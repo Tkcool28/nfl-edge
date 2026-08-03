@@ -1,0 +1,8 @@
+season,week,team,player_id,position,depth_rank,source_dt,timestamp_quality,case_label
+2024,2,BBB,qb-bbb-1,QB,1,2024-09-10T11:59:59Z,source_timestamp_preserved,one_second_before_cutoff
+2024,2,BBB,qb-bbb-2,QB,2,2024-09-10T12:00:00Z,source_timestamp_preserved,exactly_at_cutoff
+2024,2,BBB,qb-bbb-late,QB,1,2024-09-10T12:00:01Z,source_timestamp_preserved,one_second_after_cutoff
+2024,3,AAA,qb-aaa-1,QB,1,2024-09-17T12:00:00Z,source_timestamp_preserved,conflicting_depth_rank
+2024,3,AAA,qb-aaa-2,QB,1,2024-09-17T12:00:00Z,source_timestamp_preserved,conflicting_depth_rank
+2024,5,BBB,qb-bbb-1,QB,1,2024-10-01T12:00:00Z,source_timestamp_preserved,starting_qb_change
+2024,5,AAA,,QB,1,2024-10-01T12:00:00Z,source_timestamp_preserved,missing_player_id
