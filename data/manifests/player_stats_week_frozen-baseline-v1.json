@@ -2,7 +2,7 @@
   "source_id": "nflverse-player_stats_week-frozen-baseline-v1",
   "source_name": "player_stats_week",
   "source_locator": "https://github.com/nflverse/nflverse-data/releases",
-  "retrieved_at_utc": "2026-08-03T00:00:00Z",
+  "retrieved_at_utc": null,
   "seasons": [
     2018,
     2019,
@@ -13,7 +13,7 @@
     2024,
     2025
   ],
-  "file_name": "/tmp/nfl-edge-data-audit-raw/player_stats_week_2018_2025_frozen-baseline-v1.parquet",
+  "file_name": "data/raw/source_snapshots/v1/player_stats_week_2018_2025_frozen-baseline-v1.parquet",
   "compression": "parquet",
   "byte_size": 4180166,
   "sha256": "097000b7178c1c4b3ff27708f303f95d7f0a8fbea5cd4ce5a33b2b6ebadab8b6",
@@ -167,5 +167,8 @@
     "fantasy_points",
     "fantasy_points_ppr"
   ],
-  "license_or_terms_note": "NFLverse data; consult upstream repository terms and attribution requirements."
+  "license_or_terms_note": "NFLverse data; consult upstream repository terms and attribution requirements.",
+  "retrieval_timestamp_quality": "original exact network retrieval time unavailable",
+  "snapshot_filesystem_mtime_utc": "2026-08-03T01:43:41.057600Z",
+  "metadata_corrected_at_utc": "2026-08-03T04:47:15.097083Z"
 }

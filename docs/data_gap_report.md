@@ -8,7 +8,7 @@ The official audited sources support an honest compact historical baseline. They
 
 - Schedules contain `gameday` and `gametime`, plus venue and roof fields.
 - The source does not provide a native timezone-aware `scheduled_start_utc` or exact `game_end_utc`.
-- The normalized games table preserves `gameday`, `gametime`, venue fields, and the timestamp derivation classification.
+- The normalized games table preserves `gameday`, `gametime`, and venue fields. `scheduled_start_utc` remains null until an approved venue-timezone and DST mapping exists.
 - Exact `game_end_utc` is intentionally null.
 - Do not infer final whistle from kickoff plus assumed game duration.
 

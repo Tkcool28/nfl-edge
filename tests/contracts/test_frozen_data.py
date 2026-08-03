@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import csv
+import json
 from pathlib import Path
 
+import polars as pl
 import pytest
 
 from nfl_edge.data.integrity import (
@@ -78,3 +80,33 @@ def test_manifest_file_is_immutable_by_default(tmp_path: Path) -> None:
         # Explicitly exercise the same invariant used by output generation.
         if path.exists():
             raise FileExistsError(path)
+
+
+def test_every_committed_source_manifest_verifies_from_repository_root() -> None:
+    manifests = ROOT / "data" / "manifests"
+    for path in sorted(manifests.glob("*_frozen-baseline-v1.json")):
+        data = json.loads(path.read_text())
+        if isinstance(data, list):
+            continue
+        file_name = Path(data["file_name"])
+        assert not file_name.is_absolute()
+        assert file_name.parts[:4] == ("data", "raw", "source_snapshots", "v1")
+        verify_manifest_file(data, ROOT)
+
+
+def test_committed_frozen_outputs_verify_and_preserve_game_identity() -> None:
+    manifest_path = ROOT / "data" / "manifests" / "frozen_outputs_frozen-baseline-v1.json"
+    outputs = json.loads(manifest_path.read_text())
+    assert len(outputs) == 6
+    for output in outputs:
+        verify_manifest_file(output, ROOT)
+
+    games_path = ROOT / "data" / "frozen" / "games" / "games_2018_2025.parquet"
+    games = pl.read_parquet(games_path)
+    assert games["scheduled_start_utc"].null_count() == games.height
+    assert not games["scheduled_start_utc"].drop_nulls().str.ends_with("Z").any()
+    assert games["source_game_id"].null_count() == 0
+    assert games["source_game_id"].n_unique() == games.height
+    assert games["source_game_id"].n_unique() > 1
+    assert games["source_game_id"].to_list() == games["game_id"].to_list()
+    assert set(games["season"].unique().to_list()) == set(range(2018, 2026))

@@ -2,7 +2,7 @@
   "source_id": "nflverse-depth_charts-frozen-baseline-v1",
   "source_name": "depth_charts",
   "source_locator": "https://github.com/nflverse/nflverse-data/releases",
-  "retrieved_at_utc": "2026-08-03T00:00:00Z",
+  "retrieved_at_utc": null,
   "seasons": [
     2018,
     2019,
@@ -13,7 +13,7 @@
     2024,
     2025
   ],
-  "file_name": "/tmp/nfl-edge-data-audit-raw/depth_charts_2018_2025_frozen-baseline-v1.parquet",
+  "file_name": "data/raw/source_snapshots/v1/depth_charts_2018_2025_frozen-baseline-v1.parquet",
   "compression": "parquet",
   "byte_size": 3638919,
   "sha256": "88cca524b27bf32b092b86663598e8f3065b351e6768136a3e5a46acb84fe0fe",
@@ -48,5 +48,8 @@
     "pos_slot",
     "pos_rank"
   ],
-  "license_or_terms_note": "NFLverse data; consult upstream repository terms and attribution requirements."
+  "license_or_terms_note": "NFLverse data; consult upstream repository terms and attribution requirements.",
+  "retrieval_timestamp_quality": "original exact network retrieval time unavailable",
+  "snapshot_filesystem_mtime_utc": "2026-08-03T01:43:41.053600Z",
+  "metadata_corrected_at_utc": "2026-08-03T04:47:15.097083Z"
 }

@@ -92,12 +92,9 @@ def retrieve_sources(
     return manifests
 
 
-def _scheduled_start(frame: pl.DataFrame) -> pl.Expr:
-    # NFLverse gametime is local venue time. Keep the source fields and only emit
-    # UTC for rows whose timezone mapping is explicitly known.
-    return pl.when(pl.col("gameday").is_not_null() & pl.col("gametime").is_not_null()).then(
-        (pl.col("gameday") + pl.lit("T") + pl.col("gametime") + pl.lit(":00Z"))
-    ).otherwise(None)
+def _scheduled_start() -> pl.Expr:
+    """Return null until venue timezone and DST conversion is audited."""
+    return pl.lit(None, dtype=pl.String)
 
 
 def _write_frozen(frame: pl.DataFrame, path: Path, metadata: dict[str, Any]) -> dict[str, Any]:
@@ -121,8 +118,9 @@ def build_frozen_baseline(
     raw_dir: str | Path = "data/raw/source_snapshots/v1",
     output_root: str | Path = "data/frozen",
     manifest_dir: str | Path = "data/manifests",
-    created_at_utc: str = "2026-01-01T00:00:00Z",
+    created_at_utc: str | None = None,
 ) -> list[dict[str, Any]]:
+    created_at_utc = created_at_utc or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     raw_dir, output_root, manifest_dir = Path(raw_dir), Path(output_root), Path(manifest_dir)
     files = {}
     for name in SOURCE_SPECS:
@@ -139,12 +137,12 @@ def build_frozen_baseline(
         pl.col("stadium_id").alias("venue_id"),
         pl.col("stadium").alias("venue_name"),
         pl.col("roof").alias("roof_type"),
-        pl.col("gameday"), pl.col("gametime"), _scheduled_start(schedules).alias("scheduled_start_utc"),
+        pl.col("gameday"), pl.col("gametime"), _scheduled_start().alias("scheduled_start_utc"),
         pl.lit(None, dtype=pl.String).alias("game_end_utc"),
         pl.lit("after_official_weekly_publication").alias(
             "completed_game_availability_rule"
         ),
-        pl.lit("nflverse_schedule").alias("source_game_id"), pl.lit(created_at_utc).alias("observed_at_utc"),
+        pl.col("game_id").alias("source_game_id"), pl.lit(created_at_utc).alias("observed_at_utc"),
     ])
     outputs: list[dict[str, Any]] = []
     common = {

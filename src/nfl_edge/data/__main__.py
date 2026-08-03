@@ -15,7 +15,7 @@ def main() -> None:
     parser.add_argument("--output-root", default="data/frozen")
     parser.add_argument("--seasons", nargs="+", type=int, default=list(DEFAULT_SEASONS))
     parser.add_argument("--retrieved-at-utc", default=None)
-    parser.add_argument("--created-at-utc", default="2026-08-03T00:00:00Z")
+    parser.add_argument("--created-at-utc", default=None)
     parser.add_argument("--retrieve", action="store_true")
     parser.add_argument("--normalize", action="store_true")
     args = parser.parse_args()

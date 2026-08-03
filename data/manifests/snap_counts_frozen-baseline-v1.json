@@ -2,7 +2,7 @@
   "source_id": "nflverse-snap_counts-frozen-baseline-v1",
   "source_name": "snap_counts",
   "source_locator": "https://github.com/nflverse/nflverse-data/releases",
-  "retrieved_at_utc": "2026-08-03T00:00:00Z",
+  "retrieved_at_utc": null,
   "seasons": [
     2018,
     2019,
@@ -13,7 +13,7 @@
     2024,
     2025
   ],
-  "file_name": "/tmp/nfl-edge-data-audit-raw/snap_counts_2018_2025_frozen-baseline-v1.parquet",
+  "file_name": "data/raw/source_snapshots/v1/snap_counts_2018_2025_frozen-baseline-v1.parquet",
   "compression": "parquet",
   "byte_size": 1752976,
   "sha256": "fb83a703cb5a718b1467ae20402c8e90e41e83d066d4fdf64c87ae3d30546b24",
@@ -38,5 +38,8 @@
     "st_snaps",
     "st_pct"
   ],
-  "license_or_terms_note": "NFLverse data; consult upstream repository terms and attribution requirements."
+  "license_or_terms_note": "NFLverse data; consult upstream repository terms and attribution requirements.",
+  "retrieval_timestamp_quality": "original exact network retrieval time unavailable",
+  "snapshot_filesystem_mtime_utc": "2026-08-03T01:43:41.059600Z",
+  "metadata_corrected_at_utc": "2026-08-03T04:47:15.097083Z"
 }

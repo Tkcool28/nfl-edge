@@ -2,7 +2,7 @@
   "source_id": "nflverse-schedules-frozen-baseline-v1",
   "source_name": "schedules",
   "source_locator": "https://github.com/nflverse/nflverse-data/releases",
-  "retrieved_at_utc": "2026-08-03T00:00:00Z",
+  "retrieved_at_utc": null,
   "seasons": [
     2018,
     2019,
@@ -13,7 +13,7 @@
     2024,
     2025
   ],
-  "file_name": "/tmp/nfl-edge-data-audit-raw/schedules_2018_2025_frozen-baseline-v1.parquet",
+  "file_name": "data/raw/source_snapshots/v1/schedules_2018_2025_frozen-baseline-v1.parquet",
   "compression": "parquet",
   "byte_size": 127477,
   "sha256": "9fdfa5f3401f0ee834c986b0e61518b01c8e52ac823057f52c76abe6b29c83eb",
@@ -68,5 +68,8 @@
     "stadium_id",
     "stadium"
   ],
-  "license_or_terms_note": "NFLverse data; consult upstream repository terms and attribution requirements."
+  "license_or_terms_note": "NFLverse data; consult upstream repository terms and attribution requirements.",
+  "retrieval_timestamp_quality": "original exact network retrieval time unavailable",
+  "snapshot_filesystem_mtime_utc": "2026-08-03T01:43:41.058600Z",
+  "metadata_corrected_at_utc": "2026-08-03T04:47:15.097083Z"
 }

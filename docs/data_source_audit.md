@@ -6,7 +6,7 @@ This audit covers NFLverse first-party data retrieved with `nflreadpy==0.1.5` fo
 
 The snapshots are audited evidence, not model features. No sportsbook odds, play-by-play archive, model, rolling feature, backtest, or score was created.
 
-Retrieval timestamp is recorded in each manifest. Source files are versioned with `frozen-baseline-v1`; rerunning against an existing destination refuses to overwrite it.
+The original precise network retrieval timestamp was not recoverable from the first audit run. Source manifests therefore mark `retrieved_at_utc` unavailable rather than retaining the unsupported fixed-midnight value, preserve the snapshot file modification time as supporting filesystem evidence, and record the truthful metadata-correction time separately. Source files are versioned with `frozen-baseline-v1`; rerunning against an existing destination refuses to overwrite it.
 
 ## Source summary
 
@@ -50,7 +50,7 @@ The machine-readable manifests contain per-season row counts, byte sizes, checks
 
 ## Schedule and venue fields
 
-NFLverse schedules provide `gameday`, `gametime`, `location`, `roof`, `stadium_id`, and `stadium`. The normalized games table preserves all source fields needed to revisit timezone treatment. A UTC kickoff is emitted only as a conservative source-derived field; it is not treated as proven record-level publication time. `game_end_utc` remains null because the audited source does not provide exact final-whistle timestamps.
+NFLverse schedules provide `gameday`, `gametime`, `location`, `roof`, `stadium_id`, and `stadium`. The normalized games table preserves all source fields needed to revisit timezone treatment. Because `gametime` is venue-local and no approved venue-timezone/DST mapping exists, `scheduled_start_utc` is null for every historical row. Exact UTC conversion is deferred; no timezone is invented or approximated. `game_end_utc` remains null because the audited source does not provide exact final-whistle timestamps.
 
 ## Legal / terms note
 

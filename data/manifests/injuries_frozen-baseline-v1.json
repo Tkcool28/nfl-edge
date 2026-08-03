@@ -2,7 +2,7 @@
   "source_id": "nflverse-injuries-frozen-baseline-v1",
   "source_name": "injuries",
   "source_locator": "https://github.com/nflverse/nflverse-data/releases",
-  "retrieved_at_utc": "2026-08-03T00:00:00Z",
+  "retrieved_at_utc": null,
   "seasons": [
     2018,
     2019,
@@ -13,7 +13,7 @@
     2024,
     2025
   ],
-  "file_name": "/tmp/nfl-edge-data-audit-raw/injuries_2018_2025_frozen-baseline-v1.parquet",
+  "file_name": "data/raw/source_snapshots/v1/injuries_2018_2025_frozen-baseline-v1.parquet",
   "compression": "parquet",
   "byte_size": 618312,
   "sha256": "498357e8e051c6b496be51a95433d77c5a57c395dfee04b8ea31fa50b05c91e4",
@@ -39,5 +39,8 @@
     "date_modified",
     "season_type"
   ],
-  "license_or_terms_note": "NFLverse data; consult upstream repository terms and attribution requirements."
+  "license_or_terms_note": "NFLverse data; consult upstream repository terms and attribution requirements.",
+  "retrieval_timestamp_quality": "original exact network retrieval time unavailable",
+  "snapshot_filesystem_mtime_utc": "2026-08-03T01:43:41.053600Z",
+  "metadata_corrected_at_utc": "2026-08-03T04:47:15.097083Z"
 }

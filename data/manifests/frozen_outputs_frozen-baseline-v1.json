@@ -5,12 +5,12 @@
       "nflverse-schedules-frozen-baseline-v1"
     ],
     "transform_version": "normalize-v1",
-    "created_at_utc": "2026-08-03T00:00:00Z",
+    "created_at_utc": "2026-08-03T04:48:46.107687Z",
     "min_event_time_utc": "2018-09-06",
     "max_event_time_utc": "2026-02-08",
     "file_name": "data/frozen/games/games_2018_2025.parquet",
-    "byte_size": 38492,
-    "sha256": "e314a5ff0b1f39fa3cf3486b00c6909a744af01777aed91a152f505368a774da",
+    "byte_size": 43774,
+    "sha256": "74223eebc93c8359720c610ea9e26de318fe11e0105c57896eeb209ed8ab10ef",
     "row_count": 2227,
     "column_count": 19,
     "columns": [
@@ -42,12 +42,12 @@
       "nflverse-team_stats_week-frozen-baseline-v1"
     ],
     "transform_version": "normalize-v1",
-    "created_at_utc": "2026-08-03T00:00:00Z",
+    "created_at_utc": "2026-08-03T04:48:46.107687Z",
     "min_event_time_utc": "2018-09-06",
     "max_event_time_utc": "2026-02-08",
     "file_name": "data/frozen/team_game_stats/team_game_stats_2018_2025.parquet",
-    "byte_size": 102339,
-    "sha256": "46e535bb08f211cdfb7a259366b38e0811f147ad66b17943fc77cc74672521bd",
+    "byte_size": 102403,
+    "sha256": "a8d81eb99c75bbf9c1467015f7e1a976325f3c93fa3131001ccd0aff49fe480e",
     "row_count": 4454,
     "column_count": 12,
     "columns": [
@@ -72,12 +72,12 @@
       "nflverse-player_stats_week-frozen-baseline-v1"
     ],
     "transform_version": "normalize-v1",
-    "created_at_utc": "2026-08-03T00:00:00Z",
+    "created_at_utc": "2026-08-03T04:48:46.107687Z",
     "min_event_time_utc": "2018-09-06",
     "max_event_time_utc": "2026-02-08",
     "file_name": "data/frozen/qb_game_stats/qb_game_stats_2018_2025.parquet",
-    "byte_size": 117687,
-    "sha256": "896cdb22adbfcbe14f80ffbb2a79bf240205a8d10eba416ef2b2cc1242a5fe8e",
+    "byte_size": 117751,
+    "sha256": "83943a02fc2bf46ef6e85dbc5abf9086fb467e1fb12a24b6145584a2641b6db9",
     "row_count": 5314,
     "column_count": 14,
     "columns": [
@@ -104,7 +104,7 @@
       "nflverse-depth_charts-frozen-baseline-v1"
     ],
     "transform_version": "normalize-v1",
-    "created_at_utc": "2026-08-03T00:00:00Z",
+    "created_at_utc": "2026-08-03T04:48:46.107687Z",
     "min_event_time_utc": "2018-09-06",
     "max_event_time_utc": "2026-02-08",
     "file_name": "data/frozen/depth_chart_snapshots/depth_chart_snapshots_2018_2025.parquet",
@@ -133,7 +133,7 @@
       "nflverse-rosters-frozen-baseline-v1"
     ],
     "transform_version": "normalize-v1",
-    "created_at_utc": "2026-08-03T00:00:00Z",
+    "created_at_utc": "2026-08-03T04:48:46.107687Z",
     "min_event_time_utc": "2018-09-06",
     "max_event_time_utc": "2026-02-08",
     "file_name": "data/frozen/rosters/rosters_2018_2025.parquet",
@@ -160,7 +160,7 @@
       "nflverse-schedules-frozen-baseline-v1"
     ],
     "transform_version": "normalize-v1",
-    "created_at_utc": "2026-08-03T00:00:00Z",
+    "created_at_utc": "2026-08-03T04:48:46.107687Z",
     "min_event_time_utc": "2018-09-06",
     "max_event_time_utc": "2026-02-08",
     "file_name": "data/frozen/venues/venues_2018_2025.parquet",
