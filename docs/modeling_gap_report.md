@@ -41,6 +41,30 @@ documented conservative behavior and matches the Task 03A spec.
    use the same walk-forward engine.
 4. **XGBoost base model.** Task 03C.
 
+## Deferred Historical QB-Retraining Milestone
+
+After the live Sleeper source has been proven end to end, perform a
+separate historical QB-evidence reconstruction audit before changing
+the baseline model. The audit should determine whether nflverse depth
+charts, historical injury reports, stable player IDs, and only evidence
+available before each game can defensibly identify the expected starter
+for 2018–2024.
+
+Only if that audit proves adequate point-in-time coverage should the
+project:
+
+1. rebuild historical starter-certainty states;
+2. join each expected starter to prior-game QB metrics;
+3. rerun QB-adjusted Elo across the 2018–2024 development walk-forward;
+4. compare the reconstructed QB-adjusted version against the current
+   neutral-QB Elo baseline using Brier score, log loss, calibration, and
+   retained prediction ledgers;
+5. preserve 2025 as sealed holdout throughout the audit and retraining.
+
+This milestone is intentionally deferred until the Sleeper live source
+probe is complete. Sleeper's current-state API must not be assumed to
+provide historical injury snapshots.
+
 ## Exact Scorecard (Development)
 
 From the Task 03A run on 2018–2024 (source-of-truth:
@@ -89,5 +113,7 @@ documented behavior of the current Task 02 feature output.
 - No market comparison, ROI, CLV, or sportsbook comparison is produced.
 
 ## Recommended Next Step
-Task 03B: opponent-adjusted expected margin model on the same walk-forward
-infrastructure, scored against the QB-Elo baseline via Brier Skill Score.
+Complete the bounded Sleeper live-source audit and prove that current QB
+injury, practice, roster, and depth evidence can be collected reliably
+before wiring it into model scoring. After the live source is proven,
+return to the deferred historical QB-retraining milestone above.
