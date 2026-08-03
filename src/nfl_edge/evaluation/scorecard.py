@@ -197,17 +197,33 @@ def build_development_scorecard(
         )
 
     total_predicted = int(dev.height)
-    scored = dev.filter(
-        pl.col("target_available") & pl.col("actual_home_win").is_not_null()
+    # Spec terminology:
+    #   predicted_games: every prediction row in the development window.
+    #   target_unavailable_games: prediction rows whose target was not
+    #     available at the as_of_utc boundary (no outcome).
+    #   binary_scored_games: prediction rows with a non-tie, available
+    #     target (the denominator for descriptive accuracy, Brier, log
+    #     loss, and calibration).
+    #   ties_excluded_from_binary_metrics: prediction rows whose target
+    #     was a tie (margin == 0). Ties are predictions with available
+    #     outcomes, but they are excluded from the binary home-win
+    #     metrics by design.
+    #   warmup_excluded_games: prediction rows excluded as warm-up.
+    #     For this Elo baseline the warm-up policy is "all predictions
+    #     scored; no warmup required" so this count is 0.
+    target_unavailable = dev.filter(pl.col("target_available") == False)  # noqa: E712
+    ties_df = dev.filter(pl.col("actual_tie") == True)  # noqa: E712
+    binary_scored = dev.filter(
+        (pl.col("target_available") == True)  # noqa: E712
+        & (pl.col("actual_tie") == False)  # noqa: E712
     )
-    ties = int(dev.filter(pl.col("actual_tie") == True).height)  # noqa: E712
-    unscored = total_predicted - int(scored.height)
+    warmup_excluded = 0
 
-    brier = brier_score(scored)
-    ll = log_loss(scored)
-    accuracy = descriptive_accuracy(scored)
-    cal_intercept, cal_slope = calibration_intercept_slope(scored)
-    reliability = reliability_table(scored)
+    brier = brier_score(binary_scored)
+    ll = log_loss(binary_scored)
+    accuracy = descriptive_accuracy(binary_scored)
+    cal_intercept, cal_slope = calibration_intercept_slope(binary_scored)
+    reliability = reliability_table(binary_scored)
 
     scorecard = {
         "model_name": "qb_elo",
@@ -218,9 +234,10 @@ def build_development_scorecard(
         "development_seasons": "2018-2024",
         "totals": {
             "predicted_games": total_predicted,
-            "scored_games": int(scored.height),
-            "ties": ties,
-            "unscored_or_warmup": unscored,
+            "target_unavailable_games": int(target_unavailable.height),
+            "binary_scored_games": int(binary_scored.height),
+            "ties_excluded_from_binary_metrics": int(ties_df.height),
+            "warmup_excluded_games": int(warmup_excluded),
         },
         "aggregate_metrics": {
             "brier_score": brier,
@@ -235,12 +252,21 @@ def build_development_scorecard(
         "reliability_table": reliability,
         "worst_log_loss_predictions": _worst_predictions(dev),
         "missingness": _missingness(dev),
-        "warm_up_policy": "all development predictions scored; no warmup exclusion",
-        "scored_row_policy": "scored = target_available AND actual_home_win is not null",
+        "warm_up_policy": (
+            "all development predictions scored; no warmup exclusion. "
+            "warmup_excluded_games = 0"
+        ),
+        "scored_row_policy": (
+            "scored = target_available AND actual_home_win is not null. "
+            "Ties are predicted outcomes with available targets but are "
+            "excluded from binary home-win metrics by design."
+        ),
         "manifest_fingerprint": {
             "model_config_sha256": manifest.get("model_config_sha256"),
             "backtest_config_sha256": manifest.get("backtest_config_sha256"),
             "model_code_fingerprint": manifest.get("model_code_fingerprint"),
+            "feature_code_fingerprint": manifest.get("feature_code_fingerprint"),
+            "backtest_code_fingerprint": manifest.get("backtest_code_fingerprint"),
         },
     }
 
@@ -256,9 +282,10 @@ def build_development_scorecard(
         "## Totals",
         "",
         f"- Predicted games: {scorecard['totals']['predicted_games']}",
-        f"- Scored games: {scorecard['totals']['scored_games']}",
-        f"- Ties: {scorecard['totals']['ties']}",
-        f"- Unscored / warm-up: {scorecard['totals']['unscored_or_warmup']}",
+        f"- Binary-scored games: {scorecard['totals']['binary_scored_games']}",
+        f"- Ties (excluded from binary metrics): {scorecard['totals']['ties_excluded_from_binary_metrics']}",
+        f"- Target-unavailable games: {scorecard['totals']['target_unavailable_games']}",
+        f"- Warm-up excluded games: {scorecard['totals']['warmup_excluded_games']}",
         "",
         "## Aggregate Metrics",
         "",
@@ -270,7 +297,7 @@ def build_development_scorecard(
         "",
         "## Results by Season",
         "",
-        "| Season | Predicted | Scored | Ties | Accuracy | Log loss | Brier |",
+        "| Season | Predicted | Binary-Scored | Ties | Accuracy | Log loss | Brier |",
         "| --- | --- | --- | --- | --- | --- | --- |",
     ]
     for r in scorecard["by_season"]:
@@ -340,6 +367,8 @@ def build_development_scorecard(
         f"- model_config_sha256: `{scorecard['manifest_fingerprint']['model_config_sha256']}`",
         f"- backtest_config_sha256: `{scorecard['manifest_fingerprint']['backtest_config_sha256']}`",
         f"- model_code_fingerprint: `{scorecard['manifest_fingerprint']['model_code_fingerprint']}`",
+        f"- feature_code_fingerprint: `{scorecard['manifest_fingerprint']['feature_code_fingerprint']}`",
+        f"- backtest_code_fingerprint: `{scorecard['manifest_fingerprint']['backtest_code_fingerprint']}`",
         "",
         "_No 2025 predictions, scores, or calibration included._",
         "",

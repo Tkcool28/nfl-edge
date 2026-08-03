@@ -1,31 +1,37 @@
 {
-  "backtest_config_sha256": "2f1727a45f205ef491cd1800d93bdb10d948b3dbcb932e93d11694ba3d086275",
+  "backtest_code_fingerprint": "37ae010aab76a75923ad34f2dd56a8536df9e305889e470fbf9c61642563aa78",
+  "backtest_config_sha256": "a36f9b5e63b24285be2f217ffc1de7f6592623604bae8a643f8edad2f1bcadf3",
   "created_at_utc": "2026-08-03T12:00:00Z",
   "data_version": "frozen-baseline-v1",
   "development_seasons": "2018-2024",
-  "feature_code_fingerprint": "f23032303d6bcdc72c7662be2888b8936ffadd1c231ae58da889e4b72aae6768",
+  "feature_code_fingerprint": "1ee67408974b9183be61ad54963ddae5e7aa093d8518edef8948b07ce2c9a921",
   "feature_manifest_sha256": "aec492811357cddff1c1dbb0701623df2d2c234f5109522a0cacc63ca244b987",
   "feature_version": "features-v1",
   "maximum_prediction_as_of_utc": "2025-02-04T12:00:00Z",
   "minimum_prediction_as_of_utc": "2018-09-04T12:00:00Z",
-  "model_code_fingerprint": "65594378c090191bdbb508eecdc569be620dbb8eb8c9f7625e2b20818f77f198",
+  "model_code_fingerprint": "91773cfd4361d7184673f969add48b632533fceca056fb90a4cd609b7286bf7c",
   "model_config_sha256": "d37661befee7fa0e00b71337890b9bf2b2a3740b0f1a7103ed3776fbabd00d7a",
   "model_name": "qb_elo",
   "model_version": "v1.0.0",
   "prediction_ledger": {
     "path": "data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet",
     "rows": 1942,
-    "sha256": "652f4c4c76f0f59f7d4d5c62313de5fd804134fe6b3d343ea46cb95bcf062120"
+    "sha256": "3847cf65bd0dbcadd6ba3a16d123468b8c9fb9d835d1f159d493d7d1120070d2"
   },
   "random_seed": 20260802,
   "run_id": "qb_elo-v1.0.0-20260803T120000Z",
   "run_type": "development_walk_forward",
-  "scored_row_policy": "only 2018-2024 rows scored; 2025 is excluded",
+  "scored_row_policy": "only 2018-2024 rows scored; 2025 is sealed and excluded",
   "sealed_holdout_season": 2025,
   "state_ledger": {
     "path": "data/modeling/development_v1/qb_elo_state_transitions_2018_2024.parquet",
     "rows": 3884,
-    "sha256": "cd52a3c8742fc7ac0a08fd4596b0ce444373bc01e0813f082dd8f7bd2d7ee7ef"
+    "sha256": "7a48826ec6858a02b23b849fcbe2b4ab82c4639ca980531e4f7a0b0060da1fab"
   },
-  "warm_up_policy": "all predictions scored; no warmup required"
+  "two_pass_block_proof": {
+    "predict_pass_does_not_mutate_state": true,
+    "single_zero_sum_delta": true,
+    "update_pass_uses_canonical_path": true
+  },
+  "warm_up_policy": "all predictions scored; no warmup required. warmup_excluded_games = 0"
 }

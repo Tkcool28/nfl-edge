@@ -117,3 +117,72 @@ Complete the bounded Sleeper live-source audit and prove that current QB
 injury, practice, roster, and depth evidence can be collected reliably
 before wiring it into model scoring. After the live source is proven,
 return to the deferred historical QB-retraining milestone above.
+
+## Correction History (PR #4 remediation)
+
+On 2026-08-03, an independent review identified several defects in the
+prior walk-forward and Elo implementation. All defects have been
+corrected and the development baseline has been re-executed. The
+prior published metrics are **superseded** and must not be cited.
+
+Defects fixed:
+
+- **A. Same-week leakage.** The orchestrator previously predicted
+  and updated state inside the same per-game loop. The corrected
+  engine implements a strict two-pass block design (Pass 1 freezes
+  the block-start state and predicts every game; Pass 2 applies all
+  updates in deterministic ``game_id`` order).
+- **B. Non-zero-sum updates.** The corrected ``update_state_with_margin``
+  uses a single ``delta = K * MOV * (actual - expected)`` and sets
+  ``away_change = -home_change`` exactly.
+- **C. MOV formula.** The corrected ``mov_multiplier`` matches the
+  spec (``min(mov_cap, 1 + (abs(margin)/divisor)**2)``); the inline
+  reimplementation was removed.
+- **D. Two paths.** The orchestrator now uses the canonical
+  ``update_state_with_margin`` and ``mov_multiplier`` helpers; no
+  duplicate Elo math remains.
+- **E. Exposure metadata.** Prediction rows now record
+  ``training_rows_available_before_block``,
+  ``training_season_min/max``, ``training_block_count``,
+  ``prior_completed_games_count`` for the *prior* state only.
+- **F. Content fingerprint.** ``code_fingerprint`` now hashes file
+  bytes (not paths) and is independent of the absolute checkout
+  location.
+- **G. No hard-coded paths.** ``run_development_walk_forward`` takes
+  a ``project_root`` argument.
+- **H. Independent replay.** ``independent_replay_from_pregame``
+  recalculates ``elo_after`` from pregame inputs and raises
+  ``StateLedgerCorruptionError`` on mismatch.
+- **J. Tie / warm-up terminology.** The scorecard reports
+  ``predicted_games``, ``target_unavailable_games``,
+  ``binary_scored_games``, ``ties_excluded_from_binary_metrics``,
+  ``warmup_excluded_games`` (warmup = 0).
+
+Additionally a hard correctness gate
+(``_validate_state_ledger_correctness``) runs immediately before the
+state ledger is persisted; a violation raises
+``StateLedgerCorruptionError`` and prevents the ledger from being
+written.
+
+### Corrected development metrics (2018–2024)
+
+- Predicted games: **1942**
+- Binary-scored games: **1935**
+- Ties (excluded from binary metrics): **7**
+- Target-unavailable games: **0**
+- Warm-up excluded games: **0**
+- Brier score: **0.2240**
+- Log loss: **0.6397**
+- Descriptive accuracy: **0.6351**
+- Calibration intercept: **0.4822**
+- Calibration slope: **0.2158**
+
+Manifest fingerprints:
+
+- `model_code_fingerprint`: `91773cfd4361d7184673f969add48b632533fceca056fb90a4cd609b7286bf7c`
+- `feature_code_fingerprint`: `1ee67408974b9183be61ad54963ddae5e7aa093d8518edef8948b07ce2c9a921`
+- `backtest_code_fingerprint`: `37ae010aab76a75923ad34f2dd56a8536df9e305889e470fbf9c61642563aa78`
+
+The 2025 holdout was not fit, predicted, scored, calibrated, or
+reported. The poison test (corrupting every 2025 row) is preserved
+in `tests/holdout/test_2025_sealed.py` and continues to pass.

@@ -103,8 +103,9 @@ def test_build_scorecard_writes_files(tmp_path):
     assert (tmp_path / "qb_elo_development_scorecard.md").exists()
     assert (tmp_path / "qb_elo_reliability_table.csv").exists()
     assert sc["totals"]["predicted_games"] == 3
-    assert sc["totals"]["scored_games"] == 3
-    assert sc["totals"]["ties"] == 0
+    assert sc["totals"]["binary_scored_games"] == 3
+    assert sc["totals"]["ties_excluded_from_binary_metrics"] == 0
+    assert sc["totals"]["warmup_excluded_games"] == 0
 
 
 def test_scorecard_rejects_2025(tmp_path):

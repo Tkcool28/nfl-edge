@@ -108,9 +108,16 @@ def test_2025_poisoning_does_not_change_predictions():
     clean_pred = pl.read_parquet(CLEAN_OUTPUT / "qb_elo_predictions_2018_2024.parquet").sort("prediction_id")
     poison_pred = pl.read_parquet(POISONED_OUTPUT / "qb_elo_predictions_2018_2024.parquet").sort("prediction_id")
     assert clean_pred.height == poison_pred.height
-    # Compare all numeric columns
-    for col in ["predicted_home_win_probability", "home_elo_before", "away_elo_before",
-                "home_qb_adjustment", "away_qb_adjustment", "training_rows"]:
+    # Compare all numeric columns (including exposure metadata, which
+    # is computed from the same prior-state view and must therefore be
+    # 2025-invariant).
+    for col in [
+        "predicted_home_win_probability", "home_elo_before", "away_elo_before",
+        "home_qb_adjustment", "away_qb_adjustment",
+        "training_rows_available_before_block",
+        "training_season_min", "training_season_max",
+        "training_block_count", "prior_completed_games_count",
+    ]:
         assert clean_pred[col].to_list() == poison_pred[col].to_list(), f"Column {col} differs"
 
 

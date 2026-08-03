@@ -50,9 +50,17 @@ def code_fingerprint(paths: list[str | Path], root: str | Path) -> str:
     The list of paths is sorted by their repository-relative posix form so
     the output is stable across runners. Each path contributes its relative
     name, a newline, and the raw file bytes. The function reads bytes only
-    (no metadata) and never touches the current time."""
+    (no metadata) and never touches the current time.
 
-    root_path = Path(root)
+    The fingerprint is **content-based**: changing file contents while
+    keeping the filename changes the digest; renaming a file while keeping
+    its contents also changes the digest because the relative path is part
+    of the input. The absolute checkout location of ``root`` does *not*
+    participate in the digest, so two different checkouts of the same
+    repository produce the same fingerprint.
+    """
+
+    root_path = Path(root).resolve()
     sorted_paths = sorted(
         (Path(path) for path in paths),
         key=lambda candidate: candidate.resolve().relative_to(root_path).as_posix(),
@@ -68,3 +76,23 @@ def code_fingerprint(paths: list[str | Path], root: str | Path) -> str:
         digest.update(resolved.read_bytes())
         digest.update(b"\n")
     return digest.hexdigest()
+
+
+def code_fingerprint_glob(
+    *,
+    root: str | Path,
+    glob: str,
+    subdir: str | Path,
+) -> str:
+    """Convenience wrapper that globs for ``*.py`` files under
+    ``root/subdir`` and returns a :func:`code_fingerprint` over them.
+
+    This is the form callers normally want: a single call to fingerprint
+    every Python file in a subtree. The result is content-based; the
+    absolute checkout location does not participate.
+    """
+
+    root_path = Path(root).resolve()
+    target = root_path / subdir
+    paths = [Path(p) for p in sorted(target.rglob(glob))]
+    return code_fingerprint(paths, root=root_path)

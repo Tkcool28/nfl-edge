@@ -1,16 +1,16 @@
 {
   "aggregate_metrics": {
-    "brier_score": 0.2253717859267528,
-    "calibration_intercept": 0.4832522697197848,
-    "calibration_slope": 0.21429502264440556,
-    "descriptive_accuracy": 0.6304909560723514,
-    "log_loss": 0.6429306852671185
+    "brier_score": 0.22395817969967416,
+    "calibration_intercept": 0.4822286164716027,
+    "calibration_slope": 0.2157719647428949,
+    "descriptive_accuracy": 0.635142118863049,
+    "log_loss": 0.6396560960306621
   },
   "by_qb_certainty": [
     {
-      "accuracy": 0.6304909560723514,
-      "brier": 0.2253717859267528,
-      "log_loss": 0.6429306852671185,
+      "accuracy": 0.635142118863049,
+      "brier": 0.22395817969967416,
+      "log_loss": 0.6396560960306621,
       "predicted": 1942,
       "qb_certainty_state": "UNKNOWN",
       "scored": 1935
@@ -18,63 +18,63 @@
   ],
   "by_season": [
     {
-      "accuracy": 0.6264150943396226,
-      "brier": 0.2281587641091443,
-      "log_loss": 0.6477981636249349,
+      "accuracy": 0.6226415094339622,
+      "brier": 0.2271597345198358,
+      "log_loss": 0.6454285876582025,
       "predicted": 267,
       "scored": 265,
       "season": 2018,
       "ties": 2
     },
     {
-      "accuracy": 0.6353383458646616,
-      "brier": 0.22432713249336758,
-      "log_loss": 0.6412626992255707,
+      "accuracy": 0.6428571428571429,
+      "brier": 0.2237745204692226,
+      "log_loss": 0.640353828388472,
       "predicted": 267,
       "scored": 266,
       "season": 2019,
       "ties": 1
     },
     {
-      "accuracy": 0.6529850746268657,
-      "brier": 0.2194116507259797,
-      "log_loss": 0.6310683410239414,
+      "accuracy": 0.6567164179104478,
+      "brier": 0.21622593359839773,
+      "log_loss": 0.6240112304971152,
       "predicted": 269,
       "scored": 268,
       "season": 2020,
       "ties": 1
     },
     {
-      "accuracy": 0.6091549295774648,
-      "brier": 0.23082500370506473,
-      "log_loss": 0.6564849191712511,
+      "accuracy": 0.6197183098591549,
+      "brier": 0.23089713693794137,
+      "log_loss": 0.655655641645512,
       "predicted": 285,
       "scored": 284,
       "season": 2021,
       "ties": 1
     },
     {
-      "accuracy": 0.6063829787234043,
-      "brier": 0.226772260344974,
-      "log_loss": 0.6445350920918773,
+      "accuracy": 0.6276595744680851,
+      "brier": 0.22385167615360033,
+      "log_loss": 0.6378654731697188,
       "predicted": 284,
       "scored": 282,
       "season": 2022,
       "ties": 2
     },
     {
-      "accuracy": 0.6070175438596491,
-      "brier": 0.23429664770269873,
-      "log_loss": 0.662675318107568,
+      "accuracy": 0.6035087719298246,
+      "brier": 0.23360234186164303,
+      "log_loss": 0.6612657534836812,
       "predicted": 285,
       "scored": 285,
       "season": 2023,
       "ties": 0
     },
     {
-      "accuracy": 0.6771929824561403,
-      "brier": 0.2136153353570347,
-      "log_loss": 0.6162775107636667,
+      "accuracy": 0.6736842105263158,
+      "brier": 0.21197034535322928,
+      "log_loss": 0.61256784758356,
       "predicted": 285,
       "scored": 285,
       "season": 2024,
@@ -92,15 +92,15 @@
     },
     {
       "accuracy": 0.7333333333333333,
-      "log_loss": 0.6359717874477542,
+      "log_loss": 0.6421059450174317,
       "predicted": 16,
       "scored": 15,
       "season": 2018,
       "week": 2
     },
     {
-      "accuracy": 0.5625,
-      "log_loss": 0.7077577758508519,
+      "accuracy": 0.625,
+      "log_loss": 0.7052869325349829,
       "predicted": 16,
       "scored": 16,
       "season": 2018,
@@ -108,15 +108,15 @@
     },
     {
       "accuracy": 0.6,
-      "log_loss": 0.650396783165948,
+      "log_loss": 0.6527594696457562,
       "predicted": 15,
       "scored": 15,
       "season": 2018,
       "week": 4
     },
     {
-      "accuracy": 0.8,
-      "log_loss": 0.621318847389143,
+      "accuracy": 0.7333333333333333,
+      "log_loss": 0.6244804373462339,
       "predicted": 15,
       "scored": 15,
       "season": 2018,
@@ -124,7 +124,7 @@
     },
     {
       "accuracy": 0.5333333333333333,
-      "log_loss": 0.6496275905588595,
+      "log_loss": 0.6550911530834591,
       "predicted": 15,
       "scored": 15,
       "season": 2018,
@@ -132,7 +132,7 @@
     },
     {
       "accuracy": 0.5,
-      "log_loss": 0.6826731314211606,
+      "log_loss": 0.6760751616288846,
       "predicted": 14,
       "scored": 14,
       "season": 2018,
@@ -140,7 +140,7 @@
     },
     {
       "accuracy": 0.7857142857142857,
-      "log_loss": 0.5590010923056873,
+      "log_loss": 0.552513203658514,
       "predicted": 14,
       "scored": 14,
       "season": 2018,
@@ -148,7 +148,7 @@
     },
     {
       "accuracy": 0.6923076923076923,
-      "log_loss": 0.6279669756193791,
+      "log_loss": 0.6309585251645355,
       "predicted": 13,
       "scored": 13,
       "season": 2018,
@@ -156,7 +156,7 @@
     },
     {
       "accuracy": 0.5714285714285714,
-      "log_loss": 0.6415663816716625,
+      "log_loss": 0.6379450289627991,
       "predicted": 14,
       "scored": 14,
       "season": 2018,
@@ -164,7 +164,7 @@
     },
     {
       "accuracy": 0.6153846153846154,
-      "log_loss": 0.7023425123978819,
+      "log_loss": 0.6970809042139869,
       "predicted": 13,
       "scored": 13,
       "season": 2018,
@@ -172,7 +172,7 @@
     },
     {
       "accuracy": 0.8,
-      "log_loss": 0.5485164946711436,
+      "log_loss": 0.5383614216624399,
       "predicted": 15,
       "scored": 15,
       "season": 2018,
@@ -180,31 +180,31 @@
     },
     {
       "accuracy": 0.5625,
-      "log_loss": 0.6592745447434021,
+      "log_loss": 0.6386426462108902,
       "predicted": 16,
       "scored": 16,
       "season": 2018,
       "week": 13
     },
     {
-      "accuracy": 0.5625,
-      "log_loss": 0.7243766670634786,
+      "accuracy": 0.5,
+      "log_loss": 0.7201281933173702,
       "predicted": 16,
       "scored": 16,
       "season": 2018,
       "week": 14
     },
     {
-      "accuracy": 0.625,
-      "log_loss": 0.666360835507675,
+      "accuracy": 0.5625,
+      "log_loss": 0.6682546287495097,
       "predicted": 16,
       "scored": 16,
       "season": 2018,
       "week": 15
     },
     {
-      "accuracy": 0.5625,
-      "log_loss": 0.6134136001491125,
+      "accuracy": 0.625,
+      "log_loss": 0.6065494845529531,
       "predicted": 16,
       "scored": 16,
       "season": 2018,
@@ -212,7 +212,7 @@
     },
     {
       "accuracy": 0.75,
-      "log_loss": 0.572181339439613,
+      "log_loss": 0.5649076854209341,
       "predicted": 16,
       "scored": 16,
       "season": 2018,
@@ -220,7 +220,7 @@
     },
     {
       "accuracy": 0.25,
-      "log_loss": 0.8117651390635869,
+      "log_loss": 0.8744738668816519,
       "predicted": 4,
       "scored": 4,
       "season": 2018,
@@ -228,7 +228,7 @@
     },
     {
       "accuracy": 1.0,
-      "log_loss": 0.535323039792792,
+      "log_loss": 0.49647305485484977,
       "predicted": 4,
       "scored": 4,
       "season": 2018,
@@ -236,7 +236,7 @@
     },
     {
       "accuracy": 0.0,
-      "log_loss": 0.900192587468798,
+      "log_loss": 0.9403180907172584,
       "predicted": 2,
       "scored": 2,
       "season": 2018,
@@ -244,7 +244,7 @@
     },
     {
       "accuracy": 0.0,
-      "log_loss": 0.7353241256054647,
+      "log_loss": 0.7241314534267859,
       "predicted": 1,
       "scored": 1,
       "season": 2018,
@@ -252,7 +252,7 @@
     },
     {
       "accuracy": 0.7333333333333333,
-      "log_loss": 0.6107071607171973,
+      "log_loss": 0.6108728269330818,
       "predicted": 16,
       "scored": 15,
       "season": 2019,
@@ -260,7 +260,7 @@
     },
     {
       "accuracy": 0.5625,
-      "log_loss": 0.6435952211641367,
+      "log_loss": 0.6344073790000111,
       "predicted": 16,
       "scored": 16,
       "season": 2019,
@@ -268,15 +268,15 @@
     },
     {
       "accuracy": 0.6875,
-      "log_loss": 0.5819854262890394,
+      "log_loss": 0.5808692627725683,
       "predicted": 16,
       "scored": 16,
       "season": 2019,
       "week": 3
     },
     {
-      "accuracy": 0.5333333333333333,
-      "log_loss": 0.7731599956121722,
+      "accuracy": 0.6,
+      "log_loss": 0.7651051247410833,
       "predicted": 15,
       "scored": 15,
       "season": 2019,
@@ -284,7 +284,7 @@
     },
     {
       "accuracy": 0.5333333333333333,
-      "log_loss": 0.7505580499198531,
+      "log_loss": 0.7555216599999276,
       "predicted": 15,
       "scored": 15,
       "season": 2019,
@@ -292,15 +292,15 @@
     },
     {
       "accuracy": 0.5,
-      "log_loss": 0.7025827966117129,
+      "log_loss": 0.6791909078234288,
       "predicted": 14,
       "scored": 14,
       "season": 2019,
       "week": 6
     },
     {
-      "accuracy": 0.8571428571428571,
-      "log_loss": 0.5654939079038034,
+      "accuracy": 0.7142857142857143,
+      "log_loss": 0.5724171363051994,
       "predicted": 14,
       "scored": 14,
       "season": 2019,
@@ -308,23 +308,23 @@
     },
     {
       "accuracy": 0.8,
-      "log_loss": 0.44815724620987696,
+      "log_loss": 0.4533002816590502,
       "predicted": 15,
       "scored": 15,
       "season": 2019,
       "week": 8
     },
     {
-      "accuracy": 0.7857142857142857,
-      "log_loss": 0.5454217731148405,
+      "accuracy": 0.8571428571428571,
+      "log_loss": 0.5448024255070072,
       "predicted": 14,
       "scored": 14,
       "season": 2019,
       "week": 9
     },
     {
-      "accuracy": 0.38461538461538464,
-      "log_loss": 0.8191372639981821,
+      "accuracy": 0.46153846153846156,
+      "log_loss": 0.8183665586233346,
       "predicted": 13,
       "scored": 13,
       "season": 2019,
@@ -332,15 +332,15 @@
     },
     {
       "accuracy": 0.7857142857142857,
-      "log_loss": 0.5391417389871386,
+      "log_loss": 0.5419996808474471,
       "predicted": 14,
       "scored": 14,
       "season": 2019,
       "week": 11
     },
     {
-      "accuracy": 0.7142857142857143,
-      "log_loss": 0.5403491627749665,
+      "accuracy": 0.7857142857142857,
+      "log_loss": 0.532315214175588,
       "predicted": 14,
       "scored": 14,
       "season": 2019,
@@ -348,7 +348,7 @@
     },
     {
       "accuracy": 0.5,
-      "log_loss": 0.6718936034526118,
+      "log_loss": 0.6775849277776012,
       "predicted": 16,
       "scored": 16,
       "season": 2019,
@@ -356,7 +356,7 @@
     },
     {
       "accuracy": 0.6875,
-      "log_loss": 0.6067631753036546,
+      "log_loss": 0.6054573576147405,
       "predicted": 16,
       "scored": 16,
       "season": 2019,
@@ -364,7 +364,7 @@
     },
     {
       "accuracy": 0.5625,
-      "log_loss": 0.6474226794046416,
+      "log_loss": 0.6426086915186675,
       "predicted": 16,
       "scored": 16,
       "season": 2019,
@@ -372,7 +372,7 @@
     },
     {
       "accuracy": 0.6875,
-      "log_loss": 0.692130030026704,
+      "log_loss": 0.6886520198118888,
       "predicted": 16,
       "scored": 16,
       "season": 2019,
@@ -380,7 +380,7 @@
     },
     {
       "accuracy": 0.5,
-      "log_loss": 0.7219322084713942,
+      "log_loss": 0.7256550352051061,
       "predicted": 16,
       "scored": 16,
       "season": 2019,
@@ -388,7 +388,7 @@
     },
     {
       "accuracy": 0.25,
-      "log_loss": 0.8611307701921432,
+      "log_loss": 0.9043922512016226,
       "predicted": 4,
       "scored": 4,
       "season": 2019,
@@ -396,7 +396,7 @@
     },
     {
       "accuracy": 0.75,
-      "log_loss": 0.651077347300699,
+      "log_loss": 0.6807154515169022,
       "predicted": 4,
       "scored": 4,
       "season": 2019,
@@ -404,7 +404,7 @@
     },
     {
       "accuracy": 1.0,
-      "log_loss": 0.5115269730208029,
+      "log_loss": 0.4880918346900104,
       "predicted": 2,
       "scored": 2,
       "season": 2019,
@@ -412,31 +412,31 @@
     },
     {
       "accuracy": 1.0,
-      "log_loss": 0.5630615418364491,
+      "log_loss": 0.5328303245481774,
       "predicted": 1,
       "scored": 1,
       "season": 2019,
       "week": 21
     },
     {
-      "accuracy": 0.6875,
-      "log_loss": 0.6093757591072865,
+      "accuracy": 0.625,
+      "log_loss": 0.6089374542361842,
       "predicted": 16,
       "scored": 16,
       "season": 2020,
       "week": 1
     },
     {
-      "accuracy": 0.8125,
-      "log_loss": 0.5124966715036808,
+      "accuracy": 0.875,
+      "log_loss": 0.5063168821888552,
       "predicted": 16,
       "scored": 16,
       "season": 2020,
       "week": 2
     },
     {
-      "accuracy": 0.5333333333333333,
-      "log_loss": 0.6944212134157337,
+      "accuracy": 0.6,
+      "log_loss": 0.6868142881763764,
       "predicted": 16,
       "scored": 15,
       "season": 2020,
@@ -444,23 +444,23 @@
     },
     {
       "accuracy": 0.6,
-      "log_loss": 0.6121170585895254,
+      "log_loss": 0.6039769050457554,
       "predicted": 15,
       "scored": 15,
       "season": 2020,
       "week": 4
     },
     {
-      "accuracy": 0.7142857142857143,
-      "log_loss": 0.6308449356384882,
+      "accuracy": 0.7857142857142857,
+      "log_loss": 0.6323091251717512,
       "predicted": 14,
       "scored": 14,
       "season": 2020,
       "week": 5
     },
     {
-      "accuracy": 0.6428571428571429,
-      "log_loss": 0.68870380203289,
+      "accuracy": 0.5714285714285714,
+      "log_loss": 0.6766910680159718,
       "predicted": 14,
       "scored": 14,
       "season": 2020,
@@ -468,23 +468,23 @@
     },
     {
       "accuracy": 0.5714285714285714,
-      "log_loss": 0.6231533458877075,
+      "log_loss": 0.6071176209260647,
       "predicted": 14,
       "scored": 14,
       "season": 2020,
       "week": 7
     },
     {
-      "accuracy": 0.5,
-      "log_loss": 0.7235277932059362,
+      "accuracy": 0.5714285714285714,
+      "log_loss": 0.7177285209844223,
       "predicted": 14,
       "scored": 14,
       "season": 2020,
       "week": 8
     },
     {
-      "accuracy": 0.6428571428571429,
-      "log_loss": 0.5691855437033359,
+      "accuracy": 0.7142857142857143,
+      "log_loss": 0.5636640135867862,
       "predicted": 14,
       "scored": 14,
       "season": 2020,
@@ -492,15 +492,15 @@
     },
     {
       "accuracy": 0.6428571428571429,
-      "log_loss": 0.5990935791035907,
+      "log_loss": 0.591407544157173,
       "predicted": 14,
       "scored": 14,
       "season": 2020,
       "week": 10
     },
     {
-      "accuracy": 0.5714285714285714,
-      "log_loss": 0.6517241036495378,
+      "accuracy": 0.5,
+      "log_loss": 0.6674647764571924,
       "predicted": 14,
       "scored": 14,
       "season": 2020,
@@ -508,23 +508,23 @@
     },
     {
       "accuracy": 0.6875,
-      "log_loss": 0.5506231145792971,
+      "log_loss": 0.5492012242349961,
       "predicted": 16,
       "scored": 16,
       "season": 2020,
       "week": 12
     },
     {
-      "accuracy": 0.7333333333333333,
-      "log_loss": 0.6850878545580491,
+      "accuracy": 0.6666666666666666,
+      "log_loss": 0.6779632660661782,
       "predicted": 15,
       "scored": 15,
       "season": 2020,
       "week": 13
     },
     {
-      "accuracy": 0.6875,
-      "log_loss": 0.6300043625730536,
+      "accuracy": 0.625,
+      "log_loss": 0.6315329328947062,
       "predicted": 16,
       "scored": 16,
       "season": 2020,
@@ -532,7 +532,7 @@
     },
     {
       "accuracy": 0.6875,
-      "log_loss": 0.7359485332290179,
+      "log_loss": 0.7138461324718971,
       "predicted": 16,
       "scored": 16,
       "season": 2020,
@@ -540,7 +540,7 @@
     },
     {
       "accuracy": 0.75,
-      "log_loss": 0.6253950974352009,
+      "log_loss": 0.6102039887078643,
       "predicted": 16,
       "scored": 16,
       "season": 2020,
@@ -548,15 +548,15 @@
     },
     {
       "accuracy": 0.6875,
-      "log_loss": 0.5664322846005884,
+      "log_loss": 0.5586543559224574,
       "predicted": 16,
       "scored": 16,
       "season": 2020,
       "week": 17
     },
     {
-      "accuracy": 0.5,
-      "log_loss": 0.6459807478680013,
+      "accuracy": 0.6666666666666666,
+      "log_loss": 0.6069479467536535,
       "predicted": 6,
       "scored": 6,
       "season": 2020,
@@ -564,7 +564,7 @@
     },
     {
       "accuracy": 0.75,
-      "log_loss": 0.5497526552899776,
+      "log_loss": 0.5489494227370049,
       "predicted": 4,
       "scored": 4,
       "season": 2020,
@@ -572,7 +572,7 @@
     },
     {
       "accuracy": 0.5,
-      "log_loss": 0.8288789930627798,
+      "log_loss": 0.8240018293891795,
       "predicted": 2,
       "scored": 2,
       "season": 2020,
@@ -580,7 +580,7 @@
     },
     {
       "accuracy": 0.0,
-      "log_loss": 1.0275937879222763,
+      "log_loss": 0.9697589529515487,
       "predicted": 1,
       "scored": 1,
       "season": 2020,
@@ -588,7 +588,7 @@
     },
     {
       "accuracy": 0.375,
-      "log_loss": 0.6923726162876497,
+      "log_loss": 0.6973534758815447,
       "predicted": 16,
       "scored": 16,
       "season": 2021,
@@ -596,7 +596,7 @@
     },
     {
       "accuracy": 0.625,
-      "log_loss": 0.6507986811481257,
+      "log_loss": 0.6570749109155891,
       "predicted": 16,
       "scored": 16,
       "season": 2021,
@@ -604,15 +604,15 @@
     },
     {
       "accuracy": 0.6875,
-      "log_loss": 0.6338660626774432,
+      "log_loss": 0.6246521762641998,
       "predicted": 16,
       "scored": 16,
       "season": 2021,
       "week": 3
     },
     {
-      "accuracy": 0.625,
-      "log_loss": 0.7191923230669774,
+      "accuracy": 0.5625,
+      "log_loss": 0.7115040445592781,
       "predicted": 16,
       "scored": 16,
       "season": 2021,
@@ -620,23 +620,23 @@
     },
     {
       "accuracy": 0.75,
-      "log_loss": 0.5651073505717265,
+      "log_loss": 0.5641034692677583,
       "predicted": 16,
       "scored": 16,
       "season": 2021,
       "week": 5
     },
     {
-      "accuracy": 0.6428571428571429,
-      "log_loss": 0.631989985349055,
+      "accuracy": 0.5714285714285714,
+      "log_loss": 0.6262715302101943,
       "predicted": 14,
       "scored": 14,
       "season": 2021,
       "week": 6
     },
     {
-      "accuracy": 0.6923076923076923,
-      "log_loss": 0.5397570723231049,
+      "accuracy": 0.7692307692307693,
+      "log_loss": 0.5292125008101836,
       "predicted": 13,
       "scored": 13,
       "season": 2021,
@@ -644,15 +644,15 @@
     },
     {
       "accuracy": 0.5333333333333333,
-      "log_loss": 0.623358871019899,
+      "log_loss": 0.6437345800085067,
       "predicted": 15,
       "scored": 15,
       "season": 2021,
       "week": 8
     },
     {
-      "accuracy": 0.42857142857142855,
-      "log_loss": 0.8289121582020752,
+      "accuracy": 0.5,
+      "log_loss": 0.8257081435343097,
       "predicted": 14,
       "scored": 14,
       "season": 2021,
@@ -660,15 +660,15 @@
     },
     {
       "accuracy": 0.5384615384615384,
-      "log_loss": 0.7623738299978806,
+      "log_loss": 0.7730793523356001,
       "predicted": 14,
       "scored": 13,
       "season": 2021,
       "week": 10
     },
     {
-      "accuracy": 0.5333333333333333,
-      "log_loss": 0.7638661587484789,
+      "accuracy": 0.6,
+      "log_loss": 0.7590025909712249,
       "predicted": 15,
       "scored": 15,
       "season": 2021,
@@ -676,23 +676,23 @@
     },
     {
       "accuracy": 0.5333333333333333,
-      "log_loss": 0.6739740014785699,
+      "log_loss": 0.672372377275122,
       "predicted": 15,
       "scored": 15,
       "season": 2021,
       "week": 12
     },
     {
-      "accuracy": 0.5,
-      "log_loss": 0.6635034897161187,
+      "accuracy": 0.5714285714285714,
+      "log_loss": 0.6532928542626502,
       "predicted": 14,
       "scored": 14,
       "season": 2021,
       "week": 13
     },
     {
-      "accuracy": 0.6428571428571429,
-      "log_loss": 0.5122567801540996,
+      "accuracy": 0.7142857142857143,
+      "log_loss": 0.5083838742570724,
       "predicted": 14,
       "scored": 14,
       "season": 2021,
@@ -700,7 +700,7 @@
     },
     {
       "accuracy": 0.6875,
-      "log_loss": 0.6773219906502355,
+      "log_loss": 0.6686601502217884,
       "predicted": 16,
       "scored": 16,
       "season": 2021,
@@ -708,7 +708,7 @@
     },
     {
       "accuracy": 0.6875,
-      "log_loss": 0.6002743442943631,
+      "log_loss": 0.5941257171066548,
       "predicted": 16,
       "scored": 16,
       "season": 2021,
@@ -716,7 +716,7 @@
     },
     {
       "accuracy": 0.8125,
-      "log_loss": 0.48934463559044433,
+      "log_loss": 0.5176945806294385,
       "predicted": 16,
       "scored": 16,
       "season": 2021,
@@ -724,7 +724,7 @@
     },
     {
       "accuracy": 0.625,
-      "log_loss": 0.777780220032269,
+      "log_loss": 0.767129912024246,
       "predicted": 16,
       "scored": 16,
       "season": 2021,
@@ -732,7 +732,7 @@
     },
     {
       "accuracy": 0.8333333333333334,
-      "log_loss": 0.4956201181129532,
+      "log_loss": 0.4582213934920463,
       "predicted": 6,
       "scored": 6,
       "season": 2021,
@@ -740,7 +740,7 @@
     },
     {
       "accuracy": 0.25,
-      "log_loss": 0.8848793016764878,
+      "log_loss": 0.9107830376957229,
       "predicted": 4,
       "scored": 4,
       "season": 2021,
@@ -748,7 +748,7 @@
     },
     {
       "accuracy": 0.5,
-      "log_loss": 0.9047346529541948,
+      "log_loss": 0.9409592995907283,
       "predicted": 2,
       "scored": 2,
       "season": 2021,
@@ -756,7 +756,7 @@
     },
     {
       "accuracy": 1.0,
-      "log_loss": 0.4631172474596372,
+      "log_loss": 0.4474211800638479,
       "predicted": 1,
       "scored": 1,
       "season": 2021,
@@ -764,7 +764,7 @@
     },
     {
       "accuracy": 0.6,
-      "log_loss": 0.683235081450371,
+      "log_loss": 0.6696450990091233,
       "predicted": 16,
       "scored": 15,
       "season": 2022,
@@ -772,23 +772,23 @@
     },
     {
       "accuracy": 0.625,
-      "log_loss": 0.6773092166346146,
+      "log_loss": 0.6771841085676393,
       "predicted": 16,
       "scored": 16,
       "season": 2022,
       "week": 2
     },
     {
-      "accuracy": 0.375,
-      "log_loss": 0.780855112780936,
+      "accuracy": 0.5,
+      "log_loss": 0.7513274476663193,
       "predicted": 16,
       "scored": 16,
       "season": 2022,
       "week": 3
     },
     {
-      "accuracy": 0.5,
-      "log_loss": 0.6588621552338378,
+      "accuracy": 0.5625,
+      "log_loss": 0.6623363768773728,
       "predicted": 16,
       "scored": 16,
       "season": 2022,
@@ -796,7 +796,7 @@
     },
     {
       "accuracy": 0.625,
-      "log_loss": 0.6293968724534547,
+      "log_loss": 0.6356076583579786,
       "predicted": 16,
       "scored": 16,
       "season": 2022,
@@ -804,15 +804,15 @@
     },
     {
       "accuracy": 0.35714285714285715,
-      "log_loss": 0.7587533340246523,
+      "log_loss": 0.7671987159480497,
       "predicted": 14,
       "scored": 14,
       "season": 2022,
       "week": 6
     },
     {
-      "accuracy": 0.7142857142857143,
-      "log_loss": 0.6549651469430959,
+      "accuracy": 0.6428571428571429,
+      "log_loss": 0.6668964944496226,
       "predicted": 14,
       "scored": 14,
       "season": 2022,
@@ -820,15 +820,15 @@
     },
     {
       "accuracy": 0.6666666666666666,
-      "log_loss": 0.5867143146195123,
+      "log_loss": 0.5759481639831644,
       "predicted": 15,
       "scored": 15,
       "season": 2022,
       "week": 8
     },
     {
-      "accuracy": 0.5384615384615384,
-      "log_loss": 0.6742498276460878,
+      "accuracy": 0.6923076923076923,
+      "log_loss": 0.6577042947928218,
       "predicted": 13,
       "scored": 13,
       "season": 2022,
@@ -836,7 +836,7 @@
     },
     {
       "accuracy": 0.42857142857142855,
-      "log_loss": 0.6938717264543571,
+      "log_loss": 0.7127344996122614,
       "predicted": 14,
       "scored": 14,
       "season": 2022,
@@ -844,7 +844,7 @@
     },
     {
       "accuracy": 0.7857142857142857,
-      "log_loss": 0.5981526192873723,
+      "log_loss": 0.573058963412822,
       "predicted": 14,
       "scored": 14,
       "season": 2022,
@@ -852,7 +852,7 @@
     },
     {
       "accuracy": 0.625,
-      "log_loss": 0.61882861735753,
+      "log_loss": 0.6129293229732259,
       "predicted": 16,
       "scored": 16,
       "season": 2022,
@@ -860,15 +860,15 @@
     },
     {
       "accuracy": 0.9285714285714286,
-      "log_loss": 0.4887384394786029,
+      "log_loss": 0.48345566011503566,
       "predicted": 15,
       "scored": 14,
       "season": 2022,
       "week": 13
     },
     {
-      "accuracy": 0.5384615384615384,
-      "log_loss": 0.6835085248006292,
+      "accuracy": 0.6153846153846154,
+      "log_loss": 0.6631126279647298,
       "predicted": 13,
       "scored": 13,
       "season": 2022,
@@ -876,7 +876,7 @@
     },
     {
       "accuracy": 0.5,
-      "log_loss": 0.6399934719428291,
+      "log_loss": 0.631291215187441,
       "predicted": 16,
       "scored": 16,
       "season": 2022,
@@ -884,15 +884,15 @@
     },
     {
       "accuracy": 0.6875,
-      "log_loss": 0.6198216837117646,
+      "log_loss": 0.6190716485791325,
       "predicted": 16,
       "scored": 16,
       "season": 2022,
       "week": 16
     },
     {
-      "accuracy": 0.6666666666666666,
-      "log_loss": 0.5611334468098824,
+      "accuracy": 0.7333333333333333,
+      "log_loss": 0.5651624593868563,
       "predicted": 15,
       "scored": 15,
       "season": 2022,
@@ -900,7 +900,7 @@
     },
     {
       "accuracy": 0.625,
-      "log_loss": 0.6781021207656917,
+      "log_loss": 0.6521609028276588,
       "predicted": 16,
       "scored": 16,
       "season": 2022,
@@ -908,7 +908,7 @@
     },
     {
       "accuracy": 0.8333333333333334,
-      "log_loss": 0.5613422320962519,
+      "log_loss": 0.5448851289022701,
       "predicted": 6,
       "scored": 6,
       "season": 2022,
@@ -916,7 +916,7 @@
     },
     {
       "accuracy": 0.75,
-      "log_loss": 0.4650013626975803,
+      "log_loss": 0.4751675204342747,
       "predicted": 4,
       "scored": 4,
       "season": 2022,
@@ -924,7 +924,7 @@
     },
     {
       "accuracy": 0.5,
-      "log_loss": 0.6442812672906228,
+      "log_loss": 0.6190233477762191,
       "predicted": 2,
       "scored": 2,
       "season": 2022,
@@ -932,7 +932,7 @@
     },
     {
       "accuracy": 1.0,
-      "log_loss": 0.5517276262329387,
+      "log_loss": 0.42072048550491936,
       "predicted": 1,
       "scored": 1,
       "season": 2022,
@@ -940,7 +940,7 @@
     },
     {
       "accuracy": 0.625,
-      "log_loss": 0.7247132002912775,
+      "log_loss": 0.7448674497212051,
       "predicted": 16,
       "scored": 16,
       "season": 2023,
@@ -948,7 +948,7 @@
     },
     {
       "accuracy": 0.625,
-      "log_loss": 0.6080262922669079,
+      "log_loss": 0.6021751477768055,
       "predicted": 16,
       "scored": 16,
       "season": 2023,
@@ -956,23 +956,23 @@
     },
     {
       "accuracy": 0.6875,
-      "log_loss": 0.6642851004027147,
+      "log_loss": 0.6618404089900038,
       "predicted": 16,
       "scored": 16,
       "season": 2023,
       "week": 3
     },
     {
-      "accuracy": 0.5625,
-      "log_loss": 0.6299223370710001,
+      "accuracy": 0.5,
+      "log_loss": 0.629413697970085,
       "predicted": 16,
       "scored": 16,
       "season": 2023,
       "week": 4
     },
     {
-      "accuracy": 0.5714285714285714,
-      "log_loss": 0.6708957341711015,
+      "accuracy": 0.5,
+      "log_loss": 0.6741935216205236,
       "predicted": 14,
       "scored": 14,
       "season": 2023,
@@ -980,7 +980,7 @@
     },
     {
       "accuracy": 0.6666666666666666,
-      "log_loss": 0.6104164468829885,
+      "log_loss": 0.6080036733478776,
       "predicted": 15,
       "scored": 15,
       "season": 2023,
@@ -988,15 +988,15 @@
     },
     {
       "accuracy": 0.46153846153846156,
-      "log_loss": 0.7420976180185745,
+      "log_loss": 0.7428115935240988,
       "predicted": 13,
       "scored": 13,
       "season": 2023,
       "week": 7
     },
     {
-      "accuracy": 0.6875,
-      "log_loss": 0.6202743402263522,
+      "accuracy": 0.625,
+      "log_loss": 0.6216061628565186,
       "predicted": 16,
       "scored": 16,
       "season": 2023,
@@ -1004,23 +1004,23 @@
     },
     {
       "accuracy": 0.7142857142857143,
-      "log_loss": 0.5502063398422011,
+      "log_loss": 0.5460226809922627,
       "predicted": 14,
       "scored": 14,
       "season": 2023,
       "week": 9
     },
     {
-      "accuracy": 0.6428571428571429,
-      "log_loss": 0.7501428041394406,
+      "accuracy": 0.5714285714285714,
+      "log_loss": 0.7446337281846224,
       "predicted": 14,
       "scored": 14,
       "season": 2023,
       "week": 10
     },
     {
-      "accuracy": 0.7142857142857143,
-      "log_loss": 0.5639920383425262,
+      "accuracy": 0.6428571428571429,
+      "log_loss": 0.5599339331632692,
       "predicted": 14,
       "scored": 14,
       "season": 2023,
@@ -1028,7 +1028,7 @@
     },
     {
       "accuracy": 0.6875,
-      "log_loss": 0.6791089715859371,
+      "log_loss": 0.6758040104373099,
       "predicted": 16,
       "scored": 16,
       "season": 2023,
@@ -1036,7 +1036,7 @@
     },
     {
       "accuracy": 0.46153846153846156,
-      "log_loss": 0.7550052846720244,
+      "log_loss": 0.7459491362794343,
       "predicted": 13,
       "scored": 13,
       "season": 2023,
@@ -1044,23 +1044,23 @@
     },
     {
       "accuracy": 0.4,
-      "log_loss": 0.7910909377085301,
+      "log_loss": 0.7698901773877511,
       "predicted": 15,
       "scored": 15,
       "season": 2023,
       "week": 14
     },
     {
-      "accuracy": 0.5625,
-      "log_loss": 0.6040842774157859,
+      "accuracy": 0.6875,
+      "log_loss": 0.5935284137206729,
       "predicted": 16,
       "scored": 16,
       "season": 2023,
       "week": 15
     },
     {
-      "accuracy": 0.5625,
-      "log_loss": 0.7009113417839424,
+      "accuracy": 0.625,
+      "log_loss": 0.7041230790729209,
       "predicted": 16,
       "scored": 16,
       "season": 2023,
@@ -1068,15 +1068,15 @@
     },
     {
       "accuracy": 0.75,
-      "log_loss": 0.6127425802957728,
+      "log_loss": 0.6255278218332334,
       "predicted": 16,
       "scored": 16,
       "season": 2023,
       "week": 17
     },
     {
-      "accuracy": 0.5625,
-      "log_loss": 0.6998622781575939,
+      "accuracy": 0.625,
+      "log_loss": 0.7139547862994646,
       "predicted": 16,
       "scored": 16,
       "season": 2023,
@@ -1084,7 +1084,7 @@
     },
     {
       "accuracy": 0.5,
-      "log_loss": 0.6560498301928537,
+      "log_loss": 0.636173894403535,
       "predicted": 6,
       "scored": 6,
       "season": 2023,
@@ -1092,7 +1092,7 @@
     },
     {
       "accuracy": 0.75,
-      "log_loss": 0.4867001472081205,
+      "log_loss": 0.47966004328497136,
       "predicted": 4,
       "scored": 4,
       "season": 2023,
@@ -1100,7 +1100,7 @@
     },
     {
       "accuracy": 0.5,
-      "log_loss": 0.7321354011139827,
+      "log_loss": 0.683459379203883,
       "predicted": 2,
       "scored": 2,
       "season": 2023,
@@ -1108,15 +1108,15 @@
     },
     {
       "accuracy": 0.0,
-      "log_loss": 0.8339384416984538,
+      "log_loss": 0.8234104420988082,
       "predicted": 1,
       "scored": 1,
       "season": 2023,
       "week": 22
     },
     {
-      "accuracy": 0.6875,
-      "log_loss": 0.5774293082731081,
+      "accuracy": 0.8125,
+      "log_loss": 0.5681329308140067,
       "predicted": 16,
       "scored": 16,
       "season": 2024,
@@ -1124,7 +1124,7 @@
     },
     {
       "accuracy": 0.4375,
-      "log_loss": 0.7832171435954474,
+      "log_loss": 0.783473122550373,
       "predicted": 16,
       "scored": 16,
       "season": 2024,
@@ -1132,23 +1132,23 @@
     },
     {
       "accuracy": 0.5625,
-      "log_loss": 0.755351208437462,
+      "log_loss": 0.7429592782792885,
       "predicted": 16,
       "scored": 16,
       "season": 2024,
       "week": 3
     },
     {
-      "accuracy": 0.5625,
-      "log_loss": 0.6946183880753849,
+      "accuracy": 0.4375,
+      "log_loss": 0.7009788826807223,
       "predicted": 16,
       "scored": 16,
       "season": 2024,
       "week": 4
     },
     {
-      "accuracy": 0.5714285714285714,
-      "log_loss": 0.7328030961426748,
+      "accuracy": 0.6428571428571429,
+      "log_loss": 0.7340866932664075,
       "predicted": 14,
       "scored": 14,
       "season": 2024,
@@ -1156,7 +1156,7 @@
     },
     {
       "accuracy": 0.6428571428571429,
-      "log_loss": 0.607071007555037,
+      "log_loss": 0.5789643525507253,
       "predicted": 14,
       "scored": 14,
       "season": 2024,
@@ -1164,7 +1164,7 @@
     },
     {
       "accuracy": 0.7333333333333333,
-      "log_loss": 0.5751021861604433,
+      "log_loss": 0.5688055218559822,
       "predicted": 15,
       "scored": 15,
       "season": 2024,
@@ -1172,7 +1172,7 @@
     },
     {
       "accuracy": 0.625,
-      "log_loss": 0.626418224619176,
+      "log_loss": 0.6253992330289515,
       "predicted": 16,
       "scored": 16,
       "season": 2024,
@@ -1180,7 +1180,7 @@
     },
     {
       "accuracy": 0.6666666666666666,
-      "log_loss": 0.5845568630606638,
+      "log_loss": 0.564432736915245,
       "predicted": 15,
       "scored": 15,
       "season": 2024,
@@ -1188,7 +1188,7 @@
     },
     {
       "accuracy": 0.7142857142857143,
-      "log_loss": 0.6322007198003438,
+      "log_loss": 0.6062823015718874,
       "predicted": 14,
       "scored": 14,
       "season": 2024,
@@ -1196,7 +1196,7 @@
     },
     {
       "accuracy": 0.7857142857142857,
-      "log_loss": 0.5835890724973094,
+      "log_loss": 0.5842228954950802,
       "predicted": 14,
       "scored": 14,
       "season": 2024,
@@ -1204,15 +1204,15 @@
     },
     {
       "accuracy": 0.7692307692307693,
-      "log_loss": 0.6104732788850625,
+      "log_loss": 0.6181028671290337,
       "predicted": 13,
       "scored": 13,
       "season": 2024,
       "week": 12
     },
     {
-      "accuracy": 0.9375,
-      "log_loss": 0.44333191988798054,
+      "accuracy": 0.875,
+      "log_loss": 0.4494096922143042,
       "predicted": 16,
       "scored": 16,
       "season": 2024,
@@ -1220,23 +1220,23 @@
     },
     {
       "accuracy": 0.7692307692307693,
-      "log_loss": 0.48084383411116166,
+      "log_loss": 0.48159384309360986,
       "predicted": 13,
       "scored": 13,
       "season": 2024,
       "week": 14
     },
     {
-      "accuracy": 0.625,
-      "log_loss": 0.5516853612065296,
+      "accuracy": 0.6875,
+      "log_loss": 0.5553367205229054,
       "predicted": 16,
       "scored": 16,
       "season": 2024,
       "week": 15
     },
     {
-      "accuracy": 0.8125,
-      "log_loss": 0.5279084748726923,
+      "accuracy": 0.6875,
+      "log_loss": 0.5242319916017808,
       "predicted": 16,
       "scored": 16,
       "season": 2024,
@@ -1244,7 +1244,7 @@
     },
     {
       "accuracy": 0.875,
-      "log_loss": 0.48717612920652725,
+      "log_loss": 0.4787064455739859,
       "predicted": 16,
       "scored": 16,
       "season": 2024,
@@ -1252,7 +1252,7 @@
     },
     {
       "accuracy": 0.4375,
-      "log_loss": 0.844789450841522,
+      "log_loss": 0.847665628326723,
       "predicted": 16,
       "scored": 16,
       "season": 2024,
@@ -1260,7 +1260,7 @@
     },
     {
       "accuracy": 0.6666666666666666,
-      "log_loss": 0.5707321668909016,
+      "log_loss": 0.5944093577501107,
       "predicted": 6,
       "scored": 6,
       "season": 2024,
@@ -1268,7 +1268,7 @@
     },
     {
       "accuracy": 0.75,
-      "log_loss": 0.6702910853475168,
+      "log_loss": 0.6897142234715938,
       "predicted": 4,
       "scored": 4,
       "season": 2024,
@@ -1276,7 +1276,7 @@
     },
     {
       "accuracy": 1.0,
-      "log_loss": 0.4019372071967888,
+      "log_loss": 0.39230605884008773,
       "predicted": 2,
       "scored": 2,
       "season": 2024,
@@ -1284,40 +1284,20 @@
     },
     {
       "accuracy": 0.0,
-      "log_loss": 0.6975463150600965,
+      "log_loss": 0.7067900789186197,
       "predicted": 1,
       "scored": 1,
       "season": 2024,
       "week": 22
     }
   ],
-  "configuration": {
-    "home_field_elo": 48.0,
-    "initial_rating": 1500.0,
-    "k_factor_postseason": 4.0,
-    "k_factor_regular": 20.0,
-    "margin_of_victory": {
-      "cap": 2.5,
-      "divisor": 6.0
-    },
-    "probability": {
-      "max": 0.99,
-      "min": 0.01
-    },
-    "qb_adjustment": {
-      "max_abs_elo": 50.0,
-      "replacement_passing_epa": -0.05,
-      "sample_k": 250.0,
-      "scale_elo_per_shrunk_epa": 500.0,
-      "supported_uses_replacement_scenario": true,
-      "unknown_returns_zero": true
-    },
-    "season_mean_reversion_fraction": 0.333
-  },
+  "configuration": {},
   "development_seasons": "2018-2024",
   "manifest_fingerprint": {
-    "backtest_config_sha256": "2f1727a45f205ef491cd1800d93bdb10d948b3dbcb932e93d11694ba3d086275",
-    "model_code_fingerprint": "65594378c090191bdbb508eecdc569be620dbb8eb8c9f7625e2b20818f77f198",
+    "backtest_code_fingerprint": "37ae010aab76a75923ad34f2dd56a8536df9e305889e470fbf9c61642563aa78",
+    "backtest_config_sha256": "a36f9b5e63b24285be2f217ffc1de7f6592623604bae8a643f8edad2f1bcadf3",
+    "feature_code_fingerprint": "1ee67408974b9183be61ad54963ddae5e7aa093d8518edef8948b07ce2c9a921",
+    "model_code_fingerprint": "91773cfd4361d7184673f969add48b632533fceca056fb90a4cd609b7286bf7c",
     "model_config_sha256": "d37661befee7fa0e00b71337890b9bf2b2a3740b0f1a7103ed3776fbabd00d7a"
   },
   "missingness": {
@@ -1332,138 +1312,149 @@
   "model_version": "v1.0.0",
   "reliability_table": [
     {
-      "actual_home_win_rate": 0.3181818181818182,
+      "actual_home_win_rate": 0.3,
       "bucket_high": 0.2,
       "bucket_low": 0.1,
-      "count": 22,
-      "mean_predicted_probability": 0.1654981059722527
+      "count": 20,
+      "mean_predicted_probability": 0.15985920520384111
     },
     {
-      "actual_home_win_rate": 0.3026315789473684,
+      "actual_home_win_rate": 0.3218390804597701,
       "bucket_high": 0.3,
       "bucket_low": 0.2,
-      "count": 76,
-      "mean_predicted_probability": 0.2632545397312141
+      "count": 87,
+      "mean_predicted_probability": 0.261069097633106
     },
     {
-      "actual_home_win_rate": 0.3238095238095238,
+      "actual_home_win_rate": 0.2985781990521327,
       "bucket_high": 0.4,
       "bucket_low": 0.3,
-      "count": 210,
-      "mean_predicted_probability": 0.3560914783629608
+      "count": 211,
+      "mean_predicted_probability": 0.3561258005653227
     },
     {
-      "actual_home_win_rate": 0.4174454828660436,
+      "actual_home_win_rate": 0.4233128834355828,
       "bucket_high": 0.5,
       "bucket_low": 0.4,
-      "count": 321,
-      "mean_predicted_probability": 0.45355916862733275
+      "count": 326,
+      "mean_predicted_probability": 0.452758187281005
     },
     {
-      "actual_home_win_rate": 0.5,
+      "actual_home_win_rate": 0.5217391304347826,
       "bucket_high": 0.6,
       "bucket_low": 0.5,
-      "count": 478,
-      "mean_predicted_probability": 0.5513017404184481
+      "count": 460,
+      "mean_predicted_probability": 0.553615320200273
     },
     {
-      "actual_home_win_rate": 0.6384976525821596,
+      "actual_home_win_rate": 0.6261682242990654,
       "bucket_high": 0.7,
       "bucket_low": 0.6,
-      "count": 426,
-      "mean_predicted_probability": 0.6462934417689525
+      "count": 428,
+      "mean_predicted_probability": 0.6476553708367387
     },
     {
-      "actual_home_win_rate": 0.7745098039215687,
+      "actual_home_win_rate": 0.7642857142857142,
       "bucket_high": 0.8,
       "bucket_low": 0.7,
-      "count": 306,
-      "mean_predicted_probability": 0.7476524908937094
+      "count": 280,
+      "mean_predicted_probability": 0.7481809742738081
     },
     {
-      "actual_home_win_rate": 0.7674418604651163,
+      "actual_home_win_rate": 0.7857142857142857,
       "bucket_high": 0.9,
       "bucket_low": 0.8,
-      "count": 86,
-      "mean_predicted_probability": 0.8420087625499295
+      "count": 112,
+      "mean_predicted_probability": 0.8363146742758075
     },
     {
-      "actual_home_win_rate": 0.9,
+      "actual_home_win_rate": 0.9090909090909091,
       "bucket_high": 1.01,
       "bucket_low": 0.9,
-      "count": 10,
-      "mean_predicted_probability": 0.9090974318017748
+      "count": 11,
+      "mean_predicted_probability": 0.9085727507124712
     }
   ],
   "run_id": "qb_elo-v1.0.0-20260803T120000Z",
-  "scored_row_policy": "scored = target_available AND actual_home_win is not null",
+  "scored_row_policy": "scored = target_available AND actual_home_win is not null. Ties are predicted outcomes with available targets but are excluded from binary home-win metrics by design.",
   "sealed_holdout_season": 2025,
   "totals": {
+    "binary_scored_games": 1935,
     "predicted_games": 1942,
-    "scored_games": 1935,
-    "ties": 7,
-    "unscored_or_warmup": 7
+    "target_unavailable_games": 0,
+    "ties_excluded_from_binary_metrics": 7,
+    "warmup_excluded_games": 0
   },
-  "warm_up_policy": "all development predictions scored; no warmup exclusion",
+  "warm_up_policy": "all development predictions scored; no warmup exclusion. warmup_excluded_games = 0",
   "worst_log_loss_predictions": [
     {
       "actual_home_win": false,
       "away_team": "NYJ",
       "game_id": "2020_15_NYJ_LA",
       "home_team": "LAR",
-      "log_loss": 2.3587,
-      "predicted_home_win_probability": 0.9055,
+      "log_loss": 2.3537,
+      "predicted_home_win_probability": 0.905,
       "season": 2020,
       "week": 15
-    },
-    {
-      "actual_home_win": false,
-      "away_team": "HOU",
-      "game_id": "2021_11_HOU_TEN",
-      "home_team": "TEN",
-      "log_loss": 2.2966,
-      "predicted_home_win_probability": 0.8994,
-      "season": 2021,
-      "week": 11
-    },
-    {
-      "actual_home_win": true,
-      "away_team": "IND",
-      "game_id": "2021_18_IND_JAX",
-      "home_team": "JAX",
-      "log_loss": 2.1695,
-      "predicted_home_win_probability": 0.1142,
-      "season": 2021,
-      "week": 18
     },
     {
       "actual_home_win": false,
       "away_team": "LAC",
       "game_id": "2020_17_LAC_KC",
       "home_team": "KC",
-      "log_loss": 2.1545,
-      "predicted_home_win_probability": 0.884,
+      "log_loss": 2.2528,
+      "predicted_home_win_probability": 0.8949,
       "season": 2020,
       "week": 17
-    },
-    {
-      "actual_home_win": true,
-      "away_team": "GB",
-      "game_id": "2021_18_GB_DET",
-      "home_team": "DET",
-      "log_loss": 2.1488,
-      "predicted_home_win_probability": 0.1166,
-      "season": 2021,
-      "week": 18
     },
     {
       "actual_home_win": true,
       "away_team": "BUF",
       "game_id": "2024_18_BUF_NE",
       "home_team": "NE",
-      "log_loss": 2.0438,
-      "predicted_home_win_probability": 0.1295,
+      "log_loss": 2.2159,
+      "predicted_home_win_probability": 0.1091,
       "season": 2024,
+      "week": 18
+    },
+    {
+      "actual_home_win": false,
+      "away_team": "HOU",
+      "game_id": "2021_11_HOU_TEN",
+      "home_team": "TEN",
+      "log_loss": 2.1539,
+      "predicted_home_win_probability": 0.884,
+      "season": 2021,
+      "week": 11
+    },
+    {
+      "actual_home_win": true,
+      "away_team": "GB",
+      "game_id": "2021_18_GB_DET",
+      "home_team": "DET",
+      "log_loss": 2.1472,
+      "predicted_home_win_probability": 0.1168,
+      "season": 2021,
+      "week": 18
+    },
+    {
+      "actual_home_win": false,
+      "away_team": "MIA",
+      "game_id": "2019_17_MIA_NE",
+      "home_team": "NE",
+      "log_loss": 2.1049,
+      "predicted_home_win_probability": 0.8781,
+      "season": 2019,
+      "week": 17
+    },
+    {
+      "actual_home_win": true,
+      "away_team": "IND",
+      "game_id": "2021_18_IND_JAX",
+      "home_team": "JAX",
+      "log_loss": 2.072,
+      "predicted_home_win_probability": 0.1259,
+      "season": 2021,
       "week": 18
     },
     {
@@ -1471,40 +1462,30 @@
       "away_team": "ARI",
       "game_id": "2023_17_ARI_PHI",
       "home_team": "PHI",
-      "log_loss": 2.0272,
-      "predicted_home_win_probability": 0.8683,
+      "log_loss": 2.066,
+      "predicted_home_win_probability": 0.8733,
       "season": 2023,
       "week": 17
-    },
-    {
-      "actual_home_win": true,
-      "away_team": "BUF",
-      "game_id": "2021_09_BUF_JAX",
-      "home_team": "JAX",
-      "log_loss": 2.0174,
-      "predicted_home_win_probability": 0.133,
-      "season": 2021,
-      "week": 9
-    },
-    {
-      "actual_home_win": false,
-      "away_team": "ARI",
-      "game_id": "2019_16_ARI_SEA",
-      "home_team": "SEA",
-      "log_loss": 1.9974,
-      "predicted_home_win_probability": 0.8643,
-      "season": 2019,
-      "week": 16
     },
     {
       "actual_home_win": false,
       "away_team": "ATL",
       "game_id": "2019_10_ATL_NO",
       "home_team": "NO",
-      "log_loss": 1.9902,
-      "predicted_home_win_probability": 0.8633,
+      "log_loss": 2.0443,
+      "predicted_home_win_probability": 0.8705,
       "season": 2019,
       "week": 10
+    },
+    {
+      "actual_home_win": true,
+      "away_team": "BUF",
+      "game_id": "2021_09_BUF_JAX",
+      "home_team": "JAX",
+      "log_loss": 1.9758,
+      "predicted_home_win_probability": 0.1386,
+      "season": 2021,
+      "week": 9
     }
   ]
 }

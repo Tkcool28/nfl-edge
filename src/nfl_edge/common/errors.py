@@ -42,6 +42,54 @@ class ConfigurationError(ValueError):
     exception class for all configuration mistakes."""
 
 
+class StateLedgerCorruptionError(RuntimeError):
+    """Raised when the persisted state ledger is internally inconsistent.
+
+    The walk-forward engine runs a hard correctness gate against the
+    state ledger before writing it to disk. The gate enforces:
+
+    - exactly two rows per completed game (one home, one away);
+    - no duplicate side per game;
+    - per-game ``home_change + away_change == 0`` within tolerance;
+    - per-game ``(home_after + away_after) - (home_before + away_before) == 0``;
+    - the home and away update records share the same K factor and
+      MOV multiplier;
+    - ``expected_home + expected_away == 1``;
+    - ``actual_home + actual_away == 1``.
+
+    The same exception is also raised by the independent Elo replay
+    when a persisted ``elo_after`` does not match a recalculated
+    value. The two error sites share a single class so callers can
+    trap corruption uniformly.
+
+    Any violation raises this error and prevents the ledger from
+    being written.
+    """
+
+    def __init__(
+        self,
+        where: str = "",
+        problems: list[str] | None = None,
+    ) -> None:
+        problems = list(problems or [])
+        if not problems:
+            problems = ["(unspecified)"]
+        if where:
+            prefix = f"state-ledger corruption at {where}"
+        else:
+            prefix = "State ledger failed correctness gate"
+        super().__init__(
+            f"{prefix}: {len(problems)} mismatch(es); first: {problems[0]}"
+            + (
+                f" (+{len(problems) - 1} more)"
+                if len(problems) > 1
+                else ""
+            )
+        )
+        self.where = str(where)
+        self.problems = list(problems)
+
+
 class MarketColumnError(ValueError):
     """Raised when a market-named column is detected at any model-input
     boundary. Matches the existing ``assert_no_market_columns`` contract but
