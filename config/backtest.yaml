@@ -1,0 +1,45 @@
+version: backtest-config-v1
+
+split:
+  method: expanding_weekly_walk_forward
+  shuffle: false
+  development_start_season: null  # Set after data audit.
+  development_end_season: 2024
+  untouched_holdout_season: 2025
+  score_holdout_once_before_retuning: true
+
+as_of_policy:
+  historical_scoring_time: null  # Select from timestamp coverage during data audit.
+  require_timezone_aware_utc: true
+
+metrics:
+  primary: brier_skill_score_vs_qb_elo
+  required:
+    - brier_score
+    - log_loss
+    - calibration_intercept
+    - calibration_slope
+    - accuracy_descriptive_only
+  breakdowns:
+    - season
+    - week
+    - probability_bucket
+    - favorite_underdog
+    - qb_certainty
+
+uncertainty:
+  method: block_bootstrap_by_week
+  confidence_level: 0.95
+  iterations: 5000
+  random_seed: 20260802
+
+persistence:
+  retain_all_out_of_sample_predictions: true
+  retain_tuning_ledger: true
+  retain_failed_model_results: true
+  deterministic_output_order: true
+
+prohibitions:
+  use_holdout_for_tuning: false
+  use_closing_line_for_approval: false
+  use_roi_without_timestamped_prices: false

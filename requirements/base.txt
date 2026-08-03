@@ -1,0 +1,11 @@
+# Runtime libraries for deterministic data, feature, scoring, and publication code.
+# Exact versions will be locked by Hermes after the frozen-data audit proves compatibility.
+numpy>=1.26,<3
+pandas>=2.2,<3
+pyarrow>=16,<21
+scikit-learn>=1.5,<2
+pydantic>=2.7,<3
+PyYAML>=6,<7
+requests>=2.32,<3
+python-dotenv>=1.0,<2
+joblib>=1.4,<2

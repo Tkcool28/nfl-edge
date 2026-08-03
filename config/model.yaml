@@ -1,0 +1,57 @@
+version: model-config-v1
+random_seed: 20260802
+
+base_models:
+  qb_elo:
+    enabled: true
+    initial_team_rating: 1500.0
+    team_k_factor: null  # Select only from development walk-forward evidence.
+    qb_k_factor: null
+    qb_prior: conservative
+    hfa_source: feature_config
+
+  xgboost:
+    enabled: true
+    objective: binary:logistic
+    eval_metric:
+      - logloss
+    bounded_search:
+      max_depth: [2, 3, 4]
+      learning_rate: [0.025, 0.05]
+      n_estimators: [250, 500, 750]
+      min_child_weight: [5, 10, 20]
+      subsample: [0.7, 0.85]
+      colsample_bytree: [0.6, 0.8]
+      reg_alpha: [0.0, 0.1, 0.5]
+      reg_lambda: [1.0, 5.0, 10.0]
+    early_stopping_rounds: 30
+    tune_on_holdout: false
+
+  opponent_adjusted_margin:
+    enabled: true
+    method: regularized_offense_defense_strength
+    early_season_shrinkage: true
+    probability_mapping: development_only_logistic
+
+stacker:
+  enabled: true
+  type: regularized_logistic_regression
+  inputs:
+    - p_qb_elo
+    - p_xgboost
+    - p_opponent_adjusted_margin
+  out_of_sample_inputs_only: true
+  penalty: l2
+  calibration:
+    enabled_by_default: false
+    allowed_first_method: sigmoid
+
+approval:
+  primary_metric: brier_skill_score_vs_qb_elo
+  require_complete_base_model_scorecards: true
+  require_holdout_isolation: true
+  allow_simpler_base_model_fallback: true
+
+artifact:
+  approved_status: approved_for_forward_scoring
+  checksum: sha256
