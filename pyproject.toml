@@ -1,46 +1,15 @@
-[build-system]
-requires = ["setuptools>=69", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "nfl-edge"
 version = "0.1.0"
-description = "Point-in-time NFL win-probability research and static publication pipeline"
-readme = "README.md"
 requires-python = ">=3.11"
-license = {text = "MIT"}
-authors = [{name = "Todd Kirschman"}]
-dynamic = ["dependencies"]
-
-[tool.setuptools]
-package-dir = {"" = "src"}
-
-[tool.setuptools.packages.find]
-where = ["src"]
-
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements/base.txt"]}
+dependencies = ["nflreadpy==0.1.5", "polars>=1.0"]
 
 [tool.pytest.ini_options]
-addopts = "-ra --strict-markers"
 testpaths = ["tests"]
-markers = [
-  "contract: schema and architecture contract tests",
-  "leakage: point-in-time and future-information tests",
-  "integration: multi-component tests",
-  "end_to_end: bounded full-pipeline tests",
-]
+pythonpath = ["src"]
 
 [tool.ruff]
-line-length = 100
-target-version = "py311"
+line-length = 120
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]
-
-[tool.mypy]
-python_version = "3.11"
-warn_unused_configs = true
-warn_return_any = true
-no_implicit_optional = true
-check_untyped_defs = true
+select = ["E", "F", "I"]

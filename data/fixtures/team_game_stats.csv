@@ -1,0 +1,9 @@
+game_id,season,week,team,opponent,is_home,game_end_utc,observed_at_utc,offensive_epa,defensive_epa
+f-001,2024,1,AAA,BBB,true,,2024-09-10T00:00:00Z,1.2,-0.4
+f-001,2024,1,BBB,AAA,false,,2024-09-10T00:00:00Z,-0.4,1.2
+f-002,2024,2,BBB,AAA,true,,2024-09-17T00:00:00Z,0.3,0.1
+f-002,2024,2,AAA,BBB,false,,2024-09-17T00:00:00Z,-0.2,0.0
+f-003,2024,3,AAA,BBB,true,,2024-09-24T00:00:00Z,0.8,-0.1
+f-003,2024,3,BBB,AAA,false,,2024-09-24T00:00:00Z,-0.1,0.8
+f-004,2024,5,BBB,AAA,true,,2024-10-08T00:00:00Z,-0.8,0.7
+f-004,2024,5,AAA,BBB,false,,2024-10-08T00:00:00Z,1.4,-0.9

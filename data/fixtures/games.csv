@@ -1,0 +1,6 @@
+game_id,season,season_type,week,scheduled_start_utc,game_end_utc,home_team,away_team,home_score,away_score,neutral_site,venue_id,roof_type,observed_at_utc
+f-001,2024,REG,1,2024-09-05T00:20:00Z,,AAA,BBB,21,17,false,v-1,outdoor,2024-09-10T00:00:00Z
+f-002,2024,REG,2,2024-09-12T00:20:00Z,,BBB,AAA,14,10,false,v-2,dome,2024-09-17T00:00:00Z
+f-003,2024,REG,3,2024-09-19T00:20:00Z,,AAA,BBB,24,24,true,v-3,outdoor,2024-09-24T00:00:00Z
+f-004,2024,REG,5,2024-10-03T00:20:00Z,,BBB,AAA,7,28,false,v-1,outdoor,2024-10-08T00:00:00Z
+f-005,2024,REG,6,2024-10-10T00:20:00Z,,AAA,BBB,,,false,v-1,outdoor,2024-10-15T00:00:00Z
