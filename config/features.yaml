@@ -1,0 +1,62 @@
+version: feature-config-v1
+
+prediction:
+  grain: game_as_of_timestamp
+  require_as_of_utc: true
+  require_game_not_started: true
+
+rolling_windows:
+  short_games: 4
+  medium_games: 8
+  long_games: 16
+  minimum_games: 3
+
+team_features:
+  enabled:
+    - offensive_epa_per_play
+    - defensive_epa_per_play_allowed
+    - offensive_success_rate
+    - defensive_success_rate_allowed
+    - explosive_play_rate
+    - early_down_epa
+    - rest_days
+    - bye_week
+    - neutral_site
+    - roof_type
+  opponent_adjustment: sequential_only
+
+qb_features:
+  enabled:
+    - epa_per_dropback
+    - cpoe
+    - sack_rate
+    - interception_rate
+    - dropbacks
+    - starter_certainty
+  shrinkage:
+    prior: conservative_replacement_level
+    sample_measure: dropbacks
+    k_dropbacks: 250  # Initial value; tune only within development evidence.
+
+home_field:
+  method: trailing_prior_data_only
+  trailing_seasons: 2
+  clamp_points:
+    min: 1.0
+    max: 3.0
+
+missingness:
+  add_indicators: true
+  fit_imputation_on_training_window_only: true
+  reject_silent_qb_imputation: true
+
+prohibited_columns:
+  - closing_odds
+  - closing_probability
+  - current_market_probability
+  - pinnacle_probability
+  - clv
+  - final_weather
+  - future_result
+
+registry_required: true
