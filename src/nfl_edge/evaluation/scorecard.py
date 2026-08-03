@@ -1,0 +1,351 @@
+"""Build the development scorecard (Markdown + JSON) from the prediction ledger.
+
+The scorecard is descriptive only. No 2025 data is permitted. The function
+hard-fails if the prediction frame contains any season > 2024.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+import polars as pl
+
+from ..common.errors import SealedHoldoutAccessError
+from ..backtest.blocks import DEVELOPMENT_SEASON_MAX
+from .calibration import calibration_intercept_slope, reliability_table
+from .metrics import (
+    _assert_development_only,
+    brier_score,
+    descriptive_accuracy,
+    log_loss,
+)
+
+
+def _season_counts(predictions: pl.DataFrame) -> list[dict[str, Any]]:
+    """Return per-season aggregates."""
+    rows: list[dict[str, Any]] = []
+    for season in sorted(int(s) for s in predictions["season"].unique().to_list()):
+        subset = predictions.filter(pl.col("season") == season)
+        scored = subset.filter(
+            pl.col("target_available") & pl.col("actual_home_win").is_not_null()
+        )
+        ties = int(subset.filter(pl.col("actual_tie") == True).height)  # noqa: E712
+        if scored.height == 0:
+            rows.append({
+                "season": season,
+                "predicted": int(subset.height),
+                "scored": 0,
+                "ties": ties,
+                "accuracy": None,
+                "log_loss": None,
+                "brier": None,
+            })
+            continue
+        rows.append({
+            "season": season,
+            "predicted": int(subset.height),
+            "scored": int(scored.height),
+            "ties": ties,
+            "accuracy": descriptive_accuracy(scored),
+            "log_loss": log_loss(scored),
+            "brier": brier_score(scored),
+        })
+    return rows
+
+
+def _weekly_counts(predictions: pl.DataFrame) -> list[dict[str, Any]]:
+    """Return per-week (season, week) aggregates."""
+    rows: list[dict[str, Any]] = []
+    for (season, week) in sorted(
+        {(int(s), int(w)) for s, w in zip(
+            predictions["season"].to_list(), predictions["week"].to_list()
+        )}
+    ):
+        subset = predictions.filter(
+            (pl.col("season") == season) & (pl.col("week") == week)
+        )
+        scored = subset.filter(
+            pl.col("target_available") & pl.col("actual_home_win").is_not_null()
+        )
+        if scored.height == 0:
+            continue
+        rows.append({
+            "season": season,
+            "week": week,
+            "predicted": int(subset.height),
+            "scored": int(scored.height),
+            "accuracy": descriptive_accuracy(scored),
+            "log_loss": log_loss(scored),
+        })
+    return rows
+
+
+def _qb_certainty_counts(predictions: pl.DataFrame) -> list[dict[str, Any]]:
+    """Return per QB-certainty bucket aggregates."""
+    rows: list[dict[str, Any]] = []
+    for certainty in sorted(set(predictions["qb_certainty_state"].to_list())):
+        subset = predictions.filter(pl.col("qb_certainty_state") == certainty)
+        scored = subset.filter(
+            pl.col("target_available") & pl.col("actual_home_win").is_not_null()
+        )
+        if scored.height == 0:
+            rows.append({
+                "qb_certainty_state": certainty,
+                "predicted": int(subset.height),
+                "scored": 0,
+                "accuracy": None,
+                "log_loss": None,
+                "brier": None,
+            })
+            continue
+        rows.append({
+            "qb_certainty_state": certainty,
+            "predicted": int(subset.height),
+            "scored": int(scored.height),
+            "accuracy": descriptive_accuracy(scored),
+            "log_loss": log_loss(scored),
+            "brier": brier_score(scored),
+        })
+    return rows
+
+
+def _worst_predictions(predictions: pl.DataFrame, n: int = 10) -> list[dict[str, Any]]:
+    """Return the n worst log-loss predictions (highest log loss)."""
+    scored = predictions.filter(
+        pl.col("target_available") & pl.col("actual_home_win").is_not_null()
+    )
+    if scored.height == 0:
+        return []
+    rows = scored.to_dicts()
+    eps = 1e-15
+    for r in rows:
+        p = max(eps, min(1.0 - eps, float(r["predicted_home_win_probability"])))
+        y = 1.0 if r["actual_home_win"] else 0.0
+        import math
+        r["_log_loss"] = -(y * math.log(p) + (1.0 - y) * math.log(1.0 - p))
+    rows.sort(key=lambda r: r["_log_loss"], reverse=True)
+    out = []
+    for r in rows[:n]:
+        out.append({
+            "game_id": r["game_id"],
+            "season": r["season"],
+            "week": r["week"],
+            "home_team": r["home_team"],
+            "away_team": r["away_team"],
+            "predicted_home_win_probability": round(r["predicted_home_win_probability"], 4),
+            "actual_home_win": r["actual_home_win"],
+            "log_loss": round(r["_log_loss"], 4),
+        })
+    return out
+
+
+def _missingness(predictions: pl.DataFrame) -> dict[str, Any]:
+    """Report missingness in the relevant numeric columns."""
+    key_cols = [
+        "home_elo_before",
+        "away_elo_before",
+        "home_field_adjustment",
+        "home_qb_adjustment",
+        "away_qb_adjustment",
+        "predicted_home_win_probability",
+    ]
+    out: dict[str, Any] = {}
+    for c in key_cols:
+        if c in predictions.columns:
+            out[c] = int(predictions[c].null_count())
+    return out
+
+
+def build_development_scorecard(
+    predictions: pl.DataFrame,
+    *,
+    configuration: dict[str, Any],
+    manifest: dict[str, Any],
+    output_dir: Path,
+) -> dict[str, Any]:
+    """Assemble the development scorecard from the prediction ledger.
+
+    Writes:
+        - reports/development/qb_elo_development_scorecard.json
+        - reports/development/qb_elo_development_scorecard.md
+        - reports/development/qb_elo_reliability_table.csv
+    """
+    _assert_development_only(predictions)
+
+    # Always filter one more time to be safe
+    dev = predictions.filter(pl.col("season") <= DEVELOPMENT_SEASON_MAX)
+    max_season = int(dev["season"].max()) if dev.height else -1
+    if max_season > DEVELOPMENT_SEASON_MAX:
+        raise SealedHoldoutAccessError(
+            max_season, "build_development_scorecard", "season > 2024 detected"
+        )
+
+    total_predicted = int(dev.height)
+    scored = dev.filter(
+        pl.col("target_available") & pl.col("actual_home_win").is_not_null()
+    )
+    ties = int(dev.filter(pl.col("actual_tie") == True).height)  # noqa: E712
+    unscored = total_predicted - int(scored.height)
+
+    brier = brier_score(scored)
+    ll = log_loss(scored)
+    accuracy = descriptive_accuracy(scored)
+    cal_intercept, cal_slope = calibration_intercept_slope(scored)
+    reliability = reliability_table(scored)
+
+    scorecard = {
+        "model_name": "qb_elo",
+        "model_version": "v1.0.0",
+        "run_id": manifest.get("run_id"),
+        "configuration": configuration,
+        "sealed_holdout_season": 2025,
+        "development_seasons": "2018-2024",
+        "totals": {
+            "predicted_games": total_predicted,
+            "scored_games": int(scored.height),
+            "ties": ties,
+            "unscored_or_warmup": unscored,
+        },
+        "aggregate_metrics": {
+            "brier_score": brier,
+            "log_loss": ll,
+            "descriptive_accuracy": accuracy,
+            "calibration_intercept": cal_intercept,
+            "calibration_slope": cal_slope,
+        },
+        "by_season": _season_counts(dev),
+        "by_week": _weekly_counts(dev),
+        "by_qb_certainty": _qb_certainty_counts(dev),
+        "reliability_table": reliability,
+        "worst_log_loss_predictions": _worst_predictions(dev),
+        "missingness": _missingness(dev),
+        "warm_up_policy": "all development predictions scored; no warmup exclusion",
+        "scored_row_policy": "scored = target_available AND actual_home_win is not null",
+        "manifest_fingerprint": {
+            "model_config_sha256": manifest.get("model_config_sha256"),
+            "backtest_config_sha256": manifest.get("backtest_config_sha256"),
+            "model_code_fingerprint": manifest.get("model_code_fingerprint"),
+        },
+    }
+
+    # Markdown
+    md_lines = [
+        "# QB-Elo Development Scorecard",
+        "",
+        f"- **Model:** {scorecard['model_name']} {scorecard['model_version']}",
+        f"- **Run ID:** {scorecard['run_id']}",
+        f"- **Development seasons:** {scorecard['development_seasons']}",
+        f"- **Sealed holdout season:** {scorecard['sealed_holdout_season']} (not scored)",
+        "",
+        "## Totals",
+        "",
+        f"- Predicted games: {scorecard['totals']['predicted_games']}",
+        f"- Scored games: {scorecard['totals']['scored_games']}",
+        f"- Ties: {scorecard['totals']['ties']}",
+        f"- Unscored / warm-up: {scorecard['totals']['unscored_or_warmup']}",
+        "",
+        "## Aggregate Metrics",
+        "",
+        f"- Brier score: {brier:.4f}",
+        f"- Log loss: {ll:.4f}",
+        f"- Descriptive accuracy: {accuracy:.4f}",
+        f"- Calibration intercept: {cal_intercept:.4f}",
+        f"- Calibration slope: {cal_slope:.4f}",
+        "",
+        "## Results by Season",
+        "",
+        "| Season | Predicted | Scored | Ties | Accuracy | Log loss | Brier |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for r in scorecard["by_season"]:
+        md_lines.append(
+            f"| {r['season']} | {r['predicted']} | {r['scored']} | {r['ties']} | "
+            f"{r['accuracy']:.4f if r['accuracy'] is not None else 'NA'} | "
+            f"{r['log_loss']:.4f if r['log_loss'] is not None else 'NA'} | "
+            f"{r['brier']:.4f if r['brier'] is not None else 'NA'} |"
+        )
+    md_lines += [
+        "",
+        "## Results by QB Certainty",
+        "",
+        "| Certainty | Predicted | Scored | Accuracy | Log loss | Brier |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+    for r in scorecard["by_qb_certainty"]:
+        md_lines.append(
+            f"| {r['qb_certainty_state']} | {r['predicted']} | {r['scored']} | "
+            f"{r['accuracy']:.4f if r['accuracy'] is not None else 'NA'} | "
+            f"{r['log_loss']:.4f if r['log_loss'] is not None else 'NA'} | "
+            f"{r['brier']:.4f if r['brier'] is not None else 'NA'} |"
+        )
+    md_lines += [
+        "",
+        "## Reliability Table",
+        "",
+        "| Bucket | Count | Mean Predicted | Actual Home-Win Rate |",
+        "| --- | --- | --- | --- |",
+    ]
+    for r in reliability:
+        md_lines.append(
+            f"| {r['bucket_low']:.2f}–{r['bucket_high']:.2f} | {r['count']} | "
+            f"{r['mean_predicted_probability']:.4f} | {r['actual_home_win_rate']:.4f} |"
+        )
+    md_lines += [
+        "",
+        "## Missingness",
+        "",
+    ]
+    for c, n in scorecard["missingness"].items():
+        md_lines.append(f"- {c}: {n} nulls")
+    md_lines += [
+        "",
+        "## Worst Log-Loss Predictions",
+        "",
+        "| Game | Season | Week | Home | Away | Pred P(home) | Home Win | Log Loss |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for r in scorecard["worst_log_loss_predictions"]:
+        md_lines.append(
+            f"| {r['game_id']} | {r['season']} | {r['week']} | "
+            f"{r['home_team']} | {r['away_team']} | "
+            f"{r['predicted_home_win_probability']:.4f} | {r['actual_home_win']} | "
+            f"{r['log_loss']:.4f} |"
+        )
+    md_lines += [
+        "",
+        "## Configuration",
+        "",
+        "```json",
+        json.dumps(configuration, indent=2, sort_keys=True),
+        "```",
+        "",
+        "## Manifest Fingerprint",
+        "",
+        f"- model_config_sha256: `{scorecard['manifest_fingerprint']['model_config_sha256']}`",
+        f"- backtest_config_sha256: `{scorecard['manifest_fingerprint']['backtest_config_sha256']}`",
+        f"- model_code_fingerprint: `{scorecard['manifest_fingerprint']['model_code_fingerprint']}`",
+        "",
+        "_No 2025 predictions, scores, or calibration included._",
+        "",
+    ]
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    json_path = output_dir / "qb_elo_development_scorecard.json"
+    md_path = output_dir / "qb_elo_development_scorecard.md"
+    csv_path = output_dir / "qb_elo_reliability_table.csv"
+
+    json_path.write_text(json.dumps(scorecard, indent=2, sort_keys=True) + "\n")
+    md_path.write_text("\n".join(md_lines))
+
+    # CSV reliability table
+    csv_lines = ["bucket_low,bucket_high,count,mean_predicted_probability,actual_home_win_rate"]
+    for r in reliability:
+        csv_lines.append(
+            f"{r['bucket_low']:.4f},{r['bucket_high']:.4f},{r['count']},"
+            f"{r['mean_predicted_probability']:.6f},{r['actual_home_win_rate']:.6f}"
+        )
+    csv_path.write_text("\n".join(csv_lines) + "\n")
+
+    return scorecard
