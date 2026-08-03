@@ -1,83 +1,68 @@
-# NFL Edge 🏈
+# NFL Edge
 
-A pre-game NFL win-probability model with a mobile-first Streamlit dashboard.
-Pulls live odds from The Odds API, scores each week's slate against a stacked
-ensemble (QB-adjusted Elo + XGBoost + market-implied), and surfaces picks on a
-public URL via Caddy reverse-proxy.
+NFL Edge is a pregame NFL win-probability and betting-value research system.
 
-**Live URL:** `https://nfl.tkhermes.duckdns.org/` (live from Week 1, 2026 season)
+The project is designed to produce an **independent football probability first**, then compare that probability with current actionable sportsbook prices. Closing lines and sportsbook probabilities are not model features.
 
-## Architecture
+## Status
 
-- **Models:** QB-adjusted Elo (FiveThirtyEight-style) + XGBoost on nflfastR
-  features + market-implied probability, combined with a logistic stacker.
-- **Data:** [nflverse/nfl_data_py](https://github.com/nflverse/nfl_data_py) for
-  play-by-play + schedule; [The Odds API v4](https://the-odds-api.com/) for DK
-  + FD + Pinnacle.
-- **UI:** Streamlit, dark theme, mobile-first single column.
-- **Hosting:** Streamlit on `127.0.0.1:8503`, Caddy reverse-proxy on
-  `nfl.tkhermes.duckdns.org`.
-- **Refresh:** 12:00 PM ET daily (free tier). 11:58 PM ET available with paid tier.
+**Architecture and contracts phase.** Production model implementation has not yet been authorized.
 
-See [docs/nfl-model-build-plan.md](docs/nfl-model-build-plan.md) for the full
-build plan and [docs/NFL_Edge_Build_Plan.pdf](docs/NFL_Edge_Build_Plan.pdf) for
-the rendered PDF.
+The authoritative build order is:
 
-## Repo layout
+1. Lock architecture and contracts.
+2. Audit and freeze historical data.
+3. Prove the point-in-time feature pipeline.
+4. Build and walk-forward test the base models.
+5. Train the stacker from out-of-sample predictions and run the untouched holdout.
+6. Build live scoring and versioned public JSON.
+7. Prove static deployment through Caddy.
+8. Design and implement the final JavaScript interface last.
 
-```
-nfl-edge/
-├── src/nfl_edge/        # model + ingestion code
-├── app/                 # Streamlit dashboard
-├── data/                # .gitignored — parquet + JSON cache
-├── models/              # .gitignored — trained artifacts
-├── systemd/             # systemd unit
-├── cron/                # refresh + retrain scripts
-├── tests/               # pytest suite
-└── docs/                # this plan + PDF
-```
+See [`docs/NFL_EDGE_MASTER_BUILD_PLAN.md`](docs/NFL_EDGE_MASTER_BUILD_PLAN.md) and the supporting contracts in [`docs/`](docs/).
 
-## Local setup
+## Planned model
 
-```bash
-git clone https://github.com/Tkcool28/nfl-edge.git
-cd nfl-edge
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+- QB-adjusted Elo
+- Regularized XGBoost on point-in-time football features
+- Opponent-adjusted expected margin
+- Regularized logistic stacker trained only on out-of-sample base-model predictions
 
-cp .env.example .env
-# Edit .env to add your ODDS_API_KEY
-```
+Primary evaluation is Brier Skill Score against QB-adjusted Elo, supported by raw Brier score, log loss, calibration, and uncertainty analysis.
 
-## Running
+## Market policy
 
-```bash
-# Ingest data (one-time)
-python -m nfl_edge.ingest_nflverse --seasons 2020 2021 2022 2023 2024
-python -m nfl_edge.ingest_odds
+DraftKings, FanDuel, and Pinnacle prices are introduced only after the football model produces its probability. They may be used for expected-value calculation, best-price selection, eligibility, and display.
 
-# Train models
-python -m nfl_edge.train_xgb
-python -m nfl_edge.train_stacker
+They may not be used as model inputs, targets, calibration inputs, or model-approval metrics.
 
-# Score this week
-python -m nfl_edge.score_week
+## Production architecture
 
-# Launch dashboard
-streamlit run app/streamlit_app.py --server.port 8503
+The final public product will be a static HTML/CSS/JavaScript site reading sanitized JSON. The VPS will host static files through Caddy only.
+
+There will be no permanent NFL Streamlit service, Python web server, training environment, or raw historical training data on the VPS.
+
+## Repository areas
+
+```text
+docs/          authoritative architecture and contracts
+config/        reviewed model, data, backtest, and scoring configuration
+data/          frozen compact data, manifests, and deterministic fixtures
+src/nfl_edge/  implementation packages
+artifacts/     model metadata, predictions, backtests, and scorecards
+site/          static site source and generated public data
+deploy/        static deployment and Caddy material
+tests/         contract, leakage, unit, integration, and end-to-end tests
+.github/       CI and scheduled publication workflows
 ```
 
-## Deploy on VPS
+## Important legacy notice
 
-See [docs/nfl-model-build-plan.md §7](docs/nfl-model-build-plan.md#7-the-vps-deployment).
+The initial commit contains a Streamlit prototype, a systemd unit, and an early market-informed design. Those files are **superseded prototypes** and are not authoritative for new implementation. They will be removed or replaced in the first bounded implementation task after the contracts are accepted.
 
-## Data sources
+## Public URL target
 
-- **nflverse/nfl_data_py** — play-by-play, schedules, rosters (free, no auth)
-- **FiveThirtyEight NFL Elo** — historical Elo ratings (free, GitHub)
-- **The Odds API** — live DK / FD / Pinnacle (free tier: 500 credits/month)
-- **OpenWeather** — kickoff-time weather (free tier: 60 calls/min)
+`https://nfl.tkhermes.duckdns.org`
 
 ## License
 
