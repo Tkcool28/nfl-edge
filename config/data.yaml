@@ -1,0 +1,35 @@
+version: data-config-v1
+
+seasons:
+  development_start: null  # Set after source coverage audit.
+  development_end: 2024
+  untouched_holdout: 2025
+  forward_season: 2026
+
+storage:
+  compact_frozen_tables: data/frozen
+  manifests: data/manifests
+  fixtures: data/fixtures
+  raw_release_threshold_mib: 75
+  compression: zstd
+
+sources:
+  preferred_python_reader: nflreadpy
+  schedules: nflverse
+  play_by_play: nflverse
+  player_stats: nflverse
+  rosters: nflverse
+  depth_charts: nflverse
+  live_odds: the_odds_api
+
+integrity:
+  checksum: sha256
+  require_timezone_aware_utc: true
+  reject_duplicate_game_ids: true
+  preserve_raw_source_ids: true
+  frozen_files_are_immutable: true
+
+availability:
+  require_observed_at_utc: true
+  completed_game_rule: game_end_utc_lt_as_of_utc
+  unknown_batch_time_policy: conservative_documented_assumption
