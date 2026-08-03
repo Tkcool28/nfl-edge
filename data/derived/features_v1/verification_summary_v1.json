@@ -1,0 +1,399 @@
+{
+  "manifest": {
+    "base_commit_sha": "94b6d55fb166dc542850b0a392340529e2209854",
+    "configuration_fingerprint": "ac641490d1313bd108430d4d9900988aaa56a19411a6e38c93659700219d4a66",
+    "created_at_utc": "2026-08-03T07:30:00Z",
+    "data_version": "frozen-baseline-v1",
+    "feature_code_fingerprint": "45dfd843a0b0123cacc89b5b7a12b55bd6d3943532fc9114d6068426be5d62f4",
+    "feature_version": "features-v1",
+    "files": [
+      {
+        "byte_size": 866789,
+        "column_count": 303,
+        "file_path": "data/derived/features_v1/game_features_2018_2025.parquet",
+        "logical_fingerprint": "0e130d744f8715932c2546eee008548a3787e6b42817e8598dc00a9bac785316",
+        "maximum_feature_as_of_utc": "2026-02-03T12:00:00Z",
+        "minimum_feature_as_of_utc": "2018-09-04T12:00:00Z",
+        "row_count": 2227,
+        "schema_fingerprint": "192367d70de72bf3288691bd7f029de1a9e11fcc97381bb81fb15e74dd733d6b",
+        "season_coverage": [
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "sha256": "346f8aec6246edc049591abd22a8f6a4664a18de219205d8cb1ac395c42c9403"
+      },
+      {
+        "byte_size": 801574,
+        "column_count": 153,
+        "file_path": "data/derived/features_v1/team_pregame_features_2018_2025.parquet",
+        "logical_fingerprint": "148267564537754df5c938f01b0595d1ba67f1ea19a3a506c396f905b684b04f",
+        "maximum_feature_as_of_utc": "2026-02-03T12:00:00Z",
+        "minimum_feature_as_of_utc": "2018-09-04T12:00:00Z",
+        "row_count": 4454,
+        "schema_fingerprint": "cdd9c1ec9e8b11dfd2045469ef369a20102f6445f3b52bf1da614e4641073803",
+        "season_coverage": [
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "sha256": "07758f2560044a96007d60f54c34b8abe64d139764cdb772c536b773bb8dcc65"
+      },
+      {
+        "byte_size": 33137,
+        "column_count": 31,
+        "file_path": "data/derived/features_v1/qb_pregame_features_2018_2025.parquet",
+        "logical_fingerprint": "4f7cdda64a946a8af1284269ef7f7069fcd38df1f09640d9743f420133e30613",
+        "maximum_feature_as_of_utc": "2026-02-03T12:00:00Z",
+        "minimum_feature_as_of_utc": "2018-09-04T12:00:00Z",
+        "row_count": 4454,
+        "schema_fingerprint": "e1338d9405d617fcc801b0b0da73f66e0218badff2f168e919ff20f6adc96c95",
+        "season_coverage": [
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "sha256": "ab43a422a98f8275d1f25fa6128a2277755ed400d428a1273c3393463e4e6ecb"
+      },
+      {
+        "byte_size": 27177,
+        "column_count": 17,
+        "file_path": "data/derived/features_v1/starter_certainty_2018_2025.parquet",
+        "logical_fingerprint": "17c306888c8e651151cfac7a05aa19d4b7fccfdb4b5c432dfe43c384f94829ae",
+        "maximum_feature_as_of_utc": "2026-02-03T12:00:00Z",
+        "minimum_feature_as_of_utc": "2018-09-04T12:00:00Z",
+        "row_count": 2227,
+        "schema_fingerprint": "8ff234bcdabaf977a002e3752cbdde948f4cd69e63793797bc8adf4406aeb6a1",
+        "season_coverage": [
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "sha256": "580ae44b9d3900c3788a512e1fba8bb6d4802b415ee1f8fd32759a9839b29b1f"
+      },
+      {
+        "byte_size": 8457,
+        "column_count": 10,
+        "file_path": "data/derived/features_v1/weekly_availability_2018_2025.parquet",
+        "logical_fingerprint": "56310668175bda0f361d6e762b74129373f8fea6fc5d490d5c5a41a2174fb54b",
+        "maximum_feature_as_of_utc": "2026-02-03T12:00:00Z",
+        "minimum_feature_as_of_utc": "2018-09-04T12:00:00Z",
+        "row_count": 173,
+        "schema_fingerprint": "1b04bf66d078a17351999dd11fd2f3d7652ee675991c692e1ffec63eec9edb3c",
+        "season_coverage": [
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025
+        ],
+        "sha256": "5cb883da6677175ba4ade814a0c153f26812731cf78f4883568d14e88cd6bb64"
+      },
+      {
+        "byte_size": 198825,
+        "column_count": 13,
+        "file_path": "data/derived/features_v1/feature_registry_v1.json",
+        "logical_fingerprint": "50e92e7bac78045bb40e1add9651047618f333268864426c84a0ff33a7c3327c",
+        "maximum_feature_as_of_utc": null,
+        "minimum_feature_as_of_utc": null,
+        "row_count": 282,
+        "schema_fingerprint": "da7fabc65901a23c9f1d83af627ca9805babca7d49863ae048871abd31bffbdd",
+        "season_coverage": [],
+        "sha256": "2a68856b1f6e8315520526356e25ddb2ba7b879df5768a20fd7ad5efcedff8d4"
+      }
+    ],
+    "source_manifest_ids": [
+      "nflverse-schedules-frozen-baseline-v1",
+      "nflverse-team_stats_week-frozen-baseline-v1",
+      "nflverse-player_stats_week-frozen-baseline-v1",
+      "nflverse-rosters-frozen-baseline-v1",
+      "nflverse-depth_charts-frozen-baseline-v1"
+    ]
+  },
+  "null_counts_nonzero": {
+    "away_rest_or_week_gap": 128,
+    "away_roll4_defensive_epa_allowed_std": 32,
+    "away_roll4_offensive_total_epa_std": 32,
+    "away_roll8_defensive_epa_allowed_std": 32,
+    "away_roll8_offensive_total_epa_std": 32,
+    "away_week_gap_proxy": 128,
+    "expected_away_qb_id": 2227,
+    "expected_home_qb_id": 2227,
+    "home_rest_or_week_gap": 128,
+    "home_roll4_defensive_epa_allowed_std": 32,
+    "home_roll4_offensive_total_epa_std": 32,
+    "home_roll8_defensive_epa_allowed_std": 32,
+    "home_roll8_offensive_total_epa_std": 32,
+    "home_week_gap_proxy": 128,
+    "scheduled_start_utc": 2227,
+    "source_available_at_utc": 16,
+    "target_home_win": 8
+  },
+  "outputs": {
+    "game_features": [
+      2227,
+      303
+    ],
+    "qb_features": [
+      4454,
+      31
+    ],
+    "starter_certainty": [
+      2227,
+      17
+    ],
+    "team_features": [
+      4454,
+      153
+    ],
+    "weekly_availability": [
+      173,
+      10
+    ]
+  },
+  "sample_count_summary": {
+    "games_played_before_current_game": 20,
+    "games_played_before_current_game_min": 0,
+    "roll4_prior_games": 4,
+    "roll4_prior_games_min": 0,
+    "roll8_prior_games": 8,
+    "roll8_prior_games_min": 0,
+    "season_to_date_prior_games": 20,
+    "season_to_date_prior_games_min": 0
+  },
+  "season_type_counts": [
+    {
+      "len": 2,
+      "season": 2018,
+      "season_type": "CON"
+    },
+    {
+      "len": 4,
+      "season": 2018,
+      "season_type": "DIV"
+    },
+    {
+      "len": 256,
+      "season": 2018,
+      "season_type": "REG"
+    },
+    {
+      "len": 1,
+      "season": 2018,
+      "season_type": "SB"
+    },
+    {
+      "len": 4,
+      "season": 2018,
+      "season_type": "WC"
+    },
+    {
+      "len": 2,
+      "season": 2019,
+      "season_type": "CON"
+    },
+    {
+      "len": 4,
+      "season": 2019,
+      "season_type": "DIV"
+    },
+    {
+      "len": 256,
+      "season": 2019,
+      "season_type": "REG"
+    },
+    {
+      "len": 1,
+      "season": 2019,
+      "season_type": "SB"
+    },
+    {
+      "len": 4,
+      "season": 2019,
+      "season_type": "WC"
+    },
+    {
+      "len": 2,
+      "season": 2020,
+      "season_type": "CON"
+    },
+    {
+      "len": 4,
+      "season": 2020,
+      "season_type": "DIV"
+    },
+    {
+      "len": 256,
+      "season": 2020,
+      "season_type": "REG"
+    },
+    {
+      "len": 1,
+      "season": 2020,
+      "season_type": "SB"
+    },
+    {
+      "len": 6,
+      "season": 2020,
+      "season_type": "WC"
+    },
+    {
+      "len": 2,
+      "season": 2021,
+      "season_type": "CON"
+    },
+    {
+      "len": 4,
+      "season": 2021,
+      "season_type": "DIV"
+    },
+    {
+      "len": 272,
+      "season": 2021,
+      "season_type": "REG"
+    },
+    {
+      "len": 1,
+      "season": 2021,
+      "season_type": "SB"
+    },
+    {
+      "len": 6,
+      "season": 2021,
+      "season_type": "WC"
+    },
+    {
+      "len": 2,
+      "season": 2022,
+      "season_type": "CON"
+    },
+    {
+      "len": 4,
+      "season": 2022,
+      "season_type": "DIV"
+    },
+    {
+      "len": 271,
+      "season": 2022,
+      "season_type": "REG"
+    },
+    {
+      "len": 1,
+      "season": 2022,
+      "season_type": "SB"
+    },
+    {
+      "len": 6,
+      "season": 2022,
+      "season_type": "WC"
+    },
+    {
+      "len": 2,
+      "season": 2023,
+      "season_type": "CON"
+    },
+    {
+      "len": 4,
+      "season": 2023,
+      "season_type": "DIV"
+    },
+    {
+      "len": 272,
+      "season": 2023,
+      "season_type": "REG"
+    },
+    {
+      "len": 1,
+      "season": 2023,
+      "season_type": "SB"
+    },
+    {
+      "len": 6,
+      "season": 2023,
+      "season_type": "WC"
+    },
+    {
+      "len": 2,
+      "season": 2024,
+      "season_type": "CON"
+    },
+    {
+      "len": 4,
+      "season": 2024,
+      "season_type": "DIV"
+    },
+    {
+      "len": 272,
+      "season": 2024,
+      "season_type": "REG"
+    },
+    {
+      "len": 1,
+      "season": 2024,
+      "season_type": "SB"
+    },
+    {
+      "len": 6,
+      "season": 2024,
+      "season_type": "WC"
+    },
+    {
+      "len": 2,
+      "season": 2025,
+      "season_type": "CON"
+    },
+    {
+      "len": 4,
+      "season": 2025,
+      "season_type": "DIV"
+    },
+    {
+      "len": 272,
+      "season": 2025,
+      "season_type": "REG"
+    },
+    {
+      "len": 1,
+      "season": 2025,
+      "season_type": "SB"
+    },
+    {
+      "len": 6,
+      "season": 2025,
+      "season_type": "WC"
+    }
+  ],
+  "starter_state_counts": [
+    {
+      "len": 2226,
+      "starter_certainty": "POSTGAME_ONLY_EVIDENCE"
+    },
+    {
+      "len": 1,
+      "starter_certainty": "UNKNOWN"
+    }
+  ]
+}

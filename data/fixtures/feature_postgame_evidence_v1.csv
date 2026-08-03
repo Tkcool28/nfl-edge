@@ -1,0 +1,5 @@
+game_id,team,player_id,evidence_type,case_label
+fx-001,AAA,qb-aaa-1,WEEKLY_STATS_POSTGAME,postgame_only_evidence
+fx-001,BBB,qb-bbb-1,SNAP_COUNTS_POSTGAME,postgame_only_evidence
+fx-003,AAA,qb-aaa-2,WEEKLY_STATS_POSTGAME,must_not_raise_certainty
+fx-004,AAA,,WEEKLY_STATS_POSTGAME,missing_player_id

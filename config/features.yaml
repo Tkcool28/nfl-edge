@@ -5,58 +5,107 @@ prediction:
   require_as_of_utc: true
   require_game_not_started: true
 
+availability:
+  timezone: UTC
+  weekly_publication_weekday: 1  # Tuesday; Monday=0.
+  weekly_publication_hour: 12
+  weekly_publication_minute: 0
+  unusual_date_policy: strictly_following_boundary
+  rule_version: weekly-publication-v1
+
 rolling_windows:
   short_games: 4
   medium_games: 8
-  long_games: 16
   minimum_games: 3
+
+prior_season_carryover:
+  enabled: true
+  max_games: 4
+
+fixed_priors:
+  win_rate: 0.5
+  points_scored: 21.0
+  points_allowed: 21.0
+  point_differential: 0.0
+  passing_epa: 0.0
+  rushing_epa: 0.0
+  offensive_total_epa: 0.0
+  defensive_epa_allowed: 0.0
+  passing_yards: 225.0
+  rushing_yards: 110.0
 
 team_features:
   enabled:
-    - offensive_epa_per_play
-    - defensive_epa_per_play_allowed
-    - offensive_success_rate
-    - defensive_success_rate_allowed
-    - explosive_play_rate
-    - early_down_epa
-    - rest_days
-    - bye_week
+    - win_rate
+    - points_scored
+    - points_allowed
+    - point_differential
+    - passing_epa
+    - rushing_epa
+    - offensive_total_epa
+    - defensive_epa_allowed
+    - passing_yards
+    - rushing_yards
+    - rest_or_week_gap
     - neutral_site
     - roof_type
-  opponent_adjustment: sequential_only
+  opponent_adjustment: source_fields_only
 
 qb_features:
   enabled:
-    - epa_per_dropback
+    - passing_epa_per_dropback
     - cpoe
     - sack_rate
     - interception_rate
     - dropbacks
+    - recency_weighted_form
+    - season_to_date_form
+    - career_to_date_form
     - starter_certainty
   shrinkage:
-    prior: conservative_replacement_level
+    prior: conservative_fixed_priors
     sample_measure: dropbacks
-    k_dropbacks: 250  # Initial value; tune only within development evidence.
+    k_dropbacks: 250.0  # Fixed before inspecting 2025 model performance.
+    priors:
+      passing_epa_per_dropback: -0.05
+      passing_cpoe: -1.0
+      sack_rate: 0.08
+      interception_rate: 0.03
+  recency_games: 8
+  recency_decay: 0.75
+  low_sample_dropbacks: 100
 
 home_field:
-  method: trailing_prior_data_only
-  trailing_seasons: 2
-  clamp_points:
-    min: 1.0
-    max: 3.0
+  method: source_fields_only_no_fit
 
 missingness:
   add_indicators: true
   fit_imputation_on_training_window_only: true
   reject_silent_qb_imputation: true
+  numeric_policy: fixed_documented_priors
+  categorical_policy: explicit_unknown
 
 prohibited_columns:
+  - away_moneyline
+  - home_moneyline
+  - spread_line
+  - total_line
+  - away_spread_odds
+  - home_spread_odds
+  - under_odds
+  - over_odds
   - closing_odds
   - closing_probability
   - current_market_probability
   - pinnacle_probability
+  - pinnacle_price
+  - draftkings_price
+  - fanduel_price
   - clv
   - final_weather
   - future_result
+  - later_line_movement
+  - postgame_injury_outcomes
+  - end_of_season_rankings
 
 registry_required: true
