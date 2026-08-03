@@ -108,7 +108,6 @@ def test_full_frozen_build_has_required_grains_utc_and_registry_coverage() -> No
         "season_to_date_prior_games",
         "early_season_sample",
         "prior_season_carryover_games",
-        "prior_season_carryover_used",
         "roll4_minimum_sample_met",
         "roll8_minimum_sample_met",
         "season_to_date_minimum_sample_met",
@@ -118,25 +117,100 @@ def test_full_frozen_build_has_required_grains_utc_and_registry_coverage() -> No
         prefixed_count_columns.add(base)
         prefixed_count_columns.add(f"home_{base}")
         prefixed_count_columns.add(f"away_{base}")
-    state_columns = {"is_home", "neutral_site", "venue_missing", "roof_missing"}
+    state_or_context_columns = {
+        "is_home",
+        "neutral_site",
+        "venue_missing",
+        "roof_missing",
+        "roof_category",
+        "rest_or_week_gap",
+        "week_gap_proxy",
+        "bye_week_proxy",
+        "prior_season_carryover_used",
+    }
+    state_column_full_set: set[str] = set(state_or_context_columns)
+    for base in state_or_context_columns:
+        state_column_full_set.add(f"home_{base}")
+        state_column_full_set.add(f"away_{base}")
     short = int(config["rolling_windows"]["short_games"])
     medium = int(config["rolling_windows"]["medium_games"])
+    allowed_windows = {
+        "none",
+        f"last_{short}_eligible_games",
+        f"last_{medium}_eligible_games",
+        "current_season_prior_eligible_games",
+    }
     for entry in registry:
         column = entry["feature_name"]
+        suffix = column[len("home_"):] if column.startswith("home_") else (
+            column[len("away_"):] if column.startswith("away_") else column
+        )
+        assert entry["window"] in allowed_windows
         if column in prefixed_count_columns:
             assert entry["classification"] == "count_or_sample_size"
             assert entry["window"] == "none"
-        elif column in state_columns:
-            assert entry["classification"] == "game_state_indicator"
+        elif column in state_column_full_set:
+            assert entry["classification"] == "game_state_or_context"
             assert entry["window"] == "none"
         else:
             assert entry["classification"] == "rolling_metric"
-            if column.startswith(f"roll{short}_"):
+            if suffix.startswith(f"roll{short}_"):
                 assert entry["window"] == f"last_{short}_eligible_games"
-            elif column.startswith(f"roll{medium}_"):
+            elif suffix.startswith(f"roll{medium}_"):
                 assert entry["window"] == f"last_{medium}_eligible_games"
-            elif column.startswith("season_to_date_"):
+            elif suffix.startswith("season_to_date_"):
                 assert entry["window"] == "current_season_prior_eligible_games"
+            else:
+                assert entry["window"] == "none"
+    representative_columns = {
+        "home_games_played_before_current_game",
+        "away_games_played_before_current_game",
+        "home_roll4_prior_games",
+        "away_roll8_prior_games",
+        "home_prior_season_carryover_games",
+        "home_is_home",
+        "away_is_home",
+        "neutral_site",
+        "venue_missing",
+        "roof_missing",
+        "roof_category",
+        "home_rest_or_week_gap",
+        "away_week_gap_proxy",
+        "home_bye_week_proxy",
+        "home_prior_season_carryover_used",
+        "home_roll4_passing_epa",
+        "away_roll8_defensive_epa_allowed_std",
+        "home_season_to_date_passing_yards",
+    }
+    registry_by_name = {item["feature_name"]: item for item in registry}
+    expected_classifications = {
+        "home_games_played_before_current_game": "count_or_sample_size",
+        "away_games_played_before_current_game": "count_or_sample_size",
+        "home_roll4_prior_games": "count_or_sample_size",
+        "away_roll8_prior_games": "count_or_sample_size",
+        "home_prior_season_carryover_games": "count_or_sample_size",
+        "home_is_home": "game_state_or_context",
+        "away_is_home": "game_state_or_context",
+        "neutral_site": "game_state_or_context",
+        "venue_missing": "game_state_or_context",
+        "roof_missing": "game_state_or_context",
+        "roof_category": "game_state_or_context",
+        "home_rest_or_week_gap": "game_state_or_context",
+        "away_week_gap_proxy": "game_state_or_context",
+        "home_bye_week_proxy": "game_state_or_context",
+        "home_prior_season_carryover_used": "game_state_or_context",
+        "home_roll4_passing_epa": "rolling_metric",
+        "away_roll8_defensive_epa_allowed_std": "rolling_metric",
+        "home_season_to_date_passing_yards": "rolling_metric",
+    }
+    for column in representative_columns:
+        assert column in registry_by_name, f"missing registry entry for {column}"
+        expected = expected_classifications[column]
+        actual = registry_by_name[column]["classification"]
+        assert actual == expected, f"{column}: expected {expected}, got {actual}"
+    assert registry_by_name["home_roll4_prior_games"]["window"] == "none"
+    assert registry_by_name["home_roll4_passing_epa"]["window"] == "last_4_eligible_games"
+    assert registry_by_name["home_season_to_date_passing_yards"]["window"] == "current_season_prior_eligible_games"
     assert set(bundle.game_features["season"].unique().to_list()) == set(range(2018, 2026))
 
 
@@ -220,3 +294,48 @@ def test_required_output_manifest_verifies(tmp_path: Path) -> None:
         assert entry["season_coverage"] == list(range(2018, 2026)) or entry["season_coverage"] == []
     on_disk = json.loads((tmp_path / "feature_manifest_v1.json").read_text())
     assert on_disk == manifest
+
+
+def test_feature_code_fingerprint_is_deterministic_and_excludes_metadata() -> None:
+    from nfl_edge.features.pipeline import feature_code_fingerprint
+
+    first = feature_code_fingerprint(ROOT)
+    second = feature_code_fingerprint(ROOT)
+    assert first == second
+    assert len(first) == 64
+
+    target = ROOT / "src" / "nfl_edge" / "features" / "team.py"
+    original_mtime = target.stat().st_mtime
+    try:
+        os.utime(target, (original_mtime + 11, original_mtime + 11))
+        assert feature_code_fingerprint(ROOT) == first
+    finally:
+        os.utime(target, (original_mtime, original_mtime))
+
+    sentinel_path = ROOT / "src" / "nfl_edge" / "features" / "_fingerprint_sentinel.py"
+    sentinel_path.write_text("# sentinel\n")
+    try:
+        assert feature_code_fingerprint(ROOT) != first
+    finally:
+        sentinel_path.unlink()
+        assert feature_code_fingerprint(ROOT) == first
+
+    config_path = ROOT / "config" / "features.yaml"
+    config_text = config_path.read_text()
+    try:
+        config_path.write_text(config_text + "# sentinel comment\n")
+        assert feature_code_fingerprint(ROOT) != first
+    finally:
+        config_path.write_text(config_text)
+        assert feature_code_fingerprint(ROOT) == first
+
+
+def test_manifest_records_approved_base_and_feature_fingerprint(tmp_path: Path) -> None:
+    from nfl_edge.features.pipeline import approved_base_sha, feature_code_fingerprint
+
+    config = load_feature_config(ROOT / "config" / "features.yaml")
+    bundle = build_feature_bundle(FeatureInputs.from_repository(ROOT), config)
+    manifest = write_feature_outputs(bundle, tmp_path, ROOT, "2026-01-01T00:00:00Z")
+    assert manifest["base_commit_sha"] == approved_base_sha() == "94b6d55fb166dc542850b0a392340529e2209854"
+    assert manifest["feature_code_fingerprint"] == feature_code_fingerprint(ROOT)
+    assert "code_identifier" not in manifest

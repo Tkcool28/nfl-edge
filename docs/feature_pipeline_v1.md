@@ -45,7 +45,7 @@ The pipeline constructs home- and away-prefixed values for rolling 4, rolling 8,
 - prior-season carryover and early-season indicators;
 - week-gap/bye proxy where date-level rest is not supportable;
 - home, neutral site, venue ID/missingness, and roof category/missingness;
-- rolling population standard deviation for **offensive total EPA** and **defensive EPA allowed** (roll4 and roll8 only), each with an explicit `*_std_missing` indicator. Fewer than two eligible prior observations produce a null standard deviation and a `True` missingness flag; the current game is always excluded.
+- rolling population standard deviation for **offensive total EPA** and **defensive EPA allowed** on **roll4 and roll8 only**. Each STD field is paired with an explicit `*_std_missing` indicator. Fewer than two eligible prior observations produces a null standard deviation and a `True` missingness flag; the current game is always excluded. The **season-to-date** aggregate intentionally emits **no standard deviation** — only `roll4` and `roll8` carry STD fields, per the Task 02 correction.
 
 Team rows use only prior records whose weekly availability boundary is at or before the current prediction cutoff. Current-game exclusion is explicit and tested.
 

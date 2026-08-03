@@ -18,8 +18,8 @@
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "count_or_sample_size",
-    "description": "Sample-size indicator: away prior season carryover used.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: away prior season carryover used.",
     "feature_name": "away_prior_season_carryover_used",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
@@ -28,8 +28,8 @@
     "source_columns": [
       "away_prior_season_carryover_used"
     ],
-    "source_table": "team_game_stats+games",
-    "transformation": "eligible_prior_history_size",
+    "source_table": "games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   },
@@ -69,69 +69,69 @@
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling away rest or week gap.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: away rest or week gap.",
     "feature_name": "away_rest_or_week_gap",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
     "minimum_samples": 3,
     "owner_test": "tests/leakage/test_history_exclusion.py",
     "source_columns": [
-      "rest_or_week_gap"
+      "away_rest_or_week_gap"
     ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
+    "source_table": "games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling away week gap proxy.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: away week gap proxy.",
     "feature_name": "away_week_gap_proxy",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
     "minimum_samples": 3,
     "owner_test": "tests/leakage/test_history_exclusion.py",
     "source_columns": [
-      "week_gap_proxy"
+      "away_week_gap_proxy"
     ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
+    "source_table": "games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling away bye week proxy.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: away bye week proxy.",
     "feature_name": "away_bye_week_proxy",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
     "minimum_samples": 3,
     "owner_test": "tests/leakage/test_history_exclusion.py",
     "source_columns": [
-      "bye_week_proxy"
+      "away_bye_week_proxy"
     ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
+    "source_table": "games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling away is home.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: away is home.",
     "feature_name": "away_is_home",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
     "minimum_samples": 3,
     "owner_test": "tests/leakage/test_history_exclusion.py",
     "source_columns": [
-      "is_home"
+      "away_is_home"
     ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
+    "source_table": "games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   },
@@ -2364,74 +2364,6 @@
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling away season to date offensive total epa std.",
-    "feature_name": "away_season_to_date_offensive_total_epa_std",
-    "imputation": "fixed_documented_prior_or_explicit_unknown",
-    "leakage_risk": "same_game_or_future_week",
-    "minimum_samples": 3,
-    "owner_test": "tests/leakage/test_history_exclusion.py",
-    "source_columns": [
-      "offensive_total_epa"
-    ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
-    "version_added": "features-v1",
-    "window": "current_season_prior_eligible_games"
-  },
-  {
-    "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling away season to date offensive total epa std missing.",
-    "feature_name": "away_season_to_date_offensive_total_epa_std_missing",
-    "imputation": "fixed_documented_prior_or_explicit_unknown",
-    "leakage_risk": "same_game_or_future_week",
-    "minimum_samples": 3,
-    "owner_test": "tests/leakage/test_history_exclusion.py",
-    "source_columns": [
-      "offensive_total_epa"
-    ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
-    "version_added": "features-v1",
-    "window": "current_season_prior_eligible_games"
-  },
-  {
-    "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling away season to date defensive epa allowed std.",
-    "feature_name": "away_season_to_date_defensive_epa_allowed_std",
-    "imputation": "fixed_documented_prior_or_explicit_unknown",
-    "leakage_risk": "same_game_or_future_week",
-    "minimum_samples": 3,
-    "owner_test": "tests/leakage/test_history_exclusion.py",
-    "source_columns": [
-      "defensive_epa_allowed"
-    ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
-    "version_added": "features-v1",
-    "window": "current_season_prior_eligible_games"
-  },
-  {
-    "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling away season to date defensive epa allowed std missing.",
-    "feature_name": "away_season_to_date_defensive_epa_allowed_std_missing",
-    "imputation": "fixed_documented_prior_or_explicit_unknown",
-    "leakage_risk": "same_game_or_future_week",
-    "minimum_samples": 3,
-    "owner_test": "tests/leakage/test_history_exclusion.py",
-    "source_columns": [
-      "defensive_epa_allowed"
-    ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
-    "version_added": "features-v1",
-    "window": "current_season_prior_eligible_games"
-  },
-  {
-    "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
     "classification": "count_or_sample_size",
     "description": "Sample-size indicator: home games played before current game.",
     "feature_name": "home_games_played_before_current_game",
@@ -2449,8 +2381,8 @@
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "count_or_sample_size",
-    "description": "Sample-size indicator: home prior season carryover used.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: home prior season carryover used.",
     "feature_name": "home_prior_season_carryover_used",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
@@ -2459,8 +2391,8 @@
     "source_columns": [
       "home_prior_season_carryover_used"
     ],
-    "source_table": "team_game_stats+games",
-    "transformation": "eligible_prior_history_size",
+    "source_table": "games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   },
@@ -2500,69 +2432,69 @@
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling home rest or week gap.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: home rest or week gap.",
     "feature_name": "home_rest_or_week_gap",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
     "minimum_samples": 3,
     "owner_test": "tests/leakage/test_history_exclusion.py",
     "source_columns": [
-      "rest_or_week_gap"
+      "home_rest_or_week_gap"
     ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
+    "source_table": "games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling home week gap proxy.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: home week gap proxy.",
     "feature_name": "home_week_gap_proxy",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
     "minimum_samples": 3,
     "owner_test": "tests/leakage/test_history_exclusion.py",
     "source_columns": [
-      "week_gap_proxy"
+      "home_week_gap_proxy"
     ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
+    "source_table": "games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling home bye week proxy.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: home bye week proxy.",
     "feature_name": "home_bye_week_proxy",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
     "minimum_samples": 3,
     "owner_test": "tests/leakage/test_history_exclusion.py",
     "source_columns": [
-      "bye_week_proxy"
+      "home_bye_week_proxy"
     ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
+    "source_table": "games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling home is home.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: home is home.",
     "feature_name": "home_is_home",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
     "minimum_samples": 3,
     "owner_test": "tests/leakage/test_history_exclusion.py",
     "source_columns": [
-      "is_home"
+      "home_is_home"
     ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
+    "source_table": "games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   },
@@ -4795,76 +4727,8 @@
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling home season to date offensive total epa std.",
-    "feature_name": "home_season_to_date_offensive_total_epa_std",
-    "imputation": "fixed_documented_prior_or_explicit_unknown",
-    "leakage_risk": "same_game_or_future_week",
-    "minimum_samples": 3,
-    "owner_test": "tests/leakage/test_history_exclusion.py",
-    "source_columns": [
-      "offensive_total_epa"
-    ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
-    "version_added": "features-v1",
-    "window": "current_season_prior_eligible_games"
-  },
-  {
-    "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling home season to date offensive total epa std missing.",
-    "feature_name": "home_season_to_date_offensive_total_epa_std_missing",
-    "imputation": "fixed_documented_prior_or_explicit_unknown",
-    "leakage_risk": "same_game_or_future_week",
-    "minimum_samples": 3,
-    "owner_test": "tests/leakage/test_history_exclusion.py",
-    "source_columns": [
-      "offensive_total_epa"
-    ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
-    "version_added": "features-v1",
-    "window": "current_season_prior_eligible_games"
-  },
-  {
-    "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling home season to date defensive epa allowed std.",
-    "feature_name": "home_season_to_date_defensive_epa_allowed_std",
-    "imputation": "fixed_documented_prior_or_explicit_unknown",
-    "leakage_risk": "same_game_or_future_week",
-    "minimum_samples": 3,
-    "owner_test": "tests/leakage/test_history_exclusion.py",
-    "source_columns": [
-      "defensive_epa_allowed"
-    ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
-    "version_added": "features-v1",
-    "window": "current_season_prior_eligible_games"
-  },
-  {
-    "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling home season to date defensive epa allowed std missing.",
-    "feature_name": "home_season_to_date_defensive_epa_allowed_std_missing",
-    "imputation": "fixed_documented_prior_or_explicit_unknown",
-    "leakage_risk": "same_game_or_future_week",
-    "minimum_samples": 3,
-    "owner_test": "tests/leakage/test_history_exclusion.py",
-    "source_columns": [
-      "defensive_epa_allowed"
-    ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
-    "version_added": "features-v1",
-    "window": "current_season_prior_eligible_games"
-  },
-  {
-    "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "game_state_indicator",
-    "description": "Game-level indicator: neutral site.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: neutral site.",
     "feature_name": "neutral_site",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
@@ -4874,14 +4738,14 @@
       "neutral_site"
     ],
     "source_table": "games",
-    "transformation": "joined_from_games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "game_state_indicator",
-    "description": "Game-level indicator: venue missing.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: venue missing.",
     "feature_name": "venue_missing",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
@@ -4891,14 +4755,14 @@
       "venue_missing"
     ],
     "source_table": "games",
-    "transformation": "joined_from_games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "rolling_metric",
-    "description": "Leakage-safe pregame rolling roof category.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: roof category.",
     "feature_name": "roof_category",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
@@ -4907,15 +4771,15 @@
     "source_columns": [
       "roof_category"
     ],
-    "source_table": "team_game_stats+games",
-    "transformation": "shift_before_rolling_then_fixed_prior_if_missing",
+    "source_table": "games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   },
   {
     "availability_rule": "WEEK_COMPLETE_TUESDAY_1200_UTC_V1",
-    "classification": "game_state_indicator",
-    "description": "Game-level indicator: roof missing.",
+    "classification": "game_state_or_context",
+    "description": "Game-level state or context: roof missing.",
     "feature_name": "roof_missing",
     "imputation": "fixed_documented_prior_or_explicit_unknown",
     "leakage_risk": "same_game_or_future_week",
@@ -4925,7 +4789,7 @@
       "roof_missing"
     ],
     "source_table": "games",
-    "transformation": "joined_from_games",
+    "transformation": "joined_from_games_or_derived_from_history_size",
     "version_added": "features-v1",
     "window": "none"
   }

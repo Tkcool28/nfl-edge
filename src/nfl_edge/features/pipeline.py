@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from dataclasses import dataclass
@@ -212,7 +213,6 @@ def build_feature_registry(
         "games_played_before_current_game",
         "prior_season_carryover_games",
         "early_season_sample",
-        "prior_season_carryover_used",
         f"roll{short}_prior_games",
         f"roll{medium}_prior_games",
         "season_to_date_prior_games",
@@ -220,7 +220,17 @@ def build_feature_registry(
         f"roll{medium}_minimum_sample_met",
         "season_to_date_minimum_sample_met",
     }
-    state_columns = {"is_home", "neutral_site", "venue_missing", "roof_missing"}
+    state_or_context_columns = {
+        "is_home",
+        "neutral_site",
+        "venue_missing",
+        "roof_missing",
+        "roof_category",
+        "rest_or_week_gap",
+        "week_gap_proxy",
+        "bye_week_proxy",
+        "prior_season_carryover_used",
+    }
     entries: list[dict[str, Any]] = []
     for column in model_columns:
         suffix = column[len("home_"):] if column.startswith("home_") else (
@@ -230,17 +240,17 @@ def build_feature_registry(
             classification = "count_or_sample_size"
             window = "none"
             transformation = "eligible_prior_history_size"
-        elif column in state_columns:
-            classification = "game_state_indicator"
+        elif suffix in state_or_context_columns or column in state_or_context_columns:
+            classification = "game_state_or_context"
             window = "none"
-            transformation = "joined_from_games"
+            transformation = "joined_from_games_or_derived_from_history_size"
         else:
             classification = "rolling_metric"
-            if f"roll{short}_" in column:
+            if suffix.startswith(f"roll{short}_"):
                 window = f"last_{short}_eligible_games"
-            elif f"roll{medium}_" in column:
+            elif suffix.startswith(f"roll{medium}_"):
                 window = f"last_{medium}_eligible_games"
-            elif "season_to_date" in column:
+            elif suffix.startswith("season_to_date_"):
                 window = "current_season_prior_eligible_games"
             else:
                 window = "none"
@@ -256,12 +266,12 @@ def build_feature_registry(
             source_columns = [column]
         source_table = (
             "games"
-            if column in state_columns
+            if suffix in state_or_context_columns or column in state_or_context_columns
             else "team_game_stats+games"
         )
         description = {
             "count_or_sample_size": f"Sample-size indicator: {column.replace('_', ' ')}.",
-            "game_state_indicator": f"Game-level indicator: {column.replace('_', ' ')}.",
+            "game_state_or_context": f"Game-level state or context: {column.replace('_', ' ')}.",
             "rolling_metric": f"Leakage-safe pregame rolling {column.replace('_', ' ')}.",
         }[classification]
         entries.append(
@@ -392,6 +402,39 @@ def _git_identifier(root: Path) -> str | None:
         return None
 
 
+def feature_code_fingerprint(repository_root: str | Path) -> str:
+    """Deterministic SHA-256 of the Task 02 feature implementation inputs.
+
+    Inputs are repository-relative paths. Each input contributes its UTF-8
+    content (decoded as a surrogate-escape-proof bytes string) and the
+    relative path. Filesystem metadata (mtime, mode, size-only) and current
+    time are never consulted. Sorted paths make the result stable across
+    clean checkouts.
+    """
+
+    root = Path(repository_root)
+    feature_glob = sorted(path for path in (root / "src" / "nfl_edge" / "features").rglob("*.py"))
+    config_path = root / "config" / "features.yaml"
+    inputs: list[Path] = list(feature_glob)
+    if config_path.is_file():
+        inputs.append(config_path)
+    inputs.sort(key=lambda path: path.relative_to(root).as_posix())
+    digest = hashlib.sha256()
+    for path in inputs:
+        relative = path.relative_to(root).as_posix()
+        digest.update(relative.encode("utf-8"))
+        digest.update(b"\n")
+        digest.update(path.read_bytes())
+        digest.update(b"\n")
+    return digest.hexdigest()
+
+
+def approved_base_sha() -> str:
+    """The Task 02 approved base main SHA is recorded directly in the manifest."""
+
+    return "94b6d55fb166dc542850b0a392340529e2209854"
+
+
 def _timestamp(value: str | None) -> str:
     if value is None:
         return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -484,7 +527,8 @@ def write_feature_outputs(
         "source_manifest_ids": SOURCE_MANIFEST_IDS,
         "created_at_utc": _timestamp(created_at_utc),
         "configuration_fingerprint": config_fingerprint,
-        "code_identifier": _git_identifier(root),
+        "base_commit_sha": approved_base_sha(),
+        "feature_code_fingerprint": feature_code_fingerprint(root),
         "files": file_entries,
     }
     (output_dir / "feature_manifest_v1.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")

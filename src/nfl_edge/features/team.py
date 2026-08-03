@@ -117,7 +117,20 @@ def _team_completed_rows(games: pl.DataFrame, stats: pl.DataFrame, availability:
     return rows
 
 
-def _aggregate(history: list[dict[str, Any]], prefix: str, priors: dict[str, float], minimum: int) -> dict[str, Any]:
+def _aggregate(
+    history: list[dict[str, Any]],
+    prefix: str,
+    priors: dict[str, float],
+    minimum: int,
+    std_metrics: tuple[str, ...] | None = None,
+) -> dict[str, Any]:
+    """Aggregate shifted prior history into rolling metric, count, and (optional) STD fields.
+
+    ``std_metrics`` must be ``None`` for the ``season_to_date`` aggregate;
+    only roll4 and roll8 may emit the approved EPA standard deviation fields.
+    """
+
+    std_metrics = std_metrics or ()
     result: dict[str, Any] = {
         f"{prefix}_prior_games": len(history),
         f"{prefix}_minimum_sample_met": len(history) >= minimum,
@@ -131,7 +144,7 @@ def _aggregate(history: list[dict[str, Any]], prefix: str, priors: dict[str, flo
         result[f"{prefix}_{metric}"] = value
         result[f"{prefix}_{metric}_missing"] = observed is None
         result[f"{prefix}_{metric}_imputed"] = imputed
-    for metric in STD_METRICS:
+    for metric in std_metrics:
         std = _stddev([row.get(metric) for row in history])
         result[f"{prefix}_{metric}_std"] = std
         result[f"{prefix}_{metric}_std_missing"] = std is None
@@ -212,8 +225,8 @@ def build_team_pregame_features(
                 "roof_category": (game.get("roof_type") or "unknown").strip().lower(),
                 "roof_missing": game.get("roof_type") is None,
             }
-            row.update(_aggregate(combined[-short:], f"roll{short}", priors, minimum))
-            row.update(_aggregate(combined[-medium:], f"roll{medium}", priors, minimum))
+            row.update(_aggregate(combined[-short:], f"roll{short}", priors, minimum, std_metrics=STD_METRICS))
+            row.update(_aggregate(combined[-medium:], f"roll{medium}", priors, minimum, std_metrics=STD_METRICS))
             row.update(_aggregate(current_season, "season_to_date", priors, minimum))
             rows.append(row)
     result = pl.DataFrame(rows).sort(["season", "week", "game_id", "side"])

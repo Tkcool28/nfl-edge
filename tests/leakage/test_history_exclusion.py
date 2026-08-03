@@ -236,6 +236,17 @@ def test_qb_same_game_and_future_poisoning_are_excluded() -> None:
     assert {k: base_row[k] for k in keys} == {k: future_row[k] for k in keys}
 
 
+def test_season_to_date_std_columns_are_absent() -> None:
+    games = sample_games()
+    availability = build_weekly_availability(games, POLICY)
+    result = build_team_pregame_features(games, sample_team_stats(), availability, CONFIG)
+    std_columns = {column for column in result.columns if column.endswith("_std")}
+    season_std_columns = {column for column in std_columns if "season_to_date" in column}
+    assert season_std_columns == set()
+    assert {"roll4_offensive_total_epa_std", "roll4_defensive_epa_allowed_std",
+            "roll8_offensive_total_epa_std", "roll8_defensive_epa_allowed_std"}.issubset(std_columns)
+
+
 def test_qb_zero_sample_uses_fixed_prior_not_future_average() -> None:
     games = sample_games()
     availability = build_weekly_availability(games, POLICY)

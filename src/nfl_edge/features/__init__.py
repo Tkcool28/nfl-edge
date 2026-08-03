@@ -6,7 +6,9 @@ from .pipeline import (
     FEATURE_VERSION,
     FeatureBundle,
     FeatureInputs,
+    approved_base_sha,
     build_feature_bundle,
+    feature_code_fingerprint,
     load_feature_config,
     write_feature_outputs,
 )
@@ -17,8 +19,10 @@ __all__ = [
     "FEATURE_VERSION",
     "FeatureBundle",
     "FeatureInputs",
+    "approved_base_sha",
     "build_feature_bundle",
     "build_weekly_availability",
+    "feature_code_fingerprint",
     "load_feature_config",
     "write_feature_outputs",
 ]
