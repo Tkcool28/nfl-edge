@@ -1,0 +1,6 @@
+-r base.txt
+
+# Model research and backtesting.
+xgboost>=2.1,<4
+scipy>=1.13,<2
+matplotlib>=3.9,<4
