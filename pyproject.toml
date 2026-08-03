@@ -2,7 +2,11 @@
 name = "nfl-edge"
 version = "0.1.0"
 requires-python = ">=3.11"
-dependencies = ["nflreadpy==0.1.5", "polars>=1.0"]
+dependencies = [
+    "nflreadpy==0.1.5",
+    "polars>=1.0",
+    "requests==2.33.0",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

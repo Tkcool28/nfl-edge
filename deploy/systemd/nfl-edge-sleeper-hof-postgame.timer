@@ -1,0 +1,27 @@
+[Unit]
+Description=NFL Edge Sleeper Hall of Fame Game postgame timer
+Documentation=file:///root/nfl-edge/docs/sleeper_qb_source_contract_v1.md
+# Hall of Fame Game 2026: Panthers at Cardinals, 2026-08-06 20:00 EDT
+# (== 2026-08-07T00:00:00Z). Postgame collection fires at
+# 2026-08-07T03:30:00Z, approximately 3.5 hours after kickoff, to
+# allow the postgame practice / injury / depth update to settle.
+# Time conversion:
+#   kickoff  = 2026-08-07T00:00:00Z (UTC)
+#            == 2026-08-06T20:00:00-04:00 (America/New_York)
+#            == 2026-08-06T18:00:00-06:00 (America/Denver)
+#   postgame = 2026-08-07T03:30:00Z (UTC)
+#            == 2026-08-06T23:30:00-04:00 (America/New_York)
+#            == 2026-08-06T21:30:00-06:00 (America/Denver)
+# This timer is one-shot. Persistent=false prevents boot-catchup of a
+# long-elapsed event.
+Requires=nfl-edge-sleeper-hof-postgame.service
+
+[Timer]
+OnCalendar=2026-08-07 03:30:00 UTC
+Persistent=false
+RandomizedDelaySec=0
+AccuracySec=1s
+Unit=nfl-edge-sleeper-hof-postgame.service
+
+[Install]
+WantedBy=timers.target

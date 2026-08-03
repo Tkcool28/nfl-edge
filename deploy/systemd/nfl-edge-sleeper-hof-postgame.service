@@ -1,0 +1,35 @@
+[Unit]
+Description=NFL Edge Sleeper Hall of Fame Game postgame collection
+Documentation=file:///root/nfl-edge/docs/sleeper_qb_source_contract_v1.md
+After=network-online.target
+Wants=network-online.target
+# Explicitly bounded to the August 6, 2026 HOF Game (Panthers at
+# Cardinals, kickoff 2026-08-07T00:00:00Z). The postgame collection
+# fires at 2026-08-07T03:30:00Z, approximately 3.5 hours after
+# kickoff, to allow the postgame practice / injury / depth update to
+# settle. The unit is inert after a successful run.
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/nfl-edge
+Environment="PYTHONPATH=/root/nfl-edge/src"
+ExecStart=/tmp/nfl-edge-sleeper-audit-venv/bin/python /root/nfl-edge/scripts/collect_sleeper_qbs.py --kind=postgame
+TimeoutStartSec=120
+MemoryMax=256M
+MemoryHigh=128M
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/root/nfl-edge/data/source_audits/sleeper_qb_v1
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictNamespaces=true
+SystemCallArchitectures=native
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nfl-edge-sleeper-hof-postgame
