@@ -1,0 +1,47 @@
+version: scoring-config-v1
+
+timezone: America/New_York
+refreshes:
+  - "12:00"
+  - "23:58"
+
+books:
+  actionable:
+    - draftkings
+    - fanduel
+  benchmark:
+    - pinnacle
+  markets:
+    - h2h
+  odds_format: american
+
+high_hit_rate_pick:
+  require_positive_ev: true
+  minimum_model_probability: 0.55
+  minimum_ev: 0.0
+  require_qb_certainty: true
+
+best_ev_pick:
+  minimum_model_probability: 0.50
+  minimum_ev: 0.03
+  maximum_decimal_odds: 3.50
+  require_qb_certainty: true
+
+qb_uncertainty:
+  suppress_official_pick_when_probability_range_points_exceeds: 0.04
+  publish_scenarios: true
+
+publication:
+  schema_version: public-schema-v1
+  latest_path: site/public/data/latest.json
+  preserve_last_known_good: true
+  write_versioned_runs: true
+
+market_policy:
+  model_inputs_allowed: false
+  runtime_probability_adjustment_allowed: false
+  post_model_ev_only: true
+
+no_play:
+  allowed: true
+  message: No qualifying play at current prices.
