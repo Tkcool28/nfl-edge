@@ -18,7 +18,7 @@ Recommended next-task rule:
 completed-game availability = only after the audited weekly source publication boundary
 ```
 
-For a point-in-time feature builder, use a documented weekly batch boundary after the relevant completed week and before the next prediction boundary. If a precise publication timestamp is needed, it must come from an independently audited first-party release artifact; do not derive it from row values.
+Historical `observed_at_utc` is intentionally null in the baseline because the exact publication timestamp has not been proven. Artifact `created_at_utc` appears only in the normalized-output manifest and must never be copied into historical source availability. For a point-in-time feature builder, use a documented weekly batch boundary after the relevant completed week and before the next prediction boundary. If a precise publication timestamp is needed, it must come from an independently audited first-party release artifact; do not derive it from row values.
 
 ## Depth charts
 

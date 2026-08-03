@@ -110,3 +110,21 @@ def test_committed_frozen_outputs_verify_and_preserve_game_identity() -> None:
     assert games["source_game_id"].n_unique() > 1
     assert games["source_game_id"].to_list() == games["game_id"].to_list()
     assert set(games["season"].unique().to_list()) == set(range(2018, 2026))
+
+
+def test_historical_observed_times_are_null_and_manifest_creation_time_is_valid() -> None:
+    manifest_path = ROOT / "data" / "manifests" / "frozen_outputs_frozen-baseline-v1.json"
+    outputs = json.loads(manifest_path.read_text())
+    creation_times = {output["created_at_utc"] for output in outputs}
+    assert len(creation_times) == 1
+    creation_time = next(iter(creation_times))
+    assert creation_time.endswith("Z")
+    assert utc_timestamp(creation_time) == creation_time
+    for relative_path in (
+        "data/frozen/games/games_2018_2025.parquet",
+        "data/frozen/team_game_stats/team_game_stats_2018_2025.parquet",
+        "data/frozen/qb_game_stats/qb_game_stats_2018_2025.parquet",
+    ):
+        frame = pl.read_parquet(ROOT / relative_path)
+        assert frame["observed_at_utc"].null_count() == frame.height
+        assert creation_time not in frame["observed_at_utc"].drop_nulls().to_list()

@@ -142,7 +142,8 @@ def build_frozen_baseline(
         pl.lit("after_official_weekly_publication").alias(
             "completed_game_availability_rule"
         ),
-        pl.col("game_id").alias("source_game_id"), pl.lit(created_at_utc).alias("observed_at_utc"),
+        pl.col("game_id").alias("source_game_id"),
+        pl.lit(None, dtype=pl.String).alias("observed_at_utc"),
     ])
     outputs: list[dict[str, Any]] = []
     common = {
@@ -166,7 +167,7 @@ def build_frozen_baseline(
             pl.col("passing_epa"), pl.col("rushing_epa"),
             pl.col("passing_yards"), pl.col("rushing_yards"),
             pl.lit(None, dtype=pl.String).alias("game_end_utc"),
-            pl.lit(created_at_utc).alias("observed_at_utc"),
+            pl.lit(None, dtype=pl.String).alias("observed_at_utc"),
         ]
     )
     outputs.append(_write_frozen(
@@ -187,7 +188,7 @@ def build_frozen_baseline(
             pl.col("passing_cpoe"), pl.col("attempts"),
             pl.col("sacks_suffered"), pl.col("passing_interceptions"),
             pl.lit(None, dtype=pl.String).alias("game_end_utc"),
-            pl.lit(created_at_utc).alias("observed_at_utc"),
+            pl.lit(None, dtype=pl.String).alias("observed_at_utc"),
         ]
     )
     outputs.append(_write_frozen(
