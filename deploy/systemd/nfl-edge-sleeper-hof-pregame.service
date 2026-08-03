@@ -13,12 +13,11 @@ Wants=network-online.target
 Type=oneshot
 WorkingDirectory=/root/nfl-edge
 Environment="PYTHONPATH=/root/nfl-edge/src"
-ExecStart=/tmp/nfl-edge-sleeper-audit-venv/bin/python /root/nfl-edge/scripts/collect_sleeper_qbs.py --kind=pregame
+ExecStart=/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/collect_sleeper_qbs.py --kind=pregame
 TimeoutStartSec=120
 MemoryMax=256M
 MemoryHigh=128M
 NoNewPrivileges=true
-PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=read-only
 ReadWritePaths=/root/nfl-edge/data/source_audits/sleeper_qb_v1

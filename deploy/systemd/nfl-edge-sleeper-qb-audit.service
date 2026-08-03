@@ -12,7 +12,7 @@ Type=oneshot
 # (the spec at §18 requires the disposable path).
 WorkingDirectory=/root/nfl-edge
 Environment="PYTHONPATH=/root/nfl-edge/src"
-ExecStart=/tmp/nfl-edge-sleeper-audit-venv/bin/python /root/nfl-edge/scripts/collect_sleeper_qbs.py --kind=scheduled
+ExecStart=/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/collect_sleeper_qbs.py --kind=scheduled
 # Bounded timeout: a healthy fetch should complete in <60s.
 TimeoutStartSec=120
 # Low memory footprint: the Sleeper response is bounded by the
@@ -20,9 +20,11 @@ TimeoutStartSec=120
 MemoryMax=256M
 MemoryHigh=128M
 # Hardening: no new privileges, no env inheritance, no root-path
-# mutation, private /tmp.
+# mutation. PrivateTmp is intentionally NOT enabled because the
+# service interpreter lives under the project root (not /tmp); a
+# private /tmp would shadow nothing here and historically caused a
+# 203/EXEC when the venv was placed under /tmp.
 NoNewPrivileges=true
-PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=read-only
 ReadWritePaths=/root/nfl-edge/data/source_audits/sleeper_qb_v1
