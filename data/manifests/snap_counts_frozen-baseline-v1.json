@@ -1,0 +1,42 @@
+{
+  "source_id": "nflverse-snap_counts-frozen-baseline-v1",
+  "source_name": "snap_counts",
+  "source_locator": "https://github.com/nflverse/nflverse-data/releases",
+  "retrieved_at_utc": "2026-08-03T00:00:00Z",
+  "seasons": [
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "file_name": "/tmp/nfl-edge-data-audit-raw/snap_counts_2018_2025_frozen-baseline-v1.parquet",
+  "compression": "parquet",
+  "byte_size": 1752976,
+  "sha256": "fb83a703cb5a718b1467ae20402c8e90e41e83d066d4fdf64c87ae3d30546b24",
+  "row_count": 205354,
+  "column_count": 16,
+  "schema_fingerprint": "0a02b975285f9e48ff1e6967d061418ad18da238fb55d8ba4346da6740ba8c09",
+  "columns": [
+    "game_id",
+    "pfr_game_id",
+    "season",
+    "game_type",
+    "week",
+    "player",
+    "pfr_player_id",
+    "position",
+    "team",
+    "opponent",
+    "offense_snaps",
+    "offense_pct",
+    "defense_snaps",
+    "defense_pct",
+    "st_snaps",
+    "st_pct"
+  ],
+  "license_or_terms_note": "NFLverse data; consult upstream repository terms and attribution requirements."
+}

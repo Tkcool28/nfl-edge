@@ -1,0 +1,179 @@
+[
+  {
+    "data_version": "frozen-baseline-v1",
+    "source_manifest_ids": [
+      "nflverse-schedules-frozen-baseline-v1"
+    ],
+    "transform_version": "normalize-v1",
+    "created_at_utc": "2026-08-03T00:00:00Z",
+    "min_event_time_utc": "2018-09-06",
+    "max_event_time_utc": "2026-02-08",
+    "file_name": "data/frozen/games/games_2018_2025.parquet",
+    "byte_size": 38492,
+    "sha256": "e314a5ff0b1f39fa3cf3486b00c6909a744af01777aed91a152f505368a774da",
+    "row_count": 2227,
+    "column_count": 19,
+    "columns": [
+      "game_id",
+      "season",
+      "season_type",
+      "week",
+      "away_team",
+      "home_team",
+      "away_score",
+      "home_score",
+      "neutral_site_source",
+      "venue_id",
+      "venue_name",
+      "roof_type",
+      "gameday",
+      "gametime",
+      "scheduled_start_utc",
+      "game_end_utc",
+      "completed_game_availability_rule",
+      "source_game_id",
+      "observed_at_utc"
+    ],
+    "schema_fingerprint": "7074c5c9b981e449717c0d8af45d5acaef7d2f334ac4369e079b5c3b50fc6344"
+  },
+  {
+    "data_version": "frozen-baseline-v1",
+    "source_manifest_ids": [
+      "nflverse-team_stats_week-frozen-baseline-v1"
+    ],
+    "transform_version": "normalize-v1",
+    "created_at_utc": "2026-08-03T00:00:00Z",
+    "min_event_time_utc": "2018-09-06",
+    "max_event_time_utc": "2026-02-08",
+    "file_name": "data/frozen/team_game_stats/team_game_stats_2018_2025.parquet",
+    "byte_size": 102339,
+    "sha256": "46e535bb08f211cdfb7a259366b38e0811f147ad66b17943fc77cc74672521bd",
+    "row_count": 4454,
+    "column_count": 12,
+    "columns": [
+      "game_id",
+      "season",
+      "week",
+      "season_type",
+      "team",
+      "opponent",
+      "passing_epa",
+      "rushing_epa",
+      "passing_yards",
+      "rushing_yards",
+      "game_end_utc",
+      "observed_at_utc"
+    ],
+    "schema_fingerprint": "a37cb3beeee0428762314d511021944f420aea2e1ad13fe567f00306be9474df"
+  },
+  {
+    "data_version": "frozen-baseline-v1",
+    "source_manifest_ids": [
+      "nflverse-player_stats_week-frozen-baseline-v1"
+    ],
+    "transform_version": "normalize-v1",
+    "created_at_utc": "2026-08-03T00:00:00Z",
+    "min_event_time_utc": "2018-09-06",
+    "max_event_time_utc": "2026-02-08",
+    "file_name": "data/frozen/qb_game_stats/qb_game_stats_2018_2025.parquet",
+    "byte_size": 117687,
+    "sha256": "896cdb22adbfcbe14f80ffbb2a79bf240205a8d10eba416ef2b2cc1242a5fe8e",
+    "row_count": 5314,
+    "column_count": 14,
+    "columns": [
+      "game_id",
+      "season",
+      "week",
+      "season_type",
+      "team",
+      "player_id",
+      "player_name",
+      "passing_epa",
+      "passing_cpoe",
+      "attempts",
+      "sacks_suffered",
+      "passing_interceptions",
+      "game_end_utc",
+      "observed_at_utc"
+    ],
+    "schema_fingerprint": "52747f412f155039149eae487a771592fbcc8322fd2d99c622c237bb53cacb74"
+  },
+  {
+    "data_version": "frozen-baseline-v1",
+    "source_manifest_ids": [
+      "nflverse-depth_charts-frozen-baseline-v1"
+    ],
+    "transform_version": "normalize-v1",
+    "created_at_utc": "2026-08-03T00:00:00Z",
+    "min_event_time_utc": "2018-09-06",
+    "max_event_time_utc": "2026-02-08",
+    "file_name": "data/frozen/depth_chart_snapshots/depth_chart_snapshots_2018_2025.parquet",
+    "byte_size": 864648,
+    "sha256": "c455675056205e7fa3f0788a0693b8713e2d3c498efc09b63579f66d961fabdd",
+    "row_count": 813157,
+    "column_count": 11,
+    "columns": [
+      "season",
+      "week",
+      "team",
+      "player_id",
+      "player_name",
+      "pos_name",
+      "pos_slot",
+      "pos_rank",
+      "source_dt",
+      "timestamp_quality",
+      "observed_at_utc"
+    ],
+    "schema_fingerprint": "c9316eace50583ff1b74edc614a6066264456a8d5ab289bcbfac424995cae2c0"
+  },
+  {
+    "data_version": "frozen-baseline-v1",
+    "source_manifest_ids": [
+      "nflverse-rosters-frozen-baseline-v1"
+    ],
+    "transform_version": "normalize-v1",
+    "created_at_utc": "2026-08-03T00:00:00Z",
+    "min_event_time_utc": "2018-09-06",
+    "max_event_time_utc": "2026-02-08",
+    "file_name": "data/frozen/rosters/rosters_2018_2025.parquet",
+    "byte_size": 196273,
+    "sha256": "2c1c22524dbe464483485b7e9942ceaf8ab3e9daea7d894121deacbfcae3a5d6",
+    "row_count": 24862,
+    "column_count": 9,
+    "columns": [
+      "season",
+      "week",
+      "team",
+      "player_id",
+      "full_name",
+      "position",
+      "status",
+      "rookie_year",
+      "timestamp_quality"
+    ],
+    "schema_fingerprint": "56a737b844b232b2b03117d497716ebfdd6022c81ce0a2104ee16df155662207"
+  },
+  {
+    "data_version": "frozen-baseline-v1",
+    "source_manifest_ids": [
+      "nflverse-schedules-frozen-baseline-v1"
+    ],
+    "transform_version": "normalize-v1",
+    "created_at_utc": "2026-08-03T00:00:00Z",
+    "min_event_time_utc": "2018-09-06",
+    "max_event_time_utc": "2026-02-08",
+    "file_name": "data/frozen/venues/venues_2018_2025.parquet",
+    "byte_size": 2350,
+    "sha256": "0acfca15c61e214a2957fbe156115b80eb27828175d59da53e722ecd14ddd180",
+    "row_count": 39,
+    "column_count": 4,
+    "columns": [
+      "venue_id",
+      "venue_name",
+      "roof_type",
+      "neutral_site_source"
+    ],
+    "schema_fingerprint": "c3414bba6b768876aea8591c099ec58d14aefb39ef66c4162d509526c93bd299"
+  }
+]

@@ -1,0 +1,7 @@
+game_id,season,week,team,player_id,player_name,passing_epa,passing_cpoe,attempts,sacks_suffered,passing_interceptions,game_end_utc,observed_at_utc
+f-001,2024,1,AAA,p-aaa-1,Starter One,0.4,2.0,30,2,0,,2024-09-10T00:00:00Z
+f-001,2024,1,BBB,p-bbb-1,Starter Two,-0.2,-1.0,28,3,1,,2024-09-10T00:00:00Z
+f-002,2024,2,AAA,p-aaa-1,Starter One,0.1,1.0,25,1,0,,2024-09-17T00:00:00Z
+f-002,2024,2,BBB,p-bbb-2,Rookie QB,0.0,0.0,0,0,0,,2024-09-17T00:00:00Z
+f-003,2024,3,AAA,p-aaa-2,Backup Two,-0.3,-2.0,20,4,2,,2024-09-24T00:00:00Z
+f-003,2024,3,BBB,p-bbb-2,Rookie QB,0.2,0.5,12,1,0,,2024-09-24T00:00:00Z
