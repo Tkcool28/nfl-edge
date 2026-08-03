@@ -1,29 +1,53 @@
-# Secrets & credentials
+# Secrets and local credentials
 .env
-.env.local
+.env.*
+!.env.example
 
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 .venv/
 venv/
 *.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 
-# Data & model artifacts (large, re-trainable)
-data/cache/
-data/odds/
-data/processed/
-models/
+# Build and temporary output
+build/
+dist/
+*.tmp
+*.temp
+.cache/
 
-# Streamlit
-.streamlit/secrets.toml
+# Raw/disposable data not explicitly frozen
+/data/raw/
+/data/cache/
+/data/live_snapshots/private/
 
-# OS
+# Local model experiments not explicitly promoted
+/artifacts/local/
+/artifacts/tmp/
+
+# Frontend dependencies and generated caches
+node_modules/
+site/node_modules/
+site/.cache/
+site/.vite/
+
+# Deployment secrets and local staging
+deploy/private/
+deploy/staging/
+
+# IDE and OS
 .DS_Store
 Thumbs.db
-
-# Editor
 .vscode/
 .idea/
 *.swp
+
+# Legacy prototype secret location
+.streamlit/secrets.toml
