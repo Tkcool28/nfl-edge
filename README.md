@@ -58,7 +58,7 @@ tests/         contract, leakage, unit, integration, and end-to-end tests
 
 ## Important legacy notice
 
-The initial commit contains a Streamlit prototype, a systemd unit, and an early market-informed design. Those files are **superseded prototypes** and are not authoritative for new implementation. They will be removed or replaced in the first bounded implementation task after the contracts are accepted.
+The initial commit contained a Streamlit prototype, a VPS systemd/cron design, and an early market-informed model. Those runtime prototypes have been removed from the architecture branch and remain available only in Git history and the superseded original planning material. They are not authoritative for implementation.
 
 ## Public URL target
 
