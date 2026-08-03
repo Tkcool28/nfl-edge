@@ -2,23 +2,20 @@
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
-
 import polars as pl
 import pytest
 
+from nfl_edge.common.errors import SealedHoldoutAccessError
+from nfl_edge.evaluation.calibration import (
+    calibration_intercept_slope,
+    reliability_table,
+)
 from nfl_edge.evaluation.metrics import (
     brier_score,
     descriptive_accuracy,
     log_loss,
 )
-from nfl_edge.evaluation.calibration import (
-    calibration_intercept_slope,
-    reliability_table,
-)
 from nfl_edge.evaluation.scorecard import build_development_scorecard
-from nfl_edge.common.errors import SealedHoldoutAccessError
 
 
 def _make_pred_frame():

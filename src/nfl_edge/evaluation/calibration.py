@@ -13,8 +13,6 @@ from typing import Sequence
 
 import polars as pl
 
-from ..common.errors import SealedHoldoutAccessError
-from ..backtest.blocks import DEVELOPMENT_SEASON_MAX
 from .metrics import _assert_development_only, _scored
 
 
@@ -63,17 +61,14 @@ def calibration_intercept_slope(predictions: pl.DataFrame) -> tuple[float, float
     if scored.height < 2:
         return 0.0, 1.0
 
-    p = scored["predicted_home_win_probability"].to_numpy()
-    y = scored["actual_home_win"].cast(pl.Int8).to_numpy()
+    p = [float(x) for x in scored["predicted_home_win_probability"].to_list()]
+    y = [float(int(x)) for x in scored["actual_home_win"].to_list()]
 
     eps = 1e-9
-    logits = [
-        math.log(
-            max(eps, min(1.0 - eps, float(pi)))
-            / (1.0 - max(eps, min(1.0 - eps, float(pi))))
-        )
-        for pi in p
-    ]
+    logits = []
+    for pi in p:
+        pi_c = max(eps, min(1.0 - eps, pi))
+        logits.append(math.log(pi_c / (1.0 - pi_c)))
 
     # Simple OLS on logits via numpy-free closed form
     n = len(logits)

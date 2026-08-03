@@ -7,13 +7,14 @@ hard-fails if the prediction frame contains any season > 2024.
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Any
 
 import polars as pl
 
-from ..common.errors import SealedHoldoutAccessError
 from ..backtest.blocks import DEVELOPMENT_SEASON_MAX
+from ..common.errors import SealedHoldoutAccessError
 from .calibration import calibration_intercept_slope, reliability_table
 from .metrics import (
     _assert_development_only,
@@ -21,6 +22,20 @@ from .metrics import (
     descriptive_accuracy,
     log_loss,
 )
+
+
+def _fmt(value: float | None, places: int = 4) -> str:
+    """Format a nullable float with a fixed number of decimal places.
+
+    Returns "NA" when the value is None. This helper replaces the broken
+    inline-conditional format specifiers that were used in the first
+    version of the scorecard; a numeric format specifier does not accept
+    a conditional expression, so the value is formatted outside the
+    specifier.
+    """
+    if value is None:
+        return "NA"
+    return f"{value:.{places}f}"
 
 
 def _season_counts(predictions: pl.DataFrame) -> list[dict[str, Any]]:
@@ -123,7 +138,6 @@ def _worst_predictions(predictions: pl.DataFrame, n: int = 10) -> list[dict[str,
     for r in rows:
         p = max(eps, min(1.0 - eps, float(r["predicted_home_win_probability"])))
         y = 1.0 if r["actual_home_win"] else 0.0
-        import math
         r["_log_loss"] = -(y * math.log(p) + (1.0 - y) * math.log(1.0 - p))
     rows.sort(key=lambda r: r["_log_loss"], reverse=True)
     out = []
@@ -262,9 +276,9 @@ def build_development_scorecard(
     for r in scorecard["by_season"]:
         md_lines.append(
             f"| {r['season']} | {r['predicted']} | {r['scored']} | {r['ties']} | "
-            f"{r['accuracy']:.4f if r['accuracy'] is not None else 'NA'} | "
-            f"{r['log_loss']:.4f if r['log_loss'] is not None else 'NA'} | "
-            f"{r['brier']:.4f if r['brier'] is not None else 'NA'} |"
+            f"{_fmt(r['accuracy'])} | "
+            f"{_fmt(r['log_loss'])} | "
+            f"{_fmt(r['brier'])} |"
         )
     md_lines += [
         "",
@@ -276,9 +290,9 @@ def build_development_scorecard(
     for r in scorecard["by_qb_certainty"]:
         md_lines.append(
             f"| {r['qb_certainty_state']} | {r['predicted']} | {r['scored']} | "
-            f"{r['accuracy']:.4f if r['accuracy'] is not None else 'NA'} | "
-            f"{r['log_loss']:.4f if r['log_loss'] is not None else 'NA'} | "
-            f"{r['brier']:.4f if r['brier'] is not None else 'NA'} |"
+            f"{_fmt(r['accuracy'])} | "
+            f"{_fmt(r['log_loss'])} | "
+            f"{_fmt(r['brier'])} |"
         )
     md_lines += [
         "",

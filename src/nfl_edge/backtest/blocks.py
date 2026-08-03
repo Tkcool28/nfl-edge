@@ -21,7 +21,6 @@ from ..common.errors import (
     assert_season_in_window,
 )
 
-
 # The development window is hard-locked so the engine cannot accidentally
 # progress into 2025 (the sealed holdout) or 2026 (the forward-use season).
 DEVELOPMENT_SEASON_MAX = 2024

@@ -21,7 +21,6 @@ from ..common.polars_utils import (
     write_parquet_deterministic,
 )
 
-
 # Required columns of the prediction ledger. The schema is frozen so
 # downstream consumers (stacker, scorecard) can rely on order.
 PREDICTION_LEDGER_COLUMNS: tuple[str, ...] = (

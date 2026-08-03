@@ -8,12 +8,11 @@ to keep the 2025 sealed holdout inaccessible.
 from __future__ import annotations
 
 import math
-from typing import Iterable
 
 import polars as pl
 
-from ..common.errors import SealedHoldoutAccessError
 from ..backtest.blocks import DEVELOPMENT_SEASON_MAX
+from ..common.errors import SealedHoldoutAccessError
 
 
 def _assert_development_only(predictions: pl.DataFrame) -> None:

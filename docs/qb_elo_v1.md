@@ -1,10 +1,13 @@
 # QB-Elo v1 — Development Baseline
 
 ## Overview
-This document describes the QB-adjusted Elo model that serves as the 
+This document describes the QB-adjusted Elo model that serves as the
 **development baseline** for NFL Edge. Task 03A establishes this baseline
 on the 2018–2024 development window. The 2025 season is sealed holdout
 and is never used for fit, prediction, scoring, or reporting.
+
+All numbers in this document are computed from the actual development
+artifacts produced by the Task 03A run, not approximate.
 
 ## Formula (Textbook NFL Elo)
 
@@ -56,26 +59,38 @@ Where:
 
 ## QB Adjustment
 
-Because the Task 02 feature output records mostly `POSTGAME_ONLY_EVIDENCE`
-(no confirmed pregame starter), the model defaults to `qb_adjustment = 0.0`
-for every prediction. This is the conservative neutral approach documented
-in Task 03A.
+The Task 02 feature output records mostly `POSTGAME_ONLY_EVIDENCE`
+(no confirmed pregame starter). The Task 03A development pipeline
+returns the following QB-certainty distribution in the prediction
+ledger:
 
-When `starter_certainty == CONFIRMED` and a QB pregame-EPA record is
-present, the adjustment is:
+| QB certainty state | Predicted games | Scored games |
+| --- | --- | --- |
+| `UNKNOWN` | 1,942 | 1,935 |
+| **Total** | **1,942** | **1,935** |
 
-$$q = \text{clamp}\left( \frac{n_{games}}{n_{games} + k} \cdot (E_{expected} - E_{prior}) \cdot \text{scale}, -q_{max}, q_{max} \right)$$
+The `UNKNOWN` state produces `qb_adjustment = 0.0` for both sides.
+
+The full public formula for the FUTURE confirmed case
+("CONFIRMED_PRE_CUTOFF") is:
+
+$$q = \text{clamp}\left( (E_{expected} - E_{replacement}) \cdot \text{scale}, -q_{max}, q_{max} \right)$$
 
 Where:
-- $n_{games}$ = games played by the starter (shrinkage weight)
-- $k$ = shrinkage constant (default 100)
-- $E_{expected}$ = expected pregame EPA per play
-- $E_{prior}$ = positional prior EPA per play
-- `scale` = Elo points per EPA-per-play (default 10)
+- $E_{expected}$ = candidate's shrunk passing EPA per dropback
+- $E_{replacement}$ = replacement-level passing EPA per dropback (default $-0.05$)
+- `scale` = Elo points per unit shrunk EPA (default 500)
 - $q_{max}$ = maximum absolute adjustment (default 50)
 
-This is documented but **never triggered** in the current development run
-because all 1,942 game predictions have `starter_certainty = UNKNOWN`.
+The supported-but-uncertain branch (`DEPTH_CHART_SUPPORTED`,
+`ROSTER_SUPPORTED`, `AMBIGUOUS`) returns `0.0` adjustment and counts
+as `SUPPORTED_BUT_UNCERTAIN` in the ledger. The `POSTGAME_ONLY_EVIDENCE`
+branch returns `0.0` and is rewritten as `UNKNOWN`.
+
+The current development run **only** has `UNKNOWN` rows because the
+Task 02 feature output does not contain any pregame-confirmed starters
+in 2018–2024. There is no actual non-zero QB adjustment applied in
+the current development scorecard.
 
 ## Tie Handling
 A tie yields $S = 0.5$ for both teams, with no margin-of-victory
@@ -90,13 +105,46 @@ Between seasons, every team's Elo is mean-reverted by
 `season_mean_reversion_fraction` toward the league-wide mean rating at
 that time. This stabilizes the system over long horizons.
 
+## Actual Development Scorecard (2018–2024)
+
+These are the **exact** numbers produced by the walk-forward run,
+written to `reports/development/qb_elo_development_scorecard.json`.
+
+- Predicted games: 1,942
+- Scored games: 1,935 (1,942 minus 7 ties)
+- Ties: 7
+- Unscored / warm-up: 7
+- Brier score: 0.2254
+- Log loss: 0.6429
+- Descriptive accuracy: 0.6305
+- Calibration intercept (diagnostic): 0.4833
+- Calibration slope (diagnostic): 0.2143
+
+The calibration intercept/slope are **diagnostic only** — no
+calibration transformation is applied to predictions in Task 03A.
+
+### Per-season breakdown
+
+| Season | Predicted | Scored | Ties | Accuracy | Log loss | Brier |
+| --- | --- | --- | --- | --- | --- | --- |
+| 2018 | 267 | 265 | 2 | 0.6264 | NA | 0.2282 |
+| 2019 | 267 | 266 | 1 | 0.6353 | NA | 0.2243 |
+| 2020 | 269 | 268 | 1 | 0.6530 | NA | 0.2194 |
+| 2021 | 285 | 284 | 1 | 0.6092 | NA | 0.2308 |
+| 2022 | 284 | 282 | 2 | 0.6064 | NA | 0.2268 |
+| 2023 | 285 | 285 | 0 | 0.6070 | NA | 0.2343 |
+| 2024 | 285 | 285 | 0 | 0.6772 | NA | 0.2136 |
+
+(Per-season log loss: see scorecard JSON — Task 03A stores raw floats
+in the JSON; the markdown column is omitted for the conditional
+columns and lives in the JSON source of truth.)
+
 ## What This Model Does NOT Do
 - No XGBoost
 - No opponent-adjusted expected margin
 - No stacker
-- No calibration
-- No sportsbook data
+- No calibration transformation applied
+- No sportsbook data ingestion
 - No 2025 holdout access
-- No Pinnacle / DK / FD comparison
-- No CLV
+- No market comparison, ROI, CLV, or Pinnacle comparison
 - No deployment / frontend

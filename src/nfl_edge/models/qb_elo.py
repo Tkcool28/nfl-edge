@@ -35,7 +35,6 @@ from typing import Any, Mapping
 
 from ..common.errors import ConfigurationError, WalkForwardError
 
-
 # ----------------------------------------------------------------------------
 # Configuration
 # ----------------------------------------------------------------------------

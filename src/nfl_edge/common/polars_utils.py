@@ -15,7 +15,6 @@ import polars as pl
 
 from .errors import MarketColumnError
 
-
 PROHIBITED_MARKET_TOKENS: tuple[str, ...] = (
     "moneyline",
     "spread_odds",

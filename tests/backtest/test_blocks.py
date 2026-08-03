@@ -11,9 +11,9 @@ from nfl_edge.backtest.blocks import (
     DEVELOPMENT_SEASON_MAX,
     FORWARD_USE_SEASON,
     SEALED_HOLDOUT_SEASON,
+    PredictionBlock,
     assert_development_seasons_only,
     build_development_blocks,
-    PredictionBlock,
 )
 from nfl_edge.common.errors import SealedHoldoutAccessError, WalkForwardError
 

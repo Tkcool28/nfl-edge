@@ -32,7 +32,6 @@ from .blocks import (
     build_development_blocks,
 )
 
-
 # Default config for the primary run (documented in docs/qb_elo_v1.md).
 DEFAULT_ELO_CONFIG: dict[str, Any] = {
     "initial_rating": 1500.0,
@@ -55,7 +54,7 @@ def _load_games(path: Path) -> pl.DataFrame:
     The filter is explicit so that accidental 2025 leakage can be
     detected by tests that poison 2025 values.
     """
-    from ..common.errors import SealedHoldoutAccessError, WalkForwardError
+    from ..common.errors import WalkForwardError
 
     frame = pl.read_parquet(path)
     if frame.height == 0:
@@ -111,6 +110,7 @@ def run_development_walk_forward(
         c. Updates state after ALL games in the block are predicted.
     5. Writes prediction ledger, state ledger, and run manifest.
     """
+    from ..common.errors import WalkForwardError
     from ..common.fingerprint import canonical_json_sha256
     from ..common.polars_utils import assert_no_market_columns, write_parquet_deterministic
     from ..models.qb_elo import (
@@ -124,8 +124,6 @@ def run_development_walk_forward(
         ensure_team,
         initial_state,
     )
-
-    from ..common.errors import WalkForwardError
 
     if created_at is None:
         created_at = datetime.now(timezone.utc)

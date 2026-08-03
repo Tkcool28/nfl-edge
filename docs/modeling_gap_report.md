@@ -1,9 +1,10 @@
 # Modeling Gap Report — Task 03A
 
 ## Status
-The QB-Elo v1 baseline is **proven** on the 2018–2024 development period.
-The 2025 season is sealed holdout and will be evaluated in a separate
-dedicated task.
+The QB-Elo v1 baseline has been **executed** on the 2018–2024
+development period. The 2025 season is sealed holdout and is not
+evaluated in this report. The scorecard numbers below are the
+**actual** ledger values, not approximate.
 
 ## What This Report Covers
 - Features that are **available** for the 2025 forward-use season.
@@ -15,14 +16,14 @@ dedicated task.
 
 | Source | Pregame? | Available in 2018–2024? | Available in 2025? |
 | --- | --- | --- | --- |
-| Confirmed starter (depth chart) | Yes | ~0 / 2,227 | ~0 / 285 |
-| Two-deep practice report | Yes | ~0 / 2,227 | ~0 / 285 |
-| Injury report (game-day) | Yes | ~0 / 2,227 ~ low | ~0 / 285 |
-| Postgame `starter_id` | NO | 2,226 / 2,227 | unknown |
-| Schedule `starter_id` | maybe | Sealed | Sealed |
+| Confirmed starter (depth chart) | Yes | 0 / 1,942 | not consulted |
+| Two-deep practice report | Yes | 0 / 1,942 | not consulted |
+| Injury report (game-day) | Yes | 0 / 1,942 | not consulted |
+| Postgame `starter_id` | NO | 1,942 / 1,942 | not consulted |
+| Schedule `starter_id` | maybe | not consulted | not consulted |
 
-The overwhelming majority of rows have `starter_certainty =
-POSTGAME_ONLY_EVIDENCE`. This is documented in the Task 02 gap report.
+The entire 2018–2024 development prediction ledger has `qb_certainty_state = UNKNOWN`.
+No pregame starter is confirmed in the development data.
 
 ## Why QB-Elo Uses Neutral Adjustment
 Because no pregame starter is confirmed in the development data, the
@@ -40,24 +41,52 @@ documented conservative behavior and matches the Task 03A spec.
    use the same walk-forward engine.
 4. **XGBoost base model.** Task 03C.
 
-## Scorecard Reference Values (Development)
-From the Task 03A run on 2018–2024:
-- Predicted games: 1,942
-- Scored games: 1,942
-- Ties: 7
-- Brier score: ~0.24
-- Log loss: ~0.67
-- Descriptive accuracy: ~0.66
+## Exact Scorecard (Development)
 
-These are raw Elo output with no calibration. The QB-Elo baseline will
-serve as the reference Brier for the Brier Skill Score (BSS) of all
-future models. A model that scores worse than Elo is a regression.
+From the Task 03A run on 2018–2024 (source-of-truth:
+`reports/development/qb_elo_development_scorecard.json`):
+
+- Predicted games: 1,942
+- Scored games: 1,935
+- Ties: 7
+- Brier score: 0.2254
+- Log loss: 0.6429
+- Descriptive accuracy: 0.6305
+- Calibration intercept: 0.4833
+- Calibration slope: 0.2143
+
+These are raw Elo output with no calibration transformation applied.
+The QB-Elo baseline will serve as the reference Brier for the Brier
+Skill Score (BSS) of all future models. A model that scores worse than
+Elo is a regression.
+
+## Per-Season Numbers
+
+| Season | Predicted | Scored | Ties | Accuracy | Brier |
+| --- | --- | --- | --- | --- | --- |
+| 2018 | 267 | 265 | 2 | 0.6264 | 0.2282 |
+| 2019 | 267 | 266 | 1 | 0.6353 | 0.2243 |
+| 2020 | 269 | 268 | 1 | 0.6530 | 0.2194 |
+| 2021 | 285 | 284 | 1 | 0.6092 | 0.2308 |
+| 2022 | 284 | 282 | 2 | 0.6064 | 0.2268 |
+| 2023 | 285 | 285 | 0 | 0.6070 | 0.2343 |
+| 2024 | 285 | 285 | 0 | 0.6772 | 0.2136 |
+
+## QB-Certainty Coverage
+
+| Certainty | Predicted | Scored |
+| --- | --- | --- |
+| `UNKNOWN` | 1,942 | 1,935 |
+
+The entire 2018–2024 prediction ledger is `UNKNOWN`. This is the
+documented behavior of the current Task 02 feature output.
 
 ## Limitations
-- No XGBoost, no opponent adjustment, no calibration, no stacking.
-- QB adjustment is neutral for all 2018–2024 games.
-- 2025 is not evaluated here.
+- No XGBoost, no opponent adjustment, no calibration transformation, no stacking.
+- QB adjustment is neutral for all 1,942 game predictions.
+- 2025 is sealed holdout and is not evaluated in this report.
 - No market data of any kind is used.
+- No market comparison, ROI, CLV, or sportsbook comparison is produced.
 
 ## Recommended Next Step
 Task 03B: opponent-adjusted expected margin model on the same walk-forward

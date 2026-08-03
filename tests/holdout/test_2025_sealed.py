@@ -27,16 +27,8 @@ from nfl_edge.backtest.blocks import (
 )
 from nfl_edge.backtest.walk_forward import run_development_walk_forward
 from nfl_edge.common.errors import SealedHoldoutAccessError
-from nfl_edge.evaluation.calibration import reliability_table
 from nfl_edge.evaluation.metrics import brier_score, log_loss
 from nfl_edge.evaluation.scorecard import build_development_scorecard
-from nfl_edge.models.qb_elo import (
-    EloConfig,
-    apply_season_carryover,
-    initial_state,
-    rebuild_state_from_ledger,
-)
-
 
 REPO_ROOT = Path("/root/nfl-edge")
 GAMES_PATH = REPO_ROOT / "data/derived/features_v1/game_features_2018_2025.parquet"
@@ -91,9 +83,11 @@ def _cleanup():
     poisoned.write_parquet(poisoned_path)
     _run(POISONED_OUTPUT, games_override=poisoned_path)
     yield
-    for p in [CLEAN_OUTPUT, POISONED_OUTPUT, poisoned_path]:
+    for p in [CLEAN_OUTPUT, POISONED_OUTPUT]:
         if p.exists():
             shutil.rmtree(p)
+    if poisoned_path.exists():
+        poisoned_path.unlink()
 
 
 def test_clean_artifact_exists():
@@ -121,8 +115,12 @@ def test_2025_poisoning_does_not_change_predictions():
 
 
 def test_2025_poisoning_does_not_change_state():
-    clean_state = pl.read_parquet(CLEAN_OUTPUT / "qb_elo_state_transitions_2018_2024.parquet").sort("state_update_order")
-    poison_state = pl.read_parquet(POISONED_OUTPUT / "qb_elo_state_transitions_2018_2024.parquet").sort("state_update_order")
+    clean_state = pl.read_parquet(
+        CLEAN_OUTPUT / "qb_elo_state_transitions_2018_2024.parquet"
+    ).sort("state_update_order")
+    poison_state = pl.read_parquet(
+        POISONED_OUTPUT / "qb_elo_state_transitions_2018_2024.parquet"
+    ).sort("state_update_order")
     assert clean_state.height == poison_state.height
     for col in ["elo_before", "elo_change", "elo_after", "expected_result", "actual_result"]:
         assert clean_state[col].to_list() == poison_state[col].to_list(), f"Column {col} differs"

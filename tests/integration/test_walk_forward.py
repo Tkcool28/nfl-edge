@@ -26,7 +26,6 @@ from nfl_edge.models.qb_elo import (
     rebuild_state_from_ledger,
 )
 
-
 REPO_ROOT = Path("/root/nfl-edge")
 GAMES_PATH = REPO_ROOT / "data/derived/features_v1/game_features_2018_2025.parquet"
 TEAM_PATH = REPO_ROOT / "data/derived/features_v1/team_pregame_features_2018_2025.parquet"
