@@ -33,16 +33,38 @@ import requests
 DEFAULT_ENDPOINT = "https://api.sleeper.app/v1/players/nfl"
 DEFAULT_POSITION = "QB"
 DEFAULT_ACTIVE = "true"
-DEFAULT_TIMEOUT_SECONDS = 30.0
+
+# Bounded retry budget.
+#
+# Worst-case client retry duration must remain strictly below
+# systemd ``TimeoutStartSec=60``. With ``DEFAULT_TIMEOUT_SECONDS``
+# at 10s and three attempts (initial + two retries) with the
+# backoff sequence ``(1.0, 2.0)`` (placed only *between* failed
+# attempts, never before the first attempt), the worst case is:
+#
+#     attempt 1: 10s (request, no preceding backoff)
+#     backoff:   1.0s (placed after attempt 1 fails)
+#     attempt 2: 10s (request)
+#     backoff:   2.0s (placed after attempt 2 fails)
+#     attempt 3: 10s (request)
+#     -----------------
+#     total:     33s
+#
+# Headroom under TimeoutStartSec=60 is therefore 60 - 33 = 27s for
+# lock acquisition, parquet writes, report rendering, and process
+# shutdown. The audit never increases the service timeout merely to
+# accommodate a longer client retry budget.
+DEFAULT_TIMEOUT_SECONDS = 10.0
 
 # The Sleeper docs note "stay under 1000 API calls per minute". This
 # audit makes one call per scheduled run, so this constant is a
 # defensive tripwire for the integration test runner.
 SOFT_RATE_LIMIT_PER_MINUTE = 1000
 
-# Bounded retry policy. Two retries, exponential backoff, total bounded
-# to roughly 4 x timeout seconds.
-DEFAULT_RETRY_BACKOFF_SECONDS = (1.0, 2.0, 4.0)
+# Two retries with exponential backoff. Total worst-case client
+# budget is documented at ``DEFAULT_TIMEOUT_SECONDS``.
+DEFAULT_RETRY_BACKOFF_SECONDS = (1.0, 2.0)
+MAX_ATTEMPTS = 3
 
 
 class SleeperAuditError(RuntimeError):
@@ -183,7 +205,13 @@ def fetch_attempts(
     raw_dir.mkdir(parents=True, exist_ok=True)
     sess = session or requests.Session()
     attempts: list[SleeperFetchResult] = []
-    schedule = list(backoff_seconds) + [0.0]  # final "0" means the last attempt
+    # ``backoff_seconds`` is the inter-attempt delay placed *only*
+    # between a failed attempt and the next retry. The final
+    # ``0.0`` ensures the last attempt runs without a preceding
+    # sleep. The number of attempts is capped by ``MAX_ATTEMPTS``
+    # so the client never exceeds the documented worst-case
+    # budget even if a caller supplies a longer ``backoff_seconds``.
+    schedule = list(backoff_seconds)[: MAX_ATTEMPTS - 1] + [0.0]
     for attempt_index, delay in enumerate(schedule, start=1):
         if delay > 0.0:
             sleep(delay)

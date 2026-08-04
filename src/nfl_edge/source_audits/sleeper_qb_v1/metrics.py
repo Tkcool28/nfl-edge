@@ -33,6 +33,7 @@ Reconciling the two views:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 import polars as pl
@@ -240,3 +241,96 @@ def compute_reliability_metrics(
         "longest_interval_without_successful_fetch_seconds": longest_interval,
         "incomplete_response_events": incomplete_events,
     }
+
+
+def _safe_read_parquet(path: Path) -> pl.DataFrame:
+    """Read a parquet file; return an empty frame if it is missing.
+
+    The rolling metrics build reads every audit artifact; an audit
+    that has never written ``normalized/qb_snapshots.parquet`` (for
+    example) must not crash the report writer.
+    """
+    if not path.exists():
+        return pl.DataFrame()
+    return pl.read_parquet(path)
+
+
+def build_runs_from_disk(
+    audit_root: str | Path,
+) -> tuple[list[RunMetric], pl.DataFrame]:
+    """Rebuild a list of ``RunMetric`` from the persisted audit history.
+
+    The function reads every parquet artifact under
+    ``audit_root/normalized/`` and the ``fetch_ledger.parquet`` at
+    the audit root, groups attempts by ``observed_at_utc`` (each
+    group is one scheduled run), and returns one ``RunMetric`` per
+    group. The second return value is the full change ledger, also
+    read from disk.
+
+    A run with only failed attempts is recorded as a failed run.
+    A run with at least one successful attempt (regardless of
+    retries) is recorded as a successful run; the attempt list
+    preserves the full retry history.
+    """
+    audit_root = Path(audit_root)
+    fetch_ledger_path = audit_root / "fetch_ledger.parquet"
+    active_path = audit_root / "normalized" / "qb_snapshots.parquet"
+    crosswalk_path = audit_root / "normalized" / "qb_identity_crosswalk.parquet"
+    change_ledger_path = audit_root / "normalized" / "qb_change_ledger.parquet"
+
+    fetch_ledger = _safe_read_parquet(fetch_ledger_path)
+    active = _safe_read_parquet(active_path)
+    crosswalk = _safe_read_parquet(crosswalk_path)
+    change_ledger = _safe_read_parquet(change_ledger_path)
+
+    runs: list[RunMetric] = []
+    if fetch_ledger.height > 0 and "observed_at_utc" in fetch_ledger.columns:
+        groups = fetch_ledger.partition_by(
+            ["observed_at_utc"], as_dict=True, maintain_order=True
+        )
+        for key, group in groups.items():
+            observed_at_utc = str(key) if not isinstance(key, tuple) else str(key[0])
+            attempts = group.sort("attempt_number").to_dicts()
+            snapshot_ids = group.get_column("snapshot_id").unique().to_list()
+            snapshot_id = str(snapshot_ids[0]) if snapshot_ids else ""
+            success = any(bool(a.get("success")) for a in attempts)
+            active_rows: list[dict[str, Any]] = []
+            if active.height > 0 and "fetched_at_utc" in active.columns:
+                match = active.filter(pl.col("fetched_at_utc") == observed_at_utc)
+                active_rows = match.to_dicts()
+            crosswalk_rows: list[dict[str, Any]] = []
+            if crosswalk.height > 0 and snapshot_id and "snapshot_id" in crosswalk.columns:
+                cw_match = crosswalk.filter(pl.col("snapshot_id") == snapshot_id)
+                crosswalk_rows = cw_match.to_dicts()
+            runs.append(
+                RunMetric(
+                    snapshot_id=snapshot_id,
+                    observed_at_utc=observed_at_utc,
+                    success=success,
+                    fetch_attempts=attempts,
+                    active_rows=active_rows,
+                    crosswalk_rows=crosswalk_rows,
+                )
+            )
+
+    return runs, change_ledger
+
+
+def compute_rolling_metrics_from_disk(
+    audit_root: str | Path,
+    *,
+    freshness_history: list[Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Compute the rolling metrics from persisted audit artifacts.
+
+    This is the entry point the live-audit report writer uses. It
+    reads the full history (every successful and failed run) so
+    the rolling metrics include the entire observation window, not
+    just the current run.
+    """
+    runs, change_ledger = build_runs_from_disk(audit_root)
+    return compute_reliability_metrics(
+        runs=runs,
+        change_ledger=change_ledger,
+        freshness_history=freshness_history,
+    )

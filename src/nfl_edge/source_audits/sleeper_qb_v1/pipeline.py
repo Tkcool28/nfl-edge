@@ -72,7 +72,7 @@ from .ho_game import (
     resolve_hof_game,
 )
 from .ids import snapshot_id_for, utc_now
-from .metrics import RunMetric, compute_reliability_metrics
+from .metrics import compute_rolling_metrics_from_disk
 from .normalize import QB_SNAPSHOT_DTYPES, normalize_qb_payload
 from .outcomes import (
     ERROR_TOKENS,
@@ -429,20 +429,13 @@ class AuditOrchestrator:
             hof_payload = hof_result.get("payload")
             hof_run_outcome = hof_result.get("outcome")
 
-        # 14. Live audit report + metrics.
+        # 14. Live audit report + metrics. The rolling metrics block
+        # aggregates over the entire persisted history (every run,
+        # every snapshot), not just the current run; this is the
+        # spec's "true rolling" requirement.
         try:
-            metrics = compute_reliability_metrics(
-                runs=[
-                    RunMetric(
-                        snapshot_id=snapshot_id,
-                        observed_at_utc=observed_at_utc,
-                        success=True,
-                        fetch_attempts=[asdict(a) for a in attempts],
-                        active_rows=active_frame.to_dicts(),
-                        crosswalk_rows=crosswalk.to_dicts(),
-                    )
-                ],
-                change_ledger=change_ledger,
+            metrics = compute_rolling_metrics_from_disk(
+                self.audit_root,
                 freshness_history=[
                     {
                         "last_success_at_utc": observed_at_utc,
