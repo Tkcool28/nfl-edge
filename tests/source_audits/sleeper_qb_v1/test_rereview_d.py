@@ -72,12 +72,11 @@ def test_hof_union_preserves_pregame_only_and_postgame_only_qbs() -> None:
     """
     home = "KC"
     away = "DET"
-    other_team = "TB"
-    # Pregame: Mahomes (KC) is in pregame only.
+    # Pregame: Mahomes (KC) and a DET backup (9999, pregame-only).
     pregame = pl.DataFrame(
         [
             _make_qb_row("1042", home, first_name="Patrick", last_name="Mahomes"),
-            _make_qb_row("9999", other_team),
+            _make_qb_row("9999", away, first_name="Backup", last_name="Pregamer"),
         ]
     )
     pregame_evidence = pl.DataFrame(
@@ -112,12 +111,12 @@ def test_hof_union_preserves_pregame_only_and_postgame_only_qbs() -> None:
         postgame_normalized_frame=postgame,
         all_snapshot_ids=["pregame-1", "postgame-1"],
     )
-    # The union has 1042 (Mahomes, pregame+postgame) and 4242
-    # (Goff, postgame-only). The other-team 9999 is excluded.
-    assert set(record["relevant_sleeper_qbs"]) == {"1042", "4242"}
+    # The union has 1042 (Mahomes, pregame+postgame), 4242 (Goff,
+    # postgame-only), and 9999 (backup QB, pregame-only).
+    assert set(record["relevant_sleeper_qbs"]) == {"1042", "4242", "9999"}
     # Per-QB position in the lists is sorted by sleeper_player_id,
-    # so the order is ["1042", "4242"].
-    # Index 0 = Mahomes.
+    # so the order is ["1042", "4242", "9999"].
+    # Index 0 = Mahomes (pregame+postgame).
     assert record["pregame_depth_order"][0] == "1"
     assert record["pregame_injury_status"][0] == "Healthy"
     assert record["pregame_evidence_state"][0] == "DEPTH_CHART_EXPECTED_HEALTHY"
@@ -134,6 +133,17 @@ def test_hof_union_preserves_pregame_only_and_postgame_only_qbs() -> None:
     assert record["observed_depth_order"][1] == "1"
     assert record["observed_injury_status"][1] == "Healthy"
     assert record["derived_evidence_state"][1] == "DEPTH_CHART_EXPECTED_OUT"
+    # Index 2 = 9999 (pregame-only DET backup QB).
+    # Pregame fields are populated.
+    assert record["pregame_depth_order"][2] == "1"
+    assert record["pregame_injury_status"][2] == "Healthy"
+    assert record["pregame_practice_participation"][2] == "Full"
+    assert record["pregame_evidence_state"][2] is None  # no pregame evidence
+    # Postgame fields are null (he was not in postgame).
+    assert record["observed_depth_order"][2] is None
+    assert record["observed_injury_status"][2] is None
+    assert record["observed_practice_participation"][2] is None
+    assert record["derived_evidence_state"][2] is None
 
 
 def test_hof_postgame_only_qb_does_not_synthesize_pregame_history() -> None:
@@ -433,9 +443,10 @@ def test_run_history_success_recorded_only_for_terminal_success(
     r2 = _run_cli(cfg, ["--kind=scheduled"], env=env, timeout=60.0)
     assert r2.returncode == 10, f"stderr={r2.stderr!r}"
     # Read the run history.
-    history_path = audit_root / "run_history.jsonl"
+    history_path = audit_root / "run_history.parquet"
     assert history_path.exists()
-    rows = [json.loads(line) for line in history_path.read_text().splitlines()]
+    history_frame = pl.read_parquet(history_path)
+    rows = history_frame.to_dicts()
     outcomes = [r["outcome"] for r in rows]
     # Exactly one SUCCESS and one TRANSPORT_FAILURE, in that order.
     assert outcomes == ["SUCCESS", "TRANSPORT_FAILURE"]
@@ -592,6 +603,57 @@ def test_atomic_write_forced_failure_before_replace_preserves_old_target(
     assert target.read_bytes() == b"original content"
 
 
+def test_atomic_write_bytes_failure_after_replace_raises_and_cleans_temp(
+    tmp_path: Path,
+) -> None:
+    """If ``os.replace`` succeeds but the subsequent parent-dir
+    ``fsync`` fails, ``atomic_write_bytes`` must raise ``OSError``
+    and must not leave the temp file behind.
+    """
+    from nfl_edge.source_audits.sleeper_qb_v1.atomic_io import (
+        atomic_write_bytes,
+    )
+
+    target = tmp_path / "out.bin"
+    target.write_bytes(b"original content")
+
+    real_replace = os.replace
+    real_fsync = os.fsync
+
+    # Track whether replace has happened; fsync the parent dir only.
+    replace_done = {"value": False}
+
+    def spy_fsync(fd: int) -> None:
+        if replace_done["value"]:
+            raise OSError("simulated fsync failure on parent dir")
+        real_fsync(fd)
+
+    def spy_replace(src: str, dst: str) -> None:
+        real_replace(src, dst)
+        replace_done["value"] = True
+
+    os.replace = spy_replace  # type: ignore[assignment]
+    os.fsync = spy_fsync  # type: ignore[assignment]
+    try:
+        with pytest.raises(OSError, match="simulated fsync failure"):
+            atomic_write_bytes(target, b"new content")
+    finally:
+        os.replace = real_replace  # type: ignore[assignment]
+        os.fsync = real_fsync  # type: ignore[assignment]
+
+    # Temp files must be cleaned up.
+    temp_files = list(tmp_path.glob(".*.tmp.*"))
+    assert not temp_files, f"temp files left behind: {temp_files}"
+    # The target must be unchanged (replace happened, but the
+    # failure after replace means the write is reported as failed;
+    # the target was replaced with new content, but the caller must
+    # treat this as a failure — the data may not be durable).
+    # Per the rereview contract, after a replace+fsync failure the
+    # caller must handle the PERSISTENCE_FAILURE; the target may
+    # contain the new content but is not guaranteed durable.
+    # The critical guarantee is: no temp file leaks.
+
+
 # ------------------------------------------------------------------ #
 # Fix 6 — terminal exact-ID conflicts
 # ------------------------------------------------------------------ #
@@ -640,7 +702,7 @@ def _crosswalk_row(
         sleeper_record=sleeper_record,
         gsis_to_nflverse=indexes[0],
         espn_to_nflverse=indexes[1],
-        other_stable_to_nflverse=indexes[2],
+        provider_to_nflverse=indexes[2],
         sleeper_to_nflverse=indexes[4],
         name_team_to_nflverse=indexes[3],
     )

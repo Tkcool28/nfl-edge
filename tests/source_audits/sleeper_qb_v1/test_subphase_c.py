@@ -98,7 +98,7 @@ def _crosswalk_row(
         build_nflverse_indexes,
     )
 
-    gsis_idx, espn_idx, other_idx, name_team_idx, sleeper_idx = (
+    gsis_idx, espn_idx, provider_idx, name_team_idx, sleeper_idx = (
         build_nflverse_indexes(nflverse)
     )
     return _row_for_sleeper(
@@ -106,7 +106,7 @@ def _crosswalk_row(
         sleeper_record=sleeper_record,
         gsis_to_nflverse=gsis_idx,
         espn_to_nflverse=espn_idx,
-        other_stable_to_nflverse=other_idx,
+        provider_to_nflverse=provider_idx,
         name_team_to_nflverse=name_team_idx,
         sleeper_to_nflverse=sleeper_idx,
     )

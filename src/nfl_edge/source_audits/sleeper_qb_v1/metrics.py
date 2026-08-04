@@ -269,9 +269,9 @@ def build_runs_from_disk(
 ) -> tuple[list[RunMetric], pl.DataFrame]:
     """Rebuild a list of ``RunMetric`` from the persisted audit history.
 
-    The function reads ``run_history.jsonl`` (the terminal run
+    The function reads ``run_history.parquet`` (the terminal run
     history) as its primary source of truth. Every row in
-    ``run_history.jsonl`` becomes one ``RunMetric`` with a
+    ``run_history.parquet`` becomes one ``RunMetric`` with a
     terminal ``run_outcome`` and the corresponding ``success``
     boolean. The ``fetch_ledger.parquet`` is read second to
     attach per-run attempt detail (latency, http_status, response
@@ -293,26 +293,23 @@ def build_runs_from_disk(
     active_path = audit_root / "normalized" / "qb_snapshots.parquet"
     crosswalk_path = audit_root / "normalized" / "qb_identity_crosswalk.parquet"
     change_ledger_path = audit_root / "normalized" / "qb_change_ledger.parquet"
-    run_history_path = audit_root / "run_history.jsonl"
+    run_history_path = audit_root / "run_history.parquet"
 
     fetch_ledger = _safe_read_parquet(fetch_ledger_path)
     active = _safe_read_parquet(active_path)
     crosswalk = _safe_read_parquet(crosswalk_path)
     change_ledger = _safe_read_parquet(change_ledger_path)
 
-    # Read run history (terminal outcomes). One JSON object per line.
-    import json as _json
+    # Read run history (terminal outcomes). One parquet row per run.
+    # Rereview 4852338912: run_history.parquet replaces run_history.jsonl.
+    # The parquet file is the single source of truth for terminal
+    # outcomes. Malformed rows (e.g. from an interrupted write) are
+    # surfaced, not silently skipped — the file is written atomically
+    # so partial writes cannot occur.
     history: list[dict[str, Any]] = []
-    if run_history_path.exists():
-        for raw_line in run_history_path.read_text().splitlines():
-            if not raw_line.strip():
-                continue
-            try:
-                history.append(_json.loads(raw_line))
-            except _json.JSONDecodeError:
-                # Skip malformed lines; the metrics build must not
-                # crash on a single bad write.
-                continue
+    if run_history_path.exists() and run_history_path.stat().st_size > 0:
+        run_history_frame = pl.read_parquet(run_history_path)
+        history = run_history_frame.to_dicts()
 
     runs: list[RunMetric] = []
     for record in history:

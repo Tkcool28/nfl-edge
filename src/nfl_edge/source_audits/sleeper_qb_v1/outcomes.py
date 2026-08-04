@@ -34,6 +34,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 
+import polars as pl
+
 
 class RunOutcome(str, Enum):
     """The seven allowed terminal outcomes of a single audit run."""
@@ -45,6 +47,26 @@ class RunOutcome(str, Enum):
     PERSISTENCE_FAILURE = "PERSISTENCE_FAILURE"
     LOCK_FAILURE = "LOCK_FAILURE"
     REFERENCE_FAILURE = "REFERENCE_FAILURE"
+
+
+# Rereview 4852338912: terminal run history is a durable parquet file
+# (``run_history.parquet``) — not append-only JSONL. Each invocation
+# writes exactly one row. ``success`` is derived from
+# ``outcome == SUCCESS`` and is never derived from a single HTTP
+# attempt.
+RUN_HISTORY_ROW_DTYPES: dict[str, pl.DataType] = {
+    "snapshot_id": pl.Utf8,
+    "observed_at_utc": pl.Utf8,
+    "finished_at_utc": pl.Utf8,
+    "outcome": pl.Utf8,
+    "error_class": pl.Utf8,
+    "error_message": pl.Utf8,
+    "error_token": pl.Utf8,
+    "exit_code": pl.Int32,
+    "kind": pl.Utf8,
+    "attempt_count": pl.Int32,
+    "success": pl.Boolean,
+}
 
 
 # CLI exit codes per outcome. Every failure category exits nonzero.
@@ -82,7 +104,7 @@ class RunOutcomeRecord:
     Rereview contract (Rereview 4851615980): the record also
     carries ``kind``, ``attempt_count``, and ``success`` so the
     terminal run history (one row per run in
-    ``run_history.jsonl``) is the single source of truth for the
+    ``run_history.parquet``) is the single source of truth for the
     rolling metrics. ``success`` is derived from
     ``outcome == RunOutcome.SUCCESS`` and never from a single
     HTTP attempt.

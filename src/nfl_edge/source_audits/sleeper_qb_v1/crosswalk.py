@@ -92,7 +92,7 @@ def _row_for_sleeper(
     sleeper_record: Mapping[str, Any],
     gsis_to_nflverse: dict[str, set[str]],
     espn_to_nflverse: dict[str, set[str]],
-    other_stable_to_nflverse: dict[str, set[str]],
+    provider_to_nflverse: dict[str, dict[str, set[str]]],
     name_team_to_nflverse: dict[tuple[str, str], set[str]],
     sleeper_to_nflverse: dict[str, set[str]],
 ) -> dict[str, Any]:
@@ -195,7 +195,10 @@ def _row_for_sleeper(
             match_method = MATCH_METHOD_ESPN
             match_confidence = 0.95
             is_matched = True
-    # Priority 3: another exact stable provider id.
+    # Priority 3: another exact stable provider id. Each provider
+    # (sportradar / yahoo / fantasy_data / rotowire) maintains its
+    # own namespace so a token collision across providers cannot
+    # false-match or false-conflict. See Rereview 4852338912.
     if not conflict_terminal and not is_matched:
         for stable_id, label in (
             (sportradar_id, "sportradar"),
@@ -205,8 +208,9 @@ def _row_for_sleeper(
         ):
             if not stable_id:
                 continue
+            provider_index = provider_to_nflverse.get(label, {})
             picked, conflict, terminal = _pick_unique(
-                other_stable_to_nflverse.get(str(stable_id)),
+                provider_index.get(str(stable_id)),
                 method_label=f"{MATCH_METHOD_OTHER_STABLE}_{label}",
                 confidence=0.9,
             )
@@ -292,17 +296,24 @@ def build_nflverse_indexes(
 ) -> tuple[
     dict[str, set[str]],
     dict[str, set[str]],
-    dict[str, set[str]],
+    dict[str, dict[str, set[str]]],
     dict[tuple[str, str], set[str]],
     dict[str, set[str]],
 ]:
-    """Build the four (now five) lookup tables used by the crosswalk.
+    """Build the lookup tables used by the crosswalk.
 
     Every exact-ID index is a ``dict[token, set[nflverse_id]]``. When
     two nflverse rows share the same Sleeper / GSIS / ESPN /
     sportradar / yahoo / fantasy_data / rotowire id, both rows
     appear in the set; the crosswalk treats that as a conflict and
     refuses to pick the first row silently.
+
+    Rereview 4852338912: the four "other" provider IDs (sportradar,
+    yahoo, fantasy_data, rotowire) must NOT share a single namespace.
+    A token collision across different providers must not match or
+    conflict. Each provider gets its own ``dict[token, set[id]]``
+    nested inside the returned ``provider_to_nflverse`` map keyed by
+    provider name.
 
     The expected nflverse input has columns:
     ``player_id, gsis_id, espn_id, sportradar_id, yahoo_id,
@@ -311,9 +322,9 @@ def build_nflverse_indexes(
     ``sleeper_player_id`` columns the orchestrator's
     ``_read_nflverse_qbs`` synthesizes.
 
-    Only rows where ``position == "QB"`` are considered. The 2025
-    sealed holdout is excluded by an explicit filter so a 2025 row
-    can never accidentally contribute to a crosswalk entry.
+    Returns ``(gsis, espn, provider_to_nflverse, name_team, sleeper)``
+    where ``provider_to_nflverse`` is
+    ``dict[provider_name, dict[token, set[nflverse_id]]]``.
     """
     qbs = nflverse_qbs
     if "position" in qbs.columns:
@@ -330,7 +341,14 @@ def build_nflverse_indexes(
 
     gsis_index: dict[str, set[str]] = {}
     espn_index: dict[str, set[str]] = {}
-    other_index: dict[str, set[str]] = {}
+    # Rereview 4852338912: per-provider namespace for other-stable IDs.
+    # sportradar_id="123" and yahoo_id="123" must NOT collide.
+    provider_indexes: dict[str, dict[str, set[str]]] = {
+        "sportradar": {},
+        "yahoo": {},
+        "fantasy_data": {},
+        "rotowire": {},
+    }
     name_team_index: dict[tuple[str, str], set[str]] = {}
     sleeper_index: dict[str, set[str]] = {}
 
@@ -350,10 +368,15 @@ def build_nflverse_indexes(
             value = row.get(col)
             if value:
                 _add(index, str(value).strip(), str(nflverse_id))
-        for col in ("sportradar_id", "yahoo_id", "fantasy_data_id", "rotowire_id"):
+        for col, label in (
+            ("sportradar_id", "sportradar"),
+            ("yahoo_id", "yahoo"),
+            ("fantasy_data_id", "fantasy_data"),
+            ("rotowire_id", "rotowire"),
+        ):
             value = row.get(col)
             if value:
-                _add(other_index, str(value).strip(), str(nflverse_id))
+                _add(provider_indexes[label], str(value).strip(), str(nflverse_id))
         for sleeper_col in ("sleeper_id_str", "sleeper_id", "sleeper_player_id"):
             value = row.get(sleeper_col)
             if value:
@@ -366,7 +389,7 @@ def build_nflverse_indexes(
         for name_key in (full_name, first_last):
             if name_key and team:
                 name_team_index.setdefault((name_key, team), set()).add(str(nflverse_id))
-    return gsis_index, espn_index, other_index, name_team_index, sleeper_index
+    return gsis_index, espn_index, provider_indexes, name_team_index, sleeper_index
 
 
 def build_crosswalk(
@@ -389,7 +412,7 @@ def build_crosswalk(
             sleeper_record=row,
             gsis_to_nflverse=indexes[0],
             espn_to_nflverse=indexes[1],
-            other_stable_to_nflverse=indexes[2],
+            provider_to_nflverse=indexes[2],
             name_team_to_nflverse=indexes[3],
             sleeper_to_nflverse=indexes[4],
         )

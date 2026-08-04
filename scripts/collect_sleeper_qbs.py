@@ -43,6 +43,8 @@ if str(SRC) not in sys.path:
 
 from nfl_edge.source_audits.sleeper_qb_v1.atomic_io import (  # noqa: E402
     ReferenceArtifact,
+    atomic_append_run_history,
+    atomic_write_text,
 )
 from nfl_edge.source_audits.sleeper_qb_v1.locking import (  # noqa: E402
     LockFailure,
@@ -51,7 +53,9 @@ from nfl_edge.source_audits.sleeper_qb_v1.locking import (  # noqa: E402
 from nfl_edge.source_audits.sleeper_qb_v1.outcomes import (  # noqa: E402
     ERROR_TOKENS,
     EXIT_CODES,
+    RUN_HISTORY_ROW_DTYPES,
     RunOutcome,
+    RunOutcomeRecord,
 )
 from nfl_edge.source_audits.sleeper_qb_v1.pipeline import (  # noqa: E402
     AuditOrchestrator,
@@ -89,6 +93,7 @@ def _resolve_reference_manifest(
     *,
     cli_value: Path | None,
     config: dict[str, Any],
+    audit_root: Path | None = None,
 ) -> tuple[list[ReferenceArtifact], str | None]:
     """Resolve the configured reference manifest.
 
@@ -102,6 +107,11 @@ def _resolve_reference_manifest(
     a configured manifest is present, the CLI flag must agree
     (same file). This avoids silently skipping verification in a
     way that defeats the clean-clone contract.
+
+    Rereview 4852338912: ``OSError`` from reading the manifest
+    file is caught and returned as an error string, so the CLI
+    can persist it to ``latest_run_status.json`` and the terminal
+    run history rather than crashing with a bare traceback.
     """
     config_value = config.get("reference_manifest")
     if config_value is None:
@@ -111,6 +121,8 @@ def _resolve_reference_manifest(
         return ([], f"missing reference manifest file: {configured_path}")
     try:
         raw = json.loads(configured_path.read_text())
+    except OSError as exc:
+        return ([], f"cannot read reference manifest file: {exc}")
     except json.JSONDecodeError as exc:
         return ([], f"malformed reference manifest JSON: {exc}")
     if not isinstance(raw, dict):
@@ -152,12 +164,23 @@ def _emit_terminal(
     error_class: str | None = None,
     error_message: str | None = None,
     extra: dict[str, Any] | None = None,
+    audit_root: Path | None = None,
+    snapshot_id: str | None = None,
+    observed_at_utc: str | None = None,
+    attempt_count: int = 0,
 ) -> None:
     """Print a structured terminal outcome JSON to stderr.
 
     Used when the CLI must abort with a typed outcome before the
     orchestrator's normal pipeline can return a result (e.g. a
     malformed config or a missing reference manifest).
+
+    Rereview 4852338912: when ``audit_root`` is known, the terminal
+    outcome is also durably persisted to ``latest_run_status.json``
+    and ``run_history.parquet`` so the rolling metrics and the
+    audit root's single-source-of-truth pointer both reflect the
+    failure. For failures before ``audit_root`` is known, stderr
+    + nonzero exit is the acceptable fallback.
     """
     payload: dict[str, Any] = {
         "run_outcome": outcome.value,
@@ -171,6 +194,40 @@ def _emit_terminal(
     if extra:
         payload.update(extra)
     print(json.dumps(payload, indent=2, default=str), file=sys.stderr)
+
+    # When audit_root is known, durably persist the terminal outcome.
+    if audit_root is not None:
+        from datetime import datetime, timezone
+        finished_at = datetime.now(timezone.utc).isoformat()
+        record = RunOutcomeRecord(
+            outcome=outcome,
+            snapshot_id=snapshot_id,
+            observed_at_utc=observed_at_utc,
+            finished_at_utc=finished_at,
+            error_class=error_class,
+            error_message=error_message,
+            error_token=ERROR_TOKENS.get(outcome, ""),
+            exit_code=EXIT_CODES[outcome],
+            kind="scheduled",
+            attempt_count=attempt_count,
+        )
+        latest_status_path = audit_root / "latest_run_status.json"
+        history_path = audit_root / "run_history.parquet"
+        try:
+            atomic_write_text(
+                latest_status_path,
+                json.dumps(record.to_dict(), indent=2, default=str) + "\n",
+            )
+        except OSError:
+            pass
+        try:
+            atomic_append_run_history(
+                history_path,
+                record.to_dict(),
+                row_schema=RUN_HISTORY_ROW_DTYPES,
+            )
+        except OSError:
+            pass
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -263,18 +320,19 @@ def main(argv: list[str] | None = None) -> int:
             error_message=f"cannot create audit_root {audit_root}: {exc}",
         )
         return EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE]
-
     # 3. Reference-manifest resolution. Mandatory per the
     #    rereview contract; any failure is a REFERENCE_FAILURE.
     reference_manifest, manifest_error = _resolve_reference_manifest(
         cli_value=args.reference_manifest,
         config=config,
+        audit_root=audit_root,
     )
     if manifest_error is not None:
         _emit_terminal(
             outcome=RunOutcome.REFERENCE_FAILURE,
             error_class="ReferenceManifestResolutionError",
             error_message=manifest_error,
+            audit_root=audit_root,
         )
         return EXIT_CODES[RunOutcome.REFERENCE_FAILURE]
 
@@ -289,6 +347,7 @@ def main(argv: list[str] | None = None) -> int:
                 outcome=RunOutcome.NORMALIZATION_FAILURE,
                 error_class=type(exc).__name__,
                 error_message=f"cannot load fake session: {exc}",
+                audit_root=audit_root,
             )
             return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
 
@@ -309,6 +368,7 @@ def main(argv: list[str] | None = None) -> int:
                     outcome=RunOutcome.NORMALIZATION_FAILURE,
                     error_class=type(exc).__name__,
                     error_message=f"cannot construct orchestrator: {exc}",
+                    audit_root=audit_root,
                 )
                 return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
             # 6. Run.
@@ -324,6 +384,7 @@ def main(argv: list[str] | None = None) -> int:
                     outcome=RunOutcome.PERSISTENCE_FAILURE,
                     error_class=type(exc).__name__,
                     error_message=str(exc),
+                    audit_root=audit_root,
                 )
                 return EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE]
             except Exception as exc:  # noqa: BLE001
@@ -331,6 +392,7 @@ def main(argv: list[str] | None = None) -> int:
                     outcome=RunOutcome.NORMALIZATION_FAILURE,
                     error_class=type(exc).__name__,
                     error_message=str(exc),
+                    audit_root=audit_root,
                 )
                 return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
     except LockFailure as exc:
@@ -338,6 +400,7 @@ def main(argv: list[str] | None = None) -> int:
             outcome=RunOutcome.LOCK_FAILURE,
             error_class="LockFailure",
             error_message=str(exc),
+            audit_root=audit_root,
         )
         return EXIT_CODES[RunOutcome.LOCK_FAILURE]
 

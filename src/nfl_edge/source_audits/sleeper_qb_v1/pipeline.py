@@ -38,7 +38,6 @@ fully durable.
 from __future__ import annotations
 
 import json
-import os
 from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -54,6 +53,7 @@ from ...sources.sleeper import (
 from .atomic_io import (
     ReferenceArtifact,
     atomic_append_parquet,
+    atomic_append_run_history,
     atomic_write_parquet,
     atomic_write_text,
     verify_reference_manifest,
@@ -78,6 +78,7 @@ from .normalize import QB_SNAPSHOT_DTYPES, normalize_qb_payload
 from .outcomes import (
     ERROR_TOKENS,
     EXIT_CODES,
+    RUN_HISTORY_ROW_DTYPES,
     RunOutcome,
     RunOutcomeRecord,
 )
@@ -214,6 +215,7 @@ class AuditOrchestrator:
         self.hof_obs_path = self.normalized_root / "hof_game_observation.parquet"
         self.latest_pointer_path = self.audit_root / "latest_snapshot.json"
         self.latest_run_status_path = self.audit_root / "latest_run_status.json"
+        self.run_history_path = self.audit_root / "run_history.parquet"
         self.pregame_pointer_path = self.audit_root / "hof_pregame_pointer.json"
 
     # ------------------------------------------------------------------
@@ -411,20 +413,9 @@ class AuditOrchestrator:
         )
         self._append_changes(change_ledger)
 
-        # 12. Update latest pointer.
-        latest_pointer = {
-            "snapshot_id": snapshot_id,
-            "observed_at_utc": observed_at_utc,
-            "payload_sha256": winner.sha256,
-            "raw_payload_path": winner.raw_payload_path,
-            "kind": kind,
-        }
-        atomic_write_text(
-            self.latest_pointer_path,
-            json.dumps(latest_pointer, indent=2, default=str) + "\n",
-        )
-
-        # 13. HOF workflow.
+        # 12. HOF workflow — completes before any terminal-state
+        # persistence so a failed HOF run does not advance the
+        # latest-success pointer or write a misleading live report.
         hof_payload: dict[str, Any] | None = None
         hof_run_outcome: RunOutcome | None = None
         if kind in {"pregame", "postgame"}:
@@ -438,10 +429,84 @@ class AuditOrchestrator:
             hof_payload = hof_result.get("payload")
             hof_run_outcome = hof_result.get("outcome")
 
-        # 14. Live audit report + metrics. The rolling metrics block
-        # aggregates over the entire persisted history (every run,
-        # every snapshot), not just the current run; this is the
-        # spec's "true rolling" requirement.
+        # 13. Determine the final terminal outcome. The HTTP fetch
+        # succeeded, but a downstream HOF failure downgrades the run:
+        # a successful collection with a failed HOF is NOT a success.
+        final_outcome = hof_run_outcome or RunOutcome.SUCCESS
+
+        # 14. Persist terminal history BEFORE writing the live report
+        # or advancing the latest-success pointer. This is the single
+        # source of truth: if the current run cannot be recorded, the
+        # process must surface PERSISTENCE_FAILURE (exit 13) and must
+        # NOT write latest_snapshot.json or the live report.
+        record = RunOutcomeRecord(
+            outcome=final_outcome,
+            snapshot_id=snapshot_id,
+            observed_at_utc=observed_at_utc,
+            finished_at_utc=_utc_now_iso(),
+            error_class=None,
+            error_message=None,
+            error_token=ERROR_TOKENS[final_outcome] if final_outcome != RunOutcome.SUCCESS else None,
+            exit_code=EXIT_CODES[final_outcome],
+            kind=kind,
+            attempt_count=len(attempts),
+        )
+        try:
+            self._record_terminal(record)
+        except OSError as exc:
+            # Terminal-history persistence failed. The run cannot be
+            # recorded in the durable history; surface
+            # PERSISTENCE_FAILURE (exit 13). We still attempt to write
+            # latest_run_status.json (best-effort) so operators can
+            # see the failure, but the process must exit nonzero.
+            try:
+                self._write_latest_run_status(
+                    RunOutcomeRecord(
+                        outcome=RunOutcome.PERSISTENCE_FAILURE,
+                        snapshot_id=snapshot_id,
+                        observed_at_utc=observed_at_utc,
+                        finished_at_utc=_utc_now_iso(),
+                        error_class=type(exc).__name__,
+                        error_message=f"run_history write failed: {exc}",
+                        error_token=ERROR_TOKENS[RunOutcome.PERSISTENCE_FAILURE],
+                        exit_code=EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE],
+                        kind=kind,
+                        attempt_count=len(attempts),
+                    )
+                )
+            except OSError:
+                pass
+            return {
+                "snapshot_id": snapshot_id,
+                "observed_at_utc": observed_at_utc,
+                "run_outcome": RunOutcome.PERSISTENCE_FAILURE.value,
+                "exit_code": EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE],
+                "error_class": type(exc).__name__,
+                "error_message": f"run_history write failed: {exc}",
+            }
+
+        # 15. Advance the latest-success pointer ONLY on final SUCCESS.
+        # A failed HOF run (or any other downgrade) must not advance
+        # the pointer — latest_snapshot.json reflects the last run that
+        # passed every gate, not the last HTTP fetch.
+        if final_outcome == RunOutcome.SUCCESS:
+            latest_pointer = {
+                "snapshot_id": snapshot_id,
+                "observed_at_utc": observed_at_utc,
+                "payload_sha256": winner.sha256,
+                "raw_payload_path": winner.raw_payload_path,
+                "kind": kind,
+            }
+            atomic_write_text(
+                self.latest_pointer_path,
+                json.dumps(latest_pointer, indent=2, default=str) + "\n",
+            )
+
+        # 16. Live audit report + rolling metrics. The rolling metrics
+        # now read from the durable run_history.parquet, which already
+        # includes the current terminal record from step 14. The report
+        # describes the actual final outcome — no longer a hardcoded
+        # "success" observation regardless of HOF state.
         try:
             metrics = compute_rolling_metrics_from_disk(
                 self.audit_root,
@@ -449,7 +514,7 @@ class AuditOrchestrator:
                     {
                         "last_success_at_utc": observed_at_utc,
                         "last_failure_at_utc": None,
-                        "last_attempt_success": True,
+                        "last_attempt_success": final_outcome == RunOutcome.SUCCESS,
                         "change_count": change_count_for(change_ledger),
                         "last_payload_sha256": winner.sha256,
                         "prior_payload_sha256": None,
@@ -462,7 +527,7 @@ class AuditOrchestrator:
                 FreshnessInputs(
                     last_success_at_utc=observed_at_utc,
                     last_failure_at_utc=None,
-                    last_attempt_success=True,
+                    last_attempt_success=final_outcome == RunOutcome.SUCCESS,
                     change_count=change_count_for(change_ledger),
                     last_payload_sha256=winner.sha256,
                     prior_payload_sha256=None,
@@ -480,9 +545,10 @@ class AuditOrchestrator:
                 source_contract_version=AUDIT_VERSION,
                 observations=[
                     {
-                        "kind": "success",
+                        "kind": "success" if final_outcome == RunOutcome.SUCCESS else "failure",
                         "at_utc": observed_at_utc,
                         "snapshot_id": snapshot_id,
+                        "run_outcome": final_outcome.value,
                         "freshness_state": freshness_state,
                         "schema_drift_missing_fields": sorted(missing),
                         "warnings": warnings,
@@ -501,23 +567,6 @@ class AuditOrchestrator:
                 error_message=str(exc),
             )
 
-        # 15. Choose final outcome. The HOF branch can downgrade a
-        # successful collection to a non-success outcome if the
-        # pregame pointer was missing or post-kickoff.
-        final_outcome = hof_run_outcome or RunOutcome.SUCCESS
-        record = RunOutcomeRecord(
-            outcome=final_outcome,
-            snapshot_id=snapshot_id,
-            observed_at_utc=observed_at_utc,
-            finished_at_utc=_utc_now_iso(),
-            error_class=None,
-            error_message=None,
-            error_token=ERROR_TOKENS[final_outcome] if final_outcome != RunOutcome.SUCCESS else None,
-            exit_code=EXIT_CODES[final_outcome],
-            kind=kind,
-            attempt_count=len(attempts),
-        )
-        self._record_terminal(record)
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
@@ -963,44 +1012,36 @@ class AuditOrchestrator:
         self,
         record: RunOutcomeRecord,
     ) -> None:
-        """Persist a terminal outcome to both ``latest_run_status.json``
-        and ``run_history.jsonl``.
+        """Persist a terminal outcome to ``latest_run_status.json``
+        and ``run_history.parquet``.
 
-        Both files must reflect the terminal outcome of every run.
         ``_write_latest_run_status`` is the single-source-of-truth
         pointer (one row, latest run only).
         ``_append_run_history`` is the rolling source of truth
         (one row per run, every run, ever).
+
+        Rereview 4852338912: ``run_history.parquet`` replaces the old
+        ``run_history.jsonl``. The write is fully atomic (temp-file
+        fsync + os.replace + parent-directory fsync). Any ``OSError``
+        from the parquet write propagates to the caller — it is never
+        swallowed, because a missing terminal-history row means the
+        rolling metrics would silently omit the current run.
         """
         self._write_latest_run_status(record)
         self._append_run_history(record)
 
     def _append_run_history(self, record: RunOutcomeRecord) -> None:
-        """Append one row to ``run_history.jsonl``.
+        """Append one row to ``run_history.parquet``.
 
-        The terminal run history is the single source of truth for
-        the rolling metrics. ``successful_run_count`` is derived
-        from ``record.outcome == RunOutcome.SUCCESS`` and never
-        from a single HTTP attempt.
-
-        The file is JSONL (one JSON object per line) so each run
-        is appendable independently. The rolling metrics build
-        reads the file and reconstructs the per-run summary.
-        ``OSError`` from this write is swallowed because the
-        caller already has a terminal outcome; the rolling
-        metrics for this run will simply be one row short of
-        their full history.
+        Rereview 4852338912: the terminal run history is a durable
+        would silently drop a terminal record from the rolling
+        metrics.
         """
-        run_history_path = self.audit_root / "run_history.jsonl"
-        try:
-            with open(run_history_path, "a", encoding="utf-8") as handle:
-                handle.write(
-                    json.dumps(record.to_dict(), default=str, sort_keys=True) + "\n"
-                )
-                handle.flush()
-                os.fsync(handle.fileno())
-        except OSError:
-            pass
+        atomic_append_run_history(
+            self.run_history_path,
+            record.to_dict(),
+            row_schema=RUN_HISTORY_ROW_DTYPES,
+        )
 
     # ------------------------------------------------------------------
     # persistence helpers (atomic)

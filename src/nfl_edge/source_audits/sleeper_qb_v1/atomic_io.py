@@ -24,7 +24,7 @@ import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Mapping
+from typing import Any, Mapping
 
 import polars as pl
 
@@ -188,6 +188,48 @@ def atomic_append_parquet(
             [
                 pl.col(field).cast(dt, strict=False).alias(field)
                 for field, dt in schema_dtypes.items()
+            ]
+        )
+    atomic_write_parquet(path, combined)
+
+
+def atomic_append_run_history(
+    path: str | Path,
+    new_row: Mapping[str, Any],
+    *,
+    row_schema: Mapping[str, pl.DataType] | None = None,
+) -> None:
+    """Atomically append one row to the terminal run history parquet.
+
+    Reads the existing file (if any), appends ``new_row``, and rewrites
+    the entire file via ``atomic_write_parquet``. Any write failure
+    (OSError, IOError) propagates to the caller — it is never
+    swallowed. The caller is expected to translate such a failure into
+    ``PERSISTENCE_FAILURE`` (exit 13).
+
+    If ``row_schema`` is provided, the combined frame is cast so the
+    schema stays stable across appends.
+    """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    new_frame = pl.DataFrame([dict(new_row)], infer_schema_length=1)
+    if row_schema:
+        new_frame = new_frame.select(
+            [
+                pl.col(field).cast(dt, strict=False).alias(field)
+                for field, dt in row_schema.items()
+            ]
+        )
+    if path.exists() and path.stat().st_size > 0:
+        existing = pl.read_parquet(path)
+        combined = pl.concat([existing, new_frame], how="diagonal_relaxed")
+    else:
+        combined = new_frame
+    if row_schema:
+        combined = combined.select(
+            [
+                pl.col(field).cast(dt, strict=False).alias(field)
+                for field, dt in row_schema.items()
             ]
         )
     atomic_write_parquet(path, combined)
