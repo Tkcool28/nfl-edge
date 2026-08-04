@@ -84,10 +84,10 @@ def _fake_player_map() -> dict[str, dict[str, Any]]:
 
 
 class FakeSleeperResponse:
-    def __init__(self, status: int, payload: dict[str, Any] | None) -> None:
+    def __init__(self, status: int, payload: dict[str, Any] | list[Any] | None) -> None:
         self.status_code = status
-        self._payload = payload if payload is not None else {}
-        self.content = json.dumps(self._payload, sort_keys=True).encode("utf-8")
+        payload = payload if payload is not None else {}
+        self.content = json.dumps(payload, sort_keys=True).encode("utf-8")
         self.text = self.content.decode("utf-8")
         self.headers = {"Content-Type": "application/json; charset=utf-8"}
         digest = hashlib.sha256(self.content).hexdigest()
@@ -106,17 +106,37 @@ class FakeSleeperSession:
     second call (within the same orchestrator lifetime) flips one
     QB's injury status so the change-ledger tests can observe a
     deterministic delta.
+
+    Failure-injection knobs (used by CLI tests):
+
+    * ``raise_timeout`` — every ``.get`` raises
+      ``requests.exceptions.Timeout``.
+    * ``raise_status`` — every ``.get`` returns the given HTTP
+      status code (e.g. ``503``) with an empty player map.
+    * ``invalid_json`` — every ``.get`` returns HTTP 200 with a
+      body that is not a JSON object of player records (the body
+      is a JSON array, which the orchestrator must reject as
+      ``INCOMPLETE_RESPONSE``).
     """
 
     def __init__(self) -> None:
         self.call_count = 0
         self.raise_timeout = False
+        self.raise_status: int | None = None
+        self.invalid_json = False
 
     def get(self, url: str, timeout: float, allow_redirects: bool, headers: dict[str, str]) -> FakeSleeperResponse:
         self.call_count += 1
         if self.raise_timeout:
             import requests
             raise requests.exceptions.Timeout("fake timeout")
+        if self.raise_status is not None:
+            return FakeSleeperResponse(self.raise_status, {})
+        if self.invalid_json:
+            # A JSON array is parseable JSON but is not a
+            # player-map dict, so the orchestrator's parse guard
+            # must reject it as INCOMPLETE_RESPONSE.
+            return FakeSleeperResponse(200, ["a", "b", "c"])
         if self.call_count == 1:
             return FakeSleeperResponse(200, _fake_player_map())
         data = _fake_player_map()

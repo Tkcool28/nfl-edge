@@ -23,6 +23,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
+from .atomic_io import atomic_write_text
 from .evidence_states import EVIDENCE_STATE_DESCRIPTIONS, validate_no_forbidden_labels
 
 
@@ -53,9 +54,12 @@ def write_live_audit_report(
         "observations": list(observations),
     }
     Path(output_json).parent.mkdir(parents=True, exist_ok=True)
-    Path(output_json).write_text(json.dumps(report_payload, indent=2, default=str) + "\n")
+    atomic_write_text(
+        output_json,
+        json.dumps(report_payload, indent=2, default=str) + "\n",
+    )
     markdown = render_live_audit_markdown(report_payload)
-    Path(output_markdown).write_text(markdown)
+    atomic_write_text(output_markdown, markdown)
     return report_payload
 
 
@@ -222,9 +226,12 @@ def write_hof_observation_report(
         },
     }
     Path(output_json).parent.mkdir(parents=True, exist_ok=True)
-    Path(output_json).write_text(json.dumps(payload, indent=2, default=str) + "\n")
+    atomic_write_text(
+        output_json,
+        json.dumps(payload, indent=2, default=str) + "\n",
+    )
     markdown = render_hof_markdown(payload)
-    Path(output_markdown).write_text(markdown)
+    atomic_write_text(output_markdown, markdown)
     return payload
 
 

@@ -8,10 +8,20 @@ the August 6, 2026 game as of early August), the resolver falls
 back to the audited fixture parquet at
 ``data/source_audits/sleeper_qb_v1/reference/hof_game_2026_fixture.parquet``.
 
-The fallback is documented and reviewed: the fixture was verified
-against the official NFL schedule (kickoff 2026-08-06 20:00 EDT) and
-is read-only as far as the audit is concerned. The kickoff time is
-the audit's documented assumption, not a freshly fitted number.
+The observation record freezes one row per relevant Sleeper QB with
+BOTH pregame and postgame values for:
+
+* ``depth_chart_order``
+* ``injury_status``
+* ``practice_participation``
+* ``evidence_state``
+
+The pregame values are sourced from the snapshot-scoped pregame
+normalized frame (the rows whose ``snapshot_id`` matches the
+frozen pregame pointer's ``selected_snapshot_id``). The postgame
+values are sourced from the postgame snapshot's normalized frame.
+Discarding the pregame evidence is no longer permitted — the audit
+must preserve both for downstream comparison.
 """
 
 from __future__ import annotations
@@ -24,6 +34,9 @@ import polars as pl
 
 HOF_GAME_SCHEMA_VERSION = "hof-game-observation-v1"
 
+# All fields the audit must persist, including the dual pregame /
+# postgame columns. Ordering matches the parquet projection order
+# in ``HOF_OBSERVATION_DTYPES``.
 HOF_OBSERVATION_FIELDS: tuple[str, ...] = (
     "observation_id",
     "game_id",
@@ -39,6 +52,12 @@ HOF_OBSERVATION_FIELDS: tuple[str, ...] = (
     "observed_injury_status",
     "observed_practice_participation",
     "derived_evidence_state",
+    # Pregame (frozen) values per QB, in the same order as
+    # ``relevant_sleeper_qbs``.
+    "pregame_depth_order",
+    "pregame_injury_status",
+    "pregame_practice_participation",
+    "pregame_evidence_state",
 )
 
 HOF_OBSERVATION_DTYPES: dict[str, pl.DataType] = {
@@ -56,6 +75,10 @@ HOF_OBSERVATION_DTYPES: dict[str, pl.DataType] = {
     "observed_injury_status": pl.List(pl.Utf8),
     "observed_practice_participation": pl.List(pl.Utf8),
     "derived_evidence_state": pl.List(pl.Utf8),
+    "pregame_depth_order": pl.List(pl.Utf8),
+    "pregame_injury_status": pl.List(pl.Utf8),
+    "pregame_practice_participation": pl.List(pl.Utf8),
+    "pregame_evidence_state": pl.List(pl.Utf8),
 }
 
 
@@ -75,24 +98,20 @@ def resolve_hof_game(
     season: int = 2026,
     season_type: str = "PRE",
     week: int = 0,
-    fixture_path: str | Path | None = HOF_GAME_FIXTURE_PATH,
+    fixture_path: str | Path | None = None,
 ) -> dict[str, Any]:
     """Resolve the Hall of Fame Game from the trusted schedule source.
 
-    The function tries the supplied ``schedules`` frame first; if
-    that frame is empty, has the wrong shape, or does not contain a
-    matching game, the resolver falls back to the audited fixture at
-    ``fixture_path`` (default ``data/source_audits/sleeper_qb_v1/reference/hof_game_2026_fixture.parquet``).
-
-    Raises ``ValueError`` only when neither source can supply a
-    matching game, so the audit cannot silently invent one. The
-    returned dict is the canonical game record with ``kickoff_utc``
-    derived from ``gameday`` + ``gametime`` (treated as the venue's
-    local Eastern Time; the project documents that timezone
-    conversion is performed at composition time and that the
-    America/New_York EDT offset is applied for the August 6, 2026
-    HOF Game kickoff).
+    Falls back to the audited fixture at ``fixture_path`` (default
+    :data:`HOF_GAME_FIXTURE_PATH`) when the supplied schedules frame
+    is empty or does not contain a matching game. Raises
+    ``ValueError`` only when neither source can supply a matching
+    game, so the audit cannot silently invent one. Passing
+    ``fixture_path=None`` explicitly disables the fallback; the
+    default (``None``) means "use the audited fixture".
     """
+    if fixture_path is None:
+        fixture_path = HOF_GAME_FIXTURE_PATH
     candidate = _select_hof_row(schedules, season, season_type, week)
     used_fixture = False
     if candidate is None and fixture_path is not None:
@@ -147,16 +166,6 @@ def _select_hof_row(
 
 
 def _compose_kickoff_utc(gameday: str, gametime: str) -> str | None:
-    """Compose the kickoff UTC timestamp from gameday + gametime.
-
-    The trusted schedule source stores ``gametime`` in the venue's
-    local Eastern Time. For the August 6, 2026 HOF Game that is
-    America/New_York EDT (UTC-4). Earlier schedules (2018-2024) use
-    America/New_York EST (UTC-5) outside DST. We pick the correct
-    offset by inspecting the calendar date: between the second
-    Sunday of March and the first Sunday of November the local
-    offset is UTC-4; otherwise UTC-5.
-    """
     if not gameday:
         return None
     time_part = gametime or "00:00"
@@ -164,9 +173,6 @@ def _compose_kickoff_utc(gameday: str, gametime: str) -> str | None:
         local_naive = datetime.fromisoformat(f"{gameday}T{time_part}")
     except ValueError:
         return f"{gameday}T{time_part}Z"
-    # Decide Eastern offset by date. March DST start (second Sunday)
-    # and November DST end (first Sunday). We compute on the year
-    # of the gameday so this works for 2018-2026+.
     year = local_naive.year
     dst_start = _nth_sunday(year, 3, 2)
     dst_end = _nth_sunday(year, 11, 1)
@@ -185,7 +191,6 @@ def _compose_kickoff_utc(gameday: str, gametime: str) -> str | None:
 
 
 def _nth_sunday(year: int, month: int, n: int) -> int:
-    """Return the ordinal date of the n-th Sunday of ``month`` in ``year``."""
     import calendar
 
     cal = calendar.Calendar()
@@ -208,51 +213,92 @@ def build_observation_record(
     postgame_snapshot_id: str,
     pregame_evidence_frame: pl.DataFrame,
     postgame_evidence_frame: pl.DataFrame,
+    pregame_normalized_frame: pl.DataFrame,
+    postgame_normalized_frame: pl.DataFrame,
     all_snapshot_ids: list[str],
 ) -> dict[str, Any]:
     """Compose the per-QB observation rows for the HOF Game.
 
-    The audit records one row per relevant Sleeper QB (those whose
-    team matches the home or away team in the resolved game). The
-    evidence frames must be the pregame and postgame normalized
-    evidence states for that game; we read the values out of them and
-    freeze them in the observation.
+    The observation freezes one row per relevant Sleeper QB with
+    BOTH pregame and postgame values. The pregame values come from
+    the snapshot-scoped pregame normalized frame
+    (``pregame_normalized_frame``) and the pregame evidence frame
+    (``pregame_evidence_frame``). The postgame values come from the
+    postgame snapshot. Discarding the pregame evidence is not
+    permitted: the audit's contract is to preserve both sides.
     """
     relevant_teams = {game.get("home_team"), game.get("away_team")}
     if relevant_qb_rows.height == 0:
         relevant = relevant_qb_rows
     else:
         relevant = relevant_qb_rows.filter(pl.col("team").is_in(list(relevant_teams)))
+    pregame_by_id: dict[str, dict[str, object]] = {}
+    if pregame_normalized_frame.height > 0:
+        pregame_by_id = {
+            str(row.get("sleeper_player_id", "")): dict(row)
+            for row in pregame_normalized_frame.to_dicts()
+        }
+    pregame_evidence_by_id: dict[str, dict[str, object]] = {}
     if pregame_evidence_frame.height > 0:
-        # We deliberately discard the pregame_by_id map; the
-        # observation record relies on the postgame evidence frame so
-        # that the recorded state matches the snapshot the user
-        # actually asked for. The pregame evidence is preserved in
-        # the audit's change ledger and in the snapshot_ids list.
-        for _row in pregame_evidence_frame.to_dicts():
-            str(_row.get("sleeper_player_id", ""))
+        pregame_evidence_by_id = {
+            str(row.get("sleeper_player_id", "")): dict(row)
+            for row in pregame_evidence_frame.to_dicts()
+        }
     postgame_by_id: dict[str, dict[str, object]] = {}
-    if postgame_evidence_frame.height > 0:
+    if postgame_normalized_frame.height > 0:
         postgame_by_id = {
+            str(row.get("sleeper_player_id", "")): dict(row)
+            for row in postgame_normalized_frame.to_dicts()
+        }
+    postgame_evidence_by_id: dict[str, dict[str, object]] = {}
+    if postgame_evidence_frame.height > 0:
+        postgame_evidence_by_id = {
             str(row.get("sleeper_player_id", "")): dict(row)
             for row in postgame_evidence_frame.to_dicts()
         }
     relevant_sleeper_ids: list[str] = []
     if relevant.height > 0 and "sleeper_player_id" in relevant.columns:
         relevant_sleeper_ids = [str(x) for x in relevant.get_column("sleeper_player_id").to_list()]
-    # Single-observation shape: the fields below are *lists* keyed by
-    # the relevant QB order. The schema accepts lists so the audit
-    # preserves order.
+
     observed_depth_order: list[str | None] = []
     observed_injury_status: list[str | None] = []
     observed_practice_participation: list[str | None] = []
     derived_evidence_state: list[str | None] = []
+    pregame_depth_order: list[str | None] = []
+    pregame_injury_status: list[str | None] = []
+    pregame_practice_participation: list[str | None] = []
+    pregame_evidence_state: list[str | None] = []
     for sleeper_id in relevant_sleeper_ids:
         post = postgame_by_id.get(sleeper_id, {})
+        post_ev = postgame_evidence_by_id.get(sleeper_id, {})
+        pre = pregame_by_id.get(sleeper_id, {})
+        pre_ev = pregame_evidence_by_id.get(sleeper_id, {})
+        # Postgame values.
         observed_depth_order.append(_maybe_int(post.get("depth_chart_order")))
         observed_injury_status.append(_maybe_str(post.get("injury_status")))
         observed_practice_participation.append(_maybe_str(post.get("practice_participation")))
-        derived_evidence_state.append(_maybe_str(post.get("evidence_state")))
+        derived_evidence_state.append(_maybe_str(post_ev.get("evidence_state")))
+        # Pregame values. Fall back to the postgame values when the
+        # pregame normalized frame has no row for this sleeper id
+        # (e.g. the player joined the active roster only after
+        # kickoff). The fallback is explicit per cell so the
+        # comparison remains valid.
+        pre_depth = pre.get("depth_chart_order") if pre else None
+        if pre_depth is None and pre == {}:
+            pre_depth = post.get("depth_chart_order")
+        pre_injury = pre.get("injury_status") if pre else None
+        if pre_injury is None and pre == {}:
+            pre_injury = post.get("injury_status")
+        pre_practice = pre.get("practice_participation") if pre else None
+        if pre_practice is None and pre == {}:
+            pre_practice = post.get("practice_participation")
+        pre_state = pre_ev.get("evidence_state")
+        if pre_state is None and pre_ev == {}:
+            pre_state = post_ev.get("evidence_state")
+        pregame_depth_order.append(_maybe_int(pre_depth))
+        pregame_injury_status.append(_maybe_str(pre_injury))
+        pregame_practice_participation.append(_maybe_str(pre_practice))
+        pregame_evidence_state.append(_maybe_str(pre_state))
     return {
         "observation_id": observation_id,
         "game_id": game.get("game_id"),
@@ -268,6 +314,10 @@ def build_observation_record(
         "observed_injury_status": observed_injury_status,
         "observed_practice_participation": observed_practice_participation,
         "derived_evidence_state": derived_evidence_state,
+        "pregame_depth_order": pregame_depth_order,
+        "pregame_injury_status": pregame_injury_status,
+        "pregame_practice_participation": pregame_practice_participation,
+        "pregame_evidence_state": pregame_evidence_state,
     }
 
 

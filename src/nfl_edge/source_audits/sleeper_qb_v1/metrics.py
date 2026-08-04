@@ -1,55 +1,131 @@
 """Reliability metrics for the Sleeper QB source audit.
 
-This module reduces the fetch ledger, the normalized snapshots, the
-crosswalk, and the change ledger into the reliability metrics the spec
-requires (spec §13). It is a pure aggregator: no I/O, no clock, no
-network.
+This module reduces the audit's run history into the reliability
+metrics the spec requires. It is a pure aggregator: no I/O, no clock,
+no network.
+
+Count separation
+----------------
+
+The spec separates four counts:
+
+* ``scheduled_run_count`` — distinct scheduled (or pregame /
+  postgame) runs that attempted at least one HTTP fetch.
+* ``attempted_fetch_count`` — total HTTP fetch attempts across all
+  runs.
+* ``successful_run_count`` / ``failed_run_count`` — per-run outcomes.
+  A run with three retries where the last attempt succeeds counts as
+  one *successful run*, not three.
+* ``successful_attempt_count`` / ``failed_attempt_count`` — per-
+  attempt outcomes. The same successful run contributes one
+  successful attempt and two failed attempts.
+
+Reconciling the two views:
+
+    scheduled_run_count
+        == successful_run_count + failed_run_count
+    attempted_fetch_count
+        == successful_attempt_count + failed_attempt_count
+    attempted_fetch_count
+        >= scheduled_run_count
 """
 
 from __future__ import annotations
 
-from typing import Any, Mapping
+from dataclasses import dataclass, field
+from typing import Any, Iterable, Mapping
 
 import polars as pl
 
 
+@dataclass(frozen=True)
+class RunMetric:
+    """The audit's view of a single run.
+
+    The orchestrator constructs one of these per run and passes a
+    list to ``compute_reliability_metrics``.
+    """
+
+    snapshot_id: str
+    observed_at_utc: str
+    success: bool
+    fetch_attempts: list[Mapping[str, Any]] = field(default_factory=list)
+    active_rows: list[Mapping[str, Any]] = field(default_factory=list)
+    crosswalk_rows: list[Mapping[str, Any]] = field(default_factory=list)
+
+
+def _percentile(sorted_values: list[int], percentile: float) -> int:
+    if not sorted_values:
+        return 0
+    if len(sorted_values) == 1:
+        return sorted_values[0]
+    position = (len(sorted_values) - 1) * percentile
+    lower = int(position)
+    upper = min(lower + 1, len(sorted_values) - 1)
+    weight = position - lower
+    return int(round(sorted_values[lower] * (1 - weight) + sorted_values[upper] * weight))
+
+
 def compute_reliability_metrics(
     *,
-    fetch_attempts: list[Mapping[str, Any]],
-    active_qb_snapshots: list[Mapping[str, Any]],
-    crosswalk_snapshots: list[Mapping[str, Any]],
+    runs: Iterable[RunMetric],
     change_ledger: pl.DataFrame,
-    freshness_history: list[Mapping[str, Any]],
+    freshness_history: list[Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    """Compute the spec §13 metrics from the audit's own artifacts."""
-    scheduled = len(fetch_attempts)
-    attempted = sum(1 for attempt in fetch_attempts)
-    successful = sum(1 for attempt in fetch_attempts if attempt.get("success"))
-    failed = attempted - successful
-    success_pct = (successful / attempted) if attempted else 0.0
-    latencies = sorted(int(a.get("duration_ms", 0)) for a in fetch_attempts)
-    median_latency = _percentile(latencies, 0.5) if latencies else None
-    max_latency = max(latencies) if latencies else None
+    """Compute the spec §13 metrics from the audit's own artifacts.
+
+    Parameters
+    ----------
+    runs
+        One ``RunMetric`` per audit run (success and failure).
+    change_ledger
+        The full persisted change ledger.
+    freshness_history
+        Optional per-run freshness summary; if provided, the metric
+        block exposes the freshness-event counts.
+    """
+    runs_list = list(runs)
+    freshness_history = freshness_history or []
+
+    scheduled_run_count = len(runs_list)
+    successful_run_count = sum(1 for r in runs_list if r.success)
+    failed_run_count = scheduled_run_count - successful_run_count
+
+    attempted_fetch_count = 0
+    successful_attempt_count = 0
+    failed_attempt_count = 0
+    latencies: list[int] = []
     http_status_counts: dict[str, int] = {}
     raw_sizes: list[int] = []
-    for attempt in fetch_attempts:
-        status = attempt.get("http_status")
-        if status is None:
-            http_status_counts["network_error"] = http_status_counts.get("network_error", 0) + 1
-        else:
-            key = str(int(status))
-            http_status_counts[key] = http_status_counts.get(key, 0) + 1
-        raw_sizes.append(int(attempt.get("response_bytes", 0)))
+    for run in runs_list:
+        for attempt in run.fetch_attempts:
+            attempted_fetch_count += 1
+            success = bool(attempt.get("success"))
+            if success:
+                successful_attempt_count += 1
+            else:
+                failed_attempt_count += 1
+            latencies.append(int(attempt.get("duration_ms", 0)))
+            status = attempt.get("http_status")
+            if status is None:
+                http_status_counts["network_error"] = http_status_counts.get("network_error", 0) + 1
+            else:
+                key = str(int(status))
+                http_status_counts[key] = http_status_counts.get(key, 0) + 1
+            raw_sizes.append(int(attempt.get("response_bytes", 0)))
+
+    median_latency = _percentile(sorted(latencies), 0.5) if latencies else None
+    max_latency = max(latencies) if latencies else None
+
     total_active_rows = 0
     unique_sleeper_ids: set[str] = set()
     snapshots_with_null_injury = 0
     snapshots_with_populated_injury = 0
     snapshots_with_practice = 0
     snapshots_with_depth_order = 0
-    for snapshot in active_qb_snapshots:
-        rows = snapshot.get("rows", [])
-        total_active_rows += len(rows)
-        for row in rows:
+    for run in runs_list:
+        for row in run.active_rows:
+            total_active_rows += 1
             sleeper_id = str(row.get("sleeper_player_id", ""))
             if sleeper_id:
                 unique_sleeper_ids.add(sleeper_id)
@@ -64,45 +140,24 @@ def compute_reliability_metrics(
             depth = row.get("depth_chart_order")
             if depth not in (None, ""):
                 snapshots_with_depth_order += 1
-    # Per-row counts for the global metrics.
+
     exact_id_matches = 0
     fallback_matches = 0
     unmatched = 0
     duplicates: dict[str, int] = {}
-    # Per-snapshot per-method counts for the reconciliation table.
-    # The audit must satisfy:
-    #   sum(match categories + unmatched + excluded) ==
-    #   total_current_team_candidates
-    # where the current-team denominator is the count of crosswalk
-    # rows in the snapshot whose sleeper_player_id corresponds to a
-    # current-team QB (i.e. the row's team is non-null in the active
-    # QB snapshot). The metrics derive that denominator from the
-    # active QB snapshot's ``team`` field, indexed by
-    # ``sleeper_player_id``, and join it onto the crosswalk row.
     crosswalk_method_counts: dict[str, dict[str, int]] = {}
     current_team_ids_by_snapshot: dict[str, set[str]] = {}
-    for snapshot in active_qb_snapshots:
-        sid = str(snapshot.get("snapshot_id", ""))
-        if not sid:
-            continue
-        ids = current_team_ids_by_snapshot.setdefault(sid, set())
-        for row in snapshot.get("rows", []):
+    for run in runs_list:
+        ids = current_team_ids_by_snapshot.setdefault(run.snapshot_id, set())
+        for row in run.active_rows:
             pid = str(row.get("sleeper_player_id", ""))
             team = row.get("team")
             if pid and team not in (None, ""):
                 ids.add(pid)
-    for snapshot in crosswalk_snapshots:
-        rows = snapshot.get("rows", [])
-        sid = str(snapshot.get("snapshot_id", ""))
-        # The orchestrator does not tag crosswalk snapshots with
-        # ``snapshot_id`` in the same shape; fall back to the
-        # crosswalk row's own snapshot_id when missing.
-        if not sid:
-            for row in rows:
-                sid = str(row.get("snapshot_id", ""))
-                break
+    for run in runs_list:
+        sid = run.snapshot_id
         current_team_ids = current_team_ids_by_snapshot.get(sid, set())
-        for row in rows:
+        for row in run.crosswalk_rows:
             method = row.get("match_method")
             is_matched = bool(row.get("is_matched"))
             if method in {"exact_sleeper_id", "exact_gsis", "exact_espn", "exact_other_stable"} and is_matched:
@@ -114,7 +169,6 @@ def compute_reliability_metrics(
             nflv = row.get("nflverse_player_id")
             if nflv:
                 duplicates[nflv] = duplicates.get(nflv, 0) + 1
-            # Per-snapshot per-method tally restricted to current-team QBs.
             if sid and current_team_ids and str(row.get("sleeper_player_id", "")) in current_team_ids:
                 bucket = crosswalk_method_counts.setdefault(sid, {
                     "exact_sleeper_id": 0,
@@ -146,11 +200,18 @@ def compute_reliability_metrics(
     )
     intervals = [int(e.get("interval_seconds", 0)) for e in freshness_history if "interval_seconds" in e]
     longest_interval = max(intervals) if intervals else None
+    success_pct = (
+        successful_attempt_count / attempted_fetch_count
+        if attempted_fetch_count
+        else 0.0
+    )
     return {
-        "scheduled_fetches": scheduled,
-        "attempted_fetches": attempted,
-        "successful_fetches": successful,
-        "failed_fetches": failed,
+        "scheduled_run_count": scheduled_run_count,
+        "attempted_fetch_count": attempted_fetch_count,
+        "successful_run_count": successful_run_count,
+        "failed_run_count": failed_run_count,
+        "successful_attempt_count": successful_attempt_count,
+        "failed_attempt_count": failed_attempt_count,
         "success_pct": round(success_pct, 4),
         "median_latency_ms": median_latency,
         "max_latency_ms": max_latency,
@@ -179,15 +240,3 @@ def compute_reliability_metrics(
         "longest_interval_without_successful_fetch_seconds": longest_interval,
         "incomplete_response_events": incomplete_events,
     }
-
-
-def _percentile(sorted_values: list[int], percentile: float) -> int:
-    if not sorted_values:
-        return 0
-    if len(sorted_values) == 1:
-        return sorted_values[0]
-    position = (len(sorted_values) - 1) * percentile
-    lower = int(position)
-    upper = min(lower + 1, len(sorted_values) - 1)
-    weight = position - lower
-    return int(round(sorted_values[lower] * (1 - weight) + sorted_values[upper] * weight))

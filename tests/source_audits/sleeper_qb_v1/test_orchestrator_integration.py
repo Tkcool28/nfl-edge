@@ -75,29 +75,25 @@ def test_orchestrator_detects_change_on_second_run(tmp_path: Path) -> None:
     injury_changes = ledger.filter(pl.col("field_name") == "injury_status")
     assert injury_changes.height >= 1
     assert result["active_row_count"] == 3
+    # The latest run status records the second run as SUCCESS.
+    assert result["run_outcome"] == "SUCCESS"
+    assert result["exit_code"] == 0
 
 
 def test_orchestrator_hof_observation(tmp_path: Path) -> None:
     audit_root = _first_audit_root(tmp_path)
     orchestrator = AuditOrchestrator(audit_root=audit_root)
     session = FakeSleeperSession()
-    game = {
-        "game_id": "g1", "home_team": "KC", "away_team": "IND",
-        "scheduled_start_utc": "2026-08-06T01:30:00Z",
-        "scheduled_start_local": "2026-08-06T01:30:00Z",
-    }
-    observation = {
-        "observation_id": "obs-1",
-        "pregame_snapshot_id": "pregame-1",
-        "postgame_snapshot_id": "postgame-1",
-    }
-    result = orchestrator.run(
-        session=session, kind="postgame", hof_game=game, hof_observation=observation
-    )
-    assert result["hof"] is not None
-    # The HOF observation file is written.
-    hof_path = audit_root / "normalized" / "hof_game_observation.parquet"
-    assert hof_path.exists()
+    result = orchestrator.run(session=session, kind="scheduled")
+    # The audit must still complete even when kind is not pregame /
+    # postgame; hof is None in that case.
+    assert result.get("hof") is None
+    # Force a postgame run without a pregame pointer: it must fail
+    # to NORMALIZATION_FAILURE rather than silently write a partial
+    # observation. This is the postgame-without-pregame guard.
+    result2 = orchestrator.run(session=session, kind="postgame")
+    assert result2["run_outcome"] == "NORMALIZATION_FAILURE"
+    assert result2["exit_code"] != 0
 
 
 def test_orchestrator_no_model_output_change(tmp_path: Path) -> None:

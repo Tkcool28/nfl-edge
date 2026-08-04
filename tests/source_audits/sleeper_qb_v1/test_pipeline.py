@@ -4,11 +4,13 @@ report writers."""
 
 from __future__ import annotations
 
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import polars as pl
+import pytest
 
 from nfl_edge.source_audits.sleeper_qb_v1 import (
     changes,
@@ -350,9 +352,16 @@ def test_duplicate_id_violation_is_detected_in_metrics() -> None:
     cw = crosswalk.build_crosswalk(snapshot_id="s", active_qb_frame=active, nflverse_qbs=nflv)
     crosswalk_rows = cw.to_dicts()
     metrics_payload = metrics.compute_reliability_metrics(
-        fetch_attempts=[{"success": True, "duration_ms": 100, "response_bytes": 1, "http_status": 200}],
-        active_qb_snapshots=[{"rows": active.to_dicts()}],
-        crosswalk_snapshots=[{"rows": crosswalk_rows}],
+        runs=[
+            metrics.RunMetric(
+                snapshot_id="s",
+                observed_at_utc="2026-08-05T00:00:00Z",
+                success=True,
+                fetch_attempts=[{"success": True, "duration_ms": 100, "response_bytes": 1, "http_status": 200}],
+                active_rows=active.to_dicts(),
+                crosswalk_rows=crosswalk_rows,
+            )
+        ],
         change_ledger=pl.DataFrame(),
         freshness_history=[],
     )
@@ -483,6 +492,8 @@ def test_hof_observation_preserves_pregame_evidence() -> None:
         postgame_snapshot_id="postgame-1",
         pregame_evidence_frame=pregame_evidence,
         postgame_evidence_frame=postgame_evidence,
+        pregame_normalized_frame=pregame,
+        postgame_normalized_frame=postgame,
         all_snapshot_ids=["pregame-1", "postgame-1"],
     )
     assert record["latest_snapshot_before_kickoff"] == "pregame-1"
@@ -493,6 +504,10 @@ def test_hof_observation_preserves_pregame_evidence() -> None:
     assert record["postgame_snapshot_id"] == "postgame-1"
     # Postgame evidence state is recorded.
     assert record["derived_evidence_state"] == ["DEPTH_CHART_EXPECTED_OUT"]
+    # Pregame evidence is preserved in the new dedicated columns.
+    assert record["pregame_evidence_state"] == ["DEPTH_CHART_EXPECTED_HEALTHY"]
+    assert record["pregame_injury_status"] == [None]
+    assert record["pregame_depth_order"] == ["1"]
 
 
 # ---------------------------------------------------------------------------
@@ -598,17 +613,45 @@ def test_hof_kickoff_offset_is_eastern_not_utc() -> None:
 
 
 def test_lock_prevents_overlapping_collection(tmp_path: Path) -> None:
-    from nfl_edge.source_audits.sleeper_qb_v1.pipeline import AuditOrchestrator
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir(parents=True, exist_ok=True)
-    # Pre-create the lock file.
-    (audit_root / "audit.lock").write_text("held")
-    AuditOrchestrator(audit_root=audit_root)
-    # The orchestrator does not auto-release a stale lock, but the CLI
-    # entrypoint (``scripts/collect_sleeper_qbs.py``) refuses to start
-    # if the lock is held. The presence of the file is therefore
-    # sufficient evidence that the lock mechanism exists.
-    assert (audit_root / "audit.lock").exists()
+    """Two concurrent processes cannot both hold the audit lock.
+
+    The audit lock is implemented in
+    ``nfl_edge.source_audits.sleeper_qb_v1.locking`` as an
+    O_CREAT|O_EXCL ownership sentinel combined with an
+    ``fcntl.flock`` advisory lock. The ``advisory_lock`` context
+    manager waits up to ``lock_timeout_seconds`` for the lock and
+    raises ``LockFailure`` when the timeout elapses.
+    """
+    from nfl_edge.source_audits.sleeper_qb_v1.locking import (
+        LockFailure,
+        advisory_lock,
+    )
+
+    lock_dir = tmp_path / "audit"
+    lock_dir.mkdir(parents=True, exist_ok=True)
+
+    with advisory_lock(lock_dir, kind="scheduled", lock_timeout_seconds=0.0):
+        # The outer holder has the lock. A second holder must fail
+        # fast (timeout=0).
+        with pytest.raises(LockFailure):
+            with advisory_lock(lock_dir, kind="scheduled", lock_timeout_seconds=0.0):
+                pass
+        # With a small positive timeout, the second holder must also
+        # fail rather than blocking indefinitely.
+        start = time.monotonic()
+        with pytest.raises(LockFailure):
+            with advisory_lock(lock_dir, kind="scheduled", lock_timeout_seconds=0.2):
+                pass
+        elapsed = time.monotonic() - start
+        assert elapsed < 2.0, (
+            f"lock timeout exceeded 2x budget; elapsed={elapsed:.3f}s"
+        )
+
+    # After the outer holder releases, a fresh holder can acquire
+    # cleanly.
+    with advisory_lock(lock_dir, kind="scheduled", lock_timeout_seconds=0.5):
+        assert (lock_dir / "audit.lock.owner").exists()
+    assert not (lock_dir / "audit.lock.owner").exists()
 
 
 # ---------------------------------------------------------------------------
@@ -618,7 +661,9 @@ def test_lock_prevents_overlapping_collection(tmp_path: Path) -> None:
 
 def test_live_audit_report_renders(tmp_path: Path) -> None:
     metrics_payload = {
-        "scheduled_fetches": 1, "attempted_fetches": 1, "successful_fetches": 1, "failed_fetches": 0,
+        "scheduled_run_count": 1, "attempted_fetch_count": 1,
+        "successful_run_count": 1, "failed_run_count": 0,
+        "successful_attempt_count": 1, "failed_attempt_count": 0,
         "success_pct": 1.0, "median_latency_ms": 100, "max_latency_ms": 100, "http_status_counts": {"200": 1},
         "raw_response_size_bytes": {"min": 100, "max": 100, "total": 100},
         "active_qb_row_count": 1, "unique_sleeper_qb_ids": 1,
@@ -655,6 +700,8 @@ def test_hof_observation_report_renders(tmp_path: Path) -> None:
         "latest_snapshot_before_kickoff": "pregame-1", "postgame_snapshot_id": "postgame-1",
         "observed_depth_order": ["1"], "observed_injury_status": [None],
         "observed_practice_participation": [None], "derived_evidence_state": ["DEPTH_CHART_EXPECTED_HEALTHY"],
+        "pregame_depth_order": ["1"], "pregame_injury_status": [None],
+        "pregame_practice_participation": [None], "pregame_evidence_state": ["DEPTH_CHART_EXPECTED_HEALTHY"],
     }
     payload = report.write_hof_observation_report(
         observation=observation,

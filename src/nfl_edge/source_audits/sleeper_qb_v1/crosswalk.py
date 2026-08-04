@@ -90,11 +90,11 @@ def _row_for_sleeper(
     *,
     snapshot_id: str,
     sleeper_record: Mapping[str, Any],
-    gsis_to_nflverse: dict[str, str],
-    espn_to_nflverse: dict[str, str],
-    other_stable_to_nflverse: dict[str, str],
+    gsis_to_nflverse: dict[str, set[str]],
+    espn_to_nflverse: dict[str, set[str]],
+    other_stable_to_nflverse: dict[str, set[str]],
     name_team_to_nflverse: dict[tuple[str, str], set[str]],
-    sleeper_to_nflverse: dict[str, str],
+    sleeper_to_nflverse: dict[str, set[str]],
 ) -> dict[str, Any]:
     sleeper_player_id = str(sleeper_record.get("sleeper_player_id", ""))
     sleeper_name = (
@@ -116,31 +116,93 @@ def _row_for_sleeper(
     match_method = MATCH_METHOD_NONE
     match_confidence = 0.0
 
-    # Priority 0: exact Sleeper id. When the nflverse identity table
-    # exposes a sleeper_id, that is the most authoritative match
-    # because it ties the identity directly to the source system.
-    if sleeper_player_id and sleeper_player_id in sleeper_to_nflverse:
-        nflverse_id = sleeper_to_nflverse[sleeper_player_id]
+    def _pick_unique(
+        candidates: set[str] | None,
+        *,
+        method_label: str,
+        confidence: float,
+    ) -> tuple[str | None, str | None]:
+        """Return ``(nflverse_id, conflict_reason)``.
+
+        Empty set -> ``(None, None)``.
+        Singleton -> ``(the_id, None)``.
+        Multi-element -> ``(None, "multiple_nflverse_for_<method_label>")``.
+        The crosswalk never silently selects the first element of a
+        multi-match; the caller must propagate ``conflict_reason``
+        so the row emits ``is_matched=False``, ``review_required=True``,
+        and a descriptive conflict token.
+        """
+        if not candidates:
+            return None, None
+        if len(candidates) == 1:
+            return next(iter(candidates)), None
+        return None, f"multiple_nflverse_for_{method_label}"
+
+    # Priority 0: exact Sleeper id.
+    picked, conflict = _pick_unique(
+        sleeper_to_nflverse.get(sleeper_player_id) if sleeper_player_id else None,
+        method_label=MATCH_METHOD_SLEEPER,
+        confidence=1.0,
+    )
+    if conflict:
+        conflict_reasons.append(conflict)
+        review_required = True
+    if picked is not None:
+        nflverse_id = picked
         match_method = MATCH_METHOD_SLEEPER
         match_confidence = 1.0
         is_matched = True
     # Priority 1: exact GSIS id.
-    if not is_matched and gsis_id and gsis_id in gsis_to_nflverse:
-        nflverse_id = gsis_to_nflverse[gsis_id]
-        match_method = MATCH_METHOD_GSIS
-        match_confidence = 0.98
-        is_matched = True
+    if not is_matched and gsis_id:
+        picked, conflict = _pick_unique(
+            gsis_to_nflverse.get(str(gsis_id)),
+            method_label=MATCH_METHOD_GSIS,
+            confidence=0.98,
+        )
+        if conflict:
+            conflict_reasons.append(conflict)
+            review_required = True
+        if picked is not None:
+            nflverse_id = picked
+            match_method = MATCH_METHOD_GSIS
+            match_confidence = 0.98
+            is_matched = True
     # Priority 2: exact ESPN id.
-    if not is_matched and espn_id and espn_id in espn_to_nflverse:
-        nflverse_id = espn_to_nflverse[espn_id]
-        match_method = MATCH_METHOD_ESPN
-        match_confidence = 0.95
-        is_matched = True
+    if not is_matched and espn_id:
+        picked, conflict = _pick_unique(
+            espn_to_nflverse.get(str(espn_id)),
+            method_label=MATCH_METHOD_ESPN,
+            confidence=0.95,
+        )
+        if conflict:
+            conflict_reasons.append(conflict)
+            review_required = True
+        if picked is not None:
+            nflverse_id = picked
+            match_method = MATCH_METHOD_ESPN
+            match_confidence = 0.95
+            is_matched = True
     # Priority 3: another exact stable provider id.
     if not is_matched:
-        for stable_id in (sportradar_id, yahoo_id, fantasy_data_id, rotowire_id):
-            if stable_id and str(stable_id) in other_stable_to_nflverse:
-                nflverse_id = other_stable_to_nflverse[str(stable_id)]
+        for stable_id, label in (
+            (sportradar_id, "sportradar"),
+            (yahoo_id, "yahoo"),
+            (fantasy_data_id, "fantasy_data"),
+            (rotowire_id, "rotowire"),
+        ):
+            if not stable_id:
+                continue
+            picked, conflict = _pick_unique(
+                other_stable_to_nflverse.get(str(stable_id)),
+                method_label=f"{MATCH_METHOD_OTHER_STABLE}_{label}",
+                confidence=0.9,
+            )
+            if conflict:
+                conflict_reasons.append(conflict)
+                review_required = True
+                break
+            if picked is not None:
+                nflverse_id = picked
                 match_method = MATCH_METHOD_OTHER_STABLE
                 match_confidence = 0.9
                 is_matched = True
@@ -148,11 +210,6 @@ def _row_for_sleeper(
     # Priority 4: name+team fallback. Flagged as review_required.
     if not is_matched:
         team_norm = _normalize_team(sleeper_team)
-        # Try the composite full name first, then first+last, so the
-        # crosswalk resolves players whose Sleeper payload only had
-        # the split fields. We use the *normalized* joined form
-        # (no space) so the match works whether the reference side
-        # indexed under "first+last" with or without a space.
         first = sleeper_record.get("first_name")
         last = sleeper_record.get("last_name")
         first_norm = _normalize_name(first) if isinstance(first, str) else ""
@@ -201,13 +258,19 @@ def _row_for_sleeper(
 def build_nflverse_indexes(
     nflverse_qbs: pl.DataFrame,
 ) -> tuple[
-    dict[str, str],
-    dict[str, str],
-    dict[str, str],
+    dict[str, set[str]],
+    dict[str, set[str]],
+    dict[str, set[str]],
     dict[tuple[str, str], set[str]],
-    dict[str, str],
+    dict[str, set[str]],
 ]:
     """Build the four (now five) lookup tables used by the crosswalk.
+
+    Every exact-ID index is a ``dict[token, set[nflverse_id]]``. When
+    two nflverse rows share the same Sleeper / GSIS / ESPN /
+    sportradar / yahoo / fantasy_data / rotowire id, both rows
+    appear in the set; the crosswalk treats that as a conflict and
+    refuses to pick the first row silently.
 
     The expected nflverse input has columns:
     ``player_id, gsis_id, espn_id, sportradar_id, yahoo_id,
@@ -233,11 +296,16 @@ def build_nflverse_indexes(
         if any(s == 2025 for s in seasons):
             qbs = qbs.filter(pl.col("season") != 2025)
 
-    gsis_index: dict[str, str] = {}
-    espn_index: dict[str, str] = {}
-    other_index: dict[str, str] = {}
+    gsis_index: dict[str, set[str]] = {}
+    espn_index: dict[str, set[str]] = {}
+    other_index: dict[str, set[str]] = {}
     name_team_index: dict[tuple[str, str], set[str]] = {}
-    sleeper_index: dict[str, str] = {}
+    sleeper_index: dict[str, set[str]] = {}
+
+    def _add(index: dict[str, set[str]], token: str, nflverse_id: str) -> None:
+        if not token or not nflverse_id:
+            return
+        index.setdefault(token, set()).add(nflverse_id)
 
     for row in qbs.to_dicts():
         nflverse_id = row.get("player_id")
@@ -249,28 +317,15 @@ def build_nflverse_indexes(
         ):
             value = row.get(col)
             if value:
-                token = str(value).strip()
-                if token and token not in index:
-                    index[token] = nflverse_id
+                _add(index, str(value).strip(), str(nflverse_id))
         for col in ("sportradar_id", "yahoo_id", "fantasy_data_id", "rotowire_id"):
             value = row.get(col)
             if value:
-                token = str(value).strip()
-                if token and token not in other_index:
-                    other_index[token] = nflverse_id
-        # The nflverse identity table may carry a Sleeper id column
-        # under any of several historical names. Index all of them
-        # so the crosswalk can resolve direct Sleeper id matches.
+                _add(other_index, str(value).strip(), str(nflverse_id))
         for sleeper_col in ("sleeper_id_str", "sleeper_id", "sleeper_player_id"):
             value = row.get(sleeper_col)
             if value:
-                token = str(value).strip()
-                if token and token not in sleeper_index:
-                    sleeper_index[token] = nflverse_id
-        # Build candidate name keys. The nflverse reference stores
-        # ``full_name``; we also add ``first_name + last_name`` so the
-        # crosswalk can resolve rows whose Sleeper payload only
-        # populated first/last fields.
+                _add(sleeper_index, str(value).strip(), str(nflverse_id))
         full_name = _normalize_name(row.get("full_name") or "")
         first = _normalize_name(row.get("first_name") or "")
         last = _normalize_name(row.get("last_name") or "")
@@ -278,7 +333,7 @@ def build_nflverse_indexes(
         team = _normalize_team(row.get("team") or "")
         for name_key in (full_name, first_last):
             if name_key and team:
-                name_team_index.setdefault((name_key, team), set()).add(nflverse_id)
+                name_team_index.setdefault((name_key, team), set()).add(str(nflverse_id))
     return gsis_index, espn_index, other_index, name_team_index, sleeper_index
 
 

@@ -8,17 +8,36 @@ tree, and never imports from the modeling stack. The orchestrator:
 2. normalizes the response;
 3. joins against a frozen nflverse QB reference (2025 stripped);
 4. emits the change ledger against the immediately prior successful
-   snapshot;
+   snapshot's evidence;
 5. derives freshness state;
 6. persists raw bytes, ledger, normalized frames, crosswalk, and
-   reports.
+   reports — all atomically;
+7. records a single ``RunOutcome`` per run in
+   ``latest_run_status.json``.
+
+Run kinds
+---------
+
+* ``scheduled`` — twice-daily recurring collection.
+* ``pregame`` — Hall of Fame Game pre-kickoff collection. Freezes
+  an immutable pregame pointer for the postgame run to consult.
+* ``postgame`` — Hall of Fame Game post-kickoff collection. Loads
+  the frozen pregame pointer, rejects missing/malformed/post-
+  kickoff data, builds the per-QB observation with both pregame
+  and postgame values preserved.
+
+Atomicity
+---------
+
+Every mutable artifact under ``audit_root`` is written via the
+temp-file + fsync + ``os.replace`` idiom in ``atomic_io``. The
+prior valid artifact remains byte-identical until the new one is
+fully durable.
 """
 
 from __future__ import annotations
 
 import json
-import os
-import time
 from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -31,8 +50,15 @@ from ...sources.sleeper import (
     SleeperFetchResult,
     fetch_active_qb_snapshot,
 )
-from .changes import detect_changes
-from .crosswalk import build_crosswalk
+from .atomic_io import (
+    ReferenceArtifact,
+    atomic_append_parquet,
+    atomic_write_parquet,
+    atomic_write_text,
+    verify_reference_manifest,
+)
+from .changes import CHANGE_LEDGER_DTYPES, detect_changes
+from .crosswalk import CROSSWALK_DTYPES, build_crosswalk
 from .evidence_states import classify
 from .freshness import (
     FreshnessInputs,
@@ -40,13 +66,30 @@ from .freshness import (
     derive_freshness_state,
     schema_drift_fields,
 )
-from .ho_game import build_observation_record
+from .ho_game import (
+    HOF_OBSERVATION_DTYPES,
+    build_observation_record,
+    resolve_hof_game,
+)
 from .ids import snapshot_id_for, utc_now
-from .metrics import compute_reliability_metrics
+from .metrics import RunMetric, compute_reliability_metrics
 from .normalize import QB_SNAPSHOT_DTYPES, normalize_qb_payload
+from .outcomes import (
+    ERROR_TOKENS,
+    EXIT_CODES,
+    RunOutcome,
+    RunOutcomeRecord,
+)
 from .report import write_hof_observation_report, write_live_audit_report
 
 AUDIT_VERSION = "sleeper-qb-audit-v1"
+
+EVIDENCE_STATE_DTYPES = {
+    "snapshot_id": pl.Utf8,
+    "observed_at_utc": pl.Utf8,
+    "sleeper_player_id": pl.Utf8,
+    "evidence_state": pl.Utf8,
+}
 
 
 def _utc_now_iso() -> str:
@@ -62,16 +105,6 @@ def _read_nflverse_qbs(
 ) -> pl.DataFrame:
     """Read the nflverse-derived player identity reference and normalize
     its column names to the schema the crosswalk expects.
-
-    The shipped reference is built from
-    ``nflreadpy.load_ff_playerids()`` whose columns are
-    ``sleeper_id`` (int) and ``name`` (str). The crosswalk expects
-    ``player_id`` (str), ``full_name`` (str), and several stable-id
-    columns. This helper performs that normalization in one place so
-    the orchestrator and the offline audit CLI share the same
-    semantics. The 2025 sealed holdout is excluded by the
-    ``db_season != 2025`` filter applied when the file is built; this
-    helper adds a defensive strip in case the reference is replaced.
     """
     path = Path(path)
     if not path.exists():
@@ -79,11 +112,8 @@ def _read_nflverse_qbs(
     frame = pl.read_parquet(path)
     if frame.height == 0:
         return frame
-    # Coerce the Sleeper id column to a string so it can be compared
-    # against Sleeper's string-keyed player map.
     if "sleeper_id" in frame.columns and "sleeper_id_str" not in frame.columns:
         frame = frame.with_columns(pl.col("sleeper_id").cast(pl.Utf8).alias("sleeper_id_str"))
-    # Build a synthetic player_id (coalesce GSIS, fall back to sleeper).
     if "player_id" not in frame.columns:
         coalesce_inputs = []
         if "gsis_id" in frame.columns:
@@ -92,33 +122,17 @@ def _read_nflverse_qbs(
             coalesce_inputs.append(pl.col("sleeper_id_str"))
         if coalesce_inputs:
             frame = frame.with_columns(pl.coalesce(coalesce_inputs).alias("player_id"))
-    # Rename nflverse "name" -> "full_name" for the crosswalk's contract.
     if "name" in frame.columns and "full_name" not in frame.columns:
         frame = frame.rename({"name": "full_name"})
-    # Add required schema columns if missing. We only add ``season``
-    # when it is genuinely missing; we must never overwrite an
-    # existing ``db_season`` because the 2025 tripwire below keys on
-    # that column.
     for required, default_dtype in (
         ("position", pl.Utf8),
     ):
         if required not in frame.columns:
             frame = frame.with_columns(pl.lit(None, dtype=default_dtype).alias(required))
     if "position" in frame.columns:
-        # Many reference rows are not QBs; restrict to QB before the
-        # crosswalk indexes them.
         frame = frame.filter(pl.col("position") == "QB")
-    # Defensive 2025 strip. The shipped reference excludes 2025 at
-    # build time; this is a belt-and-braces tripwire. We only consult
-    # ``db_season`` (the only season column the nflverse identity
-    # table exposes); the in-frame ``season`` column is the model's
-    # contract, not the identity table's, and must not be used to
-    # filter the reference.
     if "db_season" in frame.columns:
         frame = frame.filter(pl.col("db_season") != 2025)
-    # Project to the columns the crosswalk actually consults, plus
-    # the synthesized Sleeper id so the crosswalk's exact-Sleeper
-    # priority-0 path can fire.
     keep = [
         c for c in (
             "player_id", "gsis_id", "espn_id", "sportradar_id", "yahoo_id",
@@ -131,45 +145,41 @@ def _read_nflverse_qbs(
     return frame.select(keep)
 
 
-def _atomic_write_text(path: Path, text: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_name(f".{path.name}.tmp.{os.getpid()}.{time.time_ns()}")
-    try:
-        tmp.write_text(text)
-        os.replace(tmp, path)
-    finally:
-        if tmp.exists():
-            try:
-                tmp.unlink()
-            except OSError:
-                pass
+def _evidence_frame(
+    active_frame: pl.DataFrame,
+    *,
+    snapshot_id: str,
+    observed_at_utc: str,
+) -> pl.DataFrame:
+    """Build the per-QB evidence-state frame with snapshot metadata.
 
-
-def _evidence_frame(active_frame: pl.DataFrame) -> pl.DataFrame:
+    The frame's columns are ``snapshot_id``, ``observed_at_utc``,
+    ``sleeper_player_id``, ``evidence_state``. The first two columns
+    are required so the rolling-history code can select the prior
+    snapshot's evidence rows precisely (rather than joining the
+    complete historical evidence file on ``sleeper_player_id``).
+    """
     if active_frame.height == 0:
         return pl.DataFrame(
-            {
-                "sleeper_player_id": pl.Series(
-                    name="sleeper_player_id", values=[], dtype=pl.Utf8
-                ),
-                "evidence_state": pl.Series(
-                    name="evidence_state", values=[], dtype=pl.Utf8
-                ),
-            }
+            {field: pl.Series(name=field, values=[], dtype=dt)
+             for field, dt in EVIDENCE_STATE_DTYPES.items()}
         )
     states = [classify(row) for row in active_frame.to_dicts()]
-    return active_frame.with_columns(pl.Series(name="evidence_state", values=states)).select(
-        ["sleeper_player_id", "evidence_state"]
-    )
+    return active_frame.with_columns(
+        pl.Series(name="evidence_state", values=states),
+        pl.lit(snapshot_id).alias("snapshot_id"),
+        pl.lit(observed_at_utc).alias("observed_at_utc"),
+    ).select(list(EVIDENCE_STATE_DTYPES.keys()))
+
+
+# Allowed kinds for a bounded audit run. ``scheduled`` is the
+# twice-daily collection; ``pregame`` and ``postgame`` are the
+# Hall-of-Fame-Game observations.
+ALLOWED_KINDS: frozenset[str] = frozenset({"scheduled", "pregame", "postgame"})
 
 
 class AuditOrchestrator:
-    """Bounded single-run audit orchestrator.
-
-    Parameters are paths and tuning knobs, not secrets. The class is
-    safe to construct in a unit test and is fully deterministic when
-    injected with a stub session.
-    """
+    """Bounded single-run audit orchestrator."""
 
     def __init__(
         self,
@@ -178,6 +188,8 @@ class AuditOrchestrator:
         endpoint: str = DEFAULT_ENDPOINT,
         staleness_threshold_seconds: float = 6 * 3600.0,
         nflverse_qb_path: str | Path | None = None,
+        hof_fixture_path: str | Path | None = None,
+        reference_manifest: Sequence[ReferenceArtifact] | None = None,
     ) -> None:
         self.audit_root = Path(audit_root)
         self.endpoint = endpoint
@@ -185,6 +197,10 @@ class AuditOrchestrator:
         self.nflverse_qb_path = (
             Path(nflverse_qb_path) if nflverse_qb_path is not None else None
         )
+        self.hof_fixture_path = (
+            Path(hof_fixture_path) if hof_fixture_path is not None else None
+        )
+        self.reference_manifest = list(reference_manifest or [])
         self.raw_root = self.audit_root / "raw"
         self.normalized_root = self.audit_root / "normalized"
         self.reports_root = self.audit_root / "reports"
@@ -196,6 +212,8 @@ class AuditOrchestrator:
         self.change_ledger_path = self.normalized_root / "qb_change_ledger.parquet"
         self.hof_obs_path = self.normalized_root / "hof_game_observation.parquet"
         self.latest_pointer_path = self.audit_root / "latest_snapshot.json"
+        self.latest_run_status_path = self.audit_root / "latest_run_status.json"
+        self.pregame_pointer_path = self.audit_root / "hof_pregame_pointer.json"
 
     # ------------------------------------------------------------------
     # public entry points
@@ -206,17 +224,71 @@ class AuditOrchestrator:
         *,
         session: Any | None = None,
         kind: str = "scheduled",
-        hof_game: Mapping[str, Any] | None = None,
-        hof_observation: Mapping[str, Any] | None = None,
         forced_snapshot_id: str | None = None,
         forced_observed_at_utc: str | None = None,
     ) -> dict[str, Any]:
-        """Run the bounded audit once. Returns a JSON-ready dict."""
+        """Run the bounded audit once. Returns a JSON-ready dict
+        suitable for the CLI to convert into a process exit code.
+
+        The returned dict always contains the key ``run_outcome``
+        (a ``RunOutcome`` value) and ``exit_code`` (its mapped
+        integer).
+        """
+        if kind not in ALLOWED_KINDS:
+            self._write_latest_run_status(
+                RunOutcomeRecord(
+                    outcome=RunOutcome.NORMALIZATION_FAILURE,
+                    snapshot_id=None,
+                    observed_at_utc=None,
+                    finished_at_utc=_utc_now_iso(),
+                    error_class="ValueError",
+                    error_message=f"unknown run kind: {kind!r}; allowed={sorted(ALLOWED_KINDS)}",
+                    error_token=ERROR_TOKENS[RunOutcome.NORMALIZATION_FAILURE],
+                    exit_code=EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE],
+                )
+            )
+            return {
+                "run_outcome": RunOutcome.NORMALIZATION_FAILURE.value,
+                "exit_code": EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE],
+                "error_class": "ValueError",
+                "error_message": f"unknown run kind: {kind!r}",
+            }
+
+        # Reference-manifest verification runs *before* the network.
+        # A missing or checksum-mismatched reference cannot be fixed
+        # by retrying the API.
+        if self.reference_manifest:
+            reference_dir = self.audit_root / "reference"
+            ok, errors = verify_reference_manifest(
+                reference_dir, self.reference_manifest
+            )
+            if not ok:
+                outcome = RunOutcome.REFERENCE_FAILURE
+                record = RunOutcomeRecord(
+                    outcome=outcome,
+                    snapshot_id=None,
+                    observed_at_utc=None,
+                    finished_at_utc=_utc_now_iso(),
+                    error_class="ReferenceVerificationError",
+                    error_message="; ".join(errors),
+                    error_token=ERROR_TOKENS[outcome],
+                    exit_code=EXIT_CODES[outcome],
+                )
+                self._write_latest_run_status(record)
+                return {
+                    "run_outcome": outcome.value,
+                    "exit_code": EXIT_CODES[outcome],
+                    "error_class": "ReferenceVerificationError",
+                    "error_message": "; ".join(errors),
+                    "errors": errors,
+                }
+
         # 1. Resolve snapshot_id and observed_at_utc deterministically.
         observed = utc_now()
         snapshot_id = forced_snapshot_id or snapshot_id_for(observed, kind=kind)
         observed_at_utc = forced_observed_at_utc or _utc_now_iso()
         raw_run_dir = self.raw_root / _date_partition(observed)
+
         # 2. Fetch with bounded retries.
         winner, attempts = fetch_active_qb_snapshot(
             snapshot_id=snapshot_id,
@@ -224,85 +296,99 @@ class AuditOrchestrator:
             endpoint=self.endpoint,
             session=session,
         )
-        # 3. Persist fetch ledger (always).
+
+        # 3. Persist fetch ledger (always, success or failure).
         self._append_fetch_ledger(attempts, observed_at_utc=observed_at_utc)
-        # 4. Determine which prior snapshot to compare against.
-        prior_active = self._read_prior_active()
-        prior_evidence = self._read_prior_evidence()
-        prior_snapshot_id = self._read_latest_snapshot_id()
-        # 5. If the fetch failed, write a failure report and return.
+
+        # 4. Branch on outcome.
         if winner is None:
-            report_path = self.reports_root / f"failure_{snapshot_id}.json"
-            report_payload = {
-                "schema_version": "sleeper-qb-failure-v1",
-                "snapshot_id": snapshot_id,
-                "generated_at_utc": observed_at_utc,
-                "attempts": [asdict(a) for a in attempts],
-                "freshness_state": derive_freshness_state(
-                    FreshnessInputs(
-                        last_success_at_utc=None,
-                        last_failure_at_utc=attempts[-1].response_received_at_utc
-                        if attempts
-                        else None,
-                        last_attempt_success=False,
-                        change_count=0,
-                        last_payload_sha256=None,
-                        prior_payload_sha256=None,
-                        parsed_ok=False,
-                        present_fields=frozenset(),
-                    ),
-                    staleness_threshold_seconds=self.staleness_threshold_seconds,
-                    now=observed,
-                ),
-            }
-            _atomic_write_text(report_path, json.dumps(report_payload, indent=2, default=str))
-            return report_payload
-        # 6. Parse the winning payload.
+            return self._finalize_transport_failure(
+                snapshot_id=snapshot_id,
+                observed_at_utc=observed_at_utc,
+                attempts=attempts,
+                observed=observed,
+            )
+
+        # 5. Parse the winning payload.
         try:
             raw_payload = json.loads(Path(winner.raw_payload_path).read_bytes())
         except json.JSONDecodeError as exc:
-            report_payload = {
-                "schema_version": "sleeper-qb-failure-v1",
-                "snapshot_id": snapshot_id,
-                "generated_at_utc": observed_at_utc,
-                "error_class": "JSONDecodeError",
-                "error_message": str(exc),
-                "attempts": [asdict(a) for a in attempts],
-            }
-            _atomic_write_text(
-                self.reports_root / f"failure_{snapshot_id}.json",
-                json.dumps(report_payload, indent=2, default=str),
+            return self._finalize_incomplete_response(
+                snapshot_id=snapshot_id,
+                observed_at_utc=observed_at_utc,
+                attempts=attempts,
+                error_class="JSONDecodeError",
+                error_message=str(exc),
             )
-            return report_payload
+
+        # If the JSON parses but is not a usable object of player
+        # records, that's also INCOMPLETE_RESPONSE.
         present, missing, _ = schema_drift_fields(raw_payload)
-        # 7. Normalize.
-        active_frame, inactive_frame, warnings = normalize_qb_payload(
-            snapshot_id=snapshot_id,
-            fetched_at_utc=observed_at_utc,
-            raw_payload=raw_payload,
-        )
-        # 8. Append normalized frames.
+        if not isinstance(raw_payload, dict) or not raw_payload:
+            return self._finalize_incomplete_response(
+                snapshot_id=snapshot_id,
+                observed_at_utc=observed_at_utc,
+                attempts=attempts,
+                error_class="EmptyOrInvalidPlayerMap",
+                error_message="payload parsed as JSON but is not a non-empty player map",
+            )
+
+        # 6. Normalize.
+        try:
+            active_frame, inactive_frame, warnings = normalize_qb_payload(
+                snapshot_id=snapshot_id,
+                fetched_at_utc=observed_at_utc,
+                raw_payload=raw_payload,
+            )
+        except Exception as exc:  # noqa: BLE001 - normalize must not crash the audit silently
+            return self._finalize_normalization_failure(
+                snapshot_id=snapshot_id,
+                observed_at_utc=observed_at_utc,
+                attempts=attempts,
+                error_class=type(exc).__name__,
+                error_message=str(exc),
+            )
+
+        # 7. Append normalized frames (atomic).
+        # Capture the *prior* snapshot id before we overwrite the
+        # ``latest_snapshot.json`` pointer and before the new active
+        # rows are appended to the rolling parquet. This is the only
+        # point at which the prior id is well-defined: after the
+        # append, ``_read_prior_active`` would see the current
+        # snapshot as the last one and return it as the prior.
+        prior_snapshot_id = self._read_latest_snapshot_id()
         self._append_active(active_frame)
         if inactive_frame.height > 0:
             self._append_inactive(inactive_frame)
-        # 9. Build evidence-state frame.
-        evidence_frame = _evidence_frame(active_frame)
+
+        # 8. Build evidence-state frame (with snapshot metadata).
+        evidence_frame = _evidence_frame(
+            active_frame,
+            snapshot_id=snapshot_id,
+            observed_at_utc=observed_at_utc,
+        )
         self._append_evidence(evidence_frame)
-        # 10. Crosswalk.
+
+        # 9. Crosswalk (with reference).
         if self.nflverse_qb_path is not None:
             nflverse_qbs = _read_nflverse_qbs(self.nflverse_qb_path)
-            crosswalk = build_crosswalk(
-                snapshot_id=snapshot_id,
-                active_qb_frame=active_frame,
-                nflverse_qbs=nflverse_qbs,
-            )
         else:
-            crosswalk = build_crosswalk(
-                snapshot_id=snapshot_id,
-                active_qb_frame=active_frame,
-                nflverse_qbs=pl.DataFrame(),
-            )
+            nflverse_qbs = pl.DataFrame()
+        crosswalk = build_crosswalk(
+            snapshot_id=snapshot_id,
+            active_qb_frame=active_frame,
+            nflverse_qbs=nflverse_qbs,
+        )
         self._append_crosswalk(crosswalk)
+
+        # 10. Determine which prior snapshot to compare against and
+        # read its evidence *only* (snapshot-scoped, not the entire
+        # historical evidence file). Use the prior snapshot id we
+        # captured before the append; this is the exact prior
+        # successful snapshot, never the current one.
+        prior_active = self._read_active_for_snapshot(prior_snapshot_id or "")
+        prior_evidence = self._read_evidence_for_snapshot(prior_snapshot_id or "")
+
         # 11. Change ledger.
         change_ledger = detect_changes(
             current_frame=active_frame,
@@ -315,122 +401,118 @@ class AuditOrchestrator:
             prior_observed_at_utc=self._read_latest_observed_at_utc(),
         )
         self._append_changes(change_ledger)
+
         # 12. Update latest pointer.
         latest_pointer = {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
             "payload_sha256": winner.sha256,
             "raw_payload_path": winner.raw_payload_path,
+            "kind": kind,
         }
-        _atomic_write_text(
+        atomic_write_text(
             self.latest_pointer_path,
             json.dumps(latest_pointer, indent=2, default=str) + "\n",
         )
-        # 13. HOF observation (if requested).
+
+        # 13. HOF workflow.
         hof_payload: dict[str, Any] | None = None
-        if hof_game is not None:
-            hof_observation_id = (
-                hof_observation.get("observation_id")
-                if isinstance(hof_observation, Mapping)
-                else f"hof-{snapshot_id}"
+        hof_run_outcome: RunOutcome | None = None
+        if kind in {"pregame", "postgame"}:
+            hof_result = self._run_hof_workflow(
+                kind=kind,
+                snapshot_id=snapshot_id,
+                observed_at_utc=observed_at_utc,
+                active_frame=active_frame,
+                evidence_frame=evidence_frame,
             )
-            observation_record = build_observation_record(
-                observation_id=str(hof_observation_id),
-                game=hof_game,
-                relevant_qb_rows=active_frame,
-                pregame_snapshot_id=str(hof_observation.get("pregame_snapshot_id", snapshot_id)),
-                postgame_snapshot_id=str(hof_observation.get("postgame_snapshot_id", snapshot_id)),
-                pregame_evidence_frame=evidence_frame,
-                postgame_evidence_frame=evidence_frame,
-                all_snapshot_ids=[snapshot_id],
+            hof_payload = hof_result.get("payload")
+            hof_run_outcome = hof_result.get("outcome")
+
+        # 14. Live audit report + metrics.
+        try:
+            metrics = compute_reliability_metrics(
+                runs=[
+                    RunMetric(
+                        snapshot_id=snapshot_id,
+                        observed_at_utc=observed_at_utc,
+                        success=True,
+                        fetch_attempts=[asdict(a) for a in attempts],
+                        active_rows=active_frame.to_dicts(),
+                        crosswalk_rows=crosswalk.to_dicts(),
+                    )
+                ],
+                change_ledger=change_ledger,
+                freshness_history=[
+                    {
+                        "last_success_at_utc": observed_at_utc,
+                        "last_failure_at_utc": None,
+                        "last_attempt_success": True,
+                        "change_count": change_count_for(change_ledger),
+                        "last_payload_sha256": winner.sha256,
+                        "prior_payload_sha256": None,
+                        "parsed_ok": True,
+                        "present_fields": present,
+                    }
+                ],
             )
-            self._append_hof_observation(_hof_observation_frame(observation_record))
-            evidence_state_counts = (
-                observation_record["derived_evidence_state"]
-                if observation_record["derived_evidence_state"]
-                else []
+            freshness_state = derive_freshness_state(
+                FreshnessInputs(
+                    last_success_at_utc=observed_at_utc,
+                    last_failure_at_utc=None,
+                    last_attempt_success=True,
+                    change_count=change_count_for(change_ledger),
+                    last_payload_sha256=winner.sha256,
+                    prior_payload_sha256=None,
+                    parsed_ok=True,
+                    present_fields=present,
+                ),
+                staleness_threshold_seconds=self.staleness_threshold_seconds,
+                now=observed,
             )
-            counts: dict[str, int] = {}
-            for state in evidence_state_counts:
-                counts[state] = counts.get(state, 0) + 1
-            hof_payload = write_hof_observation_report(
-                observation=observation_record,
-                evidence_state_counts=counts,
-                output_markdown=self.reports_root / "sleeper_hof_game_observation.md",
-                output_json=self.reports_root / "sleeper_hof_game_observation.json",
-            )
-        # 14. Live audit report.
-        metrics = compute_reliability_metrics(
-            fetch_attempts=[asdict(a) for a in attempts],
-            active_qb_snapshots=[{
-                "snapshot_id": snapshot_id,
-                "rows": active_frame.to_dicts(),
-            }],
-            crosswalk_snapshots=[{
-                "snapshot_id": snapshot_id,
-                "rows": crosswalk.to_dicts(),
-            }],
-            change_ledger=change_ledger,
-            freshness_history=[
-                {
-                    "last_success_at_utc": observed_at_utc,
-                    "last_failure_at_utc": None,
-                    "last_attempt_success": True,
-                    "change_count": change_count_for(change_ledger),
-                    "last_payload_sha256": winner.sha256,
-                    "prior_payload_sha256": None,
-                    "parsed_ok": True,
-                    "present_fields": present,
-                    "state": derive_freshness_state(
-                        FreshnessInputs(
-                            last_success_at_utc=observed_at_utc,
-                            last_failure_at_utc=None,
-                            last_attempt_success=True,
-                            change_count=change_count_for(change_ledger),
-                            last_payload_sha256=winner.sha256,
-                            prior_payload_sha256=None,
-                            parsed_ok=True,
-                            present_fields=present,
-                        ),
-                        staleness_threshold_seconds=self.staleness_threshold_seconds,
-                        now=observed,
-                    ),
-                }
-            ],
-        )
-        freshness_state = metrics.get("freshness_state") if False else derive_freshness_state(
-            FreshnessInputs(
-                last_success_at_utc=observed_at_utc,
-                last_failure_at_utc=None,
-                last_attempt_success=True,
-                change_count=change_count_for(change_ledger),
+            report_payload = write_live_audit_report(
+                metrics=metrics,
+                freshness_state=freshness_state,
                 last_payload_sha256=winner.sha256,
-                prior_payload_sha256=None,
-                parsed_ok=True,
-                present_fields=present,
-            ),
-            staleness_threshold_seconds=self.staleness_threshold_seconds,
-            now=observed,
+                endpoint=self.endpoint,
+                source_contract_version=AUDIT_VERSION,
+                observations=[
+                    {
+                        "kind": "success",
+                        "at_utc": observed_at_utc,
+                        "snapshot_id": snapshot_id,
+                        "freshness_state": freshness_state,
+                        "schema_drift_missing_fields": sorted(missing),
+                        "warnings": warnings,
+                    }
+                ],
+                output_markdown=self.reports_root / "sleeper_qb_live_audit.md",
+                output_json=self.reports_root / "sleeper_qb_live_audit.json",
+            )
+        except OSError as exc:
+            return self._finalize_persistence_failure(
+                snapshot_id=snapshot_id,
+                observed_at_utc=observed_at_utc,
+                attempts=attempts,
+                error_class=type(exc).__name__,
+                error_message=str(exc),
+            )
+
+        # 15. Choose final outcome. The HOF branch can downgrade a
+        # successful collection to a non-success outcome if the
+        # pregame pointer was missing or post-kickoff.
+        final_outcome = hof_run_outcome or RunOutcome.SUCCESS
+        record = RunOutcomeRecord(
+            outcome=final_outcome,
+            snapshot_id=snapshot_id,
+            observed_at_utc=observed_at_utc,
+            finished_at_utc=_utc_now_iso(),
+            error_class=None,
+            error_message=None,
+            error_token=ERROR_TOKENS[final_outcome] if final_outcome != RunOutcome.SUCCESS else None,
+            exit_code=EXIT_CODES[final_outcome],
         )
-        report_payload = write_live_audit_report(
-            metrics=metrics,
-            freshness_state=freshness_state,
-            last_payload_sha256=winner.sha256,
-            endpoint=self.endpoint,
-            source_contract_version=AUDIT_VERSION,
-            observations=[
-                {
-                    "kind": "success",
-                    "at_utc": observed_at_utc,
-                    "snapshot_id": snapshot_id,
-                    "freshness_state": freshness_state,
-                    "schema_drift_missing_fields": sorted(missing),
-                    "warnings": warnings,
-                }
-            ],
-            output_markdown=self.reports_root / "sleeper_qb_live_audit.md",
-            output_json=self.reports_root / "sleeper_qb_live_audit.json",
-        )
+        self._write_latest_run_status(record)
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
@@ -444,10 +526,416 @@ class AuditOrchestrator:
             "change_event_count": int(change_ledger.height),
             "report": report_payload,
             "hof": hof_payload,
+            "run_outcome": final_outcome.value,
+            "exit_code": EXIT_CODES[final_outcome],
         }
 
     # ------------------------------------------------------------------
-    # persistence helpers
+    # HOF pregame / postgame workflow
+    # ------------------------------------------------------------------
+
+    def _run_hof_workflow(
+        self,
+        *,
+        kind: str,
+        snapshot_id: str,
+        observed_at_utc: str,
+        active_frame: pl.DataFrame,
+        evidence_frame: pl.DataFrame,
+    ) -> dict[str, Any]:
+        """Implement the pregame freeze-pointer + postgame comparison.
+
+        Pregame behavior:
+
+        * resolve the committed HOF fixture via ``resolve_hof_game``
+          (or accept an injected ``game`` mapping);
+        * collect one snapshot (already done by the caller);
+        * persist an immutable pregame pointer containing
+          ``game_id``, ``kickoff_utc``, ``selected_snapshot_id``,
+          ``observed_at_utc``, ``normalized_snapshot_reference``,
+          ``evidence_snapshot_reference``;
+        * prove the selected snapshot occurred *before* kickoff.
+
+        Postgame behavior:
+
+        * resolve the same fixture;
+        * load the exact frozen pregame pointer;
+        * reject missing, malformed, mismatched, or post-kickoff
+          pregame data;
+        * collect the postgame snapshot (already done by the caller);
+        * build the HOF observation from the full normalized
+          pregame rows, the full normalized postgame rows, and the
+          snapshot-scoped evidence rows;
+        * preserve both pregame and postgame values per QB.
+        """
+        try:
+            game = resolve_hof_game(fixture_path=self.hof_fixture_path)
+        except Exception as exc:  # noqa: BLE001
+            return {
+                "outcome": RunOutcome.REFERENCE_FAILURE,
+                "payload": {
+                    "error_class": type(exc).__name__,
+                    "error_message": str(exc),
+                },
+            }
+        kickoff_utc = game.get("scheduled_start_utc")
+        if not kickoff_utc:
+            return {
+                "outcome": RunOutcome.REFERENCE_FAILURE,
+                "payload": {
+                    "error_class": "MissingKickoff",
+                    "error_message": "resolved HOF game has no scheduled_start_utc",
+                },
+            }
+
+        if kind == "pregame":
+            pre_kickoff = _utc_iso_is_before(observed_at_utc, kickoff_utc)
+            if not pre_kickoff:
+                return {
+                    "outcome": RunOutcome.NORMALIZATION_FAILURE,
+                    "payload": {
+                        "error_class": "PostKickoffPregame",
+                        "error_message": (
+                            f"pregame collection at {observed_at_utc} is at or after "
+                            f"kickoff {kickoff_utc}"
+                        ),
+                    },
+                }
+            pointer = {
+                "schema_version": "hof-pregame-pointer-v1",
+                "game_id": game.get("game_id"),
+                "kickoff_utc": kickoff_utc,
+                "selected_snapshot_id": snapshot_id,
+                "observed_at_utc": observed_at_utc,
+                "normalized_snapshot_reference": str(self.active_qb_path),
+                "evidence_snapshot_reference": str(self.evidence_path),
+            }
+            atomic_write_text(
+                self.pregame_pointer_path,
+                json.dumps(pointer, indent=2, default=str) + "\n",
+            )
+            return {
+                "outcome": None,
+                "payload": {
+                    "kind": "pregame",
+                    "pointer_path": str(self.pregame_pointer_path),
+                    "pointer": pointer,
+                },
+            }
+
+        # kind == "postgame"
+        if not self.pregame_pointer_path.exists():
+            return {
+                "outcome": RunOutcome.NORMALIZATION_FAILURE,
+                "payload": {
+                    "error_class": "MissingPregamePointer",
+                    "error_message": (
+                        "postgame run without a frozen pregame pointer; cannot compare"
+                    ),
+                },
+            }
+        try:
+            pointer = json.loads(self.pregame_pointer_path.read_text())
+        except (OSError, json.JSONDecodeError) as exc:
+            return {
+                "outcome": RunOutcome.NORMALIZATION_FAILURE,
+                "payload": {
+                    "error_class": "MalformedPregamePointer",
+                    "error_message": str(exc),
+                },
+            }
+        required_pointer_fields = {
+            "game_id", "kickoff_utc", "selected_snapshot_id",
+            "observed_at_utc", "normalized_snapshot_reference",
+            "evidence_snapshot_reference",
+        }
+        missing_pointer_fields = required_pointer_fields - set(pointer)
+        if missing_pointer_fields:
+            return {
+                "outcome": RunOutcome.NORMALIZATION_FAILURE,
+                "payload": {
+                    "error_class": "MalformedPregamePointer",
+                    "error_message": (
+                        f"pregame pointer missing required fields: "
+                        f"{sorted(missing_pointer_fields)}"
+                    ),
+                },
+            }
+        if pointer.get("game_id") != game.get("game_id"):
+            return {
+                "outcome": RunOutcome.NORMALIZATION_FAILURE,
+                "payload": {
+                    "error_class": "PregamePointerGameMismatch",
+                    "error_message": (
+                        f"pregame game_id={pointer.get('game_id')} does not match "
+                        f"resolved postgame game_id={game.get('game_id')}"
+                    ),
+                },
+            }
+        if not _utc_iso_is_before(str(pointer.get("observed_at_utc")), kickoff_utc):
+            return {
+                "outcome": RunOutcome.NORMALIZATION_FAILURE,
+                "payload": {
+                    "error_class": "PregamePointerPostKickoff",
+                    "error_message": (
+                        f"frozen pregame observed_at_utc={pointer.get('observed_at_utc')} "
+                        f"is not before kickoff {kickoff_utc}"
+                    ),
+                },
+            }
+        if _utc_iso_is_before(kickoff_utc, observed_at_utc) is False:
+            return {
+                "outcome": RunOutcome.NORMALIZATION_FAILURE,
+                "payload": {
+                    "error_class": "PostgamePreKickoff",
+                    "error_message": (
+                        f"postgame observed_at_utc={observed_at_utc} is before kickoff "
+                        f"{kickoff_utc}; refusing to build a postgame observation before "
+                        f"kickoff has elapsed"
+                    ),
+                },
+            }
+
+        # Build the per-QB observation from BOTH pregame and postgame
+        # normalized rows + snapshot-scoped evidence. We read the
+        # pregame active rows by ``selected_snapshot_id`` so we never
+        # join the entire historical active file on sleeper_player_id.
+        pregame_active = self._read_active_for_snapshot(
+            str(pointer.get("selected_snapshot_id"))
+        )
+        pregame_evidence = self._read_evidence_for_snapshot(
+            str(pointer.get("selected_snapshot_id"))
+        )
+        observation_id = f"hof-{game.get('game_id')}-{snapshot_id}"
+        observation_record = build_observation_record(
+            observation_id=observation_id,
+            game=game,
+            relevant_qb_rows=active_frame,
+            pregame_snapshot_id=str(pointer.get("selected_snapshot_id")),
+            postgame_snapshot_id=snapshot_id,
+            pregame_evidence_frame=pregame_evidence,
+            postgame_evidence_frame=evidence_frame,
+            pregame_normalized_frame=pregame_active,
+            postgame_normalized_frame=active_frame,
+            all_snapshot_ids=[
+                str(pointer.get("selected_snapshot_id")),
+                snapshot_id,
+            ],
+        )
+        try:
+            self._append_hof_observation(_hof_observation_frame(observation_record))
+        except OSError as exc:
+            return {
+                "outcome": RunOutcome.PERSISTENCE_FAILURE,
+                "payload": {
+                    "error_class": type(exc).__name__,
+                    "error_message": str(exc),
+                },
+            }
+        # Per-state counts over the postgame evidence so the markdown
+        # report stays consistent with the observation record.
+        evidence_state_counts: dict[str, int] = {}
+        for state in observation_record.get("derived_evidence_state") or []:
+            if state is None:
+                continue
+            evidence_state_counts[state] = evidence_state_counts.get(state, 0) + 1
+        try:
+            hof_payload = write_hof_observation_report(
+                observation=observation_record,
+                evidence_state_counts=evidence_state_counts,
+                output_markdown=self.reports_root / "sleeper_hof_game_observation.md",
+                output_json=self.reports_root / "sleeper_hof_game_observation.json",
+            )
+        except OSError as exc:
+            return {
+                "outcome": RunOutcome.PERSISTENCE_FAILURE,
+                "payload": {
+                    "error_class": type(exc).__name__,
+                    "error_message": str(exc),
+                },
+            }
+        return {"outcome": None, "payload": hof_payload}
+
+    # ------------------------------------------------------------------
+    # outcome-finalization helpers
+    # ------------------------------------------------------------------
+
+    def _finalize_transport_failure(
+        self,
+        *,
+        snapshot_id: str,
+        observed_at_utc: str,
+        attempts: Sequence[SleeperFetchResult],
+        observed: datetime,
+    ) -> dict[str, Any]:
+        outcome = RunOutcome.TRANSPORT_FAILURE
+        report_payload = {
+            "schema_version": "sleeper-qb-failure-v1",
+            "snapshot_id": snapshot_id,
+            "generated_at_utc": observed_at_utc,
+            "attempts": [asdict(a) for a in attempts],
+            "freshness_state": derive_freshness_state(
+                FreshnessInputs(
+                    last_success_at_utc=None,
+                    last_failure_at_utc=(
+                        attempts[-1].response_received_at_utc
+                        if attempts
+                        else None
+                    ),
+                    last_attempt_success=False,
+                    change_count=0,
+                    last_payload_sha256=None,
+                    prior_payload_sha256=None,
+                    parsed_ok=False,
+                    present_fields=frozenset(),
+                ),
+                staleness_threshold_seconds=self.staleness_threshold_seconds,
+                now=observed,
+            ),
+        }
+        self._write_failure_report(snapshot_id, report_payload)
+        last_error = attempts[-1] if attempts else None
+        record = RunOutcomeRecord(
+            outcome=outcome,
+            snapshot_id=snapshot_id,
+            observed_at_utc=observed_at_utc,
+            finished_at_utc=_utc_now_iso(),
+            error_class=last_error.error_class if last_error else None,
+            error_message=last_error.error_message if last_error else None,
+            error_token=ERROR_TOKENS[outcome],
+            exit_code=EXIT_CODES[outcome],
+        )
+        self._write_latest_run_status(record)
+        return {
+            "snapshot_id": snapshot_id,
+            "observed_at_utc": observed_at_utc,
+            "freshness_state": report_payload["freshness_state"],
+            "run_outcome": outcome.value,
+            "exit_code": EXIT_CODES[outcome],
+            "attempts": [asdict(a) for a in attempts],
+        }
+
+    def _finalize_incomplete_response(
+        self,
+        *,
+        snapshot_id: str,
+        observed_at_utc: str,
+        attempts: Sequence[SleeperFetchResult],
+        error_class: str,
+        error_message: str,
+    ) -> dict[str, Any]:
+        outcome = RunOutcome.INCOMPLETE_RESPONSE
+        report_payload = {
+            "schema_version": "sleeper-qb-failure-v1",
+            "snapshot_id": snapshot_id,
+            "generated_at_utc": observed_at_utc,
+            "error_class": error_class,
+            "error_message": error_message,
+            "attempts": [asdict(a) for a in attempts],
+        }
+        self._write_failure_report(snapshot_id, report_payload)
+        record = RunOutcomeRecord(
+            outcome=outcome,
+            snapshot_id=snapshot_id,
+            observed_at_utc=observed_at_utc,
+            finished_at_utc=_utc_now_iso(),
+            error_class=error_class,
+            error_message=error_message,
+            error_token=ERROR_TOKENS[outcome],
+            exit_code=EXIT_CODES[outcome],
+        )
+        self._write_latest_run_status(record)
+        return {
+            "snapshot_id": snapshot_id,
+            "observed_at_utc": observed_at_utc,
+            "run_outcome": outcome.value,
+            "exit_code": EXIT_CODES[outcome],
+            "error_class": error_class,
+            "error_message": error_message,
+        }
+
+    def _finalize_normalization_failure(
+        self,
+        *,
+        snapshot_id: str,
+        observed_at_utc: str,
+        attempts: Sequence[SleeperFetchResult],
+        error_class: str,
+        error_message: str,
+    ) -> dict[str, Any]:
+        outcome = RunOutcome.NORMALIZATION_FAILURE
+        record = RunOutcomeRecord(
+            outcome=outcome,
+            snapshot_id=snapshot_id,
+            observed_at_utc=observed_at_utc,
+            finished_at_utc=_utc_now_iso(),
+            error_class=error_class,
+            error_message=error_message,
+            error_token=ERROR_TOKENS[outcome],
+            exit_code=EXIT_CODES[outcome],
+        )
+        self._write_latest_run_status(record)
+        return {
+            "snapshot_id": snapshot_id,
+            "observed_at_utc": observed_at_utc,
+            "run_outcome": outcome.value,
+            "exit_code": EXIT_CODES[outcome],
+            "error_class": error_class,
+            "error_message": error_message,
+        }
+
+    def _finalize_persistence_failure(
+        self,
+        *,
+        snapshot_id: str,
+        observed_at_utc: str,
+        attempts: Sequence[SleeperFetchResult],
+        error_class: str,
+        error_message: str,
+    ) -> dict[str, Any]:
+        outcome = RunOutcome.PERSISTENCE_FAILURE
+        record = RunOutcomeRecord(
+            outcome=outcome,
+            snapshot_id=snapshot_id,
+            observed_at_utc=observed_at_utc,
+            finished_at_utc=_utc_now_iso(),
+            error_class=error_class,
+            error_message=error_message,
+            error_token=ERROR_TOKENS[outcome],
+            exit_code=EXIT_CODES[outcome],
+        )
+        # Best-effort: still try to record the latest-run status.
+        try:
+            self._write_latest_run_status(record)
+        except OSError:
+            pass
+        return {
+            "snapshot_id": snapshot_id,
+            "observed_at_utc": observed_at_utc,
+            "run_outcome": outcome.value,
+            "exit_code": EXIT_CODES[outcome],
+            "error_class": error_class,
+            "error_message": error_message,
+        }
+
+    def _write_failure_report(self, snapshot_id: str, payload: dict[str, Any]) -> None:
+        try:
+            atomic_write_text(
+                self.reports_root / f"failure_{snapshot_id}.json",
+                json.dumps(payload, indent=2, default=str),
+            )
+        except OSError:
+            # Failure reports are best-effort; never raise from here.
+            pass
+
+    def _write_latest_run_status(self, record: RunOutcomeRecord) -> None:
+        atomic_write_text(
+            self.latest_run_status_path,
+            json.dumps(record.to_dict(), indent=2, default=str) + "\n",
+        )
+
+    # ------------------------------------------------------------------
+    # persistence helpers (atomic)
     # ------------------------------------------------------------------
 
     def _append_fetch_ledger(
@@ -456,100 +944,60 @@ class AuditOrchestrator:
         *,
         observed_at_utc: str,
     ) -> None:
-        self.raw_root.mkdir(parents=True, exist_ok=True)
         if not attempts:
             return
         new_frame = pl.DataFrame(
             [asdict(a) for a in attempts],
             infer_schema_length=len(attempts),
         )
-        # Add observed_at_utc at ledger level for downstream joins.
         new_frame = new_frame.with_columns(pl.lit(observed_at_utc).alias("observed_at_utc"))
-        if self.fetch_ledger_path.exists():
-            existing = pl.read_parquet(self.fetch_ledger_path)
-            combined = pl.concat([existing, new_frame], how="diagonal_relaxed")
-        else:
-            combined = new_frame
-        combined.write_parquet(self.fetch_ledger_path)
+        atomic_append_parquet(self.fetch_ledger_path, new_frame)
 
     def _append_active(self, frame: pl.DataFrame) -> None:
-        self.normalized_root.mkdir(parents=True, exist_ok=True)
-        if self.active_qb_path.exists():
-            existing = pl.read_parquet(self.active_qb_path)
-            combined = pl.concat([existing, frame], how="diagonal_relaxed")
-        else:
-            combined = frame
-        combined = combined.select(
-            [pl.col(field).cast(dt, strict=False).alias(field) for field, dt in QB_SNAPSHOT_DTYPES.items()]
+        atomic_append_parquet(
+            self.active_qb_path, frame, schema_dtypes=QB_SNAPSHOT_DTYPES
         )
-        combined.write_parquet(self.active_qb_path)
 
     def _append_inactive(self, frame: pl.DataFrame) -> None:
-        if self.inactive_qb_path.exists():
-            existing = pl.read_parquet(self.inactive_qb_path)
-            combined = pl.concat([existing, frame], how="diagonal_relaxed")
-        else:
-            combined = frame
-        combined.write_parquet(self.inactive_qb_path)
+        atomic_append_parquet(self.inactive_qb_path, frame)
 
     def _append_evidence(self, frame: pl.DataFrame) -> None:
         if frame.height == 0:
             return
-        if self.evidence_path.exists():
-            existing = pl.read_parquet(self.evidence_path)
-            combined = pl.concat([existing, frame], how="diagonal_relaxed")
-        else:
-            combined = frame
-        combined.write_parquet(self.evidence_path)
+        atomic_append_parquet(
+            self.evidence_path, frame, schema_dtypes=EVIDENCE_STATE_DTYPES
+        )
 
     def _append_crosswalk(self, frame: pl.DataFrame) -> None:
         if frame.height == 0:
             # Always write at least the schema so downstream readers
             # can rely on column presence.
-            self.normalized_root.mkdir(parents=True, exist_ok=True)
             if not self.crosswalk_path.exists():
-                from .crosswalk import CROSSWALK_DTYPES
                 empty = pl.DataFrame(
                     {
                         field: pl.Series(name=field, values=[], dtype=dt)
                         for field, dt in CROSSWALK_DTYPES.items()
                     }
                 )
-                empty.write_parquet(self.crosswalk_path)
+                atomic_write_parquet(self.crosswalk_path, empty)
             return
-        self.normalized_root.mkdir(parents=True, exist_ok=True)
-        if self.crosswalk_path.exists():
-            existing = pl.read_parquet(self.crosswalk_path)
-            combined = pl.concat([existing, frame], how="diagonal_relaxed")
-        else:
-            combined = frame
-        combined.write_parquet(self.crosswalk_path)
+        atomic_append_parquet(self.crosswalk_path, frame)
 
     def _append_changes(self, frame: pl.DataFrame) -> None:
         if frame.height == 0:
             return
-        from .changes import CHANGE_LEDGER_DTYPES
-        if self.change_ledger_path.exists():
-            existing = pl.read_parquet(self.change_ledger_path)
-            combined = pl.concat([existing, frame], how="diagonal_relaxed")
-        else:
-            combined = frame
-        combined = combined.select(
-            [pl.col(field).cast(dt, strict=False).alias(field) for field, dt in CHANGE_LEDGER_DTYPES.items()]
+        atomic_append_parquet(
+            self.change_ledger_path, frame, schema_dtypes=CHANGE_LEDGER_DTYPES
         )
-        combined.write_parquet(self.change_ledger_path)
 
     def _append_hof_observation(self, frame: pl.DataFrame) -> None:
-        from .ho_game import HOF_OBSERVATION_DTYPES
-        if self.hof_obs_path.exists():
-            existing = pl.read_parquet(self.hof_obs_path)
-            combined = pl.concat([existing, frame], how="diagonal_relaxed")
-        else:
-            combined = frame
-        combined = combined.select(
-            [pl.col(field).cast(dt, strict=False).alias(field) for field, dt in HOF_OBSERVATION_DTYPES.items()]
+        atomic_append_parquet(
+            self.hof_obs_path, frame, schema_dtypes=HOF_OBSERVATION_DTYPES
         )
-        combined.write_parquet(self.hof_obs_path)
+
+    # ------------------------------------------------------------------
+    # snapshot-scoped reads
+    # ------------------------------------------------------------------
 
     def _read_prior_active(self) -> pl.DataFrame | None:
         if not self.active_qb_path.exists():
@@ -557,7 +1005,6 @@ class AuditOrchestrator:
         frame = pl.read_parquet(self.active_qb_path)
         if frame.height == 0:
             return None
-        # Pick the last unique snapshot_id by sorted order.
         unique_snapshots = (
             frame.select("snapshot_id", "fetched_at_utc")
             .unique(subset=["snapshot_id"], keep="last")
@@ -569,10 +1016,43 @@ class AuditOrchestrator:
         prior = frame.filter(pl.col("snapshot_id") == last["snapshot_id"])
         return prior
 
+    def _read_active_for_snapshot(self, snapshot_id: str) -> pl.DataFrame:
+        if not self.active_qb_path.exists() or not snapshot_id:
+            return pl.DataFrame(
+                {field: pl.Series(name=field, values=[], dtype=dt)
+                 for field, dt in QB_SNAPSHOT_DTYPES.items()}
+            )
+        frame = pl.read_parquet(self.active_qb_path)
+        if frame.height == 0:
+            return frame
+        return frame.filter(pl.col("snapshot_id") == snapshot_id)
+
+    def _read_evidence_for_snapshot(self, snapshot_id: str) -> pl.DataFrame:
+        """Snapshot-scoped evidence read. The rolling-history code
+        joins the prior evidence frame to the current frame on
+        ``sleeper_player_id``; that join must be filtered to the
+        *exact* prior successful snapshot, never the entire
+        historical evidence file. This helper enforces that.
+        """
+        if not self.evidence_path.exists() or not snapshot_id:
+            return pl.DataFrame(
+                {field: pl.Series(name=field, values=[], dtype=dt)
+                 for field, dt in EVIDENCE_STATE_DTYPES.items()}
+            )
+        frame = pl.read_parquet(self.evidence_path)
+        if frame.height == 0:
+            return frame
+        return frame.filter(pl.col("snapshot_id") == snapshot_id)
+
     def _read_prior_evidence(self) -> pl.DataFrame | None:
-        if not self.evidence_path.exists():
-            return None
-        return pl.read_parquet(self.evidence_path)
+        """Backward-compatible alias. Returns the prior snapshot's
+        evidence-scoped frame so change detection is exact.
+        """
+        prior_snapshot_id = self._read_latest_snapshot_id()
+        return self._read_evidence_for_snapshot(prior_snapshot_id or "")
+
+    def _read_prior_evidence_for(self, snapshot_id: str | None) -> pl.DataFrame | None:
+        return self._read_evidence_for_snapshot(snapshot_id or "")
 
     def _read_latest_snapshot_id(self) -> str | None:
         if not self.latest_pointer_path.exists():
@@ -599,7 +1079,6 @@ def _date_partition(timestamp: datetime) -> str:
 
 
 def _hof_observation_frame(record: Mapping[str, Any]) -> pl.DataFrame:
-    from .ho_game import HOF_OBSERVATION_DTYPES
     row: dict[str, Any] = {}
     for field in HOF_OBSERVATION_DTYPES:
         value = record.get(field)
@@ -611,3 +1090,19 @@ def _hof_observation_frame(record: Mapping[str, Any]) -> pl.DataFrame:
         [pl.col(field).cast(dt, strict=False).alias(field) for field, dt in HOF_OBSERVATION_DTYPES.items()]
     )
     return frame
+
+
+def _utc_iso_is_before(left: str, right: str) -> bool:
+    """Return True iff ``left`` strictly precedes ``right`` in UTC.
+
+    Both inputs are ISO-8601 strings; ``Z`` is treated as ``+00:00``.
+    A malformed input raises ``ValueError`` so callers can treat
+    that as a structural error.
+    """
+    def _parse(value: str) -> datetime:
+        text = value.replace("Z", "+00:00")
+        dt = datetime.fromisoformat(text)
+        if dt.tzinfo is None:
+            raise ValueError(f"timestamp must be timezone-aware: {value}")
+        return dt.astimezone(timezone.utc)
+    return _parse(left) < _parse(right)

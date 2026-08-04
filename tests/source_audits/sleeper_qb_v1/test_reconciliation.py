@@ -104,10 +104,17 @@ def test_reconciliation_table_sums_to_total_candidates() -> None:
     )
     rows = active.to_dicts()
     m = metrics.compute_reliability_metrics(
-        fetch_attempts=[{"success": True, "duration_ms": 50, "http_status": 200,
-                          "response_bytes": 1024}],
-        active_qb_snapshots=[{"snapshot_id": snap_id, "rows": rows}],
-        crosswalk_snapshots=[{"snapshot_id": snap_id, "rows": crosswalk_frame.to_dicts()}],
+        runs=[
+            metrics.RunMetric(
+                snapshot_id=snap_id,
+                observed_at_utc="2026-08-03T00:00:00Z",
+                success=True,
+                fetch_attempts=[{"success": True, "duration_ms": 50, "http_status": 200,
+                                  "response_bytes": 1024}],
+                active_rows=rows,
+                crosswalk_rows=crosswalk_frame.to_dicts(),
+            )
+        ],
         change_ledger=pl.DataFrame(),
         freshness_history=[],
     )
@@ -147,10 +154,17 @@ def test_unmatched_serialized_count_equals_records() -> None:
         reloaded = pl.read_parquet(path)
     active_rows = active.to_dicts()
     m = metrics.compute_reliability_metrics(
-        fetch_attempts=[{"success": True, "duration_ms": 50, "http_status": 200,
-                          "response_bytes": 1024}],
-        active_qb_snapshots=[{"snapshot_id": snap_id, "rows": active_rows}],
-        crosswalk_snapshots=[{"snapshot_id": snap_id, "rows": reloaded.to_dicts()}],
+        runs=[
+            metrics.RunMetric(
+                snapshot_id=snap_id,
+                observed_at_utc="2026-08-03T00:00:00Z",
+                success=True,
+                fetch_attempts=[{"success": True, "duration_ms": 50, "http_status": 200,
+                                  "response_bytes": 1024}],
+                active_rows=active_rows,
+                crosswalk_rows=reloaded.to_dicts(),
+            )
+        ],
         change_ledger=pl.DataFrame(),
         freshness_history=[],
     )
