@@ -101,36 +101,43 @@ def _validate_history_schema(frame: Any) -> None:
         ) from exc
 
 
-def _read_authoritative_history(history_path: Path) -> Any:
-    """Read ``run_history.parquet`` and validate its schema.
+def _valid_empty_history_frame() -> Any:
+    """Return an empty polars frame with the required history
+    schema. Used for the legitimate missing / zero-byte state."""
+    import polars as pl
 
-    Returns the validated Polars frame.
+    return pl.DataFrame(schema={c: pl.Utf8 for c in REQUIRED_HISTORY_COLUMNS})
 
-    Raises ``AuthorityReadError`` for any of:
-    * the path cannot be stat-ed;
-    * the file is non-empty but cannot be opened;
-    * polars raises on read;
-    * the frame is missing required columns;
-    * the frame cannot be deterministically sorted by
-      ``finished_at_utc``.
+
+def _read_authoritative_history_or_missing(
+    history_path: Path,
+) -> Any:
+    """Read ``run_history.parquet`` and validate it, distinguishing
+    legitimate missing from inaccessible authority.
+
+    * ``FileNotFoundError`` from ``stat`` → legitimate missing
+      ledger; return an empty frame with the required schema.
+    * Any other ``OSError`` from ``stat`` → inaccessible
+      authority; raise :class:`AuthorityReadError`.
+    * Zero-byte file → legitimate empty authority.
+    * Polars read / validation errors → inaccessible authority;
+      raise :class:`AuthorityReadError`.
     """
     import polars as pl
 
-    # ``stat`` failures (e.g. permission denied on the directory)
-    # surface here. We do NOT swallow them into an empty provenance.
     try:
         stat_result = history_path.stat()
+    except FileNotFoundError:
+        return _valid_empty_history_frame()
     except OSError as exc:
         raise AuthorityReadError(
             f"cannot stat ledger at {history_path}: "
             f"{type(exc).__name__}: {exc}"
         ) from exc
 
-    # Zero-byte file is a valid empty-history state.
     if stat_result.st_size == 0:
-        return pl.DataFrame(schema={c: pl.Utf8 for c in REQUIRED_HISTORY_COLUMNS})
+        return _valid_empty_history_frame()
 
-    # Open + read. Any OSError or polars error → fail closed.
     try:
         frame = pl.read_parquet(history_path)
     except Exception as exc:  # noqa: BLE001 — any read failure is authority failure
@@ -186,14 +193,7 @@ def _current_provenance(history_path: Path) -> dict[str, Any]:
 
     Empty provenance is NEVER used to represent read failure.
     """
-
-    if not history_path.exists():
-        return {
-            "source_history_row_count": 0,
-            "source_history_last_finished_at_utc": None,
-            "source_history_last_snapshot_id": None,
-        }
-    frame = _read_authoritative_history(history_path)
+    frame = _read_authoritative_history_or_missing(history_path)
     return _provenance_from_history_frame(frame)
 
 

@@ -408,3 +408,81 @@ def test_cli_does_not_mutate_audit_artifacts(tmp_path: Path) -> None:
     assert proc_bad.returncode == 3
     assert history_path.read_bytes() == history_before_bad
     assert report_path.read_bytes() == report_before_bad
+
+
+# ----------------------------------------------------------------------
+# Rereview 4859731679 follow-up: Path.stat() missing-vs-error
+# distinction.
+#
+# These tests exercise the CLI via subprocess with monkeypatched
+# ``Path.stat`` to confirm:
+# A. FileNotFoundError → legitimate missing authority (exit 0
+#    with matching empty cache).
+# B. PermissionError → fail closed (exit 3,
+#    AUTHORITATIVE_LEDGER_READ_FAILURE, no cached report printed).
+# C. Existing exit-0 / exit-2 / exit-3 behavior is preserved.
+# ----------------------------------------------------------------------
+
+
+def _stat_raising_subprocess(
+    audit_root: Path, exc_type: type[BaseException]
+) -> subprocess.CompletedProcess:
+    """Run the CLI subprocess with a hook that patches
+    ``Path.stat`` to raise ``exc_type`` for the run_history path."""
+    config_path = audit_root.parent / "audit_config.yaml"
+    config_path.write_text(f"audit_root: {audit_root}\n")
+    hook_path = audit_root.parent / "_stat_hook.py"
+    hook_path.write_text(
+        "import pathlib\n"
+        "import runpy\n"
+        "import sys\n"
+        "\n"
+        "_orig = pathlib.Path.stat\n"
+        "\n"
+        "\n"
+        "def _patched(self, *args, **kwargs):\n"
+        "    if self.name == 'run_history.parquet':\n"
+        f"        raise {exc_type.__name__}('forced')\n"
+        "    return _orig(self, *args, **kwargs)\n"
+        "\n"
+        "\n"
+        "pathlib.Path.stat = _patched\n"
+        f"sys.argv = ['{SCRIPTS_DIR}/report_sleeper_qb_audit.py', "
+        f"'--config', '{config_path}', '--report', 'live']\n"
+        f"runpy.run_path('{SCRIPTS_DIR}/report_sleeper_qb_audit.py', run_name='__main__')\n"
+    )
+    env = dict(os.environ)
+    env["PYTHONPATH"] = ":".join(PYTHONPATH_PARTS + [str(SCRIPTS_DIR)])
+    return subprocess.run(
+        [sys.executable, str(hook_path)],
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=60,
+    )
+
+
+def test_stat_filenotfounderror_treated_as_missing(
+    tmp_path: Path,
+) -> None:
+    """Path.stat raising FileNotFoundError → legitimate missing
+    authority; matching empty cache exits 0."""
+    audit_root = _make_audit_root(tmp_path)
+    _seed_live_report(audit_root, dict(EMPTY_PROVENANCE))
+    proc = _stat_raising_subprocess(audit_root, FileNotFoundError)
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_stat_permissionerror_fails_closed(tmp_path: Path) -> None:
+    """Path.stat raising PermissionError → inaccessible
+    authority; CLI exits 3, prints
+    AUTHORITATIVE_LEDGER_READ_FAILURE, and does NOT print the
+    cached report payload."""
+    audit_root = _make_audit_root(tmp_path)
+    _seed_live_report(audit_root, dict(EMPTY_PROVENANCE))
+    proc = _stat_raising_subprocess(audit_root, PermissionError)
+    assert proc.returncode == 3
+    assert "AUTHORITATIVE_LEDGER_READ_FAILURE" in proc.stdout
+    assert "PermissionError" in proc.stderr
+    # Cached report payload must NOT be printed.
+    assert "sleeper-qb-live-audit-v1" not in proc.stdout
