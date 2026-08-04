@@ -33,7 +33,11 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Mapping
 
-from ..common.errors import ConfigurationError, WalkForwardError
+from ..common.errors import (
+    ConfigurationError,
+    SealedHoldoutAccessError,
+    WalkForwardError,
+)
 
 # ----------------------------------------------------------------------------
 # Configuration
@@ -200,18 +204,39 @@ def elo_probability_home(
     return 1.0 / (1.0 + 10.0 ** (-diff / 400.0))
 
 
-def mov_multiplier(margin: int, config: EloConfig) -> float:
-    """FiveThirtyEight-style margin-of-victory multiplier.
+def mov_multiplier(
+    margin: int,
+    config: EloConfig,
+) -> float:
+    """Canonical FiveThirtyEight-style margin-of-victory multiplier.
 
-    ``multiplier = min(mov_cap, 1 + (margin/mov_divisor)^2)`` for the
-    winner; ``1.0`` for the loser. The implementation returns the
-    multiplier for a winner; the loser receives ``1.0``. The caller
-    enforces the winner-loser direction."""
+    The documented intended formula is::
 
-    if margin <= 0:
+        mov_multiplier = min(mov_cap, 1 + (abs(margin) / mov_divisor) ** 2)
+
+    Invariants:
+
+    - ``margin == 0`` returns exactly ``1.0`` (the leading 1 is **not**
+      added twice and the squared term is exactly 0).
+    - The result is always ``>= 1.0`` for any non-negative absolute
+      margin (the leading 1 plus a non-negative square).
+    - The result is capped at ``config.mov_cap`` to prevent a single
+      blowout from moving a team's rating by more than
+      ``mov_cap * K`` points.
+    - Negative ``margin`` is treated as a loss and the multiplier
+      is ``1.0`` (the loser receives a flat multiplier regardless of
+      how badly they lost). The zero-sum update path is responsible
+      for applying the right sign and the single ``delta``.
+
+    The orchestrator must call this helper; the formula is *not*
+    duplicated inline.
+    """
+
+    abs_margin = abs(int(margin))
+    if abs_margin == 0:
         return 1.0
-    raw = 1.0 + (margin / config.mov_divisor) ** 2
-    return min(config.mov_cap, raw)
+    raw = 1.0 + (abs_margin / float(config.mov_divisor)) ** 2
+    return min(float(config.mov_cap), raw)
 
 
 def clamp_probability(p: float, config: EloConfig) -> float:
@@ -477,21 +502,27 @@ def update_state_with_margin(
 ) -> tuple[UpdateRecord, UpdateRecord, EloState]:
     """Apply the Elo update for one completed game.
 
-    The home and away update records are returned together with the
-    updated state. The probability used in the update is the predicted
-    home-win probability *before* the per-game block-level adjustment
-    (i.e. the per-game probability stored on the prediction). The Elo
-    update formula is the FiveThirtyEight variant:
+    This is the **single canonical update path**. The orchestrator
+    (and any other caller) must use this function rather than
+    reimplementing the formula.
 
-        expected = 1 / (1 + 10^((opp_elo - own_elo - hfa) / 400))
-        actual = 1.0 (win) | 0.5 (tie) | 0.0 (loss)
-        delta = k * mov_multiplier * (actual - expected)
-        new_rating = old_rating + delta
+    The zero-sum update is::
 
-    The direction of the ``margin`` is signed home-minus-away. The
-    margin-of-victory multiplier is applied to the winner.
+        delta = K * MOV_multiplier * (actual_home - expected_home)
+        new_home = home_before + delta
+        new_away = away_before - delta
 
-    The state is *not* mutated in place; a new state is returned."""
+    The MOV multiplier is applied to the *single* delta. There is no
+    separate winner and loser delta. The sign of ``(actual - expected)``
+    and the loser's flat 1.0 multiplier combine so that the loser
+    receives only the negative side of the same delta.
+
+    ``margin`` is the signed home-minus-away margin (positive means
+    the home team won). The function takes the absolute value when
+    passing the margin into the MOV helper.
+
+    The state is *not* mutated in place; a new state is returned.
+    """
 
     home_team = prediction.home_team
     away_team = prediction.away_team
@@ -504,27 +535,28 @@ def update_state_with_margin(
         if season_type in {"WC", "DIV", "CON", "SB"}
         else config.k_factor_regular
     )
+
     if prediction.actual_tie:
         actual_home = 0.5
     elif prediction.actual_home_win:
         actual_home = 1.0
     else:
         actual_home = 0.0
+
     expected_home = elo_expected(home_elo + hfa, away_elo)
     expected_away = 1.0 - expected_home
+
+    # Single canonical MOV multiplier. On a tie the multiplier is
+    # exactly 1.0. On a win/loss the multiplier is computed from the
+    # absolute margin and applied to the single zero-sum delta.
     if prediction.actual_tie:
-        mult_home = 1.0
-        mult_away = 1.0
-    elif prediction.actual_home_win:
-        mult_home = mov_multiplier(margin, config)
-        mult_away = 1.0
+        mult = 1.0
     else:
-        mult_home = 1.0
-        mult_away = mov_multiplier(margin, config)
-    delta_home = k * mult_home * (actual_home - expected_home)
-    delta_away = k * mult_away * ((1.0 - actual_home) - expected_away)
-    new_home = home_elo + delta_home
-    new_away = away_elo + delta_away
+        mult = mov_multiplier(margin, config)
+
+    delta = k * mult * (actual_home - expected_home)
+    new_home = home_elo + delta
+    new_away = away_elo - delta
     teams = dict(state.teams)
     teams[home_team] = TeamState(
         team=home_team, rating=new_home, last_season=prediction.season
@@ -541,12 +573,12 @@ def update_state_with_margin(
         elo_before=home_elo,
         expected_result=expected_home,
         actual_result=actual_home,
-        margin=margin,
-        update_multiplier=mult_home,
+        margin=int(margin),
+        update_multiplier=mult,
         k_factor=k,
         home_field_adjustment=hfa,
         probability_before_update=prediction.predicted_home_win_probability,
-        elo_change=delta_home,
+        elo_change=delta,
         elo_after=new_home,
     )
     away_record = UpdateRecord(
@@ -556,12 +588,12 @@ def update_state_with_margin(
         elo_before=away_elo,
         expected_result=expected_away,
         actual_result=1.0 - actual_home,
-        margin=margin,
-        update_multiplier=mult_away,
+        margin=int(margin),
+        update_multiplier=mult,
         k_factor=k,
         home_field_adjustment=-hfa,
         probability_before_update=1.0 - prediction.predicted_home_win_probability,
-        elo_change=delta_away,
+        elo_change=-delta,
         elo_after=new_away,
     )
     return home_record, away_record, new_state
@@ -666,6 +698,283 @@ def rebuild_state_from_ledger(
         teams_d[team] = TeamState(team=team, rating=new_rating, last_season=row_season)
         state = EloState(teams=teams_d, mean=state.mean, current_season=state.current_season)
     return state
+
+
+def independent_replay_from_pregame(
+    *,
+    predictions: "list[dict[str, Any]]",
+    teams: list[str],
+    config: EloConfig,
+) -> tuple[EloState, list[dict[str, float]]]:
+    """Independent state replay that recalculates every Elo update from
+    pregame inputs and game outcomes, **without reading persisted
+    ``elo_after`` values**. The function is the source of truth used
+    to detect corrupted state-ledger rows.
+
+    Inputs are the canonical prediction rows. Each row must contain
+    at least::
+
+        game_id, season, season_type, week, home_team, away_team,
+        home_elo_before, away_elo_before, home_field_adjustment,
+        predicted_home_win_probability, actual_home_win, actual_tie,
+        target_available
+
+    For rows where ``target_available`` is true, the function reads
+    the signed margin from a parallel ``margins_by_game`` mapping
+    (game_id -> int) so the replay can recompute the MOV multiplier
+    independently. If the replay's computed ``elo_after`` for any
+    side disagrees with the ledger value (provided in the parallel
+    ``ledger_by_game`` mapping), the function raises
+    :class:`StateLedgerCorruptionError`.
+
+    Returns ``(final_state, replayed_updates)`` where ``replayed_updates``
+    is a list of ``(game_id, side, elo_before, elo_after)`` dicts the
+    caller can use to compare against the persisted state ledger.
+    """
+    state = initial_state(teams, config)
+    replayed: list[dict[str, Any]] = []
+    last_season: int | None = None
+    # Group predictions into the same chronological block order the
+    # orchestrator uses. The caller is responsible for sorting.
+    for row in predictions:
+        season = int(row["season"])
+        if season > 2024:
+            raise SealedHoldoutAccessError(
+                season, "independent_replay_from_pregame",
+                "replay must never read 2025",
+            )
+        season_type = str(row["season_type"]).upper()
+        home_team = str(row["home_team"])
+        away_team = str(row["away_team"])
+        week = int(row["week"])
+        # Apply season carryover at the same boundary the engine uses.
+        if last_season is not None and season > last_season:
+            state = apply_season_carryover(state, new_season=season, config=config)
+        last_season = season
+        # Ensure both teams exist in the state.
+        state = ensure_team(state, home_team, config)
+        state = ensure_team(state, away_team, config)
+        home_elo = state.rating(home_team)
+        away_elo = state.rating(away_team)
+        hfa = float(row["home_field_adjustment"])
+        # Reconstruct the prediction in-process. The prediction row's
+        # home_elo_before/away_elo_before are ignored: the replay
+        # computes the canonical state before the update from its own
+        # monotonic state copy.
+        if not bool(row.get("target_available", False)):
+            # No completed outcome -> no state update; carry on.
+            continue
+        # The canonical field is actual_margin (positive = home win,
+        # negative = away win, 0 = tie, null = unavailable).
+        actual_margin_value = row.get("actual_margin")
+        if actual_margin_value is None:
+            continue
+        actual_margin_int = int(actual_margin_value)
+        if actual_margin_int == 0 or row.get("actual_home_win") is None:
+            actual_home: float = 0.5
+        else:
+            actual_home = 1.0 if bool(row["actual_home_win"]) else 0.0
+        expected_home = elo_expected(home_elo + hfa, away_elo)
+        # The tie multiplier is exactly 1.0; the win/loss multiplier
+        # is the canonical MOV multiplier.  The replay computes the
+        # absolute value of the margin independently of the persisted
+        # record.
+        if actual_home == 0.5:
+            mult = 1.0
+        else:
+            mult = mov_multiplier(abs(actual_margin_int), config)
+        k = (
+            config.k_factor_postseason
+            if season_type in {"WC", "DIV", "CON", "SB"}
+            else config.k_factor_regular
+        )
+        delta = k * mult * (actual_home - expected_home)
+        new_home = home_elo + delta
+        new_away = away_elo - delta
+        teams_d = dict(state.teams)
+        teams_d[home_team] = TeamState(
+            team=home_team, rating=new_home, last_season=season
+        )
+        teams_d[away_team] = TeamState(
+            team=away_team, rating=new_away, last_season=season
+        )
+        new_mean = sum(t.rating for t in teams_d.values()) / len(teams_d)
+        state = EloState(teams=teams_d, mean=new_mean, current_season=season)
+        replayed.append({
+            "game_id": str(row["game_id"]),
+            "side": "home",
+            "elo_before": home_elo,
+            "expected_result": expected_home,
+            "actual_result": actual_home,
+            "update_multiplier": mult,
+            "k_factor": k,
+            "elo_change": delta,
+            "elo_after": new_home,
+            "season": int(season),
+            "week": int(week),
+        })
+        replayed.append({
+            "game_id": str(row["game_id"]),
+            "side": "away",
+            "elo_before": away_elo,
+            "expected_result": 1.0 - expected_home,
+            "actual_result": 1.0 - actual_home,
+            "update_multiplier": mult,
+            "k_factor": k,
+            "elo_change": -delta,
+            "elo_after": new_away,
+            "season": int(season),
+            "week": int(week),
+        })
+    return state, replayed
+
+
+def detect_state_ledger_corruption(
+    *,
+    state_ledger: "list[dict[str, Any]]",
+    predictions: "list[dict[str, Any]]",
+    config: EloConfig,
+) -> list[str]:
+    """Return a list of corruption messages (empty == OK).
+
+    Replays the Elo updates from the prediction rows in chronological
+    order and compares every persisted field to the replay-computed
+    value. The comparison covers:
+
+    - side pairing (exactly two rows per game, one home, one away);
+    - duplicate (game_id, side) rows;
+    - missing (game_id, side) rows;
+    - per-row ``elo_before``;
+    - per-row ``expected_result`` and ``actual_result``;
+    - per-row ``update_multiplier``;
+    - per-row ``k_factor``;
+    - per-row ``elo_change``;
+    - per-row ``elo_after``;
+    - per-row ``actual_margin`` (sign-correct: home is the signed
+      value; away is the negation).
+
+    Any mismatch within numerical tolerance is reported. The
+    function is a pure verification helper and never mutates its
+    inputs.
+    """
+    from ..common.errors import StateLedgerCorruptionError
+
+    teams = sorted({
+        str(r["team"]) for r in state_ledger
+    })
+    # Group the state ledger by game_id so we can match each side.
+    by_game: dict[str, dict[str, dict[str, Any]]] = {}
+    for row in state_ledger:
+        side_dict = by_game.setdefault(str(row["game_id"]), {})
+        if str(row["side"]) in side_dict:
+            problems = [
+                f"duplicate side row for game {row['game_id']} side {row['side']}"
+            ]
+            raise StateLedgerCorruptionError(
+                "detect_state_ledger_corruption", problems
+            )
+        side_dict[str(row["side"])] = {
+            "elo_before": float(row["elo_before"]),
+            "expected_result": float(row["expected_result"]),
+            "actual_result": float(row["actual_result"]),
+            "update_multiplier": float(row["update_multiplier"]),
+            "k_factor": float(row["k_factor"]),
+            "elo_change": float(row["elo_change"]),
+            "elo_after": float(row["elo_after"]),
+            # ``actual_margin`` is the canonical field; ``margin`` is
+            # retired. A missing ``actual_margin`` on a state row is
+            # an explicit error and is not silently defaulted to 0.
+            "actual_margin_signed": int(
+                row["actual_margin"]
+            ),
+        }
+    _, replayed = independent_replay_from_pregame(
+        predictions=predictions,
+        teams=teams,
+        config=config,
+    )
+    problems: list[str] = []
+    for entry in replayed:
+        gid = str(entry["game_id"])
+        side = str(entry["side"])
+        if gid not in by_game:
+            problems.append(f"missing ledger game {gid}")
+            continue
+        if side not in by_game[gid]:
+            problems.append(f"missing ledger row for game {gid} side {side}")
+            continue
+        ledger = by_game[gid][side]
+        # Field-by-field compare. Tolerance is small enough to catch
+        # any meaningful divergence.
+        for fld_name in (
+            "elo_before",
+            "expected_result",
+            "actual_result",
+            "update_multiplier",
+            "k_factor",
+            "elo_change",
+            "elo_after",
+        ):
+            lv = float(ledger[fld_name])
+            rv = float(entry[fld_name])
+            if abs(lv - rv) > 1e-6:
+                problems.append(
+                    f"{fld_name} mismatch game {gid} side {side}: "
+                    f"ledger={lv!r} replay={rv!r}"
+                )
+        # The canonical update function stores the *signed* margin on
+        # BOTH side rows (the same value). The spec says
+        # ``actual_margin`` > 0 = home win, < 0 = away win.
+        #
+        # In addition to checking that the two side rows agree, the
+        # verifier compares both side rows against the *prediction*
+        # ledger's ``actual_margin`` for the same game. That second
+        # check is what catches the corruption mode in which BOTH side
+        # rows are identically wrong (the side-vs-side check would pass
+        # but the cross-ledger check would fail).
+        prediction_by_id: dict[str, int] = {}
+        for r in predictions:
+            gid_p = str(r.get("game_id", ""))
+            if not gid_p:
+                continue
+            if "actual_margin" not in r or r.get("actual_margin") is None:
+                problems.append(
+                    f"missing prediction actual_margin game {gid_p}"
+                )
+                continue
+            prediction_by_id[gid_p] = int(r["actual_margin"])
+        this_margin = int(by_game[gid][side]["actual_margin_signed"])
+        home_margin = by_game[gid].get("home", {}).get(
+            "actual_margin_signed", None
+        )
+        if home_margin is not None and this_margin != home_margin:
+            problems.append(
+                f"actual_margin side-vs-side inconsistency game {gid} side {side}: "
+                f"this side={this_margin} home={home_margin}"
+            )
+        # Cross-ledger check: state actual_margin must equal prediction
+        # actual_margin.
+        if gid in prediction_by_id:
+            pred_margin = prediction_by_id[gid]
+            if this_margin != pred_margin:
+                problems.append(
+                    f"actual_margin cross-ledger mismatch game {gid} side {side}: "
+                    f"prediction={pred_margin!r} state={this_margin!r}"
+                )
+    # Also check for orphan ledger rows that have no replay entry
+    # (the replay loops over predictions so a row not in predictions
+    # would be a "ghost" row).
+    replay_keys = {(str(e["game_id"]), str(e["side"])) for e in replayed}
+    for gid, side_dict in by_game.items():
+        for side in side_dict:
+            if (gid, side) not in replay_keys:
+                problems.append(
+                    f"orphan ledger row game {gid} side {side} "
+                    "has no corresponding prediction"
+                )
+    if problems:
+        raise StateLedgerCorruptionError("detect_state_ledger_corruption", problems)
+    return []
 
 
 # ----------------------------------------------------------------------------

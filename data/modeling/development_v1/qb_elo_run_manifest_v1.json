@@ -1,31 +1,39 @@
 {
-  "backtest_config_sha256": "2f1727a45f205ef491cd1800d93bdb10d948b3dbcb932e93d11694ba3d086275",
+  "backtest_code_fingerprint": "7fccd6bdda30d2585f74d28f07472afc78ce45bc06b344ccbda9756242fe9d6b",
+  "backtest_config_sha256": "a36f9b5e63b24285be2f217ffc1de7f6592623604bae8a643f8edad2f1bcadf3",
   "created_at_utc": "2026-08-03T12:00:00Z",
   "data_version": "frozen-baseline-v1",
   "development_seasons": "2018-2024",
-  "feature_code_fingerprint": "f23032303d6bcdc72c7662be2888b8936ffadd1c231ae58da889e4b72aae6768",
+  "feature_code_fingerprint": "1ee67408974b9183be61ad54963ddae5e7aa093d8518edef8948b07ce2c9a921",
   "feature_manifest_sha256": "aec492811357cddff1c1dbb0701623df2d2c234f5109522a0cacc63ca244b987",
   "feature_version": "features-v1",
   "maximum_prediction_as_of_utc": "2025-02-04T12:00:00Z",
   "minimum_prediction_as_of_utc": "2018-09-04T12:00:00Z",
-  "model_code_fingerprint": "65594378c090191bdbb508eecdc569be620dbb8eb8c9f7625e2b20818f77f198",
-  "model_config_sha256": "d37661befee7fa0e00b71337890b9bf2b2a3740b0f1a7103ed3776fbabd00d7a",
+  "model_code_fingerprint": "5d13210cbbc1fbd54e569d63af7e55feb6323cfc6ac10e5915549eba0fc09cec",
+  "model_config_sha256": "2d1249cc1a4a067c0ce6dfbd40b74c36366c386a4aca014eaaae448d75010d06",
   "model_name": "qb_elo",
   "model_version": "v1.0.0",
   "prediction_ledger": {
+    "file_sha256": "47bb96b405866395cc1a18fb15413b11cf9265e0eccda30f8a77014f74926d45",
+    "logical_content_sha256": "a000dbc1a974fece7211fcb32900b272deee27e896516f7a8879f75a8fc5ed50",
     "path": "data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet",
-    "rows": 1942,
-    "sha256": "652f4c4c76f0f59f7d4d5c62313de5fd804134fe6b3d343ea46cb95bcf062120"
+    "rows": 1942
   },
   "random_seed": 20260802,
   "run_id": "qb_elo-v1.0.0-20260803T120000Z",
   "run_type": "development_walk_forward",
-  "scored_row_policy": "only 2018-2024 rows scored; 2025 is excluded",
+  "scored_row_policy": "only 2018-2024 rows scored; 2025 is sealed and excluded",
   "sealed_holdout_season": 2025,
   "state_ledger": {
+    "file_sha256": "fceb7a9b064c50b91d426de4b0d70185c8191d7e43948040a99178ab07802fbb",
+    "logical_content_sha256": "7b1b9f8124cdb2f95345eab9a944d9c4cfa58225043bdbe67a1dd5a6ad5b4fa2",
     "path": "data/modeling/development_v1/qb_elo_state_transitions_2018_2024.parquet",
-    "rows": 3884,
-    "sha256": "cd52a3c8742fc7ac0a08fd4596b0ce444373bc01e0813f082dd8f7bd2d7ee7ef"
+    "rows": 3884
   },
-  "warm_up_policy": "all predictions scored; no warmup required"
+  "two_pass_block_proof": {
+    "predict_pass_does_not_mutate_state": true,
+    "single_zero_sum_delta": true,
+    "update_pass_uses_canonical_path": true
+  },
+  "warm_up_policy": "all predictions scored; no warmup required. warmup_excluded_games = 0"
 }

@@ -8,49 +8,55 @@
 ## Totals
 
 - Predicted games: 1942
-- Scored games: 1935
-- Ties: 7
-- Unscored / warm-up: 7
+- Binary-scored games: 1935
+- Ties (excluded from binary metrics): 7
+- Target-unavailable games: 0
+- Warm-up excluded games: 0
 
 ## Aggregate Metrics
 
-- Brier score: 0.2254
-- Log loss: 0.6429
-- Descriptive accuracy: 0.6305
-- Calibration intercept: 0.4833
-- Calibration slope: 0.2143
+- Brier score: 0.2240
+- Log loss: 0.6397
+- Descriptive accuracy: 0.6351
+- Calibration intercept: -0.08156483690711451
+- Calibration slope: 0.9667354678276904
+- Calibration fit status: converged
+- Calibration iterations: 4
+- Calibration converged: True
+- Calibration max_iter: 100
 
 ## Results by Season
 
-| Season | Predicted | Scored | Ties | Accuracy | Log loss | Brier |
+| Season | Predicted | Binary-Scored | Ties | Accuracy | Log loss | Brier |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2018 | 267 | 265 | 2 | 0.6264 | 0.6478 | 0.2282 |
-| 2019 | 267 | 266 | 1 | 0.6353 | 0.6413 | 0.2243 |
-| 2020 | 269 | 268 | 1 | 0.6530 | 0.6311 | 0.2194 |
-| 2021 | 285 | 284 | 1 | 0.6092 | 0.6565 | 0.2308 |
-| 2022 | 284 | 282 | 2 | 0.6064 | 0.6445 | 0.2268 |
-| 2023 | 285 | 285 | 0 | 0.6070 | 0.6627 | 0.2343 |
-| 2024 | 285 | 285 | 0 | 0.6772 | 0.6163 | 0.2136 |
+| 2018 | 267 | 265 | 2 | 0.6226 | 0.6454 | 0.2272 |
+| 2019 | 267 | 266 | 1 | 0.6429 | 0.6404 | 0.2238 |
+| 2020 | 269 | 268 | 1 | 0.6567 | 0.6240 | 0.2162 |
+| 2021 | 285 | 284 | 1 | 0.6197 | 0.6557 | 0.2309 |
+| 2022 | 284 | 282 | 2 | 0.6277 | 0.6379 | 0.2239 |
+| 2023 | 285 | 285 | 0 | 0.6035 | 0.6613 | 0.2336 |
+| 2024 | 285 | 285 | 0 | 0.6737 | 0.6126 | 0.2120 |
 
 ## Results by QB Certainty
 
 | Certainty | Predicted | Scored | Accuracy | Log loss | Brier |
 | --- | --- | --- | --- | --- | --- |
-| UNKNOWN | 1942 | 1935 | 0.6305 | 0.6429 | 0.2254 |
+| UNKNOWN | 1942 | 1935 | 0.6351 | 0.6397 | 0.2240 |
 
 ## Reliability Table
 
 | Bucket | Count | Mean Predicted | Actual Home-Win Rate |
 | --- | --- | --- | --- |
-| 0.10–0.20 | 22 | 0.1655 | 0.3182 |
-| 0.20–0.30 | 76 | 0.2633 | 0.3026 |
-| 0.30–0.40 | 210 | 0.3561 | 0.3238 |
-| 0.40–0.50 | 321 | 0.4536 | 0.4174 |
-| 0.50–0.60 | 478 | 0.5513 | 0.5000 |
-| 0.60–0.70 | 426 | 0.6463 | 0.6385 |
-| 0.70–0.80 | 306 | 0.7477 | 0.7745 |
-| 0.80–0.90 | 86 | 0.8420 | 0.7674 |
-| 0.90–1.01 | 10 | 0.9091 | 0.9000 |
+| 0.00–0.10 | 0 | n/a | n/a |
+| 0.10–0.20 | 20 | 0.1598 | 0.3000 |
+| 0.20–0.30 | 87 | 0.2610 | 0.3218 |
+| 0.30–0.40 | 211 | 0.3561 | 0.2986 |
+| 0.40–0.50 | 326 | 0.4527 | 0.4233 |
+| 0.50–0.60 | 460 | 0.5536 | 0.5217 |
+| 0.60–0.70 | 428 | 0.6477 | 0.6262 |
+| 0.70–0.80 | 280 | 0.7482 | 0.7643 |
+| 0.80–0.90 | 112 | 0.8364 | 0.7857 |
+| 0.90–1.00 | 11 | 0.9086 | 0.9091 |
 
 ## Missingness
 
@@ -65,16 +71,16 @@
 
 | Game | Season | Week | Home | Away | Pred P(home) | Home Win | Log Loss |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 2020_15_NYJ_LA | 2020 | 15 | LAR | NYJ | 0.9055 | False | 2.3587 |
-| 2021_11_HOU_TEN | 2021 | 11 | TEN | HOU | 0.8994 | False | 2.2966 |
-| 2021_18_IND_JAX | 2021 | 18 | JAX | IND | 0.1142 | True | 2.1695 |
-| 2020_17_LAC_KC | 2020 | 17 | KC | LAC | 0.8840 | False | 2.1545 |
-| 2021_18_GB_DET | 2021 | 18 | DET | GB | 0.1166 | True | 2.1488 |
-| 2024_18_BUF_NE | 2024 | 18 | NE | BUF | 0.1295 | True | 2.0438 |
-| 2023_17_ARI_PHI | 2023 | 17 | PHI | ARI | 0.8683 | False | 2.0272 |
-| 2021_09_BUF_JAX | 2021 | 9 | JAX | BUF | 0.1330 | True | 2.0174 |
-| 2019_16_ARI_SEA | 2019 | 16 | SEA | ARI | 0.8643 | False | 1.9974 |
-| 2019_10_ATL_NO | 2019 | 10 | NO | ATL | 0.8633 | False | 1.9902 |
+| 2020_15_NYJ_LA | 2020 | 15 | LAR | NYJ | 0.9050 | False | 2.3539 |
+| 2020_17_LAC_KC | 2020 | 17 | KC | LAC | 0.8949 | False | 2.2531 |
+| 2024_18_BUF_NE | 2024 | 18 | NE | BUF | 0.1090 | True | 2.2163 |
+| 2021_11_HOU_TEN | 2021 | 11 | TEN | HOU | 0.8840 | False | 2.1541 |
+| 2021_18_GB_DET | 2021 | 18 | DET | GB | 0.1168 | True | 2.1476 |
+| 2019_17_MIA_NE | 2019 | 17 | NE | MIA | 0.8782 | False | 2.1051 |
+| 2021_18_IND_JAX | 2021 | 18 | JAX | IND | 0.1259 | True | 2.0723 |
+| 2023_17_ARI_PHI | 2023 | 17 | PHI | ARI | 0.8733 | False | 2.0661 |
+| 2019_10_ATL_NO | 2019 | 10 | NO | ATL | 0.8705 | False | 2.0445 |
+| 2021_09_BUF_JAX | 2021 | 9 | JAX | BUF | 0.1386 | True | 1.9764 |
 
 ## Configuration
 
@@ -84,30 +90,26 @@
   "initial_rating": 1500.0,
   "k_factor_postseason": 4.0,
   "k_factor_regular": 20.0,
-  "margin_of_victory": {
-    "cap": 2.5,
-    "divisor": 6.0
-  },
-  "probability": {
-    "max": 0.99,
-    "min": 0.01
-  },
-  "qb_adjustment": {
-    "max_abs_elo": 50.0,
-    "replacement_passing_epa": -0.05,
-    "sample_k": 250.0,
-    "scale_elo_per_shrunk_epa": 500.0,
-    "supported_uses_replacement_scenario": true,
-    "unknown_returns_zero": true
-  },
+  "mov_cap": 2.5,
+  "mov_divisor": 6.0,
+  "prob_max": 0.99,
+  "prob_min": 0.01,
+  "qb_adjustment_max_abs_elo": 50.0,
+  "qb_adjustment_replacement_passing_epa": -0.05,
+  "qb_adjustment_sample_k": 250.0,
+  "qb_adjustment_scale_elo_per_shrunk_epa": 500.0,
+  "qb_adjustment_supported_uses_replacement_scenario": true,
+  "qb_adjustment_unknown_returns_zero": true,
   "season_mean_reversion_fraction": 0.333
 }
 ```
 
 ## Manifest Fingerprint
 
-- model_config_sha256: `d37661befee7fa0e00b71337890b9bf2b2a3740b0f1a7103ed3776fbabd00d7a`
-- backtest_config_sha256: `2f1727a45f205ef491cd1800d93bdb10d948b3dbcb932e93d11694ba3d086275`
-- model_code_fingerprint: `65594378c090191bdbb508eecdc569be620dbb8eb8c9f7625e2b20818f77f198`
+- model_config_sha256: `2d1249cc1a4a067c0ce6dfbd40b74c36366c386a4aca014eaaae448d75010d06`
+- backtest_config_sha256: `a36f9b5e63b24285be2f217ffc1de7f6592623604bae8a643f8edad2f1bcadf3`
+- model_code_fingerprint: `5d13210cbbc1fbd54e569d63af7e55feb6323cfc6ac10e5915549eba0fc09cec`
+- feature_code_fingerprint: `1ee67408974b9183be61ad54963ddae5e7aa093d8518edef8948b07ce2c9a921`
+- backtest_code_fingerprint: `7fccd6bdda30d2585f74d28f07472afc78ce45bc06b344ccbda9756242fe9d6b`
 
 _No 2025 predictions, scores, or calibration included._

@@ -1,7 +1,8 @@
 """Development-only model evaluation metrics, calibration diagnostics, and scorecards."""
 
-from .calibration import (
-    calibration_intercept_slope,
+from .calibration import (  # noqa: F401  # EPS_PROB re-exported
+    EPS_PROB,
+    logistic_recalibration,
     reliability_table,
 )
 from .metrics import (
@@ -17,7 +18,7 @@ __all__ = [
     "log_loss",
     "descriptive_accuracy",
     "accuracy_in_bucket",
-    "calibration_intercept_slope",
+    "logistic_recalibration",
     "reliability_table",
     "build_development_scorecard",
 ]
