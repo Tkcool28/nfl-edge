@@ -318,14 +318,22 @@ def build_runs_from_disk(
 
     # Ghost filter: drop snapshot / attempt / crosswalk / change
     # rows whose snapshot_id is not in the committed-history set.
-    if active.height > 0 and committed_ids:
+    #
+    # Apply filtering unconditionally when the artifact is present
+    # (Rereview 4859475614 defect 2.1). An empty committed set means
+    # nothing is committed — every row in any present artifact is
+    # a ghost and must be dropped. ``filter_committed`` already
+    # handles the empty-committed-set case by returning an empty
+    # frame, so we don't need a guard around it.
+    if active.height > 0:
         active = filter_committed(active, committed_ids)
-    if crosswalk.height > 0 and committed_ids:
+    if crosswalk.height > 0:
         crosswalk = filter_committed(crosswalk, committed_ids)
-    if change_ledger.height > 0 and committed_ids:
+    if change_ledger.height > 0:
         change_ledger = filter_committed(change_ledger, committed_ids)
     # Fetch-attempt rows have no snapshot_id; gate them by
     # ``observed_at_utc`` matching a history row's ``observed_at_utc``.
+    # Applied unconditionally (same rule — empty history → drop all).
     if fetch_ledger.height > 0:
         fetch_ledger = filter_committed_by_observed_at(
             fetch_ledger, history, observed_column="observed_at_utc"

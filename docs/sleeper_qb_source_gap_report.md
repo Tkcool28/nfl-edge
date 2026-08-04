@@ -98,6 +98,28 @@ and updated on every run.
   The prior valid artifact is byte-identical until the new one
   is fully durable; a forced write failure cannot leave a
   half-written file behind.
+- Per rereviews `4851615980` and `4859475614`, the audit's
+  **authority model** is:
+  - `run_history.parquet` is the **sole authoritative terminal
+    ledger**. Every mutable artifact (latest pointers, status
+    file, HOF pointer cache, live report, HOF report) is a
+    *derived view* and is NEVER read for correctness.
+  - A successful run appends **exactly one** row to
+    `run_history.parquet`. Snapshot artifacts may exist for any
+    historical fetch attempt but rows whose `snapshot_id` is not
+    present in any committed history row are *ghost* rows and
+    are ignored by every reader.
+  - Derived-view write failures surface as `projection_warnings`
+    on stderr / journald. They do NOT mutate the committed
+    `RunOutcome`, do NOT append a second history row, and do NOT
+    change the process exit code.
+  - A failed `run_history.parquet` append returns
+    `PERSISTENCE_FAILURE` (exit 13) with NO derived-view writes
+    and no claim that the failure itself was recorded.
+  - Stale `reports/sleeper_qb_live_audit.json` caches (cached
+    `source_history` provenance disagrees with the live ledger)
+    are rejected by `scripts/report_sleeper_qb_audit.py
+    --report live` with `STALE_DERIVED_REPORT` (exit 2).
 
 ## 7. Unsupported claims (explicit)
 

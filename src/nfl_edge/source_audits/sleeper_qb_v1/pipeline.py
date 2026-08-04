@@ -90,7 +90,11 @@ from .outcomes import (
     RunOutcome,
     RunOutcomeRecord,
 )
-from .report import write_hof_observation_report, write_live_audit_report
+from .report import (
+    build_hof_payload,
+    persist_hof_payload,
+    write_live_audit_report,
+)
 
 AUDIT_VERSION = "sleeper-qb-audit-v1"
 
@@ -573,7 +577,7 @@ class AuditOrchestrator:
             "unmatched_count": int(crosswalk.filter(~pl.col("is_matched")).height),
             "change_event_count": int(change_ledger.height),
             "report": None,  # derived; not authoritative
-            "hof": hof_payload,
+            "hof": _surface_hof_payload(hof_payload),
             "run_outcome": final_outcome.value,
             "exit_code": EXIT_CODES[final_outcome],
             "projection_warnings": projection_warnings,
@@ -650,12 +654,11 @@ class AuditOrchestrator:
                         ),
                     },
                 }
-            # Derived inspection cache only. The committed terminal
-            # ledger (``run_history.parquet``) is the authoritative
-            # source for HOF postgame decision-making; this file
-            # is a human-facing snapshot. A cache-write failure
-            # here is non-fatal — the postgame run still succeeds
-            # as long as the committed history has the pregame row.
+            # Cache pointer to refresh AFTER the authoritative commit
+            # (Rereview 4859475614 defect 3.1). ``_run_hof_workflow``
+            # must NOT write ``hof_pregame_pointer.json`` here —
+            # doing so leaves a derived cache describing an uncommitted
+            # invocation if the later history append fails.
             pointer = {
                 "schema_version": "hof-pregame-pointer-v1",
                 "game_id": game.get("game_id"),
@@ -665,20 +668,15 @@ class AuditOrchestrator:
                 "normalized_snapshot_reference": str(self.active_qb_path),
                 "evidence_snapshot_reference": str(self.evidence_path),
             }
-            try:
-                atomic_write_text(
-                    self.pregame_pointer_path,
-                    json.dumps(pointer, indent=2, default=str) + "\n",
-                )
-            except OSError:
-                # Best-effort; the committed history is authoritative.
-                pass
             return {
                 "outcome": None,
                 "payload": {
                     "kind": "pregame",
-                    "pointer_path": str(self.pregame_pointer_path),
-                    "pointer": pointer,
+                    # Mark for refresh-derived-views: write the
+                    # pregame pointer cache ONLY after the
+                    # authoritative commit succeeds.
+                    "refresh_hof_pointer": pointer,
+                    "refresh_hof_pointer_path": str(self.pregame_pointer_path),
                 },
             }
 
@@ -792,14 +790,21 @@ class AuditOrchestrator:
             if state is None:
                 continue
             evidence_state_counts[state] = evidence_state_counts.get(state, 0) + 1
+        # HOF observation report cache write is deferred to
+        # ``_refresh_derived_views`` (Rereview 4859475614 defect 3.2).
+        # Here we compute the payload WITHOUT writing any files so
+        # that a later history-append failure cannot leave derived
+        # artifacts describing an uncommitted invocation. The
+        # payload is staged in the run() result dict and surfaced to
+        # callers; the post-commit refresh writes the files.
         try:
-            hof_payload = write_hof_observation_report(
+            hof_payload = build_hof_payload(
                 observation=observation_record,
                 evidence_state_counts=evidence_state_counts,
-                output_markdown=self.reports_root / "sleeper_hof_game_observation.md",
-                output_json=self.reports_root / "sleeper_hof_game_observation.json",
             )
-        except OSError as exc:
+        except ValueError as exc:
+            # Forbidden-label violation is a validation error in
+            # the HOF workflow, not a persistence failure.
             return {
                 "outcome": RunOutcome.PERSISTENCE_FAILURE,
                 "payload": {
@@ -807,7 +812,21 @@ class AuditOrchestrator:
                     "error_message": str(exc),
                 },
             }
-        return {"outcome": None, "payload": hof_payload}
+        return {
+            "outcome": None,
+            "payload": {
+                "kind": "postgame",
+                "observation_record": observation_record,
+                "evidence_state_counts": evidence_state_counts,
+                "refresh_hof_payload": hof_payload,
+                "refresh_hof_report_markdown": (
+                    self.reports_root / "sleeper_hof_game_observation.md"
+                ),
+                "refresh_hof_report_json": (
+                    self.reports_root / "sleeper_hof_game_observation.json"
+                ),
+            },
+        }
 
     # ------------------------------------------------------------------
     # outcome-finalization helpers
@@ -1225,6 +1244,56 @@ class AuditOrchestrator:
                 f"live audit report write failed: {type(exc).__name__}: {exc}"
             )
 
+        # 4. HOF pregame pointer cache (derived view, written ONLY
+        # here after the authoritative commit has succeeded —
+        # Rereview 4859475614 defect 3.1). The pregame block in
+        # ``_run_hof_workflow`` no longer writes the file.
+        if isinstance(hof_payload, Mapping):
+            refresh_pointer = hof_payload.get("refresh_hof_pointer")
+            refresh_pointer_path = hof_payload.get(
+                "refresh_hof_pointer_path"
+            )
+            if refresh_pointer is not None and refresh_pointer_path:
+                try:
+                    atomic_write_text(
+                        Path(str(refresh_pointer_path)),
+                        json.dumps(
+                            refresh_pointer, indent=2, default=str
+                        )
+                        + "\n",
+                    )
+                except OSError as exc:
+                    warnings_out.append(
+                        f"hof_pregame_pointer.json write failed: "
+                        f"{type(exc).__name__}: {exc}"
+                    )
+
+        # 5. HOF observation report cache (derived view, written
+        # ONLY here after the authoritative commit has succeeded —
+        # Rereview 4859475614 defect 3.2). The postgame block in
+        # ``_run_hof_workflow`` no longer writes these files; it
+        # only stages the payload via ``build_hof_payload``.
+        if isinstance(hof_payload, Mapping):
+            refresh_payload = hof_payload.get("refresh_hof_payload")
+            refresh_md = hof_payload.get("refresh_hof_report_markdown")
+            refresh_json = hof_payload.get("refresh_hof_report_json")
+            if (
+                refresh_payload is not None
+                and refresh_md is not None
+                and refresh_json is not None
+            ):
+                try:
+                    persist_hof_payload(
+                        refresh_payload,
+                        output_markdown=Path(str(refresh_md)),
+                        output_json=Path(str(refresh_json)),
+                    )
+                except OSError as exc:
+                    warnings_out.append(
+                        f"sleeper_hof_game_observation write failed: "
+                        f"{type(exc).__name__}: {exc}"
+                    )
+
         return warnings_out
 
     def _commit_terminal_record(
@@ -1390,6 +1459,31 @@ class AuditOrchestrator:
 def _date_partition(timestamp: datetime) -> str:
     ts = timestamp.astimezone(timezone.utc)
     return f"{ts.year:04d}/{ts.month:02d}/{ts.day:02d}"
+
+
+def _surface_hof_payload(hof_payload: Mapping[str, Any] | None) -> dict[str, Any] | None:
+    """Surface the postgame HOF observation in the shape callers
+    expect: ``{"observation": {...}}`` for the postgame case, plus
+    the staged ``refresh_*`` fields so the post-commit refresh
+    helper can find them.
+
+    Returns ``None`` for non-HOF runs (so ``hof: None`` is
+    preserved).
+    """
+    if not isinstance(hof_payload, Mapping):
+        return None
+    if hof_payload.get("kind") != "postgame":
+        return None
+    staged = hof_payload.get("refresh_hof_payload") or {}
+    observation = staged.get("observation")
+    surfaced: dict[str, Any] = dict(hof_payload)
+    if observation is not None:
+        surfaced["observation"] = observation
+    surfaced["evidence_state_counts"] = staged.get(
+        "evidence_state_counts",
+        hof_payload.get("evidence_state_counts", {}),
+    )
+    return surfaced
 
 
 def _hof_observation_frame(record: Mapping[str, Any]) -> pl.DataFrame:

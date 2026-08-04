@@ -167,23 +167,36 @@ asserts this contract.
 | Path | Purpose |
 | --- | --- |
 | `data/source_audits/sleeper_qb_v1/raw/YYYY/MM/DD/*.bin` | Raw bytes per attempt |
-| `data/source_audits/sleeper_qb_v1/fetch_ledger.parquet` | One row per attempt |
-| `data/source_audits/sleeper_qb_v1/latest_snapshot.json` | Pointer to the most recent successful snapshot |
-| `data/source_audits/sleeper_qb_v1/latest_run_status.json` | Terminal outcome of the most recent run |
-| `data/source_audits/sleeper_qb_v1/run_history.jsonl` | One terminal-outcome JSONL record per run (rolling metric source of truth) |
-| `data/source_audits/sleeper_qb_v1/hof_pregame_pointer.json` | Frozen pregame snapshot reference (HOF Game) |
-| `data/source_audits/sleeper_qb_v1/normalized/qb_snapshots.parquet` | Active QB snapshots |
+| `data/source_audits/sleeper_qb_v1/fetch_ledger.parquet` | One row per attempt (snapshot-keyed; ghost rows are ignored if not committed) |
+| `data/source_audits/sleeper_qb_v1/latest_snapshot.json` | **Derived** cache: last SUCCESS pointer. Refreshed only after the authoritative commit succeeds. Never read for correctness. |
+| `data/source_audits/sleeper_qb_v1/latest_run_status.json` | **Derived** cache: last terminal outcome. Refreshed only after the authoritative commit succeeds. Never read for correctness. |
+| `data/source_audits/sleeper_qb_v1/run_history.parquet` | **Sole authoritative terminal ledger**. One row per invocation. The only artifact that defines committed terminal outcomes, prior-success selection, and HOF pregame selection. |
+| `data/source_audits/sleeper_qb_v1/hof_pregame_pointer.json` | **Derived** advisory pointer (HOF pregame). Written ONLY after the pregame row commits. Never read by HOF postgame correctness logic — postgame derives the committed pregame from `run_history.parquet`. |
+| `data/source_audits/sleeper_qb_v1/normalized/qb_snapshots.parquet` | Active QB snapshots (snapshot-keyed; ghost rows ignored if not committed) |
 | `data/source_audits/sleeper_qb_v1/normalized/qb_inactive_snapshots.parquet` | Inactive QB snapshots (defensive tripwire) |
-| `data/source_audits/sleeper_qb_v1/normalized/qb_evidence_states.parquet` | Per-QB audit-only state (with `snapshot_id` + `observed_at_utc`) |
-| `data/source_audits/sleeper_qb_v1/normalized/qb_identity_crosswalk.parquet` | Sleeper -> nflverse crosswalk |
-| `data/source_audits/sleeper_qb_v1/normalized/qb_change_ledger.parquet` | Snapshot-to-snapshot change events (prior+current snapshot ids) |
-| `data/source_audits/sleeper_qb_v1/normalized/hof_game_observation.parquet` | Hall of Fame Game observation rows (pregame+postgame per QB) |
+| `data/source_audits/sleeper_qb_v1/normalized/qb_evidence_states.parquet` | Per-QB audit-only state (with `snapshot_id` + `observed_at_utc`); rows whose `snapshot_id` is not in committed history are ghost-filtered before use |
+| `data/source_audits/sleeper_qb_v1/normalized/qb_identity_crosswalk.parquet` | Sleeper -> nflverse crosswalk (snapshot-keyed; ghost rows ignored if not committed) |
+| `data/source_audits/sleeper_qb_v1/normalized/qb_change_ledger.parquet` | Snapshot-to-snapshot change events (snapshot-keyed; ghost rows ignored if not committed) |
+| `data/source_audits/sleeper_qb_v1/normalized/hof_game_observation.parquet` | Hall of Fame Game observation rows (pregame+postgame per QB); readers gate rows by the committed snapshot set |
 | `data/source_audits/sleeper_qb_v1/reference/manifest.json` | Reference-fixture SHA-256 manifest (tracked) |
 | `data/source_audits/sleeper_qb_v1/reference/hof_game_2026_fixture.parquet` | HOF Game fixture (tracked, checksum-verified) |
 | `data/source_audits/sleeper_qb_v1/reference/nflverse_player_identity_pre2025.parquet` | nflverse identity reference (tracked, checksum-verified) |
-| `data/source_audits/sleeper_qb_v1/reports/sleeper_qb_live_audit.{md,json}` | Rolling live audit report (aggregates every persisted run) |
-| `data/source_audits/sleeper_qb_v1/reports/sleeper_hof_game_observation.{md,json}` | HOF Game observation report |
+| `data/source_audits/sleeper_qb_v1/reports/sleeper_qb_live_audit.{md,json}` | **Derived** live audit projection. Refreshed only after the authoritative commit succeeds. Stale caches are rejected by `scripts/report_sleeper_qb_audit.py --report live` with `STALE_DERIVED_REPORT` (exit 2). |
+| `data/source_audits/sleeper_qb_v1/reports/sleeper_hof_game_observation.{md,json}` | **Derived** HOF Game observation report (postgame only). Refreshed only after the authoritative commit succeeds. |
 | `data/source_audits/sleeper_qb_v1/audit.lock` | Overlap-prevention lock file (POSIX advisory) |
+
+### 6.0 Authority model
+
+Per rereviews `4851615980` and `4859475614`:
+
+* **`run_history.parquet` is the sole authoritative terminal ledger.** Every other file listed above is a *derived view* and may not be read to determine correctness.
+* **Snapshot artifacts are committed only when backed by a history row.** Snapshot-keyed tables (`qb_snapshots.parquet`, `qb_identity_crosswalk.parquet`, `qb_change_ledger.parquet`, `qb_evidence_states.parquet`, `hof_game_observation.parquet`) may contain rows whose `snapshot_id` is not present in any committed history row. Such ghost rows MUST be ignored by every reader (`build_runs_from_disk`, `select_pregame_from_history`, snapshot-scoped reads).
+* **`latest_snapshot.json` is a derived SUCCESS-only cache.** It is written only after a successful history commit and is never consulted for prior-success selection.
+* **`latest_run_status.json` is a derived last-outcome cache.** It is written only after a successful history commit and is never consulted for state selection.
+* **`hof_pregame_pointer.json` is a derived advisory pointer.** HOF postgame decision-making does NOT read it. The committed pregame is selected from `run_history.parquet` via `select_pregame_from_history`.
+* **Live and HOF reports are derived projections.** They are refreshed only after a successful history commit and are never read to determine committed outcomes.
+* **Derived-view write failures are projection warnings**, not retroactive run-outcome changes. They do NOT mutate the committed `RunOutcome`, do NOT append a second history row, and do NOT change the process exit code. They are surfaced as `projection_warnings` to stderr and journald.
+* **Stale live-report caches are rejected** by `scripts/report_sleeper_qb_audit.py --report live` with `STALE_DERIVED_REPORT` (exit 2) when the cached `source_history` provenance disagrees with the live ledger.
 
 ## 6.1 Reference fixtures (clean-clone contract)
 

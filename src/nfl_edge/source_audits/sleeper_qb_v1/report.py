@@ -214,17 +214,22 @@ def render_live_audit_markdown(payload: Mapping[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def write_hof_observation_report(
+def build_hof_payload(
     *,
     observation: Mapping[str, Any],
     evidence_state_counts: Mapping[str, int],
-    output_markdown: str | Path,
-    output_json: str | Path,
 ) -> dict[str, Any]:
-    """Render the Hall of Fame Game observation report."""
+    """Compute the HOF observation report payload WITHOUT writing
+    any files.
+
+    Used by ``AuditOrchestrator._run_hof_workflow`` so the report
+    content can be staged before the authoritative commit, then
+    written to disk by ``_refresh_derived_views`` only after the
+    commit succeeds (Rereview 4859475614 defect 3.2).
+    """
     states = list(evidence_state_counts.keys())
     validate_no_forbidden_labels(states)
-    payload = {
+    return {
         "schema_version": "sleeper-hof-game-observation-v1",
         "generated_at_utc": _utc_now_iso(),
         "observation": dict(observation),
@@ -234,14 +239,51 @@ def write_hof_observation_report(
             for k in evidence_state_counts
         },
     }
+
+
+def persist_hof_payload(
+    payload: Mapping[str, Any],
+    *,
+    output_markdown: str | Path,
+    output_json: str | Path,
+) -> dict[str, Any]:
+    """Write a pre-built HOF payload (from
+    :func:`build_hof_payload`) to disk as JSON + markdown.
+
+    Returns the payload (so callers can chain). Called by
+    ``_refresh_derived_views`` AFTER the authoritative commit.
+    """
     Path(output_json).parent.mkdir(parents=True, exist_ok=True)
     atomic_write_text(
         output_json,
-        json.dumps(payload, indent=2, default=str) + "\n",
+        json.dumps(dict(payload), indent=2, default=str) + "\n",
     )
     markdown = render_hof_markdown(payload)
     atomic_write_text(output_markdown, markdown)
-    return payload
+    return dict(payload)
+
+
+def write_hof_observation_report(
+    *,
+    observation: Mapping[str, Any],
+    evidence_state_counts: Mapping[str, int],
+    output_markdown: str | Path,
+    output_json: str | Path,
+) -> dict[str, Any]:
+    """Render the Hall of Fame Game observation report.
+
+    Computes the payload via :func:`build_hof_payload` and writes
+    the JSON + markdown via :func:`persist_hof_payload`.
+    """
+    payload = build_hof_payload(
+        observation=observation,
+        evidence_state_counts=evidence_state_counts,
+    )
+    return persist_hof_payload(
+        payload,
+        output_markdown=output_markdown,
+        output_json=output_json,
+    )
 
 
 def render_hof_markdown(payload: Mapping[str, Any]) -> str:
