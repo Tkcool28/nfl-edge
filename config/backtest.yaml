@@ -1,45 +1,44 @@
-version: backtest-config-v1
+# Backtest Configuration — NFL Edge
 
-split:
-  method: expanding_weekly_walk_forward
-  shuffle: false
-  development_start_season: null  # Set after data audit.
-  development_end_season: 2024
-  untouched_holdout_season: 2025
-  score_holdout_once_before_retuning: true
+blocked_seasons:
+  - 2025  # Sealed holdout, never accessible to backtest code
+  - 2026  # Forward-use season, never accessible to backtest code
 
-as_of_policy:
-  historical_scoring_time: null  # Select from timestamp coverage during data audit.
-  require_timezone_aware_utc: true
+## Walk-Forward Engine
 
-metrics:
-  primary: brier_skill_score_vs_qb_elo
-  required:
-    - brier_score
-    - log_loss
-    - calibration_intercept
-    - calibration_slope
-    - accuracy_descriptive_only
-  breakdowns:
-    - season
-    - week
-    - probability_bucket
-    - favorite_underdog
-    - qb_certainty
+method: expanding_weekly_walk_forward
+order:
+  - season
+  - season_type_priority   # REG(0) < WC(1) < DIV(2) < CON(3) < SB(4)
+  - week
 
-uncertainty:
-  method: block_bootstrap_by_week
-  confidence_level: 0.95
-  iterations: 5000
-  random_seed: 20260802
+## Block Guarantees
 
-persistence:
-  retain_all_out_of_sample_predictions: true
-  retain_tuning_ledger: true
-  retain_failed_model_results: true
-  deterministic_output_order: true
+block_guarantees:
+  - one_frozen_prediction_per_game
+  - predict_full_block_before_state_update
+  - no_same_week_partial_reveal
+  - no_shuffled_split
+  - no_random_split
+  - no_cross_validation
+  - duplicate_block: reject
+  - duplicate_prediction_id: reject
+  - missing_block: reject
+  - overwrite: refuse_by_default
 
-prohibitions:
-  use_holdout_for_tuning: false
-  use_closing_line_for_approval: false
-  use_roi_without_timestamped_prices: false
+## Warm-Up Policy
+
+warm_up:
+  policy: "all development predictions scored"
+  rationale: >
+    Elo has no fitted parameters; state always exists and always advances.
+    No minimum-prior-history threshold is needed.
+  unscored_warmup_rows: 0
+
+## Tripwires
+
+tripwires:
+  - name: sealed_holdout_access_error
+    raised_when: "any season > 2024 reaches backtest, model, or evaluation code"
+  - name: market_column_error
+    raised_when: "away_moneyline, home_moneyline, spread_line, total_line, or any sportsbook field enters model inputs"
