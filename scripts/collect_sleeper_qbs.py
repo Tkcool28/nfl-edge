@@ -168,7 +168,8 @@ def _emit_terminal(
     snapshot_id: str | None = None,
     observed_at_utc: str | None = None,
     attempt_count: int = 0,
-) -> None:
+    kind: str | None = None,
+) -> tuple[RunOutcome, int] | None:
     """Print a structured terminal outcome JSON to stderr.
 
     Used when the CLI must abort with a typed outcome before the
@@ -181,6 +182,15 @@ def _emit_terminal(
     audit root's single-source-of-truth pointer both reflect the
     failure. For failures before ``audit_root`` is known, stderr
     + nonzero exit is the acceptable fallback.
+
+    Rereview 4852878097: persistence is history-first, then status.
+    The actual ``kind`` is taken from the caller's CLI argument
+    (not hardcoded to ``"scheduled"``). Persistence failures are
+    surfaced: if either the history append or the latest-status
+    write fails, the function returns a tuple of
+    ``(PERSISTENCE_FAILURE, exit_code=13)`` so the caller can
+    return that exit code rather than pretending the failure was
+    durably recorded. ``OSError`` is never silently swallowed.
     """
     payload: dict[str, Any] = {
         "run_outcome": outcome.value,
@@ -196,38 +206,54 @@ def _emit_terminal(
     print(json.dumps(payload, indent=2, default=str), file=sys.stderr)
 
     # When audit_root is known, durably persist the terminal outcome.
-    if audit_root is not None:
-        from datetime import datetime, timezone
-        finished_at = datetime.now(timezone.utc).isoformat()
-        record = RunOutcomeRecord(
-            outcome=outcome,
-            snapshot_id=snapshot_id,
-            observed_at_utc=observed_at_utc,
-            finished_at_utc=finished_at,
-            error_class=error_class,
-            error_message=error_message,
-            error_token=ERROR_TOKENS.get(outcome, ""),
-            exit_code=EXIT_CODES[outcome],
-            kind="scheduled",
-            attempt_count=attempt_count,
+    if audit_root is None:
+        return None
+    from datetime import datetime, timezone
+    finished_at = datetime.now(timezone.utc).isoformat()
+    record = RunOutcomeRecord(
+        outcome=outcome,
+        snapshot_id=snapshot_id,
+        observed_at_utc=observed_at_utc,
+        finished_at_utc=finished_at,
+        error_class=error_class,
+        error_message=error_message,
+        error_token=ERROR_TOKENS.get(outcome, ""),
+        exit_code=EXIT_CODES[outcome],
+        kind=kind,
+        attempt_count=attempt_count,
+    )
+    history_path = audit_root / "run_history.parquet"
+    latest_status_path = audit_root / "latest_run_status.json"
+    try:
+        atomic_append_run_history(
+            history_path,
+            record.to_dict(),
+            row_schema=RUN_HISTORY_ROW_DTYPES,
         )
-        latest_status_path = audit_root / "latest_run_status.json"
-        history_path = audit_root / "run_history.parquet"
-        try:
-            atomic_write_text(
-                latest_status_path,
-                json.dumps(record.to_dict(), indent=2, default=str) + "\n",
-            )
-        except OSError:
-            pass
-        try:
-            atomic_append_run_history(
-                history_path,
-                record.to_dict(),
-                row_schema=RUN_HISTORY_ROW_DTYPES,
-            )
-        except OSError:
-            pass
+    except OSError as exc:
+        # History persistence failed. We cannot truthfully record
+        # this terminal outcome; surface PERSISTENCE_FAILURE (13).
+        # Do NOT silently pretend the history was appended.
+        print(
+            f"persistence failure: run_history write failed: {exc}",
+            file=sys.stderr,
+        )
+        return (RunOutcome.PERSISTENCE_FAILURE, EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE])
+    try:
+        atomic_write_text(
+            latest_status_path,
+            json.dumps(record.to_dict(), indent=2, default=str) + "\n",
+        )
+    except OSError as exc:
+        # History was written; status write failed. Surface
+        # PERSISTENCE_FAILURE (13). We do NOT retry the history
+        # append — that would produce two rows for one invocation.
+        print(
+            f"persistence failure: latest_run_status write failed: {exc}",
+            file=sys.stderr,
+        )
+        return (RunOutcome.PERSISTENCE_FAILURE, EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE])
+    return None
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -275,51 +301,85 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
+    # Rereview 4852878097: the actual requested kind must flow into
+    # every persisted terminal record (never hardcoded "scheduled").
+    requested_kind = args.kind
+
+    def _terminate(
+        *,
+        outcome: RunOutcome,
+        error_class: str | None = None,
+        error_message: str | None = None,
+        audit_root: Path | None = None,
+        extra: dict[str, Any] | None = None,
+    ) -> int:
+        """Invoke ``_emit_terminal`` with the requested kind and
+        surface persistence failures as exit code 13.
+
+        For failures before ``audit_root`` is known, this is a
+        thin wrapper that returns the canonical exit code. For
+        failures after ``audit_root`` is known, persistence
+        failures inside ``_emit_terminal`` are surfaced as exit
+        code 13 (``PERSISTENCE_FAILURE``).
+        """
+        kwargs: dict[str, Any] = {
+            "outcome": outcome,
+            "error_class": error_class,
+            "error_message": error_message,
+            "kind": requested_kind,
+        }
+        if audit_root is not None:
+            kwargs["audit_root"] = audit_root
+        if extra:
+            kwargs["extra"] = extra
+        result = _emit_terminal(**kwargs)
+        if result is None:
+            return EXIT_CODES[outcome]
+        # ``_emit_terminal`` returned a (PERSISTENCE_FAILURE, 13)
+        # tuple because one of the durable writes failed.
+        return result[1]
+
     # 1. Config loading. A missing / malformed config is a
     #    NORMALIZATION_FAILURE (the input is unusable).
     try:
         config = _load_config(args.config)
     except FileNotFoundError as exc:
-        _emit_terminal(
+        return _terminate(
             outcome=RunOutcome.NORMALIZATION_FAILURE,
             error_class="FileNotFoundError",
             error_message=str(exc),
         )
-        return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
     except yaml.YAMLError as exc:
-        _emit_terminal(
+        return _terminate(
             outcome=RunOutcome.NORMALIZATION_FAILURE,
             error_class="YAMLError",
             error_message=str(exc),
         )
-        return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
     except Exception as exc:  # noqa: BLE001
-        _emit_terminal(
+        return _terminate(
             outcome=RunOutcome.NORMALIZATION_FAILURE,
             error_class=type(exc).__name__,
             error_message=str(exc),
         )
-        return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
 
     # 2. Audit-root resolution.
     try:
         audit_root = Path(str(config.get("audit_root", "data/source_audits/sleeper_qb_v1")))
     except Exception as exc:  # noqa: BLE001
-        _emit_terminal(
+        return _terminate(
             outcome=RunOutcome.NORMALIZATION_FAILURE,
             error_class=type(exc).__name__,
             error_message=f"bad audit_root in config: {exc}",
         )
-        return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
     try:
         audit_root.mkdir(parents=True, exist_ok=True)
     except OSError as exc:
-        _emit_terminal(
+        return _terminate(
             outcome=RunOutcome.PERSISTENCE_FAILURE,
             error_class=type(exc).__name__,
             error_message=f"cannot create audit_root {audit_root}: {exc}",
+            audit_root=audit_root,
         )
-        return EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE]
     # 3. Reference-manifest resolution. Mandatory per the
     #    rereview contract; any failure is a REFERENCE_FAILURE.
     reference_manifest, manifest_error = _resolve_reference_manifest(
@@ -328,13 +388,12 @@ def main(argv: list[str] | None = None) -> int:
         audit_root=audit_root,
     )
     if manifest_error is not None:
-        _emit_terminal(
+        return _terminate(
             outcome=RunOutcome.REFERENCE_FAILURE,
             error_class="ReferenceManifestResolutionError",
             error_message=manifest_error,
             audit_root=audit_root,
         )
-        return EXIT_CODES[RunOutcome.REFERENCE_FAILURE]
 
     session = None
     if args.use_fake_session:
@@ -343,13 +402,12 @@ def main(argv: list[str] | None = None) -> int:
 
             session = FakeSleeperSession()
         except Exception as exc:  # noqa: BLE001
-            _emit_terminal(
+            return _terminate(
                 outcome=RunOutcome.NORMALIZATION_FAILURE,
                 error_class=type(exc).__name__,
                 error_message=f"cannot load fake session: {exc}",
                 audit_root=audit_root,
             )
-            return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
 
     # 4. Lock acquire. LockFailure -> LOCK_FAILURE.
     try:
@@ -364,13 +422,12 @@ def main(argv: list[str] | None = None) -> int:
                     config, audit_root, reference_manifest=reference_manifest
                 )
             except Exception as exc:  # noqa: BLE001
-                _emit_terminal(
+                return _terminate(
                     outcome=RunOutcome.NORMALIZATION_FAILURE,
                     error_class=type(exc).__name__,
                     error_message=f"cannot construct orchestrator: {exc}",
                     audit_root=audit_root,
                 )
-                return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
             # 6. Run.
             try:
                 result = orchestrator.run(
@@ -380,29 +437,40 @@ def main(argv: list[str] | None = None) -> int:
                     forced_snapshot_id=args.snapshot_id,
                 )
             except OSError as exc:
-                _emit_terminal(
+                return _terminate(
                     outcome=RunOutcome.PERSISTENCE_FAILURE,
                     error_class=type(exc).__name__,
                     error_message=str(exc),
                     audit_root=audit_root,
                 )
-                return EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE]
             except Exception as exc:  # noqa: BLE001
-                _emit_terminal(
+                return _terminate(
                     outcome=RunOutcome.NORMALIZATION_FAILURE,
                     error_class=type(exc).__name__,
                     error_message=str(exc),
                     audit_root=audit_root,
                 )
-                return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
+            # Rereview 4852878097: when the orchestrator reports
+            # PERSISTENCE_FAILURE (e.g. history-write or status-
+            # write failure inside the pipeline), surface the
+            # underlying error to stderr so operators see the
+            # cause, then return the typed exit code.
+            if (
+                result.get("run_outcome") == RunOutcome.PERSISTENCE_FAILURE.value
+                and result.get("error_class")
+            ):
+                print(
+                    f"persistence failure: {result['error_class']}: "
+                    f"{result.get('error_message', '')}",
+                    file=sys.stderr,
+                )
     except LockFailure as exc:
-        _emit_terminal(
+        return _terminate(
             outcome=RunOutcome.LOCK_FAILURE,
             error_class="LockFailure",
             error_message=str(exc),
             audit_root=audit_root,
         )
-        return EXIT_CODES[RunOutcome.LOCK_FAILURE]
 
     print(json.dumps(result, indent=2, default=str))
     return int(result.get("exit_code", EXIT_CODES[RunOutcome.SUCCESS]))

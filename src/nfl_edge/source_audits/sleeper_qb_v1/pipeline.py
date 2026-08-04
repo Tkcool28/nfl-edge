@@ -238,7 +238,7 @@ class AuditOrchestrator:
         integer).
         """
         if kind not in ALLOWED_KINDS:
-            self._record_terminal(
+            self._commit_terminal_record(
                 RunOutcomeRecord(
                     outcome=RunOutcome.NORMALIZATION_FAILURE,
                     snapshot_id=None,
@@ -281,7 +281,7 @@ class AuditOrchestrator:
                     kind=kind,
                     attempt_count=0,
                 )
-                self._record_terminal(record)
+                self._commit_terminal_record(record)
                 return {
                     "run_outcome": outcome.value,
                     "exit_code": EXIT_CODES[outcome],
@@ -432,81 +432,20 @@ class AuditOrchestrator:
         # 13. Determine the final terminal outcome. The HTTP fetch
         # succeeded, but a downstream HOF failure downgrades the run:
         # a successful collection with a failed HOF is NOT a success.
+        # The live-report write happens BEFORE we record the terminal
+        # outcome, so a report-write failure becomes part of the
+        # terminal outcome (PERSISTENCE_FAILURE) and there is exactly
+        # one terminal-history row per invocation.
         final_outcome = hof_run_outcome or RunOutcome.SUCCESS
+        report_write_failed = False
+        report_payload: dict[str, Any] | None = None
 
-        # 14. Persist terminal history BEFORE writing the live report
-        # or advancing the latest-success pointer. This is the single
-        # source of truth: if the current run cannot be recorded, the
-        # process must surface PERSISTENCE_FAILURE (exit 13) and must
-        # NOT write latest_snapshot.json or the live report.
-        record = RunOutcomeRecord(
-            outcome=final_outcome,
-            snapshot_id=snapshot_id,
-            observed_at_utc=observed_at_utc,
-            finished_at_utc=_utc_now_iso(),
-            error_class=None,
-            error_message=None,
-            error_token=ERROR_TOKENS[final_outcome] if final_outcome != RunOutcome.SUCCESS else None,
-            exit_code=EXIT_CODES[final_outcome],
-            kind=kind,
-            attempt_count=len(attempts),
-        )
-        try:
-            self._record_terminal(record)
-        except OSError as exc:
-            # Terminal-history persistence failed. The run cannot be
-            # recorded in the durable history; surface
-            # PERSISTENCE_FAILURE (exit 13). We still attempt to write
-            # latest_run_status.json (best-effort) so operators can
-            # see the failure, but the process must exit nonzero.
-            try:
-                self._write_latest_run_status(
-                    RunOutcomeRecord(
-                        outcome=RunOutcome.PERSISTENCE_FAILURE,
-                        snapshot_id=snapshot_id,
-                        observed_at_utc=observed_at_utc,
-                        finished_at_utc=_utc_now_iso(),
-                        error_class=type(exc).__name__,
-                        error_message=f"run_history write failed: {exc}",
-                        error_token=ERROR_TOKENS[RunOutcome.PERSISTENCE_FAILURE],
-                        exit_code=EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE],
-                        kind=kind,
-                        attempt_count=len(attempts),
-                    )
-                )
-            except OSError:
-                pass
-            return {
-                "snapshot_id": snapshot_id,
-                "observed_at_utc": observed_at_utc,
-                "run_outcome": RunOutcome.PERSISTENCE_FAILURE.value,
-                "exit_code": EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE],
-                "error_class": type(exc).__name__,
-                "error_message": f"run_history write failed: {exc}",
-            }
-
-        # 15. Advance the latest-success pointer ONLY on final SUCCESS.
-        # A failed HOF run (or any other downgrade) must not advance
-        # the pointer — latest_snapshot.json reflects the last run that
-        # passed every gate, not the last HTTP fetch.
-        if final_outcome == RunOutcome.SUCCESS:
-            latest_pointer = {
-                "snapshot_id": snapshot_id,
-                "observed_at_utc": observed_at_utc,
-                "payload_sha256": winner.sha256,
-                "raw_payload_path": winner.raw_payload_path,
-                "kind": kind,
-            }
-            atomic_write_text(
-                self.latest_pointer_path,
-                json.dumps(latest_pointer, indent=2, default=str) + "\n",
-            )
-
-        # 16. Live audit report + rolling metrics. The rolling metrics
-        # now read from the durable run_history.parquet, which already
-        # includes the current terminal record from step 14. The report
-        # describes the actual final outcome — no longer a hardcoded
-        # "success" observation regardless of HOF state.
+        # 14. Write live report + rolling metrics BEFORE persisting
+        # the terminal outcome. If this fails, the terminal outcome
+        # is PERSISTENCE_FAILURE — the run cannot produce a live
+        # report — and exactly one terminal-history row reflects
+        # that outcome. The latest-success pointer stays at the
+        # prior successful run because final_outcome != SUCCESS.
         try:
             metrics = compute_rolling_metrics_from_disk(
                 self.audit_root,
@@ -558,13 +497,87 @@ class AuditOrchestrator:
                 output_json=self.reports_root / "sleeper_qb_live_audit.json",
             )
         except OSError as exc:
-            return self._finalize_persistence_failure(
+            report_write_failed = True
+            report_error_class = type(exc).__name__
+            report_error_message = str(exc)
+            final_outcome = RunOutcome.PERSISTENCE_FAILURE
+            metrics = None
+            freshness_state = None
+
+        # 15. Persist exactly ONE terminal-history row reflecting the
+        # actual final outcome. History is written first (Rereview
+        # 4852878097 §5: history-before-status). A history failure
+        # surfaces PERSISTENCE_FAILURE and DOES NOT write status or
+        # advance the latest-success pointer; the terminal-history
+        # row count for this invocation is still exactly one
+        # (because we never retry the history append).
+        record = RunOutcomeRecord(
+            outcome=final_outcome,
+            snapshot_id=snapshot_id,
+            observed_at_utc=observed_at_utc,
+            finished_at_utc=_utc_now_iso(),
+            error_class=None if final_outcome == RunOutcome.SUCCESS else (
+                report_error_class if report_write_failed else None
+            ),
+            error_message=None if final_outcome == RunOutcome.SUCCESS else (
+                report_error_message if report_write_failed else None
+            ),
+            error_token=ERROR_TOKENS[final_outcome] if final_outcome != RunOutcome.SUCCESS else None,
+            exit_code=EXIT_CODES[final_outcome],
+            kind=kind,
+            attempt_count=len(attempts),
+        )
+        history_written = False
+        try:
+            self._append_run_history(record)
+            history_written = True
+        except OSError as exc:
+            # History write failed. Surface PERSISTENCE_FAILURE.
+            # We do NOT retry — one row per invocation. We do NOT
+            # write latest_run_status.json (history-first ordering
+            # means status only follows history). We do NOT advance
+            # the latest-success pointer.
+            return self._failure_after_history_failure(
                 kind=kind,
                 snapshot_id=snapshot_id,
                 observed_at_utc=observed_at_utc,
                 attempts=attempts,
-                error_class=type(exc).__name__,
-                error_message=str(exc),
+                history_error=exc,
+            )
+
+        # 16. Write latest_run_status.json. History-first ordering
+        # (Rereview 4852878097 §5): history was already durably
+        # written, so a status failure cannot drop the terminal
+        # record. A status failure surfaces PERSISTENCE_FAILURE
+        # but does NOT advance the latest-success pointer and
+        # does NOT append a second history row.
+        try:
+            self._write_latest_run_status(record)
+        except OSError as exc:
+            return self._failure_after_status_failure(
+                kind=kind,
+                snapshot_id=snapshot_id,
+                observed_at_utc=observed_at_utc,
+                attempts=attempts,
+                status_error=exc,
+            )
+
+        # 17. Advance the latest-success pointer ONLY on full SUCCESS
+        # and ONLY after both history and status have been durably
+        # written. A failed HOF, a failed report write, a failed
+        # history write, or a failed status write all leave the
+        # pointer at the prior successful run.
+        if final_outcome == RunOutcome.SUCCESS and history_written:
+            latest_pointer = {
+                "snapshot_id": snapshot_id,
+                "observed_at_utc": observed_at_utc,
+                "payload_sha256": winner.sha256,
+                "raw_payload_path": winner.raw_payload_path,
+                "kind": kind,
+            }
+            atomic_write_text(
+                self.latest_pointer_path,
+                json.dumps(latest_pointer, indent=2, default=str) + "\n",
             )
 
         return {
@@ -862,7 +875,7 @@ class AuditOrchestrator:
             kind=kind,
             attempt_count=len(attempts),
         )
-        self._record_terminal(record)
+        self._commit_terminal_record(record)
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
@@ -911,7 +924,7 @@ class AuditOrchestrator:
             kind=kind,
             attempt_count=len(attempts),
         )
-        self._record_terminal(record)
+        self._commit_terminal_record(record)
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
@@ -945,7 +958,7 @@ class AuditOrchestrator:
             kind=kind,
             attempt_count=len(attempts),
         )
-        self._record_terminal(record)
+        self._commit_terminal_record(record)
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
@@ -955,41 +968,59 @@ class AuditOrchestrator:
             "error_message": error_message,
         }
 
-    def _finalize_persistence_failure(
+    def _failure_after_history_failure(
         self,
         *,
         kind: str,
         snapshot_id: str,
         observed_at_utc: str,
         attempts: Sequence[SleeperFetchResult],
-        error_class: str,
-        error_message: str,
+        history_error: BaseException,
     ) -> dict[str, Any]:
-        outcome = RunOutcome.PERSISTENCE_FAILURE
-        record = RunOutcomeRecord(
-            outcome=outcome,
-            snapshot_id=snapshot_id,
-            observed_at_utc=observed_at_utc,
-            finished_at_utc=_utc_now_iso(),
-            error_class=error_class,
-            error_message=error_message,
-            error_token=ERROR_TOKENS[outcome],
-            exit_code=EXIT_CODES[outcome],
-            kind=kind,
-            attempt_count=len(attempts),
-        )
-        # Best-effort: still try to record the latest-run status.
-        try:
-            self._record_terminal(record)
-        except OSError:
-            pass
+        """Handle a history-write failure.
+
+        History-first ordering (Rereview 4852878097 §5): if the
+        durable history append failed, status MUST NOT be written
+        (because then ``latest_run_status.json`` would claim an
+        outcome absent from ``run_history.parquet``). The terminal
+        outcome is PERSISTENCE_FAILURE (exit 13). No second history
+        row is attempted — one row per invocation.
+
+        The latest-success pointer is not advanced.
+        """
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
-            "run_outcome": outcome.value,
-            "exit_code": EXIT_CODES[outcome],
-            "error_class": error_class,
-            "error_message": error_message,
+            "run_outcome": RunOutcome.PERSISTENCE_FAILURE.value,
+            "exit_code": EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE],
+            "error_class": type(history_error).__name__,
+            "error_message": f"run_history write failed: {history_error}",
+        }
+
+    def _failure_after_status_failure(
+        self,
+        *,
+        kind: str,
+        snapshot_id: str,
+        observed_at_utc: str,
+        attempts: Sequence[SleeperFetchResult],
+        status_error: BaseException,
+    ) -> dict[str, Any]:
+        """Handle a status-write failure.
+
+        History-first ordering (Rereview 4852878097 §5): history was
+        already durably written, so the terminal record is preserved
+        in ``run_history.parquet``. A status-write failure surfaces
+        PERSISTENCE_FAILURE (exit 13) without re-appending a second
+        history row and without advancing the latest-success pointer.
+        """
+        return {
+            "snapshot_id": snapshot_id,
+            "observed_at_utc": observed_at_utc,
+            "run_outcome": RunOutcome.PERSISTENCE_FAILURE.value,
+            "exit_code": EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE],
+            "error_class": type(status_error).__name__,
+            "error_message": f"latest_run_status write failed: {status_error}",
         }
 
     def _write_failure_report(self, snapshot_id: str, payload: dict[str, Any]) -> None:
@@ -1008,34 +1039,37 @@ class AuditOrchestrator:
             json.dumps(record.to_dict(), indent=2, default=str) + "\n",
         )
 
-    def _record_terminal(
+    def _commit_terminal_record(
         self,
         record: RunOutcomeRecord,
     ) -> None:
-        """Persist a terminal outcome to ``latest_run_status.json``
-        and ``run_history.parquet``.
+        """Persist a terminal outcome to ``run_history.parquet`` and
+        ``latest_run_status.json`` in history-first order.
 
-        ``_write_latest_run_status`` is the single-source-of-truth
-        pointer (one row, latest run only).
-        ``_append_run_history`` is the rolling source of truth
-        (one row per run, every run, ever).
+        Rereview 4852878097 §3 + §5:
 
-        Rereview 4852338912: ``run_history.parquet`` replaces the old
-        ``run_history.jsonl``. The write is fully atomic (temp-file
-        fsync + os.replace + parent-directory fsync). Any ``OSError``
-        from the parquet write propagates to the caller — it is never
-        swallowed, because a missing terminal-history row means the
-        rolling metrics would silently omit the current run.
+        * Exactly one terminal-history row is appended per invocation.
+        * History is appended BEFORE status is written, so a status
+          failure cannot leave ``latest_run_status.json`` claiming an
+          outcome absent from ``run_history.parquet``.
+        * If the history write raises ``OSError``, it propagates and
+          status is NOT written.
+        * If the history write succeeds and the status write raises
+          ``OSError``, the status failure propagates and the caller is
+          responsible for surfacing ``PERSISTENCE_FAILURE`` (exit 13)
+          without re-appending a second history row.
         """
-        self._write_latest_run_status(record)
         self._append_run_history(record)
+        self._write_latest_run_status(record)
 
     def _append_run_history(self, record: RunOutcomeRecord) -> None:
         """Append one row to ``run_history.parquet``.
 
         Rereview 4852338912: the terminal run history is a durable
-        would silently drop a terminal record from the rolling
-        metrics.
+        parquet file (``run_history.parquet``). Any ``OSError``
+        propagates to the caller — it is never swallowed, because a
+        missing terminal-history row means the rolling metrics would
+        silently drop a terminal record.
         """
         atomic_append_run_history(
             self.run_history_path,
