@@ -18,7 +18,13 @@
         "mov_divisor": 6.0,
         "prob_max": 0.99,
         "prob_min": 0.01,
-        "season_mean_reversion_fraction": 0.3333333333333333
+        "qb_adjustment_max_abs_elo": 50.0,
+        "qb_adjustment_replacement_passing_epa": -0.05,
+        "qb_adjustment_sample_k": 250.0,
+        "qb_adjustment_scale_elo_per_shrunk_epa": 500.0,
+        "qb_adjustment_supported_uses_replacement_scenario": true,
+        "qb_adjustment_unknown_returns_zero": true,
+        "season_mean_reversion_fraction": 0.333
       },
       "reason": "documented conservative defaults",
       "selection": "primary"

@@ -279,6 +279,8 @@ def build_development_scorecard(
     }
 
     # Markdown
+    cal_int = cal_result["calibration_intercept"]
+    cal_sl = cal_result["calibration_slope"]
     md_lines = [
         "# QB-Elo Development Scorecard",
         "",
@@ -300,8 +302,12 @@ def build_development_scorecard(
         f"- Brier score: {brier:.4f}",
         f"- Log loss: {ll:.4f}",
         f"- Descriptive accuracy: {accuracy:.4f}",
-        f"- Calibration intercept: {cal_intercept:.4f}",
-        f"- Calibration slope: {cal_slope:.4f}",
+        f"- Calibration intercept: {cal_int if cal_int is not None else 'NA'}",
+        f"- Calibration slope: {cal_sl if cal_sl is not None else 'NA'}",
+        f"- Calibration fit status: {cal_result['calibration_fit_status']}",
+        f"- Calibration iterations: {cal_result['calibration_iterations']}",
+        f"- Calibration converged: {cal_result['calibration_converged']}",
+        f"- Calibration max_iter: {cal_result['max_iter']}",
         "",
         "## Results by Season",
         "",

@@ -212,3 +212,79 @@ pass. **All earlier calibration and replay claims are superseded.**
 
 The QB adjustment remains neutral because every development row
 carries `qb_certainty_state=UNKNOWN`.
+
+## Final Review Remediation Pass — 2026-08-03
+
+This appendix records the final independent-review remediation
+applied to PR #4. Earlier metrics and hashes are superseded.
+
+### Canonical YAML as runtime source of truth
+
+The runtime configuration now flows through a single canonical
+loader (`nfl_edge.models.qb_elo_config.load_qb_elo_canonical_config`).
+There is no in-code `DEFAULT_ELO_CONFIG`. The walk-forward
+engine, the tuning ledger, and the manifest all derive their
+configuration from the loaded normalized YAML.
+
+- Canonical YAML path: `config/qb_elo_v1.yaml`
+- `season_mean_reversion_fraction = 0.333` (exact)
+- Prior runtime value of `1.0 / 3.0` is superseded
+- `model_config_sha256 = 2d1249cc1a4a067c0ce6dfbd40b74c36366c386a4aca014eaaae448d75010d06`
+
+### Manifest hash contract
+
+The manifest now emits two SEPARATELY named hash types:
+
+- `prediction_ledger.file_sha256` — SHA-256 of the exact on-disk
+  Parquet file bytes (computed after `write_ledger` returns)
+- `prediction_ledger.logical_content_sha256` — SHA-256 of the
+  canonical logical representation of the in-memory frame
+- (same for `state_ledger`)
+
+The previous ambiguous single `sha256` field is removed. The
+two hashes are computed in independent stages and cannot be
+interchanged.
+
+### Calibration contract
+
+- `max_iter` is **exactly 100** (default)
+- Undefined fits (one-class outcome, insufficient data,
+  constant input, singular Hessian) return `calibration_intercept = None`
+  and `calibration_slope = None`
+- The Markdown scorecard renders null as `NA`
+- The JSON scorecard serializes `None` as `null`
+- The retired back-compat wrapper `calibration_intercept_slope`
+  is **removed**; no production caller substitutes `(0.0, 1.0)`
+
+### Cross-ledger `actual_margin` validation
+
+`detect_state_ledger_corruption` now compares both state side rows
+against the prediction ledger's `actual_margin`. Errors name the
+game_id, side, prediction value, and state value. The retired
+`margin` field is no longer silently accepted as a fallback.
+
+### Corrected metrics (this pass)
+
+- Brier: 0.2239582917989346
+- Log loss: 0.6396576506911166
+- Descriptive accuracy: 0.6351421188630491
+- Calibration intercept: -0.0815648369071145
+- Calibration slope: 0.9667354678276904
+- Calibration fit status: converged (4 iterations)
+- Predictions: 1942; transitions: 3884; ties: 7; binary-scored: 1935
+- Prediction parquet file_sha256: `47bb96b405866395cc1a18fb15413b11cf9265e0eccda30f8a77014f74926d45`
+- Prediction parquet logical_content_sha256: `a000dbc1a974fece7211fcb32900b272deee27e896516f7a8879f75a8fc5ed50`
+- State parquet file_sha256: `fceb7a9b064c50b91d426de4b0d70185c8191d7e43948040a99178ab07802fbb`
+- State parquet logical_content_sha256: `7b1b9f8124cdb2f95345eab9a944d9c4cfa58225043bdbe67a1dd5a6ad5b4fa2`
+- Manifest JSON SHA-256: `0db2fa92815d4166f8ab10167e92bb2a392f266f41ed5e26b9af8c2bcc3433e8`
+- Tuning ledger JSON SHA-256: `6d7e018920efc821807381d9964bc91c28241f242d4b1a883220c3f69a4bf996`
+- Scorecard JSON SHA-256: `b49a5f5b13e6b5125192c74ef31f948d5397f7c44e8cb13d1cf09ed795212f6a`
+- Scorecard MD SHA-256: `fe3fcfcb7a0b35c166a79bf998abf07c0ead36f6a0f1dc14e42e34129e2c5ef4`
+- Reliability CSV SHA-256: `ef1099d365c12f3191493f581757e8a0cd1e4404a9585d28d5e53fc4d982955e`
+
+### Two-run determinism
+
+Two independent runs in `/tmp/nfl-edge-pr4-final-a` and
+`/tmp/nfl-edge-pr4-final-b` produced byte-identical artifacts
+across all seven files using the canonical YAML and a fixed
+logical creation time of `2026-08-03T12:00:00Z`.

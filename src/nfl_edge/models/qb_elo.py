@@ -881,8 +881,11 @@ def detect_state_ledger_corruption(
             "k_factor": float(row["k_factor"]),
             "elo_change": float(row["elo_change"]),
             "elo_after": float(row["elo_after"]),
+            # ``actual_margin`` is the canonical field; ``margin`` is
+            # retired. A missing ``actual_margin`` on a state row is
+            # an explicit error and is not silently defaulted to 0.
             "actual_margin_signed": int(
-                row.get("actual_margin", row.get("margin", 0))
+                row["actual_margin"]
             ),
         }
     _, replayed = independent_replay_from_pregame(
@@ -919,20 +922,45 @@ def detect_state_ledger_corruption(
                     f"{fld_name} mismatch game {gid} side {side}: "
                     f"ledger={lv!r} replay={rv!r}"
                 )
-        # actual_margin: the canonical update function stores the
-        # *signed* margin on BOTH side rows (the same value). The
-        # spec says actual_margin > 0 = home win, < 0 = away win;
-        # the corruption verifier just needs to confirm that the
-        # two side rows carry the same actual_margin.
+        # The canonical update function stores the *signed* margin on
+        # BOTH side rows (the same value). The spec says
+        # ``actual_margin`` > 0 = home win, < 0 = away win.
+        #
+        # In addition to checking that the two side rows agree, the
+        # verifier compares both side rows against the *prediction*
+        # ledger's ``actual_margin`` for the same game. That second
+        # check is what catches the corruption mode in which BOTH side
+        # rows are identically wrong (the side-vs-side check would pass
+        # but the cross-ledger check would fail).
+        prediction_by_id: dict[str, int] = {}
+        for r in predictions:
+            gid_p = str(r.get("game_id", ""))
+            if not gid_p:
+                continue
+            if "actual_margin" not in r or r.get("actual_margin") is None:
+                problems.append(
+                    f"missing prediction actual_margin game {gid_p}"
+                )
+                continue
+            prediction_by_id[gid_p] = int(r["actual_margin"])
         this_margin = int(by_game[gid][side]["actual_margin_signed"])
         home_margin = by_game[gid].get("home", {}).get(
             "actual_margin_signed", None
         )
         if home_margin is not None and this_margin != home_margin:
             problems.append(
-                f"actual_margin inconsistency game {gid} side {side}: "
+                f"actual_margin side-vs-side inconsistency game {gid} side {side}: "
                 f"this side={this_margin} home={home_margin}"
             )
+        # Cross-ledger check: state actual_margin must equal prediction
+        # actual_margin.
+        if gid in prediction_by_id:
+            pred_margin = prediction_by_id[gid]
+            if this_margin != pred_margin:
+                problems.append(
+                    f"actual_margin cross-ledger mismatch game {gid} side {side}: "
+                    f"prediction={pred_margin!r} state={this_margin!r}"
+                )
     # Also check for orphan ledger rows that have no replay entry
     # (the replay loops over predictions so a row not in predictions
     # would be a "ghost" row).

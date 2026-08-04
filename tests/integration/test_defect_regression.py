@@ -194,24 +194,40 @@ def test_artifact_hashes_reconcile_with_manifest() -> None:
     manifest = json.loads(
         (TMP_OUTPUT / "qb_elo_run_manifest_v1.json").read_text()
     )
+    # Per the final review-remediation manifest contract, the two
+    # hash types are SEPARATELY named and the reconciliation is
+    # exact (no "either hash" acceptance).
     for key, path in (
         ("prediction_ledger", TMP_OUTPUT / "qb_elo_predictions_2018_2024.parquet"),
         ("state_ledger", TMP_OUTPUT / "qb_elo_state_transitions_2018_2024.parquet"),
     ):
         m = manifest[key]
-        # Re-hash the file (parquet content is byte-deterministic).
+        # The old ambiguous ``sha256`` field must not exist.
+        assert "sha256" not in m, f"{key} still has old sha256 field"
+        assert "file_sha256" in m, f"{key} missing file_sha256"
+        assert "logical_content_sha256" in m, f"{key} missing logical_content_sha256"
+        # Re-hash the on-disk file bytes; this is the artifact-
+        # pinning contract.
         digest = hashlib.sha256(path.read_bytes()).hexdigest()
-        # Parquet metadata may differ across polars versions; the
-        # canonical contract is the manifest's hash matches the file
-        # produced by the run. Compare the prediction and state
-        # content (sorted JSON form).
+        # Compute the canonical logical content hash from the
+        # in-memory frame read back from the file. The manifest's
+        # ``logical_content_sha256`` must match this exactly.
         frame = pl.read_parquet(path)
-        canonical = json.dumps(frame.to_dict(as_series=False), sort_keys=True, default=str).encode("utf-8")
+        canonical = json.dumps(
+            frame.to_dict(as_series=False),
+            sort_keys=True,
+            default=str,
+        ).encode("utf-8")
         canonical_hash = hashlib.sha256(canonical).hexdigest()
-        # At least one of the two must match (file-hash preferred
-        # for artifact pinning; canonical-hash matches the manifest
-        # for content-based reconciliation).
-        assert m["sha256"] in (digest, canonical_hash), f"{key} hash mismatch"
+        assert m["file_sha256"] == digest, (
+            f"{key} file_sha256 mismatch: manifest={m['file_sha256']!r} "
+            f"file={digest!r}"
+        )
+        assert m["logical_content_sha256"] == canonical_hash, (
+            f"{key} logical_content_sha256 mismatch: "
+            f"manifest={m['logical_content_sha256']!r} "
+            f"canonical={canonical_hash!r}"
+        )
 
 
 def test_scorecard_to_ledger_reconciliation(tmp_path: Path) -> None:
@@ -290,9 +306,24 @@ def test_deterministic_replay_from_second_directory(tmp_path: Path) -> None:
         assert m1["feature_code_fingerprint"] == m2["feature_code_fingerprint"]
         assert m1["model_code_fingerprint"] == m2["model_code_fingerprint"]
         assert m1["backtest_code_fingerprint"] == m2["backtest_code_fingerprint"]
-        # The content hashes reported in the manifest must match.
-        assert m1["prediction_ledger"]["sha256"] == m2["prediction_ledger"]["sha256"]
-        assert m1["state_ledger"]["sha256"] == m2["state_ledger"]["sha256"]
+        # The two hash types are now split. Both must match
+        # exactly across runs.
+        assert (
+            m1["prediction_ledger"]["file_sha256"]
+            == m2["prediction_ledger"]["file_sha256"]
+        )
+        assert (
+            m1["prediction_ledger"]["logical_content_sha256"]
+            == m2["prediction_ledger"]["logical_content_sha256"]
+        )
+        assert (
+            m1["state_ledger"]["file_sha256"]
+            == m2["state_ledger"]["file_sha256"]
+        )
+        assert (
+            m1["state_ledger"]["logical_content_sha256"]
+            == m2["state_ledger"]["logical_content_sha256"]
+        )
         # And the prediction rows must be byte-equal.
         p1 = pl.read_parquet(TMP_OUTPUT / "qb_elo_predictions_2018_2024.parquet").sort("prediction_id")
         p2 = pl.read_parquet(TMP_OUTPUT_2 / "qb_elo_predictions_2018_2024.parquet").sort("prediction_id")

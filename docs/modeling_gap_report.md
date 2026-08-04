@@ -251,3 +251,47 @@ carries `qb_certainty_state=UNKNOWN`.
 The 2025 holdout remains sealed: no fit, predict, score, calibrate,
 tune, or report on 2025. The poison test in
 `tests/holdout/test_2025_sealed.py` continues to pass.
+
+## Final Review Remediation Pass — 2026-08-03
+
+This appendix records the final independent-review remediation
+applied to PR #4 and supersedes earlier metrics and hashes.
+
+### Contract changes
+
+- **YAML is the single runtime source of truth.** `nfl_edge.models.qb_elo_config.load_qb_elo_canonical_config` is the only path. There is no in-code default.
+- `season_mean_reversion_fraction = 0.333` (exact). Prior runtime `1.0 / 3.0` is superseded.
+- **Manifest hashes split.** `file_sha256` (on-disk bytes) and `logical_content_sha256` (in-memory frame) are SEPARATELY named. Old ambiguous `sha256` field is removed.
+- **Calibration `max_iter = 100`.** Undefined fits propagate as `null`/`None`. Markdown renders `NA`. JSON serializes `null`. Retired wrapper `calibration_intercept_slope` is gone; no silent `(0.0, 1.0)`.
+- **`actual_margin` cross-ledger validation.** `detect_state_ledger_corruption` compares both state rows against prediction. Retired `margin` field is no longer defaulted.
+
+### Corrected metrics
+
+- Brier: 0.2239582917989346
+- Log loss: 0.6396576506911166
+- Descriptive accuracy: 0.6351421188630491
+- Calibration intercept: -0.0815648369071145
+- Calibration slope: 0.9667354678276904
+- Calibration fit status: converged (4 iterations)
+- Calibration max_iter: 100
+- Predictions: 1942; transitions: 3884; ties: 7; binary-scored: 1935
+- `model_config_sha256 = 2d1249cc1a4a067c0ce6dfbd40b74c36366c386a4aca014eaaae448d75010d06`
+
+### Corrected hashes
+
+- prediction parquet file_sha256: `47bb96b405866395cc1a18fb15413b11cf9265e0eccda30f8a77014f74926d45`
+- prediction parquet logical_content_sha256: `a000dbc1a974fece7211fcb32900b272deee27e896516f7a8879f75a8fc5ed50`
+- state parquet file_sha256: `fceb7a9b064c50b91d426de4b0d70185c8191d7e43948040a99178ab07802fbb`
+- state parquet logical_content_sha256: `7b1b9f8124cdb2f95345eab9a944d9c4cfa58225043bdbe67a1dd5a6ad5b4fa2`
+- manifest SHA-256: `0db2fa92815d4166f8ab10167e92bb2a392f266f41ed5e26b9af8c2bcc3433e8`
+- tuning ledger SHA-256: `6d7e018920efc821807381d9964bc91c28241f242d4b1a883220c3f69a4bf996`
+- scorecard JSON SHA-256: `b49a5f5b13e6b5125192c74ef31f948d5397f7c44e8cb13d1cf09ed795212f6a`
+- scorecard MD SHA-256: `fe3fcfcb7a0b35c166a79bf998abf07c0ead36f6a0f1dc14e42e34129e2c5ef4`
+- reliability CSV SHA-256: `ef1099d365c12f3191493f581757e8a0cd1e4404a9585d28d5e53fc4d982955e`
+
+### Two-run determinism
+
+Two independent runs in `/tmp/nfl-edge-pr4-final-a` and
+`/tmp/nfl-edge-pr4-final-b` produced byte-identical artifacts
+across all seven output files using the canonical YAML and a
+fixed logical creation time of `2026-08-03T12:00:00Z`.

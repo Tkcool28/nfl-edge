@@ -327,34 +327,46 @@ def test_state_2025_rejected() -> None:
 # ---- 4. Engine uses canonical builders only ---------------------------------
 
 
-def test_walk_forward_uses_canonical_builders(monkeypatch) -> None:
+def test_walk_forward_uses_canonical_builders(monkeypatch, tmp_path) -> None:
     """The walk-forward engine must call the canonical builders, not
-    bypass them. We intercept them and assert each is called."""
+    bypass them. We intercept them and assert each is called.
+
+    The post-2026-08-04 contract requires the engine to read the
+    on-disk Parquet bytes for ``file_sha256``. Stubbing
+    ``write_ledger`` with a no-op therefore breaks the file-hash
+    step (it tries to read a file that was never written). The
+    test records the call AND still lets the real writer run."""
     from nfl_edge.backtest import walk_forward as wf
     calls: list[str] = []
 
+    real_bpl = build_prediction_ledger
+    real_bsl = build_state_ledger
+    real_wl = write_ledger
+
     def _stub_bpl(*args: Any, **kwargs: Any) -> pl.DataFrame:
         calls.append("build_prediction_ledger")
-        return build_prediction_ledger(*args, **kwargs)
+        return real_bpl(*args, **kwargs)
 
     def _stub_bsl(*args: Any, **kwargs: Any) -> pl.DataFrame:
         calls.append("build_state_ledger")
-        return build_state_ledger(*args, **kwargs)
+        return real_bsl(*args, **kwargs)
 
     def _stub_wl(*args: Any, **kwargs: Any) -> None:
         calls.append("write_ledger")
+        return real_wl(*args, **kwargs)
 
     monkeypatch.setattr(wf, "build_prediction_ledger", _stub_bpl)
     monkeypatch.setattr(wf, "build_state_ledger", _stub_bsl)
     monkeypatch.setattr(wf, "write_ledger", _stub_wl)
-    monkeypatch.setattr(
-        wf.write_parquet_deterministic, "__call__", lambda *a, **k: None
-    ) if hasattr(wf, "write_parquet_deterministic") else None
+    out = tmp_path / "p4_canon_test"
+    if out.exists():
+        import shutil
+        shutil.rmtree(out)
     # Now call the engine through run_development_walk_forward
     wf.run_development_walk_forward(
         games_path=Path("data/derived/features_v1/game_features_2018_2025.parquet"),
         team_features_path=Path("data/derived/features_v1/team_pregame_features_2018_2025.parquet"),
-        output_dir=Path("/tmp/p4_canon_test"),
+        output_dir=out,
         created_at=datetime(2026, 8, 3, 12, 0, 0, tzinfo=timezone.utc),
         project_root=Path("."),
     )

@@ -123,7 +123,7 @@ def _sigmoid(x: float) -> float:
 def logistic_recalibration(
     predictions: pl.DataFrame,
     *,
-    max_iter: int = 64,
+    max_iter: int = 100,
     tol: float = 1e-9,
 ) -> dict[str, Any]:
     """Fit the diagnostic logistic recalibration model and return a
@@ -155,6 +155,9 @@ def logistic_recalibration(
             "calibration_fit_status": "insufficient_data",
             "calibration_iterations": 0,
             "calibration_converged": False,
+            "max_iter": max_iter,
+            "tol": tol,
+            "calibration_rows_used": n,
         }
 
     xs: list[float] = [
@@ -176,6 +179,9 @@ def logistic_recalibration(
             "calibration_fit_status": "one_class_outcome",
             "calibration_iterations": 0,
             "calibration_converged": False,
+            "max_iter": max_iter,
+            "tol": tol,
+            "calibration_rows_used": n,
         }
 
     # Constant input probability -> constant logit -> slope undefined
@@ -215,6 +221,9 @@ def logistic_recalibration(
                 "calibration_fit_status": "singular_hessian",
                 "calibration_iterations": iterations,
                 "calibration_converged": False,
+                "max_iter": max_iter,
+                "tol": tol,
+                "calibration_rows_used": n,
             }
         # Newton step
         d_intercept = (h11 * g0 - h01 * g1) / det
@@ -228,6 +237,9 @@ def logistic_recalibration(
                 "calibration_fit_status": "non_finite_step",
                 "calibration_iterations": iterations,
                 "calibration_converged": False,
+                "max_iter": max_iter,
+                "tol": tol,
+                "calibration_rows_used": n,
             }
         if abs(d_intercept) < tol and abs(d_slope) < tol:
             converged = True
@@ -249,23 +261,20 @@ def logistic_recalibration(
         "calibration_fit_status": "converged" if converged else "max_iter_reached",
         "calibration_iterations": iterations,
         "calibration_converged": converged,
+        "max_iter": max_iter,
+        "tol": tol,
+        "calibration_rows_used": n,
     }
 
 
-def calibration_intercept_slope(
-    predictions: pl.DataFrame,
-) -> tuple[float, float]:
-    """Back-compat wrapper: returns ``(intercept, slope)`` for the
-    logistic recalibration fit, or ``(0.0, 1.0)`` if the fit is
-    undefined.
-
-    See :func:`logistic_recalibration` for the structured result that
-    includes the convergence status.
-    """
-    result = logistic_recalibration(predictions)
-    if result["calibration_intercept"] is None:
-        return 0.0, 1.0
-    return (
-        float(result["calibration_intercept"]),
-        float(result["calibration_slope"] or 1.0),
-    )
+# ---------------------------------------------------------------------------
+# Compatibility wrapper
+# ---------------------------------------------------------------------------
+#
+# The wrapper ``calibration_intercept_slope`` is RETIRED. Production
+# callers must use ``logistic_recalibration`` directly, which returns a
+# structured result whose ``calibration_intercept`` and
+# ``calibration_slope`` are ``None`` (not 0.0/1.0) when the fit is
+# undefined. The legacy identity-substitution behavior
+# ``(0.0, 1.0)`` is removed; scorecard rendering must handle the null
+# case explicitly.

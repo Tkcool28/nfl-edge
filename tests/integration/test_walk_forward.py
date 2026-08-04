@@ -18,13 +18,13 @@ import polars as pl
 import pytest
 
 from nfl_edge.backtest.walk_forward import (
-    DEFAULT_ELO_CONFIG,
     run_development_walk_forward,
 )
 from nfl_edge.models.qb_elo import (
     EloConfig,
     rebuild_state_from_ledger,
 )
+from nfl_edge.models.qb_elo_config import load_qb_elo_canonical_config
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 GAMES_PATH = REPO_ROOT / "data/derived/features_v1/game_features_2018_2025.parquet"
@@ -70,7 +70,11 @@ def test_walk_forward_no_2025_in_state():
 
 def test_state_ledger_reproduces_final_elos():
     state = pl.read_parquet(TMP_OUTPUT / "qb_elo_state_transitions_2018_2024.parquet")
-    config = EloConfig(**DEFAULT_ELO_CONFIG)
+    from nfl_edge.models.qb_elo_config import (
+        canonical_config_to_elo_config_input,
+    )
+    cfg = load_qb_elo_canonical_config(REPO_ROOT / "config/qb_elo_v1.yaml")
+    config = EloConfig(**canonical_config_to_elo_config_input(cfg))
     teams = sorted(set(state["team"].unique().to_list()))
     final_state = rebuild_state_from_ledger(state.to_dicts(), teams, config)
     # Last transition per team should match final_state

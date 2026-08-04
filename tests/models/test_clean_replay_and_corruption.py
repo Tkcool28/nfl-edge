@@ -30,7 +30,15 @@ from nfl_edge.models.qb_elo import (
 def test_clean_full_ledger_replay_has_zero_mismatches(tmp_path: Path) -> None:
     """Run the full development walk-forward into a temp dir, then
     replay from the persisted prediction ledger and verify zero
-    mismatches."""
+    mismatches.
+
+    The persisted state was written with the *canonical YAML*
+    configuration (``season_mean_reversion_fraction=0.333``). The
+    replay must use the same canonical configuration; instantiating
+    :class:`EloConfig` with the dataclass default would use
+    ``1.0/3.0`` and would not reproduce the persisted state. The
+    canonical loader is the single source of truth.
+    """
     out = tmp_path / "clean"
     out.mkdir()
     run_development_walk_forward(
@@ -44,7 +52,17 @@ def test_clean_full_ledger_replay_has_zero_mismatches(tmp_path: Path) -> None:
     state = pl.read_parquet(out / "qb_elo_state_transitions_2018_2024.parquet")
     pred_rows = pred.to_dicts()
     state_rows = state.to_dicts()
-    cfg = EloConfig()
+    from nfl_edge.models.qb_elo_config import (
+        canonical_config_to_elo_config_input,
+        load_qb_elo_canonical_config,
+    )
+    cfg = EloConfig(
+        **canonical_config_to_elo_config_input(
+            load_qb_elo_canonical_config(
+                Path("config/qb_elo_v1.yaml")
+            )
+        )
+    )
     problems = detect_state_ledger_corruption(
         state_ledger=state_rows, predictions=pred_rows, config=cfg
     )

@@ -7,7 +7,7 @@ import pytest
 
 from nfl_edge.common.errors import SealedHoldoutAccessError
 from nfl_edge.evaluation.calibration import (
-    calibration_intercept_slope,
+    logistic_recalibration,
     reliability_table,
 )
 from nfl_edge.evaluation.metrics import (
@@ -85,11 +85,15 @@ def test_reliability_table_basic():
             assert r["actual_home_win_rate"] is None
 
 
-def test_calibration_intercept_slope_runs():
+def test_calibration_structured_result_runs() -> None:
     df = _make_pred_frame()
-    intercept, slope = calibration_intercept_slope(df)
-    assert isinstance(intercept, float)
-    assert isinstance(slope, float)
+    res = logistic_recalibration(df)
+    assert "calibration_intercept" in res
+    assert "calibration_slope" in res
+    assert "calibration_fit_status" in res
+    assert "calibration_iterations" in res
+    assert "calibration_converged" in res
+    assert "max_iter" in res
 
 
 def test_build_scorecard_writes_files(tmp_path):

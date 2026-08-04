@@ -1,5 +1,5 @@
 {
-  "backtest_code_fingerprint": "42aab18ebc9ec504f1b2e0df6175a985950aa43df8534ff6a531b27e1900e9ca",
+  "backtest_code_fingerprint": "7fccd6bdda30d2585f74d28f07472afc78ce45bc06b344ccbda9756242fe9d6b",
   "backtest_config_sha256": "a36f9b5e63b24285be2f217ffc1de7f6592623604bae8a643f8edad2f1bcadf3",
   "created_at_utc": "2026-08-03T12:00:00Z",
   "data_version": "frozen-baseline-v1",
@@ -9,14 +9,15 @@
   "feature_version": "features-v1",
   "maximum_prediction_as_of_utc": "2025-02-04T12:00:00Z",
   "minimum_prediction_as_of_utc": "2018-09-04T12:00:00Z",
-  "model_code_fingerprint": "6bc664edf0c896590efed4546e4e269ecb660df8700207f7f80e19a81ed6574e",
-  "model_config_sha256": "d37661befee7fa0e00b71337890b9bf2b2a3740b0f1a7103ed3776fbabd00d7a",
+  "model_code_fingerprint": "5d13210cbbc1fbd54e569d63af7e55feb6323cfc6ac10e5915549eba0fc09cec",
+  "model_config_sha256": "2d1249cc1a4a067c0ce6dfbd40b74c36366c386a4aca014eaaae448d75010d06",
   "model_name": "qb_elo",
   "model_version": "v1.0.0",
   "prediction_ledger": {
+    "file_sha256": "47bb96b405866395cc1a18fb15413b11cf9265e0eccda30f8a77014f74926d45",
+    "logical_content_sha256": "a000dbc1a974fece7211fcb32900b272deee27e896516f7a8879f75a8fc5ed50",
     "path": "data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet",
-    "rows": 1942,
-    "sha256": "0f53dbd057cb30080b2a3361639fbdf1e4d16d70dfee3f65ccd09c5b95abc855"
+    "rows": 1942
   },
   "random_seed": 20260802,
   "run_id": "qb_elo-v1.0.0-20260803T120000Z",
@@ -24,9 +25,10 @@
   "scored_row_policy": "only 2018-2024 rows scored; 2025 is sealed and excluded",
   "sealed_holdout_season": 2025,
   "state_ledger": {
+    "file_sha256": "fceb7a9b064c50b91d426de4b0d70185c8191d7e43948040a99178ab07802fbb",
+    "logical_content_sha256": "7b1b9f8124cdb2f95345eab9a944d9c4cfa58225043bdbe67a1dd5a6ad5b4fa2",
     "path": "data/modeling/development_v1/qb_elo_state_transitions_2018_2024.parquet",
-    "rows": 3884,
-    "sha256": "67323c62fb5e1d6ce686000726bb6d1a44f636d66a43aecedafdb9a6007e558c"
+    "rows": 3884
   },
   "two_pass_block_proof": {
     "predict_pass_does_not_mutate_state": true,

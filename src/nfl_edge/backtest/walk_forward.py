@@ -61,18 +61,11 @@ from .ledger import (  # re-exported at module level so tests can
     write_ledger,
 )
 
-# Default config for the primary run (documented in docs/qb_elo_v1.md).
-DEFAULT_ELO_CONFIG: dict[str, Any] = {
-    "initial_rating": 1500.0,
-    "k_factor_regular": 20.0,
-    "k_factor_postseason": 4.0,
-    "home_field_elo": 48.0,
-    "season_mean_reversion_fraction": 1.0 / 3.0,
-    "mov_divisor": 6.0,
-    "mov_cap": 2.5,
-    "prob_min": 0.01,
-    "prob_max": 0.99,
-}
+# The primary configuration is loaded from config/qb_elo_v1.yaml at
+# run time by the canonical loader. There is no in-code default
+# constant; ``qb_elo_config`` in this module is just the project
+# root used to locate the YAML. The runtime value is the YAML
+# value, exactly.
 
 
 def _load_games(path: Path) -> pl.DataFrame:
@@ -612,11 +605,28 @@ def run_development_walk_forward(
         ensure_team,
         initial_state,
     )
+    from ..models.qb_elo_config import (
+        canonical_config_sha256,
+        canonical_config_to_elo_config_input,
+        load_qb_elo_canonical_config,
+    )
 
     if created_at is None:
         created_at = datetime.now(timezone.utc)
-    config_data = config or DEFAULT_ELO_CONFIG.copy()
-    elo_config = config_from_dict(config_data)
+    # The canonical primary configuration is loaded from
+    # config/qb_elo_v1.yaml. No in-code default may diverge.
+    if config is None:
+        _cfg_root = (
+            Path(project_root) if project_root is not None else Path.cwd()
+        )
+        config_data = load_qb_elo_canonical_config(
+            _cfg_root / "config/qb_elo_v1.yaml"
+        )
+    else:
+        config_data = config
+    elo_config = config_from_dict(
+        canonical_config_to_elo_config_input(config_data)
+    )
     run_id = new_run_id("qb_elo", "v1.0.0", created_at)
     games = _load_games(games_path)
     teams = _extract_teams_from_games(games)
@@ -719,9 +729,19 @@ def run_development_walk_forward(
     # abbreviation) accidentally replaces the real game_id.
     _validate_state_ledger_correctness(state_frame)
 
-    # Compute hashes (content-based, not path-based).
-    pred_hash = _sha256_bytes(_frame_bytes_for_fingerprint(pred_frame))
-    state_hash = _sha256_bytes(_frame_bytes_for_fingerprint(state_frame))
+    # Hashes are computed in two stages per the manifest contract:
+    #
+    #   - logical_content_sha256: SHA-256 of the canonical logical
+    #     representation of the frame (independent of Parquet encoding
+    #     details). Computed BEFORE writing.
+    #   - file_sha256: SHA-256 of the final written Parquet file
+    #     bytes. Computed AFTER ``write_ledger`` returns.
+    pred_logical_hash = _sha256_bytes(
+        _frame_bytes_for_fingerprint(pred_frame)
+    )
+    state_logical_hash = _sha256_bytes(
+        _frame_bytes_for_fingerprint(state_frame)
+    )
 
     # Compute code fingerprints from the source files themselves
     # (content-based), not from path strings. The function takes an
@@ -745,6 +765,23 @@ def run_development_walk_forward(
         else ""
     )
 
+    # Write outputs FIRST, then read the on-disk bytes to compute
+    # the file SHA-256, then build the manifest. The required order
+    # is:
+    #   1. Build canonical DataFrames (pred_frame, state_frame).
+    #   2. Compute logical_content_sha256 from the in-memory frame.
+    #   3. Write Parquet files.
+    #   4. Read final file bytes.
+    #   5. Compute file_sha256 from on-disk bytes.
+    #   6. Build/write the final manifest containing both hash types.
+    output_dir.mkdir(parents=True, exist_ok=True)
+    pred_path = output_dir / "qb_elo_predictions_2018_2024.parquet"
+    state_path = output_dir / "qb_elo_state_transitions_2018_2024.parquet"
+    write_ledger(pred_frame, str(pred_path))
+    write_ledger(state_frame, str(state_path))
+    pred_file_hash = _sha256_bytes(pred_path.read_bytes())
+    state_file_hash = _sha256_bytes(state_path.read_bytes())
+
     # Run manifest. All paths are repository-relative; no absolute
     # host paths participate.
     manifest: dict[str, Any] = {
@@ -758,7 +795,7 @@ def run_development_walk_forward(
         "feature_code_fingerprint": feature_fingerprint,
         "model_name": "qb_elo",
         "model_version": "v1.0.0",
-        "model_config_sha256": canonical_json_sha256(config_data),
+        "model_config_sha256": canonical_config_sha256(config_data),
         "backtest_config_sha256": canonical_json_sha256(
             {
                 "development_end_season": DEVELOPMENT_SEASON_MAX,
@@ -775,13 +812,15 @@ def run_development_walk_forward(
         "created_at_utc": created_at.isoformat().replace("+00:00", "Z"),
         "prediction_ledger": {
             "path": "data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet",
-            "sha256": pred_hash,
             "rows": pred_frame.height,
+            "file_sha256": pred_file_hash,
+            "logical_content_sha256": pred_logical_hash,
         },
         "state_ledger": {
             "path": "data/modeling/development_v1/qb_elo_state_transitions_2018_2024.parquet",
-            "sha256": state_hash,
             "rows": state_frame.height,
+            "file_sha256": state_file_hash,
+            "logical_content_sha256": state_logical_hash,
         },
         "minimum_prediction_as_of_utc": blocks[0]
         .as_of_utc.isoformat()
@@ -803,12 +842,6 @@ def run_development_walk_forward(
         },
     }
 
-    # Write outputs
-    output_dir.mkdir(parents=True, exist_ok=True)
-    pred_path = output_dir / "qb_elo_predictions_2018_2024.parquet"
-    state_path = output_dir / "qb_elo_state_transitions_2018_2024.parquet"
-    write_ledger(pred_frame, str(pred_path))
-    write_ledger(state_frame, str(state_path))
     (output_dir / "qb_elo_run_manifest_v1.json").write_text(
         json_lib.dumps(manifest, indent=2, sort_keys=True) + "\n"
     )

@@ -240,3 +240,55 @@ binomial fit and recomputed every artifact. The corrected numbers are:
 
 This document is updated in place; the prior values are superseded
 and remain only as historical record.
+
+### Final Review Remediation Pass — 2026-08-03
+
+This section records the final independent-review remediation
+applied to PR #4. The runtime, the manifest, the tuning ledger,
+and the scorecard now agree on the canonical YAML configuration.
+
+- Canonical YAML path: `config/qb_elo_v1.yaml`
+- `season_mean_reversion_fraction = 0.333` (exact)
+- The runtime loader is `nfl_edge.models.qb_elo_config.load_qb_elo_canonical_config`
+- There is no in-code default; the prior `1.0 / 3.0` runtime value is superseded
+- `model_config_sha256 = 2d1249cc1a4a067c0ce6dfbd40b74c36366c386a4aca014eaaae448d75010d06`
+
+**Manifest hash contract**
+
+- `prediction_ledger.file_sha256` = SHA-256 of exact on-disk Parquet bytes (post-write)
+- `prediction_ledger.logical_content_sha256` = SHA-256 of canonical logical content (pre-write)
+- Same split for `state_ledger`
+- The prior ambiguous single `sha256` field is **removed**
+- `prediction_ledger.file_sha256 = 47bb96b405866395cc1a18fb15413b11cf9265e0eccda30f8a77014f74926d45`
+- `prediction_ledger.logical_content_sha256 = a000dbc1a974fece7211fcb32900b272deee27e896516f7a8879f75a8fc5ed50`
+- `state_ledger.file_sha256 = fceb7a9b064c50b91d426de4b0d70185c8191d7e43948040a99178ab07802fbb`
+- `state_ledger.logical_content_sha256 = 7b1b9f8124cdb2f95345eab9a944d9c4cfa58225043bdbe67a1dd5a6ad5b4fa2`
+
+**Calibration contract**
+
+- `max_iter = 100` (default)
+- Undefined fits return `calibration_intercept = None`, `calibration_slope = None`
+- Markdown renders null as `NA`; JSON serializes `None` as `null`
+- The retired back-compat wrapper `calibration_intercept_slope` is **removed** (no silent `(0.0, 1.0)` substitution)
+
+**Cross-ledger `actual_margin` validation**
+
+- `detect_state_ledger_corruption` now compares both state side rows against the prediction ledger's `actual_margin`
+- Error messages name `game_id`, `side`, prediction value, and state value
+- The retired `margin` field is no longer silently defaulted via `row.get("actual_margin", row.get("margin", 0))`
+
+**Corrected metrics**
+
+- Brier: 0.2239582917989346
+- Log loss: 0.6396576506911166
+- Descriptive accuracy: 0.6351421188630491
+- Calibration intercept: -0.0815648369071145
+- Calibration slope: 0.9667354678276904
+- Calibration fit status: converged (4 iterations)
+- Calibration max_iter: 100
+- Predictions: 1942; transitions: 3884; ties: 7; binary-scored: 1935
+
+**Two-run determinism proof**
+
+Both `/tmp/nfl-edge-pr4-final-a` and `/tmp/nfl-edge-pr4-final-b`
+produced byte-identical artifacts across all 7 output files.
