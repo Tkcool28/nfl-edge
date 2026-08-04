@@ -429,23 +429,56 @@ class AuditOrchestrator:
             hof_payload = hof_result.get("payload")
             hof_run_outcome = hof_result.get("outcome")
 
-        # 13. Determine the final terminal outcome. The HTTP fetch
-        # succeeded, but a downstream HOF failure downgrades the run:
-        # a successful collection with a failed HOF is NOT a success.
-        # The live-report write happens BEFORE we record the terminal
-        # outcome, so a report-write failure becomes part of the
-        # terminal outcome (PERSISTENCE_FAILURE) and there is exactly
-        # one terminal-history row per invocation.
-        final_outcome = hof_run_outcome or RunOutcome.SUCCESS
+        # 13. Determine the provisional final terminal outcome.
+        # The HTTP fetch succeeded, but a downstream HOF failure
+        # downgrades the run: a successful collection with a
+        # failed HOF is NOT a success. The provisional outcome is
+        # what gets reported in the live report's current-run
+        # observation; a later report-write or pointer-write
+        # failure may downgrade it to PERSISTENCE_FAILURE.
+        provisional_outcome = hof_run_outcome or RunOutcome.SUCCESS
         report_write_failed = False
+        report_error_class: str | None = None
+        report_error_message: str | None = None
         report_payload: dict[str, Any] | None = None
+        pointer_write_failed = False
+        pointer_error_class: str | None = None
+        pointer_error_message: str | None = None
+
+        # Build the in-memory provisional record used for the
+        # current-run-inclusive metrics (Rereview 4858328151 §2)
+        # BEFORE the live report is computed. The report writer
+        # then sees the current invocation.
+        provisional_record = {
+            "outcome": provisional_outcome.value,
+            "snapshot_id": snapshot_id,
+            "observed_at_utc": observed_at_utc,
+            "kind": kind,
+            "attempt_count": len(attempts),
+            "success": provisional_outcome == RunOutcome.SUCCESS,
+        }
+        # Per-attempt detail for the current invocation (used by
+        # attempt reconciliation in the metrics).
+        current_fetch_attempts = [
+            {
+                "success": a.error_class is None,
+                "duration_ms": int(a.duration_ms or 0),
+                "http_status": a.http_status,
+                "response_bytes": int(a.response_bytes or 0),
+            }
+            for a in attempts
+        ]
+        current_active_rows = active_frame.to_dicts()
+        current_crosswalk_rows = crosswalk.to_dicts()
 
         # 14. Write live report + rolling metrics BEFORE persisting
-        # the terminal outcome. If this fails, the terminal outcome
-        # is PERSISTENCE_FAILURE — the run cannot produce a live
+        # the terminal outcome. The metrics computation includes
+        # the current invocation's provisional record so the live
+        # report reflects the run that is about to be committed.
+        # If this fails, the terminal outcome becomes
+        # PERSISTENCE_FAILURE — the run cannot produce a live
         # report — and exactly one terminal-history row reflects
-        # that outcome. The latest-success pointer stays at the
-        # prior successful run because final_outcome != SUCCESS.
+        # that outcome.
         try:
             metrics = compute_rolling_metrics_from_disk(
                 self.audit_root,
@@ -453,7 +486,9 @@ class AuditOrchestrator:
                     {
                         "last_success_at_utc": observed_at_utc,
                         "last_failure_at_utc": None,
-                        "last_attempt_success": final_outcome == RunOutcome.SUCCESS,
+                        "last_attempt_success": (
+                            provisional_outcome == RunOutcome.SUCCESS
+                        ),
                         "change_count": change_count_for(change_ledger),
                         "last_payload_sha256": winner.sha256,
                         "prior_payload_sha256": None,
@@ -461,12 +496,18 @@ class AuditOrchestrator:
                         "present_fields": present,
                     }
                 ],
+                current_run_record=provisional_record,
+                current_active_rows=current_active_rows,
+                current_crosswalk_rows=current_crosswalk_rows,
+                current_fetch_attempts=current_fetch_attempts,
             )
             freshness_state = derive_freshness_state(
                 FreshnessInputs(
                     last_success_at_utc=observed_at_utc,
                     last_failure_at_utc=None,
-                    last_attempt_success=final_outcome == RunOutcome.SUCCESS,
+                    last_attempt_success=(
+                        provisional_outcome == RunOutcome.SUCCESS
+                    ),
                     change_count=change_count_for(change_ledger),
                     last_payload_sha256=winner.sha256,
                     prior_payload_sha256=None,
@@ -484,10 +525,14 @@ class AuditOrchestrator:
                 source_contract_version=AUDIT_VERSION,
                 observations=[
                     {
-                        "kind": "success" if final_outcome == RunOutcome.SUCCESS else "failure",
+                        "kind": (
+                            "success"
+                            if provisional_outcome == RunOutcome.SUCCESS
+                            else "failure"
+                        ),
                         "at_utc": observed_at_utc,
                         "snapshot_id": snapshot_id,
-                        "run_outcome": final_outcome.value,
+                        "run_outcome": provisional_outcome.value,
                         "freshness_state": freshness_state,
                         "schema_drift_missing_fields": sorted(missing),
                         "warnings": warnings,
@@ -500,29 +545,78 @@ class AuditOrchestrator:
             report_write_failed = True
             report_error_class = type(exc).__name__
             report_error_message = str(exc)
-            final_outcome = RunOutcome.PERSISTENCE_FAILURE
             metrics = None
             freshness_state = None
 
-        # 15. Persist exactly ONE terminal-history row reflecting the
-        # actual final outcome. History is written first (Rereview
-        # 4852878097 §5: history-before-status). A history failure
-        # surfaces PERSISTENCE_FAILURE and DOES NOT write status or
-        # advance the latest-success pointer; the terminal-history
-        # row count for this invocation is still exactly one
-        # (because we never retry the history append).
+        # 15. Resolve the TRUE final outcome after the live report
+        # write. A failed report write downgrades the outcome to
+        # PERSISTENCE_FAILURE. The latest-success pointer is
+        # advanced only if the provisional outcome is still
+        # SUCCESS after this step.
+        final_outcome = provisional_outcome
+        if report_write_failed:
+            final_outcome = RunOutcome.PERSISTENCE_FAILURE
+
+        # 16. Atomically advance latest_snapshot.json ONLY when the
+        # true final outcome is SUCCESS (Rereview 4858328151 §3:
+        # pointer must be written BEFORE terminal history/status
+        # are committed, but only after all other success-path
+        # work has completed). A pointer-write failure downgrades
+        # the outcome to PERSISTENCE_FAILURE; the prior pointer
+        # file remains byte-identical because ``os.replace`` only
+        # succeeds on a complete atomic write. The CLI must NOT
+        # attempt a second terminal-history row — that would
+        # record SUCCESS for an invocation whose pointer write
+        # failed. The orchestrator owns the terminal outcome.
+        if final_outcome == RunOutcome.SUCCESS:
+            latest_pointer = {
+                "snapshot_id": snapshot_id,
+                "observed_at_utc": observed_at_utc,
+                "payload_sha256": winner.sha256,
+                "raw_payload_path": winner.raw_payload_path,
+                "kind": kind,
+            }
+            try:
+                atomic_write_text(
+                    self.latest_pointer_path,
+                    json.dumps(latest_pointer, indent=2, default=str) + "\n",
+                )
+            except OSError as exc:
+                pointer_write_failed = True
+                pointer_error_class = type(exc).__name__
+                pointer_error_message = str(exc)
+                final_outcome = RunOutcome.PERSISTENCE_FAILURE
+
+        # 17. Persist exactly ONE terminal-history row reflecting
+        # the actual final outcome (Rereview 4858328151 §3).
+        # History-first ordering: history is written before status.
+        # A history failure surfaces PERSISTENCE_FAILURE and does
+        # NOT write status or advance the latest-success pointer.
+        error_class_for_record: str | None = None
+        error_message_for_record: str | None = None
+        if final_outcome != RunOutcome.SUCCESS:
+            if pointer_write_failed:
+                error_class_for_record = pointer_error_class
+                error_message_for_record = (
+                    f"latest_snapshot write failed: {pointer_error_message}"
+                )
+            elif report_write_failed:
+                error_class_for_record = report_error_class
+                error_message_for_record = (
+                    f"live report write failed: {report_error_message}"
+                )
         record = RunOutcomeRecord(
             outcome=final_outcome,
             snapshot_id=snapshot_id,
             observed_at_utc=observed_at_utc,
             finished_at_utc=_utc_now_iso(),
-            error_class=None if final_outcome == RunOutcome.SUCCESS else (
-                report_error_class if report_write_failed else None
+            error_class=error_class_for_record,
+            error_message=error_message_for_record,
+            error_token=(
+                ERROR_TOKENS[final_outcome]
+                if final_outcome != RunOutcome.SUCCESS
+                else None
             ),
-            error_message=None if final_outcome == RunOutcome.SUCCESS else (
-                report_error_message if report_write_failed else None
-            ),
-            error_token=ERROR_TOKENS[final_outcome] if final_outcome != RunOutcome.SUCCESS else None,
             exit_code=EXIT_CODES[final_outcome],
             kind=kind,
             attempt_count=len(attempts),
@@ -530,13 +624,8 @@ class AuditOrchestrator:
         history_written = False
         try:
             self._append_run_history(record)
-            history_written = True
+            history_written = True  # noqa: F841 — recorded for symmetry with status path
         except OSError as exc:
-            # History write failed. Surface PERSISTENCE_FAILURE.
-            # We do NOT retry — one row per invocation. We do NOT
-            # write latest_run_status.json (history-first ordering
-            # means status only follows history). We do NOT advance
-            # the latest-success pointer.
             return self._failure_after_history_failure(
                 kind=kind,
                 snapshot_id=snapshot_id,
@@ -545,12 +634,12 @@ class AuditOrchestrator:
                 history_error=exc,
             )
 
-        # 16. Write latest_run_status.json. History-first ordering
-        # (Rereview 4852878097 §5): history was already durably
-        # written, so a status failure cannot drop the terminal
-        # record. A status failure surfaces PERSISTENCE_FAILURE
-        # but does NOT advance the latest-success pointer and
-        # does NOT append a second history row.
+        # 18. Write latest_run_status.json. History-first ordering:
+        # history was already durably written, so a status failure
+        # cannot drop the terminal record. A status failure
+        # surfaces PERSISTENCE_FAILURE but does NOT advance the
+        # latest-success pointer and does NOT append a second
+        # history row.
         try:
             self._write_latest_run_status(record)
         except OSError as exc:
@@ -560,24 +649,6 @@ class AuditOrchestrator:
                 observed_at_utc=observed_at_utc,
                 attempts=attempts,
                 status_error=exc,
-            )
-
-        # 17. Advance the latest-success pointer ONLY on full SUCCESS
-        # and ONLY after both history and status have been durably
-        # written. A failed HOF, a failed report write, a failed
-        # history write, or a failed status write all leave the
-        # pointer at the prior successful run.
-        if final_outcome == RunOutcome.SUCCESS and history_written:
-            latest_pointer = {
-                "snapshot_id": snapshot_id,
-                "observed_at_utc": observed_at_utc,
-                "payload_sha256": winner.sha256,
-                "raw_payload_path": winner.raw_payload_path,
-                "kind": kind,
-            }
-            atomic_write_text(
-                self.latest_pointer_path,
-                json.dumps(latest_pointer, indent=2, default=str) + "\n",
             )
 
         return {

@@ -369,10 +369,52 @@ def build_runs_from_disk(
     return runs, change_ledger
 
 
+def _current_run_metric_from_record(
+    record: Mapping[str, Any],
+    *,
+    active_rows: list[Mapping[str, Any]] | None = None,
+    crosswalk_rows: list[Mapping[str, Any]] | None = None,
+    fetch_attempts: list[Mapping[str, Any]] | None = None,
+) -> RunMetric:
+    """Build a ``RunMetric`` from an in-memory terminal record.
+
+    Used by ``compute_rolling_metrics_from_disk`` (with the
+    ``current_run_record`` keyword) to include the current
+    invocation's provisional outcome in the live rolling report,
+    without first durably persisting it to ``run_history.parquet``.
+
+    Rereview 4858328151 §2: the live report must include the
+    current run, so the operator sees the current invocation's
+    outcome reflected in scheduled_run_count /
+    successful_run_count / failed_run_count.
+    """
+    outcome = str(record.get("outcome", ""))
+    success = outcome == "SUCCESS"
+    try:
+        attempt_count = int(record.get("attempt_count", 0) or 0)
+    except (TypeError, ValueError):
+        attempt_count = 0
+    return RunMetric(
+        snapshot_id=str(record.get("snapshot_id") or ""),
+        observed_at_utc=str(record.get("observed_at_utc") or ""),
+        success=success,
+        run_outcome=outcome,
+        attempt_count=attempt_count,
+        kind=record.get("kind"),
+        fetch_attempts=list(fetch_attempts or []),
+        active_rows=list(active_rows or []),
+        crosswalk_rows=list(crosswalk_rows or []),
+    )
+
+
 def compute_rolling_metrics_from_disk(
     audit_root: str | Path,
     *,
     freshness_history: list[Mapping[str, Any]] | None = None,
+    current_run_record: Mapping[str, Any] | None = None,
+    current_active_rows: list[Mapping[str, Any]] | None = None,
+    current_crosswalk_rows: list[Mapping[str, Any]] | None = None,
+    current_fetch_attempts: list[Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Compute the rolling metrics from persisted audit artifacts.
 
@@ -380,8 +422,32 @@ def compute_rolling_metrics_from_disk(
     reads the full history (every successful and failed run) so
     the rolling metrics include the entire observation window, not
     just the current run.
+
+    Rereview 4858328151 §2: the optional ``current_run_record``
+    keyword (plus its optional companion lists) lets the caller
+    include the **current** invocation's provisional outcome in
+    the metrics without first durably appending it to
+    ``run_history.parquet``. The record is treated like every
+    other terminal row for the purposes of
+    ``scheduled_run_count`` / ``successful_run_count`` /
+    ``failed_run_count`` and attempt reconciliation.
+
+    Attempt reconciliation (Rereview 4851615980):
+    ``attempted_fetch_count == successful_attempt_count +
+    failed_attempt_count``. The current invocation's attempt
+    detail contributes to this count when supplied via
+    ``current_fetch_attempts``.
     """
     runs, change_ledger = build_runs_from_disk(audit_root)
+    if current_run_record is not None:
+        runs.append(
+            _current_run_metric_from_record(
+                current_run_record,
+                active_rows=current_active_rows,
+                crosswalk_rows=current_crosswalk_rows,
+                fetch_attempts=current_fetch_attempts,
+            )
+        )
     return compute_reliability_metrics(
         runs=runs,
         change_ledger=change_ledger,

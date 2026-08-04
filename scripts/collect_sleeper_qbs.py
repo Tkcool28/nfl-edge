@@ -437,19 +437,32 @@ def main(argv: list[str] | None = None) -> int:
                     forced_snapshot_id=args.snapshot_id,
                 )
             except OSError as exc:
-                return _terminate(
-                    outcome=RunOutcome.PERSISTENCE_FAILURE,
-                    error_class=type(exc).__name__,
-                    error_message=str(exc),
-                    audit_root=audit_root,
+                # Rereview 4858328151 §4: an OSError that escapes
+                # the orchestrator must NOT cause the CLI to write
+                # a second terminal-history row. The orchestrator
+                # owns the terminal outcome. If something genuinely
+                # raises after the orchestrator's run() began, the
+                # CLI surfaces it as PERSISTENCE_FAILURE without
+                # calling ``_terminate`` (which would attempt a
+                # second history append). The ``orchestrator``
+                # local is referenced so the loop variable is not
+                # lost.
+                print(
+                    f"persistence failure (orchestrator escaped): "
+                    f"{type(exc).__name__}: {exc}",
+                    file=sys.stderr,
                 )
+                return EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE]
             except Exception as exc:  # noqa: BLE001
-                return _terminate(
-                    outcome=RunOutcome.NORMALIZATION_FAILURE,
-                    error_class=type(exc).__name__,
-                    error_message=str(exc),
-                    audit_root=audit_root,
+                # Non-OSError exceptions from inside the
+                # orchestrator are likewise CLI-surfaced without
+                # a second terminal-history row.
+                print(
+                    f"unexpected exception in orchestrator: "
+                    f"{type(exc).__name__}: {exc}",
+                    file=sys.stderr,
                 )
+                return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
             # Rereview 4852878097: when the orchestrator reports
             # PERSISTENCE_FAILURE (e.g. history-write or status-
             # write failure inside the pipeline), surface the

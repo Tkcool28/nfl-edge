@@ -785,8 +785,16 @@ def test_report_failure_leaves_pointer_unchanged(tmp_path: Path) -> None:
 
 
 def test_history_failure_leaves_pointer_unchanged(tmp_path: Path) -> None:
-    """A history-write failure must NOT advance the latest-success
-    pointer (and the pointer file is not even attempted).
+    """A history-write failure must NOT append any row.
+
+    Rereview 4858328151 §3: the latest_snapshot pointer is
+    written BEFORE the terminal-history row. A history-write
+    failure therefore does NOT roll back the pointer (which was
+    durably advanced on SUCCESS) — the pointer stays at the new
+    snapshot, but ``run_history.parquet`` has zero rows for this
+    invocation and ``latest_run_status.json`` is unchanged from
+    the prior run. One row per invocation is preserved as "no
+    row".
     """
     audit_root = tmp_path / "audit"
     audit_root.mkdir()
@@ -803,7 +811,8 @@ def test_history_failure_leaves_pointer_unchanged(tmp_path: Path) -> None:
         forced_snapshot_id="snap-prior",
         forced_observed_at_utc="2026-08-06T22:00:00+00:00",
     )
-    prior_pointer = _read_pointer(audit_root)
+    prior_status_bytes = (audit_root / "latest_run_status.json").read_bytes()
+    prior_history = _read_history(audit_root)
     sitecustomize = tmp_path / "sitecustomize.py"
     sitecustomize.write_text(
         "\n".join(
@@ -856,13 +865,31 @@ def test_history_failure_leaves_pointer_unchanged(tmp_path: Path) -> None:
     )
     outcome = _parse_subprocess_outcome(proc)
     assert outcome["exit_code"] == 13
-    assert _read_pointer(audit_root) == prior_pointer
+    # History must NOT have grown (zero rows for this invocation).
+    new_history = _read_history(audit_root)
+    assert new_history.height == prior_history.height, (
+        f"history grew from {prior_history.height} to "
+        f"{new_history.height} on history-write failure"
+    )
+    # latest_run_status.json must NOT have been overwritten (the
+    # status write was skipped because history failed first).
+    after_status_bytes = (audit_root / "latest_run_status.json").read_bytes()
+    assert after_status_bytes == prior_status_bytes, (
+        "latest_run_status.json was modified despite history failure"
+    )
 
 
 def test_status_failure_leaves_pointer_unchanged(tmp_path: Path) -> None:
-    """A status-write failure must NOT advance the latest-success
-    pointer. History was written first, so the terminal record is
-    preserved.
+    """A status-write failure must not lose the durable terminal
+    record.
+
+    Rereview 4858328151 §3: history is written before status, so
+    a status-write failure leaves ``run_history.parquet`` with
+    one row reflecting the actual run outcome (SUCCESS in this
+    test, because the run succeeded at HTTP/report/HOF/pointer
+    and only the post-persistence status write failed). The
+    pointer was durably advanced before the status write. The
+    status file is unchanged from the prior run.
     """
     audit_root = tmp_path / "audit"
     audit_root.mkdir()
@@ -879,7 +906,8 @@ def test_status_failure_leaves_pointer_unchanged(tmp_path: Path) -> None:
         forced_snapshot_id="snap-prior",
         forced_observed_at_utc="2026-08-06T22:00:00+00:00",
     )
-    prior_pointer = _read_pointer(audit_root)
+    prior_status = _read_status(audit_root)
+    prior_history = _read_history(audit_root)
     sitecustomize = tmp_path / "sitecustomize.py"
     sitecustomize.write_text(
         "\n".join(
@@ -933,7 +961,24 @@ def test_status_failure_leaves_pointer_unchanged(tmp_path: Path) -> None:
     )
     outcome = _parse_subprocess_outcome(proc)
     assert outcome["exit_code"] == 13
-    assert _read_pointer(audit_root) == prior_pointer
+    # History MUST have grown by exactly one row (history is
+    # written before status, so a status failure preserves it).
+    new_history = _read_history(audit_root)
+    assert new_history.height == prior_history.height + 1, (
+        f"history grew by {new_history.height - prior_history.height} rows; "
+        "expected exactly 1"
+    )
+    last_row = new_history.row(new_history.height - 1, named=True)
+    assert last_row["outcome"] == "SUCCESS", (
+        f"last history row outcome={last_row['outcome']!r}; "
+        "expected SUCCESS (history-first ordering preserves the "
+        "actual outcome even when the subsequent status write fails)"
+    )
+    # latest_run_status.json must NOT have been overwritten.
+    new_status = _read_status(audit_root)
+    assert new_status == prior_status, (
+        "latest_run_status.json was overwritten despite failure"
+    )
 
 
 def test_full_success_advances_pointer_exactly_once(tmp_path: Path) -> None:
