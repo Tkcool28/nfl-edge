@@ -197,6 +197,7 @@ Per rereviews `4851615980` and `4859475614`:
 * **Live and HOF reports are derived projections.** They are refreshed only after a successful history commit and are never read to determine committed outcomes.
 * **Derived-view write failures are projection warnings**, not retroactive run-outcome changes. They do NOT mutate the committed `RunOutcome`, do NOT append a second history row, and do NOT change the process exit code. They are surfaced as `projection_warnings` to stderr and journald.
 * **Stale live-report caches are rejected** by `scripts/report_sleeper_qb_audit.py --report live` with `STALE_DERIVED_REPORT` (exit 2) when the cached `source_history` provenance disagrees with the live ledger.
+* **Corrupt / unreadable / schema-invalid authoritative ledgers fail closed** (Rereview 4859731679). The CLI never treats such a ledger as empty history. The exit code is `AUTHORITATIVE_LEDGER_READ_FAILURE` (exit 3) — distinct from the stale-cache exit. Missing or legitimately empty history (file does not exist, zero bytes, or a valid empty parquet) remains a valid empty-authority state.
 
 ## 6.1 Reference fixtures (clean-clone contract)
 

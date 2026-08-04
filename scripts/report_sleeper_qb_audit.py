@@ -4,19 +4,25 @@ This is the entry point a human reviewer (or a test) calls to read the
 audit's most recent outputs without having to know the audit tree
 layout.
 
-Stale-cache detection (Rereview 4859475614 defect 4):
+State matrix (Rereview 4859731679):
 
-For ``--report live``, the cached ``source_history`` provenance block
-is compared against the current ``run_history.parquet`` ledger
-provenance. If any field differs, is missing, or the cached report has
-no ``source_history`` block, the CLI prints ``STALE_DERIVED_REPORT``
-to stdout, includes expected and cached provenance on stderr, and
-returns exit code 2. This is a report-consumer validation error — not
-a ``RunOutcome``.
+* **Missing ledger** (``run_history.parquet`` does not exist) —
+  valid empty authority. Empty provenance is accepted as matching
+  empty cached provenance.
+* **Zero-byte ledger** — valid empty authority. Same behavior.
+* **Valid empty parquet** (height == 0, schema valid) — valid empty
+  authority. Same behavior.
+* **Readable authoritative ledger whose cached provenance disagrees**
+  — ``STALE_DERIVED_REPORT`` (exit 2).
+* **Unreadable / corrupt / schema-invalid authoritative ledger** —
+  ``AUTHORITATIVE_LEDGER_READ_FAILURE`` (exit 3). The CLI does NOT
+  print the cached report payload in this case.
 
-For ``--report hof``, current behavior is preserved (the HOF report
-does not yet carry provenance fields; stale-detection for HOF is
-documented as out-of-scope for this pass).
+Both ``STALE_DERIVED_REPORT`` and
+``AUTHORITATIVE_LEDGER_READ_FAILURE`` are report-consumer validation
+errors — not a ``RunOutcome``.
+
+The CLI does not modify any audit artifact.
 """
 
 from __future__ import annotations
@@ -35,6 +41,26 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 STALE_EXIT_CODE = 2
+AUTHORITY_READ_FAILURE_EXIT_CODE = 3
+
+REQUIRED_HISTORY_COLUMNS: tuple[str, ...] = (
+    "finished_at_utc",
+    "snapshot_id",
+)
+
+PREFERRED_HISTORY_COLUMNS: tuple[str, ...] = (
+    "outcome",
+    "observed_at_utc",
+    "kind",
+)
+
+
+class AuthorityReadError(RuntimeError):
+    """Raised when the authoritative ``run_history.parquet`` ledger
+    cannot be read or validated. The CLI converts this into
+    ``AUTHORITATIVE_LEDGER_READ_FAILURE`` (exit 3) — never a stale-
+    cache exit, never an empty-history provenance.
+    """
 
 
 def _load_config(path: Path) -> Mapping[str, Any]:
@@ -43,53 +69,132 @@ def _load_config(path: Path) -> Mapping[str, Any]:
     return yaml.safe_load(path.read_text())
 
 
+def _validate_history_schema(frame: Any) -> None:
+    """Require the authoritative ledger to expose at least
+    ``finished_at_utc`` and ``snapshot_id`` so a deterministic sort
+    by ``finished_at_utc`` is possible.
+
+    Missing required columns → ``AuthorityReadError``. Missing
+    preferred columns → logged as warnings (does not raise).
+    """
+
+    if not hasattr(frame, "columns"):
+        raise AuthorityReadError(
+            "ledger frame is not a tabular object (no .columns attribute)"
+        )
+    cols = list(frame.columns)
+    missing_required = [c for c in REQUIRED_HISTORY_COLUMNS if c not in cols]
+    if missing_required:
+        raise AuthorityReadError(
+            "authoritative ledger is missing required columns: "
+            f"{', '.join(sorted(missing_required))}"
+        )
+    # Deterministic-sort check: try sorting by finished_at_utc and
+    # observe an exception. A valid ledger accepts a sort without
+    # raising regardless of value types.
+    try:
+        frame.sort("finished_at_utc", descending=True, nulls_last=True)
+    except Exception as exc:  # noqa: BLE001 — fail closed on any sort failure
+        raise AuthorityReadError(
+            "authoritative ledger cannot be deterministically sorted by "
+            f"finished_at_utc: {type(exc).__name__}: {exc}"
+        ) from exc
+
+
+def _read_authoritative_history(history_path: Path) -> Any:
+    """Read ``run_history.parquet`` and validate its schema.
+
+    Returns the validated Polars frame.
+
+    Raises ``AuthorityReadError`` for any of:
+    * the path cannot be stat-ed;
+    * the file is non-empty but cannot be opened;
+    * polars raises on read;
+    * the frame is missing required columns;
+    * the frame cannot be deterministically sorted by
+      ``finished_at_utc``.
+    """
+    import polars as pl
+
+    # ``stat`` failures (e.g. permission denied on the directory)
+    # surface here. We do NOT swallow them into an empty provenance.
+    try:
+        stat_result = history_path.stat()
+    except OSError as exc:
+        raise AuthorityReadError(
+            f"cannot stat ledger at {history_path}: "
+            f"{type(exc).__name__}: {exc}"
+        ) from exc
+
+    # Zero-byte file is a valid empty-history state.
+    if stat_result.st_size == 0:
+        return pl.DataFrame(schema={c: pl.Utf8 for c in REQUIRED_HISTORY_COLUMNS})
+
+    # Open + read. Any OSError or polars error → fail closed.
+    try:
+        frame = pl.read_parquet(history_path)
+    except Exception as exc:  # noqa: BLE001 — any read failure is authority failure
+        raise AuthorityReadError(
+            f"cannot read ledger at {history_path}: "
+            f"{type(exc).__name__}: {exc}"
+        ) from exc
+
+    _validate_history_schema(frame)
+    return frame
+
+
+def _provenance_from_history_frame(frame: Any) -> dict[str, Any]:
+    """Build the provenance dict from a validated ledger frame.
+
+    Assumes the frame has already passed
+    :func:`_validate_history_schema`.
+    """
+
+    height = int(frame.height)
+    if height == 0:
+        return {
+            "source_history_row_count": 0,
+            "source_history_last_finished_at_utc": None,
+            "source_history_last_snapshot_id": None,
+        }
+    sorted_frame = frame.sort(
+        "finished_at_utc", descending=True, nulls_last=True
+    )
+    row = sorted_frame.row(0, named=True)
+    last_finished_val = row.get("finished_at_utc")
+    last_sid_val = row.get("snapshot_id")
+    return {
+        "source_history_row_count": height,
+        "source_history_last_finished_at_utc": (
+            str(last_finished_val) if last_finished_val is not None else None
+        ),
+        "source_history_last_snapshot_id": (
+            str(last_sid_val) if last_sid_val is not None else None
+        ),
+    }
+
+
 def _current_provenance(history_path: Path) -> dict[str, Any]:
     """Return the current ledger provenance from
-    ``run_history.parquet``."""
+    ``run_history.parquet``.
+
+    Behavior (Rereview 4859731679):
+
+    * Missing / zero-byte / valid-empty → valid empty authority.
+    * Any read / validation failure → raises
+      :class:`AuthorityReadError`.
+
+    Empty provenance is NEVER used to represent read failure.
+    """
+
     if not history_path.exists():
         return {
             "source_history_row_count": 0,
             "source_history_last_finished_at_utc": None,
             "source_history_last_snapshot_id": None,
         }
-    try:
-        import polars as pl
-
-        if history_path.stat().st_size == 0:
-            return {
-                "source_history_row_count": 0,
-                "source_history_last_finished_at_utc": None,
-                "source_history_last_snapshot_id": None,
-            }
-        frame = pl.read_parquet(history_path)
-        height = int(frame.height)
-        last_finished: str | None = None
-        last_sid: str | None = None
-        if height > 0 and "finished_at_utc" in frame.columns:
-            sorted_frame = frame.sort(
-                "finished_at_utc", descending=True, nulls_last=True
-            )
-            row = sorted_frame.row(0, named=True)
-            val = row.get("finished_at_utc")
-            last_finished = str(val) if val is not None else None
-        if height > 0 and "snapshot_id" in frame.columns:
-            sorted_frame = frame.sort(
-                "finished_at_utc", descending=True, nulls_last=True
-            )
-            row = sorted_frame.row(0, named=True)
-            val = row.get("snapshot_id")
-            last_sid = str(val) if val is not None else None
-        return {
-            "source_history_row_count": height,
-            "source_history_last_finished_at_utc": last_finished,
-            "source_history_last_snapshot_id": last_sid,
-        }
-    except Exception:  # noqa: BLE001 — malformed parquet → empty provenance
-        return {
-            "source_history_row_count": 0,
-            "source_history_last_finished_at_utc": None,
-            "source_history_last_snapshot_id": None,
-        }
+    frame = _read_authoritative_history(history_path)
+    return _provenance_from_history_frame(frame)
 
 
 def _cached_provenance(report: Mapping[str, Any]) -> dict[str, Any] | None:
@@ -125,12 +230,41 @@ def _provenance_matches(
     return True, None
 
 
-def _print_live(
-    audit_root: Path,
-) -> int:
+def _print_authority_read_failure(
+    history_path: Path,
+    exc: BaseException,
+) -> None:
+    """Emit the AUTHORITATIVE_LEDGER_READ_FAILURE token and the
+    diagnostic details on stderr. Does NOT print the cached report."""
+    print("AUTHORITATIVE_LEDGER_READ_FAILURE", file=sys.stdout)
+    print(
+        f"Authoritative ledger at {history_path} cannot be read "
+        f"or validated.",
+        file=sys.stderr,
+    )
+    print(
+        f"  ledger path:    {history_path}",
+        file=sys.stderr,
+    )
+    print(
+        f"  exception class: {type(exc).__name__}",
+        file=sys.stderr,
+    )
+    print(
+        f"  exception message: {exc}",
+        file=sys.stderr,
+    )
+
+
+def _print_live(audit_root: Path) -> int:
     """Print the live audit report, validating provenance freshness.
 
-    Returns the process exit code.
+    Returns the process exit code:
+
+    * 0 — provenance matches;
+    * 2 — STALE_DERIVED_REPORT (readable authority, stale cache);
+    * 3 — AUTHORITATIVE_LEDGER_READ_FAILURE (unreadable / invalid
+      authority).
     """
     report_path = audit_root / "reports" / "sleeper_qb_live_audit.json"
     history_path = audit_root / "run_history.parquet"
@@ -138,7 +272,13 @@ def _print_live(
         print(f"ERROR: report not found at {report_path}", file=sys.stderr)
         return 1
     payload: dict[str, Any] = json.loads(report_path.read_text())
-    expected = _current_provenance(history_path)
+
+    try:
+        expected = _current_provenance(history_path)
+    except AuthorityReadError as exc:
+        _print_authority_read_failure(history_path, exc)
+        return AUTHORITY_READ_FAILURE_EXIT_CODE
+
     cached = _cached_provenance(payload)
     matches, mismatch_field = _provenance_matches(expected, cached)
     if not matches:
@@ -183,7 +323,9 @@ def main() -> int:
         description=(
             "Print the latest Sleeper QB source-audit report. "
             "Stale derived live reports are rejected with "
-            "STALE_DERIVED_REPORT (exit 2)."
+            "STALE_DERIVED_REPORT (exit 2). Unreadable / invalid "
+            "authoritative ledgers are rejected with "
+            "AUTHORITATIVE_LEDGER_READ_FAILURE (exit 3)."
         ),
     )
     parser.add_argument(
