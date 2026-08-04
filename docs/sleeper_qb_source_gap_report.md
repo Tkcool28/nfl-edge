@@ -1,9 +1,9 @@
 # Sleeper QB Source Gap Report
 
-**Status**: Bounded live source-feasibility audit (interim).
-**Date**: August 3, 2026
-**Repository**: `Tkcool28/nfl-edge`
-**Branch**: `feat/sleeper-qb-source-audit-v1` (stacked on `feat/development-walk-forward-qb-elo-v1`)
+|**Status**: Bounded live source-feasibility audit (interim).
+|**Date**: August 3, 2026 (sub-phase C revision 2026-08-04)
+|**Repository**: `Tkcool28/nfl-edge`
+|**Branch**: `feat/sleeper-qb-source-audit-v1` (refreshed onto merged `main`; based on `cd4a483`)
 
 ## 1. What this report covers
 
@@ -81,14 +81,23 @@ and updated on every run.
 
 ## 6. Operational gaps
 
-- The audit's lock file (`data/source_audits/sleeper_qb_v1/audit.lock`)
-  is a plain sentinel. If the harness is killed mid-run the lock may
-  survive and block the next collection. The CLI refuses to start
-  while the lock exists; an operator must remove the file manually.
+- The audit's lock helper (`nfl_edge.source_audits.sleeper_qb_v1.locking`)
+  is a two-layer POSIX advisory lock: an `O_CREAT|O_EXCL` ownership
+  sentinel + `fcntl.flock(LOCK_EX|LOCK_NB)`. The helper honors
+  `--lock-timeout-seconds` (default 0 = fail fast) and recovers
+  stale owners whose PID is no longer alive (`kill(pid, 0)`
+  tripwire). A dead harness does not leave the next collection
+  blocked; the owner sentinel is overwritten on the next acquire.
 - The twice-daily timer is documented to drift up to one hour
   seasonally because it is anchored to fixed UTC clock-times rather
   than the local Mountain Time clock. The deviation is acceptable
   for a source-feasibility audit.
+- All mutable artifacts are written through
+  `atomic_io.atomic_write_parquet` / `atomic_write_text` /
+  `atomic_append_parquet` (temp-file + fsync + `os.replace`).
+  The prior valid artifact is byte-identical until the new one
+  is fully durable; a forced write failure cannot leave a
+  half-written file behind.
 
 ## 7. Unsupported claims (explicit)
 

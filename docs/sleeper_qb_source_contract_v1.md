@@ -1,10 +1,10 @@
 # Sleeper QB Source Contract v1
 
-**Status**: Source-feasibility audit, not a model input.
-**Version**: 1.0
-**Date**: August 3, 2026
-**Repository**: `Tkcool28/nfl-edge`
-**Branch**: `feat/sleeper-qb-source-audit-v1` (stacked on `feat/development-walk-forward-qb-elo-v1`)
+|**Status**: Source-feasibility audit, not a model input.
+|**Version**: 1.0
+|**Date**: August 3, 2026 (sub-phase C revision 2026-08-04)
+|**Repository**: `Tkcool28/nfl-edge`
+|**Branch**: `feat/sleeper-qb-source-audit-v1` (refreshed onto merged `main`; based on `cd4a483`)
 
 ## 1. Purpose
 
@@ -78,10 +78,35 @@ The audit will not declare reliability from one successful call.
 
 ## 5. Bounded retry
 
-The client retries up to four times with exponential backoff (1s, 2s,
-4s, 0s). On any non-2xx or network exception it persists an audit
-envelope rather than the upstream body, so the failure case is itself
-auditable.
+The client retries up to three times (initial + two retries)
+with exponential backoff (`1.0s`, `2.0s`) placed **only
+between failed attempts**, never before the first attempt.
+
+| Constant | Value |
+| --- | --- |
+| `DEFAULT_TIMEOUT_SECONDS` | 10.0 |
+| `DEFAULT_RETRY_BACKOFF_SECONDS` | `(1.0, 2.0)` |
+| `MAX_ATTEMPTS` | 3 |
+| Worst-case total | 3 × 10s + (1.0 + 2.0)s = **33.0s** |
+| systemd `TimeoutStartSec` | 120s (87s headroom) |
+| Spec target `TimeoutStartSec` | 60s (27s headroom) |
+
+The audit never raises the service timeout merely to
+accommodate a longer client retry budget. On any non-2xx or
+network exception it persists an audit envelope rather than
+the upstream body, so the failure case is itself auditable.
+
+## 5.1 Lock + write atomicity
+
+The audit uses an OS-advisory file lock with two layers
+(`O_CREAT|O_EXCL` ownership sentinel + `fcntl.flock`). The
+helper honors `--lock-timeout-seconds` (default 0 = fail
+fast) and recovers stale owners whose PID is no longer alive
+(`kill(pid, 0)` tripwire). Every mutable artifact is written
+through `atomic_io.atomic_write_parquet` / `atomic_write_text`
+/ `atomic_append_parquet`, which uses temp-file + fsync +
+`os.replace`. The prior valid artifact remains byte-identical
+until the new one is fully durable.
 
 ## 6. Storage
 
@@ -89,15 +114,39 @@ auditable.
 | --- | --- |
 | `data/source_audits/sleeper_qb_v1/raw/YYYY/MM/DD/*.bin` | Raw bytes per attempt |
 | `data/source_audits/sleeper_qb_v1/fetch_ledger.parquet` | One row per attempt |
+| `data/source_audits/sleeper_qb_v1/latest_snapshot.json` | Pointer to the most recent successful snapshot |
+| `data/source_audits/sleeper_qb_v1/latest_run_status.json` | Terminal outcome of the most recent run |
+| `data/source_audits/sleeper_qb_v1/hof_pregame_pointer.json` | Frozen pregame snapshot reference (HOF Game) |
 | `data/source_audits/sleeper_qb_v1/normalized/qb_snapshots.parquet` | Active QB snapshots |
 | `data/source_audits/sleeper_qb_v1/normalized/qb_inactive_snapshots.parquet` | Inactive QB snapshots (defensive tripwire) |
-| `data/source_audits/sleeper_qb_v1/normalized/qb_evidence_states.parquet` | Per-QB audit-only state |
+| `data/source_audits/sleeper_qb_v1/normalized/qb_evidence_states.parquet` | Per-QB audit-only state (with `snapshot_id` + `observed_at_utc`) |
 | `data/source_audits/sleeper_qb_v1/normalized/qb_identity_crosswalk.parquet` | Sleeper -> nflverse crosswalk |
-| `data/source_audits/sleeper_qb_v1/normalized/qb_change_ledger.parquet` | Snapshot-to-snapshot change events |
-| `data/source_audits/sleeper_qb_v1/normalized/hof_game_observation.parquet` | Hall of Fame Game observation rows |
-| `data/source_audits/sleeper_qb_v1/reports/sleeper_qb_live_audit.{md,json}` | Rolling live audit report |
+| `data/source_audits/sleeper_qb_v1/normalized/qb_change_ledger.parquet` | Snapshot-to-snapshot change events (prior+current snapshot ids) |
+| `data/source_audits/sleeper_qb_v1/normalized/hof_game_observation.parquet` | Hall of Fame Game observation rows (pregame+postgame per QB) |
+| `data/source_audits/sleeper_qb_v1/reference/manifest.json` | Reference-fixture SHA-256 manifest (tracked) |
+| `data/source_audits/sleeper_qb_v1/reference/hof_game_2026_fixture.parquet` | HOF Game fixture (tracked, checksum-verified) |
+| `data/source_audits/sleeper_qb_v1/reference/nflverse_player_identity_pre2025.parquet` | nflverse identity reference (tracked, checksum-verified) |
+| `data/source_audits/sleeper_qb_v1/reports/sleeper_qb_live_audit.{md,json}` | Rolling live audit report (aggregates every persisted run) |
 | `data/source_audits/sleeper_qb_v1/reports/sleeper_hof_game_observation.{md,json}` | HOF Game observation report |
-| `data/source_audits/sleeper_qb_v1/audit.lock` | Overlap-prevention lock file |
+| `data/source_audits/sleeper_qb_v1/audit.lock` | Overlap-prevention lock file (POSIX advisory) |
+
+## 6.1 Reference fixtures (clean-clone contract)
+
+The audit ships two reference fixtures and a manifest. Every
+fresh checkout must contain:
+
+* `reference/hof_game_2026_fixture.parquet`
+* `reference/nflverse_player_identity_pre2025.parquet`
+* `reference/manifest.json` (SHA-256 manifest for both)
+
+The CLI verifies every fixture against the manifest before
+each run; a missing or tampered fixture fails the run with
+`REFERENCE_FAILURE` (exit 21). The crosswalk's exact-ID
+priority order is: Sleeper id, GSIS, ESPN, sportradar, Yahoo,
+fantasy_data, rotowire. When two nflverse rows share an exact
+id, the crosswalk emits `is_matched=False`,
+`review_required=True`, and a descriptive `conflict_reason`;
+it never silently selects the first row.
 
 ## 7. Allowed evidence states
 
@@ -140,21 +189,18 @@ audit-config time.
 
 | Field | Value |
 |---|---|
-| Source function | `nflreadpy.load_ff_playerids()` |
+| Source function | `nflreadpy.load_ff_playerids()` (offline build) |
 | Source artifact | `data/source_audits/sleeper_qb_v1/reference/nflverse_player_identity_pre2025.parquet` |
-| All seasons present before filter | `db_season == 2026` (only) |
 | Filter expression | `position == "QB" AND db_season != 2025` |
-| Row count before filter | 12,470 |
-| Rows where `db_season == 2025` before filter | 0 |
+| Total row count (all positions, all seasons) | 12,470 |
+| Rows where `db_season == 2025` before filter | 0 (the shipped reference is the 2024 nflreadpy snapshot) |
 | Row count after `position == "QB"` filter | 682 |
 | Row count after `db_season != 2025` filter | 682 |
-| Row count where `db_season == 2026` (used) | 682 |
 | Identity metadata only? | **Yes** (no fit, predict, score, or report is performed) |
 
-The wording "db_season=2026 only" and "2025 rows stripped" reconciles:
-the table is a single static snapshot whose only `db_season` value is
-2026. The 2025 strip is a defensive tripwire that activates only if
-the table is ever replaced with a version that contains 2025 rows.
+The 2025 strip is a defensive tripwire that activates only if
+the table is ever replaced with a version that contains 2025
+rows; today the shipped file contains zero such rows.
 
 ## 9. Timer schedule
 

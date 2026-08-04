@@ -27,3 +27,13 @@ nflverse_qb_path: data/source_audits/sleeper_qb_v1/reference/nflverse_player_ide
 # than this many seconds. The twice-daily timer runs 12 hours apart, so
 # a 6-hour threshold is a defensive tripwire.
 staleness_threshold_seconds: 21600
+
+# Reference-artifact manifest. Every entry must exist under
+# ``audit_root/reference/`` and have the exact SHA-256 listed here.
+# The audit's verify_reference_manifest helper raises
+# ReferenceFailure if any entry is missing or mismatched, so a
+# tampered or missing fixture fails the run rather than silently
+# passing through the crosswalk or HOF workflow. The manifest is
+# shipped as part of the repository so a clean clone + audit
+# produces a verifiable outcome without external setup.
+reference_manifest: data/source_audits/sleeper_qb_v1/reference/manifest.json

@@ -134,9 +134,18 @@ def main(argv: list[str] | None = None) -> int:
     audit_root.mkdir(parents=True, exist_ok=True)
 
     reference_manifest: list[ReferenceArtifact] = []
-    if args.reference_manifest is not None and args.reference_manifest.exists():
-        raw = json.loads(args.reference_manifest.read_text())
-        for entry in raw:
+    # CLI flag overrides config. If neither is set, the audit
+    # silently skips reference verification — a deliberate opt-in
+    # to keep the default behavior identical to the historical
+    # sub-phase A contract.
+    manifest_source: Path | None = None
+    if args.reference_manifest is not None:
+        manifest_source = args.reference_manifest
+    elif "reference_manifest" in config:
+        manifest_source = Path(str(config["reference_manifest"]))
+    if manifest_source is not None and manifest_source.exists():
+        raw = json.loads(manifest_source.read_text())
+        for entry in raw.get("artifacts", []):
             reference_manifest.append(
                 ReferenceArtifact(
                     path=str(entry["path"]),
