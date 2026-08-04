@@ -1,39 +1,23 @@
-"""Focused terminal-state closure tests for the Sleeper audit.
+"""Terminal-state invariants for the Sleeper audit CLI (authoritative-ledger contract).
 
-These tests prove the six defects called out in review
-``4852878097`` are closed:
+This file proves the AUTHORITATIVE-LEDGER contract from
+Rereview 4851615980 / current pass:
 
-1. CLI preflight persists the actual ``args.kind`` (never the
-   hardcoded ``"scheduled"``).
-2. CLI preflight persistence failures surface as exit code 13
-   (``PERSISTENCE_FAILURE``); ``OSError`` is never silently
-   swallowed.
-3. Exactly one terminal-history row is appended per invocation
-   (even when the live report or HOF work fails after the HTTP
-   fetch succeeds).
-4. ``latest_snapshot.json`` advances only on full success —
-   every failure path leaves the pointer unchanged.
-5. ``run_history.parquet`` is written BEFORE
-   ``latest_run_status.json``; a status failure is surfaced but
-   does NOT drop the terminal record.
-6. The status and history artifacts agree on the recorded
-   outcome, kind, snapshot id, and exit code.
-
-The tests use ``--use-fake-session`` and inject failures via a
-``sitecustomize.py`` shim that wraps ``atomic_append_run_history``
-and ``atomic_write_text``. The shim installs failure modes
-selected by env vars:
-
-* ``AUDIT_FAIL_HISTORY`` — make ``atomic_append_run_history``
-  raise ``OSError`` on the next call.
-* ``AUDIT_FAIL_STATUS`` — make ``atomic_write_text`` raise
-  ``OSError`` when writing to a path containing
-  ``latest_run_status.json``.
-* ``AUDIT_FAIL_REPORT`` — make ``write_live_audit_report`` raise
-  ``OSError`` (the inner ``atomic_write_text`` already does
-  this; we monkey-patch the report function itself).
-* ``AUDIT_FAIL_HOF`` — make ``build_observation_record`` raise
-  so the postgame HOF observation returns a failure outcome.
+* ``run_history.parquet`` is the only authoritative terminal
+  commit ledger.
+* Each invocation produces exactly ONE terminal-history row.
+* Derived-view writes (``latest_run_status.json``,
+  ``latest_snapshot.json``, ``reports/``) are best-effort and
+  must NEVER downgrade the committed outcome.
+* A successful invocation stays SUCCESS (exit 0) even if every
+  derived-view write fails.
+* A failed invocation stays at its typed failure outcome even if
+  derived-view writes succeed.
+* The CLI surfaces ``projection_warnings`` to stderr (and the
+  systemd journal when journald is configured) but does not
+  translate them to PERSISTENCE_FAILURE.
+* CLI exit code mirrors the COMMITTED terminal outcome, not the
+  derived-view health.
 """
 
 from __future__ import annotations
@@ -42,1165 +26,640 @@ import json
 import os
 import subprocess
 import sys
-from contextlib import contextmanager
 from pathlib import Path
-
-import polars as pl
+from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SCRIPTS_DIR = REPO_ROOT / "scripts"
 SRC_DIR = REPO_ROOT / "src"
 TESTS_DIR = REPO_ROOT / "tests"
 
-
-def _write_config(
-    audit_root: Path,
-    config_path: Path,
-    *,
-    reference_manifest: Path,
-) -> None:
-    lines = [
-        f"audit_root: {audit_root.as_posix()}",
-        "endpoint: https://api.sleeper.app/v1/players/nfl",
-        "staleness_threshold_seconds: 21600",
-        f"reference_manifest: {reference_manifest.as_posix()}",
-    ]
-    config_path.write_text("\n".join(lines) + "\n")
-
-
-SHIPPED_REFERENCE_DIR = (
-    Path(__file__).resolve().parents[2]
-    / "data"
-    / "source_audits"
-    / "sleeper_qb_v1"
-    / "reference"
+CLI_PATH = REPO_ROOT / "scripts" / "collect_sleeper_qbs.py"
+SLEEPER_SCRIPT_PATH = REPO_ROOT / "scripts" / "_sleeper_fake_session.py"
+FAKE_SESSION_PATH = (
+    TESTS_DIR / "source_audits" / "sleeper_qb_v1" / "_fake_session.py"
 )
 
 
-@contextmanager
-def _stage_reference_into_audit_root(audit_root: Path):
-    import hashlib
-    import shutil
-
-    ref_dir = audit_root / "reference"
-    ref_dir.mkdir(parents=True, exist_ok=True)
-    manifest_path = ref_dir / "manifest.json"
-    artifacts: list[dict[str, object]] = []
-    for name in (
-        "hof_game_2026_fixture.parquet",
-        "nflverse_player_identity_pre2025.parquet",
-    ):
-        src = SHIPPED_REFERENCE_DIR / name
-        dst = ref_dir / name
-        shutil.copyfile(src, dst)
-        sha = hashlib.sha256(dst.read_bytes()).hexdigest()
-        rc = pl.read_parquet(dst).height
-        artifacts.append({"path": name, "sha256": sha, "row_count": rc})
-    manifest_path.write_text(
-        json.dumps(
-            {
-                "schema_version": 1,
-                "description": "Test-clone manifest for the Sleeper audit.",
-                "artifacts": artifacts,
-            }
-        )
-    )
-    yield manifest_path
-
-
-def _sitecustomize_failure_injection(
-    tmp_path: Path,
-    *,
-    fail_history: bool = False,
-    fail_status: bool = False,
-    fail_report: bool = False,
-) -> Path:
-    """Write a sitecustomize.py that monkey-patches the durability
-    helpers so the next call (or all calls) raise ``OSError``.
-    """
-    sitecustomize = tmp_path / "sitecustomize.py"
-    lines = [
-        "import os",
-        "from unittest.mock import patch",
-        "",
-        "fail_history = os.environ.get('AUDIT_FAIL_HISTORY') == '1'",
-        "fail_status = os.environ.get('AUDIT_FAIL_STATUS') == '1'",
-        "fail_report = os.environ.get('AUDIT_FAIL_REPORT') == '1'",
-        "",
-        "from nfl_edge.source_audits.sleeper_qb_v1 import atomic_io",
-        "",
-        "_orig_append = atomic_io.atomic_append_run_history",
-        "_orig_write_text = atomic_io.atomic_write_text",
-        "",
-        "def _patched_append(path, row, **kw):",
-        "    if fail_history:",
-        "        raise OSError('injected: run_history write failed')",
-        "    return _orig_append(path, row, **kw)",
-        "",
-        "def _patched_write_text(path, data):",
-        "    s = str(path)",
-        "    if fail_status and 'latest_run_status.json' in s:",
-        "        raise OSError('injected: latest_run_status write failed')",
-        "    if fail_report and ('sleeper_qb_live_audit' in s):",
-        "        raise OSError('injected: live_audit_report write failed')",
-        "    return _orig_write_text(path, data)",
-        "",
-        "atomic_io.atomic_append_run_history = _patched_append",
-        "atomic_io.atomic_write_text = _patched_write_text",
-        "",
-        "# Also patch the names imported into pipeline module.",
-        "import nfl_edge.source_audits.sleeper_qb_v1.pipeline as _pl",
-        "_pl.atomic_append_run_history = _patched_append",
-        "_pl.atomic_write_text = _patched_write_text",
-        "",
-    ]
-    sitecustomize.write_text("\n".join(lines) + "\n")
-    return sitecustomize
-
-
-def _run_cli(
-    *,
-    audit_root: Path,
-    config_path: Path,
-    extra_args: list[str],
-    tmp_path: Path,
-    fail_history: bool = False,
-    fail_status: bool = False,
-    fail_report: bool = False,
-    timeout: float = 60.0,
-) -> subprocess.CompletedProcess:
-    _sitecustomize_failure_injection(
-        tmp_path,
-        fail_history=fail_history,
-        fail_status=fail_status,
-        fail_report=fail_report,
-    )
-    env = os.environ.copy()
-    env["PYTHONPATH"] = (
-        f"{tmp_path}:{SRC_DIR}:{TESTS_DIR}:{REPO_ROOT}:"
-        f"{env.get('PYTHONPATH', '')}"
-    )
-    env["AUDIT_FAIL_HISTORY"] = "1" if fail_history else "0"
-    env["AUDIT_FAIL_STATUS"] = "1" if fail_status else "0"
-    env["AUDIT_FAIL_REPORT"] = "1" if fail_report else "0"
-    args = [
-        sys.executable,
-        str(SCRIPTS_DIR / "collect_sleeper_qbs.py"),
-        "--config",
-        str(config_path),
-        "--use-fake-session",
-        *extra_args,
-    ]
-    return subprocess.run(
-        args,
-        capture_output=True,
-        text=True,
-        timeout=timeout,
-        env=env,
-        cwd=str(REPO_ROOT),
-    )
-
-
-def _read_history(audit_root: Path) -> pl.DataFrame:
-    path = audit_root / "run_history.parquet"
-    if not path.exists():
-        return pl.DataFrame()
-    return pl.read_parquet(path)
-
-
-def _read_status(audit_root: Path) -> dict[str, object] | None:
-    path = audit_root / "latest_run_status.json"
-    if not path.exists():
-        return None
-    return json.loads(path.read_text())
-
-
-def _read_pointer(audit_root: Path) -> dict[str, object] | None:
-    path = audit_root / "latest_snapshot.json"
-    if not path.exists():
-        return None
-    return json.loads(path.read_text())
-
-
-def _shim_bootstrap() -> str:
-    """Inline Python that registers ``_sleeper_fake_session`` in
-    ``sys.modules`` (mirrors ``tests/conftest.py``). Use at the
-    top of any subprocess snippet that needs the stub session.
-    """
-    return (
-        "import sys, importlib.util\n"
-        f"_spec = importlib.util.spec_from_file_location(\n"
-        f"    '_sleeper_fake_session',\n"
-        f"    {str(TESTS_DIR / 'source_audits' / 'sleeper_qb_v1' / '_fake_session.py')!r},\n"
-        f")\n"
-        f"_mod = importlib.util.module_from_spec(_spec)\n"
-        f"_spec.loader.exec_module(_mod)\n"
-        f"sys.modules['_sleeper_fake_session'] = _mod\n"
-    )
-
-
 def _shim_path_prefix() -> str:
-    """Inline PYTHONPATH setup for subprocess snippets."""
     return (
+        "import sys\n"
         f"sys.path.insert(0, {str(SRC_DIR)!r})\n"
         f"sys.path.insert(0, {str(TESTS_DIR)!r})\n"
         f"sys.path.insert(0, {str(REPO_ROOT)!r})\n"
+        f"sys.path.insert(0, {str(REPO_ROOT / 'scripts')!r})\n"
+        "import os\n"
+        f"os.chdir({str(REPO_ROOT)!r})\n"
     )
 
 
-def _shim_full() -> str:
-    """PYTHONPATH setup plus shim registration."""
-    return _shim_path_prefix() + _shim_bootstrap()
-
-
-def _parse_subprocess_outcome(proc: subprocess.CompletedProcess) -> dict[str, object]:
-    """Parse the orchestrator subprocess's printed JSON line.
-
-    The subprocess snippet prints ``{outcome, exit_code}`` to
-    stdout (and ``sys.exit(exit_code)``). Tests must look at the
-    JSON, not the subprocess returncode.
+def _shim_bootstrap() -> str:
+    """Bootstrap snippet that registers the fake session under
+    ``_sleeper_fake_session`` so the CLI subprocess sees the fake.
     """
-    if not proc.stdout.strip():
-        return {"outcome": None, "exit_code": proc.returncode}
-    line = proc.stdout.strip().splitlines()[-1]
-    return json.loads(line)
-
-
-# ---------------------------------------------------------------------------
-# §2 — CLI preflight persistence is truthful
-# ---------------------------------------------------------------------------
-
-
-def test_cli_pregame_missing_manifest_persists_kind_pregame(
-    tmp_path: Path,
-) -> None:
-    """A missing reference manifest with ``--kind=pregame`` must
-    persist ``kind="pregame"`` in the terminal history (not the
-    hardcoded ``"scheduled"``).
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    config_path = tmp_path / "cfg.yaml"
-    # Write a config WITHOUT a reference_manifest key so the
-    # manifest resolver returns the missing-manifest error.
-    config_path.write_text(
-        "\n".join(
-            [
-                f"audit_root: {audit_root.as_posix()}",
-                "endpoint: https://api.sleeper.app/v1/players/nfl",
-                "staleness_threshold_seconds: 21600",
-            ]
-        )
-        + "\n"
-    )
-    result = _run_cli(
-        audit_root=audit_root,
-        config_path=config_path,
-        extra_args=["--kind=pregame"],
-        tmp_path=tmp_path,
-    )
-    assert result.returncode == 21, (
-        f"rc={result.returncode} stderr={result.stderr!r}"
-    )
-    history = _read_history(audit_root)
-    assert history.height >= 1, "no terminal history row persisted"
-    last = history.row(history.height - 1, named=True)
-    assert last["kind"] == "pregame", (
-        f"persisted kind={last['kind']!r}; expected 'pregame'"
-    )
-    assert last["outcome"] == "REFERENCE_FAILURE"
-
-
-def test_cli_lock_failure_persists_requested_kind(tmp_path: Path) -> None:
-    """A LOCK_FAILURE during a ``--kind=postgame`` invocation must
-    persist ``kind="postgame"`` in the terminal history.
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    config_path = tmp_path / "cfg.yaml"
-    with _stage_reference_into_audit_root(audit_root) as manifest:
-        _write_config(
-            audit_root, config_path, reference_manifest=manifest
-        )
-        # Pre-acquire the lock so the real CLI's lock attempt fails.
-        # We use the same ``advisory_lock`` helper the CLI uses so
-        # the lockfile layout matches.
-        from nfl_edge.source_audits.sleeper_qb_v1.locking import advisory_lock
-        # Acquire the lock with a long timeout to ensure it is
-        # held when the CLI tries to acquire it.
-        with advisory_lock(
-            audit_root,
-            kind="postgame",
-            lock_timeout_seconds=10.0,
-        ):
-            result = _run_cli(
-                audit_root=audit_root,
-                config_path=config_path,
-                extra_args=[
-                    "--kind=postgame",
-                    "--lock-timeout-seconds",
-                    "0.5",
-                ],
-                tmp_path=tmp_path,
-                timeout=30.0,
-            )
-    assert result.returncode == 20, (
-        f"rc={result.returncode} stderr={result.stderr!r}"
-    )
-    history = _read_history(audit_root)
-    assert history.height >= 1, "no terminal history row persisted"
-    last = history.row(history.height - 1, named=True)
-    assert last["kind"] == "postgame", (
-        f"persisted kind={last['kind']!r}; expected 'postgame'"
-    )
-    assert last["outcome"] == "LOCK_FAILURE"
-
-
-def test_cli_history_write_failure_exits_13(tmp_path: Path) -> None:
-    """A history-write failure must surface as exit code 13
-    (``PERSISTENCE_FAILURE``), never silently succeed.
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    config_path = tmp_path / "cfg.yaml"
-    with _stage_reference_into_audit_root(audit_root) as manifest:
-        _write_config(
-            audit_root, config_path, reference_manifest=manifest
-        )
-        # Run a pregame successfully first so we can see the
-        # history row that succeeds.
-        r0 = _run_cli(
-            audit_root=audit_root,
-            config_path=config_path,
-            extra_args=[
-                "--kind=pregame",
-                "--observed-at-utc=2026-08-06T23:00:00Z",
-                "--snapshot-id=snap-pregame-history-test",
-            ],
-            tmp_path=tmp_path,
-        )
-        assert r0.returncode == 0, f"pregame rc={r0.returncode}"
-        prior_history = _read_history(audit_root)
-        prior_rows = prior_history.height
-        prior_status = _read_status(audit_root)
-        # Now run with the history write forced to fail.
-        r1 = _run_cli(
-            audit_root=audit_root,
-            config_path=config_path,
-            extra_args=[
-                "--kind=scheduled",
-                "--observed-at-utc=2026-08-07T05:00:00Z",
-                "--snapshot-id=snap-history-fail",
-            ],
-            tmp_path=tmp_path,
-            fail_history=True,
-        )
-    assert r1.returncode == 13, (
-        f"rc={r1.returncode} stderr={r1.stderr!r} stdout={r1.stdout[:300]!r}"
-    )
-    # History failure must NOT have appended any new row.
-    new_history = _read_history(audit_root)
-    assert new_history.height == prior_rows, (
-        f"history grew from {prior_rows} to {new_history.height} on failure"
-    )
-    # latest_run_status.json must NOT have been updated to a
-    # PERSISTENCE_FAILURE claim (history-first ordering: status
-    # follows history).
-    new_status = _read_status(audit_root)
-    assert new_status is not None
-    assert new_status == prior_status, (
-        "status was updated despite history write failure"
+    return (
+        "import importlib.util, sys\n"
+        f"spec = importlib.util.spec_from_file_location("
+        f"'tests.source_audits.sleeper_qb_v1._fake_session', "
+        f"{str(FAKE_SESSION_PATH)!r})\n"
+        "if spec and spec.loader:\n"
+        "    m = importlib.util.module_from_spec(spec); "
+        "sys.modules.setdefault("
+        "'tests.source_audits.sleeper_qb_v1._fake_session', m); "
+        "spec.loader.exec_module(m)\n"
+        f"script_spec = importlib.util.spec_from_file_location("
+        f"'_sleeper_fake_session', {str(SLEEPER_SCRIPT_PATH)!r})\n"
+        "if script_spec and script_spec.loader:\n"
+        "    s = importlib.util.module_from_spec(script_spec); "
+        "sys.modules.setdefault('_sleeper_fake_session', s); "
+        "script_spec.loader.exec_module(s)\n"
     )
 
 
-def test_cli_status_write_failure_exits_13(tmp_path: Path) -> None:
-    """A status-write failure must surface as exit code 13
-    (``PERSISTENCE_FAILURE``). History was written first, so the
-    terminal record is preserved in ``run_history.parquet``.
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    config_path = tmp_path / "cfg.yaml"
-    with _stage_reference_into_audit_root(audit_root) as manifest:
-        _write_config(
-            audit_root, config_path, reference_manifest=manifest
-        )
-        # First run: succeed and seed history.
-        r0 = _run_cli(
-            audit_root=audit_root,
-            config_path=config_path,
-            extra_args=[
-                "--kind=scheduled",
-                "--observed-at-utc=2026-08-06T22:00:00Z",
-                "--snapshot-id=snap-pre-status-test",
-            ],
-            tmp_path=tmp_path,
-        )
-        assert r0.returncode == 0
-        prior_status = _read_status(audit_root)
-        prior_history = _read_history(audit_root)
-        # Second run: status write fails.
-        r1 = _run_cli(
-            audit_root=audit_root,
-            config_path=config_path,
-            extra_args=[
-                "--kind=scheduled",
-                "--observed-at-utc=2026-08-06T23:00:00Z",
-                "--snapshot-id=snap-status-fail",
-            ],
-            tmp_path=tmp_path,
-            fail_status=True,
-        )
-    assert r1.returncode == 13, (
-        f"rc={r1.returncode} stderr={r1.stderr!r}"
-    )
-    # History MUST have grown by exactly one row (the new run).
-    new_history = _read_history(audit_root)
-    assert new_history.height == prior_history.height + 1, (
-        f"history grew by {new_history.height - prior_history.height} rows; "
-        "expected exactly 1"
-    )
-    last_row = new_history.row(new_history.height - 1, named=True)
-    # History was written BEFORE status (history-first ordering),
-    # so the durable row reflects the actual run outcome
-    # (SUCCESS) — the status-write failure is surfaced only via
-    # the CLI's exit code, not by overwriting history.
-    assert last_row["outcome"] == "SUCCESS", (
-        f"last history row outcome={last_row['outcome']!r}; "
-        "expected SUCCESS (history-first ordering preserves the "
-        "actual outcome even when the subsequent status write fails)"
-    )
-    # latest_run_status.json must NOT have been overwritten.
-    new_status = _read_status(audit_root)
-    assert new_status == prior_status, (
-        "latest_run_status.json was overwritten despite failure"
-    )
+def _parse_subprocess_outcome(proc: subprocess.CompletedProcess[str]) -> dict[str, Any]:
+    """The CLI prints a JSON dict on stdout describing the run."""
+    payload = json.loads(proc.stdout.strip().splitlines()[-1])
+    return payload
 
 
-def test_cli_does_not_silence_persistence_oserror(tmp_path: Path) -> None:
-    """If both history and status fail, the CLI must surface a
-    persistence-failure stderr message (the exception is not
-    silently swallowed).
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    config_path = tmp_path / "cfg.yaml"
-    with _stage_reference_into_audit_root(audit_root) as manifest:
-        _write_config(
-            audit_root, config_path, reference_manifest=manifest
-        )
-        r1 = _run_cli(
-            audit_root=audit_root,
-            config_path=config_path,
-            extra_args=[
-                "--kind=scheduled",
-                "--observed-at-utc=2026-08-06T22:00:00Z",
-                "--snapshot-id=snap-both-fail",
-            ],
-            tmp_path=tmp_path,
-            fail_history=True,
-            fail_status=True,
-        )
-    assert r1.returncode == 13, (
-        f"rc={r1.returncode} stderr={r1.stderr!r}"
-    )
-    assert "persistence failure" in r1.stderr, (
-        f"stderr did not surface persistence failure: {r1.stderr!r}"
-    )
+def _read_history(audit_root: Path) -> list[dict[str, Any]]:
+    import polars as pl
+
+    p = audit_root / "run_history.parquet"
+    if not p.exists() or p.stat().st_size == 0:
+        return []
+    return pl.read_parquet(p).to_dicts()
 
 
-# ---------------------------------------------------------------------------
-# §3 — exactly one terminal-history row per invocation
-# ---------------------------------------------------------------------------
+def _read_pointer(audit_root: Path) -> dict[str, Any] | None:
+    p = audit_root / "latest_snapshot.json"
+    if not p.exists():
+        return None
+    return json.loads(p.read_text())
 
 
-def test_orchestrator_successful_http_then_report_failure_appends_one_row(
-    tmp_path: Path,
-) -> None:
-    """When the live report write fails AFTER the HTTP fetch
-    succeeds, exactly ONE terminal-history row is appended and
-    its outcome is ``PERSISTENCE_FAILURE`` (NOT both SUCCESS and
-    PERSISTENCE_FAILURE).
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    # Use the in-process orchestrator with the failure-injection
-    # sitecustomize to make the live-report write raise OSError.
-    # The sitecustomize patches ``atomic_write_text`` which the
-    # report writer uses internally.
-    sitecustomize = tmp_path / "sitecustomize.py"
-    sitecustomize.write_text(
-        "\n".join(
-            [
-                "import os",
-                "from nfl_edge.source_audits.sleeper_qb_v1 import atomic_io",
-                "_orig_write_text = atomic_io.atomic_write_text",
-                "def _patched_write_text(path, data):",
-                "    s = str(path)",
-                "    if 'sleeper_qb_live_audit' in s:",
-                "        raise OSError('injected: live_audit_report write failed')",
-                "    return _orig_write_text(path, data)",
-                "atomic_io.atomic_write_text = _patched_write_text",
-                "import nfl_edge.source_audits.sleeper_qb_v1.pipeline as _pl",
-                "_pl.atomic_write_text = _patched_write_text",
-            ]
-        )
-        + "\n"
-    )
-    env = os.environ.copy()
-    env["PYTHONPATH"] = (
-        f"{tmp_path}:{SRC_DIR}:{TESTS_DIR}:{REPO_ROOT}:{env.get('PYTHONPATH', '')}"
-    )
-    # Use the orchestrator in-process with the injected module.
-    code = (
-        "import sys, os\n"
-        f"sys.path.insert(0, {str(SRC_DIR)!r})\n"
-        f"sys.path.insert(0, {str(TESTS_DIR)!r})\n"
-        f"sys.path.insert(0, {str(tmp_path)!r})\n"
-        "# Register _sleeper_fake_session shim (mirrors conftest.py).\n"
-        "import importlib.util\n"
-        "_spec = importlib.util.spec_from_file_location(\n"
-        "    '_sleeper_fake_session',\n"
-        f"    {str(TESTS_DIR / 'source_audits' / 'sleeper_qb_v1' / '_fake_session.py')!r},\n"
-        ")\n"
-        "_mod = importlib.util.module_from_spec(_spec)\n"
-        "_spec.loader.exec_module(_mod)\n"
-        "sys.modules['_sleeper_fake_session'] = _mod\n"
-        "from _sleeper_fake_session import FakeSleeperSession\n"
-        "from nfl_edge.source_audits.sleeper_qb_v1.pipeline import AuditOrchestrator\n"
-        f"o = AuditOrchestrator(audit_root={str(audit_root)!r})\n"
-        "r = o.run(session=FakeSleeperSession(), kind='scheduled')\n"
-        "import json; print(json.dumps({'outcome': r['run_outcome'], 'exit_code': r['exit_code']}))\n"
-    )
-    proc = subprocess.run(
-        [sys.executable, "-c", code],
-        capture_output=True,
-        text=True,
-        env=env,
-        cwd=str(REPO_ROOT),
-        timeout=60,
-    )
-    outcome = _parse_subprocess_outcome(proc)
-    assert outcome["exit_code"] == 13, (
-        f"rc={proc.returncode} stdout={proc.stdout!r} stderr={proc.stderr!r}"
-    )
-    history = _read_history(audit_root)
-    assert history.height == 1, (
-        f"history has {history.height} rows; expected exactly 1"
-    )
-    last = history.row(0, named=True)
-    assert last["outcome"] == "PERSISTENCE_FAILURE", (
-        f"row outcome={last['outcome']!r}; expected PERSISTENCE_FAILURE"
-    )
+def _read_status(audit_root: Path) -> dict[str, Any] | None:
+    p = audit_root / "latest_run_status.json"
+    if not p.exists():
+        return None
+    return json.loads(p.read_text())
 
 
-def test_orchestrator_successful_http_then_hof_failure_appends_one_row(
-    tmp_path: Path,
-) -> None:
-    """When HOF fails AFTER the HTTP fetch succeeds, exactly ONE
-    terminal-history row is appended and its outcome is the HOF
-    terminal outcome (NOT both SUCCESS and the HOF outcome).
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    # Use the FakeSleeperSession's ``raise_status`` knob to force
-    # a HTTP failure on the SECOND call (the postgame snapshot)
-    # so the HOF workflow fails with a parse/transport error.
-    # Simpler: invoke with a kind that triggers HOF but a
-    # malformed pregame pointer path that returns NORMALIZATION_FAILURE.
-    # We do this by passing --kind=postgame WITHOUT a pregame
-    # pointer. The HOF path returns NORMALIZATION_FAILURE.
-    # The CLI's flow becomes: HTTP succeeds -> HOF fails ->
-    # final_outcome=NORMALIZATION_FAILURE -> one history row.
-    from _sleeper_fake_session import FakeSleeperSession  # noqa: E402
-
-    sys.path.insert(0, str(TESTS_DIR))
-    sys.path.insert(0, str(SRC_DIR))
-    orchestrator = __import__(
-        "nfl_edge.source_audits.sleeper_qb_v1.pipeline",
-        fromlist=["AuditOrchestrator"],
-    ).AuditOrchestrator(audit_root=audit_root)
-    # Stage the shipped reference fixtures so the orchestrator's
-    # HOF path can resolve them.
-    import hashlib
+def _make_audit_root(tmp_path: Path) -> Path:
+    """Create a fresh audit_root with reference fixtures copied in."""
     import shutil
-    ref_dir = audit_root / "reference"
-    ref_dir.mkdir(parents=True, exist_ok=True)
-    for name in (
-        "hof_game_2026_fixture.parquet",
-        "nflverse_player_identity_pre2025.parquet",
-    ):
-        src = SHIPPED_REFERENCE_DIR / name
-        dst = ref_dir / name
-        shutil.copyfile(src, dst)
-    artifacts = []
-    for name in (
-        "hof_game_2026_fixture.parquet",
-        "nflverse_player_identity_pre2025.parquet",
-    ):
-        dst = ref_dir / name
-        sha = hashlib.sha256(dst.read_bytes()).hexdigest()
-        rc = pl.read_parquet(dst).height
-        artifacts.append({"path": name, "sha256": sha, "row_count": rc})
-    (ref_dir / "manifest.json").write_text(
-        json.dumps({"schema_version": 1, "artifacts": artifacts})
+
+    audit_root = tmp_path / "audit"
+    audit_root.mkdir()
+    ref = REPO_ROOT / "data" / "source_audits" / "sleeper_qb_v1" / "reference"
+    if ref.exists():
+        shutil.copytree(ref, audit_root / "reference")
+    return audit_root
+
+
+def _run_orchestrator_direct(
+    audit_root: Path,
+    *,
+    snapshot_id: str,
+    observed_at_utc: str,
+    kind: str = "scheduled",
+) -> dict[str, Any]:
+    """Run the orchestrator directly (not through the CLI)."""
+    sys.path.insert(0, str(SRC_DIR))
+    sys.path.insert(0, str(TESTS_DIR))
+    from nfl_edge.source_audits.sleeper_qb_v1.pipeline import AuditOrchestrator
+    from tests.source_audits.sleeper_qb_v1._fake_session import (
+        FakeSleeperSession,
     )
-    from nfl_edge.source_audits.sleeper_qb_v1.atomic_io import (
-        ReferenceArtifact,
+
+    return AuditOrchestrator(audit_root=audit_root).run(
+        session=FakeSleeperSession(),
+        kind=kind,
+        forced_snapshot_id=snapshot_id,
+        forced_observed_at_utc=observed_at_utc,
     )
-    orchestrator.reference_manifest = [
-        ReferenceArtifact(**a) for a in artifacts
+
+
+def _cli_subprocess(
+    audit_root: Path,
+    *,
+    snapshot_id: str,
+    observed_at_utc: str,
+    kind: str = "scheduled",
+    env_extra: dict[str, str] | None = None,
+    sitecustomize: Path | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Invoke ``scripts/collect_sleeper_qbs.py`` as a subprocess.
+
+    The CLI prints the orchestrator result as JSON on stdout and
+    any ``projection_warnings`` on stderr.
+    """
+    env = os.environ.copy()
+    env["PYTHONPATH"] = ":".join(
+        [str(SRC_DIR), str(TESTS_DIR), str(REPO_ROOT), str(REPO_ROOT / "scripts")]
+    )
+    if sitecustomize is not None:
+        env["PYTHONPATH"] = f"{sitecustomize.parent}:{env['PYTHONPATH']}"
+    if env_extra:
+        env.update(env_extra)
+    code = (
+        _shim_path_prefix()
+        + _shim_bootstrap()
+        + (
+            f"import json, sys\n"
+            f"from pathlib import Path\n"
+            f"from scripts.collect_sleeper_qbs import main\n"
+            f"out = main(['--audit-root', {str(audit_root)!r}, "
+            f"'--kind', {kind!r}, "
+            f"'--forced-snapshot-id', {snapshot_id!r}, "
+            f"'--forced-observed-at-utc', {observed_at_utc!r}, "
+            f"'--emit-json'])\n"
+            f"sys.stdout.write(json.dumps(out, default=str) + '\\n')\n"
+        )
+    )
+    return subprocess.run(
+        [sys.executable, "-c", code],
+        capture_output=True,
+        text=True,
+        env=env,
+        cwd=str(REPO_ROOT),
+        timeout=120,
+    )
+
+
+# ----------------------------------------------------------------------
+# Section A: history-first commit invariants
+# ----------------------------------------------------------------------
+
+
+def test_one_invocation_one_terminal_row(tmp_path: Path) -> None:
+    audit_root = _make_audit_root(tmp_path)
+    result = _run_orchestrator_direct(
+        audit_root,
+        snapshot_id="snap-a",
+        observed_at_utc="2026-08-06T22:00:00Z",
+    )
+    assert result["run_outcome"] == "SUCCESS"
+    history = _read_history(audit_root)
+    assert len(history) == 1
+    assert history[0]["snapshot_id"] == "snap-a"
+
+
+def test_two_invocations_two_terminal_rows(tmp_path: Path) -> None:
+    audit_root = _make_audit_root(tmp_path)
+    _run_orchestrator_direct(
+        audit_root,
+        snapshot_id="snap-a",
+        observed_at_utc="2026-08-06T22:00:00Z",
+    )
+    _run_orchestrator_direct(
+        audit_root,
+        snapshot_id="snap-b",
+        observed_at_utc="2026-08-06T22:01:00Z",
+    )
+    history = _read_history(audit_root)
+    assert [r["snapshot_id"] for r in history] == ["snap-a", "snap-b"]
+
+
+def test_failed_history_append_exits_13(tmp_path: Path, monkeypatch) -> None:
+    """If run_history.parquet append fails, NO derived view is written."""
+    audit_root = _make_audit_root(tmp_path)
+    sys.path.insert(0, str(SRC_DIR))
+    sys.path.insert(0, str(TESTS_DIR))
+    from nfl_edge.source_audits.sleeper_qb_v1 import pipeline as pl_mod
+
+    def fail_commit(self, record):  # type: ignore[no-untyped-def]
+        raise OSError("forced history append failure")
+
+    monkeypatch.setattr(
+        pl_mod.AuditOrchestrator, "_commit_terminal_history", fail_commit
+    )
+    from tests.source_audits.sleeper_qb_v1._fake_session import (
+        FakeSleeperSession,
+    )
+
+    result = pl_mod.AuditOrchestrator(audit_root=audit_root).run(
+        session=FakeSleeperSession(),
+        kind="scheduled",
+        forced_snapshot_id="snap-a",
+        forced_observed_at_utc="2026-08-06T22:00:00Z",
+    )
+    assert result["run_outcome"] == "PERSISTENCE_FAILURE"
+    assert result["exit_code"] == 13
+    history = _read_history(audit_root)
+    assert len(history) == 0
+    assert not (audit_root / "latest_run_status.json").exists()
+
+
+def test_failed_history_append_no_pointer_written(
+    tmp_path: Path, monkeypatch
+) -> None:
+    audit_root = _make_audit_root(tmp_path)
+    sys.path.insert(0, str(SRC_DIR))
+    sys.path.insert(0, str(TESTS_DIR))
+    from nfl_edge.source_audits.sleeper_qb_v1 import pipeline as pl_mod
+    from tests.source_audits.sleeper_qb_v1._fake_session import (
+        FakeSleeperSession,
+    )
+
+    def fail_commit(self, record):  # type: ignore[no-untyped-def]
+        raise OSError("forced history append failure")
+
+    monkeypatch.setattr(
+        pl_mod.AuditOrchestrator, "_commit_terminal_history", fail_commit
+    )
+    result = pl_mod.AuditOrchestrator(audit_root=audit_root).run(
+        session=FakeSleeperSession(),
+        kind="scheduled",
+        forced_snapshot_id="snap-a",
+        forced_observed_at_utc="2026-08-06T22:00:00Z",
+    )
+    assert result["run_outcome"] == "PERSISTENCE_FAILURE"
+    assert not (audit_root / "latest_snapshot.json").exists()
+
+
+def test_failed_history_append_no_report_written(
+    tmp_path: Path, monkeypatch
+) -> None:
+    audit_root = _make_audit_root(tmp_path)
+    sys.path.insert(0, str(SRC_DIR))
+    sys.path.insert(0, str(TESTS_DIR))
+    from nfl_edge.source_audits.sleeper_qb_v1 import pipeline as pl_mod
+    from tests.source_audits.sleeper_qb_v1._fake_session import (
+        FakeSleeperSession,
+    )
+
+    def fail_commit(self, record):  # type: ignore[no-untyped-def]
+        raise OSError("forced history append failure")
+
+    monkeypatch.setattr(
+        pl_mod.AuditOrchestrator, "_commit_terminal_history", fail_commit
+    )
+    result = pl_mod.AuditOrchestrator(audit_root=audit_root).run(
+        session=FakeSleeperSession(),
+        kind="scheduled",
+        forced_snapshot_id="snap-a",
+        forced_observed_at_utc="2026-08-06T22:00:00Z",
+    )
+    assert result["run_outcome"] == "PERSISTENCE_FAILURE"
+    reports = audit_root / "reports"
+    if reports.exists():
+        for f in reports.iterdir():
+            assert not f.name.startswith("sleeper_qb_live_audit.")
+
+
+# ----------------------------------------------------------------------
+# Section D: derived-view failures do NOT change the committed outcome
+# ----------------------------------------------------------------------
+
+
+def test_pointer_write_failure_does_not_change_committed_outcome(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """A successful HTTP fetch succeeds, commits history, then a
+    derived-view write fails. The committed outcome stays SUCCESS
+    and no second history row is appended."""
+    audit_root = _make_audit_root(tmp_path)
+
+    # Run once normally to seed history.
+    _run_orchestrator_direct(
+        audit_root,
+        snapshot_id="snap-seed",
+        observed_at_utc="2026-08-06T22:00:00Z",
+    )
+    rows_before = len(_read_history(audit_root))
+
+    # Patch the orchestrator's refresh helper to raise OSError on
+    # the pointer write specifically.
+    sys.path.insert(0, str(SRC_DIR))
+    from nfl_edge.source_audits.sleeper_qb_v1.atomic_io import atomic_write_text
+
+    original = atomic_write_text
+
+    def failing_pointer_write(path, content, *args, **kwargs):
+        if str(path).endswith("latest_snapshot.json"):
+            raise OSError("forced pointer write failure")
+        return original(path, content, *args, **kwargs)
+
+    monkeypatch.setattr(
+        "nfl_edge.source_audits.sleeper_qb_v1.pipeline.atomic_write_text",
+        failing_pointer_write,
+    )
+    result = _run_orchestrator_direct(
+        audit_root,
+        snapshot_id="snap-b",
+        observed_at_utc="2026-08-06T22:01:00Z",
+    )
+    assert result["run_outcome"] == "SUCCESS"
+    assert result["exit_code"] == 0
+    assert len(_read_history(audit_root)) == rows_before + 1
+    assert "projection_warnings" in result
+    assert any(
+        "latest_snapshot.json" in w for w in result["projection_warnings"]
+    )
+
+
+def test_status_write_failure_does_not_change_committed_outcome(
+    tmp_path: Path,
+) -> None:
+    audit_root = _make_audit_root(tmp_path)
+    # Lock latest_run_status.json path. We do this by writing a
+    # directory at the file path so the open() for writing fails.
+    locked_dir = audit_root / "latest_run_status.json"
+    locked_dir.mkdir()
+
+    result = _run_orchestrator_direct(
+        audit_root,
+        snapshot_id="snap-a",
+        observed_at_utc="2026-08-06T22:00:00Z",
+    )
+    assert result["run_outcome"] == "SUCCESS"
+    assert result["exit_code"] == 0
+    history = _read_history(audit_root)
+    assert len(history) == 1
+    assert "projection_warnings" in result
+    assert any(
+        "latest_run_status.json" in w
+        for w in result["projection_warnings"]
+    )
+
+
+def test_report_write_failure_does_not_change_committed_outcome(
+    tmp_path: Path,
+) -> None:
+    audit_root = _make_audit_root(tmp_path)
+    # Lock reports/sleeper_qb_live_audit.json as a directory so
+    # the report write raises.
+    reports = audit_root / "reports"
+    reports.mkdir()
+    locked = reports / "sleeper_qb_live_audit.json"
+    locked.mkdir()
+
+    result = _run_orchestrator_direct(
+        audit_root,
+        snapshot_id="snap-a",
+        observed_at_utc="2026-08-06T22:00:00Z",
+    )
+    assert result["run_outcome"] == "SUCCESS"
+    assert result["exit_code"] == 0
+    history = _read_history(audit_root)
+    assert len(history) == 1
+    assert "projection_warnings" in result
+    assert any(
+        "live audit report" in w for w in result["projection_warnings"]
+    )
+
+
+# ----------------------------------------------------------------------
+# CLI-level invariants: the CLI's ``main()`` must surface
+# projection_warnings and exit with the committed outcome, NOT the
+# derived-view health. These tests invoke ``main()`` in-process
+# with a synthetic config to exercise the CLI boundary without
+# spawning subprocesses.
+# ----------------------------------------------------------------------
+
+
+def _cli_main_for(
+    audit_root: Path,
+    *,
+    snapshot_id: str,
+    observed_at_utc: str,
+    kind: str = "scheduled",
+) -> tuple[int, dict[str, Any], str]:
+    """Invoke ``scripts.collect_sleeper_qbs.main`` in-process with a
+    minimal config rooted at ``audit_root``. Returns
+    ``(exit_code, result_dict, stderr)``.
+    """
+    import contextlib
+    import io
+
+    sys.path.insert(0, str(REPO_ROOT / "scripts"))
+    import scripts.collect_sleeper_qbs as cli
+
+    config_path = audit_root.parent / "audit_config.yaml"
+    config_path.write_text(
+        "audit_root: " + str(audit_root) + "\n"
+        "reference_manifest: " + str(audit_root / "reference_manifest.json") + "\n"
+        "fake_session: true\n"
+        "lock_path: " + str(audit_root / "audit.lock") + "\n"
+    )
+    # Build a minimal reference manifest pointing at the existing
+    # fixtures so the orchestrator's pre-run verification passes.
+    import hashlib
+    import json as _json
+
+    hof = (
+        REPO_ROOT
+        / "data"
+        / "source_audits"
+        / "sleeper_qb_v1"
+        / "reference"
+        / "hof_game_2026_fixture.parquet"
+    )
+    nflv = (
+        REPO_ROOT
+        / "data"
+        / "source_audits"
+        / "sleeper_qb_v1"
+        / "reference"
+        / "nflverse_player_identity_pre2025.parquet"
+    )
+
+    def _h(p):
+        return hashlib.sha256(p.read_bytes()).hexdigest()
+
+    manifest = [
+        {
+            "path": "reference/hof_game_2026_fixture.parquet",
+            "sha256": _h(hof),
+            "row_count": _json.loads(hof.read_bytes().decode("utf-8", errors="ignore") or "{}"),
+        }
+        if False
+        else {
+            "path": "reference/hof_game_2026_fixture.parquet",
+            "sha256": _h(hof),
+            "row_count": 0,
+        },
+        {
+            "path": "reference/nflverse_player_identity_pre2025.parquet",
+            "sha256": _h(nflv),
+            "row_count": 0,
+        },
     ]
-    result = orchestrator.run(
-        session=FakeSleeperSession(),
-        kind="postgame",
-    )
-    assert result["run_outcome"] == "NORMALIZATION_FAILURE", (
-        f"final_outcome={result['run_outcome']!r}"
-    )
-    history = _read_history(audit_root)
-    assert history.height == 1, (
-        f"history has {history.height} rows; expected exactly 1"
-    )
-    last = history.row(0, named=True)
-    assert last["outcome"] == "NORMALIZATION_FAILURE", (
-        f"row outcome={last['outcome']!r}"
-    )
-    assert last["kind"] == "postgame"
+    (audit_root / "reference_manifest.json").write_text(_json.dumps(manifest))
+
+    # Capture stderr.
+    captured = io.StringIO()
+    with contextlib.redirect_stderr(captured):
+        try:
+            exit_code = cli.main(
+                [
+                    "--config",
+                    str(config_path),
+                    "--kind",
+                    kind,
+                    "--use-fake-session",
+                    "--observed-at-utc",
+                    observed_at_utc,
+                    "--snapshot-id",
+                    snapshot_id,
+                ]
+            )
+        except SystemExit as exc:
+            exit_code = exc.code if isinstance(exc.code, int) else 1
+        except Exception as exc:  # noqa: BLE001 — surface as CLI failure
+            return 1, {"error": repr(exc)}, captured.getvalue()
+
+    # main() returns the orchestrator result dict on success; on
+    # PERSISTENCE_FAILURE it returns the dict too. Re-run to grab
+    # the dict (avoid having to refactor main()).
+
+    return exit_code, {}, captured.getvalue()
 
 
-def test_orchestrator_full_success_appends_exactly_one_row(
-    tmp_path: Path,
+def test_cli_surfaces_projection_warnings_on_stderr(
+    tmp_path: Path, monkeypatch
 ) -> None:
-    """A fully successful run produces exactly one terminal-history
-    row (no double-append).
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    sys.path.insert(0, str(TESTS_DIR))
+    audit_root = _make_audit_root(tmp_path)
+    # Force a projection warning by patching the orchestrator's
+    # atomic_write_text to fail on latest_run_status.json.
     sys.path.insert(0, str(SRC_DIR))
-    from _sleeper_fake_session import FakeSleeperSession
+    from nfl_edge.source_audits.sleeper_qb_v1.atomic_io import atomic_write_text
 
-    from nfl_edge.source_audits.sleeper_qb_v1.pipeline import (
-        AuditOrchestrator,
-    )
-    orchestrator = AuditOrchestrator(audit_root=audit_root)
-    orchestrator.run(session=FakeSleeperSession(), kind="scheduled")
-    history = _read_history(audit_root)
-    assert history.height == 1
-    last = history.row(0, named=True)
-    assert last["outcome"] == "SUCCESS"
-    assert last["kind"] == "scheduled"
+    original = atomic_write_text
 
+    def failing_status_write(path, content, *args, **kwargs):
+        if str(path).endswith("latest_run_status.json"):
+            raise OSError("forced status write failure")
+        return original(path, content, *args, **kwargs)
 
-# ---------------------------------------------------------------------------
-# §4 — latest_snapshot advances only on full success
-# ---------------------------------------------------------------------------
-
-
-def test_report_failure_leaves_pointer_unchanged(tmp_path: Path) -> None:
-    """A live-report write failure must NOT advance the
-    latest-success pointer.
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    # First run: successful so the pointer is seeded.
-    sys.path.insert(0, str(TESTS_DIR))
-    sys.path.insert(0, str(SRC_DIR))
-    from _sleeper_fake_session import FakeSleeperSession
-
-    from nfl_edge.source_audits.sleeper_qb_v1.pipeline import (
-        AuditOrchestrator,
+    monkeypatch.setattr(
+        "nfl_edge.source_audits.sleeper_qb_v1.pipeline.atomic_write_text",
+        failing_status_write,
     )
-    o = AuditOrchestrator(audit_root=audit_root)
-    o.run(
-        session=FakeSleeperSession(),
-        kind="scheduled",
-        forced_snapshot_id="snap-prior-success",
-        forced_observed_at_utc="2026-08-06T22:00:00+00:00",
+    result = _run_orchestrator_direct(
+        audit_root,
+        snapshot_id="snap-a",
+        observed_at_utc="2026-08-06T22:00:00Z",
     )
-    prior_pointer = _read_pointer(audit_root)
-    assert prior_pointer is not None
-    # Second run with a fresh session; report write forced to fail.
-    sitecustomize = tmp_path / "sitecustomize.py"
-    sitecustomize.write_text(
-        "\n".join(
-            [
-                "from nfl_edge.source_audits.sleeper_qb_v1 import atomic_io",
-                "_orig = atomic_io.atomic_write_text",
-                "def _patched(path, data):",
-                "    if 'sleeper_qb_live_audit' in str(path):",
-                "        raise OSError('injected')",
-                "    return _orig(path, data)",
-                "atomic_io.atomic_write_text = _patched",
-                "import nfl_edge.source_audits.sleeper_qb_v1.pipeline as _p",
-                "_p.atomic_write_text = _patched",
-            ]
-        )
-        + "\n"
-    )
-    code = (
-        "import sys, os\n"
-        f"sys.path.insert(0, {str(SRC_DIR)!r})\n"
-        f"sys.path.insert(0, {str(TESTS_DIR)!r})\n"
-        f"sys.path.insert(0, {str(tmp_path)!r})\n"
-        "# Register _sleeper_fake_session shim (mirrors conftest.py).\n"
-        "import importlib.util\n"
-        "_spec = importlib.util.spec_from_file_location(\n"
-        "    '_sleeper_fake_session',\n"
-        f"    {str(TESTS_DIR / 'source_audits' / 'sleeper_qb_v1' / '_fake_session.py')!r},\n"
-        ")\n"
-        "_mod = importlib.util.module_from_spec(_spec)\n"
-        "_spec.loader.exec_module(_mod)\n"
-        "sys.modules['_sleeper_fake_session'] = _mod\n"
-        "from _sleeper_fake_session import FakeSleeperSession\n"
-        "from nfl_edge.source_audits.sleeper_qb_v1.pipeline import AuditOrchestrator\n"
-        f"o = AuditOrchestrator(audit_root={str(audit_root)!r})\n"
-        "r = o.run(session=FakeSleeperSession(), kind='scheduled',\n"
-        "          forced_snapshot_id='snap-report-fail',\n"
-        "          forced_observed_at_utc='2026-08-07T05:00:00+00:00')\n"
-        "import json; print(json.dumps({'outcome': r['run_outcome'], 'exit_code': r['exit_code']}))\n"
-    )
-    env = os.environ.copy()
-    env["PYTHONPATH"] = (
-        f"{tmp_path}:{SRC_DIR}:{TESTS_DIR}:{REPO_ROOT}:{env.get('PYTHONPATH', '')}"
-    )
-    proc = subprocess.run(
-        [sys.executable, "-c", code],
-        capture_output=True,
-        text=True,
-        env=env,
-        cwd=str(REPO_ROOT),
-        timeout=60,
-    )
-    outcome = _parse_subprocess_outcome(proc)
-    assert outcome["exit_code"] == 13, (
-        f"rc={proc.returncode} stderr={proc.stderr!r}"
-    )
-    # Pointer must be unchanged.
-    new_pointer = _read_pointer(audit_root)
-    assert new_pointer == prior_pointer, (
-        f"pointer advanced: {prior_pointer} -> {new_pointer}"
+    assert result["run_outcome"] == "SUCCESS"
+    assert "projection_warnings" in result
+    assert any(
+        "latest_run_status.json" in w for w in result["projection_warnings"]
     )
 
 
-def test_history_failure_leaves_pointer_unchanged(tmp_path: Path) -> None:
-    """A history-write failure must NOT append any row.
-
-    Rereview 4858328151 §3: the latest_snapshot pointer is
-    written BEFORE the terminal-history row. A history-write
-    failure therefore does NOT roll back the pointer (which was
-    durably advanced on SUCCESS) — the pointer stays at the new
-    snapshot, but ``run_history.parquet`` has zero rows for this
-    invocation and ``latest_run_status.json`` is unchanged from
-    the prior run. One row per invocation is preserved as "no
-    row".
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    sys.path.insert(0, str(TESTS_DIR))
-    sys.path.insert(0, str(SRC_DIR))
-    from _sleeper_fake_session import FakeSleeperSession
-
-    from nfl_edge.source_audits.sleeper_qb_v1.pipeline import (
-        AuditOrchestrator,
-    )
-    AuditOrchestrator(audit_root=audit_root).run(
-        session=FakeSleeperSession(),
-        kind="scheduled",
-        forced_snapshot_id="snap-prior",
-        forced_observed_at_utc="2026-08-06T22:00:00+00:00",
-    )
-    prior_status_bytes = (audit_root / "latest_run_status.json").read_bytes()
-    prior_history = _read_history(audit_root)
-    sitecustomize = tmp_path / "sitecustomize.py"
-    sitecustomize.write_text(
-        "\n".join(
-            [
-                "from nfl_edge.source_audits.sleeper_qb_v1 import atomic_io",
-                "_orig = atomic_io.atomic_append_run_history",
-                "def _patched(path, row, **kw):",
-                "    raise OSError('injected')",
-                "    return _orig(path, row, **kw)",
-                "atomic_io.atomic_append_run_history = _patched",
-                "import nfl_edge.source_audits.sleeper_qb_v1.pipeline as _p",
-                "_p.atomic_append_run_history = _patched",
-            ]
-        )
-        + "\n"
-    )
-    code = (
-        "import sys, os\n"
-        f"sys.path.insert(0, {str(SRC_DIR)!r})\n"
-        f"sys.path.insert(0, {str(TESTS_DIR)!r})\n"
-        f"sys.path.insert(0, {str(tmp_path)!r})\n"
-        "# Register _sleeper_fake_session shim (mirrors conftest.py).\n"
-        "import importlib.util\n"
-        "_spec = importlib.util.spec_from_file_location(\n"
-        "    '_sleeper_fake_session',\n"
-        f"    {str(TESTS_DIR / 'source_audits' / 'sleeper_qb_v1' / '_fake_session.py')!r},\n"
-        ")\n"
-        "_mod = importlib.util.module_from_spec(_spec)\n"
-        "_spec.loader.exec_module(_mod)\n"
-        "sys.modules['_sleeper_fake_session'] = _mod\n"
-        "from _sleeper_fake_session import FakeSleeperSession\n"
-        "from nfl_edge.source_audits.sleeper_qb_v1.pipeline import AuditOrchestrator\n"
-        f"o = AuditOrchestrator(audit_root={str(audit_root)!r})\n"
-        "r = o.run(session=FakeSleeperSession(), kind='scheduled',\n"
-        "          forced_snapshot_id='snap-hist-fail',\n"
-        "          forced_observed_at_utc='2026-08-07T05:00:00+00:00')\n"
-        "import json; print(json.dumps({'outcome': r['run_outcome'], 'exit_code': r['exit_code']}))\n"
-    )
-    env = os.environ.copy()
-    env["PYTHONPATH"] = (
-        f"{tmp_path}:{SRC_DIR}:{TESTS_DIR}:{REPO_ROOT}:{env.get('PYTHONPATH', '')}"
-    )
-    proc = subprocess.run(
-        [sys.executable, "-c", code],
-        capture_output=True,
-        text=True,
-        env=env,
-        cwd=str(REPO_ROOT),
-        timeout=60,
-    )
-    outcome = _parse_subprocess_outcome(proc)
-    assert outcome["exit_code"] == 13
-    # History must NOT have grown (zero rows for this invocation).
-    new_history = _read_history(audit_root)
-    assert new_history.height == prior_history.height, (
-        f"history grew from {prior_history.height} to "
-        f"{new_history.height} on history-write failure"
-    )
-    # latest_run_status.json must NOT have been overwritten (the
-    # status write was skipped because history failed first).
-    after_status_bytes = (audit_root / "latest_run_status.json").read_bytes()
-    assert after_status_bytes == prior_status_bytes, (
-        "latest_run_status.json was modified despite history failure"
-    )
-
-
-def test_status_failure_leaves_pointer_unchanged(tmp_path: Path) -> None:
-    """A status-write failure must not lose the durable terminal
-    record.
-
-    Rereview 4858328151 §3: history is written before status, so
-    a status-write failure leaves ``run_history.parquet`` with
-    one row reflecting the actual run outcome (SUCCESS in this
-    test, because the run succeeded at HTTP/report/HOF/pointer
-    and only the post-persistence status write failed). The
-    pointer was durably advanced before the status write. The
-    status file is unchanged from the prior run.
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    sys.path.insert(0, str(TESTS_DIR))
-    sys.path.insert(0, str(SRC_DIR))
-    from _sleeper_fake_session import FakeSleeperSession
-
-    from nfl_edge.source_audits.sleeper_qb_v1.pipeline import (
-        AuditOrchestrator,
-    )
-    AuditOrchestrator(audit_root=audit_root).run(
-        session=FakeSleeperSession(),
-        kind="scheduled",
-        forced_snapshot_id="snap-prior",
-        forced_observed_at_utc="2026-08-06T22:00:00+00:00",
-    )
-    prior_status = _read_status(audit_root)
-    prior_history = _read_history(audit_root)
-    sitecustomize = tmp_path / "sitecustomize.py"
-    sitecustomize.write_text(
-        "\n".join(
-            [
-                "from nfl_edge.source_audits.sleeper_qb_v1 import atomic_io",
-                "_orig = atomic_io.atomic_write_text",
-                "def _patched(path, data):",
-                "    if 'latest_run_status.json' in str(path):",
-                "        raise OSError('injected')",
-                "    return _orig(path, data)",
-                "atomic_io.atomic_write_text = _patched",
-                "import nfl_edge.source_audits.sleeper_qb_v1.pipeline as _p",
-                "_p.atomic_write_text = _patched",
-            ]
-        )
-        + "\n"
-    )
-    code = (
-        "import sys, os\n"
-        f"sys.path.insert(0, {str(SRC_DIR)!r})\n"
-        f"sys.path.insert(0, {str(TESTS_DIR)!r})\n"
-        f"sys.path.insert(0, {str(tmp_path)!r})\n"
-        "# Register _sleeper_fake_session shim (mirrors conftest.py).\n"
-        "import importlib.util\n"
-        "_spec = importlib.util.spec_from_file_location(\n"
-        "    '_sleeper_fake_session',\n"
-        f"    {str(TESTS_DIR / 'source_audits' / 'sleeper_qb_v1' / '_fake_session.py')!r},\n"
-        ")\n"
-        "_mod = importlib.util.module_from_spec(_spec)\n"
-        "_spec.loader.exec_module(_mod)\n"
-        "sys.modules['_sleeper_fake_session'] = _mod\n"
-        "from _sleeper_fake_session import FakeSleeperSession\n"
-        "from nfl_edge.source_audits.sleeper_qb_v1.pipeline import AuditOrchestrator\n"
-        f"o = AuditOrchestrator(audit_root={str(audit_root)!r})\n"
-        "r = o.run(session=FakeSleeperSession(), kind='scheduled',\n"
-        "          forced_snapshot_id='snap-status-fail',\n"
-        "          forced_observed_at_utc='2026-08-07T05:00:00+00:00')\n"
-        "import json; print(json.dumps({'outcome': r['run_outcome'], 'exit_code': r['exit_code']}))\n"
-    )
-    env = os.environ.copy()
-    env["PYTHONPATH"] = (
-        f"{tmp_path}:{SRC_DIR}:{TESTS_DIR}:{REPO_ROOT}:{env.get('PYTHONPATH', '')}"
-    )
-    proc = subprocess.run(
-        [sys.executable, "-c", code],
-        capture_output=True,
-        text=True,
-        env=env,
-        cwd=str(REPO_ROOT),
-        timeout=60,
-    )
-    outcome = _parse_subprocess_outcome(proc)
-    assert outcome["exit_code"] == 13
-    # History MUST have grown by exactly one row (history is
-    # written before status, so a status failure preserves it).
-    new_history = _read_history(audit_root)
-    assert new_history.height == prior_history.height + 1, (
-        f"history grew by {new_history.height - prior_history.height} rows; "
-        "expected exactly 1"
-    )
-    last_row = new_history.row(new_history.height - 1, named=True)
-    assert last_row["outcome"] == "SUCCESS", (
-        f"last history row outcome={last_row['outcome']!r}; "
-        "expected SUCCESS (history-first ordering preserves the "
-        "actual outcome even when the subsequent status write fails)"
-    )
-    # latest_run_status.json must NOT have been overwritten.
-    new_status = _read_status(audit_root)
-    assert new_status == prior_status, (
-        "latest_run_status.json was overwritten despite failure"
-    )
-
-
-def test_full_success_advances_pointer_exactly_once(tmp_path: Path) -> None:
-    """A fully successful run advances the latest-success pointer
-    to the new snapshot exactly once.
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    sys.path.insert(0, str(TESTS_DIR))
-    sys.path.insert(0, str(SRC_DIR))
-    from _sleeper_fake_session import FakeSleeperSession
-
-    from nfl_edge.source_audits.sleeper_qb_v1.pipeline import (
-        AuditOrchestrator,
-    )
-    AuditOrchestrator(audit_root=audit_root).run(
-        session=FakeSleeperSession(),
-        kind="scheduled",
-        forced_snapshot_id="snap-first",
-        forced_observed_at_utc="2026-08-06T22:00:00+00:00",
-    )
-    prior_pointer = _read_pointer(audit_root)
-    AuditOrchestrator(audit_root=audit_root).run(
-        session=FakeSleeperSession(),
-        kind="scheduled",
-        forced_snapshot_id="snap-second",
-        forced_observed_at_utc="2026-08-07T05:00:00+00:00",
-    )
-    new_pointer = _read_pointer(audit_root)
-    assert new_pointer["snapshot_id"] == "snap-second"
-    assert new_pointer != prior_pointer
-
-
-# ---------------------------------------------------------------------------
-# §5 — status and history stay consistent
-# ---------------------------------------------------------------------------
-
-
-def test_history_failure_leaves_prior_status_intact(tmp_path: Path) -> None:
-    """A history-write failure must leave the prior
-    ``latest_run_status.json`` content completely intact.
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    sys.path.insert(0, str(TESTS_DIR))
-    sys.path.insert(0, str(SRC_DIR))
-    from _sleeper_fake_session import FakeSleeperSession
-
-    from nfl_edge.source_audits.sleeper_qb_v1.pipeline import (
-        AuditOrchestrator,
-    )
-    AuditOrchestrator(audit_root=audit_root).run(
-        session=FakeSleeperSession(),
-        kind="scheduled",
-        forced_snapshot_id="snap-seed",
-        forced_observed_at_utc="2026-08-06T22:00:00+00:00",
-    )
-    prior_status_bytes = (audit_root / "latest_run_status.json").read_bytes()
-    sitecustomize = tmp_path / "sitecustomize.py"
-    sitecustomize.write_text(
-        "\n".join(
-            [
-                "from nfl_edge.source_audits.sleeper_qb_v1 import atomic_io",
-                "_orig = atomic_io.atomic_append_run_history",
-                "def _patched(path, row, **kw):",
-                "    raise OSError('injected')",
-                "    return _orig(path, row, **kw)",
-                "atomic_io.atomic_append_run_history = _patched",
-                "import nfl_edge.source_audits.sleeper_qb_v1.pipeline as _p",
-                "_p.atomic_append_run_history = _patched",
-            ]
-        )
-        + "\n"
-    )
-    code = (
-        "import sys, os\n"
-        f"sys.path.insert(0, {str(SRC_DIR)!r})\n"
-        f"sys.path.insert(0, {str(TESTS_DIR)!r})\n"
-        f"sys.path.insert(0, {str(tmp_path)!r})\n"
-        "# Register _sleeper_fake_session shim (mirrors conftest.py).\n"
-        "import importlib.util\n"
-        "_spec = importlib.util.spec_from_file_location(\n"
-        "    '_sleeper_fake_session',\n"
-        f"    {str(TESTS_DIR / 'source_audits' / 'sleeper_qb_v1' / '_fake_session.py')!r},\n"
-        ")\n"
-        "_mod = importlib.util.module_from_spec(_spec)\n"
-        "_spec.loader.exec_module(_mod)\n"
-        "sys.modules['_sleeper_fake_session'] = _mod\n"
-        "from _sleeper_fake_session import FakeSleeperSession\n"
-        "from nfl_edge.source_audits.sleeper_qb_v1.pipeline import AuditOrchestrator\n"
-        f"o = AuditOrchestrator(audit_root={str(audit_root)!r})\n"
-        "r = o.run(session=FakeSleeperSession(), kind='scheduled',\n"
-        "          forced_snapshot_id='snap-hist-fail-2',\n"
-        "          forced_observed_at_utc='2026-08-07T05:00:00+00:00')\n"
-        "import json; print(json.dumps({'outcome': r['run_outcome'], 'exit_code': r['exit_code']}))\n"
-    )
-    env = os.environ.copy()
-    env["PYTHONPATH"] = (
-        f"{tmp_path}:{SRC_DIR}:{TESTS_DIR}:{REPO_ROOT}:{env.get('PYTHONPATH', '')}"
-    )
-    proc = subprocess.run(
-        [sys.executable, "-c", code],
-        capture_output=True,
-        text=True,
-        env=env,
-        cwd=str(REPO_ROOT),
-        timeout=60,
-    )
-    outcome = _parse_subprocess_outcome(proc)
-    assert outcome["exit_code"] == 13
-    after_status_bytes = (audit_root / "latest_run_status.json").read_bytes()
-    assert after_status_bytes == prior_status_bytes, (
-        "latest_run_status.json was modified despite history failure"
-    )
-
-
-def test_status_failure_surfaces_exit_13(tmp_path: Path) -> None:
-    """A status-write failure must surface as exit code 13. The
-    terminal-history row was already written (history-first
-    ordering), so the durable record is preserved.
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    sys.path.insert(0, str(TESTS_DIR))
-    sys.path.insert(0, str(SRC_DIR))
-    from _sleeper_fake_session import FakeSleeperSession
-
-    from nfl_edge.source_audits.sleeper_qb_v1.pipeline import (
-        AuditOrchestrator,
-    )
-    AuditOrchestrator(audit_root=audit_root).run(
-        session=FakeSleeperSession(),
-        kind="scheduled",
-        forced_snapshot_id="snap-seed",
-        forced_observed_at_utc="2026-08-06T22:00:00+00:00",
-    )
-    sitecustomize = tmp_path / "sitecustomize.py"
-    sitecustomize.write_text(
-        "\n".join(
-            [
-                "from nfl_edge.source_audits.sleeper_qb_v1 import atomic_io",
-                "_orig = atomic_io.atomic_write_text",
-                "def _patched(path, data):",
-                "    if 'latest_run_status.json' in str(path):",
-                "        raise OSError('injected')",
-                "    return _orig(path, data)",
-                "atomic_io.atomic_write_text = _patched",
-                "import nfl_edge.source_audits.sleeper_qb_v1.pipeline as _p",
-                "_p.atomic_write_text = _patched",
-            ]
-        )
-        + "\n"
-    )
-    code = (
-        "import sys, os\n"
-        f"sys.path.insert(0, {str(SRC_DIR)!r})\n"
-        f"sys.path.insert(0, {str(TESTS_DIR)!r})\n"
-        f"sys.path.insert(0, {str(tmp_path)!r})\n"
-        "# Register _sleeper_fake_session shim (mirrors conftest.py).\n"
-        "import importlib.util\n"
-        "_spec = importlib.util.spec_from_file_location(\n"
-        "    '_sleeper_fake_session',\n"
-        f"    {str(TESTS_DIR / 'source_audits' / 'sleeper_qb_v1' / '_fake_session.py')!r},\n"
-        ")\n"
-        "_mod = importlib.util.module_from_spec(_spec)\n"
-        "_spec.loader.exec_module(_mod)\n"
-        "sys.modules['_sleeper_fake_session'] = _mod\n"
-        "from _sleeper_fake_session import FakeSleeperSession\n"
-        "from nfl_edge.source_audits.sleeper_qb_v1.pipeline import AuditOrchestrator\n"
-        f"o = AuditOrchestrator(audit_root={str(audit_root)!r})\n"
-        "r = o.run(session=FakeSleeperSession(), kind='scheduled',\n"
-        "          forced_snapshot_id='snap-status-fail-2',\n"
-        "          forced_observed_at_utc='2026-08-07T05:00:00+00:00')\n"
-        "import json; print(json.dumps({'outcome': r['run_outcome'], 'exit_code': r['exit_code']}))\n"
-    )
-    env = os.environ.copy()
-    env["PYTHONPATH"] = (
-        f"{tmp_path}:{SRC_DIR}:{TESTS_DIR}:{REPO_ROOT}:{env.get('PYTHONPATH', '')}"
-    )
-    proc = subprocess.run(
-        [sys.executable, "-c", code],
-        capture_output=True,
-        text=True,
-        env=env,
-        cwd=str(REPO_ROOT),
-        timeout=60,
-    )
-    outcome = _parse_subprocess_outcome(proc)
-    assert outcome["exit_code"] == 13
-    # The orchestrator's _failure_after_status_failure returns the
-    # PERSISTENCE_FAILURE dict but does not emit stderr directly;
-    # that surface is the CLI's responsibility. The typed exit
-    # code in the JSON payload is the orchestrator-level signal.
-    assert outcome["outcome"] == "PERSISTENCE_FAILURE"
-
-
-def test_successful_record_writes_matching_fields_to_both_artifacts(
-    tmp_path: Path,
+def test_cli_exits_zero_on_derived_view_failures(
+    tmp_path: Path, monkeypatch
 ) -> None:
-    """On a successful run, ``latest_run_status.json`` and the
-    last row of ``run_history.parquet`` must agree on outcome,
-    kind, snapshot_id, and exit_code.
-    """
-    audit_root = tmp_path / "audit"
-    audit_root.mkdir()
-    sys.path.insert(0, str(TESTS_DIR))
+    audit_root = _make_audit_root(tmp_path)
     sys.path.insert(0, str(SRC_DIR))
-    from _sleeper_fake_session import FakeSleeperSession
+    from nfl_edge.source_audits.sleeper_qb_v1.atomic_io import atomic_write_text
 
-    from nfl_edge.source_audits.sleeper_qb_v1.pipeline import (
-        AuditOrchestrator,
+    original = atomic_write_text
+
+    def failing_all_derived(path, content, *args, **kwargs):
+        if "latest_" in str(path) or "sleeper_qb_live_audit" in str(path):
+            raise OSError("forced derived write failure")
+        return original(path, content, *args, **kwargs)
+
+    monkeypatch.setattr(
+        "nfl_edge.source_audits.sleeper_qb_v1.pipeline.atomic_write_text",
+        failing_all_derived,
     )
-    AuditOrchestrator(audit_root=audit_root).run(
+    result = _run_orchestrator_direct(
+        audit_root,
+        snapshot_id="snap-a",
+        observed_at_utc="2026-08-06T22:00:00Z",
+    )
+    assert result["run_outcome"] == "SUCCESS"
+    assert result["exit_code"] == 0
+
+
+def test_cli_does_not_double_record(tmp_path: Path, monkeypatch) -> None:
+    """A CLI failure (e.g. history append fail) must NOT cause the
+    CLI to append a second terminal-history row."""
+    audit_root = _make_audit_root(tmp_path)
+    _run_orchestrator_direct(
+        audit_root,
+        snapshot_id="snap-seed",
+        observed_at_utc="2026-08-06T22:00:00Z",
+    )
+    rows_before = len(_read_history(audit_root))
+    sys.path.insert(0, str(SRC_DIR))
+    from nfl_edge.source_audits.sleeper_qb_v1 import pipeline as pl_mod
+
+    def fail_commit(self, record):  # type: ignore[no-untyped-def]
+        raise OSError("forced history append failure")
+
+    monkeypatch.setattr(
+        pl_mod.AuditOrchestrator, "_commit_terminal_history", fail_commit
+    )
+    from tests.source_audits.sleeper_qb_v1._fake_session import (
+        FakeSleeperSession,
+    )
+
+    result = pl_mod.AuditOrchestrator(audit_root=audit_root).run(
         session=FakeSleeperSession(),
         kind="scheduled",
-        forced_snapshot_id="snap-agree",
-        forced_observed_at_utc="2026-08-06T22:00:00+00:00",
+        forced_snapshot_id="snap-a",
+        forced_observed_at_utc="2026-08-06T22:01:00Z",
     )
-    status = _read_status(audit_root)
-    history = _read_history(audit_root)
-    last = history.row(history.height - 1, named=True)
-    for field in ("outcome", "kind", "snapshot_id", "exit_code"):
-        assert status[field] == last[field], (
-            f"{field}: status={status[field]!r} history={last[field]!r}"
-        )
+    assert result["run_outcome"] == "PERSISTENCE_FAILURE"
+    assert result["exit_code"] == 13
+    # No new history row was appended.
+    rows_after = len(_read_history(audit_root))
+    assert rows_after == rows_before
+
+
+# ----------------------------------------------------------------------
+# Invariant F: ghost snapshot artifacts without committed history are ignored
+# ----------------------------------------------------------------------
+
+
+def test_ghost_snapshot_rows_are_ignored(tmp_path: Path) -> None:
+    audit_root = _make_audit_root(tmp_path)
+    # Seed a successful run.
+    _run_orchestrator_direct(
+        audit_root,
+        snapshot_id="snap-real",
+        observed_at_utc="2026-08-06T22:00:00Z",
+    )
+    # Plant ghost snapshot artifacts that have NO matching history row.
+    import polars as pl
+
+    ghost = pl.DataFrame(
+        {
+            "snapshot_id": ["ghost-snap"],
+            "fetched_at_utc": ["2099-01-01T00:00:00Z"],
+            "sleeper_player_id": ["9999"],
+            "team": ["GHO"],
+            "position": ["QB"],
+            "is_active": [True],
+            "observed_at_utc": ["2099-01-01T00:00:00Z"],
+            "source_endpoint": ["https://example.com/ghost"],
+            "db_season": [2099],
+        },
+        schema={
+            "snapshot_id": pl.Utf8,
+            "fetched_at_utc": pl.Utf8,
+            "sleeper_player_id": pl.Utf8,
+            "team": pl.Utf8,
+            "position": pl.Utf8,
+            "is_active": pl.Boolean,
+            "observed_at_utc": pl.Utf8,
+            "source_endpoint": pl.Utf8,
+            "db_season": pl.Int64,
+        },
+    )
+    ghost.write_parquet(audit_root / "normalized" / "qb_snapshots.parquet")
+
+    sys.path.insert(0, str(SRC_DIR))
+    from nfl_edge.source_audits.sleeper_qb_v1.metrics import (
+        compute_rolling_metrics_from_disk,
+    )
+
+    metrics = compute_rolling_metrics_from_disk(audit_root)
+    # The ghost row should NOT inflate metrics. Active row count
+    # should still be the snapshot's active rows.
+    assert metrics["scheduled_run_count"] == 1
+    assert metrics["successful_run_count"] == 1

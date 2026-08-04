@@ -54,6 +54,12 @@ class RunOutcome(str, Enum):
 # writes exactly one row. ``success`` is derived from
 # ``outcome == SUCCESS`` and is never derived from a single HTTP
 # attempt.
+#
+# Rereview 4851615980 authoritativeness (Rereview 4851615980 / current
+# pass): ``run_history.parquet`` is the ONLY authoritative terminal
+# commit ledger. ``payload_sha256`` and ``raw_payload_path`` are
+# carried so prior successful snapshots can be reconstructed from
+# history alone — no derived cache file is read for correctness.
 RUN_HISTORY_ROW_DTYPES: dict[str, pl.DataType] = {
     "snapshot_id": pl.Utf8,
     "observed_at_utc": pl.Utf8,
@@ -66,6 +72,10 @@ RUN_HISTORY_ROW_DTYPES: dict[str, pl.DataType] = {
     "kind": pl.Utf8,
     "attempt_count": pl.Int32,
     "success": pl.Boolean,
+    # Carried on every committed row; nullable for runs that did not
+    # produce a successful payload (e.g. transport failures).
+    "payload_sha256": pl.Utf8,
+    "raw_payload_path": pl.Utf8,
 }
 
 
@@ -120,6 +130,11 @@ class RunOutcomeRecord:
     exit_code: int
     kind: str | None = None
     attempt_count: int = 0
+    # Carried on every committed row so prior successful snapshots
+    # can be reconstructed from history alone. Nullable for runs
+    # without a successful payload.
+    payload_sha256: str | None = None
+    raw_payload_path: str | None = None
 
     @property
     def success(self) -> bool:
@@ -146,6 +161,8 @@ class RunOutcomeRecord:
             "kind": self.kind,
             "attempt_count": self.attempt_count,
             "success": self.success,
+            "payload_sha256": self.payload_sha256,
+            "raw_payload_path": self.raw_payload_path,
         }
 
 

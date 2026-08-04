@@ -38,6 +38,13 @@ from typing import Any, Iterable, Mapping
 
 import polars as pl
 
+from .history_views import (
+    committed_snapshot_ids,
+    filter_committed,
+    filter_committed_by_observed_at,
+    load_run_history,
+)
+
 
 @dataclass(frozen=True)
 class RunMetric:
@@ -269,14 +276,17 @@ def build_runs_from_disk(
 ) -> tuple[list[RunMetric], pl.DataFrame]:
     """Rebuild a list of ``RunMetric`` from the persisted audit history.
 
-    The function reads ``run_history.parquet`` (the terminal run
-    history) as its primary source of truth. Every row in
-    ``run_history.parquet`` becomes one ``RunMetric`` with a
-    terminal ``run_outcome`` and the corresponding ``success``
-    boolean. The ``fetch_ledger.parquet`` is read second to
-    attach per-run attempt detail (latency, http_status, response
-    bytes) but it does NOT determine success — the terminal
-    outcome does.
+    The function reads ``run_history.parquet`` (the **authoritative**
+    terminal run history — the only source of truth) as its
+    primary source. Every row in ``run_history.parquet`` becomes
+    one ``RunMetric``. ``fetch_ledger.parquet``,
+    ``normalized/qb_snapshots.parquet``,
+    ``normalized/qb_identity_crosswalk.parquet`` are read to attach
+    per-run attempt detail and snapshot rows, but they are filtered
+    through the **committed-snapshot-id set** derived from
+    ``run_history.parquet``: any row whose ``snapshot_id`` (or
+    ``fetched_at_utc`` for fetch attempts) does not correspond to a
+    committed history row is ignored.
 
     Per the rereview contract: a run is successful iff
     ``run_outcome == SUCCESS``. INCOMPLETE_RESPONSE,
@@ -285,8 +295,8 @@ def build_runs_from_disk(
     all count as failed runs even when the underlying HTTP attempt
     succeeded.
 
-    The second return value is the full change ledger, also
-    read from disk.
+    The second return value is the full change ledger, also read
+    from disk and filtered to committed snapshots.
     """
     audit_root = Path(audit_root)
     fetch_ledger_path = audit_root / "fetch_ledger.parquet"
@@ -295,34 +305,44 @@ def build_runs_from_disk(
     change_ledger_path = audit_root / "normalized" / "qb_change_ledger.parquet"
     run_history_path = audit_root / "run_history.parquet"
 
+    # Authoritative terminal history is the source of truth. Read
+    # it FIRST so every other read can be filtered against the
+    # committed-snapshot-id set.
+    history = load_run_history(run_history_path)
+    committed_ids = committed_snapshot_ids(history)
+
     fetch_ledger = _safe_read_parquet(fetch_ledger_path)
     active = _safe_read_parquet(active_path)
     crosswalk = _safe_read_parquet(crosswalk_path)
     change_ledger = _safe_read_parquet(change_ledger_path)
 
-    # Read run history (terminal outcomes). One parquet row per run.
-    # Rereview 4852338912: run_history.parquet replaces run_history.jsonl.
-    # The parquet file is the single source of truth for terminal
-    # outcomes. Malformed rows (e.g. from an interrupted write) are
-    # surfaced, not silently skipped — the file is written atomically
-    # so partial writes cannot occur.
-    history: list[dict[str, Any]] = []
-    if run_history_path.exists() and run_history_path.stat().st_size > 0:
-        run_history_frame = pl.read_parquet(run_history_path)
-        history = run_history_frame.to_dicts()
+    # Ghost filter: drop snapshot / attempt / crosswalk / change
+    # rows whose snapshot_id is not in the committed-history set.
+    if active.height > 0 and committed_ids:
+        active = filter_committed(active, committed_ids)
+    if crosswalk.height > 0 and committed_ids:
+        crosswalk = filter_committed(crosswalk, committed_ids)
+    if change_ledger.height > 0 and committed_ids:
+        change_ledger = filter_committed(change_ledger, committed_ids)
+    # Fetch-attempt rows have no snapshot_id; gate them by
+    # ``observed_at_utc`` matching a history row's ``observed_at_utc``.
+    if fetch_ledger.height > 0:
+        fetch_ledger = filter_committed_by_observed_at(
+            fetch_ledger, history, observed_column="observed_at_utc"
+        )
+
+    # Build per-run metrics from history (the only authoritative
+    # row source).
+    history_records = history.to_dicts() if history.height > 0 else []
 
     runs: list[RunMetric] = []
-    for record in history:
+    for record in history_records:
         run_outcome = str(record.get("outcome", ""))
-        # The terminal run-outcome is the ONLY source of truth for
-        # success. A run with HTTP success + a downstream failure
-        # is a failed run.
         success = run_outcome == "SUCCESS"
         observed_at_utc = str(record.get("observed_at_utc") or "")
         snapshot_id = str(record.get("snapshot_id") or "")
         kind = record.get("kind")
         attempt_count = int(record.get("attempt_count") or 0)
-        # Attach the per-run attempts from the fetch ledger.
         attempts: list[dict[str, Any]] = []
         if (
             fetch_ledger.height > 0
@@ -369,85 +389,26 @@ def build_runs_from_disk(
     return runs, change_ledger
 
 
-def _current_run_metric_from_record(
-    record: Mapping[str, Any],
-    *,
-    active_rows: list[Mapping[str, Any]] | None = None,
-    crosswalk_rows: list[Mapping[str, Any]] | None = None,
-    fetch_attempts: list[Mapping[str, Any]] | None = None,
-) -> RunMetric:
-    """Build a ``RunMetric`` from an in-memory terminal record.
-
-    Used by ``compute_rolling_metrics_from_disk`` (with the
-    ``current_run_record`` keyword) to include the current
-    invocation's provisional outcome in the live rolling report,
-    without first durably persisting it to ``run_history.parquet``.
-
-    Rereview 4858328151 §2: the live report must include the
-    current run, so the operator sees the current invocation's
-    outcome reflected in scheduled_run_count /
-    successful_run_count / failed_run_count.
-    """
-    outcome = str(record.get("outcome", ""))
-    success = outcome == "SUCCESS"
-    try:
-        attempt_count = int(record.get("attempt_count", 0) or 0)
-    except (TypeError, ValueError):
-        attempt_count = 0
-    return RunMetric(
-        snapshot_id=str(record.get("snapshot_id") or ""),
-        observed_at_utc=str(record.get("observed_at_utc") or ""),
-        success=success,
-        run_outcome=outcome,
-        attempt_count=attempt_count,
-        kind=record.get("kind"),
-        fetch_attempts=list(fetch_attempts or []),
-        active_rows=list(active_rows or []),
-        crosswalk_rows=list(crosswalk_rows or []),
-    )
-
-
 def compute_rolling_metrics_from_disk(
     audit_root: str | Path,
     *,
     freshness_history: list[Mapping[str, Any]] | None = None,
-    current_run_record: Mapping[str, Any] | None = None,
-    current_active_rows: list[Mapping[str, Any]] | None = None,
-    current_crosswalk_rows: list[Mapping[str, Any]] | None = None,
-    current_fetch_attempts: list[Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    """Compute the rolling metrics from persisted audit artifacts.
+    """Compute the rolling metrics from committed terminal history.
 
-    This is the entry point the live-audit report writer uses. It
-    reads the full history (every successful and failed run) so
-    the rolling metrics include the entire observation window, not
-    just the current run.
-
-    Rereview 4858328151 §2: the optional ``current_run_record``
-    keyword (plus its optional companion lists) lets the caller
-    include the **current** invocation's provisional outcome in
-    the metrics without first durably appending it to
-    ``run_history.parquet``. The record is treated like every
-    other terminal row for the purposes of
-    ``scheduled_run_count`` / ``successful_run_count`` /
-    ``failed_run_count`` and attempt reconciliation.
+    Authoritative pass: reads only ``run_history.parquet`` and the
+    snapshot artifacts that correspond to committed snapshot_ids.
+    The current invocation's row appears in the metrics naturally
+    after ``commit_terminal_history`` writes it — there is no
+    in-memory provisional row to feed in.
 
     Attempt reconciliation (Rereview 4851615980):
     ``attempted_fetch_count == successful_attempt_count +
-    failed_attempt_count``. The current invocation's attempt
-    detail contributes to this count when supplied via
-    ``current_fetch_attempts``.
+    failed_attempt_count``. Per-attempt detail is read from
+    ``fetch_ledger.parquet`` filtered to committed observed_at_utc
+    values.
     """
     runs, change_ledger = build_runs_from_disk(audit_root)
-    if current_run_record is not None:
-        runs.append(
-            _current_run_metric_from_record(
-                current_run_record,
-                active_rows=current_active_rows,
-                crosswalk_rows=current_crosswalk_rows,
-                fetch_attempts=current_fetch_attempts,
-            )
-        )
     return compute_reliability_metrics(
         runs=runs,
         change_ledger=change_ledger,

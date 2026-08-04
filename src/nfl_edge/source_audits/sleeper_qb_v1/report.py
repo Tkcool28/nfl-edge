@@ -37,10 +37,18 @@ def write_live_audit_report(
     observations: list[Mapping[str, Any]],
     output_markdown: str | Path,
     output_json: str | Path,
+    source_history: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Render the live audit report and write it to disk.
 
     Returns the JSON-ready dict so the caller can post-process it.
+
+    ``source_history`` carries committed-history provenance
+    (``source_history_row_count``,
+    ``source_history_last_finished_at_utc``,
+    ``source_history_last_snapshot_id``) so consumers can detect
+    a stale cached report by comparing the cached provenance with
+    the live ledger.
     """
     metrics_view = dict(metrics)
     report_payload: dict[str, Any] = {
@@ -52,6 +60,7 @@ def write_live_audit_report(
         "last_payload_sha256": last_payload_sha256,
         "metrics": metrics_view,
         "observations": list(observations),
+        "source_history": dict(source_history or {}),
     }
     Path(output_json).parent.mkdir(parents=True, exist_ok=True)
     atomic_write_text(

@@ -67,6 +67,14 @@ from .freshness import (
     derive_freshness_state,
     schema_drift_fields,
 )
+from .history_views import (
+    history_last_finished_at_utc,
+    history_last_snapshot_id,
+    history_row_count,
+    load_run_history,
+    select_latest_successful_snapshot,
+    select_pregame_from_history,
+)
 from .ho_game import (
     HOF_OBSERVATION_DTYPES,
     build_observation_record,
@@ -238,25 +246,47 @@ class AuditOrchestrator:
         integer).
         """
         if kind not in ALLOWED_KINDS:
-            self._commit_terminal_record(
-                RunOutcomeRecord(
-                    outcome=RunOutcome.NORMALIZATION_FAILURE,
+            record = RunOutcomeRecord(
+                outcome=RunOutcome.NORMALIZATION_FAILURE,
+                snapshot_id=None,
+                observed_at_utc=None,
+                finished_at_utc=_utc_now_iso(),
+                error_class="ValueError",
+                error_message=f"unknown run kind: {kind!r}; allowed={sorted(ALLOWED_KINDS)}",
+                error_token=ERROR_TOKENS[RunOutcome.NORMALIZATION_FAILURE],
+                exit_code=EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE],
+                kind=kind,
+                attempt_count=0,
+            )
+            try:
+                self._commit_terminal_history(record)
+            except OSError as exc:
+                return self._failure_after_history_failure(
+                    kind=kind,
                     snapshot_id=None,
                     observed_at_utc=None,
-                    finished_at_utc=_utc_now_iso(),
-                    error_class="ValueError",
-                    error_message=f"unknown run kind: {kind!r}; allowed={sorted(ALLOWED_KINDS)}",
-                    error_token=ERROR_TOKENS[RunOutcome.NORMALIZATION_FAILURE],
-                    exit_code=EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE],
-                    kind=kind,
-                    attempt_count=0,
+                    attempts=[],
+                    history_error=exc,
                 )
+            projection_warnings = self._refresh_derived_views(
+                record,
+                winner_sha256=None,
+                winner_raw_payload_path=None,
+                hof_payload=None,
+                kind=kind,
+                change_ledger=pl.DataFrame(),
+                present_fields=frozenset(),
+                missing_fields=[],
+                warnings=[],
+                observed=utc_now(),
+                endpoint=self.endpoint,
             )
             return {
                 "run_outcome": RunOutcome.NORMALIZATION_FAILURE.value,
                 "exit_code": EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE],
                 "error_class": "ValueError",
                 "error_message": f"unknown run kind: {kind!r}",
+                "projection_warnings": projection_warnings,
             }
 
         # Reference-manifest verification runs *before* the network.
@@ -281,13 +311,36 @@ class AuditOrchestrator:
                     kind=kind,
                     attempt_count=0,
                 )
-                self._commit_terminal_record(record)
+                try:
+                    self._commit_terminal_history(record)
+                except OSError as exc:
+                    return self._failure_after_history_failure(
+                        kind=kind,
+                        snapshot_id=None,
+                        observed_at_utc=None,
+                        attempts=[],
+                        history_error=exc,
+                    )
+                projection_warnings = self._refresh_derived_views(
+                    record,
+                    winner_sha256=None,
+                    winner_raw_payload_path=None,
+                    hof_payload=None,
+                    kind=kind,
+                    change_ledger=pl.DataFrame(),
+                    present_fields=frozenset(),
+                    missing_fields=[],
+                    warnings=[],
+                    observed=utc_now(),
+                    endpoint=self.endpoint,
+                )
                 return {
                     "run_outcome": outcome.value,
                     "exit_code": EXIT_CODES[outcome],
                     "error_class": "ReferenceVerificationError",
                     "error_message": "; ".join(errors),
                     "errors": errors,
+                    "projection_warnings": projection_warnings,
                 }
 
         # 1. Resolve snapshot_id and observed_at_utc deterministically.
@@ -429,182 +482,28 @@ class AuditOrchestrator:
             hof_payload = hof_result.get("payload")
             hof_run_outcome = hof_result.get("outcome")
 
-        # 13. Determine the provisional final terminal outcome.
-        # The HTTP fetch succeeded, but a downstream HOF failure
-        # downgrades the run: a successful collection with a
-        # failed HOF is NOT a success. The provisional outcome is
-        # what gets reported in the live report's current-run
-        # observation; a later report-write or pointer-write
-        # failure may downgrade it to PERSISTENCE_FAILURE.
-        provisional_outcome = hof_run_outcome or RunOutcome.SUCCESS
-        report_write_failed = False
-        report_error_class: str | None = None
-        report_error_message: str | None = None
-        report_payload: dict[str, Any] | None = None
-        pointer_write_failed = False
-        pointer_error_class: str | None = None
-        pointer_error_message: str | None = None
+        # 13. Determine the final terminal outcome from the run itself
+        # (HOF failure downgrades a successful collection). The
+        # committed terminal outcome is decided BEFORE the
+        # authoritative history append — there is no provisional
+        # outcome and no derived-view-driven downgrade.
+        final_outcome = hof_run_outcome or RunOutcome.SUCCESS
 
-        # Build the in-memory provisional record used for the
-        # current-run-inclusive metrics (Rereview 4858328151 §2)
-        # BEFORE the live report is computed. The report writer
-        # then sees the current invocation.
-        provisional_record = {
-            "outcome": provisional_outcome.value,
-            "snapshot_id": snapshot_id,
-            "observed_at_utc": observed_at_utc,
-            "kind": kind,
-            "attempt_count": len(attempts),
-            "success": provisional_outcome == RunOutcome.SUCCESS,
-        }
-        # Per-attempt detail for the current invocation (used by
-        # attempt reconciliation in the metrics).
-        current_fetch_attempts = [
-            {
-                "success": a.error_class is None,
-                "duration_ms": int(a.duration_ms or 0),
-                "http_status": a.http_status,
-                "response_bytes": int(a.response_bytes or 0),
-            }
-            for a in attempts
-        ]
-        current_active_rows = active_frame.to_dicts()
-        current_crosswalk_rows = crosswalk.to_dicts()
-
-        # 14. Write live report + rolling metrics BEFORE persisting
-        # the terminal outcome. The metrics computation includes
-        # the current invocation's provisional record so the live
-        # report reflects the run that is about to be committed.
-        # If this fails, the terminal outcome becomes
-        # PERSISTENCE_FAILURE — the run cannot produce a live
-        # report — and exactly one terminal-history row reflects
-        # that outcome.
-        try:
-            metrics = compute_rolling_metrics_from_disk(
-                self.audit_root,
-                freshness_history=[
-                    {
-                        "last_success_at_utc": observed_at_utc,
-                        "last_failure_at_utc": None,
-                        "last_attempt_success": (
-                            provisional_outcome == RunOutcome.SUCCESS
-                        ),
-                        "change_count": change_count_for(change_ledger),
-                        "last_payload_sha256": winner.sha256,
-                        "prior_payload_sha256": None,
-                        "parsed_ok": True,
-                        "present_fields": present,
-                    }
-                ],
-                current_run_record=provisional_record,
-                current_active_rows=current_active_rows,
-                current_crosswalk_rows=current_crosswalk_rows,
-                current_fetch_attempts=current_fetch_attempts,
-            )
-            freshness_state = derive_freshness_state(
-                FreshnessInputs(
-                    last_success_at_utc=observed_at_utc,
-                    last_failure_at_utc=None,
-                    last_attempt_success=(
-                        provisional_outcome == RunOutcome.SUCCESS
-                    ),
-                    change_count=change_count_for(change_ledger),
-                    last_payload_sha256=winner.sha256,
-                    prior_payload_sha256=None,
-                    parsed_ok=True,
-                    present_fields=present,
-                ),
-                staleness_threshold_seconds=self.staleness_threshold_seconds,
-                now=observed,
-            )
-            report_payload = write_live_audit_report(
-                metrics=metrics,
-                freshness_state=freshness_state,
-                last_payload_sha256=winner.sha256,
-                endpoint=self.endpoint,
-                source_contract_version=AUDIT_VERSION,
-                observations=[
-                    {
-                        "kind": (
-                            "success"
-                            if provisional_outcome == RunOutcome.SUCCESS
-                            else "failure"
-                        ),
-                        "at_utc": observed_at_utc,
-                        "snapshot_id": snapshot_id,
-                        "run_outcome": provisional_outcome.value,
-                        "freshness_state": freshness_state,
-                        "schema_drift_missing_fields": sorted(missing),
-                        "warnings": warnings,
-                    }
-                ],
-                output_markdown=self.reports_root / "sleeper_qb_live_audit.md",
-                output_json=self.reports_root / "sleeper_qb_live_audit.json",
-            )
-        except OSError as exc:
-            report_write_failed = True
-            report_error_class = type(exc).__name__
-            report_error_message = str(exc)
-            metrics = None
-            freshness_state = None
-
-        # 15. Resolve the TRUE final outcome after the live report
-        # write. A failed report write downgrades the outcome to
-        # PERSISTENCE_FAILURE. The latest-success pointer is
-        # advanced only if the provisional outcome is still
-        # SUCCESS after this step.
-        final_outcome = provisional_outcome
-        if report_write_failed:
-            final_outcome = RunOutcome.PERSISTENCE_FAILURE
-
-        # 16. Atomically advance latest_snapshot.json ONLY when the
-        # true final outcome is SUCCESS (Rereview 4858328151 §3:
-        # pointer must be written BEFORE terminal history/status
-        # are committed, but only after all other success-path
-        # work has completed). A pointer-write failure downgrades
-        # the outcome to PERSISTENCE_FAILURE; the prior pointer
-        # file remains byte-identical because ``os.replace`` only
-        # succeeds on a complete atomic write. The CLI must NOT
-        # attempt a second terminal-history row — that would
-        # record SUCCESS for an invocation whose pointer write
-        # failed. The orchestrator owns the terminal outcome.
-        if final_outcome == RunOutcome.SUCCESS:
-            latest_pointer = {
-                "snapshot_id": snapshot_id,
-                "observed_at_utc": observed_at_utc,
-                "payload_sha256": winner.sha256,
-                "raw_payload_path": winner.raw_payload_path,
-                "kind": kind,
-            }
-            try:
-                atomic_write_text(
-                    self.latest_pointer_path,
-                    json.dumps(latest_pointer, indent=2, default=str) + "\n",
-                )
-            except OSError as exc:
-                pointer_write_failed = True
-                pointer_error_class = type(exc).__name__
-                pointer_error_message = str(exc)
-                final_outcome = RunOutcome.PERSISTENCE_FAILURE
-
-        # 17. Persist exactly ONE terminal-history row reflecting
-        # the actual final outcome (Rereview 4858328151 §3).
-        # History-first ordering: history is written before status.
-        # A history failure surfaces PERSISTENCE_FAILURE and does
-        # NOT write status or advance the latest-success pointer.
+        # 14. Build the terminal record.
         error_class_for_record: str | None = None
         error_message_for_record: str | None = None
-        if final_outcome != RunOutcome.SUCCESS:
-            if pointer_write_failed:
-                error_class_for_record = pointer_error_class
-                error_message_for_record = (
-                    f"latest_snapshot write failed: {pointer_error_message}"
-                )
-            elif report_write_failed:
-                error_class_for_record = report_error_class
-                error_message_for_record = (
-                    f"live report write failed: {report_error_message}"
-                )
+        if final_outcome != RunOutcome.SUCCESS and hof_run_outcome is not None:
+            payload = hof_payload or {}
+            error_class_for_record = (
+                payload.get("error_class")
+                if isinstance(payload, Mapping)
+                else None
+            )
+            error_message_for_record = (
+                payload.get("error_message")
+                if isinstance(payload, Mapping)
+                else None
+            )
         record = RunOutcomeRecord(
             outcome=final_outcome,
             snapshot_id=snapshot_id,
@@ -620,11 +519,19 @@ class AuditOrchestrator:
             exit_code=EXIT_CODES[final_outcome],
             kind=kind,
             attempt_count=len(attempts),
+            payload_sha256=getattr(winner, "sha256", None) if winner else None,
+            raw_payload_path=(
+                str(winner.raw_payload_path) if winner else None
+            ),
         )
-        history_written = False
+
+        # 15. AUTHORITATIVE COMMIT POINT: append exactly one
+        # terminal-history row to ``run_history.parquet``. A failure
+        # here surfaces PERSISTENCE_FAILURE (exit 13) with NO retry,
+        # NO derived-view writes, NO second history row. The caller
+        # accepts that no durable terminal record is available.
         try:
-            self._append_run_history(record)
-            history_written = True  # noqa: F841 — recorded for symmetry with status path
+            self._commit_terminal_history(record)
         except OSError as exc:
             return self._failure_after_history_failure(
                 kind=kind,
@@ -634,38 +541,42 @@ class AuditOrchestrator:
                 history_error=exc,
             )
 
-        # 18. Write latest_run_status.json. History-first ordering:
-        # history was already durably written, so a status failure
-        # cannot drop the terminal record. A status failure
-        # surfaces PERSISTENCE_FAILURE but does NOT advance the
-        # latest-success pointer and does NOT append a second
-        # history row.
-        try:
-            self._write_latest_run_status(record)
-        except OSError as exc:
-            return self._failure_after_status_failure(
-                kind=kind,
-                snapshot_id=snapshot_id,
-                observed_at_utc=observed_at_utc,
-                attempts=attempts,
-                status_error=exc,
-            )
+        # 16. Refresh derived views. Failures are returned as
+        # projection_warnings; the committed terminal outcome is
+        # NOT mutated, no second history row is appended, and the
+        # process exit code is unchanged.
+        projection_warnings = self._refresh_derived_views(
+            record,
+            winner_sha256=getattr(winner, "sha256", None) if winner else None,
+            winner_raw_payload_path=(
+                str(winner.raw_payload_path) if winner else None
+            ),
+            hof_payload=hof_payload,
+            kind=kind,
+            change_ledger=change_ledger,
+            present_fields=present,
+            missing_fields=list(missing),
+            warnings=warnings,
+            observed=observed,
+            endpoint=self.endpoint,
+        )
 
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
-            "payload_sha256": winner.sha256,
-            "freshness_state": freshness_state,
-            "metrics": metrics,
+            "payload_sha256": getattr(winner, "sha256", None) if winner else None,
+            "freshness_state": None,  # surfaced via report cache; not authoritative
+            "metrics": None,  # derived; not authoritative
             "active_row_count": active_frame.height,
             "inactive_row_count": inactive_frame.height,
             "matched_count": int(crosswalk.filter(pl.col("is_matched")).height),
             "unmatched_count": int(crosswalk.filter(~pl.col("is_matched")).height),
             "change_event_count": int(change_ledger.height),
-            "report": report_payload,
+            "report": None,  # derived; not authoritative
             "hof": hof_payload,
             "run_outcome": final_outcome.value,
             "exit_code": EXIT_CODES[final_outcome],
+            "projection_warnings": projection_warnings,
         }
 
     # ------------------------------------------------------------------
@@ -739,6 +650,12 @@ class AuditOrchestrator:
                         ),
                     },
                 }
+            # Derived inspection cache only. The committed terminal
+            # ledger (``run_history.parquet``) is the authoritative
+            # source for HOF postgame decision-making; this file
+            # is a human-facing snapshot. A cache-write failure
+            # here is non-fatal — the postgame run still succeeds
+            # as long as the committed history has the pregame row.
             pointer = {
                 "schema_version": "hof-pregame-pointer-v1",
                 "game_id": game.get("game_id"),
@@ -748,10 +665,14 @@ class AuditOrchestrator:
                 "normalized_snapshot_reference": str(self.active_qb_path),
                 "evidence_snapshot_reference": str(self.evidence_path),
             }
-            atomic_write_text(
-                self.pregame_pointer_path,
-                json.dumps(pointer, indent=2, default=str) + "\n",
-            )
+            try:
+                atomic_write_text(
+                    self.pregame_pointer_path,
+                    json.dumps(pointer, indent=2, default=str) + "\n",
+                )
+            except OSError:
+                # Best-effort; the committed history is authoritative.
+                pass
             return {
                 "outcome": None,
                 "payload": {
@@ -761,62 +682,56 @@ class AuditOrchestrator:
                 },
             }
 
-        # kind == "postgame"
-        if not self.pregame_pointer_path.exists():
+        # kind == "postgame": derive the committed pregame
+        # selection from ``run_history.parquet``. The
+        # ``hof_pregame_pointer.json`` cache is NEVER read for this
+        # decision — only the committed terminal-history ledger
+        # decides.
+        history = load_run_history(self.run_history_path)
+        pregame = select_pregame_from_history(history, kickoff_utc=kickoff_utc)
+        if pregame is None:
             return {
                 "outcome": RunOutcome.NORMALIZATION_FAILURE,
                 "payload": {
-                    "error_class": "MissingPregamePointer",
+                    "error_class": "MissingCommittedPregame",
                     "error_message": (
-                        "postgame run without a frozen pregame pointer; cannot compare"
+                        "postgame run with no committed pregame row in "
+                        "run_history.parquet; cannot compare"
                     ),
                 },
             }
-        try:
-            pointer = json.loads(self.pregame_pointer_path.read_text())
-        except (OSError, json.JSONDecodeError) as exc:
+        pregame_snapshot_id = str(pregame.get("snapshot_id") or "")
+        if not pregame_snapshot_id:
             return {
                 "outcome": RunOutcome.NORMALIZATION_FAILURE,
                 "payload": {
-                    "error_class": "MalformedPregamePointer",
-                    "error_message": str(exc),
+                    "error_class": "MissingCommittedPregame",
+                    "error_message": (
+                        "postgame run with no committed pregame snapshot_id; "
+                        "cannot compare"
+                    ),
                 },
             }
-        required_pointer_fields = {
-            "game_id", "kickoff_utc", "selected_snapshot_id",
-            "observed_at_utc", "normalized_snapshot_reference",
-            "evidence_snapshot_reference",
+        pointer = {
+            "schema_version": "hof-pregame-pointer-v1",
+            "game_id": game.get("game_id"),
+            "kickoff_utc": kickoff_utc,
+            "selected_snapshot_id": pregame_snapshot_id,
+            "observed_at_utc": pregame.get("observed_at_utc"),
+            "normalized_snapshot_reference": str(self.active_qb_path),
+            "evidence_snapshot_reference": str(self.evidence_path),
         }
-        missing_pointer_fields = required_pointer_fields - set(pointer)
-        if missing_pointer_fields:
+        # Sanity: pregame must be before kickoff (already enforced by
+        # ``select_pregame_from_history``).
+        if not _utc_iso_is_before(
+            str(pregame.get("observed_at_utc")), kickoff_utc
+        ):
             return {
                 "outcome": RunOutcome.NORMALIZATION_FAILURE,
                 "payload": {
-                    "error_class": "MalformedPregamePointer",
+                    "error_class": "PregamePostKickoff",
                     "error_message": (
-                        f"pregame pointer missing required fields: "
-                        f"{sorted(missing_pointer_fields)}"
-                    ),
-                },
-            }
-        if pointer.get("game_id") != game.get("game_id"):
-            return {
-                "outcome": RunOutcome.NORMALIZATION_FAILURE,
-                "payload": {
-                    "error_class": "PregamePointerGameMismatch",
-                    "error_message": (
-                        f"pregame game_id={pointer.get('game_id')} does not match "
-                        f"resolved postgame game_id={game.get('game_id')}"
-                    ),
-                },
-            }
-        if not _utc_iso_is_before(str(pointer.get("observed_at_utc")), kickoff_utc):
-            return {
-                "outcome": RunOutcome.NORMALIZATION_FAILURE,
-                "payload": {
-                    "error_class": "PregamePointerPostKickoff",
-                    "error_message": (
-                        f"frozen pregame observed_at_utc={pointer.get('observed_at_utc')} "
+                        f"committed pregame observed_at_utc={pregame.get('observed_at_utc')} "
                         f"is not before kickoff {kickoff_utc}"
                     ),
                 },
@@ -946,7 +861,29 @@ class AuditOrchestrator:
             kind=kind,
             attempt_count=len(attempts),
         )
-        self._commit_terminal_record(record)
+        try:
+            self._commit_terminal_history(record)
+        except OSError as exc:
+            return self._failure_after_history_failure(
+                kind=kind,
+                snapshot_id=snapshot_id,
+                observed_at_utc=observed_at_utc,
+                attempts=attempts,
+                history_error=exc,
+            )
+        projection_warnings = self._refresh_derived_views(
+            record,
+            winner_sha256=None,
+            winner_raw_payload_path=None,
+            hof_payload=None,
+            kind=kind,
+            change_ledger=pl.DataFrame(),
+            present_fields=frozenset(),
+            missing_fields=[],
+            warnings=[],
+            observed=observed,
+            endpoint=self.endpoint,
+        )
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
@@ -954,6 +891,7 @@ class AuditOrchestrator:
             "run_outcome": outcome.value,
             "exit_code": EXIT_CODES[outcome],
             "attempts": [asdict(a) for a in attempts],
+            "projection_warnings": projection_warnings,
         }
 
     def _finalize_incomplete_response(
@@ -995,7 +933,29 @@ class AuditOrchestrator:
             kind=kind,
             attempt_count=len(attempts),
         )
-        self._commit_terminal_record(record)
+        try:
+            self._commit_terminal_history(record)
+        except OSError as exc:
+            return self._failure_after_history_failure(
+                kind=kind,
+                snapshot_id=snapshot_id,
+                observed_at_utc=observed_at_utc,
+                attempts=attempts,
+                history_error=exc,
+            )
+        projection_warnings = self._refresh_derived_views(
+            record,
+            winner_sha256=None,
+            winner_raw_payload_path=None,
+            hof_payload=None,
+            kind=kind,
+            change_ledger=pl.DataFrame(),
+            present_fields=frozenset(),
+            missing_fields=[],
+            warnings=[],
+            observed=utc_now(),
+            endpoint=self.endpoint,
+        )
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
@@ -1004,6 +964,7 @@ class AuditOrchestrator:
             "exit_code": EXIT_CODES[outcome],
             "error_class": error_class,
             "error_message": error_message,
+            "projection_warnings": projection_warnings,
         }
 
     def _finalize_normalization_failure(
@@ -1029,7 +990,29 @@ class AuditOrchestrator:
             kind=kind,
             attempt_count=len(attempts),
         )
-        self._commit_terminal_record(record)
+        try:
+            self._commit_terminal_history(record)
+        except OSError as exc:
+            return self._failure_after_history_failure(
+                kind=kind,
+                snapshot_id=snapshot_id,
+                observed_at_utc=observed_at_utc,
+                attempts=attempts,
+                history_error=exc,
+            )
+        projection_warnings = self._refresh_derived_views(
+            record,
+            winner_sha256=None,
+            winner_raw_payload_path=None,
+            hof_payload=None,
+            kind=kind,
+            change_ledger=pl.DataFrame(),
+            present_fields=frozenset(),
+            missing_fields=[],
+            warnings=[],
+            observed=utc_now(),
+            endpoint=self.endpoint,
+        )
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
@@ -1037,27 +1020,29 @@ class AuditOrchestrator:
             "exit_code": EXIT_CODES[outcome],
             "error_class": error_class,
             "error_message": error_message,
+            "projection_warnings": projection_warnings,
         }
 
     def _failure_after_history_failure(
         self,
         *,
         kind: str,
-        snapshot_id: str,
-        observed_at_utc: str,
+        snapshot_id: str | None,
+        observed_at_utc: str | None,
         attempts: Sequence[SleeperFetchResult],
         history_error: BaseException,
     ) -> dict[str, Any]:
         """Handle a history-write failure.
 
-        History-first ordering (Rereview 4852878097 §5): if the
-        durable history append failed, status MUST NOT be written
-        (because then ``latest_run_status.json`` would claim an
-        outcome absent from ``run_history.parquet``). The terminal
-        outcome is PERSISTENCE_FAILURE (exit 13). No second history
-        row is attempted — one row per invocation.
+        Authoritative-ledger contract: ``run_history.parquet`` is
+        the only commit point. If the append failed, no derived
+        view may be written (because doing so would claim an
+        outcome absent from the ledger). The terminal outcome is
+        ``PERSISTENCE_FAILURE`` (exit 13). NO retry, NO second
+        history row, NO derived-view writes.
 
-        The latest-success pointer is not advanced.
+        We do not claim that this failure was itself recorded —
+        the terminal ledger was unavailable.
         """
         return {
             "snapshot_id": snapshot_id,
@@ -1066,32 +1051,6 @@ class AuditOrchestrator:
             "exit_code": EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE],
             "error_class": type(history_error).__name__,
             "error_message": f"run_history write failed: {history_error}",
-        }
-
-    def _failure_after_status_failure(
-        self,
-        *,
-        kind: str,
-        snapshot_id: str,
-        observed_at_utc: str,
-        attempts: Sequence[SleeperFetchResult],
-        status_error: BaseException,
-    ) -> dict[str, Any]:
-        """Handle a status-write failure.
-
-        History-first ordering (Rereview 4852878097 §5): history was
-        already durably written, so the terminal record is preserved
-        in ``run_history.parquet``. A status-write failure surfaces
-        PERSISTENCE_FAILURE (exit 13) without re-appending a second
-        history row and without advancing the latest-success pointer.
-        """
-        return {
-            "snapshot_id": snapshot_id,
-            "observed_at_utc": observed_at_utc,
-            "run_outcome": RunOutcome.PERSISTENCE_FAILURE.value,
-            "exit_code": EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE],
-            "error_class": type(status_error).__name__,
-            "error_message": f"latest_run_status write failed: {status_error}",
         }
 
     def _write_failure_report(self, snapshot_id: str, payload: dict[str, Any]) -> None:
@@ -1104,49 +1063,185 @@ class AuditOrchestrator:
             # Failure reports are best-effort; never raise from here.
             pass
 
-    def _write_latest_run_status(self, record: RunOutcomeRecord) -> None:
-        atomic_write_text(
-            self.latest_run_status_path,
-            json.dumps(record.to_dict(), indent=2, default=str) + "\n",
-        )
-
-    def _commit_terminal_record(
+    def _commit_terminal_history(
         self,
         record: RunOutcomeRecord,
     ) -> None:
-        """Persist a terminal outcome to ``run_history.parquet`` and
-        ``latest_run_status.json`` in history-first order.
+        """Append one terminal-history row.
 
-        Rereview 4852878097 §3 + §5:
-
-        * Exactly one terminal-history row is appended per invocation.
-        * History is appended BEFORE status is written, so a status
-          failure cannot leave ``latest_run_status.json`` claiming an
-          outcome absent from ``run_history.parquet``.
-        * If the history write raises ``OSError``, it propagates and
-          status is NOT written.
-        * If the history write succeeds and the status write raises
-          ``OSError``, the status failure propagates and the caller is
-          responsible for surfacing ``PERSISTENCE_FAILURE`` (exit 13)
-          without re-appending a second history row.
-        """
-        self._append_run_history(record)
-        self._write_latest_run_status(record)
-
-    def _append_run_history(self, record: RunOutcomeRecord) -> None:
-        """Append one row to ``run_history.parquet``.
-
-        Rereview 4852338912: the terminal run history is a durable
-        parquet file (``run_history.parquet``). Any ``OSError``
-        propagates to the caller — it is never swallowed, because a
-        missing terminal-history row means the rolling metrics would
-        silently drop a terminal record.
+        Authoritative commit point. Raises ``OSError`` on write
+        failure so the caller can return ``PERSISTENCE_FAILURE``
+        (exit 13). The function NEVER writes derived views —
+        ``refresh_derived_views`` handles those as best-effort.
         """
         atomic_append_run_history(
             self.run_history_path,
             record.to_dict(),
             row_schema=RUN_HISTORY_ROW_DTYPES,
         )
+
+    def _refresh_derived_views(
+        self,
+        record: RunOutcomeRecord,
+        *,
+        winner_sha256: str | None,
+        winner_raw_payload_path: str | None,
+        hof_payload: Mapping[str, Any] | None,
+        kind: str,
+        change_ledger: pl.DataFrame,
+        present_fields: frozenset[str] | tuple[str, ...],
+        missing_fields: list[str],
+        warnings: list[str],
+        observed: datetime,
+        endpoint: str,
+    ) -> list[str]:
+        """Best-effort refresh of derived views.
+
+        Writes:
+
+        * ``latest_run_status.json`` (derived cache);
+        * ``latest_snapshot.json`` (derived cache, only on SUCCESS);
+        * ``reports/sleeper_qb_live_audit.{md,json}`` (derived cache).
+
+        Failures are collected as ``projection_warnings`` and
+        RETURNED, never raised. A derived-view failure does NOT
+        mutate the committed terminal outcome, does NOT append a
+        second history row, and does NOT change the process exit
+        code.
+
+        A SUCCESS committed to history remains SUCCESS even if every
+        derived view here fails. A HOF-failure committed to history
+        retains its typed outcome regardless of derived-view health.
+        """
+        warnings_out: list[str] = []
+
+        # 1. latest_run_status.json
+        try:
+            atomic_write_text(
+                self.latest_run_status_path,
+                json.dumps(record.to_dict(), indent=2, default=str) + "\n",
+            )
+        except OSError as exc:
+            warnings_out.append(
+                f"latest_run_status.json write failed: {type(exc).__name__}: {exc}"
+            )
+
+        # 2. latest_snapshot.json — derived cache, SUCCESS-only.
+        if record.outcome == RunOutcome.SUCCESS:
+            latest_pointer = {
+                "snapshot_id": record.snapshot_id,
+                "observed_at_utc": record.observed_at_utc,
+                "finished_at_utc": record.finished_at_utc,
+                "payload_sha256": record.payload_sha256 or winner_sha256,
+                "raw_payload_path": record.raw_payload_path
+                or winner_raw_payload_path,
+                "kind": kind,
+            }
+            try:
+                atomic_write_text(
+                    self.latest_pointer_path,
+                    json.dumps(latest_pointer, indent=2, default=str) + "\n",
+                )
+            except OSError as exc:
+                warnings_out.append(
+                    f"latest_snapshot.json write failed: "
+                    f"{type(exc).__name__}: {exc}"
+                )
+
+        # 3. Live audit report (derived cache).
+        try:
+            history = load_run_history(self.run_history_path)
+            metrics = compute_rolling_metrics_from_disk(
+                self.audit_root,
+                freshness_history=[
+                    {
+                        "last_success_at_utc": record.observed_at_utc,
+                        "last_failure_at_utc": None,
+                        "last_attempt_success": (
+                            record.outcome == RunOutcome.SUCCESS
+                        ),
+                        "change_count": change_count_for(change_ledger),
+                        "last_payload_sha256": winner_sha256,
+                        "prior_payload_sha256": None,
+                        "parsed_ok": True,
+                        "present_fields": frozenset(present_fields),
+                    }
+                ],
+            )
+            freshness_state = derive_freshness_state(
+                FreshnessInputs(
+                    last_success_at_utc=record.observed_at_utc,
+                    last_failure_at_utc=None,
+                    last_attempt_success=(
+                        record.outcome == RunOutcome.SUCCESS
+                    ),
+                    change_count=change_count_for(change_ledger),
+                    last_payload_sha256=winner_sha256,
+                    prior_payload_sha256=None,
+                    parsed_ok=True,
+                    present_fields=frozenset(present_fields),
+                ),
+                staleness_threshold_seconds=self.staleness_threshold_seconds,
+                now=observed,
+            )
+            # Refresh source-history provenance so cached reports
+            # can be cross-checked against the live ledger.
+            provenance = {
+                "source_history_row_count": history_row_count(history),
+                "source_history_last_finished_at_utc": (
+                    history_last_finished_at_utc(history)
+                ),
+                "source_history_last_snapshot_id": (
+                    history_last_snapshot_id(history)
+                ),
+            }
+            write_live_audit_report(
+                metrics=metrics,
+                freshness_state=freshness_state,
+                last_payload_sha256=winner_sha256,
+                endpoint=endpoint,
+                source_contract_version=AUDIT_VERSION,
+                observations=[
+                    {
+                        "kind": (
+                            "success"
+                            if record.outcome == RunOutcome.SUCCESS
+                            else "failure"
+                        ),
+                        "at_utc": record.observed_at_utc,
+                        "snapshot_id": record.snapshot_id,
+                        "run_outcome": record.outcome.value,
+                        "freshness_state": freshness_state,
+                        "schema_drift_missing_fields": sorted(missing_fields),
+                        "warnings": list(warnings),
+                    }
+                ],
+                output_markdown=self.reports_root / "sleeper_qb_live_audit.md",
+                output_json=self.reports_root / "sleeper_qb_live_audit.json",
+                source_history=provenance,
+            )
+        except OSError as exc:
+            warnings_out.append(
+                f"live audit report write failed: {type(exc).__name__}: {exc}"
+            )
+
+        return warnings_out
+
+    def _commit_terminal_record(
+        self,
+        record: RunOutcomeRecord,
+    ) -> None:
+        """Backwards-compatible: append history (the authoritative
+        commit point) only. Status pointer writes are no longer
+        performed here — they belong to ``refresh_derived_views``.
+        """
+        self._commit_terminal_history(record)
+
+    def _append_run_history(self, record: RunOutcomeRecord) -> None:
+        """Append one row to ``run_history.parquet`` (back-compat
+        alias for :meth:`_commit_terminal_history`).
+        """
+        self._commit_terminal_history(record)
 
     # ------------------------------------------------------------------
     # persistence helpers (atomic)
@@ -1269,22 +1364,27 @@ class AuditOrchestrator:
         return self._read_evidence_for_snapshot(snapshot_id or "")
 
     def _read_latest_snapshot_id(self) -> str | None:
-        if not self.latest_pointer_path.exists():
+        """Return the snapshot_id of the latest committed SUCCESS row.
+
+        Derived from ``run_history.parquet`` (the authoritative
+        terminal ledger). ``latest_snapshot.json`` is a derived
+        cache and is NOT consulted here.
+        """
+        history = load_run_history(self.run_history_path)
+        selected = select_latest_successful_snapshot(history)
+        if selected is None:
             return None
-        try:
-            data = json.loads(self.latest_pointer_path.read_text())
-        except (OSError, json.JSONDecodeError):
-            return None
-        return data.get("snapshot_id")
+        return selected.get("snapshot_id")
 
     def _read_latest_observed_at_utc(self) -> str | None:
-        if not self.latest_pointer_path.exists():
+        """Return the observed_at_utc of the latest committed
+        SUCCESS row. Derived from ``run_history.parquet``.
+        """
+        history = load_run_history(self.run_history_path)
+        selected = select_latest_successful_snapshot(history)
+        if selected is None:
             return None
-        try:
-            data = json.loads(self.latest_pointer_path.read_text())
-        except (OSError, json.JSONDecodeError):
-            return None
-        return data.get("observed_at_utc")
+        return selected.get("observed_at_utc")
 
 
 def _date_partition(timestamp: datetime) -> str:
