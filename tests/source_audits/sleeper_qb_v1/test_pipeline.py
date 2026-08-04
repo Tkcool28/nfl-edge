@@ -406,7 +406,18 @@ def test_schema_drift_detection() -> None:
 
 
 def test_incomplete_response_detection() -> None:
-    inputs = freshness.FreshnessInputs(
+    """``parsed_ok=False`` with ``last_attempt_success=False`` is
+    a transport-level failure (network exhaustion, timeout, or
+    all-attempt HTTP failure), NOT an INCOMPLETE_RESPONSE.
+
+    The rereview contract reserves INCOMPLETE_RESPONSE for a
+    successful HTTP response whose body is malformed / empty /
+    unusable (parse-level failure). The test below simulates the
+    parse-level failure (HTTP 200 with empty payload) to assert
+    that INCOMPLETE_RESPONSE is preserved only for that case.
+    """
+    # Transport-level: last_attempt_success=False, parsed_ok=False.
+    transport_inputs = freshness.FreshnessInputs(
         last_success_at_utc=None,
         last_failure_at_utc=None,
         last_attempt_success=False,
@@ -416,8 +427,28 @@ def test_incomplete_response_detection() -> None:
         parsed_ok=False,
         present_fields=frozenset(),
     )
-    state = freshness.derive_freshness_state(inputs, staleness_threshold_seconds=3600)
-    assert state == "INCOMPLETE_RESPONSE"
+    transport_state = freshness.derive_freshness_state(
+        transport_inputs, staleness_threshold_seconds=3600
+    )
+    assert transport_state == "FETCH_FAILED_USING_NO_FALLBACK"
+
+    # Parse-level: HTTP 200 succeeded (last_attempt_success=True)
+    # but the body was empty / unusable (parsed_ok=False, no
+    # present fields). INCOMPLETE_RESPONSE is the correct label.
+    parse_inputs = freshness.FreshnessInputs(
+        last_success_at_utc="2026-08-04T00:00:00Z",
+        last_failure_at_utc=None,
+        last_attempt_success=True,
+        change_count=0,
+        last_payload_sha256=None,
+        prior_payload_sha256=None,
+        parsed_ok=False,
+        present_fields=frozenset(),
+    )
+    parse_state = freshness.derive_freshness_state(
+        parse_inputs, staleness_threshold_seconds=3600
+    )
+    assert parse_state == "INCOMPLETE_RESPONSE"
 
 
 # ---------------------------------------------------------------------------

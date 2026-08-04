@@ -2,7 +2,7 @@
 
 |**Status**: Source-feasibility audit, not a model input.
 |**Version**: 1.0
-|**Date**: August 3, 2026 (sub-phase C revision 2026-08-04)
+|**Date**: August 3, 2026 (sub-phase C revision 2026-08-04; rereview D 2026-08-04)
 |**Repository**: `Tkcool28/nfl-edge`
 |**Branch**: `feat/sleeper-qb-source-audit-v1` (refreshed onto merged `main`; based on `cd4a483`)
 
@@ -108,6 +108,60 @@ through `atomic_io.atomic_write_parquet` / `atomic_write_text`
 `os.replace`. The prior valid artifact remains byte-identical
 until the new one is fully durable.
 
+### 5.1.1 Atomic durability sequence (Rereview D)
+
+Per rereview `4851615980`, the atomic write helpers enforce
+the following ordering; the sequence is asserted by
+`tests/source_audits/sleeper_qb_v1/test_rereview_d.py`:
+
+`atomic_write_bytes(path, data)`:
+
+1. write `data` to a temp file (`<path>.tmp-<pid>-<random>`).
+2. flush the temp file (`handle.flush()`).
+3. fsync the temp file (`os.fsync(handle.fileno())`).
+4. `os.replace(temp, path)` — atomic rename.
+5. fsync the parent directory (`os.fsync(dirfd)`).
+
+`atomic_write_parquet(path, frame)`:
+
+1. write the Parquet to a temp path.
+2. open the temp file read-only.
+3. fsync the temp file via the read-only fd.
+4. `os.replace(temp, path)` — atomic rename.
+5. fsync the parent directory.
+
+The directory fsync is critical: without it the rename may
+not survive a crash. The temp-file fsync is critical: without
+it the new bytes may not be on disk before the rename. A
+forced failure before `os.replace` preserves the old target
+byte-for-byte (verified by SHA-256 round-trip in the test
+suite).
+
+## 5.2 HOF observation union + null preservation
+
+`build_observation_record` constructs the relevant QB set as
+the **union** of pregame HOF-team QBs and postgame HOF-team
+QBs (in deterministic ascending order by Sleeper id). For
+each QB in the union:
+
+* If the QB is **pregame-only**: pregame fields populated;
+  postgame fields (`observed_depth_order`,
+  `observed_injury_status`, `observed_practice_participation`,
+  `derived_evidence_state`) are all `null`.
+* If the QB is **postgame-only**: postgame fields populated;
+  pregame fields (`pregame_depth_order`,
+  `pregame_injury_status`, `pregame_practice_participation`,
+  `pregame_evidence_state`) are all `null`. **The audit never
+  copies postgame values into missing pregame fields** — that
+  would synthesize a historical signal the audit never
+  observed.
+* If the QB is in both: pregame and postgame columns are
+  populated independently.
+
+The rereview test
+`test_hof_postgame_only_qb_does_not_synthesize_pregame_history`
+asserts this contract.
+
 ## 6. Storage
 
 | Path | Purpose |
@@ -116,6 +170,7 @@ until the new one is fully durable.
 | `data/source_audits/sleeper_qb_v1/fetch_ledger.parquet` | One row per attempt |
 | `data/source_audits/sleeper_qb_v1/latest_snapshot.json` | Pointer to the most recent successful snapshot |
 | `data/source_audits/sleeper_qb_v1/latest_run_status.json` | Terminal outcome of the most recent run |
+| `data/source_audits/sleeper_qb_v1/run_history.jsonl` | One terminal-outcome JSONL record per run (rolling metric source of truth) |
 | `data/source_audits/sleeper_qb_v1/hof_pregame_pointer.json` | Frozen pregame snapshot reference (HOF Game) |
 | `data/source_audits/sleeper_qb_v1/normalized/qb_snapshots.parquet` | Active QB snapshots |
 | `data/source_audits/sleeper_qb_v1/normalized/qb_inactive_snapshots.parquet` | Inactive QB snapshots (defensive tripwire) |
@@ -138,6 +193,22 @@ fresh checkout must contain:
 * `reference/hof_game_2026_fixture.parquet`
 * `reference/nflverse_player_identity_pre2025.parquet`
 * `reference/manifest.json` (SHA-256 manifest for both)
+
+Per rereview `4851615980`, the configured
+`reference_manifest:` is **mandatory**. The CLI must fail with
+`REFERENCE_FAILURE` (exit 21) — never silently skip — if any
+of the following holds:
+
+* the `reference_manifest:` key is missing from the config;
+* the configured manifest path is missing on disk;
+* the manifest JSON is malformed;
+* the manifest schema is malformed (missing `artifacts`, wrong
+  types, empty list);
+* any tracked fixture's SHA-256 does not match the manifest.
+
+The CLI flag `--reference-manifest`, when supplied, must agree
+with the configured path; it cannot bypass the configured
+manifest.
 
 The CLI verifies every fixture against the manifest before
 each run; a missing or tampered fixture fails the run with
@@ -180,6 +251,30 @@ designation is not equivalent to verified health.
 The 2025 sealed holdout season is filtered out of the nflverse
 reference at the crosswalk boundary even if a 2025 row is supplied,
 so a 2025 row can never contribute to a crosswalk match.
+
+### 8.0 Terminal exact-ID conflict semantics (Rereview D)
+
+When a higher-priority exact identifier produces a
+multi-match conflict (the same token resolves to two or more
+nflverse rows), the crosswalk treats the row as **terminal**:
+
+* `is_matched = False`.
+* `nflverse_player_id = None`.
+* `match_confidence = 0.0`.
+* `review_required = True`.
+* `conflict_reason` preserves the exact token, e.g.
+  `multiple_nflverse_for_exact_sleeper_id`,
+  `multiple_nflverse_for_exact_gsis`,
+  `multiple_nflverse_for_exact_espn`, or
+  `multiple_nflverse_for_exact_other_stable_sportradar`.
+
+**The conflict is terminal**: the crosswalk does NOT fall
+through to lower-priority identifiers and does NOT evaluate
+the name+team fallback. Asserted by the rereview tests
+`test_sleeper_conflict_blocks_lower_priorities`,
+`test_gsis_conflict_blocks_lower_priorities`,
+`test_espn_conflict_blocks_other_stable_id`, and
+`test_other_stable_conflict_blocks_name_fallback`.
 
 ### 8.1 Identity reference (nflverse player identity table)
 

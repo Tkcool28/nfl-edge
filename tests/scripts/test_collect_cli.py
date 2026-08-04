@@ -91,12 +91,20 @@ def _run_cli(
     )
 
 
-def _write_config(audit_root: Path, config_path: Path) -> None:
-    config_path.write_text(
-        f"audit_root: {audit_root.as_posix()}\n"
-        "endpoint: https://api.sleeper.app/v1/players/nfl\n"
-        "staleness_threshold_seconds: 21600\n"
-    )
+def _write_config(
+    audit_root: Path,
+    config_path: Path,
+    *,
+    reference_manifest: Path | None = None,
+) -> None:
+    lines = [
+        f"audit_root: {audit_root.as_posix()}",
+        "endpoint: https://api.sleeper.app/v1/players/nfl",
+        "staleness_threshold_seconds: 21600",
+    ]
+    if reference_manifest is not None:
+        lines.append(f"reference_manifest: {reference_manifest.as_posix()}")
+    config_path.write_text("\n".join(lines) + "\n")
 
 
 @contextmanager
@@ -106,10 +114,102 @@ def _temp_audit_root(tmp_path: Path) -> Iterator[Path]:
     yield audit_root
 
 
+SHIPPED_REFERENCE_DIR = (
+    Path(__file__).resolve().parents[2]
+    / "data"
+    / "source_audits"
+    / "sleeper_qb_v1"
+    / "reference"
+)
+
+
+@contextmanager
+def _temp_reference(tmp_path: Path) -> Iterator[Path]:
+    """Stage the shipped reference fixtures into ``tmp_path/ref``.
+
+    Returns the path to a JSON manifest pointing at the staged
+    fixtures with their actual SHA-256s. The clean-clone contract
+    is the test's responsibility here: the fixtures exist in the
+    repo, but a fresh audit_root does not yet have them.
+    """
+    import hashlib
+    import shutil
+
+    ref_dir = tmp_path / "ref"
+    ref_dir.mkdir(parents=True, exist_ok=True)
+    manifest_path = tmp_path / "manifest.json"
+    artifacts: list[dict[str, object]] = []
+    for name in ("hof_game_2026_fixture.parquet", "nflverse_player_identity_pre2025.parquet"):
+        src = SHIPPED_REFERENCE_DIR / name
+        dst = ref_dir / name
+        shutil.copyfile(src, dst)
+        sha = hashlib.sha256(dst.read_bytes()).hexdigest()
+        # Row counts for the manifest — read with polars.
+        import polars as pl
+
+        rc = pl.read_parquet(dst).height
+        artifacts.append({"path": name, "sha256": sha, "row_count": rc})
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "description": "Test-clone manifest for the Sleeper audit.",
+                "artifacts": artifacts,
+            }
+        )
+    )
+    yield manifest_path
+
+
+@contextmanager
+def _stage_reference_into_audit_root(
+    audit_root: Path,
+) -> Iterator[Path]:
+    """Copy the shipped fixtures into ``audit_root/reference/`` and
+    yield a manifest pointing at them.
+
+    The rereview contract makes the reference manifest mandatory;
+    every CLI test must provide it. The orchestrator resolves
+    fixture paths relative to ``audit_root/reference/``, so the
+    fixtures must live there.
+    """
+    import hashlib
+    import shutil
+
+    ref_dir = audit_root / "reference"
+    ref_dir.mkdir(parents=True, exist_ok=True)
+    manifest_path = ref_dir / "manifest.json"
+    artifacts: list[dict[str, object]] = []
+    for name in ("hof_game_2026_fixture.parquet", "nflverse_player_identity_pre2025.parquet"):
+        src = SHIPPED_REFERENCE_DIR / name
+        dst = ref_dir / name
+        shutil.copyfile(src, dst)
+        sha = hashlib.sha256(dst.read_bytes()).hexdigest()
+        import polars as pl
+
+        rc = pl.read_parquet(dst).height
+        artifacts.append({"path": name, "sha256": sha, "row_count": rc})
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "description": "Test-clone manifest for the Sleeper audit.",
+                "artifacts": artifacts,
+            }
+        )
+    )
+    yield manifest_path
+
+
 def test_cli_scheduled_exits_zero_on_success(tmp_path: Path) -> None:
     config_path = tmp_path / "cfg.yaml"
-    with _temp_audit_root(tmp_path) as audit_root:
-        _write_config(audit_root, config_path)
+    with _temp_audit_root(tmp_path) as audit_root, \
+            _stage_reference_into_audit_root(audit_root) as manifest_path:
+        _write_config(
+            audit_root,
+            config_path,
+            reference_manifest=manifest_path,
+        )
         result = _run_cli(
             audit_root=audit_root,
             config_path=config_path,
@@ -127,8 +227,13 @@ def test_cli_postgame_without_pregame_pointer_is_normalization_failure(
     tmp_path: Path,
 ) -> None:
     config_path = tmp_path / "cfg.yaml"
-    with _temp_audit_root(tmp_path) as audit_root:
-        _write_config(audit_root, config_path)
+    with _temp_audit_root(tmp_path) as audit_root, \
+            _stage_reference_into_audit_root(audit_root) as manifest_path:
+        _write_config(
+            audit_root,
+            config_path,
+            reference_manifest=manifest_path,
+        )
         result = _run_cli(
             audit_root=audit_root,
             config_path=config_path,
@@ -150,8 +255,13 @@ def test_cli_pregame_writes_immutable_pointer(tmp_path: Path) -> None:
     with every documented field populated.
     """
     config_path = tmp_path / "cfg.yaml"
-    with _temp_audit_root(tmp_path) as audit_root:
-        _write_config(audit_root, config_path)
+    with _temp_audit_root(tmp_path) as audit_root, \
+            _stage_reference_into_audit_root(audit_root) as manifest_path:
+        _write_config(
+            audit_root,
+            config_path,
+            reference_manifest=manifest_path,
+        )
         result = _run_cli(
             audit_root=audit_root,
             config_path=config_path,
@@ -195,8 +305,13 @@ def test_cli_pregame_then_postgame_preserves_both_per_qb_values(
     the postgame lands well after.
     """
     config_path = tmp_path / "cfg.yaml"
-    with _temp_audit_root(tmp_path) as audit_root:
-        _write_config(audit_root, config_path)
+    with _temp_audit_root(tmp_path) as audit_root, \
+            _stage_reference_into_audit_root(audit_root) as manifest_path:
+        _write_config(
+            audit_root,
+            config_path,
+            reference_manifest=manifest_path,
+        )
         # Pregame at 2026-08-07 22:00 UTC (well before kickoff at
         # 00:00Z which is later that *day*; the kickoff is the
         # evening of Aug 6 local time). The pregame must be
@@ -256,8 +371,13 @@ def test_cli_timeout_exhaustion_exits_nonzero(tmp_path: Path) -> None:
     The CLI must exit nonzero with ``TRANSPORT_FAILURE``.
     """
     config_path = tmp_path / "cfg.yaml"
-    with _temp_audit_root(tmp_path) as audit_root:
-        _write_config(audit_root, config_path)
+    with _temp_audit_root(tmp_path) as audit_root, \
+            _stage_reference_into_audit_root(audit_root) as manifest_path:
+        _write_config(
+            audit_root,
+            config_path,
+            reference_manifest=manifest_path,
+        )
         # Drop a module-level flag into the fake session before
         # invoking the CLI. The CLI imports the fake session on
         # every invocation, so we set the attribute via PYTHONPATH
@@ -297,8 +417,13 @@ def test_cli_http_failure_exits_nonzero(tmp_path: Path) -> None:
     ``TRANSPORT_FAILURE``.
     """
     config_path = tmp_path / "cfg.yaml"
-    with _temp_audit_root(tmp_path) as audit_root:
-        _write_config(audit_root, config_path)
+    with _temp_audit_root(tmp_path) as audit_root, \
+            _stage_reference_into_audit_root(audit_root) as manifest_path:
+        _write_config(
+            audit_root,
+            config_path,
+            reference_manifest=manifest_path,
+        )
         sitecustomize = tmp_path / "sitecustomize.py"
         sitecustomize.write_text(
             "import scripts._sleeper_fake_session as _f\n"
@@ -328,8 +453,13 @@ def test_cli_invalid_json_exits_nonzero(tmp_path: Path) -> None:
     nonzero with ``INCOMPLETE_RESPONSE``.
     """
     config_path = tmp_path / "cfg.yaml"
-    with _temp_audit_root(tmp_path) as audit_root:
-        _write_config(audit_root, config_path)
+    with _temp_audit_root(tmp_path) as audit_root, \
+            _stage_reference_into_audit_root(audit_root) as manifest_path:
+        _write_config(
+            audit_root,
+            config_path,
+            reference_manifest=manifest_path,
+        )
         sitecustomize = tmp_path / "sitecustomize.py"
         sitecustomize.write_text(
             "import scripts._sleeper_fake_session as _f\n"
@@ -359,8 +489,13 @@ def test_cli_latest_run_status_reflects_failure(tmp_path: Path) -> None:
     the failure outcome; no stale success remains visible.
     """
     config_path = tmp_path / "cfg.yaml"
-    with _temp_audit_root(tmp_path) as audit_root:
-        _write_config(audit_root, config_path)
+    with _temp_audit_root(tmp_path) as audit_root, \
+            _stage_reference_into_audit_root(audit_root) as manifest_path:
+        _write_config(
+            audit_root,
+            config_path,
+            reference_manifest=manifest_path,
+        )
         # 1) Successful run.
         r1 = _run_cli(
             audit_root=audit_root,

@@ -115,46 +115,57 @@ def _row_for_sleeper(
     nflverse_id: str | None = None
     match_method = MATCH_METHOD_NONE
     match_confidence = 0.0
+    # Rereview contract (Rereview 4851615980): once a
+    # higher-priority exact identifier produces a multi-match
+    # conflict, the row is TERMINAL. The crosswalk must NOT fall
+    # through to lower-priority identifiers or to name+team
+    # fallback. The conflict token is preserved exactly as the
+    # spec requires, ``is_matched`` stays False,
+    # ``nflverse_player_id`` stays None, and ``review_required``
+    # stays True.
+    conflict_terminal = False
 
     def _pick_unique(
         candidates: set[str] | None,
         *,
         method_label: str,
         confidence: float,
-    ) -> tuple[str | None, str | None]:
-        """Return ``(nflverse_id, conflict_reason)``.
+    ) -> tuple[str | None, str | None, bool]:
+        """Return ``(nflverse_id, conflict_reason, terminal)``.
 
-        Empty set -> ``(None, None)``.
-        Singleton -> ``(the_id, None)``.
-        Multi-element -> ``(None, "multiple_nflverse_for_<method_label>")``.
-        The crosswalk never silently selects the first element of a
-        multi-match; the caller must propagate ``conflict_reason``
-        so the row emits ``is_matched=False``, ``review_required=True``,
-        and a descriptive conflict token.
+        Empty set -> ``(None, None, False)``.
+        Singleton -> ``(the_id, None, False)``.
+        Multi-element -> ``(None, "multiple_nflverse_for_<method_label>", True)``.
+
+        The terminal flag short-circuits all lower-priority
+        identifiers; the crosswalk never silently selects the first
+        element of a multi-match.
         """
         if not candidates:
-            return None, None
+            return None, None, False
         if len(candidates) == 1:
-            return next(iter(candidates)), None
-        return None, f"multiple_nflverse_for_{method_label}"
+            return next(iter(candidates)), None, False
+        return None, f"multiple_nflverse_for_{method_label}", True
 
     # Priority 0: exact Sleeper id.
-    picked, conflict = _pick_unique(
-        sleeper_to_nflverse.get(sleeper_player_id) if sleeper_player_id else None,
-        method_label=MATCH_METHOD_SLEEPER,
-        confidence=1.0,
-    )
-    if conflict:
-        conflict_reasons.append(conflict)
-        review_required = True
-    if picked is not None:
-        nflverse_id = picked
-        match_method = MATCH_METHOD_SLEEPER
-        match_confidence = 1.0
-        is_matched = True
+    if not conflict_terminal:
+        picked, conflict, terminal = _pick_unique(
+            sleeper_to_nflverse.get(sleeper_player_id) if sleeper_player_id else None,
+            method_label=MATCH_METHOD_SLEEPER,
+            confidence=1.0,
+        )
+        if conflict:
+            conflict_reasons.append(conflict)
+            review_required = True
+            conflict_terminal = True
+        if picked is not None:
+            nflverse_id = picked
+            match_method = MATCH_METHOD_SLEEPER
+            match_confidence = 1.0
+            is_matched = True
     # Priority 1: exact GSIS id.
-    if not is_matched and gsis_id:
-        picked, conflict = _pick_unique(
+    if not conflict_terminal and not is_matched and gsis_id:
+        picked, conflict, terminal = _pick_unique(
             gsis_to_nflverse.get(str(gsis_id)),
             method_label=MATCH_METHOD_GSIS,
             confidence=0.98,
@@ -162,14 +173,15 @@ def _row_for_sleeper(
         if conflict:
             conflict_reasons.append(conflict)
             review_required = True
+            conflict_terminal = True
         if picked is not None:
             nflverse_id = picked
             match_method = MATCH_METHOD_GSIS
             match_confidence = 0.98
             is_matched = True
     # Priority 2: exact ESPN id.
-    if not is_matched and espn_id:
-        picked, conflict = _pick_unique(
+    if not conflict_terminal and not is_matched and espn_id:
+        picked, conflict, terminal = _pick_unique(
             espn_to_nflverse.get(str(espn_id)),
             method_label=MATCH_METHOD_ESPN,
             confidence=0.95,
@@ -177,13 +189,14 @@ def _row_for_sleeper(
         if conflict:
             conflict_reasons.append(conflict)
             review_required = True
+            conflict_terminal = True
         if picked is not None:
             nflverse_id = picked
             match_method = MATCH_METHOD_ESPN
             match_confidence = 0.95
             is_matched = True
     # Priority 3: another exact stable provider id.
-    if not is_matched:
+    if not conflict_terminal and not is_matched:
         for stable_id, label in (
             (sportradar_id, "sportradar"),
             (yahoo_id, "yahoo"),
@@ -192,7 +205,7 @@ def _row_for_sleeper(
         ):
             if not stable_id:
                 continue
-            picked, conflict = _pick_unique(
+            picked, conflict, terminal = _pick_unique(
                 other_stable_to_nflverse.get(str(stable_id)),
                 method_label=f"{MATCH_METHOD_OTHER_STABLE}_{label}",
                 confidence=0.9,
@@ -200,6 +213,7 @@ def _row_for_sleeper(
             if conflict:
                 conflict_reasons.append(conflict)
                 review_required = True
+                conflict_terminal = True
                 break
             if picked is not None:
                 nflverse_id = picked
@@ -208,7 +222,9 @@ def _row_for_sleeper(
                 is_matched = True
                 break
     # Priority 4: name+team fallback. Flagged as review_required.
-    if not is_matched:
+    # The rereview contract also forbids evaluating this fallback
+    # when a higher-priority exact ID produced a conflict.
+    if not conflict_terminal and not is_matched:
         team_norm = _normalize_team(sleeper_team)
         first = sleeper_record.get("first_name")
         last = sleeper_record.get("last_name")
@@ -234,7 +250,23 @@ def _row_for_sleeper(
             if len(candidates) > 1:
                 conflict_reasons.append("multiple_nflverse_for_name_team")
                 review_required = True
+                conflict_terminal = True
                 break
+    # Rereview contract: when a higher-priority exact ID produced a
+    # conflict, the row is terminal. ``is_matched`` stays False,
+    # ``nflverse_player_id`` is explicitly null (overriding any
+    # value picked before the conflict), ``match_method`` stays at
+    # the conflict label (not whatever lower-priority method would
+    # have evaluated), and ``match_confidence`` stays at 0.0.
+    if conflict_terminal:
+        is_matched = False
+        nflverse_id = None
+        if match_method == MATCH_METHOD_NONE:
+            match_confidence = 0.0
+        # The fallback name+team case would have set
+        # ``review_required = True`` even on a singleton; this
+        # branch never executes for that case because the conflict
+        # would have happened in priority 0..3.
     if not gsis_id and not espn_id and not sleeper_team:
         conflict_reasons.append("missing_all_stable_ids_and_team")
         review_required = True

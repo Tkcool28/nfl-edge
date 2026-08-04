@@ -45,11 +45,20 @@ class RunMetric:
 
     The orchestrator constructs one of these per run and passes a
     list to ``compute_reliability_metrics``.
+
+    Rereview contract (Rereview 4851615980): ``success`` is derived
+    from the terminal ``run_outcome == SUCCESS``, never from a
+    single HTTP attempt. Runs that succeeded at HTTP but failed
+    in normalization / persistence / reference / HOF are
+    counted as failed runs.
     """
 
     snapshot_id: str
     observed_at_utc: str
     success: bool
+    run_outcome: str | None = None
+    attempt_count: int = 0
+    kind: str | None = None
     fetch_attempts: list[Mapping[str, Any]] = field(default_factory=list)
     active_rows: list[Mapping[str, Any]] = field(default_factory=list)
     crosswalk_rows: list[Mapping[str, Any]] = field(default_factory=list)
@@ -260,58 +269,105 @@ def build_runs_from_disk(
 ) -> tuple[list[RunMetric], pl.DataFrame]:
     """Rebuild a list of ``RunMetric`` from the persisted audit history.
 
-    The function reads every parquet artifact under
-    ``audit_root/normalized/`` and the ``fetch_ledger.parquet`` at
-    the audit root, groups attempts by ``observed_at_utc`` (each
-    group is one scheduled run), and returns one ``RunMetric`` per
-    group. The second return value is the full change ledger, also
-    read from disk.
+    The function reads ``run_history.jsonl`` (the terminal run
+    history) as its primary source of truth. Every row in
+    ``run_history.jsonl`` becomes one ``RunMetric`` with a
+    terminal ``run_outcome`` and the corresponding ``success``
+    boolean. The ``fetch_ledger.parquet`` is read second to
+    attach per-run attempt detail (latency, http_status, response
+    bytes) but it does NOT determine success — the terminal
+    outcome does.
 
-    A run with only failed attempts is recorded as a failed run.
-    A run with at least one successful attempt (regardless of
-    retries) is recorded as a successful run; the attempt list
-    preserves the full retry history.
+    Per the rereview contract: a run is successful iff
+    ``run_outcome == SUCCESS``. INCOMPLETE_RESPONSE,
+    NORMALIZATION_FAILURE, PERSISTENCE_FAILURE,
+    REFERENCE_FAILURE, HOF workflow failures, and TRANSPORT_FAILURE
+    all count as failed runs even when the underlying HTTP attempt
+    succeeded.
+
+    The second return value is the full change ledger, also
+    read from disk.
     """
     audit_root = Path(audit_root)
     fetch_ledger_path = audit_root / "fetch_ledger.parquet"
     active_path = audit_root / "normalized" / "qb_snapshots.parquet"
     crosswalk_path = audit_root / "normalized" / "qb_identity_crosswalk.parquet"
     change_ledger_path = audit_root / "normalized" / "qb_change_ledger.parquet"
+    run_history_path = audit_root / "run_history.jsonl"
 
     fetch_ledger = _safe_read_parquet(fetch_ledger_path)
     active = _safe_read_parquet(active_path)
     crosswalk = _safe_read_parquet(crosswalk_path)
     change_ledger = _safe_read_parquet(change_ledger_path)
 
+    # Read run history (terminal outcomes). One JSON object per line.
+    import json as _json
+    history: list[dict[str, Any]] = []
+    if run_history_path.exists():
+        for raw_line in run_history_path.read_text().splitlines():
+            if not raw_line.strip():
+                continue
+            try:
+                history.append(_json.loads(raw_line))
+            except _json.JSONDecodeError:
+                # Skip malformed lines; the metrics build must not
+                # crash on a single bad write.
+                continue
+
     runs: list[RunMetric] = []
-    if fetch_ledger.height > 0 and "observed_at_utc" in fetch_ledger.columns:
-        groups = fetch_ledger.partition_by(
-            ["observed_at_utc"], as_dict=True, maintain_order=True
-        )
-        for key, group in groups.items():
-            observed_at_utc = str(key) if not isinstance(key, tuple) else str(key[0])
-            attempts = group.sort("attempt_number").to_dicts()
-            snapshot_ids = group.get_column("snapshot_id").unique().to_list()
-            snapshot_id = str(snapshot_ids[0]) if snapshot_ids else ""
-            success = any(bool(a.get("success")) for a in attempts)
-            active_rows: list[dict[str, Any]] = []
-            if active.height > 0 and "fetched_at_utc" in active.columns:
-                match = active.filter(pl.col("fetched_at_utc") == observed_at_utc)
-                active_rows = match.to_dicts()
-            crosswalk_rows: list[dict[str, Any]] = []
-            if crosswalk.height > 0 and snapshot_id and "snapshot_id" in crosswalk.columns:
-                cw_match = crosswalk.filter(pl.col("snapshot_id") == snapshot_id)
-                crosswalk_rows = cw_match.to_dicts()
-            runs.append(
-                RunMetric(
-                    snapshot_id=snapshot_id,
-                    observed_at_utc=observed_at_utc,
-                    success=success,
-                    fetch_attempts=attempts,
-                    active_rows=active_rows,
-                    crosswalk_rows=crosswalk_rows,
-                )
+    for record in history:
+        run_outcome = str(record.get("outcome", ""))
+        # The terminal run-outcome is the ONLY source of truth for
+        # success. A run with HTTP success + a downstream failure
+        # is a failed run.
+        success = run_outcome == "SUCCESS"
+        observed_at_utc = str(record.get("observed_at_utc") or "")
+        snapshot_id = str(record.get("snapshot_id") or "")
+        kind = record.get("kind")
+        attempt_count = int(record.get("attempt_count") or 0)
+        # Attach the per-run attempts from the fetch ledger.
+        attempts: list[dict[str, Any]] = []
+        if (
+            fetch_ledger.height > 0
+            and observed_at_utc
+            and "observed_at_utc" in fetch_ledger.columns
+        ):
+            attempts = (
+                fetch_ledger.filter(pl.col("observed_at_utc") == observed_at_utc)
+                .sort("attempt_number")
+                .to_dicts()
             )
+        active_rows: list[dict[str, Any]] = []
+        if (
+            active.height > 0
+            and observed_at_utc
+            and "fetched_at_utc" in active.columns
+        ):
+            active_rows = active.filter(
+                pl.col("fetched_at_utc") == observed_at_utc
+            ).to_dicts()
+        crosswalk_rows: list[dict[str, Any]] = []
+        if (
+            crosswalk.height > 0
+            and snapshot_id
+            and "snapshot_id" in crosswalk.columns
+        ):
+            crosswalk_rows = crosswalk.filter(
+                pl.col("snapshot_id") == snapshot_id
+            ).to_dicts()
+        runs.append(
+            RunMetric(
+                snapshot_id=snapshot_id,
+                observed_at_utc=observed_at_utc,
+                success=success,
+                run_outcome=run_outcome,
+                attempt_count=attempt_count,
+                kind=str(kind) if kind else None,
+                fetch_attempts=attempts,
+                active_rows=active_rows,
+                crosswalk_rows=crosswalk_rows,
+            )
+        )
 
     return runs, change_ledger
 

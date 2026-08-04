@@ -79,9 +79,21 @@ def sha256_of_bytes(data: bytes) -> str:
 def atomic_write_bytes(path: str | Path, data: bytes) -> None:
     """Write ``data`` to ``path`` atomically.
 
-    Uses the standard ``write to temp + fsync + os.replace`` idiom.
+    Rereview durability sequence (Rereview 4851615980):
+
+    1. write the data to a temp file in the same directory as
+       ``path``;
+    2. flush the temp file's userspace buffer;
+    3. ``fsync`` the temp file so its contents reach the disk
+       BEFORE the rename;
+    4. ``os.replace`` the temp file into the target path;
+    5. ``fsync`` the parent directory so the rename itself is
+       durable across power loss.
+
     The temp file lives in the same directory as the target so
-    ``os.replace`` is atomic on POSIX.
+    ``os.replace`` is atomic on POSIX. The parent directory fsync
+    happens *after* the replace; doing it before would not
+    guarantee the rename was durable.
     """
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -92,6 +104,15 @@ def atomic_write_bytes(path: str | Path, data: bytes) -> None:
             handle.flush()
             os.fsync(handle.fileno())
         os.replace(tmp, path)
+        # Parent-directory fsync after the rename so the directory
+        # entry change is durable. This is the only ordering that
+        # protects against a power loss between os.replace and
+        # the kernel flushing the directory inode.
+        dir_fd = os.open(str(path.parent), os.O_DIRECTORY)
+        try:
+            os.fsync(dir_fd)
+        finally:
+            os.close(dir_fd)
     finally:
         if tmp.exists():
             try:
@@ -107,26 +128,33 @@ def atomic_write_text(path: str | Path, text: str) -> None:
 def atomic_write_parquet(path: str | Path, frame: pl.DataFrame) -> None:
     """Atomically persist a polars frame as parquet.
 
-    ``frame.write_parquet`` writes directly to the target path, so
-    a crash mid-write leaves the existing file truncated or empty.
-    This helper routes through a temp file + ``os.replace`` so the
-    previous valid artifact remains readable until the new one is
-    fully durable.
+    Rereview durability sequence (Rereview 4851615980):
+
+    1. write the parquet to a temp path;
+    2. open the temp file read-only (the writer has already
+       closed it);
+    3. ``fsync`` the temp file so the parquet bytes reach the
+       disk before the rename;
+    4. ``os.replace`` the temp file into the target path;
+    5. ``fsync`` the parent directory so the rename is durable.
+
+    Doing the parent-directory fsync *after* ``os.replace`` is the
+    only ordering that guarantees the rename is durable across a
+    power loss.
     """
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(f".{path.name}.tmp.{os.getpid()}.{time.time_ns()}")
     try:
         frame.write_parquet(tmp)
-        # Parquet write is closed at this point but we still flush
-        # and fsync the directory entry so the rename is durable
-        # across power loss.
+        with open(tmp, "rb") as handle:
+            os.fsync(handle.fileno())
+        os.replace(tmp, path)
         dir_fd = os.open(str(path.parent), os.O_DIRECTORY)
         try:
             os.fsync(dir_fd)
         finally:
             os.close(dir_fd)
-        os.replace(tmp, path)
     finally:
         if tmp.exists():
             try:

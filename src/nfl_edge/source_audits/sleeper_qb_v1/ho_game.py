@@ -224,41 +224,37 @@ def build_observation_record(
     the snapshot-scoped pregame normalized frame
     (``pregame_normalized_frame``) and the pregame evidence frame
     (``pregame_evidence_frame``). The postgame values come from the
-    postgame snapshot. Discarding the pregame evidence is not
-    permitted: the audit's contract is to preserve both sides.
+    postgame snapshot.
+
+    Rereview contract (Rereview 4851615980):
+
+    * The relevant QB set is the union of pregame HOF-team QBs and
+      postgame HOF-team QBs (neither side may drop the other).
+    * Ordering is deterministic (sorted ascending Sleeper id).
+    * Pregame-only QBs keep pregame fields populated and
+      postgame fields null.
+    * Postgame-only QBs keep postgame fields populated and
+      pregame fields null. Missing pregame evidence is never
+      synthesized from the postgame row.
     """
     relevant_teams = {game.get("home_team"), game.get("away_team")}
-    if relevant_qb_rows.height == 0:
-        relevant = relevant_qb_rows
-    else:
-        relevant = relevant_qb_rows.filter(pl.col("team").is_in(list(relevant_teams)))
-    pregame_by_id: dict[str, dict[str, object]] = {}
-    if pregame_normalized_frame.height > 0:
-        pregame_by_id = {
-            str(row.get("sleeper_player_id", "")): dict(row)
-            for row in pregame_normalized_frame.to_dicts()
-        }
-    pregame_evidence_by_id: dict[str, dict[str, object]] = {}
-    if pregame_evidence_frame.height > 0:
-        pregame_evidence_by_id = {
-            str(row.get("sleeper_player_id", "")): dict(row)
-            for row in pregame_evidence_frame.to_dicts()
-        }
-    postgame_by_id: dict[str, dict[str, object]] = {}
-    if postgame_normalized_frame.height > 0:
-        postgame_by_id = {
-            str(row.get("sleeper_player_id", "")): dict(row)
-            for row in postgame_normalized_frame.to_dicts()
-        }
-    postgame_evidence_by_id: dict[str, dict[str, object]] = {}
-    if postgame_evidence_frame.height > 0:
-        postgame_evidence_by_id = {
-            str(row.get("sleeper_player_id", "")): dict(row)
-            for row in postgame_evidence_frame.to_dicts()
-        }
-    relevant_sleeper_ids: list[str] = []
-    if relevant.height > 0 and "sleeper_player_id" in relevant.columns:
-        relevant_sleeper_ids = [str(x) for x in relevant.get_column("sleeper_player_id").to_list()]
+    pregame_team = _team_filter(pregame_normalized_frame, relevant_teams)
+    postgame_team = _team_filter(postgame_normalized_frame, relevant_teams)
+    pregame_evidence_team = _team_filter(pregame_evidence_frame, relevant_teams)
+    postgame_evidence_team = _team_filter(postgame_evidence_frame, relevant_teams)
+    pregame_by_id = _index_by_sleeper_id(pregame_team)
+    pregame_evidence_by_id = _index_by_sleeper_id(pregame_evidence_team)
+    postgame_by_id = _index_by_sleeper_id(postgame_team)
+    postgame_evidence_by_id = _index_by_sleeper_id(postgame_evidence_team)
+    # Union of pregame + postgame team QBs, in deterministic
+    # ascending order by sleeper_player_id (string). Sorting
+    # guarantees the same observation frame across two runs of
+    # the same data, regardless of the input row order.
+    union_ids = sorted(
+        {*pregame_by_id.keys(), *postgame_by_id.keys()},
+        key=lambda x: (x == "", x),
+    )
+    relevant_sleeper_ids = list(union_ids)
 
     observed_depth_order: list[str | None] = []
     observed_injury_status: list[str | None] = []
@@ -273,32 +269,21 @@ def build_observation_record(
         post_ev = postgame_evidence_by_id.get(sleeper_id, {})
         pre = pregame_by_id.get(sleeper_id, {})
         pre_ev = pregame_evidence_by_id.get(sleeper_id, {})
-        # Postgame values.
-        observed_depth_order.append(_maybe_int(post.get("depth_chart_order")))
-        observed_injury_status.append(_maybe_str(post.get("injury_status")))
-        observed_practice_participation.append(_maybe_str(post.get("practice_participation")))
-        derived_evidence_state.append(_maybe_str(post_ev.get("evidence_state")))
-        # Pregame values. Fall back to the postgame values when the
-        # pregame normalized frame has no row for this sleeper id
-        # (e.g. the player joined the active roster only after
-        # kickoff). The fallback is explicit per cell so the
-        # comparison remains valid.
-        pre_depth = pre.get("depth_chart_order") if pre else None
-        if pre_depth is None and pre == {}:
-            pre_depth = post.get("depth_chart_order")
-        pre_injury = pre.get("injury_status") if pre else None
-        if pre_injury is None and pre == {}:
-            pre_injury = post.get("injury_status")
-        pre_practice = pre.get("practice_participation") if pre else None
-        if pre_practice is None and pre == {}:
-            pre_practice = post.get("practice_participation")
-        pre_state = pre_ev.get("evidence_state")
-        if pre_state is None and pre_ev == {}:
-            pre_state = post_ev.get("evidence_state")
-        pregame_depth_order.append(_maybe_int(pre_depth))
-        pregame_injury_status.append(_maybe_str(pre_injury))
-        pregame_practice_participation.append(_maybe_str(pre_practice))
-        pregame_evidence_state.append(_maybe_str(pre_state))
+        # Postgame values are present only when this sleeper was
+        # on a HOF team in the postgame frame.
+        observed_depth_order.append(_maybe_int(post.get("depth_chart_order")) if post else None)
+        observed_injury_status.append(_maybe_str(post.get("injury_status")) if post else None)
+        observed_practice_participation.append(_maybe_str(post.get("practice_participation")) if post else None)
+        derived_evidence_state.append(_maybe_str(post_ev.get("evidence_state")) if post_ev else None)
+        # Pregame values are present only when this sleeper was
+        # on a HOF team in the pregame frame. Per the rereview
+        # contract, missing pregame evidence is NEVER replaced
+        # with the postgame value — that would synthesize a
+        # historical signal the audit never observed.
+        pregame_depth_order.append(_maybe_int(pre.get("depth_chart_order")) if pre else None)
+        pregame_injury_status.append(_maybe_str(pre.get("injury_status")) if pre else None)
+        pregame_practice_participation.append(_maybe_str(pre.get("practice_participation")) if pre else None)
+        pregame_evidence_state.append(_maybe_str(pre_ev.get("evidence_state")) if pre_ev else None)
     return {
         "observation_id": observation_id,
         "game_id": game.get("game_id"),
@@ -318,6 +303,24 @@ def build_observation_record(
         "pregame_injury_status": pregame_injury_status,
         "pregame_practice_participation": pregame_practice_participation,
         "pregame_evidence_state": pregame_evidence_state,
+    }
+
+
+def _team_filter(frame: pl.DataFrame, relevant_teams: set[str | None]) -> pl.DataFrame:
+    if frame.height == 0 or "team" not in frame.columns:
+        # If a frame has no ``team`` column (e.g. an evidence frame
+        # whose rows are not team-tagged), return it as-is. The
+        # caller will then index it by ``sleeper_player_id`` only.
+        return frame
+    return frame.filter(pl.col("team").is_in(list(relevant_teams)))
+
+
+def _index_by_sleeper_id(frame: pl.DataFrame) -> dict[str, dict[str, object]]:
+    if frame.height == 0 or "sleeper_player_id" not in frame.columns:
+        return {}
+    return {
+        str(row.get("sleeper_player_id", "")): dict(row)
+        for row in frame.to_dicts()
     }
 
 

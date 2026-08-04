@@ -78,6 +78,14 @@ class RunOutcomeRecord:
     The audit pipeline writes one of these to
     ``latest_run_status.json`` *every* run, success or failure, so a
     failed run always replaces a previous successful one.
+
+    Rereview contract (Rereview 4851615980): the record also
+    carries ``kind``, ``attempt_count``, and ``success`` so the
+    terminal run history (one row per run in
+    ``run_history.jsonl``) is the single source of truth for the
+    rolling metrics. ``success`` is derived from
+    ``outcome == RunOutcome.SUCCESS`` and never from a single
+    HTTP attempt.
     """
 
     outcome: RunOutcome
@@ -88,6 +96,20 @@ class RunOutcomeRecord:
     error_message: str | None
     error_token: str | None
     exit_code: int
+    kind: str | None = None
+    attempt_count: int = 0
+
+    @property
+    def success(self) -> bool:
+        """A run is successful iff its terminal outcome is SUCCESS.
+
+        This property is the ONLY place in the audit that decides
+        run success. Rolling metrics must derive
+        ``successful_run_count`` from ``outcome == SUCCESS`` and
+        count every other outcome as a failed run, regardless of
+        whether any single HTTP attempt returned 2xx.
+        """
+        return self.outcome == RunOutcome.SUCCESS
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -99,6 +121,9 @@ class RunOutcomeRecord:
             "error_message": self.error_message,
             "error_token": self.error_token,
             "exit_code": self.exit_code,
+            "kind": self.kind,
+            "attempt_count": self.attempt_count,
+            "success": self.success,
         }
 
 

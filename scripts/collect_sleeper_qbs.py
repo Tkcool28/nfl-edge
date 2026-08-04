@@ -49,6 +49,7 @@ from nfl_edge.source_audits.sleeper_qb_v1.locking import (  # noqa: E402
     advisory_lock,
 )
 from nfl_edge.source_audits.sleeper_qb_v1.outcomes import (  # noqa: E402
+    ERROR_TOKENS,
     EXIT_CODES,
     RunOutcome,
 )
@@ -82,6 +83,94 @@ def _build_orchestrator(
         hof_fixture_path=config.get("hof_fixture_path"),
         reference_manifest=reference_manifest,
     )
+
+
+def _resolve_reference_manifest(
+    *,
+    cli_value: Path | None,
+    config: dict[str, Any],
+) -> tuple[list[ReferenceArtifact], str | None]:
+    """Resolve the configured reference manifest.
+
+    The rereview contract makes ``reference_manifest`` mandatory.
+    If the config key is missing, the configured path is missing,
+    the JSON is malformed, the schema is malformed, or the
+    artifacts list is empty, this function returns ``([], error)``
+    where ``error`` is a descriptive message. The caller is
+    expected to surface that error as ``REFERENCE_FAILURE`` (exit
+    21). The CLI flag does not bypass the configured manifest: if
+    a configured manifest is present, the CLI flag must agree
+    (same file). This avoids silently skipping verification in a
+    way that defeats the clean-clone contract.
+    """
+    config_value = config.get("reference_manifest")
+    if config_value is None:
+        return ([], "missing reference_manifest in config (mandatory)")
+    configured_path = Path(str(config_value))
+    if not configured_path.exists():
+        return ([], f"missing reference manifest file: {configured_path}")
+    try:
+        raw = json.loads(configured_path.read_text())
+    except json.JSONDecodeError as exc:
+        return ([], f"malformed reference manifest JSON: {exc}")
+    if not isinstance(raw, dict):
+        return ([], "reference manifest must be a JSON object with an 'artifacts' array")
+    artifacts_raw = raw.get("artifacts")
+    if not isinstance(artifacts_raw, list) or not artifacts_raw:
+        return ([], "reference manifest has empty or missing 'artifacts' array")
+    parsed: list[ReferenceArtifact] = []
+    for entry in artifacts_raw:
+        if not isinstance(entry, dict):
+            return ([], f"reference manifest entry is not a JSON object: {entry!r}")
+        try:
+            parsed.append(
+                ReferenceArtifact(
+                    path=str(entry["path"]),
+                    sha256=str(entry["sha256"]),
+                    row_count=int(entry["row_count"]),
+                )
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            return (
+                [],
+                f"reference manifest schema violation on entry {entry!r}: {exc}",
+            )
+    # CLI flag, if supplied, must match the configured path. We do
+    # not silently allow the flag to bypass the configured manifest.
+    if cli_value is not None and cli_value != configured_path:
+        return (
+            [],
+            f"--reference-manifest {cli_value} does not match configured "
+            f"{configured_path}; refusing to skip verification",
+        )
+    return (parsed, None)
+
+
+def _emit_terminal(
+    *,
+    outcome: RunOutcome,
+    error_class: str | None = None,
+    error_message: str | None = None,
+    extra: dict[str, Any] | None = None,
+) -> None:
+    """Print a structured terminal outcome JSON to stderr.
+
+    Used when the CLI must abort with a typed outcome before the
+    orchestrator's normal pipeline can return a result (e.g. a
+    malformed config or a missing reference manifest).
+    """
+    payload: dict[str, Any] = {
+        "run_outcome": outcome.value,
+        "exit_code": EXIT_CODES[outcome],
+        "error_token": ERROR_TOKENS.get(outcome, ""),
+    }
+    if error_class is not None:
+        payload["error_class"] = error_class
+    if error_message is not None:
+        payload["error_message"] = error_message
+    if extra:
+        payload.update(extra)
+    print(json.dumps(payload, indent=2, default=str), file=sys.stderr)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -129,65 +218,126 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    config = _load_config(args.config)
-    audit_root = Path(config.get("audit_root", "data/source_audits/sleeper_qb_v1"))
-    audit_root.mkdir(parents=True, exist_ok=True)
+    # 1. Config loading. A missing / malformed config is a
+    #    NORMALIZATION_FAILURE (the input is unusable).
+    try:
+        config = _load_config(args.config)
+    except FileNotFoundError as exc:
+        _emit_terminal(
+            outcome=RunOutcome.NORMALIZATION_FAILURE,
+            error_class="FileNotFoundError",
+            error_message=str(exc),
+        )
+        return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
+    except yaml.YAMLError as exc:
+        _emit_terminal(
+            outcome=RunOutcome.NORMALIZATION_FAILURE,
+            error_class="YAMLError",
+            error_message=str(exc),
+        )
+        return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
+    except Exception as exc:  # noqa: BLE001
+        _emit_terminal(
+            outcome=RunOutcome.NORMALIZATION_FAILURE,
+            error_class=type(exc).__name__,
+            error_message=str(exc),
+        )
+        return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
 
-    reference_manifest: list[ReferenceArtifact] = []
-    # CLI flag overrides config. If neither is set, the audit
-    # silently skips reference verification — a deliberate opt-in
-    # to keep the default behavior identical to the historical
-    # sub-phase A contract.
-    manifest_source: Path | None = None
-    if args.reference_manifest is not None:
-        manifest_source = args.reference_manifest
-    elif "reference_manifest" in config:
-        manifest_source = Path(str(config["reference_manifest"]))
-    if manifest_source is not None and manifest_source.exists():
-        raw = json.loads(manifest_source.read_text())
-        for entry in raw.get("artifacts", []):
-            reference_manifest.append(
-                ReferenceArtifact(
-                    path=str(entry["path"]),
-                    sha256=str(entry["sha256"]),
-                    row_count=int(entry["row_count"]),
-                )
-            )
+    # 2. Audit-root resolution.
+    try:
+        audit_root = Path(str(config.get("audit_root", "data/source_audits/sleeper_qb_v1")))
+    except Exception as exc:  # noqa: BLE001
+        _emit_terminal(
+            outcome=RunOutcome.NORMALIZATION_FAILURE,
+            error_class=type(exc).__name__,
+            error_message=f"bad audit_root in config: {exc}",
+        )
+        return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
+    try:
+        audit_root.mkdir(parents=True, exist_ok=True)
+    except OSError as exc:
+        _emit_terminal(
+            outcome=RunOutcome.PERSISTENCE_FAILURE,
+            error_class=type(exc).__name__,
+            error_message=f"cannot create audit_root {audit_root}: {exc}",
+        )
+        return EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE]
+
+    # 3. Reference-manifest resolution. Mandatory per the
+    #    rereview contract; any failure is a REFERENCE_FAILURE.
+    reference_manifest, manifest_error = _resolve_reference_manifest(
+        cli_value=args.reference_manifest,
+        config=config,
+    )
+    if manifest_error is not None:
+        _emit_terminal(
+            outcome=RunOutcome.REFERENCE_FAILURE,
+            error_class="ReferenceManifestResolutionError",
+            error_message=manifest_error,
+        )
+        return EXIT_CODES[RunOutcome.REFERENCE_FAILURE]
 
     session = None
     if args.use_fake_session:
-        from scripts._sleeper_fake_session import FakeSleeperSession
+        try:
+            from scripts._sleeper_fake_session import FakeSleeperSession
 
-        session = FakeSleeperSession()
+            session = FakeSleeperSession()
+        except Exception as exc:  # noqa: BLE001
+            _emit_terminal(
+                outcome=RunOutcome.NORMALIZATION_FAILURE,
+                error_class=type(exc).__name__,
+                error_message=f"cannot load fake session: {exc}",
+            )
+            return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
 
+    # 4. Lock acquire. LockFailure -> LOCK_FAILURE.
     try:
         with advisory_lock(
             audit_root,
             kind=args.kind,
             lock_timeout_seconds=args.lock_timeout_seconds,
         ):
-            orchestrator = _build_orchestrator(
-                config, audit_root, reference_manifest=reference_manifest
-            )
-            result = orchestrator.run(
-                session=session,
-                kind=args.kind,
-                forced_observed_at_utc=args.observed_at_utc,
-                forced_snapshot_id=args.snapshot_id,
-            )
+            # 5. Orchestrator construction.
+            try:
+                orchestrator = _build_orchestrator(
+                    config, audit_root, reference_manifest=reference_manifest
+                )
+            except Exception as exc:  # noqa: BLE001
+                _emit_terminal(
+                    outcome=RunOutcome.NORMALIZATION_FAILURE,
+                    error_class=type(exc).__name__,
+                    error_message=f"cannot construct orchestrator: {exc}",
+                )
+                return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
+            # 6. Run.
+            try:
+                result = orchestrator.run(
+                    session=session,
+                    kind=args.kind,
+                    forced_observed_at_utc=args.observed_at_utc,
+                    forced_snapshot_id=args.snapshot_id,
+                )
+            except OSError as exc:
+                _emit_terminal(
+                    outcome=RunOutcome.PERSISTENCE_FAILURE,
+                    error_class=type(exc).__name__,
+                    error_message=str(exc),
+                )
+                return EXIT_CODES[RunOutcome.PERSISTENCE_FAILURE]
+            except Exception as exc:  # noqa: BLE001
+                _emit_terminal(
+                    outcome=RunOutcome.NORMALIZATION_FAILURE,
+                    error_class=type(exc).__name__,
+                    error_message=str(exc),
+                )
+                return EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE]
     except LockFailure as exc:
-        print(
-            json.dumps(
-                {
-                    "run_outcome": RunOutcome.LOCK_FAILURE.value,
-                    "exit_code": EXIT_CODES[RunOutcome.LOCK_FAILURE],
-                    "error_class": "LockFailure",
-                    "error_message": str(exc),
-                },
-                indent=2,
-                default=str,
-            ),
-            file=sys.stderr,
+        _emit_terminal(
+            outcome=RunOutcome.LOCK_FAILURE,
+            error_class="LockFailure",
+            error_message=str(exc),
         )
         return EXIT_CODES[RunOutcome.LOCK_FAILURE]
 

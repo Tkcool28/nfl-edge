@@ -88,14 +88,37 @@ def derive_freshness_state(
     staleness_threshold_seconds: float,
     now: datetime | None = None,
 ) -> str:
-    """Pick exactly one freshness state for the audit harness."""
-    if not inputs.parsed_ok:
+    """Pick exactly one freshness state for the audit harness.
+
+    Rereview contract (Rereview 4851615980): ``INCOMPLETE_RESPONSE``
+    is reserved for the parse-level failure (HTTP succeeded but
+    the body is malformed / empty / unusable). Transport-level
+    failures (network exhaustion, timeout exhaustion, all-attempt
+    HTTP failure) always produce ``FETCH_FAILED_USING_NO_FALLBACK``,
+    regardless of the ``parsed_ok`` flag. Callers that want to
+    distinguish transport vs parse must pass
+    ``last_attempt_success=False`` for transport failures and
+    ``last_attempt_success=True`` + an empty ``present_fields`` for
+    parse failures.
+    """
+    # Transport-level: HTTP/network failed. The parsed_ok flag is
+    # False here regardless of whether the failure was a connection
+    # error, a timeout, or a 5xx after every retry. Do NOT pass
+    # this case through the INCOMPLETE_RESPONSE branch.
+    if not inputs.last_attempt_success:
+        return "FETCH_FAILED_USING_NO_FALLBACK"
+    if inputs.last_success_at_utc is None:
+        return "FETCH_FAILED_USING_NO_FALLBACK"
+    # Parse-level: HTTP succeeded but the body had no usable
+    # fields. Distinguish from SCHEMA_DRIFT (which fires when
+    # required fields are missing) by treating the all-empty
+    # case as INCOMPLETE_RESPONSE — there is no schema to drift
+    # against.
+    if not inputs.present_fields:
         return "INCOMPLETE_RESPONSE"
     missing = EXPECTED_SLEEPER_FIELDS - inputs.present_fields
     if missing:
         return "SCHEMA_DRIFT"
-    if not inputs.last_attempt_success:
-        return "FETCH_FAILED_USING_NO_FALLBACK"
     last_success = _parse_utc(inputs.last_success_at_utc)
     if last_success is None:
         return "FETCH_FAILED_USING_NO_FALLBACK"

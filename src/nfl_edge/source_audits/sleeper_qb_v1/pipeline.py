@@ -38,6 +38,7 @@ fully durable.
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -235,7 +236,7 @@ class AuditOrchestrator:
         integer).
         """
         if kind not in ALLOWED_KINDS:
-            self._write_latest_run_status(
+            self._record_terminal(
                 RunOutcomeRecord(
                     outcome=RunOutcome.NORMALIZATION_FAILURE,
                     snapshot_id=None,
@@ -245,6 +246,8 @@ class AuditOrchestrator:
                     error_message=f"unknown run kind: {kind!r}; allowed={sorted(ALLOWED_KINDS)}",
                     error_token=ERROR_TOKENS[RunOutcome.NORMALIZATION_FAILURE],
                     exit_code=EXIT_CODES[RunOutcome.NORMALIZATION_FAILURE],
+                    kind=kind,
+                    attempt_count=0,
                 )
             )
             return {
@@ -273,8 +276,10 @@ class AuditOrchestrator:
                     error_message="; ".join(errors),
                     error_token=ERROR_TOKENS[outcome],
                     exit_code=EXIT_CODES[outcome],
+                    kind=kind,
+                    attempt_count=0,
                 )
-                self._write_latest_run_status(record)
+                self._record_terminal(record)
                 return {
                     "run_outcome": outcome.value,
                     "exit_code": EXIT_CODES[outcome],
@@ -303,6 +308,7 @@ class AuditOrchestrator:
         # 4. Branch on outcome.
         if winner is None:
             return self._finalize_transport_failure(
+                kind=kind,
                 snapshot_id=snapshot_id,
                 observed_at_utc=observed_at_utc,
                 attempts=attempts,
@@ -314,6 +320,7 @@ class AuditOrchestrator:
             raw_payload = json.loads(Path(winner.raw_payload_path).read_bytes())
         except json.JSONDecodeError as exc:
             return self._finalize_incomplete_response(
+                kind=kind,
                 snapshot_id=snapshot_id,
                 observed_at_utc=observed_at_utc,
                 attempts=attempts,
@@ -326,6 +333,7 @@ class AuditOrchestrator:
         present, missing, _ = schema_drift_fields(raw_payload)
         if not isinstance(raw_payload, dict) or not raw_payload:
             return self._finalize_incomplete_response(
+                kind=kind,
                 snapshot_id=snapshot_id,
                 observed_at_utc=observed_at_utc,
                 attempts=attempts,
@@ -342,6 +350,7 @@ class AuditOrchestrator:
             )
         except Exception as exc:  # noqa: BLE001 - normalize must not crash the audit silently
             return self._finalize_normalization_failure(
+                kind=kind,
                 snapshot_id=snapshot_id,
                 observed_at_utc=observed_at_utc,
                 attempts=attempts,
@@ -484,6 +493,7 @@ class AuditOrchestrator:
             )
         except OSError as exc:
             return self._finalize_persistence_failure(
+                kind=kind,
                 snapshot_id=snapshot_id,
                 observed_at_utc=observed_at_utc,
                 attempts=attempts,
@@ -504,8 +514,10 @@ class AuditOrchestrator:
             error_message=None,
             error_token=ERROR_TOKENS[final_outcome] if final_outcome != RunOutcome.SUCCESS else None,
             exit_code=EXIT_CODES[final_outcome],
+            kind=kind,
+            attempt_count=len(attempts),
         )
-        self._write_latest_run_status(record)
+        self._record_terminal(record)
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
@@ -756,6 +768,7 @@ class AuditOrchestrator:
     def _finalize_transport_failure(
         self,
         *,
+        kind: str,
         snapshot_id: str,
         observed_at_utc: str,
         attempts: Sequence[SleeperFetchResult],
@@ -797,8 +810,10 @@ class AuditOrchestrator:
             error_message=last_error.error_message if last_error else None,
             error_token=ERROR_TOKENS[outcome],
             exit_code=EXIT_CODES[outcome],
+            kind=kind,
+            attempt_count=len(attempts),
         )
-        self._write_latest_run_status(record)
+        self._record_terminal(record)
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
@@ -811,6 +826,7 @@ class AuditOrchestrator:
     def _finalize_incomplete_response(
         self,
         *,
+        kind: str,
         snapshot_id: str,
         observed_at_utc: str,
         attempts: Sequence[SleeperFetchResult],
@@ -818,6 +834,12 @@ class AuditOrchestrator:
         error_message: str,
     ) -> dict[str, Any]:
         outcome = RunOutcome.INCOMPLETE_RESPONSE
+        # Per the rereview contract, the freshness state for a
+        # parse-level failure (HTTP succeeded but the body was
+        # malformed / empty / unusable) is INCOMPLETE_RESPONSE.
+        # The transport-level path produces FETCH_FAILED_USING_NO_FALLBACK;
+        # that path does not flow through this function.
+        freshness_state = "INCOMPLETE_RESPONSE"
         report_payload = {
             "schema_version": "sleeper-qb-failure-v1",
             "snapshot_id": snapshot_id,
@@ -825,6 +847,7 @@ class AuditOrchestrator:
             "error_class": error_class,
             "error_message": error_message,
             "attempts": [asdict(a) for a in attempts],
+            "freshness_state": freshness_state,
         }
         self._write_failure_report(snapshot_id, report_payload)
         record = RunOutcomeRecord(
@@ -836,11 +859,14 @@ class AuditOrchestrator:
             error_message=error_message,
             error_token=ERROR_TOKENS[outcome],
             exit_code=EXIT_CODES[outcome],
+            kind=kind,
+            attempt_count=len(attempts),
         )
-        self._write_latest_run_status(record)
+        self._record_terminal(record)
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
+            "freshness_state": freshness_state,
             "run_outcome": outcome.value,
             "exit_code": EXIT_CODES[outcome],
             "error_class": error_class,
@@ -850,6 +876,7 @@ class AuditOrchestrator:
     def _finalize_normalization_failure(
         self,
         *,
+        kind: str,
         snapshot_id: str,
         observed_at_utc: str,
         attempts: Sequence[SleeperFetchResult],
@@ -866,8 +893,10 @@ class AuditOrchestrator:
             error_message=error_message,
             error_token=ERROR_TOKENS[outcome],
             exit_code=EXIT_CODES[outcome],
+            kind=kind,
+            attempt_count=len(attempts),
         )
-        self._write_latest_run_status(record)
+        self._record_terminal(record)
         return {
             "snapshot_id": snapshot_id,
             "observed_at_utc": observed_at_utc,
@@ -880,6 +909,7 @@ class AuditOrchestrator:
     def _finalize_persistence_failure(
         self,
         *,
+        kind: str,
         snapshot_id: str,
         observed_at_utc: str,
         attempts: Sequence[SleeperFetchResult],
@@ -896,10 +926,12 @@ class AuditOrchestrator:
             error_message=error_message,
             error_token=ERROR_TOKENS[outcome],
             exit_code=EXIT_CODES[outcome],
+            kind=kind,
+            attempt_count=len(attempts),
         )
         # Best-effort: still try to record the latest-run status.
         try:
-            self._write_latest_run_status(record)
+            self._record_terminal(record)
         except OSError:
             pass
         return {
@@ -926,6 +958,49 @@ class AuditOrchestrator:
             self.latest_run_status_path,
             json.dumps(record.to_dict(), indent=2, default=str) + "\n",
         )
+
+    def _record_terminal(
+        self,
+        record: RunOutcomeRecord,
+    ) -> None:
+        """Persist a terminal outcome to both ``latest_run_status.json``
+        and ``run_history.jsonl``.
+
+        Both files must reflect the terminal outcome of every run.
+        ``_write_latest_run_status`` is the single-source-of-truth
+        pointer (one row, latest run only).
+        ``_append_run_history`` is the rolling source of truth
+        (one row per run, every run, ever).
+        """
+        self._write_latest_run_status(record)
+        self._append_run_history(record)
+
+    def _append_run_history(self, record: RunOutcomeRecord) -> None:
+        """Append one row to ``run_history.jsonl``.
+
+        The terminal run history is the single source of truth for
+        the rolling metrics. ``successful_run_count`` is derived
+        from ``record.outcome == RunOutcome.SUCCESS`` and never
+        from a single HTTP attempt.
+
+        The file is JSONL (one JSON object per line) so each run
+        is appendable independently. The rolling metrics build
+        reads the file and reconstructs the per-run summary.
+        ``OSError`` from this write is swallowed because the
+        caller already has a terminal outcome; the rolling
+        metrics for this run will simply be one row short of
+        their full history.
+        """
+        run_history_path = self.audit_root / "run_history.jsonl"
+        try:
+            with open(run_history_path, "a", encoding="utf-8") as handle:
+                handle.write(
+                    json.dumps(record.to_dict(), default=str, sort_keys=True) + "\n"
+                )
+                handle.flush()
+                os.fsync(handle.fileno())
+        except OSError:
+            pass
 
     # ------------------------------------------------------------------
     # persistence helpers (atomic)
