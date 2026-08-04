@@ -174,7 +174,7 @@ def test_independent_replay_reproduces_ledger(tmp_path: Path) -> None:
             "home_field_adjustment": 48.0,
             "predicted_home_win_probability": 0.6,
             "actual_home_win": True, "actual_tie": False,
-            "target_available": True, "signed_margin": 7,
+            "target_available": True, "actual_margin": 7,
         },
         {
             "game_id": "G2", "season": 2018, "season_type": "REG", "week": 1,
@@ -183,7 +183,7 @@ def test_independent_replay_reproduces_ledger(tmp_path: Path) -> None:
             "home_field_adjustment": 48.0,
             "predicted_home_win_probability": 0.55,
             "actual_home_win": False, "actual_tie": False,
-            "target_available": True, "signed_margin": -3,
+            "target_available": True, "actual_margin": -3,
         },
         {
             "game_id": "G3", "season": 2018, "season_type": "REG", "week": 1,
@@ -192,7 +192,7 @@ def test_independent_replay_reproduces_ledger(tmp_path: Path) -> None:
             "home_field_adjustment": 0.0,
             "predicted_home_win_probability": 0.5,
             "actual_home_win": False, "actual_tie": True,
-            "target_available": True, "signed_margin": 0,
+            "target_available": True, "actual_margin": 0,
         },
     ]
     config = EloConfig()
@@ -203,8 +203,8 @@ def test_independent_replay_reproduces_ledger(tmp_path: Path) -> None:
     assert len(replayed) == 6
     # All replayed elo_after values are finite numbers.
     for entry in replayed:
-        assert isinstance(entry["elo_after_replay"], float)
-        assert entry["elo_after_replay"] > 0.0
+        assert isinstance(entry["elo_after"], float)
+        assert entry["elo_after"] > 0.0
 
 
 def test_corrupted_elo_after_detected(tmp_path: Path) -> None:

@@ -138,3 +138,77 @@ Manifest fingerprints:
 The 2025 holdout was not fit, predicted, scored, calibrated, or
 reported. The poison test (corrupting every 2025 row) is preserved
 in `tests/holdout/test_2025_sealed.py` and continues to pass.
+
+
+## Remediation Pass — 2026-08-03
+
+The Task 03A contracts below were corrected in the PR #4 final remediation
+pass. **All earlier calibration and replay claims are superseded.**
+
+### Corrections implemented
+
+- **Logistic calibration** is now a deterministic Newton-Raphson / IRLS fit
+  on the binomial log-likelihood with explicit `max_iter=100`, `tol=1e-9`,
+  probability clamp `[1e-9, 1-1e-9]`, finite-value checks, and no silent
+  0/1 substitution. The earlier OLS-on-logits approach is retired.
+  Calibration remains a diagnostic, not a production model input.
+- **Actual-margin persistence.** The prediction ledger and the state
+  ledger both persist `actual_margin` (signed home margin). The
+  `signed_margin` field name and the ambiguous `is_scored` flag are
+  retired; `is_binary_scored` excludes ties.
+- **Clean independent replay.** `independent_replay_from_pregame` now
+  reconstructs every persisted field from the pregame inputs and the
+  persisted `actual_margin`. The replay validator
+  (`detect_state_ledger_corruption`) checks `elo_before`,
+  `expected_result`, `actual_result`, `update_multiplier`, `k_factor`,
+  `elo_change`, `elo_after`, and the `actual_margin` consistency
+  between the two side rows. Clean full 2018–2024 ledger produces
+  zero mismatches.
+- **Targeted corruption coverage.** Per-field corruption tests trip
+  the validator with messages that name the game_id, side, field,
+  and expected vs actual value for: home/away `elo_before`,
+  `expected_result`, `actual_result`, `update_multiplier`, `k_factor`,
+  `elo_change`, `elo_after`, `actual_margin`, missing home row,
+  missing away row, duplicate home row, duplicate away row, orphan
+  state row.
+- **Repeated-team rejection.** A repeated team within a single
+  prediction block raises `RepeatedTeamInPredictionBlockError` before
+  any prediction row is written and before any state mutation. The
+  error message names the block ID, the repeated team, and the
+  affected game IDs. The real 2018–2024 dataset has zero
+  repeated-team violations across 173 blocks.
+- **Distinct training_block_count.** `training_block_count` counts
+  distinct `(season, season_type, week)` keys; it is no longer a
+  raw row count.
+- **Canonical ledger writer.** The walk-forward engine is the only
+  caller of `build_prediction_ledger`, `build_state_ledger`, and
+  `write_ledger`; an alternate direct `pl.DataFrame.write_parquet`
+  path is impossible. Per-row schema validation runs on every row,
+  not just the first.
+- **Full-range reliability buckets.** The reliability diagram now
+  uses 10 buckets covering `[0.00, 1.00]` with the final bucket
+  closed on the right. Probability 1.0 belongs in the final bucket.
+  Empty buckets report `null` (not 0.0).
+- **Deterministic artifacts.** Two independent runs in
+  `/tmp/nfl-edge-pr4-run-a` and `/tmp/nfl-edge-pr4-run-b` produce
+  byte-identical artifacts for all 7 output files.
+
+### Corrected metrics and hashes
+
+- Brier: 0.22395817969967416
+- Log loss: 0.6396560960306621
+- Descriptive accuracy: 0.635142118863049
+- Calibration intercept: -0.08163555069431239
+- Calibration slope: 0.9669825702467028
+- Calibration fit status: converged (4 iterations)
+- Predictions: 1942; transitions: 3884; ties: 7; binary-scored: 1935
+- Prediction parquet SHA-256: `08ce867f32e5f44e9019ee1d1deaa4501e238d55ab8ecc948b9aca28384f0f26`
+- State parquet SHA-256:    `a1bce06062cd6bd2a451f3a3b29fc2752adadbd64552cda9eccd3118c07c0927`
+- Manifest SHA-256:         `cec593b071128c26c4889e67f812b9397acd26e46e521bfd2c0c136cbec09a62`
+- Tuning ledger SHA-256:    `b46bced9d83abe7184519bf5f89f2cc3399749d54aedb10e9ebdafe4eb2320b0`
+- Scorecard JSON SHA-256:   `1f6dad38426105268376d11d3e9a71bc4efbf413e0e755c4f60e3ae0dd77be2b`
+- Scorecard MD SHA-256:     `d7b95a150bf92afc72c9a6600b4d4a84c1700864a9a0d436a58e1b05ea633363`
+- Reliability CSV SHA-256:  `5ac82d5c5fa2e25d4ca4b30cb16f474b566d908d5864f8e7659541ae74e679b4`
+
+The QB adjustment remains neutral because every development row
+carries `qb_certainty_state=UNKNOWN`.

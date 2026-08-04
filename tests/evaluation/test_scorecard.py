@@ -75,9 +75,14 @@ def test_metrics_reject_2025():
 def test_reliability_table_basic():
     df = _make_pred_frame()
     table = reliability_table(df)
-    assert len(table) == 9  # 9 buckets
+    assert len(table) == 10  # 10 buckets covering [0.00, 1.00]
     total = sum(r["count"] for r in table)
     assert total == 3
+    # Empty buckets must report None, not 0.0
+    for r in table:
+        if r["count"] == 0:
+            assert r["mean_predicted_probability"] is None
+            assert r["actual_home_win_rate"] is None
 
 
 def test_calibration_intercept_slope_runs():

@@ -35,7 +35,10 @@ PREDICTION_LEDGER_COLUMNS: tuple[str, ...] = (
     "model_version",
     "training_season_min",
     "training_season_max",
-    "training_rows",
+    "training_rows_available_before_block",
+    "training_block_count",
+    "prior_completed_games_count",
+    "exposure_kind",
     "prediction_block_id",
     "home_team",
     "away_team",
@@ -47,10 +50,11 @@ PREDICTION_LEDGER_COLUMNS: tuple[str, ...] = (
     "qb_adjustment_net",
     "qb_certainty_state",
     "predicted_home_win_probability",
+    "actual_margin",
     "actual_home_win",
     "actual_tie",
     "target_available",
-    "is_scored",
+    "is_binary_scored",
     "created_at_utc",
 )
 
@@ -66,7 +70,7 @@ STATE_LEDGER_COLUMNS: tuple[str, ...] = (
     "elo_before",
     "expected_result",
     "actual_result",
-    "margin",
+    "actual_margin",
     "update_multiplier",
     "k_factor",
     "home_field_adjustment",
@@ -134,19 +138,98 @@ def build_prediction_ledger(
     rows_list = list(rows)
     if not rows_list:
         raise WalkForwardError("build_prediction_ledger", "no rows provided")
-    extra = [c for c in rows_list[0].keys() if c not in columns]
-    if extra:
-        raise WalkForwardError("build_prediction_ledger", f"unexpected columns: {extra}")
-    missing = [c for c in columns if c not in rows_list[0]]
-    if missing:
-        raise WalkForwardError("build_prediction_ledger", f"missing columns: {missing}")
-    assert_no_market_columns(rows_list[0].keys())
+    # Validate the SCHEMA on every row, not just the first. A row that
+    # silently drops a field would be a contract violation.
+    for idx, row in enumerate(rows_list):
+        extra = [c for c in row.keys() if c not in columns]
+        if extra:
+            raise WalkForwardError(
+                "build_prediction_ledger",
+                f"row {idx} has unexpected columns: {extra}",
+            )
+        missing = [c for c in columns if c not in row]
+        if missing:
+            raise WalkForwardError(
+                "build_prediction_ledger",
+                f"row {idx} is missing columns: {missing}",
+            )
+        assert_no_market_columns(row.keys())
+        _validate_prediction_row(row, where=f"build_prediction_ledger row {idx}")
     frame = pl.DataFrame(rows_list).select(list(columns))
     ids = frame["prediction_id"]
     if ids.is_duplicated().any():
         dupes = ids.filter(ids.is_duplicated()).unique().to_list()
         raise WalkForwardError("build_prediction_ledger", f"duplicate prediction_id: {dupes[:5]}")
+    if frame["game_id"].is_duplicated().any():
+        dupes = frame.filter(frame["game_id"].is_duplicated())["game_id"].unique().to_list()
+        raise WalkForwardError("build_prediction_ledger", f"duplicate game_id: {dupes[:5]}")
+    if int(frame["season"].max()) > 2024:
+        raise WalkForwardError(
+            "build_prediction_ledger",
+            f"detected season {int(frame['season'].max())} > 2024",
+        )
     return frame.sort(["season", "week", "game_id"])
+
+
+def _validate_prediction_row(row: Mapping[str, Any], *, where: str) -> None:
+    """Validate a single prediction row's invariants.
+
+    This is intentionally strict: a row that violates any of these
+    conditions must not be written to the canonical ledger.
+    """
+    season = int(row["season"])
+    if season > 2024:
+        raise WalkForwardError(where, f"season {season} > 2024")
+    p = row.get("predicted_home_win_probability")
+    if p is None or not (0.0 <= float(p) <= 1.0):
+        raise WalkForwardError(where, f"invalid probability: {p}")
+    target_available = bool(row.get("target_available"))
+    actual_tie = bool(row.get("actual_tie"))
+    actual_home_win = row.get("actual_home_win")
+    actual_margin = row.get("actual_margin")
+    is_binary_scored = bool(row.get("is_binary_scored"))
+
+    # target_available consistency
+    if target_available:
+        if actual_margin is None:
+            raise WalkForwardError(where, "target_available=True but actual_margin is null")
+    else:
+        if actual_margin is not None:
+            raise WalkForwardError(where, "target_available=False but actual_margin is not null")
+        if actual_tie:
+            raise WalkForwardError(where, "target_available=False but actual_tie is true")
+        if actual_home_win is not None:
+            raise WalkForwardError(where, "target_available=False but actual_home_win is not null")
+
+    # actual_margin consistency
+    if target_available:
+        m = int(actual_margin)
+        if m > 0:
+            if actual_home_win is not True or actual_tie:
+                raise WalkForwardError(
+                    where,
+                    f"actual_margin={m} requires actual_home_win=True and actual_tie=False",
+                )
+        elif m < 0:
+            if actual_home_win is not False or actual_tie:
+                raise WalkForwardError(
+                    where,
+                    f"actual_margin={m} requires actual_home_win=False and actual_tie=False",
+                )
+        else:  # m == 0
+            if actual_home_win is not None or not actual_tie:
+                raise WalkForwardError(
+                    where,
+                    "actual_margin=0 requires actual_home_win=None and actual_tie=True",
+                )
+
+    # is_binary_scored consistency
+    expected_binary = target_available and not actual_tie
+    if is_binary_scored != expected_binary:
+        raise WalkForwardError(
+            where,
+            f"is_binary_scored={is_binary_scored} but expected {expected_binary}",
+        )
 
 
 def build_state_ledger(
@@ -162,19 +245,46 @@ def build_state_ledger(
     rows_list = list(rows)
     if not rows_list:
         raise WalkForwardError("build_state_ledger", "no rows provided")
-    extra = [c for c in rows_list[0].keys() if c not in columns]
-    if extra:
-        raise WalkForwardError("build_state_ledger", f"unexpected columns: {extra}")
-    missing = [c for c in columns if c not in rows_list[0]]
-    if missing:
-        raise WalkForwardError("build_state_ledger", f"missing columns: {missing}")
-    assert_no_market_columns(rows_list[0].keys())
+    for idx, row in enumerate(rows_list):
+        extra = [c for c in row.keys() if c not in columns]
+        if extra:
+            raise WalkForwardError(
+                "build_state_ledger",
+                f"row {idx} has unexpected columns: {extra}",
+            )
+        missing = [c for c in columns if c not in row]
+        if missing:
+            raise WalkForwardError(
+                "build_state_ledger",
+                f"row {idx} is missing columns: {missing}",
+            )
+        assert_no_market_columns(row.keys())
     frame = pl.DataFrame(rows_list).select(list(columns))
+    if frame.height > 0 and int(frame["season"].max()) > 2024:
+        raise WalkForwardError(
+            "build_state_ledger",
+            f"detected season {int(frame['season'].max())} > 2024",
+        )
     keys = frame.select("game_id", "team")
     if keys.is_duplicated().any():
         dupes = keys.filter(keys.is_duplicated()).unique().to_dicts()
         raise WalkForwardError(
             "build_state_ledger", f"duplicate (game_id, team) state rows: {dupes[:5]}"
+        )
+    # Exactly two state rows per completed game: {home, away}
+    by_game = frame.group_by("game_id").agg(
+        pl.col("side").alias("sides"),
+        pl.col("team").alias("teams"),
+    )
+    bad = by_game.filter(
+        (pl.col("sides").list.len() != 2)
+        | ~(pl.col("sides").list.contains("home"))
+        | ~(pl.col("sides").list.contains("away"))
+    )
+    if bad.height > 0:
+        raise WalkForwardError(
+            "build_state_ledger",
+            f"games with bad side pairing: {bad.height}",
         )
     return frame.sort(["state_update_order", "game_id", "side"])
 

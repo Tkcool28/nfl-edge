@@ -15,7 +15,10 @@ import polars as pl
 
 from ..backtest.blocks import DEVELOPMENT_SEASON_MAX
 from ..common.errors import SealedHoldoutAccessError
-from .calibration import calibration_intercept_slope, reliability_table
+from .calibration import (
+    logistic_recalibration,
+    reliability_table,
+)
 from .metrics import (
     _assert_development_only,
     brier_score,
@@ -222,7 +225,9 @@ def build_development_scorecard(
     brier = brier_score(binary_scored)
     ll = log_loss(binary_scored)
     accuracy = descriptive_accuracy(binary_scored)
-    cal_intercept, cal_slope = calibration_intercept_slope(binary_scored)
+    cal_result = logistic_recalibration(binary_scored)
+    cal_intercept = cal_result["calibration_intercept"]
+    cal_slope = cal_result["calibration_slope"]
     reliability = reliability_table(binary_scored)
 
     scorecard = {
@@ -245,6 +250,9 @@ def build_development_scorecard(
             "descriptive_accuracy": accuracy,
             "calibration_intercept": cal_intercept,
             "calibration_slope": cal_slope,
+            "calibration_fit_status": cal_result["calibration_fit_status"],
+            "calibration_iterations": cal_result["calibration_iterations"],
+            "calibration_converged": cal_result["calibration_converged"],
         },
         "by_season": _season_counts(dev),
         "by_week": _weekly_counts(dev),
@@ -329,9 +337,19 @@ def build_development_scorecard(
         "| --- | --- | --- | --- |",
     ]
     for r in reliability:
+        mean_p = (
+            f"{r['mean_predicted_probability']:.4f}"
+            if r["mean_predicted_probability"] is not None
+            else "n/a"
+        )
+        rate = (
+            f"{r['actual_home_win_rate']:.4f}"
+            if r["actual_home_win_rate"] is not None
+            else "n/a"
+        )
         md_lines.append(
             f"| {r['bucket_low']:.2f}–{r['bucket_high']:.2f} | {r['count']} | "
-            f"{r['mean_predicted_probability']:.4f} | {r['actual_home_win_rate']:.4f} |"
+            f"{mean_p} | {rate} |"
         )
     md_lines += [
         "",
@@ -382,12 +400,22 @@ def build_development_scorecard(
     json_path.write_text(json.dumps(scorecard, indent=2, sort_keys=True) + "\n")
     md_path.write_text("\n".join(md_lines))
 
-    # CSV reliability table
+    # CSV reliability table — empty buckets write `null` for the
+    # averaging columns.
     csv_lines = ["bucket_low,bucket_high,count,mean_predicted_probability,actual_home_win_rate"]
     for r in reliability:
+        mean_p = (
+            f"{r['mean_predicted_probability']:.6f}"
+            if r["mean_predicted_probability"] is not None
+            else "null"
+        )
+        rate = (
+            f"{r['actual_home_win_rate']:.6f}"
+            if r["actual_home_win_rate"] is not None
+            else "null"
+        )
         csv_lines.append(
-            f"{r['bucket_low']:.4f},{r['bucket_high']:.4f},{r['count']},"
-            f"{r['mean_predicted_probability']:.6f},{r['actual_home_win_rate']:.6f}"
+            f"{r['bucket_low']:.4f},{r['bucket_high']:.4f},{r['count']},{mean_p},{rate}"
         )
     csv_path.write_text("\n".join(csv_lines) + "\n")
 

@@ -96,6 +96,17 @@ class MarketColumnError(ValueError):
     is the runtime exception for code that does not have a frame handy."""
 
 
+class RepeatedTeamInPredictionBlockError(ValueError):
+    """Raised when a single prediction block contains the same team
+    more than once.
+
+    For this baseline (Task 03A) the spec requires every block to
+    contain each team at most once. A repeated team would make the
+    state-update order ambiguous (which game is the "true" first
+    occurrence) and would break the clean two-pass design.
+    """
+
+
 def assert_season_in_window(
     *,
     season: int,

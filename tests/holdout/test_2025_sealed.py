@@ -30,7 +30,7 @@ from nfl_edge.common.errors import SealedHoldoutAccessError
 from nfl_edge.evaluation.metrics import brier_score, log_loss
 from nfl_edge.evaluation.scorecard import build_development_scorecard
 
-REPO_ROOT = Path("/root/nfl-edge")
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 GAMES_PATH = REPO_ROOT / "data/derived/features_v1/game_features_2018_2025.parquet"
 TEAM_PATH = REPO_ROOT / "data/derived/features_v1/team_pregame_features_2018_2025.parquet"
 CLEAN_OUTPUT = Path("/tmp/nfl-edge-holdout-clean")

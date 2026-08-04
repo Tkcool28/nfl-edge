@@ -26,7 +26,7 @@ from nfl_edge.models.qb_elo import (
     rebuild_state_from_ledger,
 )
 
-REPO_ROOT = Path("/root/nfl-edge")
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 GAMES_PATH = REPO_ROOT / "data/derived/features_v1/game_features_2018_2025.parquet"
 TEAM_PATH = REPO_ROOT / "data/derived/features_v1/team_pregame_features_2018_2025.parquet"
 TMP_OUTPUT = Path("/tmp/nfl-edge-walk-forward-test")
@@ -116,5 +116,8 @@ def test_walk_forward_manifest_has_no_2025_info():
 def test_walk_forward_writes_tuning_ledger():
     assert (TMP_OUTPUT / "qb_elo_tuning_ledger_v1.json").exists()
     ledg = json.loads((TMP_OUTPUT / "qb_elo_tuning_ledger_v1.json").read_text())
-    assert isinstance(ledg, list)
-    assert len(ledg) >= 1
+    assert isinstance(ledg, dict)
+    assert "sensitivity_audit" in ledg
+    assert "primary_configuration" in ledg
+    assert ledg["primary_configuration"]["path"] == "config/qb_elo_v1.yaml"
+    assert len(ledg["sensitivity_audit"]) >= 1

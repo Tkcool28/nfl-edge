@@ -1,5 +1,5 @@
 {
-  "backtest_code_fingerprint": "37ae010aab76a75923ad34f2dd56a8536df9e305889e470fbf9c61642563aa78",
+  "backtest_code_fingerprint": "42aab18ebc9ec504f1b2e0df6175a985950aa43df8534ff6a531b27e1900e9ca",
   "backtest_config_sha256": "a36f9b5e63b24285be2f217ffc1de7f6592623604bae8a643f8edad2f1bcadf3",
   "created_at_utc": "2026-08-03T12:00:00Z",
   "data_version": "frozen-baseline-v1",
@@ -9,14 +9,14 @@
   "feature_version": "features-v1",
   "maximum_prediction_as_of_utc": "2025-02-04T12:00:00Z",
   "minimum_prediction_as_of_utc": "2018-09-04T12:00:00Z",
-  "model_code_fingerprint": "91773cfd4361d7184673f969add48b632533fceca056fb90a4cd609b7286bf7c",
+  "model_code_fingerprint": "6bc664edf0c896590efed4546e4e269ecb660df8700207f7f80e19a81ed6574e",
   "model_config_sha256": "d37661befee7fa0e00b71337890b9bf2b2a3740b0f1a7103ed3776fbabd00d7a",
   "model_name": "qb_elo",
   "model_version": "v1.0.0",
   "prediction_ledger": {
     "path": "data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet",
     "rows": 1942,
-    "sha256": "3847cf65bd0dbcadd6ba3a16d123468b8c9fb9d835d1f159d493d7d1120070d2"
+    "sha256": "0f53dbd057cb30080b2a3361639fbdf1e4d16d70dfee3f65ccd09c5b95abc855"
   },
   "random_seed": 20260802,
   "run_id": "qb_elo-v1.0.0-20260803T120000Z",
@@ -26,7 +26,7 @@
   "state_ledger": {
     "path": "data/modeling/development_v1/qb_elo_state_transitions_2018_2024.parquet",
     "rows": 3884,
-    "sha256": "7a48826ec6858a02b23b849fcbe2b4ab82c4639ca980531e4f7a0b0060da1fab"
+    "sha256": "67323c62fb5e1d6ce686000726bb6d1a44f636d66a43aecedafdb9a6007e558c"
   },
   "two_pass_block_proof": {
     "predict_pass_does_not_mutate_state": true,

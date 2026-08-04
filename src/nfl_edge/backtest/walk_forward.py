@@ -53,6 +53,13 @@ from .blocks import (
     SEALED_HOLDOUT_SEASON,
     build_development_blocks,
 )
+from .ledger import (  # re-exported at module level so tests can
+    PREDICTION_LEDGER_COLUMNS,  # monkeypatch the canonical builders
+    STATE_LEDGER_COLUMNS,
+    build_prediction_ledger,
+    build_state_ledger,
+    write_ledger,
+)
 
 # Default config for the primary run (documented in docs/qb_elo_v1.md).
 DEFAULT_ELO_CONFIG: dict[str, Any] = {
@@ -207,7 +214,8 @@ def _build_exposure_for_block(
                 (pl.col("season").cast(pl.Utf8) + pl.lit("|") +
                  pl.col("season_type") + pl.lit("|") +
                  pl.col("week").cast(pl.Utf8))
-            ).height
+                .n_unique()
+            ).item()
         ),
         "prior_completed_games_count": int(n_completed),
     }
@@ -235,6 +243,7 @@ def _predict_block(
     state update in pass 2.
     """
 
+    from ..common.errors import RepeatedTeamInPredictionBlockError
     from ..models.qb_elo import (
         clamp_probability,
         elo_probability_home,
@@ -244,6 +253,26 @@ def _predict_block(
     pregame_inputs: list[dict[str, Any]] = []
     # Sort block games deterministically by game_id for replay.
     block_dicts = sorted(block_games.to_dicts(), key=lambda r: str(r["game_id"]))
+    # Repeated-team guard. A block must contain each team at most once
+    # so the state-update order is well-defined. Validation runs BEFORE
+    # any prediction row is written and BEFORE any state mutation.
+    team_first_seen: dict[str, str] = {}
+    repeated_games: list[tuple[str, str, str]] = []  # (team, first_game, second_game)
+    for game_row in block_dicts:
+        gid = str(game_row["game_id"])
+        for team_slot in ("home_team", "away_team"):
+            team = str(game_row[team_slot])
+            if team in team_first_seen:
+                repeated_games.append((team, team_first_seen[team], gid))
+            else:
+                team_first_seen[team] = gid
+    if repeated_games:
+        details = ", ".join(
+            f"team={t} games=({a},{b})" for t, a, b in repeated_games[:5]
+        )
+        raise RepeatedTeamInPredictionBlockError(
+            f"block {block_id} has repeated teams: {details}"
+        )
     for game_row in block_dicts:
         game_id = str(game_row["game_id"])
         home_team = str(game_row["home_team"])
@@ -275,20 +304,24 @@ def _predict_block(
         p_home = clamp_probability(p_home, elo_config)
 
         # Resolve target (margin / win / tie) from the games frame.
+        # actual_margin is the canonical field.  null when no completed
+        # outcome exists; 0 for a tie; positive for home win; negative
+        # for away win.
         target_margin_val = game_row.get("target_margin")
         target_available = target_margin_val is not None
         if target_available:
-            margin_signed = int(target_margin_val)
-            if margin_signed == 0:
+            actual_margin: int | None = int(target_margin_val)
+            if actual_margin == 0:
                 actual_home_win: bool | None = None
                 actual_tie: bool = True
             else:
-                actual_home_win = margin_signed > 0
+                actual_home_win = actual_margin > 0
                 actual_tie = False
         else:
+            actual_margin = None
             actual_home_win = None
             actual_tie = False
-            margin_signed = 0
+        is_binary_scored = bool(target_available and not actual_tie)
 
         prediction_id = f"{run_id}:{game_id}"
         predictions.append(
@@ -313,10 +346,11 @@ def _predict_block(
                 "qb_adjustment_net": home_qb_adj - away_qb_adj,
                 "qb_certainty_state": "UNKNOWN",
                 "predicted_home_win_probability": p_home,
+                "actual_margin": actual_margin,
                 "actual_home_win": actual_home_win,
                 "actual_tie": actual_tie,
                 "target_available": target_available,
-                "is_scored": target_available,
+                "is_binary_scored": is_binary_scored,
                 # Exposure metadata (truthful, per block)
                 "training_rows_available_before_block": exposure[
                     "training_rows_available_before_block"
@@ -343,10 +377,10 @@ def _predict_block(
                 "away_elo_before": away_elo_before,
                 "home_field_adjustment": hfa,
                 "predicted_home_win_probability": p_home,
+                "actual_margin": actual_margin,
                 "actual_home_win": actual_home_win,
                 "actual_tie": actual_tie,
                 "target_available": target_available,
-                "signed_margin": margin_signed,
             }
         )
     return predictions, pregame_inputs
@@ -403,7 +437,7 @@ def _update_block(
         )
         home_record, away_record, new_state = update_state_with_margin(
             prediction=prediction,
-            margin=int(row["signed_margin"]),
+            margin=int(row["actual_margin"]),
             state=current_state,
             config=elo_config,
         )
@@ -424,7 +458,7 @@ def _update_block(
                     "elo_before": float(record.elo_before),
                     "expected_result": float(record.expected_result),
                     "actual_result": float(record.actual_result),
-                    "margin": int(record.margin),
+                    "actual_margin": int(record.margin),
                     "update_multiplier": float(record.update_multiplier),
                     "k_factor": float(record.k_factor),
                     "home_field_adjustment": float(
@@ -572,10 +606,6 @@ def run_development_walk_forward(
         canonical_json_sha256,
         code_fingerprint_glob,
     )
-    from ..common.polars_utils import (
-        assert_no_market_columns,
-        write_parquet_deterministic,
-    )
     from ..models.qb_elo import (
         EloState,
         config_from_dict,
@@ -673,15 +703,16 @@ def run_development_walk_forward(
         # the next block. Only after pass 2 finishes do we advance.
         state = new_state
 
-    # Build ledgers
-    pred_frame = pl.DataFrame(predictions_all).sort(
-        ["season", "week", "game_id"]
+    # Build ledgers via the canonical builders. The builder is the
+    # single source of truth for the on-disk schema and the strict
+    # per-row invariants. The walk-forward engine must not construct
+    # and persist DataFrames through any other code path.
+    pred_frame = build_prediction_ledger(
+        predictions_all, columns=PREDICTION_LEDGER_COLUMNS
     )
-    assert_no_market_columns(pred_frame.columns)
-    state_frame = pl.DataFrame(state_updates_all).sort(
-        ["state_update_order", "game_id", "side"]
+    state_frame = build_state_ledger(
+        state_updates_all, columns=STATE_LEDGER_COLUMNS
     )
-    assert_no_market_columns(state_frame.columns)
 
     # Hard correctness gate: per-game zero-sum and side pairing.
     # Catches write-path bugs where a non-game_id field (e.g. team
@@ -776,22 +807,41 @@ def run_development_walk_forward(
     output_dir.mkdir(parents=True, exist_ok=True)
     pred_path = output_dir / "qb_elo_predictions_2018_2024.parquet"
     state_path = output_dir / "qb_elo_state_transitions_2018_2024.parquet"
-    write_parquet_deterministic(pred_frame, pred_path)
-    write_parquet_deterministic(state_frame, state_path)
+    write_ledger(pred_frame, str(pred_path))
+    write_ledger(state_frame, str(state_path))
     (output_dir / "qb_elo_run_manifest_v1.json").write_text(
         json_lib.dumps(manifest, indent=2, sort_keys=True) + "\n"
     )
     # Tuning ledger (only sensitivity variants go here)
     (output_dir / "qb_elo_tuning_ledger_v1.json").write_text(
         json_lib.dumps(
-            [
-                {
-                    "config_id": "default",
-                    "configuration": config_data,
-                    "selection": "primary",
-                    "reason": "documented conservative defaults",
-                }
-            ],
+            {
+                "model_name": "qb_elo",
+                "model_version": "v1.0.0",
+                "tuning_policy": (
+                    "No hyperparameter tuning performed. The primary configuration is "
+                    "frozen in config/qb_elo_v1.yaml. Per the policy in docs/modeling_gap_report.md "
+                    "and the parameter policy in config/qb_elo_v1.yaml, this baseline "
+                    "permitted one frozen primary configuration plus a very small "
+                    "sensitivity audit (~3 variants max). No broad hyperparameter mining "
+                    "was performed."
+                ),
+                "sensitivity_audit": [
+                    {
+                        "config_id": "default",
+                        "configuration": config_data,
+                        "selection": "primary",
+                        "reason": "documented conservative defaults",
+                    }
+                ],
+                "primary_configuration": {
+                    "path": "config/qb_elo_v1.yaml",
+                    "sha256": _sha256_bytes(
+                        (proj_root / "config/qb_elo_v1.yaml").read_bytes()
+                    ),
+                },
+                "frozen_at_utc": created_at.isoformat().replace("+00:00", "Z"),
+            },
             indent=2,
             sort_keys=True,
         )

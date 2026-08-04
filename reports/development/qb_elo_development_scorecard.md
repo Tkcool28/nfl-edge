@@ -1,7 +1,7 @@
 # QB-Elo Development Scorecard
 
 - **Model:** qb_elo v1.0.0
-- **Run ID:** qb_elo-v1.0.0-20260803T120000Z
+- **Run ID:** None
 - **Development seasons:** 2018-2024
 - **Sealed holdout season:** 2025 (not scored)
 
@@ -18,8 +18,8 @@
 - Brier score: 0.2240
 - Log loss: 0.6397
 - Descriptive accuracy: 0.6351
-- Calibration intercept: 0.4822
-- Calibration slope: 0.2158
+- Calibration intercept: -0.0816
+- Calibration slope: 0.9670
 
 ## Results by Season
 
@@ -43,6 +43,7 @@
 
 | Bucket | Count | Mean Predicted | Actual Home-Win Rate |
 | --- | --- | --- | --- |
+| 0.00–0.10 | 0 | n/a | n/a |
 | 0.10–0.20 | 20 | 0.1599 | 0.3000 |
 | 0.20–0.30 | 87 | 0.2611 | 0.3218 |
 | 0.30–0.40 | 211 | 0.3561 | 0.2986 |
@@ -51,7 +52,7 @@
 | 0.60–0.70 | 428 | 0.6477 | 0.6262 |
 | 0.70–0.80 | 280 | 0.7482 | 0.7643 |
 | 0.80–0.90 | 112 | 0.8363 | 0.7857 |
-| 0.90–1.01 | 11 | 0.9086 | 0.9091 |
+| 0.90–1.00 | 11 | 0.9086 | 0.9091 |
 
 ## Missingness
 
@@ -80,15 +81,18 @@
 ## Configuration
 
 ```json
-{}
+{
+  "model_name": "qb_elo",
+  "model_version": "v1.0.0"
+}
 ```
 
 ## Manifest Fingerprint
 
-- model_config_sha256: `d37661befee7fa0e00b71337890b9bf2b2a3740b0f1a7103ed3776fbabd00d7a`
-- backtest_config_sha256: `a36f9b5e63b24285be2f217ffc1de7f6592623604bae8a643f8edad2f1bcadf3`
-- model_code_fingerprint: `91773cfd4361d7184673f969add48b632533fceca056fb90a4cd609b7286bf7c`
-- feature_code_fingerprint: `1ee67408974b9183be61ad54963ddae5e7aa093d8518edef8948b07ce2c9a921`
-- backtest_code_fingerprint: `37ae010aab76a75923ad34f2dd56a8536df9e305889e470fbf9c61642563aa78`
+- model_config_sha256: `None`
+- backtest_config_sha256: `None`
+- model_code_fingerprint: `None`
+- feature_code_fingerprint: `None`
+- backtest_code_fingerprint: `None`
 
 _No 2025 predictions, scores, or calibration included._

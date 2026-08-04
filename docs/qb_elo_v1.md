@@ -202,11 +202,17 @@ written.
 - Ties (excluded from binary metrics): **7**
 - Target-unavailable games: **0**
 - Warm-up excluded games: **0**
-- Brier score: **0.2240**
-- Log loss: **0.6397**
-- Descriptive accuracy: **0.6351**
-- Calibration intercept: **0.4822**
-- Calibration slope: **0.2158**
+- Brier score: **0.2240** (full: 0.22395817969967416)
+- Log loss: **0.6397** (full: 0.6396560960306621)
+- Descriptive accuracy: **0.6351** (full: 0.635142118863049)
+- Calibration intercept: **-0.0816** (full: -0.08163555069431239)
+- Calibration slope: **0.9670** (full: 0.9669825702467028)
+- Calibration fit status: **converged** in 4 iterations
+
+The earlier "calibration intercept 0.4822 / slope 0.2158" was the
+output of an OLS-on-logits fit. The 2026-08-03 remediation replaced
+that with a deterministic Newton-Raphson / IRLS binomial fit; the
+earlier numbers are **superseded**.
 
 Manifest fingerprints:
 
@@ -217,3 +223,20 @@ Manifest fingerprints:
 The 2025 holdout was not fit, predicted, scored, calibrated, or
 reported. The poison test (corrupting every 2025 row) is preserved
 in `tests/holdout/test_2025_sealed.py` and continues to pass.
+
+
+### Remediation Pass — 2026-08-03
+
+The earlier "calibration intercept 0.4822 / slope 0.2158" line in this
+document was the output of the OLS-on-logits fit. The 2026-08-03
+remediation replaced that with a deterministic Newton-Raphson / IRLS
+binomial fit and recomputed every artifact. The corrected numbers are:
+
+- Calibration intercept: -0.08163555069431239
+- Calibration slope: 0.9669825702467028
+- Calibration fit status: converged (4 iterations, tol=1e-9)
+- Calibration remains diagnostic only — never used as a production
+  model input.
+
+This document is updated in place; the prior values are superseded
+and remain only as historical record.

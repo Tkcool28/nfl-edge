@@ -1,8 +1,11 @@
 {
   "aggregate_metrics": {
     "brier_score": 0.22395817969967416,
-    "calibration_intercept": 0.4822286164716027,
-    "calibration_slope": 0.2157719647428949,
+    "calibration_converged": true,
+    "calibration_fit_status": "converged",
+    "calibration_intercept": -0.08163555069431239,
+    "calibration_iterations": 4,
+    "calibration_slope": 0.9669825702467028,
     "descriptive_accuracy": 0.635142118863049,
     "log_loss": 0.6396560960306621
   },
@@ -1291,14 +1294,17 @@
       "week": 22
     }
   ],
-  "configuration": {},
+  "configuration": {
+    "model_name": "qb_elo",
+    "model_version": "v1.0.0"
+  },
   "development_seasons": "2018-2024",
   "manifest_fingerprint": {
-    "backtest_code_fingerprint": "37ae010aab76a75923ad34f2dd56a8536df9e305889e470fbf9c61642563aa78",
-    "backtest_config_sha256": "a36f9b5e63b24285be2f217ffc1de7f6592623604bae8a643f8edad2f1bcadf3",
-    "feature_code_fingerprint": "1ee67408974b9183be61ad54963ddae5e7aa093d8518edef8948b07ce2c9a921",
-    "model_code_fingerprint": "91773cfd4361d7184673f969add48b632533fceca056fb90a4cd609b7286bf7c",
-    "model_config_sha256": "d37661befee7fa0e00b71337890b9bf2b2a3740b0f1a7103ed3776fbabd00d7a"
+    "backtest_code_fingerprint": null,
+    "backtest_config_sha256": null,
+    "feature_code_fingerprint": null,
+    "model_code_fingerprint": null,
+    "model_config_sha256": null
   },
   "missingness": {
     "away_elo_before": 0,
@@ -1311,6 +1317,13 @@
   "model_name": "qb_elo",
   "model_version": "v1.0.0",
   "reliability_table": [
+    {
+      "actual_home_win_rate": null,
+      "bucket_high": 0.1,
+      "bucket_low": 0.0,
+      "count": 0,
+      "mean_predicted_probability": null
+    },
     {
       "actual_home_win_rate": 0.3,
       "bucket_high": 0.2,
@@ -1369,13 +1382,13 @@
     },
     {
       "actual_home_win_rate": 0.9090909090909091,
-      "bucket_high": 1.01,
+      "bucket_high": 1.0,
       "bucket_low": 0.9,
       "count": 11,
       "mean_predicted_probability": 0.9085727507124712
     }
   ],
-  "run_id": "qb_elo-v1.0.0-20260803T120000Z",
+  "run_id": null,
   "scored_row_policy": "scored = target_available AND actual_home_win is not null. Ties are predicted outcomes with available targets but are excluded from binary home-win metrics by design.",
   "sealed_holdout_season": 2025,
   "totals": {
