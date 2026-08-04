@@ -192,6 +192,9 @@ def logistic_recalibration(
             "calibration_fit_status": "constant_input",
             "calibration_iterations": 0,
             "calibration_converged": False,
+            "max_iter": max_iter,
+            "tol": tol,
+            "calibration_rows_used": n,
         }
 
     # Initialise at (0, 1) (identity in logit space)
