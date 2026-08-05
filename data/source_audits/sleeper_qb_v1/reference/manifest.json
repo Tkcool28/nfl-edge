@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "description": "Reference fixtures consumed by the Sleeper QB source audit. Every entry must exist under data/source_audits/sleeper_qb_v1/ and have the exact SHA-256 listed here. The audit's verify_reference_manifest helper raises ReferenceFailure if any entry is missing or mismatched.",
+  "artifacts": [
+    {
+      "path": "hof_game_2026_fixture.parquet",
+      "sha256": "641a41a2955db800e1dbfc886d23c3680b9b7b820dde9e53e19fd3fcb5f1f770",
+      "row_count": 1
+    },
+    {
+      "path": "nflverse_player_identity_pre2025.parquet",
+      "sha256": "eb125f3b42d1e45fbe76c412601c09826d01bbf6046fa093ddd407f4e699d984",
+      "row_count": 12470
+    }
+  ]
+}

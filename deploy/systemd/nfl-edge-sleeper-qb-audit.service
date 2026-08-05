@@ -1,0 +1,45 @@
+[Unit]
+Description=NFL Edge Sleeper QB source-audit (twice-daily)
+Documentation=file:///root/nfl-edge/docs/sleeper_qb_source_contract_v1.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# The audit is read-only on external systems and writes only to the
+# configured audit_root under the repository. Set WorkingDirectory to
+# the repository root and use the system Python or a disposable venv
+# (the spec at §18 requires the disposable path).
+WorkingDirectory=/root/nfl-edge
+Environment="PYTHONPATH=/root/nfl-edge/src"
+ExecStart=/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/collect_sleeper_qbs.py --kind=scheduled
+# Bounded timeout: a healthy fetch should complete in <60s.
+TimeoutStartSec=120
+# Low memory footprint: the Sleeper response is bounded by the
+# filtered endpoint and the audit never loads more than a few MB.
+MemoryMax=256M
+MemoryHigh=128M
+# Hardening: no new privileges, no env inheritance, no root-path
+# mutation. PrivateTmp is intentionally NOT enabled because the
+# service interpreter lives under the project root (not /tmp); a
+# private /tmp would shadow nothing here and historically caused a
+# 203/EXEC when the venv was placed under /tmp.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/root/nfl-edge/data/source_audits/sleeper_qb_v1
+# The audit reads /etc/resolv.conf for DNS; allow that.
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictNamespaces=true
+SystemCallArchitectures=native
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nfl-edge-sleeper-audit
+
+[Install]
+WantedBy=multi-user.target

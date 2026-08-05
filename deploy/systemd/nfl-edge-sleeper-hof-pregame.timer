@@ -1,0 +1,26 @@
+[Unit]
+Description=NFL Edge Sleeper Hall of Fame Game pregame timer
+Documentation=file:///root/nfl-edge/docs/sleeper_qb_source_contract_v1.md
+# Hall of Fame Game 2026: Panthers at Cardinals, 2026-08-06 20:00 EDT
+# (== 2026-08-07T00:00:00Z). Pregame collection fires at
+# 2026-08-06T22:30:00Z, approximately 90 minutes before kickoff.
+# Time conversion:
+#   2026-08-06T20:00:00-04:00 (America/New_York EDT)
+#   == 2026-08-07T00:00:00Z (UTC)
+#   == 2026-08-06T18:00:00-06:00 (America/Denver MDT)
+#   pregame = 2026-08-06T22:30:00Z
+#           == 2026-08-06T18:30:00-04:00 (America/New_York)
+#           == 2026-08-06T16:30:00-06:00 (America/Denver)
+# This timer is one-shot. Persistent=false prevents boot-catchup of a
+# long-elapsed event.
+Requires=nfl-edge-sleeper-hof-pregame.service
+
+[Timer]
+OnCalendar=2026-08-06 22:30:00 UTC
+Persistent=false
+RandomizedDelaySec=0
+AccuracySec=1s
+Unit=nfl-edge-sleeper-hof-pregame.service
+
+[Install]
+WantedBy=timers.target

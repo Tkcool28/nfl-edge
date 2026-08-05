@@ -1,0 +1,25 @@
+[Unit]
+Description=NFL Edge Sleeper QB source-audit timer (06:00 and 18:00 MDT)
+Documentation=file:///root/nfl-edge/docs/sleeper_qb_source_contract_v1.md
+Requires=nfl-edge-sleeper-qb-audit.service
+
+[Timer]
+# Mountain Time is UTC-6 (MST) or UTC-7 (MDT). The audit uses fixed
+# clock-time triggers so the timer fires at the same wall-clock time
+# year-round; daylight-saving drift is documented in the source
+# contract and is acceptable for a source-feasibility audit.
+# 06:00 MDT == 12:00 UTC; 18:00 MDT == 00:00 UTC next day.
+OnCalendar=*-*-* 12:00:00 UTC
+OnCalendar=*-*-* 00:00:00 UTC
+# Persistent: missed runs catch up at boot.
+Persistent=true
+# RandomizedDelaySec deliberately disabled per spec §11; the audit
+# must run on a deterministic schedule to make change detection
+# reproducible.
+RandomizedDelaySec=0
+# Prevent overlap with any running collection.
+AccuracySec=1s
+Unit=nfl-edge-sleeper-qb-audit.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,39 @@
+# Sleeper QB source-audit v1 configuration
+#
+# This config is read by scripts/collect_sleeper_qbs.py and
+# scripts/report_sleeper_qb_audit.py. All paths are repository-relative.
+# The audit does not consult any environment variable, does not read any
+# API key, and never writes outside `audit_root`.
+version: sleeper-qb-audit-config-v1
+
+# Endpoint pinned to the documented Sleeper public host and path. The
+# client rejects any deviation.
+endpoint: https://api.sleeper.app/v1/players/nfl
+
+# Where the audit's raw bytes, normalized frames, and reports live.
+audit_root: data/source_audits/sleeper_qb_v1
+
+# Path to the nflverse-derived player identity reference parquet. The
+# audit uses this ONLY for identity resolution; it never reads 2025
+# model-target rows. The shipped reference is built from
+# nflreadpy.load_ff_playerids() with the 2025 db_season stripped, so
+# the crosswalk can match Sleeper player_id -> GSIS / ESPN / sportradar
+# / yahoo / fantasy_data / rotowire without ever reading the 2025
+# sealed holdout. A null value falls back to "all rows unmatched" so
+# the audit cannot silently disable the crosswalk.
+nflverse_qb_path: data/source_audits/sleeper_qb_v1/reference/nflverse_player_identity_pre2025.parquet
+
+# A successful fetch is considered STALE_LAST_SUCCESS if it is older
+# than this many seconds. The twice-daily timer runs 12 hours apart, so
+# a 6-hour threshold is a defensive tripwire.
+staleness_threshold_seconds: 21600
+
+# Reference-artifact manifest. Every entry must exist under
+# ``audit_root/reference/`` and have the exact SHA-256 listed here.
+# The audit's verify_reference_manifest helper raises
+# ReferenceFailure if any entry is missing or mismatched, so a
+# tampered or missing fixture fails the run rather than silently
+# passing through the crosswalk or HOF workflow. The manifest is
+# shipped as part of the repository so a clean clone + audit
+# produces a verifiable outcome without external setup.
+reference_manifest: data/source_audits/sleeper_qb_v1/reference/manifest.json

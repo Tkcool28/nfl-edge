@@ -1,2 +1,3 @@
-nflreadpy==0.1.5
-polars==1.43.2
+# Base runtime dependencies for the NFL Edge audit harness.
+# Pinned versions live in requirements/lock.txt.
+requests==2.33.0

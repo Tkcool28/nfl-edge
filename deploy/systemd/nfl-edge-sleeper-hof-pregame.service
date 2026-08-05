@@ -1,0 +1,34 @@
+[Unit]
+Description=NFL Edge Sleeper Hall of Fame Game pregame collection
+Documentation=file:///root/nfl-edge/docs/sleeper_qb_source_contract_v1.md
+After=network-online.target
+Wants=network-online.target
+# Explicitly bounded to the August 6, 2026 HOF Game (Panthers at
+# Cardinals, kickoff 2026-08-07T00:00:00Z). The pregame collection
+# fires at 2026-08-06T22:30:00Z, approximately 90 minutes before
+# kickoff. The unit is inert after a successful run; it does not
+# become a recurring permanent job.
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/nfl-edge
+Environment="PYTHONPATH=/root/nfl-edge/src"
+ExecStart=/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/collect_sleeper_qbs.py --kind=pregame
+TimeoutStartSec=120
+MemoryMax=256M
+MemoryHigh=128M
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/root/nfl-edge/data/source_audits/sleeper_qb_v1
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictNamespaces=true
+SystemCallArchitectures=native
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nfl-edge-sleeper-hof-pregame
