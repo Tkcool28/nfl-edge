@@ -29,8 +29,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import math
-import shutil
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -40,12 +38,8 @@ import polars as pl
 from nfl_edge.backtest.expected_margin_walk_forward import (
     run_expected_margin_candidate,
 )
+from nfl_edge.models.expected_margin import load_all_candidates
 from nfl_edge.models.expected_margin_config import lock_expected_margin_config
-from nfl_edge.models.expected_margin import (
-    candidate_config_from_normalized,
-    load_all_candidates,
-    shared_config_from_normalized,
-)
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_YAML = REPO_ROOT / "config/expected_margin_v1.yaml"
@@ -59,29 +53,99 @@ def _hash_file(path: Path) -> str:
 
 
 def _extract_development_games(
-    source: Path,
+    features_path: Path,
+    games_path: Path,
     out_path: Path,
 ) -> pl.DataFrame:
-    """Read the canonical game features parquet and persist a
-    determinstic 2018-2024 extraction. 2025 rows are filtered out
-    BEFORE the parquet is written, so 2025 outcomes are never
-    summarized, logged, or persisted. 2026+ rows would raise at the
-    filter stage below.
+    """Build the deterministic 2018-2024 development extraction.
+
+    The canonical features parquet has the block / target metadata but
+    no actual home / away scores. The frozen games parquet has the
+    completed-game scores but no block / target metadata. We join them
+    on the canonical unique game identity (``game_id``) and then filter
+    to seasons 2018-2024 BEFORE any fitting, prediction, mapping, or
+    evaluation.
+
+    Safety guarantees:
+      - duplicate ``game_id`` keys on either source raise rather than
+        silently multiplying rows;
+      - any forward-use season (2026 and later) or pre-2018 season
+        raises at the boundary BEFORE filtering;
+      - the 2025 sealed-holdout rows present in the source are
+        excluded (filtered out) and never reach fitting, prediction,
+        mapping, or evaluation;
+      - any feature row without a matching frozen completed-game score
+        raises instead of being silently dropped;
+      - the returned frame contains exactly seasons 2018-2024 and
+        preserves every point-in-time feature field from the canonical
+        source. No permanent output is written here when ``out_path``
+        is ``None``.
+
+    The joined final scores are consumed downstream only as targets
+    for prior-completed training and for later evaluation. They are
+    never exposed to the current block during prediction (enforced by
+    the walk-forward, not at this join).
     """
-    source = Path(source)
-    if not source.exists():
-        raise FileNotFoundError(source)
-    frame = pl.read_parquet(source)
-    seasons = sorted(int(s) for s in frame["season"].unique().to_list())
-    bad = [s for s in seasons if s > 2024]
-    if bad:
+    features_path = Path(features_path)
+    games_path = Path(games_path)
+    if not features_path.exists():
+        raise FileNotFoundError(features_path)
+    if not games_path.exists():
+        raise FileNotFoundError(games_path)
+    features = pl.read_parquet(features_path)
+    games = pl.read_parquet(games_path)
+
+    # Fail on duplicate join keys on either side instead of silently
+    # multiplying rows in the join.
+    for name, frame in (("features", features), ("frozen games", games)):
+        dup = int(frame["game_id"].len() - frame["game_id"].n_unique())
+        if dup:
+            raise ValueError(
+                f"Duplicate game_id keys in {name} source "
+                f"({dup} extra rows); refusing to join."
+            )
+
+    # Reject unsupported seasons at the boundary BEFORE any filtering.
+    # 2025 is the sealed holdout and is excluded below, not rejected.
+    all_seasons = sorted(int(s) for s in features["season"].unique().to_list())
+    future = [s for s in all_seasons if s >= 2026]
+    if future:
         raise ValueError(
-            f"Game features parquet contains unsupported seasons "
-            f"{bad}; 2025 would be the sealed holdout, 2026+ are "
-            f"forward-use. Extraction must filter to seasons <= 2024 "
-            f"before any fitting, prediction, mapping, or evaluation."
+            f"Game features contain forward-use seasons {future}; "
+            f"2026 and later must be rejected at the boundary and must "
+            f"never enter any fitting, prediction, mapping, or "
+            f"evaluation frame."
         )
+    past = [s for s in all_seasons if s < 2018]
+    if past:
+        raise ValueError(
+            f"Game features contain unexpected pre-2018 seasons {past}; "
+            f"rejecting at the development boundary."
+        )
+
+    # Join the frozen completed-game scores by canonical game identity.
+    games_join = games.select(["game_id", "home_score", "away_score"])
+    frame = features.join(games_join, on="game_id", how="left")
+
+    # Fail on any feature row without a matching completed-game score.
+    missing = frame.filter(
+        pl.col("home_score").is_null() | pl.col("away_score").is_null()
+    ).height
+    if missing:
+        raise ValueError(
+            f"{missing} feature rows have no matching frozen "
+            f"completed-game score; refusing to build the development "
+            f"frame."
+        )
+
+    # Restrict to the 2018-2024 development window (excludes 2025).
     frame = frame.filter((pl.col("season") >= 2018) & (pl.col("season") <= 2024))
+    seasons = sorted(int(s) for s in frame["season"].unique().to_list())
+    if seasons != list(range(2018, 2025)):
+        raise ValueError(
+            f"Development extraction produced unexpected seasons "
+            f"{seasons}; expected [2018..2024]."
+        )
     if out_path is not None:
         out_path.parent.mkdir(parents=True, exist_ok=True)
         frame.write_parquet(out_path)
@@ -213,7 +277,7 @@ def main() -> int:
         sha = args.code_commit_sha
 
     # 1. Confirm the locked configuration SHA-256 matches.
-    locked = lock_expected_margin_config(args.extraction_parquet.parent.parent / "config/expected_margin_v1.yaml")
+    locked = lock_expected_margin_config(REPO_ROOT / "config/expected_margin_v1.yaml")
     config_sha256 = locked["config_sha256"]
     expected_sha = "37df479ab032784825e88e40010e65a84a983a832cf51ad9ca78080362dcfd18"
     if config_sha256 != expected_sha:
@@ -224,8 +288,9 @@ def main() -> int:
 
     # 2. Build the deterministic development extraction. 2025+ rows
     # are never written to this file.
+    games_frozen = REPO_ROOT / "data/frozen/games/games_2018_2025.parquet"
     extraction = _extract_development_games(
-        args.games_parquet, args.extraction_parquet
+        args.games_parquet, games_frozen, args.extraction_parquet
     )
     development_seasons = sorted(int(s) for s in extraction["season"].unique().to_list())
     if development_seasons != list(range(2018, 2025)):
@@ -235,7 +300,7 @@ def main() -> int:
         )
 
     # 3. Run the three locked candidates.
-    config_yaml = args.extraction_parquet.parent.parent / "config/expected_margin_v1.yaml"
+    config_yaml = REPO_ROOT / "config/expected_margin_v1.yaml"
     shared, candidates, _ = load_all_candidates(config_yaml)
     all_results: dict[str, dict] = {}
     for cand in candidates:
