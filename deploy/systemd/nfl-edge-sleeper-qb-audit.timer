@@ -1,7 +1,6 @@
 [Unit]
 Description=NFL Edge Sleeper QB source-audit timer (06:00 and 18:00 MDT)
 Documentation=file:///root/nfl-edge/docs/sleeper_qb_source_contract_v1.md
-Requires=nfl-edge-sleeper-qb-audit.service
 
 [Timer]
 # Mountain Time is UTC-6 (MST) or UTC-7 (MDT). The audit uses fixed
