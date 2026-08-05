@@ -13,7 +13,6 @@ Documentation=file:///root/nfl-edge/docs/sleeper_qb_source_contract_v1.md
 #           == 2026-08-06T16:30:00-06:00 (America/Denver)
 # This timer is one-shot. Persistent=false prevents boot-catchup of a
 # long-elapsed event.
-Requires=nfl-edge-sleeper-hof-pregame.service
 
 [Timer]
 OnCalendar=2026-08-06 22:30:00 UTC
