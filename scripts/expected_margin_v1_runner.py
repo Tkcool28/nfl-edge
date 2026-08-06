@@ -893,7 +893,6 @@ def main() -> int:
         "",
         "## Reliability table",
         "See `expected_margin_reliability_table.csv` (fixed buckets [0,0.2)...[0.8,1.0)).",
-        "",
     ]
     sc_md_path = reports_dir / "expected_margin_development_scorecard.md"
     sc_md_path.write_text("\n".join(sc_md_lines) + "\n")
