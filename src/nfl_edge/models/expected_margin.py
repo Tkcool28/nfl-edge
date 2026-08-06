@@ -50,19 +50,21 @@ regression on the recency-weighted design matrix. The identity of
 offense vs defense is therefore anchored by which game the team is
 playing (home or away), not by the algebraic sign of the margin.
 
-Identifiability (deterministic reduced parameterization + post-fit centering):
+Identifiability (symmetric ridge fit + prediction-invariant post-fit centering):
 
 - The league baseline is the FITTED intercept; its L2 prior is
   ``shared.league_baseline_prior`` (default 22.5). The intercept is
   NOT simultaneously a fixed constant.
-- The reference team (alphabetically smallest in the training
-  slice) has offense=0 and defense=0 inside the linear system.
-  All other team effects receive their declared ridge priors.
+- All team offense and defense effects are fitted symmetrically
+  with their declared ridge priors; NO team is pinned as an
+  alphabetical reference. The ridge on every effect makes the
+  linear system uniquely solvable; there is no soft-penalty fake
+  "sum-to-zero" diagonal term.
 - After the closed-form solve, the offense and defense vectors are
   CENTERED so that ``sum(offense) = 0`` and ``sum(defense) = 0``,
-  and the league baseline is adjusted by the centering offset. The
-  centering is prediction-invariant: predicted home and away points
-  do not depend on which team is the alphabetical reference.
+  and the league baseline is adjusted so every predicted score is
+  unchanged. The centering is prediction-invariant: predicted home
+  and away points do not depend on team naming or team-index order.
 - HFA is a single scalar fitted jointly with its own ridge prior.
 
 Ties (margin == 0) are INCLUDED in the scoring fit. Both home and
@@ -302,24 +304,25 @@ def _solve_two_observation_ridge(
     home_field_ridge: float,
     league_baseline_prior: float,
     league_baseline_prior_weight: float,
-    sum_to_zero_weight: float = 1.0e-6,
 ):
     """Closed-form ridge linear regression for the two-observation scoring fit.
 
-    Identifiability is enforced by a deterministic reduced
-    parameterization (one team has its offense and defense pinned to
-    0 inside the linear system) followed by a PREDICTION-INVARIANT
-    POST-FIT CENTERING so that the output satisfies
-    ``sum(offense) = 0`` and ``sum(defense) = 0``.
+    Identifiability is enforced by a SYMMETRIC ridge fit followed by
+    a PREDICTION-INVARIANT POST-FIT CENTERING so that the output
+    satisfies ``sum(offense) = 0`` and ``sum(defense) = 0``.
 
-    The reference team (used only for the identification pivot) is
-    the alphabetically smallest team in the training slice. The
-    post-fit centering is prediction-invariant: adding c to every
-    offense effect and subtracting c from the league baseline leaves
-    every prediction unchanged. Predictions do not depend on team
-    naming or ordering. Tests
+    All team effects receive their declared ridge priors; NO team is
+    pinned as an alphabetical reference. The ridge on every effect
+    makes the system uniquely solvable (positive definite) — the
+    earlier hand-added tiny diagonal is removed because it is NOT a
+    sum-to-zero constraint and is not required as numerical ridge.
+    After the solve, the offense and defense vectors are centered by
+    subtracting their means and the league baseline is adjusted so
+    every predicted score is unchanged. This centering is
+    prediction-invariant: predictions do not depend on team naming
+    or team-index ordering. Tests
     ``test_team_order_permutation_invariance`` and
-    ``test_team_rename_invariance`` lock this property.
+    ``test_reference_team_rename_invariance`` lock this property.
 
     Sign convention::
 
@@ -338,12 +341,11 @@ def _solve_two_observation_ridge(
     """
     # Full parameter vector with all n_teams offense and defense
     # coefficients in the system. The ridge is applied to all teams
-    # symmetrically. The sum-to-zero constraint is enforced by a
-    # small soft penalty (sum_to_zero_weight) which adds a small
-    # fixed amount to the diagonal of the offense and defense blocks.
-    # This makes the system positive-definite AND identifies the
-    # unique solution that minimizes the data fit plus the ridge
-    # plus the constraint penalty.
+    # symmetrically. There is NO reference-team pinning and NO
+    # soft-penalty sum-to-zero term: the declared ridge on every
+    # effect makes the system positive definite and uniquely
+    # solvable. Identification to a prediction-invariant gauge is
+    # achieved afterward by post-fit centering.
     league_baseline_idx = 0
     offense_start = 1
     defense_start = 1 + n_teams
@@ -388,16 +390,22 @@ def _solve_two_observation_ridge(
         xtw_x[idx * n_params + idx] += defense_ridge
     xtw_x[hfa_idx * n_params + hfa_idx] += home_field_ridge
 
-    # Soft sum-to-zero penalty.
-    for k in range(n_teams):
-        xtw_x[(offense_start + k) * n_params + (offense_start + k)] += sum_to_zero_weight
-        xtw_x[(defense_start + k) * n_params + (defense_start + k)] += sum_to_zero_weight
-
     solution = _cholesky_solve(xtw_x, xtw_y, n_params)
-    league_baseline = float(solution[league_baseline_idx])
-    offense = tuple(solution[offense_start:offense_start + n_teams])
-    defense = tuple(solution[defense_start:defense_start + n_teams])
+    raw_league_baseline = float(solution[league_baseline_idx])
+    raw_offense = [float(v) for v in solution[offense_start:offense_start + n_teams]]
+    raw_defense = [float(v) for v in solution[defense_start:defense_start + n_teams]]
     hfa = float(solution[hfa_idx])
+
+    # Prediction-invariant post-fit centering. Subtract each effect
+    # vector's mean so sum(offense) = 0 and sum(defense) = 0, and add
+    # the combined centering offset to the league baseline so every
+    # expected home/away points value (and hence every margin) is
+    # numerically unchanged.
+    mean_offense = sum(raw_offense) / n_teams
+    mean_defense = sum(raw_defense) / n_teams
+    league_baseline = raw_league_baseline + mean_offense - mean_defense
+    offense = tuple(v - mean_offense for v in raw_offense)
+    defense = tuple(v - mean_defense for v in raw_defense)
 
     return (league_baseline, offense, defense, hfa, {})
 

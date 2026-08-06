@@ -52,11 +52,16 @@ block ordering and the within-block ``prediction_as_of_utc`` (UTC
 timezone-aware). ``game_id`` is used only as a final tie-breaker
 within a single block. The age of each prior completed game is the
 count of completed games that finished strictly before it in the
-chronological order.
+chronological order, REVERSED so the newest prior game is age 0
+(greatest recency weight) and the oldest prior game is age ``n-1``.
+The weight is ``w = 0.5 ** (age / half_life)``.
 """
 
 from __future__ import annotations
 
+import hashlib
+import json
+import math
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -186,14 +191,18 @@ def _chronological_age_per_row(
 
     The age of each prior completed game is the count of completed
     games that finished strictly before it in the deterministic
-    chronological order. The order is:
+    chronological order, then reversed so the NEWEST prior game is
+    age 0 (greatest recency) and the OLDEST prior game is age
+    ``n - 1``. The order is:
 
     1. ``prediction_as_of_utc`` (UTC timezone-aware primary key)
     2. ``game_id`` (lexicographic tie-breaker)
 
-    The frame is sorted by these two keys. The age of row ``i`` in
-    the sorted frame is exactly ``i`` because rows 0..i-1 are
-    strictly older.
+    The frame is sorted by these two keys. Row ``i`` in the sorted
+    frame (0 = oldest) receives age ``n - 1 - i`` (0 = newest). The
+    returned ages align row-for-row with the caller's sorted frame
+    and its weight is ``w = 0.5 ** (age / half_life)`` — the newest
+    completed game therefore carries the greatest recency weight.
 
     The age is NEVER computed from game_id order alone and NEVER
     from numeric ``season, week`` alone — both are insufficient
@@ -207,7 +216,9 @@ def _chronological_age_per_row(
     sorted_frame = prior_completed.sort(
         ["prediction_as_of_utc", "game_id"]
     )
-    return [float(i) for i in range(sorted_frame.height)]
+    n = sorted_frame.height
+    # age = n - 1 - chronological_position  ->  newest age 0, oldest age n-1.
+    return [float(n - 1 - i) for i in range(n)]
 
 
 def _load_games(path: str | Path) -> pl.DataFrame:
@@ -369,6 +380,82 @@ def _prior_oos_for_mapping(
     return available
 
 
+def _eligible_mapping_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Return the prior-OOS rows eligible for the binary margin->probability mapping.
+
+    A row is eligible only when ALL hold:
+
+    - ``expected_home_margin_available`` is true;
+    - ``target_available`` is true;
+    - the game is not a tie (``actual_tie`` false);
+    - ``actual_home_win`` is not None (we never call bool() on a null
+      binary outcome);
+    - the expected margin is finite.
+
+    ``margins`` and ``wins`` arrays must be derived from this SAME
+    list so their positional alignment cannot diverge.
+    """
+    return [
+        r
+        for r in rows
+        if (
+            bool(r.get("expected_home_margin_available", False))
+            and bool(r.get("target_available", False))
+            and not bool(r.get("actual_tie", False))
+            and r.get("actual_home_win") is not None
+            and math.isfinite(float(r.get("expected_home_margin", float("nan"))))
+        )
+    ]
+
+
+def _is_binary_scored(
+    *,
+    target_available: bool,
+    actual_tie: bool,
+    probability_available: bool,
+    predicted_probability: float | None,
+) -> bool:
+    """Official binary scoring eligibility for one prediction row.
+
+    A row is officially binary-scored ONLY when ALL hold:
+
+    - the target is available (the game's outcome is known);
+    - the game is not a tie;
+    - a home-win probability is available;
+    - the predicted probability is finite (non-null).
+
+    This must be evaluated AFTER probability availability has been
+    determined for the row. Ties remain in the scoring-model fit but
+    are never officially binary-scored (tie policy is unchanged).
+    """
+    if not target_available or actual_tie:
+        return False
+    if not probability_available:
+        return False
+    if predicted_probability is None or not math.isfinite(predicted_probability):
+        return False
+    return True
+
+
+def _fitted_state_fingerprint(state: dict[str, Any]) -> str:
+    """Deterministic SHA-256 over the canonical serialized fitted state.
+
+    The payload is the block-state record (a dict) with the
+    ``fitted_state_fingerprint`` key itself excluded, serialized as
+    canonical JSON (sorted keys, compact separators). Because the
+    full centered offense/defense vectors and every fitted scalar
+    (league baseline, HFA, mapping params, ridge values, counts,
+    solver status) are included, any change to a fitted coefficient
+    changes the fingerprint. This is NOT the configuration-file hash:
+    it is derived from the actual fitted state content of the block.
+    """
+    payload = {k: v for k, v in state.items() if k != "fitted_state_fingerprint"}
+    canonical = json.dumps(
+        payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    ).encode("utf-8")
+    return hashlib.sha256(canonical).hexdigest()
+
+
 def _fit_block_model(
     *,
     prior_completed: pl.DataFrame,
@@ -466,7 +553,9 @@ def _predict_block(
             actual_margin = None
             actual_home_win = None
             actual_tie = False
-        is_binary_scored = bool(target_available and not actual_tie)
+        # NOTE: is_binary_scored is computed AFTER probability
+        # availability is determined below (it requires a finite
+        # probability), so it is not set here.
 
         home_off = float(fitted._offense(home_team))  # noqa: SLF001
         home_def = float(fitted._defense(home_team))  # noqa: SLF001
@@ -506,6 +595,13 @@ def _predict_block(
                 apply_clipping=shared.apply_probability_clipping,
             )
             probability_available = True
+
+        binary_scored = _is_binary_scored(
+            target_available=target_available,
+            actual_tie=actual_tie,
+            probability_available=probability_available,
+            predicted_probability=predicted_probability,
+        )
 
         predictions.append(
             {
@@ -554,7 +650,7 @@ def _predict_block(
                 "actual_margin": actual_margin,
                 "actual_home_win": actual_home_win,
                 "actual_tie": actual_tie,
-                "is_binary_scored": is_binary_scored,
+                "is_binary_scored": binary_scored,
                 "created_at_utc": created_at.isoformat().replace("+00:00", "Z"),
             }
         )
@@ -625,6 +721,7 @@ def run_expected_margin_candidate(
 
     all_predictions: list[dict[str, Any]] = []
     prior_oos: list[dict[str, Any]] = []
+    block_states: list[dict[str, Any]] = []
 
     for block in blocks:
         exposure = _build_exposure_for_block(block=block, games=games)
@@ -673,16 +770,14 @@ def run_expected_margin_candidate(
                 cutoff_utc=cutoff_iso,
             )
         else:
-            margins = [
-                float(r["expected_home_margin"])
-                for r in prior_oos_for_mapping
-                if bool(r.get("expected_home_margin_available", False))
-            ]
-            wins = [
-                bool(r["actual_home_win"])
-                for r in prior_oos_for_mapping
-                if bool(r.get("expected_home_margin_available", False))
-            ]
+            # Build margins and wins arrays from the SAME eligible row
+            # list so their positional alignment cannot diverge. A null
+            # binary outcome / missing target / tie is never admitted
+            # (see _eligible_mapping_rows) — we never call bool() on a
+            # null binary outcome.
+            eligible = _eligible_mapping_rows(prior_oos_for_mapping)
+            margins = [float(r["expected_home_margin"]) for r in eligible]
+            wins = [bool(r["actual_home_win"]) for r in eligible]
             if len(margins) < int(shared.minimum_mapping_rows):
                 mapping = FittedMapping(
                     row_count=len(margins),
@@ -704,6 +799,42 @@ def run_expected_margin_candidate(
                     max_iterations=shared.mapping_solver_max_iterations,
                     cutoff_utc=cutoff_iso,
                 )
+
+        block_state: dict[str, Any] = {
+            "candidate_id": candidate.id,
+            "block_id": str(block.block_id),
+            "cutoff_utc": cutoff_iso,
+            "team_index": dict(fitted.team_index),
+            "centered_offense": list(fitted.offense_effect),
+            "centered_defense": list(fitted.defense_effect),
+            "league_baseline": float(fitted.league_baseline),
+            "home_field_effect": float(fitted.home_field_effect),
+            "offense_ridge": float(candidate.offense_ridge),
+            "defense_ridge": float(candidate.defense_ridge),
+            "home_field_ridge": float(candidate.home_field_ridge),
+            "recency_half_life_games": float(candidate.recency_half_life_games),
+            "training_row_count": int(
+                exposure["training_rows_available_before_block"]
+            ),
+            "training_completed_row_count": int(
+                exposure["training_completed_rows_before_block"]
+            ),
+            "prior_completed_game_count": int(
+                exposure["prior_completed_games_count"]
+            ),
+            "mapping_row_count": int(mapping.row_count),
+            "mapping_intercept": float(mapping.intercept),
+            "mapping_slope": float(mapping.slope),
+            "mapping_fit_status": str(mapping.fit_status),
+            "mapping_convergence_status": str(mapping.convergence_status),
+            "sum_offense_effects": float(sum(fitted.offense_effect)),
+            "sum_defense_effects": float(sum(fitted.defense_effect)),
+            "solver_status": "team_strength_warmup" if team_strength_warmup else "ok",
+        }
+        block_state["fitted_state_fingerprint"] = _fitted_state_fingerprint(
+            block_state
+        )
+        block_states.append(block_state)
 
         block_games = games.filter(
             (pl.col("season") == block.season)
@@ -732,4 +863,5 @@ def run_expected_margin_candidate(
         "candidate_id": candidate.id,
         "model_version": model_version,
         "predictions": all_predictions,
+        "block_states": block_states,
     }

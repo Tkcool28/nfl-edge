@@ -36,6 +36,9 @@ from nfl_edge.backtest.blocks import (
 )
 from nfl_edge.backtest.expected_margin_walk_forward import (
     _chronological_age_per_row,
+    _eligible_mapping_rows,
+    _fitted_state_fingerprint,
+    _is_binary_scored,
     _load_games,
     _prior_oos_for_mapping,
     run_expected_margin_candidate,
@@ -164,16 +167,16 @@ def _synthetic_game_frame(
 
 def test_identifiability_distinguishes_offense_and_defense() -> None:
     """Clean balanced fixture: four teams with KNOWN distinct offense and
-    defense profiles. AA is the reference team (pinned to (off=0, def=0))
-    and is the strongest offense AND strongest defense. BB is high O / weak D.
-    CC is low O / great D. DD is low O / weak D. The model must identify
-    a non-reference team as the unique offense leader and a DIFFERENT
-    non-reference team as the unique defense leader.
+    defense profiles. AA is the strongest offense AND strongest defense.
+    BB is high O / weak D. CC is low O / great D. DD is low O / weak D.
+    The model must identify one team as the unique offense leader and a
+    DIFFERENT team as the unique defense leader (no reference team is
+    pinned; identification is symmetric ridge + post-fit centering).
     """
     shared, candidates = _shared_and_candidates()
     cand = candidates[1]
-    # True deviations from AA (the reference team).
-    # AA itself: off=+4, def=+4 (high O, great D).
+    # True deviations relative to the league baseline (after centering).
+    # AA: off=+4, def=+4 (high O, great D).
     # BB: off=+4, def=-4 (high O, weak D).
     # CC: off=-4, def=+4 (low O, great D).
     # DD: off=-4, def=-4 (low O, weak D).
@@ -315,10 +318,9 @@ def test_higher_offense_raises_expected_points() -> None:
         shared=shared,
         fitted_at_cutoff_utc="2026-08-05T00:00:00Z",
     )
-    # AAA is the high-O team (reference team pinned to 0; AAA's
-    # offense effect is the deviation from the reference team).
-    # Its expected home points for AAA vs BBB must exceed the
-    # league baseline.
+    # AAA is the high-O team. After sum-to-zero centering its offense
+    # effect is the deviation above the league average offense. Its
+    # expected home points for AAA vs BBB must exceed the league baseline.
     pts = fitted.expected_home_points("AAA", "BBB", neutral_site=False)
     assert pts > fitted.league_baseline, (
         f"AAA (high O) should have expected home points above the baseline "
@@ -388,8 +390,7 @@ def test_stronger_defense_lowers_opponent_points() -> None:
         fitted_at_cutoff_utc="2026-08-05T00:00:00Z",
     )
     deff = dict(zip(fitted.team_index.keys(), fitted.defense_effect))
-    # AAA is the reference team (alphabetically smallest).
-    # sum-to-zero; no reference team
+    # sum-to-zero; no reference team is pinned.
     # The defense rank by the data is AAA > BBB > CCC > DDD
     # (AAA strongest, DDD weakest). Under our convention, positive
     # defense = strong, so defense effects must be ordered
@@ -724,10 +725,12 @@ def test_chronological_recency_uses_completion_order_not_game_id() -> None:
     ]
     frame = pl.DataFrame(rows)
     computed_ages = _chronological_age_per_row(frame)
-    # The ages must be 0, 1, 2, 3 in chronological order
-    # (G001, G002, G003, G004), NOT in game_id order.
-    assert computed_ages == [0.0, 1.0, 2.0, 3.0], (
-        f"chronological ages must follow chronological order, not "
+    # The corrected recency direction: newest prior game carries age
+    # 0 (greatest recency), oldest carries age n-1. For the 4 rows
+    # sorted chronologically (G001, G002, G003, G004) the ages are
+    # [3, 2, 1, 0] — NOT the game_id order.
+    assert computed_ages == [3.0, 2.0, 1.0, 0.0], (
+        f"chronological ages must follow chronological order (newest=0), not "
         f"game_id order; got {computed_ages}"
     )
 
@@ -1305,23 +1308,20 @@ def test_cholesky_solve_deterministic() -> None:
 
 
 def test_reference_team_rename_invariance() -> None:
-    """The reference team is alphabetically smallest. Renaming the
-    teams (which changes which team is the reference) must NOT
-    materially change the predicted home points, away points, or
-    margin for any team pair.
+    """Renaming the teams (which changes the alphabetical sort order and
+    hence the internal team-index ordering) must NOT materially change
+    the predicted home points, away points, or margin for any team pair.
 
-    The current implementation pins the reference team to (off=0,
-    def=0). This is a prediction-invariant constraint because the
-    sum of predictions across all teams is fixed by the data; the
-    reference team acts as the calibration anchor against which the
-    other teams are measured. The predicted home points, away
-    points, and margin for any non-reference team must be close
-    under different reference-team identities.
+    Identification is a SYMMETRIC ridge fit followed by
+    prediction-invariant post-fit centering: no team is pinned as a
+    reference, so predictions are invariant to team naming and
+    ordering. Predicted home points, away points, and margin for any
+    team pair must be close under different team-name identities.
     """
     shared, candidates = _shared_and_candidates()
     cand = candidates[1]
     # Build a balanced fixture with KNOWN offense and defense values.
-    # True deviations from AA (the reference team).
+    # True deviations relative to the league baseline (after centering).
     # AA: off=+4, def=+4 (high O, great D)
     # BB: off=+4, def=-4 (high O, weak D)
     # CC: off=-4, def=+4 (low O, great D)
@@ -1410,3 +1410,482 @@ def test_reference_team_rename_invariance() -> None:
         assert abs(a_pts_a - a_pts_b) < 1e-3, (
             f"Renaming changes away points for ({h_a} vs {a_a}) by {a_pts_a - a_pts_b:.6f}"
         )
+
+
+# ---------------------------------------------------------------------------
+# PR7 Step 1 — corrected recency direction (newest = age 0)
+# ---------------------------------------------------------------------------
+
+
+def test_recency_corrected_direction_newest_age_zero() -> None:
+    """Newest prior game carries age 0 (greatest recency); oldest prior
+    game carries the greatest age (n-1). Row order and age order remain
+    aligned to the sorted chronological frame."""
+    shared, candidates = _shared_and_candidates()
+    half_life = candidates[1].recency_half_life_games
+    from datetime import timedelta
+
+    base = datetime(2024, 9, 1, 12, 0, 0, tzinfo=timezone.utc)
+    rows = []
+    for i in range(4):
+        # game_id deliberately reversed relative to chronological order.
+        rows.append(
+            {
+                "game_id": f"G{3 - i:03d}",
+                "season": 2024,
+                "season_type": "REG",
+                "week": 1,
+                "home_team": "AAA",
+                "away_team": "BBB",
+                "neutral_site": False,
+                "target_available": True,
+                "target_margin": 5.0,
+                "target_home_win": True,
+                "target_tie": False,
+                "home_score": 25.0,
+                "away_score": 20.0,
+                "prediction_as_of_utc": base + timedelta(days=i),  # i=3 newest
+            }
+        )
+    frame = pl.DataFrame(rows)
+    ages = _chronological_age_per_row(frame)
+    # Sorted chronological order: pos0 = oldest (day 0) ... pos3 = newest (day 3).
+    assert ages == [3.0, 2.0, 1.0, 0.0], f"got {ages}"
+    assert ages[-1] == 0.0, "newest prior game must carry age zero"
+    assert ages[0] == max(ages), "oldest prior game must carry the greatest age"
+    # Newest prior game carries the greatest recency weight.
+    weights = [_recency_weight(a, half_life) for a in ages]
+    assert weights[-1] == max(weights)
+    assert weights[0] == min(weights)
+    # Row order and age order remain aligned to the sorted frame.
+    sf = frame.sort(["prediction_as_of_utc", "game_id"])
+    assert len(ages) == sf.height
+    assert ages == [float(sf.height - 1 - i) for i in range(sf.height)]
+
+
+def test_recency_game_id_reversal_does_not_change_ages() -> None:
+    """Reversing the lexical game_id order must not alter the computed
+    chronological ages: they follow prediction_as_of_utc, not game_id."""
+    from datetime import timedelta
+
+    base = datetime(2024, 9, 1, 12, 0, 0, tzinfo=timezone.utc)
+
+    def build(game_ids: list[str]) -> pl.DataFrame:
+        rows = []
+        for i, gid in enumerate(game_ids):
+            rows.append(
+                {
+                    "game_id": gid,
+                    "season": 2024,
+                    "season_type": "REG",
+                    "week": 1,
+                    "home_team": "AAA",
+                    "away_team": "BBB",
+                    "neutral_site": False,
+                    "target_available": True,
+                    "target_margin": 5.0,
+                    "target_home_win": True,
+                    "target_tie": False,
+                    "home_score": 25.0,
+                    "away_score": 20.0,
+                    "prediction_as_of_utc": base + timedelta(days=i),
+                }
+            )
+        return pl.DataFrame(rows)
+
+    frame_a = build(["G001", "G002", "G003", "G004"])
+    frame_b = build(["G004", "G003", "G002", "G001"])
+    assert _chronological_age_per_row(frame_a) == [3.0, 2.0, 1.0, 0.0]
+    assert _chronological_age_per_row(frame_b) == [3.0, 2.0, 1.0, 0.0]
+
+
+def test_recency_recent_evidence_dominates_and_half_life_magnitude() -> None:
+    """Older games give one scoring signal (A scores high), recent games
+    give a conflicting signal (A scores low). The fitted prediction must
+    move toward the recent signal, and the candidate with the SHORTER
+    half-life must respond more strongly (predict closer to the recent
+    signal) than the longer-half-life candidate."""
+    shared, candidates = _shared_and_candidates()
+    short = next(c for c in candidates if c.id == "responsive")  # HL 4.0
+    long_ = next(c for c in candidates if c.id == "stable")  # HL 16.0
+    assert short.recency_half_life_games < long_.recency_half_life_games
+
+    n_old = 30
+    n_new = 30
+    home_teams: list[str] = []
+    away_teams: list[str] = []
+    home_points: list[float] = []
+    away_points: list[float] = []
+    neutral_site: list[bool] = []
+    all_ages: list[float] = []
+
+    # Old era: A is a high scorer (A=45, B=10) in both directions.
+    for i in range(n_old):
+        home_teams.append("A" if i % 2 == 0 else "B")
+        away_teams.append("B" if i % 2 == 0 else "A")
+        if i % 2 == 0:
+            home_points.append(45.0)
+            away_points.append(10.0)
+        else:
+            home_points.append(10.0)
+            away_points.append(45.0)
+        neutral_site.append(True)
+    # Recent era: A is now a low scorer (A=5, B=10) in both directions.
+    for i in range(n_new):
+        home_teams.append("A" if i % 2 == 0 else "B")
+        away_teams.append("B" if i % 2 == 0 else "A")
+        if i % 2 == 0:
+            home_points.append(5.0)
+            away_points.append(10.0)
+        else:
+            home_points.append(10.0)
+            away_points.append(5.0)
+        neutral_site.append(True)
+
+    # Old games are chronologically older -> larger recency age (lower
+    # weight); recent games are younger -> smaller age (higher weight).
+    all_ages = [float(a) for a in range(n_old, n_old + n_new)] + [
+        float(a) for a in range(0, n_new)
+    ]
+
+    def _fit(cand) -> float:
+        fitted = fit_expected_margin(
+            prior_training_games=[{}] * len(home_teams),
+            home_points=home_points,
+            away_points=away_points,
+            neutral_site=neutral_site,
+            home_team_codes=home_teams,
+            away_team_codes=away_teams,
+            chronological_age_in_completed_games=all_ages,
+            candidate=cand,
+            shared=shared,
+            fitted_at_cutoff_utc="2026-08-05T00:00:00Z",
+        )
+        return fitted.expected_home_points("A", "B", neutral_site=True)
+
+    short_pred = _fit(short)
+    long_pred = _fit(long_)
+    # Both moved away from the old (45) signal toward the recent (5) signal.
+    assert short_pred < 40.0, f"short-HL pred should move toward recent: {short_pred}"
+    assert long_pred < 40.0, f"long-HL pred should move toward recent: {long_pred}"
+    # The shorter-half-life candidate responds more strongly (lower here,
+    # because the recent signal is low).
+    assert short_pred < long_pred, (
+        f"shorter HL should respond more strongly to recent evidence: "
+        f"short={short_pred:.4f} long={long_pred:.4f}"
+    )
+
+
+# ---------------------------------------------------------------------------
+# PR7 Step 1 — binary mapping eligibility
+# ---------------------------------------------------------------------------
+
+
+def test_mapping_eligibility_filters_and_row_count() -> None:
+    rows = [
+        # home win -> eligible
+        {"expected_home_margin": 3.0, "expected_home_margin_available": True,
+         "target_available": True, "actual_tie": False, "actual_home_win": True},
+        # away win -> eligible
+        {"expected_home_margin": -4.0, "expected_home_margin_available": True,
+         "target_available": True, "actual_tie": False, "actual_home_win": False},
+        # tie -> excluded
+        {"expected_home_margin": 0.0, "expected_home_margin_available": True,
+         "target_available": True, "actual_tie": True, "actual_home_win": None},
+        # target unavailable -> excluded
+        {"expected_home_margin": 2.0, "expected_home_margin_available": True,
+         "target_available": False, "actual_tie": False, "actual_home_win": True},
+        # null binary outcome -> excluded (must not call bool() on it)
+        {"expected_home_margin": 5.0, "expected_home_margin_available": True,
+         "target_available": True, "actual_tie": False, "actual_home_win": None},
+        # margin unavailable -> excluded
+        {"expected_home_margin": float("nan"), "expected_home_margin_available": False,
+         "target_available": True, "actual_tie": False, "actual_home_win": True},
+        # non-finite margin -> excluded
+        {"expected_home_margin": float("inf"), "expected_home_margin_available": True,
+         "target_available": True, "actual_tie": False, "actual_home_win": True},
+    ]
+    eligible = _eligible_mapping_rows(rows)
+    # Only the explicit home-win and away-win rows are eligible.
+    assert len(eligible) == 2
+    # Row count must equal the exact number of eligible binary rows.
+    assert len(eligible) == sum(
+        1
+        for r in rows
+        if _is_eligible_like(r)
+    )
+    margins = [float(r["expected_home_margin"]) for r in eligible]
+    wins = [bool(r["actual_home_win"]) for r in eligible]
+    assert margins == [3.0, -4.0]
+    assert wins == [True, False]
+
+
+def _is_eligible_like(r) -> bool:
+    """Local eligibility mirror (for the row-count assertion)."""
+    return (
+        bool(r.get("expected_home_margin_available", False))
+        and bool(r.get("target_available", False))
+        and not bool(r.get("actual_tie", False))
+        and r.get("actual_home_win") is not None
+        and math.isfinite(float(r.get("expected_home_margin", float("nan"))))
+    )
+
+
+# ---------------------------------------------------------------------------
+# PR7 Step 1 — official binary scoring semantics
+# ---------------------------------------------------------------------------
+
+
+def test_is_binary_scored_semantics() -> None:
+    # team-strength warm-up (no probability) -> not scored
+    assert (
+        _is_binary_scored(
+            target_available=True, actual_tie=False,
+            probability_available=False, predicted_probability=None,
+        )
+        is False
+    )
+    # mapping warm-up (no probability) -> not scored
+    assert (
+        _is_binary_scored(
+            target_available=True, actual_tie=False,
+            probability_available=False, predicted_probability=None,
+        )
+        is False
+    )
+    # rejected non-positive mapping (no probability) -> not scored
+    assert (
+        _is_binary_scored(
+            target_available=True, actual_tie=False,
+            probability_available=False, predicted_probability=None,
+        )
+        is False
+    )
+    # tie with an available probability -> not scored
+    assert (
+        _is_binary_scored(
+            target_available=True, actual_tie=True,
+            probability_available=True, predicted_probability=0.6,
+        )
+        is False
+    )
+    # non-tie with an unavailable probability -> not scored
+    assert (
+        _is_binary_scored(
+            target_available=True, actual_tie=False,
+            probability_available=False, predicted_probability=None,
+        )
+        is False
+    )
+    # non-tie with an available finite probability -> scored
+    assert (
+        _is_binary_scored(
+            target_available=True, actual_tie=False,
+            probability_available=True, predicted_probability=0.62,
+        )
+        is True
+    )
+    # non-tie, probability_available true but null probability -> not scored
+    assert (
+        _is_binary_scored(
+            target_available=True, actual_tie=False,
+            probability_available=True, predicted_probability=None,
+        )
+        is False
+    )
+    # target unavailable even with a probability -> not scored
+    assert (
+        _is_binary_scored(
+            target_available=False, actual_tie=False,
+            probability_available=True, predicted_probability=0.6,
+        )
+        is False
+    )
+
+
+# ---------------------------------------------------------------------------
+# PR7 Step 1 — truthful prediction-invariant centering
+# ---------------------------------------------------------------------------
+
+
+def test_centering_is_real_and_prediction_invariant() -> None:
+    shared, candidates = _shared_and_candidates()
+    cand = candidates[1]
+    home_teams = ["AAA", "BBB", "CCC", "AAA", "BBB", "CCC"]
+    away_teams = ["BBB", "CCC", "AAA", "CCC", "AAA", "BBB"]
+    home_points = [25.0, 30.0, 20.0, 28.0, 22.0, 18.0]
+    away_points = [20.0, 25.0, 22.0, 24.0, 20.0, 24.0]
+    fitted = fit_expected_margin(
+        prior_training_games=[{}] * 6,
+        home_points=home_points,
+        away_points=away_points,
+        neutral_site=[False] * 6,
+        home_team_codes=home_teams,
+        away_team_codes=away_teams,
+        chronological_age_in_completed_games=[0.0, 1.0, 2.0, 3.0, 4.0, 5.0],
+        candidate=cand,
+        shared=shared,
+        fitted_at_cutoff_utc="2026-08-05T00:00:00Z",
+    )
+    off = dict(zip(fitted.team_index.keys(), fitted.offense_effect))
+    deff = dict(zip(fitted.team_index.keys(), fitted.defense_effect))
+    # Genuine sum-to-zero centering.
+    assert abs(sum(fitted.offense_effect)) < 1e-9
+    assert abs(sum(fitted.defense_effect)) < 1e-9
+    # Predictions are unchanged by (consistent with) the centered fields and
+    # the adjusted league baseline for every team pair and neutral flag.
+    for h in fitted.team_index:
+        for a in fitted.team_index:
+            if h == a:
+                continue
+            for neutral in (False, True):
+                hfa = 0.0 if neutral else fitted.home_field_effect
+                hp = fitted.expected_home_points(h, a, neutral_site=neutral)
+                assert math.isclose(
+                    hp, fitted.league_baseline + hfa + off[h] - deff[a],
+                    rel_tol=1e-12, abs_tol=1e-9,
+                ), "home points inconsistent with centered fields"
+                ap = fitted.expected_away_points(h, a, neutral_site=neutral)
+                assert math.isclose(
+                    ap, fitted.league_baseline + off[a] - deff[h],
+                    rel_tol=1e-12, abs_tol=1e-9,
+                ), "away points inconsistent with centered fields"
+                assert math.isclose(
+                    fitted.expected_home_margin(h, a, neutral_site=neutral),
+                    hp - ap, rel_tol=1e-12, abs_tol=1e-9,
+                ), "margin inconsistent with centered home/away points"
+
+
+def test_team_index_permutation_invariance() -> None:
+    """Reordering the input games (hence the internal team-index
+    ordering) must not change any fitted coefficient or prediction."""
+    shared, candidates = _shared_and_candidates()
+    cand = candidates[1]
+    home_teams = ["AAA", "BBB", "CCC", "BBB", "CCC", "AAA"]
+    away_teams = ["BBB", "CCC", "AAA", "CCC", "AAA", "BBB"]
+    home_points = [25.0, 30.0, 20.0, 28.0, 22.0, 18.0]
+    away_points = [20.0, 25.0, 22.0, 24.0, 20.0, 24.0]
+    ages = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0]
+
+    def _fit(ht, at, hp, ap, ag):
+        return fit_expected_margin(
+            prior_training_games=[{}] * len(ht),
+            home_points=hp,
+            away_points=ap,
+            neutral_site=[False] * len(ht),
+            home_team_codes=ht,
+            away_team_codes=at,
+            chronological_age_in_completed_games=ag,
+            candidate=cand,
+            shared=shared,
+            fitted_at_cutoff_utc="2026-08-05T00:00:00Z",
+        )
+
+    fwd = _fit(home_teams, away_teams, home_points, away_points, ages)
+    rev_ht = list(reversed(home_teams))
+    rev_at = list(reversed(away_teams))
+    rev_hp = list(reversed(home_points))
+    rev_ap = list(reversed(away_points))
+    rev_ag = list(reversed(ages))
+    rev = _fit(rev_ht, rev_at, rev_hp, rev_ap, rev_ag)
+    assert fwd.team_index == rev.team_index
+    # Summation order differs between the two orderings, so compare the
+    # fitted coefficients with a small numeric tolerance rather than
+    # bit-exact equality.
+    for x, y in zip(fwd.offense_effect, rev.offense_effect):
+        assert math.isclose(x, y, rel_tol=1e-8, abs_tol=1e-8)
+    for x, y in zip(fwd.defense_effect, rev.defense_effect):
+        assert math.isclose(x, y, rel_tol=1e-8, abs_tol=1e-8)
+    assert math.isclose(
+        fwd.league_baseline, rev.league_baseline, rel_tol=1e-8, abs_tol=1e-8
+    )
+    for h in fwd.team_index:
+        for a in fwd.team_index:
+            if h == a:
+                continue
+            assert math.isclose(
+                fwd.expected_home_margin(h, a, False),
+                rev.expected_home_margin(h, a, False),
+                rel_tol=1e-12, abs_tol=1e-9,
+            )
+
+
+# ---------------------------------------------------------------------------
+# PR7 Step 1 — complete fitted block-state exposure + fingerprint
+# ---------------------------------------------------------------------------
+
+
+def test_block_state_vectors_lengthes_sums_and_fingerprint() -> None:
+    shared, candidates = _shared_and_candidates()
+    warmup = []
+    for i in range(80):
+        warmup.append(
+            {
+                "game_id": f"WARM-{i:03d}",
+                "season": 2017,
+                "season_type": "REG",
+                "week": 1 + (i % 17),
+                "home_team": f"HW{i % 4:03d}",
+                "away_team": f"AW{i % 4:03d}",
+                "neutral_site": False,
+                "target_available": True,
+                "target_margin": 4.0,
+                "target_home_win": True,
+                "target_tie": False,
+                "home_score": 24.0,
+                "away_score": 20.0,
+                "prediction_as_of_utc": _cu("2017-09-10T17:00:00Z"),
+            }
+        )
+    block = _synthetic_game_frame(season=2018, week=1, n_games=2, base_offset=0)
+    games = pl.concat([pl.DataFrame(warmup), block])
+    with tempfile.NamedTemporaryFile(suffix=".parquet", delete=False) as tmp:
+        path = tmp.name
+    try:
+        games.write_parquet(path)
+        result = run_expected_margin_candidate(
+            games_path=path,
+            candidate=candidates[1],
+            shared=shared,
+            run_id="T-BLOCKSTATE",
+            model_version="v1.0.0",
+        )
+        states = result["block_states"]
+        assert len(states) >= 1
+        # Pick a real (non-warmup) fitted block state for the checks.
+        fitted_state = next(s for s in states if s["solver_status"] == "ok")
+        for key in (
+            "candidate_id", "block_id", "cutoff_utc", "team_index",
+            "centered_offense", "centered_defense", "league_baseline",
+            "home_field_effect", "offense_ridge", "defense_ridge",
+            "home_field_ridge", "recency_half_life_games",
+            "training_row_count", "training_completed_row_count",
+            "prior_completed_game_count", "mapping_row_count",
+            "mapping_intercept", "mapping_slope", "mapping_fit_status",
+            "mapping_convergence_status", "sum_offense_effects",
+            "sum_defense_effects", "solver_status",
+            "fitted_state_fingerprint",
+        ):
+            assert key in fitted_state, f"block-state missing field {key}"
+        assert len(fitted_state["centered_offense"]) == len(
+            fitted_state["team_index"]
+        )
+        assert len(fitted_state["centered_defense"]) == len(
+            fitted_state["team_index"]
+        )
+        assert abs(fitted_state["sum_offense_effects"]) < 1e-9
+        assert abs(fitted_state["sum_defense_effects"]) < 1e-9
+        # Identical fitted state -> identical fingerprint.
+        assert _fitted_state_fingerprint(dict(fitted_state)) == fitted_state[
+            "fitted_state_fingerprint"
+        ]
+        # Changing a fitted coefficient changes the fingerprint.
+        changed = dict(fitted_state)
+        changed_off = list(fitted_state["centered_offense"])
+        changed_off[0] += 0.5
+        changed["centered_offense"] = changed_off
+        assert _fitted_state_fingerprint(changed) != fitted_state[
+            "fitted_state_fingerprint"
+        ]
+    finally:
+        Path(path).unlink(missing_ok=True)

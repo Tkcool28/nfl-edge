@@ -14,15 +14,19 @@
 # All other parameters are shared and live under the `shared` mapping.
 #
 # Identifiability:
-#   - The league baseline is the FITTED intercept (the ``league_baseline``
-#     parameter is the prior mean for the intercept; the runtime fits
-#     an unpenalized intercept at this prior).
+#   - The league baseline is the FITTED intercept (the
+#     `league_baseline` parameter is the prior mean for the
+#     intercept; the runtime fits an intercept at this prior).
 #   - Team offense and defense effects are deviations around that
 #     baseline.
-#   - A *reference team* (the alphabetically smallest team in the
-#     training slice) is pinned to (offense = 0, defense = 0). This
-#     single deterministic constraint breaks the offense/defense
-#     interchangeability and the global sum ambiguity.
+#   - All team effects are fitted symmetrically with their declared
+#     ridge priors (no team is pinned as an alphabetically smallest
+#     reference team). After the closed-form solve the offense and
+#     defense vectors are CENTERED to sum to zero and the league
+#     baseline is adjusted, which is prediction-invariant: team
+#     naming and ordering do not change any predicted score.
+#     Final identification method: symmetric ridge fit followed by
+#     prediction-invariant post-fit centering.
 #
 # Deterministic ordering: candidate ids are a fixed tuple. The runtime
 # never reads this file at random; the walk-forward iterates candidates
