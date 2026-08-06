@@ -1,0 +1,270 @@
+{
+  "candidates": {
+    "balanced": {
+      "corrected_metrics_json": {
+        "accuracy": 0.5756434400502197,
+        "brier": 0.24234518109086495,
+        "cal_intercept": 0.06297486195881563,
+        "cal_slope": 0.7580997712111688,
+        "log_loss": 0.6781463209053582,
+        "scored": 1593
+      },
+      "early_later": {
+        "early_week_le9": {
+          "brier": 0.24468597571901174,
+          "n": 734
+        },
+        "later_week_ge10": {
+          "brier": 0.24034501431896768,
+          "n": 859
+        }
+      },
+      "id": "balanced",
+      "margin_metrics_json": {
+        "margin_mae": 11.0511411533007,
+        "margin_rmse": 14.17732563445879,
+        "margin_rows": 1864,
+        "mean_signed_margin_error": 0.40301909416254006
+      },
+      "officially_scored_row_count": 1593,
+      "parameters": {
+        "defense_ridge": 1.0,
+        "home_field_ridge": 1.0,
+        "id": "balanced",
+        "mapping_intercept_l2_weight": 1.0,
+        "mapping_slope_l2_weight": 1.0,
+        "offense_ridge": 1.0,
+        "recency_half_life_games": 8.0
+      },
+      "season_brier": [
+        {
+          "brier": null,
+          "log_loss": null,
+          "scored": 0,
+          "season": 2018
+        },
+        {
+          "brier": 0.23664971817663488,
+          "log_loss": 0.6669645535399277,
+          "scored": 189,
+          "season": 2019
+        },
+        {
+          "brier": 0.23819420759444765,
+          "log_loss": 0.6711318314446532,
+          "scored": 268,
+          "season": 2020
+        },
+        {
+          "brier": 0.24943464017088116,
+          "log_loss": 0.6929480115262807,
+          "scored": 284,
+          "season": 2021
+        },
+        {
+          "brier": 0.24210392362699593,
+          "log_loss": 0.6771435733145037,
+          "scored": 282,
+          "season": 2022
+        },
+        {
+          "brier": 0.2456941545090104,
+          "log_loss": 0.6840953146981232,
+          "scored": 285,
+          "season": 2023
+        },
+        {
+          "brier": 0.23985070456365204,
+          "log_loss": 0.6724511232242221,
+          "scored": 285,
+          "season": 2024
+        }
+      ]
+    },
+    "responsive": {
+      "corrected_metrics_json": {
+        "accuracy": 0.5699937225360954,
+        "brier": 0.24482502316040203,
+        "cal_intercept": 0.07703814762862196,
+        "cal_slope": 0.7064944911503813,
+        "log_loss": 0.6831274373969675,
+        "scored": 1593
+      },
+      "early_later": {
+        "early_week_le9": {
+          "brier": 0.2470456204493011,
+          "n": 734
+        },
+        "later_week_ge10": {
+          "brier": 0.24292756284602263,
+          "n": 859
+        }
+      },
+      "id": "responsive",
+      "margin_metrics_json": {
+        "margin_mae": 11.56370764275455,
+        "margin_rmse": 14.773766602594296,
+        "margin_rows": 1864,
+        "mean_signed_margin_error": 0.3865470810237096
+      },
+      "officially_scored_row_count": 1593,
+      "parameters": {
+        "defense_ridge": 0.25,
+        "home_field_ridge": 0.25,
+        "id": "responsive",
+        "mapping_intercept_l2_weight": 0.25,
+        "mapping_slope_l2_weight": 0.25,
+        "offense_ridge": 0.25,
+        "recency_half_life_games": 4.0
+      },
+      "season_brier": [
+        {
+          "brier": null,
+          "log_loss": null,
+          "scored": 0,
+          "season": 2018
+        },
+        {
+          "brier": 0.23921680946018947,
+          "log_loss": 0.6721410271248004,
+          "scored": 189,
+          "season": 2019
+        },
+        {
+          "brier": 0.24049737041531333,
+          "log_loss": 0.6751849994254293,
+          "scored": 268,
+          "season": 2020
+        },
+        {
+          "brier": 0.2520039321945253,
+          "log_loss": 0.6980588525422414,
+          "scored": 284,
+          "season": 2021
+        },
+        {
+          "brier": 0.24490106491160185,
+          "log_loss": 0.682874441813429,
+          "scored": 282,
+          "season": 2022
+        },
+        {
+          "brier": 0.24737146342301494,
+          "log_loss": 0.6876635174444168,
+          "scored": 285,
+          "season": 2023
+        },
+        {
+          "brier": 0.24283826495215616,
+          "log_loss": 0.6787170688271038,
+          "scored": 285,
+          "season": 2024
+        }
+      ]
+    },
+    "stable": {
+      "corrected_metrics_json": {
+        "accuracy": 0.6013810420590081,
+        "brier": 0.2382906415044255,
+        "cal_intercept": 0.044759339465077486,
+        "cal_slope": 0.796242283299105,
+        "log_loss": 0.6699884079836355,
+        "scored": 1593
+      },
+      "early_later": {
+        "early_week_le9": {
+          "brier": 0.24108407498468126,
+          "n": 734
+        },
+        "later_week_ge10": {
+          "brier": 0.23590370300092406,
+          "n": 859
+        }
+      },
+      "id": "stable",
+      "margin_metrics_json": {
+        "margin_mae": 10.692866609181808,
+        "margin_rmse": 13.814494036869487,
+        "margin_rows": 1864,
+        "mean_signed_margin_error": 0.48705764279262875
+      },
+      "officially_scored_row_count": 1593,
+      "parameters": {
+        "defense_ridge": 4.0,
+        "home_field_ridge": 4.0,
+        "id": "stable",
+        "mapping_intercept_l2_weight": 4.0,
+        "mapping_slope_l2_weight": 4.0,
+        "offense_ridge": 4.0,
+        "recency_half_life_games": 16.0
+      },
+      "season_brier": [
+        {
+          "brier": null,
+          "log_loss": null,
+          "scored": 0,
+          "season": 2018
+        },
+        {
+          "brier": 0.23254707706955652,
+          "log_loss": 0.6578386312184968,
+          "scored": 189,
+          "season": 2019
+        },
+        {
+          "brier": 0.23277397669168942,
+          "log_loss": 0.6610752030805218,
+          "scored": 268,
+          "season": 2020
+        },
+        {
+          "brier": 0.2459881198877082,
+          "log_loss": 0.6863713867706621,
+          "scored": 284,
+          "season": 2021
+        },
+        {
+          "brier": 0.23833784358699717,
+          "log_loss": 0.6695643434890611,
+          "scored": 282,
+          "season": 2022
+        },
+        {
+          "brier": 0.24208635335668893,
+          "log_loss": 0.676611172421853,
+          "scored": 285,
+          "season": 2023
+        },
+        {
+          "brier": 0.23577424544116568,
+          "log_loss": 0.6638985099826112,
+          "scored": 285,
+          "season": 2024
+        }
+      ]
+    }
+  },
+  "candidates_locked_before_comparison": true,
+  "code_commit_sha": "1b3d23b7bc9c09da6514b4da0a9ef584883d18a6",
+  "configuration_sha256": "37df479ab032784825e88e40010e65a84a983a832cf51ad9ca78080362dcfd18",
+  "configuration_yaml_sha256": "1c1b6ea4fe8dddd1d1373bc2e5ea8d5413b9ba9c501bf2f14eecfe3e27360784",
+  "fourth_candidate_tested": false,
+  "frozen_at_utc": "2026-08-05T00:00:00Z",
+  "manifest_version": "expected_margin_v1.0.0",
+  "model_name": "expected_margin",
+  "model_version": "expected_margin_v1.0.0",
+  "post_result_tuning": false,
+  "selection": "stable",
+  "selection_classification": "decisive",
+  "selection_policy": [
+    "Brier",
+    "log loss",
+    "calibration",
+    "margin error",
+    "season stability",
+    "early/later stability",
+    "usable scored-row count"
+  ],
+  "selection_rationale": "stable has the lowest aggregate Brier (0.238291), lowest log loss (0.669988), highest accuracy (0.601381), the most positive calibration slope (0.7962), the lowest margin MAE and RMSE, and the lowest/most stable early and later Brier. Selection is decisive on the multi-criteria policy, not a near-tie.",
+  "verdict": "EXPECTED_MARGIN_V1_IMPLEMENTED_BUT_WEAK"
+}

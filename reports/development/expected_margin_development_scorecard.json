@@ -1,0 +1,227 @@
+{
+  "aggregate_metrics": {
+    "accuracy": 0.6013810420590081,
+    "brier": 0.2382906415044255,
+    "calibration_intercept": 0.044759339465077486,
+    "calibration_slope": 0.796242283299105,
+    "log_loss": 0.6699884079836355,
+    "margin_mae": 10.692866609181808,
+    "margin_rmse": 13.814494036869487,
+    "mean_signed_margin_error": 0.48705764279262875,
+    "official_scored_row_count": 1593,
+    "prediction_row_count": 1942,
+    "probability_available_row_count": 1597,
+    "state_row_count": 151,
+    "warmup_row_count": 78
+  },
+  "bootstrap": {
+    "block_type": "season_week",
+    "brier_skill_score_ci": [
+      -0.09606,
+      -0.04467
+    ],
+    "log_loss_difference_ci": [
+      0.02046,
+      0.04565
+    ],
+    "n_resamples": 1000,
+    "no_superiority_claim": true,
+    "seed": 20260802,
+    "selected_brier_ci": [
+      0.23209,
+      0.24426
+    ],
+    "win_prop_selected_brier_lt_qb": 0.0,
+    "win_prop_selected_logloss_lt_qb": 0.0
+  },
+  "by_early_later": {
+    "early_week_le9": {
+      "brier": 0.24108407498468126,
+      "n": 734
+    },
+    "later_week_ge10": {
+      "brier": 0.23590370300092406,
+      "n": 859
+    }
+  },
+  "by_season": [
+    {
+      "brier": null,
+      "log_loss": null,
+      "scored": 0,
+      "season": 2018
+    },
+    {
+      "brier": 0.23254707706955652,
+      "log_loss": 0.6578386312184968,
+      "scored": 189,
+      "season": 2019
+    },
+    {
+      "brier": 0.23277397669168942,
+      "log_loss": 0.6610752030805218,
+      "scored": 268,
+      "season": 2020
+    },
+    {
+      "brier": 0.2459881198877082,
+      "log_loss": 0.6863713867706621,
+      "scored": 284,
+      "season": 2021
+    },
+    {
+      "brier": 0.23833784358699717,
+      "log_loss": 0.6695643434890611,
+      "scored": 282,
+      "season": 2022
+    },
+    {
+      "brier": 0.24208635335668893,
+      "log_loss": 0.676611172421853,
+      "scored": 285,
+      "season": 2023
+    },
+    {
+      "brier": 0.23577424544116568,
+      "log_loss": 0.6638985099826112,
+      "scored": 285,
+      "season": 2024
+    }
+  ],
+  "common_row_qb_elo_comparison": {
+    "brier_skill_score": -0.0694827662218318,
+    "common_rows": 1593,
+    "log_loss_difference": 0.032648307924717734,
+    "qb_elo_accuracy": 0.6377903327055869,
+    "qb_elo_brier": 0.22280923922340168,
+    "qb_elo_cal_intercept": -0.09292645215637417,
+    "qb_elo_cal_slope": 0.9487201481940393,
+    "qb_elo_log_loss": 0.6373401000589177,
+    "reliability": {
+      "qb_elo": [
+        {
+          "actual": 0.3,
+          "count": 20,
+          "hi": 0.2,
+          "lo": 0.0,
+          "pred": 0.15981
+        },
+        {
+          "actual": 0.310606,
+          "count": 264,
+          "hi": 0.4,
+          "lo": 0.2,
+          "pred": 0.327097
+        },
+        {
+          "actual": 0.464696,
+          "count": 609,
+          "hi": 0.6,
+          "lo": 0.4,
+          "pred": 0.506866
+        },
+        {
+          "actual": 0.683219,
+          "count": 584,
+          "hi": 0.8,
+          "lo": 0.6,
+          "pred": 0.691727
+        },
+        {
+          "actual": 0.801724,
+          "count": 116,
+          "hi": 1.0,
+          "lo": 0.8,
+          "pred": 0.844032
+        }
+      ],
+      "selected": [
+        {
+          "actual": 0.3,
+          "count": 10,
+          "hi": 0.2,
+          "lo": 0.0,
+          "pred": 0.160628
+        },
+        {
+          "actual": 0.387755,
+          "count": 196,
+          "hi": 0.4,
+          "lo": 0.2,
+          "pred": 0.336182
+        },
+        {
+          "actual": 0.509692,
+          "count": 877,
+          "hi": 0.6,
+          "lo": 0.4,
+          "pred": 0.508682
+        },
+        {
+          "actual": 0.656504,
+          "count": 492,
+          "hi": 0.8,
+          "lo": 0.6,
+          "pred": 0.66854
+        },
+        {
+          "actual": 0.777778,
+          "count": 18,
+          "hi": 1.0,
+          "lo": 0.8,
+          "pred": 0.829925
+        }
+      ]
+    },
+    "selected_accuracy": 0.6013810420590081,
+    "selected_brier": 0.2382906415044255,
+    "selected_cal_intercept": 0.044759339465077486,
+    "selected_cal_slope": 0.796242283299105,
+    "selected_log_loss": 0.6699884079836355
+  },
+  "development_seasons": "2018-2024",
+  "manifest_fingerprint": "c359a6504745aa807911dfb4012e8ea4f2948deb25f6f979f74c9cb2c3b17a8d",
+  "model_name": "expected_margin",
+  "model_version": "expected_margin_v1.0.0",
+  "reliability_table": [
+    {
+      "actual_home_win_rate": 0.3,
+      "bucket_high": 0.2,
+      "bucket_low": 0.0,
+      "count": 10,
+      "mean_predicted_probability": 0.160628
+    },
+    {
+      "actual_home_win_rate": 0.387755,
+      "bucket_high": 0.4,
+      "bucket_low": 0.2,
+      "count": 196,
+      "mean_predicted_probability": 0.336182
+    },
+    {
+      "actual_home_win_rate": 0.509692,
+      "bucket_high": 0.6,
+      "bucket_low": 0.4,
+      "count": 877,
+      "mean_predicted_probability": 0.508682
+    },
+    {
+      "actual_home_win_rate": 0.656504,
+      "bucket_high": 0.8,
+      "bucket_low": 0.6,
+      "count": 492,
+      "mean_predicted_probability": 0.66854
+    },
+    {
+      "actual_home_win_rate": 0.777778,
+      "bucket_high": 1.0,
+      "bucket_low": 0.8,
+      "count": 18,
+      "mean_predicted_probability": 0.829925
+    }
+  ],
+  "scored_row_policy": "official scored rows = is_binary_scored AND probability_available AND finite probability; ties excluded from binary scoring",
+  "sealed_holdout_season": 2025,
+  "selected_candidate": "stable",
+  "verdict": "EXPECTED_MARGIN_V1_IMPLEMENTED_BUT_WEAK"
+}

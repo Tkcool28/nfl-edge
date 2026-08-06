@@ -1,0 +1,134 @@
+# Expected Margin v1 — locked candidate configuration.
+#
+# Base Model C (docs/model_contract.md) is a deterministic ridge-regularized
+# scoring model. This file freezes three candidate configurations for the
+# Task 03B development walk-forward. No fourth candidate exists. Every
+# parameter used by the runtime is explicit in this YAML; no undocumented
+# Python constants are permitted.
+#
+# The three candidates vary ONLY in:
+#   - shrinkage (ridge) strength on offense and defense effects
+#   - recency half-life on prior game weights
+#   - home-field ridge strength (single scalar)
+#   - mapping regularization on the prior-OOS logistic regression
+# All other parameters are shared and live under the `shared` mapping.
+#
+# Identifiability:
+#   - The league baseline is the FITTED intercept (the
+#     `league_baseline` parameter is the prior mean for the
+#     intercept; the runtime fits an intercept at this prior).
+#   - Team offense and defense effects are deviations around that
+#     baseline.
+#   - All team effects are fitted symmetrically with their declared
+#     ridge priors (no team is pinned as an alphabetically smallest
+#     reference team). After the closed-form solve the offense and
+#     defense vectors are CENTERED to sum to zero and the league
+#     baseline is adjusted, which is prediction-invariant: team
+#     naming and ordering do not change any predicted score.
+#     Final identification method: symmetric ridge fit followed by
+#     prediction-invariant post-fit centering.
+#
+# Deterministic ordering: candidate ids are a fixed tuple. The runtime
+# never reads this file at random; the walk-forward iterates candidates
+# in the order listed below.
+
+# ----------------------------------------------------------------------
+# Shared parameters — identical across all three candidates.
+# ----------------------------------------------------------------------
+shared:
+  # Prior mean for the FITTED league scoring baseline. The runtime
+  # fits one intercept parameter; its L2 prior is centered on this
+  # value. The fitted baseline is the recency-weighted average points
+  # per team-game under the team's reference-team constraint.
+  league_baseline_prior: 22.5
+
+  # Deterministic 0/1 cap on the final home-win probability. Used
+  # purely for numerical stability; the value is exposed so downstream
+  # callers can identify the exact clip.
+  probability_min: 0.001
+  probability_max: 0.999
+
+  # Mapping (margin-to-probability) regularization.
+  # Mapping intercept is L2-penalized toward 0.0 (log-odds of 0.5).
+  # Mapping slope is L2-penalized toward 0.0 (no edge).
+  mapping_intercept_l2_prior: 0.0
+  mapping_slope_l2_prior: 0.0
+
+  # Deterministic logistic-regression solver. Newton-Raphson / IRLS.
+  mapping_solver_tolerance: 1.0e-9
+  mapping_solver_max_iterations: 100
+
+  # Tie policy used by the BINARY mapping and the scorecard's
+  # probability metrics. "exclude" means ties are removed from the
+  # mapping fit and excluded from official probability scoring.
+  # Ties REMAIN in the scoring-model fit (see the recency + tie
+  # treatment in the model module).
+  tie_policy: "exclude"
+
+  # Minimum completed training games required before any team offense
+  # or defense effect is fit. Below this threshold the model records
+  # an explicit warm-up state and does not predict a numeric margin.
+  minimum_training_games: 64
+
+  # Minimum number of eligible prior OOS mapping rows required before
+  # the logistic mapping layer is allowed to emit an official home-win
+  # probability. Below this threshold the mapping fit is skipped and
+  # the row is recorded as `mapping_warmup = true`.
+  minimum_mapping_rows: 256
+
+  # Probability clipping is the only transformation applied to the
+  # mapping output. The mapping is the sole probability layer; no
+  # second calibration is performed.
+  apply_probability_clipping: true
+
+  # If true, a mapping fit that produces a non-positive slope is
+  # treated as "fit_unavailable" and the row is excluded from official
+  # probability scoring (the OOS expected-margin prediction itself
+  # remains persisted and contributes to future mapping fits).
+  reject_nonpositive_slope: true
+
+  # Hard season gate. Any input row whose season exceeds this value
+  # is rejected at the boundary. The runtime enforces the same bound
+  # for both the model fit and the mapping fit.
+  maximum_development_season: 2024
+
+# ----------------------------------------------------------------------
+# Candidate A — responsive.
+# ----------------------------------------------------------------------
+# Lowest shrinkage, shortest recency half-life. Most aggressive cache
+# of recent information. Largest home-field ridge (carries HFA even
+# when opponent effects dominate).
+candidates:
+  - id: "responsive"
+    offense_ridge: 0.25
+    defense_ridge: 0.25
+    home_field_ridge: 0.25
+    recency_half_life_games: 4.0
+    mapping_intercept_l2_weight: 0.25
+    mapping_slope_l2_weight: 0.25
+
+# ----------------------------------------------------------------------
+# Candidate B — balanced.
+# ----------------------------------------------------------------------
+# Mid-range shrinkage and a half-season recency window. Balanced
+# home-field ridge.
+  - id: "balanced"
+    offense_ridge: 1.0
+    defense_ridge: 1.0
+    home_field_ridge: 1.0
+    recency_half_life_games: 8.0
+    mapping_intercept_l2_weight: 1.0
+    mapping_slope_l2_weight: 1.0
+
+# ----------------------------------------------------------------------
+# Candidate C — stable.
+# ----------------------------------------------------------------------
+# Strong shrinkage toward zero, long multi-season recency window. The
+# smallest home-field ridge preserves HFA but heavily regularizes it.
+  - id: "stable"
+    offense_ridge: 4.0
+    defense_ridge: 4.0
+    home_field_ridge: 4.0
+    recency_half_life_games: 16.0
+    mapping_intercept_l2_weight: 4.0
+    mapping_slope_l2_weight: 4.0

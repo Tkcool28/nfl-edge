@@ -1,0 +1,212 @@
+{
+  "block_state_count": 151,
+  "bootstrap": {
+    "block_type": "season_week",
+    "brier_skill_score_ci": [
+      -0.09606,
+      -0.04467
+    ],
+    "log_loss_difference_ci": [
+      0.02046,
+      0.04565
+    ],
+    "n_resamples": 1000,
+    "no_superiority_claim": true,
+    "seed": 20260802,
+    "selected_brier_ci": [
+      0.23209,
+      0.24426
+    ],
+    "win_prop_selected_brier_lt_qb": 0.0,
+    "win_prop_selected_logloss_lt_qb": 0.0
+  },
+  "candidates": [
+    {
+      "defense_ridge": 0.25,
+      "home_field_ridge": 0.25,
+      "id": "responsive",
+      "mapping_intercept_l2_weight": 0.25,
+      "mapping_slope_l2_weight": 0.25,
+      "offense_ridge": 0.25,
+      "recency_half_life_games": 4.0
+    },
+    {
+      "defense_ridge": 1.0,
+      "home_field_ridge": 1.0,
+      "id": "balanced",
+      "mapping_intercept_l2_weight": 1.0,
+      "mapping_slope_l2_weight": 1.0,
+      "offense_ridge": 1.0,
+      "recency_half_life_games": 8.0
+    },
+    {
+      "defense_ridge": 4.0,
+      "home_field_ridge": 4.0,
+      "id": "stable",
+      "mapping_intercept_l2_weight": 4.0,
+      "mapping_slope_l2_weight": 4.0,
+      "offense_ridge": 4.0,
+      "recency_half_life_games": 16.0
+    }
+  ],
+  "code_commit_sha": "1b3d23b7bc9c09da6514b4da0a9ef584883d18a6",
+  "complete_state_declaration": "state ledger stores complete fitted block state sufficient for reconstruction without refitting",
+  "configuration_sha256": "37df479ab032784825e88e40010e65a84a983a832cf51ad9ca78080362dcfd18",
+  "configuration_yaml_sha256": "1c1b6ea4fe8dddd1d1373bc2e5ea8d5413b9ba9c501bf2f14eecfe3e27360784",
+  "corrected_recency_declaration": "newest prior game has age 0 (greatest recency); oldest has age n-1",
+  "corrected_stable_metrics": {
+    "accuracy": 0.6013810420590081,
+    "brier": 0.2382906415044255,
+    "cal_intercept": 0.044759339465077486,
+    "cal_slope": 0.796242283299105,
+    "log_loss": 0.6699884079836355,
+    "margin_mae": 10.692866609181808,
+    "margin_rmse": 13.814494036869487,
+    "mean_signed_margin_error": 0.48705764279262875,
+    "scored": 1593
+  },
+  "creation_timestamp": "2026-08-05T00:00:00Z",
+  "development_period": "2018-2024",
+  "extraction": {
+    "file_sha256": "0e40be2c1c660e58052cd7d5207f039414f36dcf812de2225da4c41eb5e5bd14",
+    "logical_content_sha256": "3000742b63fc297a8e0e987e65c650b8ee5fa68b9829ac92bbdc821665f6d9b8",
+    "logical_hash_method": "canonical: sort by game_id, sorted columns, None->null, float NaN->'NaN', compact json.dumps default=str, sha256",
+    "path": "data/derived/features_v1/expected_margin_development_2018_2024.parquet",
+    "rows": 1942
+  },
+  "forward_use_declaration": "2026 and later rows are rejected at the boundary",
+  "forward_use_season": 2026,
+  "fourth_candidate_tested": false,
+  "manifest_version": "expected_margin_v1.0.0",
+  "market_independence_declaration": "the model reads no market/odds data; no market fields present in any ledger",
+  "model_name": "expected_margin",
+  "model_version": "expected_margin_v1.0.0",
+  "no_superiority_claim": true,
+  "official_scored_row_count": 1593,
+  "post_result_tuning": false,
+  "prediction_ledger": {
+    "file_sha256": "1e2c073244ca7beb31b5eb30894a94ae142d75a04f485ac54ef86a16640e07e9",
+    "logical_content_sha256": "79cf788da4b77d10d209827139a5c46d03f85ecb60331070ad6e5ffe9f1d87ac",
+    "path": "data/modeling/development_v1/expected_margin_predictions_2018_2024.parquet",
+    "rows": 1942
+  },
+  "probability_available_row_count": 1597,
+  "qb_elo_common_row_comparison": {
+    "brier_skill_score": -0.0694827662218318,
+    "common_rows": 1593,
+    "log_loss_difference": 0.032648307924717734,
+    "qb_elo_accuracy": 0.6377903327055869,
+    "qb_elo_brier": 0.22280923922340168,
+    "qb_elo_cal_intercept": -0.09292645215637417,
+    "qb_elo_cal_slope": 0.9487201481940393,
+    "qb_elo_log_loss": 0.6373401000589177,
+    "reliability": {
+      "qb_elo": [
+        {
+          "actual": 0.3,
+          "count": 20,
+          "hi": 0.2,
+          "lo": 0.0,
+          "pred": 0.15981
+        },
+        {
+          "actual": 0.310606,
+          "count": 264,
+          "hi": 0.4,
+          "lo": 0.2,
+          "pred": 0.327097
+        },
+        {
+          "actual": 0.464696,
+          "count": 609,
+          "hi": 0.6,
+          "lo": 0.4,
+          "pred": 0.506866
+        },
+        {
+          "actual": 0.683219,
+          "count": 584,
+          "hi": 0.8,
+          "lo": 0.6,
+          "pred": 0.691727
+        },
+        {
+          "actual": 0.801724,
+          "count": 116,
+          "hi": 1.0,
+          "lo": 0.8,
+          "pred": 0.844032
+        }
+      ],
+      "selected": [
+        {
+          "actual": 0.3,
+          "count": 10,
+          "hi": 0.2,
+          "lo": 0.0,
+          "pred": 0.160628
+        },
+        {
+          "actual": 0.387755,
+          "count": 196,
+          "hi": 0.4,
+          "lo": 0.2,
+          "pred": 0.336182
+        },
+        {
+          "actual": 0.509692,
+          "count": 877,
+          "hi": 0.6,
+          "lo": 0.4,
+          "pred": 0.508682
+        },
+        {
+          "actual": 0.656504,
+          "count": 492,
+          "hi": 0.8,
+          "lo": 0.6,
+          "pred": 0.66854
+        },
+        {
+          "actual": 0.777778,
+          "count": 18,
+          "hi": 1.0,
+          "lo": 0.8,
+          "pred": 0.829925
+        }
+      ]
+    },
+    "selected_accuracy": 0.6013810420590081,
+    "selected_brier": 0.2382906415044255,
+    "selected_cal_intercept": 0.044759339465077486,
+    "selected_cal_slope": 0.796242283299105,
+    "selected_log_loss": 0.6699884079836355
+  },
+  "row_count_predictions": 1942,
+  "row_count_state": 151,
+  "run_id": "expected_margin_v1-corrected-stable",
+  "run_type": "development_walk_forward",
+  "sealed_holdout_declaration": "2025 rows are sealed and were never admitted to fitting, prediction, mapping, or evaluation",
+  "sealed_holdout_season": 2025,
+  "selected_candidate": "stable",
+  "selection_classification": "decisive",
+  "selection_policy": [
+    "Brier",
+    "log loss",
+    "calibration",
+    "margin error",
+    "season stability",
+    "early/later stability",
+    "usable scored-row count"
+  ],
+  "state_ledger": {
+    "file_sha256": "e55fa4f725e4700486588e5fb8d559a963580a975deedfff5a132da176c72f40",
+    "logical_content_sha256": "633172999aff041a59046f1b5e2dc641bbca7250342b8d39c4f0399b12b4e932",
+    "path": "data/modeling/development_v1/expected_margin_state_2018_2024.parquet",
+    "rows": 151
+  },
+  "tie_exclusion_declaration": "ties excluded from the binary mapping and official binary scoring; ties remain in the scoring fit",
+  "verdict": "EXPECTED_MARGIN_V1_IMPLEMENTED_BUT_WEAK",
+  "warmup_row_count": 78,
+  "weak_model_statement": "Expected-Margin v1 is weaker than QB-Elo as a win-probability model."
+}
