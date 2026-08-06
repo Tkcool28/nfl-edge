@@ -567,26 +567,6 @@ def _state_ledger(block_states: list[dict]) -> pl.DataFrame:
     return pl.DataFrame(rows, infer_schema_length=100_000)
 
 
-def _reconstruct_margin_from_state(st_row, game_row) -> float:
-    """Reconstruct an expected home margin for one game from its block's
-    persisted fitted state (no refitting)."""
-    ti = json.loads(st_row["team_index_json"])
-    off = json.loads(st_row["centered_offense_json"])
-    deff = json.loads(st_row["centered_defense_json"])
-    baseline = float(st_row["league_baseline"])
-    hfa = float(st_row["home_field_effect"])
-    neutral = bool(game_row.get("neutral_site", False))
-    ht = str(game_row["home_team"])
-    at = str(game_row["away_team"])
-    home_off = off[ti[ht]] if ht in ti else 0.0
-    away_def = deff[at] if at in ti else 0.0
-    away_off = off[at] if at in ti else 0.0
-    home_def = deff[ht] if ht in ti else 0.0
-    hp = baseline + (0.0 if neutral else hfa) + home_off - away_def
-    ap = baseline + away_off - home_def
-    return hp - ap
-
-
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--features-parquet", type=Path, default=DEFAULT_FEATURES)
