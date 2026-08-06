@@ -1,0 +1,154 @@
+{
+  "aggregate_metrics": {
+    "accuracy": 0.541745135,
+    "brier": 0.248562053,
+    "calibration_intercept": 0.1233884866,
+    "calibration_slope": 0.3583380744,
+    "log_loss": 0.6902788369,
+    "margin_mae": 11.3820346541,
+    "margin_rmse": 14.6789664528,
+    "mean_signed_margin_error": 0.0214422957,
+    "official_scored_row_count": 1593,
+    "prediction_row_count": 1942,
+    "state_row_count": 151,
+    "warmup_row_count": 78
+  },
+  "bootstrap": {
+    "block_type": "season_week",
+    "brier_skill_score_ci": [
+      -0.15068,
+      -0.08301
+    ],
+    "log_loss_difference_ci": [
+      0.03785,
+      0.06848
+    ],
+    "n_resamples": 1000,
+    "no_superiority_claim": true,
+    "seed": 20260802,
+    "stable_brier_ci": [
+      0.24679,
+      0.25029
+    ],
+    "win_prop_stable_brier_lt_qbe": 0.0,
+    "win_prop_stable_log_loss_lt_qbe": 0.0
+  },
+  "by_early_later": {
+    "early_week_le9": {
+      "brier": 0.24980306386401602,
+      "scored": 734
+    },
+    "later_week_ge10": {
+      "brier": 0.24750163159105928,
+      "scored": 859
+    }
+  },
+  "by_season": [
+    {
+      "accuracy": null,
+      "brier": null,
+      "log_loss": null,
+      "scored": 0,
+      "season": 2018
+    },
+    {
+      "accuracy": 0.5502645502645502,
+      "brier": 0.24428396915477374,
+      "log_loss": 0.6816297573328652,
+      "scored": 189,
+      "season": 2019
+    },
+    {
+      "accuracy": 0.4925373134328358,
+      "brier": 0.25316498179613717,
+      "log_loss": 0.6995738773416124,
+      "scored": 268,
+      "season": 2020
+    },
+    {
+      "accuracy": 0.5422535211267606,
+      "brier": 0.25008246725138633,
+      "log_loss": 0.6933223008116056,
+      "scored": 284,
+      "season": 2021
+    },
+    {
+      "accuracy": 0.549645390070922,
+      "brier": 0.2477199901374253,
+      "log_loss": 0.6886077743210327,
+      "scored": 282,
+      "season": 2022
+    },
+    {
+      "accuracy": 0.5824561403508772,
+      "brier": 0.24644599512933163,
+      "log_loss": 0.6860284135757699,
+      "scored": 285,
+      "season": 2023
+    },
+    {
+      "accuracy": 0.5333333333333333,
+      "brier": 0.24850490733783678,
+      "log_loss": 0.6901450534009682,
+      "scored": 285,
+      "season": 2024
+    }
+  ],
+  "common_row_qb_elo_comparison": {
+    "brier_skill_score": -0.115582,
+    "expected_margin_accuracy": 0.541745,
+    "expected_margin_brier": 0.248562,
+    "expected_margin_log_loss": 0.690279,
+    "log_loss_difference": 0.052939,
+    "qb_elo_accuracy": 0.63779,
+    "qb_elo_brier": 0.222809,
+    "qb_elo_log_loss": 0.63734,
+    "rows": 1593
+  },
+  "development_seasons": "2018-2024",
+  "manifest_fingerprint": "0e2df577e13a4decbf6d5421f93bba16fe7a7d54cc4202da1d0ea880ca8cab58",
+  "model_name": "expected_margin",
+  "model_version": "expected_margin_v1.0.0",
+  "reliability_table": [
+    {
+      "actual_home_win_rate": null,
+      "bucket_high": 0.2,
+      "bucket_low": 0.0,
+      "count": 0,
+      "mean_predicted_probability": null
+    },
+    {
+      "actual_home_win_rate": null,
+      "bucket_high": 0.4,
+      "bucket_low": 0.2,
+      "count": 0,
+      "mean_predicted_probability": null
+    },
+    {
+      "actual_home_win_rate": 0.541191,
+      "bucket_high": 0.6,
+      "bucket_low": 0.4,
+      "count": 1578,
+      "mean_predicted_probability": 0.529772
+    },
+    {
+      "actual_home_win_rate": 0.6,
+      "bucket_high": 0.8,
+      "bucket_low": 0.6,
+      "count": 15,
+      "mean_predicted_probability": 0.618109
+    },
+    {
+      "actual_home_win_rate": null,
+      "bucket_high": 1.0,
+      "bucket_low": 0.8,
+      "count": 0,
+      "mean_predicted_probability": null
+    }
+  ],
+  "scored_row_policy": "official scored rows = is_binary_scored AND probability_available AND finite probability; ties excluded from binary scoring",
+  "sealed_holdout_season": 2025,
+  "selected_candidate": "stable",
+  "verdict": "EXPECTED_MARGIN_V1_IMPLEMENTED_BUT_WEAK",
+  "warm_up_policy": "team-strength warm-up when <64 training games; mapping warm-up when <256 prior OOS rows; warmup rows=78"
+}

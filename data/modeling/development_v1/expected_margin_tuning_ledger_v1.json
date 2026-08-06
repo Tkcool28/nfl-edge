@@ -1,0 +1,128 @@
+{
+  "candidates": {
+    "balanced": {
+      "aggregate_metrics": {
+        "accuracy": 0.536779324055666,
+        "brier": 0.24891608588868494,
+        "cal_intercept": 0.22743465694043105,
+        "cal_slope": -0.5614301423092618,
+        "early_brier": 0.2500455078847885,
+        "later_brier": 0.24799707303849006,
+        "log_loss": 0.6909834380958049,
+        "margin_mae": 12.289307466432403,
+        "margin_rmse": 15.826709063005053,
+        "mean_signed_margin": 0.01923640349719011,
+        "scored": 1509
+      },
+      "candidate_sha256": "082863e50209366e7700711cb1391ec07b9c015d8b3d7fb49afbf945e26b0bcd",
+      "id": "balanced",
+      "parameters": {
+        "defense_ridge": 1.0,
+        "home_field_ridge": 1.0,
+        "mapping_intercept_l2_weight": 1.0,
+        "mapping_slope_l2_weight": 1.0,
+        "offense_ridge": 1.0,
+        "recency_half_life_games": 8.0
+      },
+      "season_stability_brier": {
+        "2019": 0.24735498480823387,
+        "2020": 0.2527170364515799,
+        "2021": 0.2500171064671677,
+        "2022": 0.2474968198532082,
+        "2023": 0.24677833878796218,
+        "2024": 0.2483619173413616
+      }
+    },
+    "responsive": {
+      "aggregate_metrics": {
+        "accuracy": 0.5385174418604651,
+        "brier": 0.2490141058058592,
+        "cal_intercept": 0.3024378822403154,
+        "cal_slope": -1.196456815557619,
+        "early_brier": 0.25049923075632746,
+        "later_brier": 0.2476371412159292,
+        "log_loss": 0.6911800999032415,
+        "margin_mae": 13.18821802996483,
+        "margin_rmse": 17.040758770558384,
+        "mean_signed_margin": 0.06829269537962045,
+        "scored": 1376
+      },
+      "candidate_sha256": "7abc4ca113704356d39ef56b02588cabe85e7fe25cf91e44bc1b0b52c2e1facd",
+      "id": "responsive",
+      "parameters": {
+        "defense_ridge": 0.25,
+        "home_field_ridge": 0.25,
+        "mapping_intercept_l2_weight": 0.25,
+        "mapping_slope_l2_weight": 0.25,
+        "offense_ridge": 0.25,
+        "recency_half_life_games": 4.0
+      },
+      "season_stability_brier": {
+        "2019": 0.24900438783111922,
+        "2020": 0.25284062689802633,
+        "2021": 0.2501019236238745,
+        "2022": 0.2474576839104594,
+        "2023": 0.24694410290842306,
+        "2024": 0.24733906589025695
+      }
+    },
+    "stable": {
+      "aggregate_metrics": {
+        "accuracy": 0.5417451349654739,
+        "brier": 0.24856205298989809,
+        "cal_intercept": 0.1233884866074445,
+        "cal_slope": 0.358338074426211,
+        "early_brier": 0.24980306386401602,
+        "later_brier": 0.24750163159105928,
+        "log_loss": 0.6902788368743636,
+        "margin_mae": 11.382034654106725,
+        "margin_rmse": 14.678966452765897,
+        "mean_signed_margin": 0.021442295748581423,
+        "scored": 1593
+      },
+      "candidate_sha256": "d14cf866bd64a273e78104aedf40d7bf1fc8f9fa8778bb3c3bbd5451cba9b6ed",
+      "id": "stable",
+      "parameters": {
+        "defense_ridge": 4.0,
+        "home_field_ridge": 4.0,
+        "mapping_intercept_l2_weight": 4.0,
+        "mapping_slope_l2_weight": 4.0,
+        "offense_ridge": 4.0,
+        "recency_half_life_games": 16.0
+      },
+      "season_stability_brier": {
+        "2019": 0.24428396915477374,
+        "2020": 0.25316498179613717,
+        "2021": 0.25008246725138633,
+        "2022": 0.2477199901374253,
+        "2023": 0.24644599512933163,
+        "2024": 0.24850490733783678
+      }
+    }
+  },
+  "candidates_locked_before_comparison": true,
+  "code_commit_sha": "3913ca371b917590ee25b330ab8641696d6a19e0",
+  "configuration_sha256": "37df479ab032784825e88e40010e65a84a983a832cf51ad9ca78080362dcfd18",
+  "configuration_yaml_sha256": "d15922855ce0f9c09b096b6d5b5cd4b02fda950356ffc9829be45b63ecb8b045",
+  "fourth_candidate_tested": false,
+  "frozen_at_utc": "2026-08-05T21:00:00Z",
+  "manifest_version": "expected_margin_v1.0.0",
+  "model_name": "expected_margin",
+  "model_version": "expected_margin_v1.0.0",
+  "not_production": [
+    "responsive",
+    "balanced"
+  ],
+  "selection": "stable",
+  "selection_policy": [
+    "Brier",
+    "log loss",
+    "calibration",
+    "margin error",
+    "season stability",
+    "early-season stability",
+    "usable scored-row count"
+  ],
+  "selection_rationale": "stable has the lowest aggregate Brier, lowest log loss, lowest margin MAE and RMSE, the only positive calibration slope, the largest usable scored-row count, and the best early/later and most stable season-to-season Brier. Selected on the multi-criteria policy, not on a tiny aggregate-Brier difference.",
+  "verdict": "EXPECTED_MARGIN_V1_IMPLEMENTED_BUT_WEAK"
+}

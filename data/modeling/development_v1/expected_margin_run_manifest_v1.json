@@ -1,0 +1,100 @@
+{
+  "bootstrap": {
+    "block_type": "season_week",
+    "brier_skill_score_ci": [
+      -0.15068,
+      -0.08301
+    ],
+    "log_loss_difference_ci": [
+      0.03785,
+      0.06848
+    ],
+    "n_resamples": 1000,
+    "no_superiority_claim": true,
+    "seed": 20260802,
+    "stable_brier_ci": [
+      0.24679,
+      0.25029
+    ],
+    "win_prop_stable_brier_lt_qbe": 0.0,
+    "win_prop_stable_log_loss_lt_qbe": 0.0
+  },
+  "candidates": [
+    {
+      "defense_ridge": 0.25,
+      "home_field_ridge": 0.25,
+      "id": "responsive",
+      "mapping_intercept_l2_weight": 0.25,
+      "mapping_slope_l2_weight": 0.25,
+      "offense_ridge": 0.25,
+      "recency_half_life_games": 4.0
+    },
+    {
+      "defense_ridge": 1.0,
+      "home_field_ridge": 1.0,
+      "id": "balanced",
+      "mapping_intercept_l2_weight": 1.0,
+      "mapping_slope_l2_weight": 1.0,
+      "offense_ridge": 1.0,
+      "recency_half_life_games": 8.0
+    },
+    {
+      "defense_ridge": 4.0,
+      "home_field_ridge": 4.0,
+      "id": "stable",
+      "mapping_intercept_l2_weight": 4.0,
+      "mapping_slope_l2_weight": 4.0,
+      "offense_ridge": 4.0,
+      "recency_half_life_games": 16.0
+    }
+  ],
+  "code_commit_sha": "3913ca371b917590ee25b330ab8641696d6a19e0",
+  "configuration_sha256": "37df479ab032784825e88e40010e65a84a983a832cf51ad9ca78080362dcfd18",
+  "configuration_yaml_sha256": "d15922855ce0f9c09b096b6d5b5cd4b02fda950356ffc9829be45b63ecb8b045",
+  "creation_timestamp": "2026-08-05T21:00:00Z",
+  "development_period": "2018-2024",
+  "extraction": {
+    "file_sha256": "0e40be2c1c660e58052cd7d5207f039414f36dcf812de2225da4c41eb5e5bd14",
+    "logical_content_sha256": "3bbc1b795d3e93ac66793bcdebc368d38e759af5c73ff8d1ffcd2d596ce7c3e9",
+    "path": "data/derived/features_v1/expected_margin_development_2018_2024.parquet",
+    "rows": 1942
+  },
+  "forward_use_declaration": "2026 and later rows are rejected at the boundary",
+  "forward_use_season": 2026,
+  "manifest_version": "expected_margin_v1.0.0",
+  "market_independence_declaration": "the model reads no market/odds data; no market fields present in any ledger",
+  "model_name": "expected_margin",
+  "model_version": "expected_margin_v1.0.0",
+  "official_scored_row_count": 1593,
+  "prediction_ledger": {
+    "file_sha256": "dfa2d3f458ab052f89be0865d6f7b51ee7b431464a3f5276649fbba6c14f16f2",
+    "logical_content_sha256": "89bb19711e33d492593acf2b3bb4b406cf48170ac06e1828fea13d7abc258d97",
+    "path": "data/modeling/development_v1/expected_margin_predictions_2018_2024.parquet",
+    "rows": 1942
+  },
+  "qb_elo_common_row_comparison": {
+    "brier_skill_score": -0.115582,
+    "expected_margin_brier": 0.248562,
+    "expected_margin_log_loss": 0.690279,
+    "log_loss_difference": 0.052939,
+    "qb_elo_brier": 0.222809,
+    "qb_elo_log_loss": 0.63734,
+    "rows": 1593
+  },
+  "row_count_predictions": 1942,
+  "row_count_state": 151,
+  "run_id": "expected_margin_v1-stable-20260805T210000Z",
+  "run_type": "development_walk_forward",
+  "sealed_holdout_declaration": "2025 rows are sealed and were never admitted to fitting, prediction, mapping, or evaluation",
+  "sealed_holdout_season": 2025,
+  "selected_candidate": "stable",
+  "state_ledger": {
+    "file_sha256": "3941f9953081ef39f8edeab390a5308cee0d5b177ef16f3808fef1f317b97050",
+    "logical_content_sha256": "70f735d7fa9746efaa05511a82d310145e6a3f3f2b65e782e9775fe56681d9fe",
+    "path": "data/modeling/development_v1/expected_margin_state_2018_2024.parquet",
+    "rows": 151
+  },
+  "verdict": "EXPECTED_MARGIN_V1_IMPLEMENTED_BUT_WEAK",
+  "warmup_row_count": 78,
+  "weak_model_statement": "Expected-Margin v1 is weaker than QB-Elo as a win-probability model."
+}
