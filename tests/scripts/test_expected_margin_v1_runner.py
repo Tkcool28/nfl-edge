@@ -158,3 +158,59 @@ def test_joined_scores_match_correct_game_id(tmp_path: Path) -> None:
     assert int(row_2018["away_score"][0]) == 3
     assert int(row_2019["home_score"][0]) == 14
     assert int(row_2019["away_score"][0]) == 28
+
+
+def test_logical_hash_deterministic_and_row_order_independent() -> None:
+    """The canonical logical hash is invariant to row order (it sorts by
+    the canonical key) and is deterministic across identical content."""
+    df_a = pl.DataFrame(
+        {"game_id": ["g2", "g1", "g3"], "p": [0.5, None, 0.7],
+         "season": [2020, 2019, 2021]}
+    )
+    df_b = pl.DataFrame(
+        {"game_id": ["g1", "g2", "g3"], "p": [None, 0.5, 0.7],
+         "season": [2019, 2020, 2021]}
+    )
+    h_a = _runner.logical_hash(df_a, "game_id")
+    h_b = _runner.logical_hash(df_b, "game_id")
+    assert isinstance(h_a, str) and len(h_a) == 64
+    assert h_a == h_b, "logical hash must be invariant to row order"
+
+
+def test_logical_hash_normalizes_nan_and_null_distinctly() -> None:
+    nan_frame = pl.DataFrame({"game_id": ["g1"], "x": [float("nan")]})
+    null_frame = pl.DataFrame({"game_id": ["g1"], "x": [None]})
+    h_nan = _runner.logical_hash(nan_frame, "game_id")
+    h_null = _runner.logical_hash(null_frame, "game_id")
+    # NaN is normalized to the literal "NaN" so it is NOT conflated with null.
+    assert h_nan != h_null
+    # Same content twice -> same hash.
+    assert h_nan == _runner.logical_hash(nan_frame, "game_id")
+
+
+def test_select_candidate_returns_stable_decisive() -> None:
+    reports = {
+        "responsive": {"binary_metrics": {"brier": 0.244825, "log_loss": 0.683127},
+                       "margin_metrics": {"margin_mae": 11.56}},
+        "balanced": {"binary_metrics": {"brier": 0.242345, "log_loss": 0.678146},
+                     "margin_metrics": {"margin_mae": 11.05}},
+        "stable": {"binary_metrics": {"brier": 0.238291, "log_loss": 0.669988},
+                   "margin_metrics": {"margin_mae": 10.69}},
+    }
+    sel, decision = _runner._select_candidate(reports)
+    assert sel == "stable"
+    assert decision == "decisive"
+
+
+def test_select_candidate_classifies_marginal_when_close() -> None:
+    reports = {
+        "responsive": {"binary_metrics": {"brier": 0.240000, "log_loss": 0.6700},
+                       "margin_metrics": {"margin_mae": 11.0}},
+        "balanced": {"binary_metrics": {"brier": 0.240001, "log_loss": 0.6701},
+                     "margin_metrics": {"margin_mae": 11.0}},
+        "stable": {"binary_metrics": {"brier": 0.240002, "log_loss": 0.6702},
+                   "margin_metrics": {"margin_mae": 10.9}},
+    }
+    sel, decision = _runner._select_candidate(reports)
+    assert sel == "responsive"
+    assert decision == "marginal"
