@@ -96,7 +96,6 @@ from .expected_margin_config import (
     load_expected_margin_canonical_config,
 )
 
-
 # ---------------------------------------------------------------------------
 # Configuration value objects
 # ---------------------------------------------------------------------------

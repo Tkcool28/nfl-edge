@@ -37,7 +37,6 @@ from nfl_edge.backtest.blocks import (
 from nfl_edge.backtest.expected_margin_walk_forward import (
     _chronological_age_per_row,
     _load_games,
-    _prior_completed_games,
     _prior_oos_for_mapping,
     run_expected_margin_candidate,
 )
@@ -49,7 +48,6 @@ from nfl_edge.common.polars_utils import assert_no_market_columns
 from nfl_edge.models.expected_margin import (
     ExpectedMarginCandidateConfig,
     ExpectedMarginSharedConfig,
-    FittedExpectedMargin,
     FittedMapping,
     _cholesky_solve,
     _recency_weight,
@@ -58,7 +56,6 @@ from nfl_edge.models.expected_margin import (
     fit_mapping,
     is_mapping_available,
     is_warmup_state,
-    load_all_candidates,
     predict_home_win_probability,
     shared_config_from_normalized,
 )
@@ -66,7 +63,6 @@ from nfl_edge.models.expected_margin_config import (
     load_expected_margin_canonical_config,
     lock_expected_margin_config,
 )
-
 
 # ---------------------------------------------------------------------------
 # Configuration helpers
@@ -667,10 +663,6 @@ def test_chronological_recency_uses_completion_order_not_game_id() -> None:
     cand = candidates[1]
     # Game IDs deliberately out of order: G003 is the most recent,
     # G001 is the oldest.
-    home_teams = ["AAA", "AAA", "AAA", "AAA"]
-    away_teams = ["BBB", "BBB", "BBB", "BBB"]
-    home_points = [25.0, 25.0, 25.0, 25.0]
-    away_points = [20.0, 20.0, 20.0, 20.0]
     # Chronological ages (sorted by prediction_as_of_utc, then game_id):
     # each row has its own age. We use chronological_age_in_completed_games
     # directly, so the test is anchored at the model boundary.
