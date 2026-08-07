@@ -1,0 +1,143 @@
+base_sha: a93bfe1f7ffaaac7bff8758bf278af1ce07149db
+extraction:
+  source_artifacts:
+    - data/derived/features_v1/game_features_2018_2025.parquet
+    - data/derived/features_v1/qb_pregame_features_2018_2025.parquet
+    - data/derived/features_v1/starter_certainty_2018_2025.parquet
+  output_artifact: data/derived/features_v1/xgboost_development_2018_2024.parquet
+  development_seasons: [2018-2024]
+  season_gate_policy: reject 2025+ (sealed holdout) and 2026+ (forward-use)
+  season_gate_enforcement: hard rejection at extraction boundary
+
+target_policy:
+  target: "P(home team wins)"
+  encoding: home_win=1, away_win=0, tie=excluded, unknown=excluded
+  columns: [target_home_win, target_margin, target_tie, target_available]
+  note: "Targets preserved in extraction parquet; never enter model matrix"
+
+exclusions:
+  identifiers: "game_id, team names, venue_id, player_ids — metadata only"
+  timestamps: "feature_as_of_utc, prediction_as_of_utc, source_available_at_utc, scheduled_start_utc"
+  market_data: "no market columns in source; market tokens rejected at extraction"
+  postgame_outcomes: "home_score, away_score, target_margin — postgame, excluded from features"
+  qb_player_ids: "expected_home_qb_id, expected_away_qb_id — Null/raw IDs, excluded"
+  qb_status: "qb_status is POSTGAME_ONLY_EVIDENCE for all rows — not forward-looking"
+  postgame_qb_evidence_ids: "postgame evidence IDs excluded from model matrix"
+  qb_observed_prior_constants: "passing_epa_observed, passing_epa_prior, passing_epa_sample_size, prior_dropback_or_attempt_volume, prior_games — constant at priors in base commit, redundant with shrunk values + flags"
+  qb_imputed_flags: "*_imputed flags for QB metrics — all True (constant), uninformative in base commit"
+  offensive_total_epa: "deterministic identity (passing_epa + rushing_epa); excluded to avoid duplication"
+  is_home: "home_is_home/away_is_home constant per side; excluded (redundant with team identity)"
+  starter_certainty_text: "starter_certainty, home_starter_certainty, away_starter_certainty — string-valued postgame evidence audit, not numeric features"
+
+feature_contract:
+  column_order: "identity -> timestamp -> provenance -> context -> team metrics -> QB -> targets"
+  row_order: "season ASC, week ASC, game_id ASC"
+
+determinism:
+  xgboost_random_seed: 42
+  xgboost_nthread: 1
+  xgboost_tree_method: hist
+
+feature_count_target:
+  min: 80
+  max: 140
+feature_count_actual: 132
+extraction_sha256: fb4e45d28e337617043d578cb088e366aa217984bb200efca844e13111dc10f8
+hashes:
+  feature_order_hash: e33c5154a7ba3e9b89b8da55bf41dd6b8358b49b09baee14f0d9106c1cf4a09c
+  source_field_hash: 161e36e5f2cf3406b48fc43c658d3ba4db0c42f2c84f7f461fd4f3728a980d24
+  transformation_hash: df7485093dfe6a2d6e561417206295f578459e6bf42f1dfa167531597081d68c
+  logical_contract_hash: ebfcc2dc63c857c2ddc1db7eaaf1b374ebe2308decb5df7bd4794ad834ef8793
+  exclusion_hash: 7d8c4a7d4940690f294bdacf70df4f5ecac56de7b3118e55b6b8601df5374a5f
+
+shared_settings:
+  objective: binary:logistic
+  eval_metric: logloss
+  tree_method: hist
+  seed: 42
+  nthread: 1
+  early_stopping_rounds: 50
+  probability_epsilon: 0.000001
+  min_training_rows: 32
+  min_training_blocks: 2
+  validation_block_count: 2
+  min_validation_rows: 21
+  min_validation_blocks: 2
+
+candidates:
+  deterministic_order: [conservative, balanced, expressive]
+  conservative:
+    hypothesis: "Prefer stable broad effects and resist local interactions while remaining genuinely nonlinear."
+    max_depth: 2
+    learning_rate: 0.05
+    min_child_weight: 5.0
+    subsample: 0.80
+    colsample_bytree: 0.60
+    reg_alpha: 0.50
+    reg_lambda: 2.00
+    gamma: 0.50
+    max_delta_step: 1.00
+    max_rounds: 200
+    interaction_complexity: low
+  balanced:
+    hypothesis: "Capture moderate nonlinear and conditional football relationships with meaningful regularization."
+    max_depth: 3
+    learning_rate: 0.05
+    min_child_weight: 3.0
+    subsample: 0.85
+    colsample_bytree: 0.70
+    reg_alpha: 0.30
+    reg_lambda: 1.50
+    gamma: 0.20
+    max_delta_step: 0.00
+    max_rounds: 400
+    interaction_complexity: moderate
+  expressive:
+    hypothesis: "Search for higher-order conditional football relationships with chronological early stopping acting as the primary complexity brake."
+    max_depth: 4
+    learning_rate: 0.03
+    min_child_weight: 1.0
+    subsample: 0.90
+    colsample_bytree: 0.80
+    reg_alpha: 0.10
+    reg_lambda: 1.00
+    gamma: 0.00
+    max_delta_step: 0.00
+    max_rounds: 800
+    interaction_complexity: high
+
+walkforward_policy:
+  description: "Chronological walk-forward validation policy — locked prospectively, not implemented in this step."
+  prediction_block: B
+  fit_data: "only strictly prior chronological blocks may be used"
+  validation_tail:
+    reserve_most_recent: 2
+    min_blocks: 2
+    min_rows: 21
+  fit_requirements:
+    min_blocks: 2
+    min_rows: 32
+  rules:
+    - "If any requirement fails, block B remains warm-up (no probability produced)."
+    - "Current block never enters fit or validation."
+    - "No same-week partial-result updating."
+    - "Early stopping determines best iteration."
+    - "Later implementation may refit all prior eligible rows for exactly best_iteration + 1 rounds before predicting current block."
+
+lock_metadata:
+  status: PRE_RESULT_AUTHORITATIVE_LOCK
+  purpose: "Fresh prospective candidate lock for XGBoost-v1 (Task 03C-3 recovery). No NFL candidate performance has been observed."
+  candidate_count: 3
+  max_depth_absolute_max: 4
+  no_nfl_candidate_results_exist_at_lock_time: true
+  candidates_fixed_before_results: true
+  checkpoint_created_before_results: true
+  created_from: "accepted Task 03C-2 artifacts only; NOT from artifacts/tmp/task03c_invalidated_recovery_snapshot/"
+
+lock_hashes:
+  shared_settings_hash: b1bf9d17f0747f264f4d6dfec3323133e753106009890224d79c7527d034cf97
+  conservative_parameter_hash: a044ba76fd138bde1a52e364fd7fce5de042a2ddfdb6cdac22e592d4819ed58b
+  balanced_parameter_hash: 3548924be19dcab76d07e4eeba34a23755a8b6fc43e44dd2db4c65f36ca2d1de
+  expressive_parameter_hash: 48e65199f99e7c6d79c5cc29670d6a80012758b2c6fd1800ecf08c7d5ab0c54a
+  candidate_definition_hash: 0f3c568a4dddd6b91344c9c8af09b3807658ba1a716803fddfc0fb3406de419e
+  logical_config_hash: 7c1bac58bff756b47303948304d170944424fb4728aca1e155e6862cb978d2a4

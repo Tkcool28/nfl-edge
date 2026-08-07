@@ -1,0 +1,141 @@
+{
+  "manifest_version": "03c_preservation_baseline_v1",
+  "base_sha": "a93bfe1f7ffaaac7bff8758bf278af1ce07149db",
+  "source_checkout": "/root/nfl-edge",
+  "worktree": "/root/workspaces/nfl-edge-xgboost-v1",
+  "generated_by": "Task 03C-1 environment isolation and preservation setup",
+  "total_files": 25,
+  "artifacts": {
+    "Task 03A — QB-Elo": {
+      "data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet": {
+        "repo_relative_path": "data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet",
+        "sha256": "47bb96b405866395cc1a18fb15413b11cf9265e0eccda30f8a77014f74926d45",
+        "file_size": 83061
+      },
+      "data/modeling/development_v1/qb_elo_state_transitions_2018_2024.parquet": {
+        "repo_relative_path": "data/modeling/development_v1/qb_elo_state_transitions_2018_2024.parquet",
+        "sha256": "fceb7a9b064c50b91d426de4b0d70185c8191d7e43948040a99178ab07802fbb",
+        "file_size": 172844
+      },
+      "data/modeling/development_v1/qb_elo_run_manifest_v1.json": {
+        "repo_relative_path": "data/modeling/development_v1/qb_elo_run_manifest_v1.json",
+        "sha256": "0db2fa92815d4166f8ab10167e92bb2a392f266f41ed5e26b9af8c2bcc3433e8",
+        "file_size": 2021
+      },
+      "data/modeling/development_v1/qb_elo_tuning_ledger_v1.json": {
+        "repo_relative_path": "data/modeling/development_v1/qb_elo_tuning_ledger_v1.json",
+        "sha256": "6d7e018920efc821807381d9964bc91c28241f242d4b1a883220c3f69a4bf996",
+        "file_size": 1419
+      },
+      "reports/development/qb_elo_development_scorecard.md": {
+        "repo_relative_path": "reports/development/qb_elo_development_scorecard.md",
+        "sha256": "fe3fcfcb7a0b35c166a79bf998abf07c0ead36f6a0f1dc14e42e34129e2c5ef4",
+        "file_size": 3990
+      },
+      "reports/development/qb_elo_development_scorecard.json": {
+        "repo_relative_path": "reports/development/qb_elo_development_scorecard.json",
+        "sha256": "b49a5f5b13e6b5125192c74ef31f948d5397f7c44e8cb13d1cf09ed795212f6a",
+        "file_size": 32804
+      },
+      "reports/development/qb_elo_reliability_table.csv": {
+        "repo_relative_path": "reports/development/qb_elo_reliability_table.csv",
+        "sha256": "ef1099d365c12f3191493f581757e8a0cd1e4404a9585d28d5e53fc4d982955e",
+        "file_size": 424
+      }
+    },
+    "Task 03B — Expected-Margin": {
+      "config/expected_margin_v1.yaml": {
+        "repo_relative_path": "config/expected_margin_v1.yaml",
+        "sha256": "1c1b6ea4fe8dddd1d1373bc2e5ea8d5413b9ba9c501bf2f14eecfe3e27360784",
+        "file_size": 5908
+      },
+      "docs/expected_margin_v1.md": {
+        "repo_relative_path": "docs/expected_margin_v1.md",
+        "sha256": "abc382d4458d88315c3ee0726de513307841fdf325ed8e1d6da467bcdc554b45",
+        "file_size": 3879
+      },
+      "data/modeling/development_v1/expected_margin_predictions_2018_2024.parquet": {
+        "repo_relative_path": "data/modeling/development_v1/expected_margin_predictions_2018_2024.parquet",
+        "sha256": "1e2c073244ca7beb31b5eb30894a94ae142d75a04f485ac54ef86a16640e07e9",
+        "file_size": 163153
+      },
+      "data/modeling/development_v1/expected_margin_state_2018_2024.parquet": {
+        "repo_relative_path": "data/modeling/development_v1/expected_margin_state_2018_2024.parquet",
+        "sha256": "e55fa4f725e4700486588e5fb8d559a963580a975deedfff5a132da176c72f40",
+        "file_size": 107997
+      },
+      "data/modeling/development_v1/expected_margin_run_manifest_v1.json": {
+        "repo_relative_path": "data/modeling/development_v1/expected_margin_run_manifest_v1.json",
+        "sha256": "c359a6504745aa807911dfb4012e8ea4f2948deb25f6f979f74c9cb2c3b17a8d",
+        "file_size": 6767
+      },
+      "data/modeling/development_v1/expected_margin_tuning_ledger_v1.json": {
+        "repo_relative_path": "data/modeling/development_v1/expected_margin_tuning_ledger_v1.json",
+        "sha256": "6ae4cf8f9281bcd5adaa336b6b0e25e8d8db1873e82d36a026188c3edce4dfb0",
+        "file_size": 7631
+      },
+      "reports/development/expected_margin_development_scorecard.md": {
+        "repo_relative_path": "reports/development/expected_margin_development_scorecard.md",
+        "sha256": "7b9312aedaeaf0a32e39d3eb7465ae29e10057ef991e3d8838ffeda2feeb7a9c",
+        "file_size": 1317
+      },
+      "reports/development/expected_margin_development_scorecard.json": {
+        "repo_relative_path": "reports/development/expected_margin_development_scorecard.json",
+        "sha256": "ca9c1ea5c3013ba65e3a42d7a262621b9f697a58340b3db8736110d381232b2e",
+        "file_size": 5505
+      },
+      "reports/development/expected_margin_reliability_table.csv": {
+        "repo_relative_path": "reports/development/expected_margin_reliability_table.csv",
+        "sha256": "5fbaa8c2378474fce531193b43795ce8f5028a13087611d737417009daa28a2a",
+        "file_size": 255
+      }
+    },
+    "Frozen feature and configuration": {
+      "data/derived/features_v1/game_features_2018_2025.parquet": {
+        "repo_relative_path": "data/derived/features_v1/game_features_2018_2025.parquet",
+        "sha256": "346f8aec6246edc049591abd22a8f6a4664a18de219205d8cb1ac395c42c9403",
+        "file_size": 866789
+      },
+      "data/derived/features_v1/team_pregame_features_2018_2025.parquet": {
+        "repo_relative_path": "data/derived/features_v1/team_pregame_features_2018_2025.parquet",
+        "sha256": "07758f2560044a96007d60f54c34b8abe64d139764cdb772c536b773bb8dcc65",
+        "file_size": 801574
+      },
+      "data/derived/features_v1/qb_pregame_features_2018_2025.parquet": {
+        "repo_relative_path": "data/derived/features_v1/qb_pregame_features_2018_2025.parquet",
+        "sha256": "ab43a422a98f8275d1f25fa6128a2277755ed400d428a1273c3393463e4e6ecb",
+        "file_size": 33137
+      },
+      "data/derived/features_v1/starter_certainty_2018_2025.parquet": {
+        "repo_relative_path": "data/derived/features_v1/starter_certainty_2018_2025.parquet",
+        "sha256": "580ae44b9d3900c3788a512e1fba8bb6d4802b415ee1f8fd32759a9839b29b1f",
+        "file_size": 27177
+      },
+      "data/derived/features_v1/weekly_availability_2018_2025.parquet": {
+        "repo_relative_path": "data/derived/features_v1/weekly_availability_2018_2025.parquet",
+        "sha256": "5cb883da6677175ba4ade814a0c153f26812731cf78f4883568d14e88cd6bb64",
+        "file_size": 8457
+      },
+      "data/derived/features_v1/feature_registry_v1.json": {
+        "repo_relative_path": "data/derived/features_v1/feature_registry_v1.json",
+        "sha256": "2a68856b1f6e8315520526356e25ddb2ba7b879df5768a20fd7ad5efcedff8d4",
+        "file_size": 198825
+      },
+      "data/derived/features_v1/feature_manifest_v1.json": {
+        "repo_relative_path": "data/derived/features_v1/feature_manifest_v1.json",
+        "sha256": "aec492811357cddff1c1dbb0701623df2d2c234f5109522a0cacc63ca244b987",
+        "file_size": 4798
+      },
+      "config/features.yaml": {
+        "repo_relative_path": "config/features.yaml",
+        "sha256": "399902d3027f94d4af769cce3766fb7d75c3189c7692a75e7217325899ce38e5",
+        "file_size": 2364
+      },
+      "config/backtest.yaml": {
+        "repo_relative_path": "config/backtest.yaml",
+        "sha256": "271a17d5781c0bc0619d3f30256cd03fc1a2ee776818678adcbe9b14cd31f275",
+        "file_size": 1220
+      }
+    }
+  }
+}

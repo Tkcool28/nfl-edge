@@ -1,0 +1,30 @@
+{
+  "lock_type": "SELECTED_DEVELOPMENT_CANDIDATE_POST_ADJUDICATION_V2",
+  "version": 2,
+  "selected_candidate": "conservative",
+  "created_datetime_utc": "2026-08-07T19:51:00.000000+00:00",
+  "reason": "reporting-accounting correction only. Original SELECTED_V1_LOCK_MANIFEST.json referenced the pre-correction scorecard SHA which encoded the incorrect warm-up shorthand (291). No model, prediction, parameters, or selected candidate changed.",
+  "note": "This V2 lock supersedes (does not overwrite) SELECTED_V1_LOCK_MANIFEST.json, which is preserved unchanged as the original post-adjudication record. The original 03C-3 pre-result three-candidate lock remains authoritative.",
+  "selected_parameter_hash": "a044ba76fd138bde1a52e364fd7fce5de042a2ddfdb6cdac22e592d4819ed58b",
+  "refers_to_artifacts": {
+    "canonical_config_sha256": "6aa585239ea20c7cd43da5837128101c83c5ce25645c8769e391a4dfc175a3be",
+    "shared_settings_hash": "b1bf9d17f0747f264f4d6dfec3323133e753106009890224d79c7527d034cf97",
+    "feature_contract_sha256": "4187bef6b76d71f4f89f3387ec4789512cccb6deacd6cd64520039c713919993",
+    "feature_order_hash": "e33c5154a7ba3e9b89b8da55bf41dd6b8358b49b09baee14f0d9106c1cf4a09c",
+    "extraction_sha256": "fb4e45d28e337617043d578cb088e366aa217984bb200efca844e13111dc10f8",
+    "prediction_artifact_sha256": "aa13da5fe2056fdb483c95e4a4568506fd2a36b059983c4556d2680124919b6e",
+    "block_state_artifact_sha256": "0b229ffdce058081004390fd0a5bbbba73e838a190edd217c4aa54e2dba40365",
+    "scorecard_sha256": "1450a5da294a6ccaaa9e45c000ce9da6fb45a40fe2a641662462b317280c3af1",
+    "scorecard_md_sha256": "9ecede227aa3132a15bf7b455fd22025e1b23a3c1ee02d4ba44402d2905ea85d",
+    "selected_candidate_artifact_sha256": "357c975539f8b14a7e7668275cf6919cf323f578478a33a5c9025a1c046531d5",
+    "row_accounting_erratum_sha256": "34b64e4a50c824c7e16c1f41a5f0a984d42658406ad371df04879fafe6e963f7"
+  },
+  "row_accounting": {
+    "total_rows": 1942,
+    "binary_scored_rows": 1651,
+    "warmup_rows": 288,
+    "tie_or_nonbinary_rows": 3
+  },
+  "original_lock_unchanged": true,
+  "original_prospective_lock_unchanged": true
+}

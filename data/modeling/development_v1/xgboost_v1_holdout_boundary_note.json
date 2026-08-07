@@ -1,0 +1,42 @@
+{
+  "artifact": "xgboost_v1_holdout_boundary_note",
+  "scope": "Task 03C-7A publication-boundary adjudication",
+  "publication_validation_access": {
+    "2025_test_fixture_rows_accessed": true,
+    "responsible_test": "tests/models/test_xgboost_contract.py::TestPoisonTests::test_2025_feature_poisoning",
+    "test_execution_context": "The prior Task 03C-7 focused suite executed tests/models/test_xgboost_contract.py.",
+    "reason_for_access": "The test loads source fixture rows and deliberately alters a 2025 feature value to verify that the hard 2018-2024 season gate prevents 2025 source changes from contaminating the frozen development extraction.",
+    "excluded_from_publication_revalidation_due_to_holdout_boundary": [
+      "tests/models/test_xgboost_contract.py"
+    ]
+  },
+  "adjudicated_boundaries": {
+    "2025_holdout_performance_evaluated": false,
+    "2025_holdout_used_for_selection": false,
+    "2025_holdout_used_for_retuning": false,
+    "market_data_used": false,
+    "model_selection_invalidated": false
+  },
+  "evidence_basis": [
+    "The recorded focused-test history identifies fixture/source-row access only in the holdout-poisoning contract test.",
+    "The recorded task artifacts and prior execution report contain development-only 2018-2024 metrics and no 2025 performance metric, candidate comparison, QB-Elo comparison, Expected-Margin comparison, market evaluation, or outcome-based selection result.",
+    "The selected conservative candidate and parameter hash were already frozen before publication validation.",
+    "No post-access model retuning, candidate-selection change, or model-evidence rewrite occurred.",
+    "Publication was stopped immediately after the fixture-row access was recognized."
+  ],
+  "explicit_non_events": {
+    "model_prediction_accuracy_computed_for_2025": false,
+    "brier_computed_for_2025": false,
+    "logloss_computed_for_2025": false,
+    "roc_auc_computed_for_2025": false,
+    "calibration_computed_for_2025": false,
+    "candidate_comparison_computed_for_2025": false,
+    "selected_model_performance_computed_for_2025": false,
+    "qb_elo_comparison_computed_for_2025": false,
+    "expected_margin_comparison_computed_for_2025": false,
+    "sportsbook_or_market_evaluation_computed_for_2025": false,
+    "outcome_based_model_selection_using_2025": false
+  },
+  "selected_candidate_status": "XGBOOST_V1_CONSERVATIVE_SELECTED_AND_FROZEN",
+  "publication_note": "A publication-time contract test accessed 2025 source fixture rows solely to verify holdout exclusion; no 2025 model performance was calculated or used for model decisions."
+}

@@ -1,0 +1,54 @@
+{
+  "erratum": "xgboost_v1_row_accounting_erratum",
+  "created_datetime_utc": "2026-08-07T19:50:00.000000+00:00",
+  "issue": "NON_SCORED_ROWS_PREVIOUSLY_MISLABELED_AS_WARMUP",
+  "original_shorthand": "1942 - 1651 = 291",
+  "corrected_accounting": {
+    "total_rows": 1942,
+    "binary_scored_rows": 1651,
+    "warmup_rows": 288,
+    "tie_or_nonbinary_rows": 3,
+    "sum_check": "1651 + 288 + 3 = 1942"
+  },
+  "definitions": {
+    "binary_scored_rows": "Rows with valid binary target and valid prediction used in Brier/logloss/accuracy/AUC scoring.",
+    "warmup_rows": "Rows explicitly flagged by the walk-forward engine as warm-up because insufficient eligible prior training/validation history existed.",
+    "tie_or_nonbinary_rows": "Rows not usable for binary win/loss scoring because the target is not binary (tie / null target), but which are not necessarily warm-up rows."
+  },
+  "explanation": "Earlier Task 03C reporting used total_rows minus scored_rows as a shorthand for warm-up rows, producing 291. The accepted conservative prediction slice (derived directly from the immutable parquet) shows 288 true warm-up-flagged rows and 3 tie/non-binary rows (target null, not warm-up). No model, prediction, training chronology, candidate selection, metrics, bootstrap, or canonical runner changed. This is a reporting/accounting semantics correction only.",
+  "authoritative_raw_prediction_sha256": "aa13da5fe2056fdb483c95e4a4568506fd2a36b059983c4556d2680124919b6e",
+  "canonical_replay_proof_sha256": "ac438a0c35010b18bd253940fe126fffd61f7a9c215e804bee35b8c9db26b96c",
+  "tie_or_nonbinary_game_ids": [
+    "2020_03_CIN_PHI",
+    "2021_10_DET_PIT",
+    "2022_13_WAS_NYG"
+  ],
+  "tie_or_nonbinary_warmup_flags": {
+    "2020_03_CIN_PHI": false,
+    "2021_10_DET_PIT": false,
+    "2022_13_WAS_NYG": false
+  },
+  "pre_correction_affected_artifact_sha256": {
+    "xgboost_v1_scorecard.json": "8da31a2a11b2f32338bb38934491b2557bae700db79dcb4fbeb0f6ed36cb3a8d",
+    "xgboost_v1_scorecard.md": "f40c9e91667a29b530d985b90b88e75713a24361ab9e9799aea57cc590cf7675",
+    "xgboost_selected_candidate_v1.json": "357c975539f8b14a7e7668275cf6919cf323f578478a33a5c9025a1c046531d5",
+    "xgboost_selected_v1_lock/SELECTED_V1_LOCK_MANIFEST.json": "c4c048c917e53226b1876315a5fd4caddafe81353f3ebfe7d18f06ca44e59da1",
+    "xgboost_v1_canonical_replay_proof.json": "f546fdc8d75fc9e13580c61e4063639f3b661d9950d6b39ef0534250f7712307"
+  },
+  "post_correction_artifact_sha256": {
+    "xgboost_v1_scorecard.json": "1450a5da294a6ccaaa9e45c000ce9da6fb45a40fe2a641662462b317280c3af1",
+    "xgboost_v1_scorecard.md": "9ecede227aa3132a15bf7b455fd22025e1b23a3c1ee02d4ba44402d2905ea85d",
+    "xgboost_selected_candidate_v1.json": "357c975539f8b14a7e7668275cf6919cf323f578478a33a5c9025a1c046531d5",
+    "xgboost_v1_canonical_replay_proof.json": "ac438a0c35010b18bd253940fe126fffd61f7a9c215e804bee35b8c9db26b96c"
+  },
+  "preserved_historical_forensic": {
+    "xgboost_03c4b_first_run_preservation_manifest.json": "ef5615a058df51f6fdc419d61222e243608bdc0e0230fc2a55baa634a4788bc3",
+    "note": "This forensic first-run preservation manifest records the original shorthand 291 per candidate (lines 60-62). It is a historical/forensic record and is intentionally NOT rewritten. Its global_warmup_row_count=864 (= 3 x 288) already confirms the true warm-up count is 288. See _forensic_first_run_original/ for the immutable first-run snapshot."
+  },
+  "flags": {
+    "MODEL_OUTPUT_CHANGED": false,
+    "CANDIDATE_SELECTION_CHANGED": false,
+    "METRICS_CHANGED": false,
+    "2025_HOLDOUT_ACCESSED": false
+  }
+}

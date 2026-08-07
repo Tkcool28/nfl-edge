@@ -1,0 +1,67 @@
+{
+  "proof_artifact": "xgboost_v1_canonical_replay_proof",
+  "verdict": "XGBOOST_V1_CANONICAL_RUNNER_VERIFIED",
+  "created_datetime_utc": "2026-08-07T19:30:43.482935+00:00",
+  "canonical_runner": {
+    "path": "src/nfl_edge/models/run_xgboost_v1.py",
+    "sha256": "04b1524838bfb94fd444d06860da4823febb97972183a96cda0ac806e2e57ea0"
+  },
+  "selected_candidate": "conservative",
+  "selected_parameter_hash": "a044ba76fd138bde1a52e364fd7fce5de042a2ddfdb6cdac22e592d4819ed58b",
+  "source_lock_hashes": {
+    "canonical_config_sha256": "6aa585239ea20c7cd43da5837128101c83c5ce25645c8769e391a4dfc175a3be",
+    "selected_lock_sha256": "c4c048c917e53226b1876315a5fd4caddafe81353f3ebfe7d18f06ca44e59da1",
+    "feature_contract_sha256": "4187bef6b76d71f4f89f3387ec4789512cccb6deacd6cd64520039c713919993",
+    "feature_order_hash": "e33c5154a7ba3e9b89b8da55bf41dd6b8358b49b09baee14f0d9106c1cf4a09c",
+    "extraction_sha256": "fb4e45d28e337617043d578cb088e366aa217984bb200efca844e13111dc10f8",
+    "extraction_logical_hash": "5753e15c907e6c4da2e9dce7570064158f8fb7d574afb2e3d4d62b661ab8613c"
+  },
+  "row_counts": {
+    "total_rows": 1942,
+    "scored_rows": 1651,
+    "warmup_rows": 288
+  },
+  "logical_hashes": {
+    "run_A_prediction": "0eab3249f7133a496081582959826b74d7568b9e2c01a61eaca220543d929ee0",
+    "run_B_prediction": "0eab3249f7133a496081582959826b74d7568b9e2c01a61eaca220543d929ee0",
+    "accepted_03C4B_conservative_prediction": "0eab3249f7133a496081582959826b74d7568b9e2c01a61eaca220543d929ee0",
+    "run_A_block_state": "93b537e1aca6d39190fe6e168db210e2d49a650b5e057a9a9f87cd593cd6e449",
+    "run_B_block_state": "93b537e1aca6d39190fe6e168db210e2d49a650b5e057a9a9f87cd593cd6e449",
+    "accepted_03C4B_conservative_block_state": "93b537e1aca6d39190fe6e168db210e2d49a650b5e057a9a9f87cd593cd6e449"
+  },
+  "equality_flags": {
+    "CANONICAL_RUN_A_EQUALS_ACCEPTED_PREDICTION": true,
+    "CANONICAL_RUN_B_EQUALS_ACCEPTED_PREDICTION": true,
+    "CANONICAL_RUN_A_EQUALS_CANONICAL_RUN_B_PREDICTION": true,
+    "CANONICAL_RUN_A_EQUALS_ACCEPTED_BLOCK_STATE": true,
+    "CANONICAL_RUN_B_EQUALS_ACCEPTED_BLOCK_STATE": true,
+    "CANONICAL_RUN_A_EQUALS_CANONICAL_RUN_B_BLOCK_STATE": true,
+    "prediction_frame_equals_accepted": true,
+    "block_state_frame_equals_accepted": true,
+    "run_A_equals_run_B_prediction_frame": true,
+    "run_A_equals_run_B_block_state_frame": true
+  },
+  "sequence_equality": {
+    "best_iteration_A_equals_B": true,
+    "best_iteration_A_equals_accepted": true,
+    "final_refit_A_equals_B": true,
+    "final_refit_A_equals_accepted": true
+  },
+  "metrics_verification": {
+    "brier": 0.232614,
+    "logloss": 0.657516,
+    "accuracy": 0.614779,
+    "roc_auc": 0.648708,
+    "targets": {
+      "brier": 0.232614,
+      "logloss": 0.657516,
+      "accuracy": 0.614779,
+      "roc_auc": 0.648708
+    }
+  },
+  "flags": {
+    "2025_HOLDOUT_ACCESSED": false,
+    "MARKET_DATA_USED": false,
+    "PRODUCTION_DEPLOYED": false
+  }
+}

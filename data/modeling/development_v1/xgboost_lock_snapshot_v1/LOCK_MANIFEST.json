@@ -1,0 +1,46 @@
+{
+  "NO_NFL_CANDIDATE_RESULTS_EXIST_AT_LOCK_TIME": true,
+  "balanced_parameter_hash": "3548924be19dcab76d07e4eeba34a23755a8b6fc43e44dd2db4c65f36ca2d1de",
+  "candidate_definition_hash": "0f3c568a4dddd6b91344c9c8af09b3807658ba1a716803fddfc0fb3406de419e",
+  "candidates_fixed_before_results": true,
+  "canonical_candidate_differentiation_sha256": "faf89503d42527e899ff6441f022298433aed61df812d3bead695fc1dce25e01",
+  "canonical_config_sha256": "6aa585239ea20c7cd43da5837128101c83c5ce25645c8769e391a4dfc175a3be",
+  "conservative_parameter_hash": "a044ba76fd138bde1a52e364fd7fce5de042a2ddfdb6cdac22e592d4819ed58b",
+  "created_from": "accepted Task 03C-2 artifacts only; NOT from invalidated snapshot",
+  "creation_purpose": "Immutable checkpoint for Task 03C-3 fresh prospective candidate lock. Created BEFORE any NFL fitting or candidate performance evaluation. Contains exact copies of the canonical config, candidate differentiation artifact, and feature contract.",
+  "explicit_declaration": "NO_NFL_CANDIDATE_RESULTS_EXIST_AT_LOCK_TIME = TRUE",
+  "expressive_parameter_hash": "48e65199f99e7c6d79c5cc29670d6a80012758b2c6fd1800ecf08c7d5ab0c54a",
+  "extraction_file_hash": "fb4e45d28e337617043d578cb088e366aa217984bb200efca844e13111dc10f8",
+  "extraction_logical_hash": "5753e15c907e6c4da2e9dce7570064158f8fb7d574afb2e3d4d62b661ab8613c",
+  "extraction_row_count": 1942,
+  "extraction_seasons": "2018-2024",
+  "feature_contract_file_hash": "4187bef6b76d71f4f89f3387ec4789512cccb6deacd6cd64520039c713919993",
+  "feature_count": 132,
+  "feature_order_hash": "e33c5154a7ba3e9b89b8da55bf41dd6b8358b49b09baee14f0d9106c1cf4a09c",
+  "logical_config_hash": "7c1bac58bff756b47303948304d170944424fb4728aca1e155e6862cb978d2a4",
+  "logical_contract_hash": "ebfcc2dc63c857c2ddc1db7eaaf1b374ebe2308decb5df7bd4794ad834ef8793",
+  "no_nfl_fitting": true,
+  "no_walkforward_engine": true,
+  "nthread": 1,
+  "python_version": "3.11.15",
+  "seed": 42,
+  "shared_settings_hash": "b1bf9d17f0747f264f4d6dfec3323133e753106009890224d79c7527d034cf97",
+  "snapshot_files": {
+    "config_xgboost_v1.locked.yaml": {
+      "sha256": "6aa585239ea20c7cd43da5837128101c83c5ce25645c8769e391a4dfc175a3be"
+    },
+    "xgboost_candidate_differentiation_v1.locked.json": {
+      "sha256": "faf89503d42527e899ff6441f022298433aed61df812d3bead695fc1dce25e01"
+    },
+    "xgboost_feature_contract_v1.locked.json": {
+      "sha256": "4187bef6b76d71f4f89f3387ec4789512cccb6deacd6cd64520039c713919993"
+    }
+  },
+  "source_canonical_paths": {
+    "candidate_differentiation": "data/modeling/development_v1/xgboost_candidate_differentiation_v1.json",
+    "config_xgboost_v1.yaml": "config/xgboost_v1.yaml",
+    "feature_contract": "data/modeling/development_v1/xgboost_feature_contract_v1.json"
+  },
+  "status": "PRE_RESULT_AUTHORITATIVE_LOCK",
+  "xgboost_version": "2.1.4"
+}

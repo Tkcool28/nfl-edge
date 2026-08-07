@@ -1,0 +1,482 @@
+{
+  "artifact_version": "xgboost_candidate_differentiation_v1",
+  "base_sha": "a93bfe1f7ffaaac7bff8758bf278af1ce07149db",
+  "candidate_definition_hash": "0f3c568a4dddd6b91344c9c8af09b3807658ba1a716803fddfc0fb3406de419e",
+  "candidate_ids": [
+    "conservative",
+    "balanced",
+    "expressive"
+  ],
+  "candidate_order": [
+    "conservative",
+    "balanced",
+    "expressive"
+  ],
+  "candidate_param_hashes": {
+    "balanced": "3548924be19dcab76d07e4eeba34a23755a8b6fc43e44dd2db4c65f36ca2d1de",
+    "conservative": "a044ba76fd138bde1a52e364fd7fce5de042a2ddfdb6cdac22e592d4819ed58b",
+    "expressive": "48e65199f99e7c6d79c5cc29670d6a80012758b2c6fd1800ecf08c7d5ab0c54a"
+  },
+  "candidates": [
+    {
+      "candidate_id": "conservative",
+      "colsample_bytree": 0.6,
+      "depth": 2,
+      "gamma": 0.5,
+      "hypothesis": "Prefer stable broad effects and resist local interactions while remaining genuinely nonlinear.",
+      "interaction_complexity": "low",
+      "learning_rate": 0.05,
+      "max_delta_step": 1.0,
+      "max_rounds": 200,
+      "min_child_weight": 5.0,
+      "order_index": 0,
+      "parameter_hash": "a044ba76fd138bde1a52e364fd7fce5de042a2ddfdb6cdac22e592d4819ed58b",
+      "params": {
+        "colsample_bytree": 0.6,
+        "gamma": 0.5,
+        "learning_rate": 0.05,
+        "max_delta_step": 1.0,
+        "max_depth": 2,
+        "min_child_weight": 5.0,
+        "reg_alpha": 0.5,
+        "reg_lambda": 2.0,
+        "subsample": 0.8
+      },
+      "reg_alpha": 0.5,
+      "reg_lambda": 2.0,
+      "subsample": 0.8
+    },
+    {
+      "candidate_id": "balanced",
+      "colsample_bytree": 0.7,
+      "depth": 3,
+      "gamma": 0.2,
+      "hypothesis": "Capture moderate nonlinear and conditional football relationships with meaningful regularization.",
+      "interaction_complexity": "moderate",
+      "learning_rate": 0.05,
+      "max_delta_step": 0.0,
+      "max_rounds": 400,
+      "min_child_weight": 3.0,
+      "order_index": 1,
+      "parameter_hash": "3548924be19dcab76d07e4eeba34a23755a8b6fc43e44dd2db4c65f36ca2d1de",
+      "params": {
+        "colsample_bytree": 0.7,
+        "gamma": 0.2,
+        "learning_rate": 0.05,
+        "max_delta_step": 0.0,
+        "max_depth": 3,
+        "min_child_weight": 3.0,
+        "reg_alpha": 0.3,
+        "reg_lambda": 1.5,
+        "subsample": 0.85
+      },
+      "reg_alpha": 0.3,
+      "reg_lambda": 1.5,
+      "subsample": 0.85
+    },
+    {
+      "candidate_id": "expressive",
+      "colsample_bytree": 0.8,
+      "depth": 4,
+      "gamma": 0.0,
+      "hypothesis": "Search for higher-order conditional football relationships with chronological early stopping acting as the primary complexity brake.",
+      "interaction_complexity": "high",
+      "learning_rate": 0.03,
+      "max_delta_step": 0.0,
+      "max_rounds": 800,
+      "min_child_weight": 1.0,
+      "order_index": 2,
+      "parameter_hash": "48e65199f99e7c6d79c5cc29670d6a80012758b2c6fd1800ecf08c7d5ab0c54a",
+      "params": {
+        "colsample_bytree": 0.8,
+        "gamma": 0.0,
+        "learning_rate": 0.03,
+        "max_delta_step": 0.0,
+        "max_depth": 4,
+        "min_child_weight": 1.0,
+        "reg_alpha": 0.1,
+        "reg_lambda": 1.0,
+        "subsample": 0.9
+      },
+      "reg_alpha": 0.1,
+      "reg_lambda": 1.0,
+      "subsample": 0.9
+    }
+  ],
+  "config": {
+    "file_sha256": "6aa585239ea20c7cd43da5837128101c83c5ce25645c8769e391a4dfc175a3be",
+    "path": "config/xgboost_v1.yaml"
+  },
+  "created_from": "accepted Task 03C-2 artifacts only (feature contract + extraction); NOT from invalidated snapshot",
+  "demonstrations": {
+    "alpha_ordering": {
+      "balanced": 0.3,
+      "conservative": 0.5,
+      "constraint": "0.5 > 0.3 > 0.1",
+      "expressive": 0.1,
+      "satisfied": true
+    },
+    "child_weight_ordering": {
+      "balanced": 3.0,
+      "conservative": 5.0,
+      "constraint": "5 > 3 > 1",
+      "expressive": 1.0,
+      "satisfied": true
+    },
+    "colsample_bytree_ordering": {
+      "balanced": 0.7,
+      "conservative": 0.6,
+      "constraint": "0.60 < 0.70 < 0.80",
+      "expressive": 0.8,
+      "satisfied": true
+    },
+    "depth_ordering": {
+      "balanced": 3,
+      "conservative": 2,
+      "constraint": "2 < 3 < 4",
+      "expressive": 4,
+      "satisfied": true
+    },
+    "lambda_ordering": {
+      "balanced": 1.5,
+      "conservative": 2.0,
+      "constraint": "2.0 > 1.5 > 1.0",
+      "expressive": 1.0,
+      "satisfied": true
+    },
+    "max_rounds_ordering": {
+      "balanced": 400,
+      "conservative": 200,
+      "constraint": "200 < 400 < 800",
+      "expressive": 800,
+      "satisfied": true
+    },
+    "subsample_ordering": {
+      "balanced": 0.85,
+      "conservative": 0.8,
+      "constraint": "0.80 < 0.85 < 0.90",
+      "expressive": 0.9,
+      "satisfied": true
+    }
+  },
+  "extraction": {
+    "path": "data/derived/features_v1/xgboost_development_2018_2024.parquet",
+    "row_count": 1942,
+    "seasons": [
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "sha256": "fb4e45d28e337617043d578cb088e366aa217984bb200efca844e13111dc10f8"
+  },
+  "feature_contract": {
+    "extraction_row_count": 1942,
+    "extraction_sha256": "fb4e45d28e337617043d578cb088e366aa217984bb200efca844e13111dc10f8",
+    "feature_count": 132,
+    "feature_order_hash": "e33c5154a7ba3e9b89b8da55bf41dd6b8358b49b09baee14f0d9106c1cf4a09c",
+    "file_sha256": "4187bef6b76d71f4f89f3387ec4789512cccb6deacd6cd64520039c713919993",
+    "logical_contract_hash": "ebfcc2dc63c857c2ddc1db7eaaf1b374ebe2308decb5df7bd4794ad834ef8793",
+    "path": "data/modeling/development_v1/xgboost_feature_contract_v1.json"
+  },
+  "lock_status": "PRE_RESULT_AUTHORITATIVE_LOCK",
+  "logical_config_hash": "7c1bac58bff756b47303948304d170944424fb4728aca1e155e6862cb978d2a4",
+  "no_nfl_candidate_results_exist_at_lock_time": true,
+  "pairwise_differences": [
+    {
+      "details": [
+        {
+          "conservative_value": 0.6,
+          "different": true,
+          "field": "colsample_bytree",
+          "from": "conservative",
+          "from_value": 0.6,
+          "to": "balanced",
+          "to_value": 0.7
+        },
+        {
+          "conservative_value": 0.5,
+          "different": true,
+          "field": "gamma",
+          "from": "conservative",
+          "from_value": 0.5,
+          "to": "balanced",
+          "to_value": 0.2
+        },
+        {
+          "conservative_value": 1.0,
+          "different": true,
+          "field": "max_delta_step",
+          "from": "conservative",
+          "from_value": 1.0,
+          "to": "balanced",
+          "to_value": 0.0
+        },
+        {
+          "conservative_value": 2,
+          "different": true,
+          "field": "max_depth",
+          "from": "conservative",
+          "from_value": 2,
+          "to": "balanced",
+          "to_value": 3
+        },
+        {
+          "conservative_value": 5.0,
+          "different": true,
+          "field": "min_child_weight",
+          "from": "conservative",
+          "from_value": 5.0,
+          "to": "balanced",
+          "to_value": 3.0
+        },
+        {
+          "conservative_value": 0.5,
+          "different": true,
+          "field": "reg_alpha",
+          "from": "conservative",
+          "from_value": 0.5,
+          "to": "balanced",
+          "to_value": 0.3
+        },
+        {
+          "conservative_value": 2.0,
+          "different": true,
+          "field": "reg_lambda",
+          "from": "conservative",
+          "from_value": 2.0,
+          "to": "balanced",
+          "to_value": 1.5
+        },
+        {
+          "conservative_value": 0.8,
+          "different": true,
+          "field": "subsample",
+          "from": "conservative",
+          "from_value": 0.8,
+          "to": "balanced",
+          "to_value": 0.85
+        }
+      ],
+      "differing_fields": [
+        "colsample_bytree",
+        "gamma",
+        "max_delta_step",
+        "max_depth",
+        "min_child_weight",
+        "reg_alpha",
+        "reg_lambda",
+        "subsample"
+      ],
+      "from": "conservative",
+      "pair": "conservative vs balanced",
+      "to": "balanced"
+    },
+    {
+      "details": [
+        {
+          "conservative_value": 0.6,
+          "different": true,
+          "field": "colsample_bytree",
+          "from": "conservative",
+          "from_value": 0.6,
+          "to": "expressive",
+          "to_value": 0.8
+        },
+        {
+          "conservative_value": 0.5,
+          "different": true,
+          "field": "gamma",
+          "from": "conservative",
+          "from_value": 0.5,
+          "to": "expressive",
+          "to_value": 0.0
+        },
+        {
+          "conservative_value": 0.05,
+          "different": true,
+          "field": "learning_rate",
+          "from": "conservative",
+          "from_value": 0.05,
+          "to": "expressive",
+          "to_value": 0.03
+        },
+        {
+          "conservative_value": 1.0,
+          "different": true,
+          "field": "max_delta_step",
+          "from": "conservative",
+          "from_value": 1.0,
+          "to": "expressive",
+          "to_value": 0.0
+        },
+        {
+          "conservative_value": 2,
+          "different": true,
+          "field": "max_depth",
+          "from": "conservative",
+          "from_value": 2,
+          "to": "expressive",
+          "to_value": 4
+        },
+        {
+          "conservative_value": 5.0,
+          "different": true,
+          "field": "min_child_weight",
+          "from": "conservative",
+          "from_value": 5.0,
+          "to": "expressive",
+          "to_value": 1.0
+        },
+        {
+          "conservative_value": 0.5,
+          "different": true,
+          "field": "reg_alpha",
+          "from": "conservative",
+          "from_value": 0.5,
+          "to": "expressive",
+          "to_value": 0.1
+        },
+        {
+          "conservative_value": 2.0,
+          "different": true,
+          "field": "reg_lambda",
+          "from": "conservative",
+          "from_value": 2.0,
+          "to": "expressive",
+          "to_value": 1.0
+        },
+        {
+          "conservative_value": 0.8,
+          "different": true,
+          "field": "subsample",
+          "from": "conservative",
+          "from_value": 0.8,
+          "to": "expressive",
+          "to_value": 0.9
+        }
+      ],
+      "differing_fields": [
+        "colsample_bytree",
+        "gamma",
+        "learning_rate",
+        "max_delta_step",
+        "max_depth",
+        "min_child_weight",
+        "reg_alpha",
+        "reg_lambda",
+        "subsample"
+      ],
+      "from": "conservative",
+      "pair": "conservative vs expressive",
+      "to": "expressive"
+    },
+    {
+      "details": [
+        {
+          "conservative_value": null,
+          "different": true,
+          "field": "colsample_bytree",
+          "from": "balanced",
+          "from_value": 0.7,
+          "to": "expressive",
+          "to_value": 0.8
+        },
+        {
+          "conservative_value": null,
+          "different": true,
+          "field": "gamma",
+          "from": "balanced",
+          "from_value": 0.2,
+          "to": "expressive",
+          "to_value": 0.0
+        },
+        {
+          "conservative_value": null,
+          "different": true,
+          "field": "learning_rate",
+          "from": "balanced",
+          "from_value": 0.05,
+          "to": "expressive",
+          "to_value": 0.03
+        },
+        {
+          "conservative_value": null,
+          "different": true,
+          "field": "max_depth",
+          "from": "balanced",
+          "from_value": 3,
+          "to": "expressive",
+          "to_value": 4
+        },
+        {
+          "conservative_value": null,
+          "different": true,
+          "field": "min_child_weight",
+          "from": "balanced",
+          "from_value": 3.0,
+          "to": "expressive",
+          "to_value": 1.0
+        },
+        {
+          "conservative_value": null,
+          "different": true,
+          "field": "reg_alpha",
+          "from": "balanced",
+          "from_value": 0.3,
+          "to": "expressive",
+          "to_value": 0.1
+        },
+        {
+          "conservative_value": null,
+          "different": true,
+          "field": "reg_lambda",
+          "from": "balanced",
+          "from_value": 1.5,
+          "to": "expressive",
+          "to_value": 1.0
+        },
+        {
+          "conservative_value": null,
+          "different": true,
+          "field": "subsample",
+          "from": "balanced",
+          "from_value": 0.85,
+          "to": "expressive",
+          "to_value": 0.9
+        }
+      ],
+      "differing_fields": [
+        "colsample_bytree",
+        "gamma",
+        "learning_rate",
+        "max_depth",
+        "min_child_weight",
+        "reg_alpha",
+        "reg_lambda",
+        "subsample"
+      ],
+      "from": "balanced",
+      "pair": "balanced vs expressive",
+      "to": "expressive"
+    }
+  ],
+  "shared_settings": {
+    "early_stopping_rounds": 50,
+    "eval_metric": "logloss",
+    "min_training_blocks": 2,
+    "min_training_rows": 32,
+    "min_validation_blocks": 2,
+    "min_validation_rows": 21,
+    "nthread": 1,
+    "objective": "binary:logistic",
+    "probability_epsilon": 1e-06,
+    "seed": 42,
+    "tree_method": "hist",
+    "validation_block_count": 2
+  },
+  "shared_settings_hash": "b1bf9d17f0747f264f4d6dfec3323133e753106009890224d79c7527d034cf97"
+}
