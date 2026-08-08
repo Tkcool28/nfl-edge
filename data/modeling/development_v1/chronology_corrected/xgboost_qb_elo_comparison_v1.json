@@ -1,0 +1,41 @@
+{
+  "common_rows_with_qb_elo": 1655,
+  "qb_elo_metrics": {
+    "scored_rows": 1655,
+    "warmup_rows": 0,
+    "brier_score": 0.222823,
+    "logloss": 0.637241,
+    "accuracy": 0.636858,
+    "roc_auc": 0.688594,
+    "mean_probability": 0.564971,
+    "std_probability": 0.163617,
+    "min_probability": 0.109014,
+    "max_probability": 0.925477
+  },
+  "pairwise_correlations": {
+    "qb_elo_vs_conservative": {
+      "common_rows": 1655,
+      "pearson_correlation": 0.67349
+    },
+    "qb_elo_vs_balanced": {
+      "common_rows": 1655,
+      "pearson_correlation": 0.652752
+    },
+    "qb_elo_vs_expressive": {
+      "common_rows": 1655,
+      "pearson_correlation": 0.622993
+    },
+    "conservative_vs_balanced": {
+      "common_rows": 1655,
+      "pearson_correlation": 0.907886
+    },
+    "conservative_vs_expressive": {
+      "common_rows": 1655,
+      "pearson_correlation": 0.885323
+    },
+    "balanced_vs_expressive": {
+      "common_rows": 1655,
+      "pearson_correlation": 0.8952
+    }
+  }
+}

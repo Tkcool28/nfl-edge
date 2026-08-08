@@ -1,0 +1,74 @@
+{
+  "manifest_name": "xgboost_03c4b_first_run_preservation_manifest",
+  "STATUS": "FIRST_RUN_PRESERVED_BEFORE_AUC_REMEDIATION",
+  "notes": "Records SHA-256 and logical-content hashes of ALL first-run Task 03C-4B artifacts BEFORE the authorized ROC-AUC reporting defect remediation. These exact bytes are the preserved first-run evidence. The raw prediction parquet and block-state parquet are treated as immutable and MUST NOT be overwritten.",
+  "lock_hashes": {
+    "canonical_config_sha256": "6aa585239ea20c7cd43da5837128101c83c5ce25645c8769e391a4dfc175a3be",
+    "candidate_evidence_sha256": "faf89503d42527e899ff6441f022298433aed61df812d3bead695fc1dce25e01",
+    "lock_manifest_sha256": "e0f2d54734e1cf236ea20e573857367c4df9e12fa251b9bcf1762a19cc127af7",
+    "feature_contract_sha256": "4187bef6b76d71f4f89f3387ec4789512cccb6deacd6cd64520039c713919993",
+    "extraction_sha256": "fb4e45d28e337617043d578cb088e366aa217984bb200efca844e13111dc10f8",
+    "extraction_rows": 1942,
+    "feature_count": 132,
+    "feature_order_hash": "e33c5154a7ba3e9b89b8da55bf41dd6b8358b49b09baee14f0d9106c1cf4a09c",
+    "shared_settings_hash": "b1bf9d17f0747f264f4d6dfec3323133e753106009890224d79c7527d034cf97"
+  },
+  "candidate_lock_param_hashes": {
+    "conservative": "a044ba76fd138bde1a52e364fd7fce5de042a2ddfdb6cdac22e592d4819ed58b",
+    "balanced": "3548924be19dcab76d07e4eeba34a23755a8b6fc43e44dd2db4c65f36ca2d1de",
+    "expressive": "48e65199f99e7c6d79c5cc29670d6a80012758b2c6fd1800ecf08c7d5ab0c54a"
+  },
+  "first_run_engine_sha256": "c1e44f182ead99b5e045ffda0c297e797f1c835289994a1e59fdf332c8b60b5d",
+  "first_run_execution_script_pre_fix_sha256": "b10416b56481acd0a3c7f137e93e5f1c111944390b1be0192c62f5638b3ca9fc",
+  "first_run_test_sha256": "0deed41b651a37111f4a89e0469881d86b850ae09052d9b62aa0cff4c0cc5c87",
+  "first_run_predictions": {
+    "path": "data/modeling/development_v1/xgboost_candidate_predictions_2018_2024.parquet",
+    "sha256": "aa13da5fe2056fdb483c95e4a4568506fd2a36b059983c4556d2680124919b6e",
+    "logical_hash": "1484cd715e37d8005dd2e72bf44a6f7766fd2a528a46365a083dea611840ac24",
+    "probability_sequence_hash": "9512a391c198b48704c8b59eff52e7a48d1b8a3a0345086bdd0d7bb142a0661d",
+    "rows": 5826
+  },
+  "first_run_block_state": {
+    "path": "data/modeling/development_v1/xgboost_block_state_2018_2024.parquet",
+    "sha256": "0b229ffdce058081004390fd0a5bbbba73e838a190edd217c4aa54e2dba40365",
+    "logical_hash": "e606a3cabd7683434559e8b177d8da9cfeca2f6f187f0b58d289a795bf00e3e4",
+    "best_iteration_sequence_hash": "22872a7f7af30aac6b401a17513e6dfa8d6d6ff1904eb5e1f35ec314e475dbe7",
+    "final_refit_rounds_sequence_hash": "ad1ec320fc334c1bd13fe8d620e860f1ae8d2e172be0f98f10a9d5c24f03f7b0",
+    "rows": 453
+  },
+  "derived_artifact_hashes": {
+    "xgboost_development_run_manifest_v1.json": "81684191d75276a622638c249b37b97139be158e7f717ee4d7c22b9bdd8e7a66",
+    "xgboost_candidate_metrics_v1.json": "74bb6922c955057535a8ca6952dcc3ff03dd4f471beda629cf2988fc2ea1a2a5",
+    "xgboost_reliability_tables_v1.json": "bb686635df0dcc8255f8ca13e69c3d438f19d75a19da961871f827118d236fe6",
+    "xgboost_season_metrics_v1.json": "079d434c3a9b067443b6df36adc0e49a855a223b1bef604bec47b2f708a9d77a",
+    "xgboost_early_late_metrics_v1.json": "e83e1676462e4d510cb1245b0f91b964c1d6a28382fbe56fd98f7cc173b92621",
+    "xgboost_probability_extremity_v1.json": "cd0f4985016bc89c0d811b21aa9ed620556b533998d5f17b7001934e5e4a659a",
+    "xgboost_iteration_summary_v1.json": "e55b8d48575a616dae3c83f09f3b4703208645900767cdd72e53cc191c5e9f2c",
+    "xgboost_common_row_comparison_v1.json": "9ba8a10acd623fed645bcc7ead909826c48c9883a44664bf29baa0b26a034598",
+    "xgboost_qb_elo_comparison_v1.json": "bbd944d98e399c6d894733a771a05415716192ccb9a26bc18d415012142fe3d5",
+    "xgboost_expected_margin_context_v1.json": "bfc0faf34492d0b21ca00419eabe794ef2b33031bcde2f83796a42b44fb111ba",
+    "xgboost_blocked_bootstrap_v1.json": "481eda0459829ad78b16a304a94f232607480681d264acba1673b03b2617adb5"
+  },
+  "row_counts": {
+    "total_rows": 1942,
+    "scored": {
+      "conservative": 1651,
+      "balanced": 1651,
+      "expressive": 1651
+    },
+    "warm_up": {
+      "conservative": 291,
+      "balanced": 291,
+      "expressive": 291
+    },
+    "global_scored_row_count": 4953,
+    "global_warmup_row_count": 864,
+    "prediction_row_count": 5826,
+    "block_state_row_count": 453
+  },
+  "flags": {
+    "2025_HOLDOUT_ACCESSED": false,
+    "MARKET_DATA_USED": false,
+    "CANDIDATE_SELECTION_PERFORMED": false
+  }
+}

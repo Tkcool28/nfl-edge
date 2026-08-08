@@ -8,6 +8,11 @@ dependencies = [
     "requests==2.33.0",
 ]
 
+[project.optional-dependencies]
+model-development = [
+    "xgboost==2.1.4",
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]

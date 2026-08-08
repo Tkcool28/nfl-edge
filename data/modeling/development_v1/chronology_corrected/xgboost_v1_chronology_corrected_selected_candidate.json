@@ -1,0 +1,83 @@
+{
+  "aggregate_metrics": {
+    "accuracy": 0.607855,
+    "brier_score": 0.232639,
+    "logloss": 0.657508,
+    "max_probability": 0.921787,
+    "mean_probability": 0.556618,
+    "min_probability": 0.121301,
+    "roc_auc": 0.649541,
+    "scored_rows": 1655,
+    "std_probability": 0.130179,
+    "warmup_rows": 0
+  },
+  "artifact": "xgboost_v1_chronology_corrected_selected_candidate",
+  "boundaries": {
+    "2025_HOLDOUT_PERFORMANCE_EVALUATED": false,
+    "2025_HOLDOUT_USED_FOR_RETUNING": false,
+    "2025_HOLDOUT_USED_FOR_SELECTION": false,
+    "MARKET_DATA_USED": false,
+    "retuning_performed": false
+  },
+  "candidate_pair_bootstrap": {
+    "conservative_minus_balanced": {
+      "mean_difference": -0.002327,
+      "median_difference": -0.002312,
+      "n_bootstrap_blocks": 119,
+      "n_resamples": 1000,
+      "percentile_2_5": -0.005147,
+      "percentile_97_5": 0.000345,
+      "proportion_favoring_a": 0.953,
+      "proportion_favoring_b": 0.047
+    },
+    "conservative_minus_expressive": {
+      "mean_difference": -0.003813,
+      "median_difference": -0.00374,
+      "n_bootstrap_blocks": 119,
+      "n_resamples": 1000,
+      "percentile_2_5": -0.006726,
+      "percentile_97_5": -0.00109,
+      "proportion_favoring_a": 0.995,
+      "proportion_favoring_b": 0.005
+    }
+  },
+  "chronology_corrected_evidence_source": "chronology_corrected/",
+  "chronology_erratum_sha256": "3cfe7cdb63604c98383621213cb9f507280a433973bbe84dbf38dee2a66c0620",
+  "chronology_remediation_audit_sha256": "33e7b8fb026a4af7daa665ce42336519fd10ed22e0daeac7890861faa5f02d1a",
+  "expected_calibration_error": 0.026433,
+  "old_selection_status": "INVALIDATED_BY_CHRONOLOGY_DEFECT",
+  "qb_elo_comparison": {
+    "common_rows": 1655,
+    "qb_elo_metrics": {
+      "accuracy": 0.636858,
+      "brier_score": 0.222823,
+      "logloss": 0.637241,
+      "max_probability": 0.925477,
+      "mean_probability": 0.564971,
+      "min_probability": 0.109014,
+      "roc_auc": 0.688594,
+      "scored_rows": 1655,
+      "std_probability": 0.163617,
+      "warmup_rows": 0
+    }
+  },
+  "row_accounting": {
+    "binary_scored_rows": 1655,
+    "fitted_blocks": 119,
+    "identity": "1655 + 284 + 3 = 1942",
+    "tie_or_nonbinary_rows": 3,
+    "total_extraction_rows": 1942,
+    "warmup_blocks": 32,
+    "warmup_rows": 284
+  },
+  "selected_candidate": "conservative",
+  "selected_parameter_hash": "a044ba76fd138bde1a52e364fd7fce5de042a2ddfdb6cdac22e592d4819ed58b",
+  "selection_rationale": [
+    "best Brier, logloss, ROC-AUC, and ECE among the frozen candidates",
+    "bootstrap favors conservative over expressive in 99.5% of resamples",
+    "bootstrap favors conservative over balanced in 95.3% of resamples",
+    "balanced slightly higher threshold accuracy does not outweigh probability-quality measures",
+    "predeclared simplicity/stability tie-break is supporting evidence only"
+  ],
+  "status": "XGBOOST_V1_CONSERVATIVE_SELECTED_AFTER_CHRONOLOGY_CORRECTION"
+}

@@ -1,0 +1,152 @@
+{
+  "conservative": {
+    "early_weeks_1_4": {
+      "scored_rows": 189,
+      "warmup_rows": 0,
+      "brier_score": 0.241664,
+      "logloss": 0.677646,
+      "accuracy": 0.571429,
+      "roc_auc": 0.64764,
+      "mean_probability": 0.54891,
+      "std_probability": 0.104293,
+      "min_probability": 0.243077,
+      "max_probability": 0.853028
+    },
+    "middle_weeks_5_9": {
+      "scored_rows": 503,
+      "warmup_rows": 0,
+      "brier_score": 0.235557,
+      "logloss": 0.663088,
+      "accuracy": 0.604374,
+      "roc_auc": 0.636441,
+      "mean_probability": 0.554497,
+      "std_probability": 0.125389,
+      "min_probability": 0.121301,
+      "max_probability": 0.921787
+    },
+    "late_weeks_10_plus": {
+      "scored_rows": 963,
+      "warmup_rows": 0,
+      "brier_score": 0.229343,
+      "logloss": 0.65064,
+      "accuracy": 0.616822,
+      "roc_auc": 0.656566,
+      "mean_probability": 0.559238,
+      "std_probability": 0.136954,
+      "min_probability": 0.126014,
+      "max_probability": 0.902107
+    },
+    "postseason": {
+      "scored_rows": 58,
+      "warmup_rows": 0,
+      "brier_score": 0.227244,
+      "logloss": 0.645007,
+      "accuracy": 0.62069,
+      "roc_auc": 0.616162,
+      "mean_probability": 0.565604,
+      "std_probability": 0.103192,
+      "min_probability": 0.28535,
+      "max_probability": 0.793826
+    }
+  },
+  "balanced": {
+    "early_weeks_1_4": {
+      "scored_rows": 189,
+      "warmup_rows": 0,
+      "brier_score": 0.242754,
+      "logloss": 0.681851,
+      "accuracy": 0.566138,
+      "roc_auc": 0.632135,
+      "mean_probability": 0.554812,
+      "std_probability": 0.121727,
+      "min_probability": 0.133754,
+      "max_probability": 0.894684
+    },
+    "middle_weeks_5_9": {
+      "scored_rows": 503,
+      "warmup_rows": 0,
+      "brier_score": 0.237933,
+      "logloss": 0.670822,
+      "accuracy": 0.600398,
+      "roc_auc": 0.628279,
+      "mean_probability": 0.555782,
+      "std_probability": 0.136419,
+      "min_probability": 0.075782,
+      "max_probability": 0.954302
+    },
+    "late_weeks_10_plus": {
+      "scored_rows": 963,
+      "warmup_rows": 0,
+      "brier_score": 0.232214,
+      "logloss": 0.658386,
+      "accuracy": 0.627207,
+      "roc_auc": 0.649961,
+      "mean_probability": 0.557241,
+      "std_probability": 0.143832,
+      "min_probability": 0.07555,
+      "max_probability": 0.925084
+    },
+    "postseason": {
+      "scored_rows": 58,
+      "warmup_rows": 0,
+      "brier_score": 0.225914,
+      "logloss": 0.641372,
+      "accuracy": 0.637931,
+      "roc_auc": 0.635732,
+      "mean_probability": 0.56219,
+      "std_probability": 0.113296,
+      "min_probability": 0.285206,
+      "max_probability": 0.791461
+    }
+  },
+  "expressive": {
+    "early_weeks_1_4": {
+      "scored_rows": 189,
+      "warmup_rows": 0,
+      "brier_score": 0.249116,
+      "logloss": 0.694336,
+      "accuracy": 0.582011,
+      "roc_auc": 0.617584,
+      "mean_probability": 0.562018,
+      "std_probability": 0.107928,
+      "min_probability": 0.216123,
+      "max_probability": 0.852506
+    },
+    "middle_weeks_5_9": {
+      "scored_rows": 503,
+      "warmup_rows": 0,
+      "brier_score": 0.239237,
+      "logloss": 0.672061,
+      "accuracy": 0.596421,
+      "roc_auc": 0.62284,
+      "mean_probability": 0.566463,
+      "std_probability": 0.133131,
+      "min_probability": 0.157346,
+      "max_probability": 0.954443
+    },
+    "late_weeks_10_plus": {
+      "scored_rows": 963,
+      "warmup_rows": 0,
+      "brier_score": 0.232862,
+      "logloss": 0.6597,
+      "accuracy": 0.62513,
+      "roc_auc": 0.643936,
+      "mean_probability": 0.558889,
+      "std_probability": 0.140917,
+      "min_probability": 0.075396,
+      "max_probability": 0.914202
+    },
+    "postseason": {
+      "scored_rows": 58,
+      "warmup_rows": 0,
+      "brier_score": 0.229574,
+      "logloss": 0.650192,
+      "accuracy": 0.655172,
+      "roc_auc": 0.619949,
+      "mean_probability": 0.561237,
+      "std_probability": 0.104705,
+      "min_probability": 0.331433,
+      "max_probability": 0.796962
+    }
+  }
+}

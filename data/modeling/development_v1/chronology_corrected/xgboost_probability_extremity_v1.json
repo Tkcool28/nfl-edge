@@ -1,0 +1,47 @@
+{
+  "conservative": {
+    "total_scored": 1655,
+    "below_0.10": 0,
+    "below_0.20": 7,
+    "above_0.80": 46,
+    "above_0.90": 2,
+    "outside_0.25_0.75": 132,
+    "outside_0.10_0.90": 2,
+    "pct_below_0.10": 0.0,
+    "pct_below_0.20": 0.42,
+    "pct_above_0.80": 2.78,
+    "pct_above_0.90": 0.12,
+    "pct_outside_0_25_0_75": 7.98,
+    "pct_outside_0_10_0_90": 0.12
+  },
+  "balanced": {
+    "total_scored": 1655,
+    "below_0.10": 3,
+    "below_0.20": 15,
+    "above_0.80": 61,
+    "above_0.90": 6,
+    "outside_0.25_0.75": 163,
+    "outside_0.10_0.90": 9,
+    "pct_below_0.10": 0.18,
+    "pct_below_0.20": 0.91,
+    "pct_above_0.80": 3.69,
+    "pct_above_0.90": 0.36,
+    "pct_outside_0_25_0_75": 9.85,
+    "pct_outside_0_10_0_90": 0.54
+  },
+  "expressive": {
+    "total_scored": 1655,
+    "below_0.10": 2,
+    "below_0.20": 13,
+    "above_0.80": 74,
+    "above_0.90": 5,
+    "outside_0.25_0.75": 179,
+    "outside_0.10_0.90": 7,
+    "pct_below_0.10": 0.12,
+    "pct_below_0.20": 0.79,
+    "pct_above_0.80": 4.47,
+    "pct_above_0.90": 0.3,
+    "pct_outside_0_25_0_75": 10.82,
+    "pct_outside_0_10_0_90": 0.42
+  }
+}

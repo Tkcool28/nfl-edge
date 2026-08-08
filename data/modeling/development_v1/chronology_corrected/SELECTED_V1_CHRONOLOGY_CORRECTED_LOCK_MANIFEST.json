@@ -1,0 +1,30 @@
+{
+  "artifact": "xgboost_v1_chronology_corrected_selected_lock",
+  "corrected_evidence": {
+    "block_state_sha256": "9d99382ed760d463792724d96bd0fc7ff546b15a39b9bf0e423a1ac0fb354533",
+    "chronology_audit_sha256": "33e7b8fb026a4af7daa665ce42336519fd10ed22e0daeac7890861faa5f02d1a",
+    "chronology_erratum_sha256": "3cfe7cdb63604c98383621213cb9f507280a433973bbe84dbf38dee2a66c0620",
+    "future_stack_candidates_sha256": "986edfb1a40c263206a2fb4a11a1c7ea711ec16c24e8a12d3b4387b49e7cd8f2",
+    "prediction_sha256": "ad6fb5d53798039dae848160cdb09b1371a0796d68fa9d67521fa02535906f6f",
+    "scorecard_json_sha256": "2036670f892e5535404bb0bf56c73a88868fb9786dbc7e62139201aca67a90ab",
+    "scorecard_md_sha256": "ec5949ee381281ef48190b0a4816ce45b69483de0e66f49a85560b031bfba225",
+    "selected_artifact_sha256": "de674cdf44498ce13cea3b6dbd5b6d742d9edd5414c739d3bd3441fb56f50c80"
+  },
+  "old_lock_status": "SUPERSEDED_INVALIDATED_BY_CHRONOLOGY_DEFECT",
+  "row_accounting": {
+    "binary_scored_rows": 1655,
+    "fitted_blocks": 119,
+    "identity": "1655 + 284 + 3 = 1942",
+    "tie_or_nonbinary_rows": 3,
+    "total_extraction_rows": 1942,
+    "warmup_blocks": 32,
+    "warmup_rows": 284
+  },
+  "selected_candidate": "conservative",
+  "selected_parameter_hash": "a044ba76fd138bde1a52e364fd7fce5de042a2ddfdb6cdac22e592d4819ed58b",
+  "status": "XGBOOST_V1_CONSERVATIVE_SELECTED_AFTER_CHRONOLOGY_CORRECTION",
+  "superseded_historical_locks": [
+    "xgboost_selected_v1_lock/SELECTED_V1_LOCK_MANIFEST.json",
+    "xgboost_selected_v1_lock/SELECTED_V1_LOCK_MANIFEST_V2.json"
+  ]
+}

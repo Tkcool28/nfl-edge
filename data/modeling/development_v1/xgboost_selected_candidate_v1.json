@@ -1,0 +1,250 @@
+{
+  "adjudication_artifact": "xgboost_selected_candidate_v1",
+  "status": "SELECTED_DEVELOPMENT_CANDIDATE",
+  "selected_candidate": "conservative",
+  "selection_datetime_utc": "2026-08-07T18:06:17.580818+00:00",
+  "selection_basis": {
+    "common_row_count": 1651,
+    "conservative_common_row_metrics": {
+      "brier": 0.232614,
+      "logloss": 0.657516,
+      "accuracy": 0.614779,
+      "roc_auc": 0.648708,
+      "ece": 0.024647
+    },
+    "balanced_common_row_metrics": {
+      "brier": 0.234517,
+      "logloss": 0.661773,
+      "accuracy": 0.604482,
+      "roc_auc": 0.640765,
+      "ece": 0.026753
+    },
+    "expressive_common_row_metrics": {
+      "brier": 0.234775,
+      "logloss": 0.663203,
+      "accuracy": 0.601454,
+      "roc_auc": 0.640218,
+      "ece": 0.02531
+    },
+    "reasons": [
+      "lowest aggregate Brier",
+      "lowest aggregate logloss",
+      "highest accuracy",
+      "highest ROC-AUC",
+      "lowest reported ECE",
+      "lowest Brier in 5 of 7 seasons",
+      "performs best in Weeks 1-4",
+      "materially best in Weeks 5-9",
+      "expressive only has a small late-season advantage in Weeks 10+",
+      "blocked bootstrap favors conservative over balanced in 91% of resamples",
+      "blocked bootstrap favors conservative over expressive in 96.3% of resamples",
+      "XGB-vs-XGB 95% intervals slightly overlap zero; simpler/stabler candidate preferred under predeclared tie-break",
+      "no candidate setting altered after results were seen"
+    ],
+    "not_claimed": "No statistical significance is claimed where the 95% interval crosses zero."
+  },
+  "selection_rationale": "Conservative is the selected XGBoost V1 candidate because it has the strongest aggregate predictive performance and broadest seasonal stability, while the blocked-bootstrap evidence strongly favors it over the other XGBoost candidates without establishing an absolute separation at the 95% interval level. Under the predeclared simplicity/stability tie-break rule, conservative is the appropriate V1 selection.",
+  "qb_elo_status": {
+    "conclusion": "XGBOOST_V1_SELECTED_BUT_WEAKER_THAN_QB_ELO_STANDALONE",
+    "common_row_count": 1651,
+    "qb_elo_common_row_metrics": {
+      "brier": 0.222546,
+      "logloss": 0.636666,
+      "accuracy": 0.637795,
+      "roc_auc": 0.689392
+    },
+    "selected_xgboost_conservative_common_row_metrics": {
+      "brier": 0.232614,
+      "logloss": 0.657516,
+      "accuracy": 0.614779,
+      "roc_auc": 0.648708
+    },
+    "blocked_bootstrap_conservative_minus_qb_elo": {
+      "mean_difference": 0.009938,
+      "median_difference": 0.009826,
+      "percentile_2_5": 0.004496,
+      "percentile_97_5": 0.015656,
+      "proportion_favoring_xgb": 0.0,
+      "proportion_favoring_qb_elo": 1.0,
+      "n_resamples": 1000
+    },
+    "note": "QB-Elo is standalone-stronger. Selected model remains useful as a distinct nonlinear candidate / future ensemble component. Not a failure."
+  },
+  "expected_margin_context": {
+    "prior_conclusion": "EXPECTED_MARGIN_V1_IMPLEMENTED_BUT_WEAK",
+    "common_rows": 1412,
+    "metrics": {
+      "scored_rows": 1412,
+      "warmup_rows": 0,
+      "brier_score": 0.23714,
+      "logloss": 0.667614,
+      "accuracy": 0.602691,
+      "roc_auc": 0.627902,
+      "mean_probability": 0.536095,
+      "std_probability": 0.124639,
+      "min_probability": 0.118022,
+      "max_probability": 0.878211
+    },
+    "note": "EM common-row set is 1412, not 1651; not compared directly against the 1651-row table."
+  },
+  "frozen_candidate_metrics": {
+    "conservative": {
+      "scored_rows": 1651,
+      "warmup_rows": 0,
+      "brier_score": 0.232614,
+      "logloss": 0.657516,
+      "accuracy": 0.614779,
+      "roc_auc": 0.648708,
+      "mean_probability": 0.555929,
+      "std_probability": 0.131645,
+      "min_probability": 0.164227,
+      "max_probability": 0.929974
+    },
+    "balanced": {
+      "scored_rows": 1651,
+      "warmup_rows": 0,
+      "brier_score": 0.234517,
+      "logloss": 0.661773,
+      "accuracy": 0.604482,
+      "roc_auc": 0.640765,
+      "mean_probability": 0.556277,
+      "std_probability": 0.13867,
+      "min_probability": 0.108536,
+      "max_probability": 0.971452
+    },
+    "expressive": {
+      "scored_rows": 1651,
+      "warmup_rows": 0,
+      "brier_score": 0.234775,
+      "logloss": 0.663203,
+      "accuracy": 0.601454,
+      "roc_auc": 0.640218,
+      "mean_probability": 0.559001,
+      "std_probability": 0.135018,
+      "min_probability": 0.094778,
+      "max_probability": 0.898889
+    }
+  },
+  "pairwise_blocked_bootstrap": {
+    "conservative_minus_balanced": {
+      "mean_difference": -0.001939,
+      "median_difference": -0.001933,
+      "percentile_2_5": -0.004876,
+      "percentile_97_5": 0.000929,
+      "proportion_favoring_a": 0.91,
+      "proportion_favoring_b": 0.09,
+      "n_resamples": 1000,
+      "n_bootstrap_blocks": 118
+    },
+    "conservative_minus_expressive": {
+      "mean_difference": -0.002646,
+      "median_difference": -0.002613,
+      "percentile_2_5": -0.005626,
+      "percentile_97_5": 0.000169,
+      "proportion_favoring_a": 0.963,
+      "proportion_favoring_b": 0.037,
+      "n_resamples": 1000,
+      "n_bootstrap_blocks": 118
+    },
+    "balanced_minus_expressive": {
+      "mean_difference": -0.000745,
+      "median_difference": -0.000736,
+      "percentile_2_5": -0.003342,
+      "percentile_97_5": 0.001907,
+      "proportion_favoring_a": 0.716,
+      "proportion_favoring_b": 0.284,
+      "n_resamples": 1000,
+      "n_bootstrap_blocks": 118
+    }
+  },
+  "prediction_correlations": {
+    "qb_elo_vs_conservative": {
+      "common_rows": 1651,
+      "pearson_correlation": 0.676192
+    },
+    "qb_elo_vs_balanced": {
+      "common_rows": 1651,
+      "pearson_correlation": 0.661676
+    },
+    "qb_elo_vs_expressive": {
+      "common_rows": 1651,
+      "pearson_correlation": 0.64236
+    },
+    "conservative_vs_balanced": {
+      "common_rows": 1651,
+      "pearson_correlation": 0.928353
+    },
+    "conservative_vs_expressive": {
+      "common_rows": 1651,
+      "pearson_correlation": 0.902098
+    },
+    "balanced_vs_expressive": {
+      "common_rows": 1651,
+      "pearson_correlation": 0.922789
+    }
+  },
+  "calibration_terminology_audit": {
+    "ece_is_primary_calibration": true,
+    "reliability_bins_are_primary_calibration": true,
+    "reported_intercept_formula": "intercept = mean(y) - slope * mean(logit(p)), with y=tie-excluded binary target and logit(p)=ln(p/(1-p))",
+    "reported_slope_formula": "slope = cov(logit(p), y, ddof=1) / var(logit(p), ddof=1)",
+    "intercept_slope_are_conventional_logistic_calibration": false,
+    "mathematical_meaning": "OLS (ordinary least squares) linear-regression coefficients of the binary outcome y on logit(predicted probability): y = a + b*logit(p). They are NOT conventional calibration intercept/slope (which would fit logit(P(y=1)) = a + b*logit(p) via maximum-likelihood logistic regression). Referred to in this artifact as 'ols_outcome_on_logit_intercept' / 'ols_outcome_on_logit_slope'.",
+    "renamed_as": {
+      "calibration_intercept": "ols_outcome_on_logit_intercept",
+      "calibration_slope": "ols_outcome_on_logit_slope"
+    },
+    "note": "ECE and reliability bins are the authoritative calibration evidence. The OLS stats are retained as descriptive diagnostics only; no post-hoc calibrator was fit."
+  },
+  "hashes": {
+    "canonical_config_sha256": "6aa585239ea20c7cd43da5837128101c83c5ce25645c8769e391a4dfc175a3be",
+    "selected_parameter_hash": "a044ba76fd138bde1a52e364fd7fce5de042a2ddfdb6cdac22e592d4819ed58b",
+    "candidate_definition_hash": "0f3c568a4dddd6b91344c9c8af09b3807658ba1a716803fddfc0fb3406de419e",
+    "shared_settings_hash": "b1bf9d17f0747f264f4d6dfec3323133e753106009890224d79c7527d034cf97",
+    "feature_contract_sha256": "4187bef6b76d71f4f89f3387ec4789512cccb6deacd6cd64520039c713919993",
+    "feature_order_hash": "e33c5154a7ba3e9b89b8da55bf41dd6b8358b49b09baee14f0d9106c1cf4a09c",
+    "extraction_sha256": "fb4e45d28e337617043d578cb088e366aa217984bb200efca844e13111dc10f8",
+    "prediction_artifact_sha256": "aa13da5fe2056fdb483c95e4a4568506fd2a36b059983c4556d2680124919b6e",
+    "block_state_artifact_sha256": "0b229ffdce058081004390fd0a5bbbba73e838a190edd217c4aa54e2dba40365",
+    "candidate_metrics_artifact_sha256": "01484bba99ef3e32fffd0bd7f60bbf4aa081871eb1ad5bb017a763db019abad1",
+    "bootstrap_artifact_sha256": "481eda0459829ad78b16a304a94f232607480681d264acba1673b03b2617adb5"
+  },
+  "deterministic_replay_status": "MATCHED",
+  "flags": {
+    "2025_HOLDOUT_ACCESSED": false,
+    "MARKET_DATA_USED": false,
+    "POST_RESULT_RETUNING_OCCURRED": false,
+    "CANDIDATE_SELECTION_PERFORMED": true,
+    "SHAP_PERFORMED": false,
+    "FEATURE_PRUNING_PERFORMED": false,
+    "POST_HOC_CALIBRATION_FIT": false,
+    "BLEND_CREATED": false,
+    "XGBOOST_V2_CREATED": false,
+    "CANONICAL_RUNNER_IMPLEMENTED": false
+  },
+  "future_v2_research_not_implemented": {
+    "label": "FUTURE_V2_RESEARCH_NOT_IMPLEMENTED",
+    "recommendations": [
+      "inspect redundancy within the 72 team-performance features",
+      "use grouped SHAP by feature family after V1 is finalized",
+      "examine feature families: team performance, QB, game context, sample-size, variability",
+      "revisit roof_category with cleaner categorical handling (one-hot or native categorical)",
+      "examine why expressive capacity helps slightly in Weeks 10+ but hurts earlier",
+      "preserve Weeks 1-4 calibration as a dedicated diagnostic",
+      "reassess the 22 QB features when genuine pregame QB evidence becomes available",
+      "test whether feature pruning can retain or improve performance",
+      "only pursue V2 after V1 is fully completed and the simple QB-Elo + XGBoost blend is evaluated"
+    ]
+  },
+  "future_blend_research_not_implemented": {
+    "label": "FUTURE_BLEND_RESEARCH_NOT_IMPLEMENTED",
+    "preferred_first_blend_experiment": {
+      "inputs": [
+        "qb_elo_probability",
+        "selected_xgboost_conservative_probability"
+      ],
+      "initial_meta_model": "simple logistic regression",
+      "note": "Do not feed extra raw features initially. Not built in this chunk."
+    }
+  }
+}

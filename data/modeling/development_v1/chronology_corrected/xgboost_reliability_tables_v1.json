@@ -1,0 +1,326 @@
+{
+  "conservative": {
+    "reliability_table": [
+      {
+        "bin_index": 0,
+        "bin_lower": 0.0,
+        "bin_upper": 0.1,
+        "bin_center": 0.05,
+        "count": 0,
+        "mean_predicted_probability": 0.05,
+        "observed_home_win_rate": 0.0,
+        "calibration_gap": 0.0
+      },
+      {
+        "bin_index": 1,
+        "bin_lower": 0.1,
+        "bin_upper": 0.2,
+        "bin_center": 0.15,
+        "count": 7,
+        "mean_predicted_probability": 0.145868,
+        "observed_home_win_rate": 0.428571,
+        "calibration_gap": 0.282703
+      },
+      {
+        "bin_index": 2,
+        "bin_lower": 0.2,
+        "bin_upper": 0.30000000000000004,
+        "bin_center": 0.25,
+        "count": 47,
+        "mean_predicted_probability": 0.266503,
+        "observed_home_win_rate": 0.468085,
+        "calibration_gap": 0.201582
+      },
+      {
+        "bin_index": 3,
+        "bin_lower": 0.30000000000000004,
+        "bin_upper": 0.4,
+        "bin_center": 0.35,
+        "count": 148,
+        "mean_predicted_probability": 0.354834,
+        "observed_home_win_rate": 0.277027,
+        "calibration_gap": 0.077807
+      },
+      {
+        "bin_index": 4,
+        "bin_lower": 0.4,
+        "bin_upper": 0.5,
+        "bin_center": 0.45,
+        "count": 277,
+        "mean_predicted_probability": 0.454066,
+        "observed_home_win_rate": 0.436823,
+        "calibration_gap": 0.017243
+      },
+      {
+        "bin_index": 5,
+        "bin_lower": 0.5,
+        "bin_upper": 0.6000000000000001,
+        "bin_center": 0.55,
+        "count": 584,
+        "mean_predicted_probability": 0.550613,
+        "observed_home_win_rate": 0.535959,
+        "calibration_gap": 0.014655
+      },
+      {
+        "bin_index": 6,
+        "bin_lower": 0.6000000000000001,
+        "bin_upper": 0.7000000000000001,
+        "bin_center": 0.65,
+        "count": 371,
+        "mean_predicted_probability": 0.644528,
+        "observed_home_win_rate": 0.625337,
+        "calibration_gap": 0.019191
+      },
+      {
+        "bin_index": 7,
+        "bin_lower": 0.7000000000000001,
+        "bin_upper": 0.8,
+        "bin_center": 0.75,
+        "count": 175,
+        "mean_predicted_probability": 0.742882,
+        "observed_home_win_rate": 0.742857,
+        "calibration_gap": 2.5e-05
+      },
+      {
+        "bin_index": 8,
+        "bin_lower": 0.8,
+        "bin_upper": 0.9,
+        "bin_center": 0.85,
+        "count": 44,
+        "mean_predicted_probability": 0.837661,
+        "observed_home_win_rate": 0.840909,
+        "calibration_gap": 0.003248
+      },
+      {
+        "bin_index": 9,
+        "bin_lower": 0.9,
+        "bin_upper": 1.0,
+        "bin_center": 0.95,
+        "count": 2,
+        "mean_predicted_probability": 0.911947,
+        "observed_home_win_rate": 1.0,
+        "calibration_gap": 0.088053
+      }
+    ],
+    "bin_count": 10,
+    "expected_calibration_error": 0.026433,
+    "calibration_intercept": 0.491897,
+    "calibration_slope": 0.214891
+  },
+  "balanced": {
+    "reliability_table": [
+      {
+        "bin_index": 0,
+        "bin_lower": 0.0,
+        "bin_upper": 0.1,
+        "bin_center": 0.05,
+        "count": 3,
+        "mean_predicted_probability": 0.08354,
+        "observed_home_win_rate": 0.666667,
+        "calibration_gap": 0.583127
+      },
+      {
+        "bin_index": 1,
+        "bin_lower": 0.1,
+        "bin_upper": 0.2,
+        "bin_center": 0.15,
+        "count": 12,
+        "mean_predicted_probability": 0.169993,
+        "observed_home_win_rate": 0.416667,
+        "calibration_gap": 0.246673
+      },
+      {
+        "bin_index": 2,
+        "bin_lower": 0.2,
+        "bin_upper": 0.30000000000000004,
+        "bin_center": 0.25,
+        "count": 59,
+        "mean_predicted_probability": 0.263471,
+        "observed_home_win_rate": 0.389831,
+        "calibration_gap": 0.12636
+      },
+      {
+        "bin_index": 3,
+        "bin_lower": 0.30000000000000004,
+        "bin_upper": 0.4,
+        "bin_center": 0.35,
+        "count": 158,
+        "mean_predicted_probability": 0.357813,
+        "observed_home_win_rate": 0.341772,
+        "calibration_gap": 0.016041
+      },
+      {
+        "bin_index": 4,
+        "bin_lower": 0.4,
+        "bin_upper": 0.5,
+        "bin_center": 0.45,
+        "count": 246,
+        "mean_predicted_probability": 0.455286,
+        "observed_home_win_rate": 0.402439,
+        "calibration_gap": 0.052847
+      },
+      {
+        "bin_index": 5,
+        "bin_lower": 0.5,
+        "bin_upper": 0.6000000000000001,
+        "bin_center": 0.55,
+        "count": 562,
+        "mean_predicted_probability": 0.548026,
+        "observed_home_win_rate": 0.537367,
+        "calibration_gap": 0.010659
+      },
+      {
+        "bin_index": 6,
+        "bin_lower": 0.6000000000000001,
+        "bin_upper": 0.7000000000000001,
+        "bin_center": 0.65,
+        "count": 367,
+        "mean_predicted_probability": 0.643024,
+        "observed_home_win_rate": 0.645777,
+        "calibration_gap": 0.002753
+      },
+      {
+        "bin_index": 7,
+        "bin_lower": 0.7000000000000001,
+        "bin_upper": 0.8,
+        "bin_center": 0.75,
+        "count": 187,
+        "mean_predicted_probability": 0.743118,
+        "observed_home_win_rate": 0.721925,
+        "calibration_gap": 0.021193
+      },
+      {
+        "bin_index": 8,
+        "bin_lower": 0.8,
+        "bin_upper": 0.9,
+        "bin_center": 0.85,
+        "count": 55,
+        "mean_predicted_probability": 0.840114,
+        "observed_home_win_rate": 0.690909,
+        "calibration_gap": 0.149205
+      },
+      {
+        "bin_index": 9,
+        "bin_lower": 0.9,
+        "bin_upper": 1.0,
+        "bin_center": 0.95,
+        "count": 6,
+        "mean_predicted_probability": 0.920267,
+        "observed_home_win_rate": 1.0,
+        "calibration_gap": 0.079733
+      }
+    ],
+    "bin_count": 10,
+    "expected_calibration_error": 0.028609,
+    "calibration_intercept": 0.50026,
+    "calibration_slope": 0.179109
+  },
+  "expressive": {
+    "reliability_table": [
+      {
+        "bin_index": 0,
+        "bin_lower": 0.0,
+        "bin_upper": 0.1,
+        "bin_center": 0.05,
+        "count": 2,
+        "mean_predicted_probability": 0.080008,
+        "observed_home_win_rate": 0.5,
+        "calibration_gap": 0.419992
+      },
+      {
+        "bin_index": 1,
+        "bin_lower": 0.1,
+        "bin_upper": 0.2,
+        "bin_center": 0.15,
+        "count": 11,
+        "mean_predicted_probability": 0.172599,
+        "observed_home_win_rate": 0.545455,
+        "calibration_gap": 0.372856
+      },
+      {
+        "bin_index": 2,
+        "bin_lower": 0.2,
+        "bin_upper": 0.30000000000000004,
+        "bin_center": 0.25,
+        "count": 37,
+        "mean_predicted_probability": 0.258367,
+        "observed_home_win_rate": 0.432432,
+        "calibration_gap": 0.174066
+      },
+      {
+        "bin_index": 3,
+        "bin_lower": 0.30000000000000004,
+        "bin_upper": 0.4,
+        "bin_center": 0.35,
+        "count": 150,
+        "mean_predicted_probability": 0.35593,
+        "observed_home_win_rate": 0.346667,
+        "calibration_gap": 0.009263
+      },
+      {
+        "bin_index": 4,
+        "bin_lower": 0.4,
+        "bin_upper": 0.5,
+        "bin_center": 0.45,
+        "count": 259,
+        "mean_predicted_probability": 0.454401,
+        "observed_home_win_rate": 0.382239,
+        "calibration_gap": 0.072161
+      },
+      {
+        "bin_index": 5,
+        "bin_lower": 0.5,
+        "bin_upper": 0.6000000000000001,
+        "bin_center": 0.55,
+        "count": 603,
+        "mean_predicted_probability": 0.551882,
+        "observed_home_win_rate": 0.558872,
+        "calibration_gap": 0.006991
+      },
+      {
+        "bin_index": 6,
+        "bin_lower": 0.6000000000000001,
+        "bin_upper": 0.7000000000000001,
+        "bin_center": 0.65,
+        "count": 348,
+        "mean_predicted_probability": 0.642877,
+        "observed_home_win_rate": 0.603448,
+        "calibration_gap": 0.039429
+      },
+      {
+        "bin_index": 7,
+        "bin_lower": 0.7000000000000001,
+        "bin_upper": 0.8,
+        "bin_center": 0.75,
+        "count": 171,
+        "mean_predicted_probability": 0.746728,
+        "observed_home_win_rate": 0.725146,
+        "calibration_gap": 0.021582
+      },
+      {
+        "bin_index": 8,
+        "bin_lower": 0.8,
+        "bin_upper": 0.9,
+        "bin_center": 0.85,
+        "count": 69,
+        "mean_predicted_probability": 0.838586,
+        "observed_home_win_rate": 0.753623,
+        "calibration_gap": 0.084963
+      },
+      {
+        "bin_index": 9,
+        "bin_lower": 0.9,
+        "bin_upper": 1.0,
+        "bin_center": 0.95,
+        "count": 5,
+        "mean_predicted_probability": 0.921191,
+        "observed_home_win_rate": 0.8,
+        "calibration_gap": 0.121191
+      }
+    ],
+    "bin_count": 10,
+    "expected_calibration_error": 0.035986,
+    "calibration_intercept": 0.496801,
+    "calibration_slope": 0.176686
+  }
+}

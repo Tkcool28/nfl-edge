@@ -1,0 +1,56 @@
+{
+  "run_purpose": "Task 03C-4B: Execute all three frozen XGBoost candidates over 2018-2024 for raw OOS evidence",
+  "status": "DEVELOPMENT_CANDIDATE_EVALUATION_ONLY",
+  "execution_datetime_utc": "2026-08-07T17:16:23.768472+00:00",
+  "canonical_config_sha256": "6aa585239ea20c7cd43da5837128101c83c5ce25645c8769e391a4dfc175a3be",
+  "lock_manifest_sha256": "e0f2d54734e1cf236ea20e573857367c4df9e12fa251b9bcf1762a19cc127af7",
+  "feature_contract_sha256": "4187bef6b76d71f4f89f3387ec4789512cccb6deacd6cd64520039c713919993",
+  "extraction_sha256": "fb4e45d28e337617043d578cb088e366aa217984bb200efca844e13111dc10f8",
+  "extraction_logical_hash": "5753e15c907e6c4da2e9dce7570064158f8fb7d574afb2e3d4d62b661ab8613c",
+  "candidate_order": [
+    "conservative",
+    "balanced",
+    "expressive"
+  ],
+  "candidate_param_hashes": {
+    "conservative": "1277cb64eefafbbdd08bf416b807e4ab36d8cf906d6faebccdb40128a586dd7a",
+    "balanced": "72ad5676554afbe9f11642f840f62c5bb2cf5037b0b84bc313b0c2fab309e7af",
+    "expressive": "e08858011baaa8b31235f24f6f0004f95aac1eefaa0783940bf858d65a734f79"
+  },
+  "expected_param_hashes_from_lock": {
+    "conservative": "a044ba76fd138bde1a52e364fd7fce5de042a2ddfdb6cdac22e592d4819ed58b",
+    "balanced": "3548924be19dcab76d07e4eeba34a23755a8b6fc43e44dd2db4c65f36ca2d1de",
+    "expressive": "48e65199f99e7c6d79c5cc29670d6a80012758b2c6fd1800ecf08c7d5ab0c54a"
+  },
+  "param_hashes_match_lock": true,
+  "shared_settings_hash": "b1bf9d17f0747f264f4d6dfec3323133e753106009890224d79c7527d034cf97",
+  "seed": 42,
+  "nthread": 1,
+  "xgboost_version": "2.1.4",
+  "python_version": "3.11.15",
+  "prediction_artifact_sha": "aa13da5fe2056fdb483c95e4a4568506fd2a36b059983c4556d2680124919b6e",
+  "block_state_artifact_sha": "0b229ffdce058081004390fd0a5bbbba73e838a190edd217c4aa54e2dba40365",
+  "prediction_row_count": 5826,
+  "block_state_row_count": 453,
+  "scored_row_count": 4953,
+  "warmup_row_count": 864,
+  "extraction_row_count": 1942,
+  "feature_count": 132,
+  "development_seasons": [
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "2025_HOLDOUT_ACCESSED": false,
+  "MARKET_DATA_USED": false,
+  "CANDIDATE_SELECTION_PERFORMED": false,
+  "calibration_transform_applied": false,
+  "shap_performed": false,
+  "feature_pruning_performed": false,
+  "blend_created": false,
+  "v2_created": false
+}

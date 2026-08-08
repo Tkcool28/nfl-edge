@@ -1,0 +1,38 @@
+{
+  "conservative": {
+    "fitted_blocks": 119,
+    "warmup_blocks": 32,
+    "best_iteration_mean": 61.78,
+    "best_iteration_median": 49,
+    "best_iteration_min": 0,
+    "best_iteration_max": 196,
+    "final_refit_mean": 62.78,
+    "final_refit_median": 50,
+    "hitting_max_ceiling": 0,
+    "early_stop_le_10": 23
+  },
+  "balanced": {
+    "fitted_blocks": 119,
+    "warmup_blocks": 32,
+    "best_iteration_mean": 55.41,
+    "best_iteration_median": 36,
+    "best_iteration_min": 0,
+    "best_iteration_max": 324,
+    "final_refit_mean": 56.41,
+    "final_refit_median": 37,
+    "hitting_max_ceiling": 0,
+    "early_stop_le_10": 27
+  },
+  "expressive": {
+    "fitted_blocks": 119,
+    "warmup_blocks": 32,
+    "best_iteration_mean": 62.87,
+    "best_iteration_median": 52,
+    "best_iteration_min": 0,
+    "best_iteration_max": 277,
+    "final_refit_mean": 63.87,
+    "final_refit_median": 53,
+    "hitting_max_ceiling": 0,
+    "early_stop_le_10": 25
+  }
+}
