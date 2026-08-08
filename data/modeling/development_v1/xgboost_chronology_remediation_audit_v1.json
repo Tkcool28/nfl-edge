@@ -1,0 +1,33 @@
+{
+  "artifact": "xgboost_chronology_remediation_audit_v1",
+  "scope": "Frozen 2018-2024 development extraction only; no model fitting or prediction generation.",
+  "previous_season_type_priority": {"PRE": 0, "WC": 1, "DIV": 2, "CON": 3, "SB": 4, "REG": 99},
+  "corrected_season_type_priority": {"PRE": 0, "REG": 1, "WC": 2, "DIV": 3, "CON": 4, "SB": 5},
+  "chronological_invariant": "REG(S) < WC(S) < DIV(S) < CON(S) < SB(S) < REG(S+1)",
+  "block_comparison_identity": "(season, season_type_priority, week)",
+  "total_unique_blocks": 151,
+  "seasons_audited": [2018, 2019, 2020, 2021, 2022, 2023, 2024],
+  "per_season": [
+    {"season": 2018, "first_reg_block": "2018_REG_01", "last_reg_block": "2018_REG_17", "postseason_blocks": ["2018_WC_18", "2018_DIV_19", "2018_CON_20", "2018_SB_21"], "all_reg_precede_same_season_postseason": true},
+    {"season": 2019, "first_reg_block": "2019_REG_01", "last_reg_block": "2019_REG_17", "postseason_blocks": ["2019_WC_18", "2019_DIV_19", "2019_CON_20", "2019_SB_21"], "all_reg_precede_same_season_postseason": true},
+    {"season": 2020, "first_reg_block": "2020_REG_01", "last_reg_block": "2020_REG_17", "postseason_blocks": ["2020_WC_18", "2020_DIV_19", "2020_CON_20", "2020_SB_21"], "all_reg_precede_same_season_postseason": true},
+    {"season": 2021, "first_reg_block": "2021_REG_01", "last_reg_block": "2021_REG_18", "postseason_blocks": ["2021_WC_19", "2021_DIV_20", "2021_CON_21", "2021_SB_22"], "all_reg_precede_same_season_postseason": true},
+    {"season": 2022, "first_reg_block": "2022_REG_01", "last_reg_block": "2022_REG_18", "postseason_blocks": ["2022_WC_19", "2022_DIV_20", "2022_CON_21", "2022_SB_22"], "all_reg_precede_same_season_postseason": true},
+    {"season": 2023, "first_reg_block": "2023_REG_01", "last_reg_block": "2023_REG_18", "postseason_blocks": ["2023_WC_19", "2023_DIV_20", "2023_CON_21", "2023_SB_22"], "all_reg_precede_same_season_postseason": true},
+    {"season": 2024, "first_reg_block": "2024_REG_01", "last_reg_block": "2024_REG_18", "postseason_blocks": ["2024_WC_19", "2024_DIV_20", "2024_CON_21", "2024_SB_22"], "all_reg_precede_same_season_postseason": true}
+  ],
+  "cross_season_transition_examples": [
+    {"prior_season_last_postseason_block": "2018_SB_21", "next_season_first_reg_block": "2019_REG_01", "ordered": true},
+    {"prior_season_last_postseason_block": "2019_SB_21", "next_season_first_reg_block": "2020_REG_01", "ordered": true},
+    {"prior_season_last_postseason_block": "2020_SB_21", "next_season_first_reg_block": "2021_REG_01", "ordered": true},
+    {"prior_season_last_postseason_block": "2021_SB_22", "next_season_first_reg_block": "2022_REG_01", "ordered": true},
+    {"prior_season_last_postseason_block": "2022_SB_22", "next_season_first_reg_block": "2023_REG_01", "ordered": true},
+    {"prior_season_last_postseason_block": "2023_SB_22", "next_season_first_reg_block": "2024_REG_01", "ordered": true}
+  ],
+  "same_season_chronology_violation_count": 0,
+  "cross_season_chronology_violation_count": 0,
+  "chronology_violations": 0,
+  "CHRONOLOGY_VIOLATIONS": 0,
+  "2025_HOLDOUT_ACCESSED": false,
+  "model_fit_or_prediction_rerun": false
+}

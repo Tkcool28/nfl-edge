@@ -1,0 +1,45 @@
+{
+  "three_candidate_common_rows": 1655,
+  "candidate_scores": {
+    "conservative": 1655,
+    "balanced": 1655,
+    "expressive": 1655
+  },
+  "all_candidates_score_identical_rows": true,
+  "conservative": {
+    "scored_rows": 1655,
+    "warmup_rows": 0,
+    "brier_score": 0.232639,
+    "logloss": 0.657508,
+    "accuracy": 0.607855,
+    "roc_auc": 0.649541,
+    "mean_probability": 0.556618,
+    "std_probability": 0.130179,
+    "min_probability": 0.121301,
+    "max_probability": 0.921787
+  },
+  "balanced": {
+    "scored_rows": 1655,
+    "warmup_rows": 0,
+    "brier_score": 0.235156,
+    "logloss": 0.664845,
+    "accuracy": 0.612085,
+    "roc_auc": 0.643633,
+    "mean_probability": 0.55652,
+    "std_probability": 0.139236,
+    "min_probability": 0.07555,
+    "max_probability": 0.954302
+  },
+  "expressive": {
+    "scored_rows": 1655,
+    "warmup_rows": 0,
+    "brier_score": 0.236656,
+    "logloss": 0.667412,
+    "accuracy": 0.61148,
+    "roc_auc": 0.635017,
+    "mean_probability": 0.561548,
+    "std_probability": 0.135215,
+    "min_probability": 0.075396,
+    "max_probability": 0.954443
+  }
+}

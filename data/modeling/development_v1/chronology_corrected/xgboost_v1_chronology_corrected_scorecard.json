@@ -1,0 +1,305 @@
+{
+  "aggregate_metrics": {
+    "accuracy": 0.607855,
+    "brier_score": 0.232639,
+    "logloss": 0.657508,
+    "max_probability": 0.921787,
+    "mean_probability": 0.556618,
+    "min_probability": 0.121301,
+    "roc_auc": 0.649541,
+    "scored_rows": 1655,
+    "std_probability": 0.130179,
+    "warmup_rows": 0
+  },
+  "artifact": "xgboost_v1_chronology_corrected_scorecard",
+  "boundaries": {
+    "2025_HOLDOUT_PERFORMANCE_EVALUATED": false,
+    "2025_HOLDOUT_USED_FOR_RETUNING": false,
+    "2025_HOLDOUT_USED_FOR_SELECTION": false,
+    "MARKET_DATA_USED": false,
+    "PRODUCTION_DEPLOYED": false
+  },
+  "calibration_note": "ECE and reliability tables are primary calibration evidence. No post-hoc calibration applied.",
+  "expected_calibration_error": 0.026433,
+  "identity": {
+    "binary_scored_rows": 1655,
+    "fitted_blocks": 119,
+    "identity": "1655 + 284 + 3 = 1942",
+    "tie_or_nonbinary_rows": 3,
+    "total_extraction_rows": 1942,
+    "warmup_blocks": 32,
+    "warmup_rows": 284
+  },
+  "ols_descriptive_coefficients": {
+    "ols_outcome_on_logit_intercept": 0.491897,
+    "ols_outcome_on_logit_slope": 0.214891
+  },
+  "qb_elo_exact_common_row_comparison": {
+    "common_rows": 1655,
+    "qb_elo_metrics": {
+      "accuracy": 0.636858,
+      "brier_score": 0.222823,
+      "logloss": 0.637241,
+      "max_probability": 0.925477,
+      "mean_probability": 0.564971,
+      "min_probability": 0.109014,
+      "roc_auc": 0.688594,
+      "scored_rows": 1655,
+      "std_probability": 0.163617,
+      "warmup_rows": 0
+    },
+    "selected_metrics": {
+      "accuracy": 0.607855,
+      "brier_score": 0.232639,
+      "logloss": 0.657508,
+      "max_probability": 0.921787,
+      "mean_probability": 0.556618,
+      "min_probability": 0.121301,
+      "roc_auc": 0.649541,
+      "scored_rows": 1655,
+      "std_probability": 0.130179,
+      "warmup_rows": 0
+    }
+  },
+  "reliability_table": [
+    {
+      "bin_center": 0.05,
+      "bin_index": 0,
+      "bin_lower": 0.0,
+      "bin_upper": 0.1,
+      "calibration_gap": 0.0,
+      "count": 0,
+      "mean_predicted_probability": 0.05,
+      "observed_home_win_rate": 0.0
+    },
+    {
+      "bin_center": 0.15,
+      "bin_index": 1,
+      "bin_lower": 0.1,
+      "bin_upper": 0.2,
+      "calibration_gap": 0.282703,
+      "count": 7,
+      "mean_predicted_probability": 0.145868,
+      "observed_home_win_rate": 0.428571
+    },
+    {
+      "bin_center": 0.25,
+      "bin_index": 2,
+      "bin_lower": 0.2,
+      "bin_upper": 0.30000000000000004,
+      "calibration_gap": 0.201582,
+      "count": 47,
+      "mean_predicted_probability": 0.266503,
+      "observed_home_win_rate": 0.468085
+    },
+    {
+      "bin_center": 0.35,
+      "bin_index": 3,
+      "bin_lower": 0.30000000000000004,
+      "bin_upper": 0.4,
+      "calibration_gap": 0.077807,
+      "count": 148,
+      "mean_predicted_probability": 0.354834,
+      "observed_home_win_rate": 0.277027
+    },
+    {
+      "bin_center": 0.45,
+      "bin_index": 4,
+      "bin_lower": 0.4,
+      "bin_upper": 0.5,
+      "calibration_gap": 0.017243,
+      "count": 277,
+      "mean_predicted_probability": 0.454066,
+      "observed_home_win_rate": 0.436823
+    },
+    {
+      "bin_center": 0.55,
+      "bin_index": 5,
+      "bin_lower": 0.5,
+      "bin_upper": 0.6000000000000001,
+      "calibration_gap": 0.014655,
+      "count": 584,
+      "mean_predicted_probability": 0.550613,
+      "observed_home_win_rate": 0.535959
+    },
+    {
+      "bin_center": 0.65,
+      "bin_index": 6,
+      "bin_lower": 0.6000000000000001,
+      "bin_upper": 0.7000000000000001,
+      "calibration_gap": 0.019191,
+      "count": 371,
+      "mean_predicted_probability": 0.644528,
+      "observed_home_win_rate": 0.625337
+    },
+    {
+      "bin_center": 0.75,
+      "bin_index": 7,
+      "bin_lower": 0.7000000000000001,
+      "bin_upper": 0.8,
+      "calibration_gap": 2.5e-05,
+      "count": 175,
+      "mean_predicted_probability": 0.742882,
+      "observed_home_win_rate": 0.742857
+    },
+    {
+      "bin_center": 0.85,
+      "bin_index": 8,
+      "bin_lower": 0.8,
+      "bin_upper": 0.9,
+      "calibration_gap": 0.003248,
+      "count": 44,
+      "mean_predicted_probability": 0.837661,
+      "observed_home_win_rate": 0.840909
+    },
+    {
+      "bin_center": 0.95,
+      "bin_index": 9,
+      "bin_lower": 0.9,
+      "bin_upper": 1.0,
+      "calibration_gap": 0.088053,
+      "count": 2,
+      "mean_predicted_probability": 0.911947,
+      "observed_home_win_rate": 1.0
+    }
+  ],
+  "season_metrics": {
+    "2018": {
+      "accuracy": 0.598985,
+      "brier_score": 0.241447,
+      "logloss": 0.675625,
+      "max_probability": 0.891871,
+      "mean_probability": 0.614425,
+      "min_probability": 0.237822,
+      "roc_auc": 0.556673,
+      "scored_rows": 197,
+      "std_probability": 0.110568,
+      "warmup_rows": 0
+    },
+    "2019": {
+      "accuracy": 0.52193,
+      "brier_score": 0.245653,
+      "logloss": 0.685317,
+      "max_probability": 0.853028,
+      "mean_probability": 0.563951,
+      "min_probability": 0.249904,
+      "roc_auc": 0.602691,
+      "scored_rows": 228,
+      "std_probability": 0.108656,
+      "warmup_rows": 0
+    },
+    "2020": {
+      "accuracy": 0.630901,
+      "brier_score": 0.229706,
+      "logloss": 0.6521,
+      "max_probability": 0.899289,
+      "mean_probability": 0.541294,
+      "min_probability": 0.126014,
+      "roc_auc": 0.681158,
+      "scored_rows": 233,
+      "std_probability": 0.143617,
+      "warmup_rows": 0
+    },
+    "2021": {
+      "accuracy": 0.614458,
+      "brier_score": 0.229457,
+      "logloss": 0.652689,
+      "max_probability": 0.881851,
+      "mean_probability": 0.533231,
+      "min_probability": 0.121301,
+      "roc_auc": 0.682773,
+      "scored_rows": 249,
+      "std_probability": 0.147277,
+      "warmup_rows": 0
+    },
+    "2022": {
+      "accuracy": 0.620968,
+      "brier_score": 0.227821,
+      "logloss": 0.646618,
+      "max_probability": 0.866321,
+      "mean_probability": 0.551555,
+      "min_probability": 0.274402,
+      "roc_auc": 0.657089,
+      "scored_rows": 248,
+      "std_probability": 0.112936,
+      "warmup_rows": 0
+    },
+    "2023": {
+      "accuracy": 0.612,
+      "brier_score": 0.234721,
+      "logloss": 0.660954,
+      "max_probability": 0.921787,
+      "mean_probability": 0.55743,
+      "min_probability": 0.247877,
+      "roc_auc": 0.610742,
+      "scored_rows": 250,
+      "std_probability": 0.118418,
+      "warmup_rows": 0
+    },
+    "2024": {
+      "accuracy": 0.648,
+      "brier_score": 0.22243,
+      "logloss": 0.635065,
+      "max_probability": 0.902107,
+      "mean_probability": 0.546161,
+      "min_probability": 0.212896,
+      "roc_auc": 0.690241,
+      "scored_rows": 250,
+      "std_probability": 0.14388,
+      "warmup_rows": 0
+    }
+  },
+  "selected_candidate": "conservative",
+  "selected_parameter_hash": "a044ba76fd138bde1a52e364fd7fce5de042a2ddfdb6cdac22e592d4819ed58b",
+  "status": "XGBOOST_V1_CONSERVATIVE_SELECTED_AFTER_CHRONOLOGY_CORRECTION",
+  "time_slice_metrics": {
+    "early_weeks_1_4": {
+      "accuracy": 0.571429,
+      "brier_score": 0.241664,
+      "logloss": 0.677646,
+      "max_probability": 0.853028,
+      "mean_probability": 0.54891,
+      "min_probability": 0.243077,
+      "roc_auc": 0.64764,
+      "scored_rows": 189,
+      "std_probability": 0.104293,
+      "warmup_rows": 0
+    },
+    "late_weeks_10_plus": {
+      "accuracy": 0.616822,
+      "brier_score": 0.229343,
+      "logloss": 0.65064,
+      "max_probability": 0.902107,
+      "mean_probability": 0.559238,
+      "min_probability": 0.126014,
+      "roc_auc": 0.656566,
+      "scored_rows": 963,
+      "std_probability": 0.136954,
+      "warmup_rows": 0
+    },
+    "middle_weeks_5_9": {
+      "accuracy": 0.604374,
+      "brier_score": 0.235557,
+      "logloss": 0.663088,
+      "max_probability": 0.921787,
+      "mean_probability": 0.554497,
+      "min_probability": 0.121301,
+      "roc_auc": 0.636441,
+      "scored_rows": 503,
+      "std_probability": 0.125389,
+      "warmup_rows": 0
+    },
+    "postseason": {
+      "accuracy": 0.62069,
+      "brier_score": 0.227244,
+      "logloss": 0.645007,
+      "max_probability": 0.793826,
+      "mean_probability": 0.565604,
+      "min_probability": 0.28535,
+      "roc_auc": 0.616162,
+      "scored_rows": 58,
+      "std_probability": 0.103192,
+      "warmup_rows": 0
+    }
+  }
+}

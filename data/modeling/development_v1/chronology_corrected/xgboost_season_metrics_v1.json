@@ -1,0 +1,260 @@
+{
+  "conservative": {
+    "2018": {
+      "scored_rows": 197,
+      "warmup_rows": 0,
+      "brier_score": 0.241447,
+      "logloss": 0.675625,
+      "accuracy": 0.598985,
+      "roc_auc": 0.556673,
+      "mean_probability": 0.614425,
+      "std_probability": 0.110568,
+      "min_probability": 0.237822,
+      "max_probability": 0.891871
+    },
+    "2019": {
+      "scored_rows": 228,
+      "warmup_rows": 0,
+      "brier_score": 0.245653,
+      "logloss": 0.685317,
+      "accuracy": 0.52193,
+      "roc_auc": 0.602691,
+      "mean_probability": 0.563951,
+      "std_probability": 0.108656,
+      "min_probability": 0.249904,
+      "max_probability": 0.853028
+    },
+    "2020": {
+      "scored_rows": 233,
+      "warmup_rows": 0,
+      "brier_score": 0.229706,
+      "logloss": 0.6521,
+      "accuracy": 0.630901,
+      "roc_auc": 0.681158,
+      "mean_probability": 0.541294,
+      "std_probability": 0.143617,
+      "min_probability": 0.126014,
+      "max_probability": 0.899289
+    },
+    "2021": {
+      "scored_rows": 249,
+      "warmup_rows": 0,
+      "brier_score": 0.229457,
+      "logloss": 0.652689,
+      "accuracy": 0.614458,
+      "roc_auc": 0.682773,
+      "mean_probability": 0.533231,
+      "std_probability": 0.147277,
+      "min_probability": 0.121301,
+      "max_probability": 0.881851
+    },
+    "2022": {
+      "scored_rows": 248,
+      "warmup_rows": 0,
+      "brier_score": 0.227821,
+      "logloss": 0.646618,
+      "accuracy": 0.620968,
+      "roc_auc": 0.657089,
+      "mean_probability": 0.551555,
+      "std_probability": 0.112936,
+      "min_probability": 0.274402,
+      "max_probability": 0.866321
+    },
+    "2023": {
+      "scored_rows": 250,
+      "warmup_rows": 0,
+      "brier_score": 0.234721,
+      "logloss": 0.660954,
+      "accuracy": 0.612,
+      "roc_auc": 0.610742,
+      "mean_probability": 0.55743,
+      "std_probability": 0.118418,
+      "min_probability": 0.247877,
+      "max_probability": 0.921787
+    },
+    "2024": {
+      "scored_rows": 250,
+      "warmup_rows": 0,
+      "brier_score": 0.22243,
+      "logloss": 0.635065,
+      "accuracy": 0.648,
+      "roc_auc": 0.690241,
+      "mean_probability": 0.546161,
+      "std_probability": 0.14388,
+      "min_probability": 0.212896,
+      "max_probability": 0.902107
+    }
+  },
+  "balanced": {
+    "2018": {
+      "scored_rows": 197,
+      "warmup_rows": 0,
+      "brier_score": 0.248746,
+      "logloss": 0.697767,
+      "accuracy": 0.57868,
+      "roc_auc": 0.549542,
+      "mean_probability": 0.604328,
+      "std_probability": 0.114102,
+      "min_probability": 0.208876,
+      "max_probability": 0.907547
+    },
+    "2019": {
+      "scored_rows": 228,
+      "warmup_rows": 0,
+      "brier_score": 0.25155,
+      "logloss": 0.701443,
+      "accuracy": 0.565789,
+      "roc_auc": 0.590741,
+      "mean_probability": 0.569717,
+      "std_probability": 0.1302,
+      "min_probability": 0.206661,
+      "max_probability": 0.894684
+    },
+    "2020": {
+      "scored_rows": 233,
+      "warmup_rows": 0,
+      "brier_score": 0.228863,
+      "logloss": 0.650474,
+      "accuracy": 0.626609,
+      "roc_auc": 0.684513,
+      "mean_probability": 0.544557,
+      "std_probability": 0.152363,
+      "min_probability": 0.07555,
+      "max_probability": 0.880358
+    },
+    "2021": {
+      "scored_rows": 249,
+      "warmup_rows": 0,
+      "brier_score": 0.230053,
+      "logloss": 0.657963,
+      "accuracy": 0.618474,
+      "roc_auc": 0.685391,
+      "mean_probability": 0.528343,
+      "std_probability": 0.165282,
+      "min_probability": 0.075782,
+      "max_probability": 0.90142
+    },
+    "2022": {
+      "scored_rows": 248,
+      "warmup_rows": 0,
+      "brier_score": 0.232228,
+      "logloss": 0.655845,
+      "accuracy": 0.629032,
+      "roc_auc": 0.642838,
+      "mean_probability": 0.547836,
+      "std_probability": 0.112449,
+      "min_probability": 0.260575,
+      "max_probability": 0.925084
+    },
+    "2023": {
+      "scored_rows": 250,
+      "warmup_rows": 0,
+      "brier_score": 0.234327,
+      "logloss": 0.660341,
+      "accuracy": 0.624,
+      "roc_auc": 0.60982,
+      "mean_probability": 0.562938,
+      "std_probability": 0.121614,
+      "min_probability": 0.177762,
+      "max_probability": 0.954302
+    },
+    "2024": {
+      "scored_rows": 250,
+      "warmup_rows": 0,
+      "brier_score": 0.224176,
+      "logloss": 0.639206,
+      "accuracy": 0.632,
+      "roc_auc": 0.685791,
+      "mean_probability": 0.548225,
+      "std_probability": 0.152883,
+      "min_probability": 0.179128,
+      "max_probability": 0.915336
+    }
+  },
+  "expressive": {
+    "2018": {
+      "scored_rows": 197,
+      "warmup_rows": 0,
+      "brier_score": 0.252038,
+      "logloss": 0.70398,
+      "accuracy": 0.57868,
+      "roc_auc": 0.52847,
+      "mean_probability": 0.624037,
+      "std_probability": 0.114825,
+      "min_probability": 0.198719,
+      "max_probability": 0.954443
+    },
+    "2019": {
+      "scored_rows": 228,
+      "warmup_rows": 0,
+      "brier_score": 0.25306,
+      "logloss": 0.703517,
+      "accuracy": 0.535088,
+      "roc_auc": 0.576517,
+      "mean_probability": 0.569854,
+      "std_probability": 0.116661,
+      "min_probability": 0.164047,
+      "max_probability": 0.853011
+    },
+    "2020": {
+      "scored_rows": 233,
+      "warmup_rows": 0,
+      "brier_score": 0.235047,
+      "logloss": 0.664167,
+      "accuracy": 0.648069,
+      "roc_auc": 0.662168,
+      "mean_probability": 0.548275,
+      "std_probability": 0.150936,
+      "min_probability": 0.075396,
+      "max_probability": 0.876154
+    },
+    "2021": {
+      "scored_rows": 249,
+      "warmup_rows": 0,
+      "brier_score": 0.231104,
+      "logloss": 0.657142,
+      "accuracy": 0.626506,
+      "roc_auc": 0.684098,
+      "mean_probability": 0.535605,
+      "std_probability": 0.149664,
+      "min_probability": 0.08462,
+      "max_probability": 0.883264
+    },
+    "2022": {
+      "scored_rows": 248,
+      "warmup_rows": 0,
+      "brier_score": 0.230677,
+      "logloss": 0.651692,
+      "accuracy": 0.612903,
+      "roc_auc": 0.639126,
+      "mean_probability": 0.552839,
+      "std_probability": 0.123008,
+      "min_probability": 0.238867,
+      "max_probability": 0.914202
+    },
+    "2023": {
+      "scored_rows": 250,
+      "warmup_rows": 0,
+      "brier_score": 0.234963,
+      "logloss": 0.662528,
+      "accuracy": 0.616,
+      "roc_auc": 0.606955,
+      "mean_probability": 0.565689,
+      "std_probability": 0.114976,
+      "min_probability": 0.248996,
+      "max_probability": 0.923509
+    },
+    "2024": {
+      "scored_rows": 250,
+      "warmup_rows": 0,
+      "brier_score": 0.224226,
+      "logloss": 0.639403,
+      "accuracy": 0.652,
+      "roc_auc": 0.682276,
+      "mean_probability": 0.547441,
+      "std_probability": 0.148979,
+      "min_probability": 0.182927,
+      "max_probability": 0.90935
+    }
+  }
+}

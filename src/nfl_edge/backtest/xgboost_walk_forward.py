@@ -20,13 +20,17 @@ import xgboost as xgb
 
 # ─── Season-type ordering (explicit, stable, documented) ────────────────
 #
-# Priority is the sort key, lower = earlier:
-#   PRE  → 0  (preseason; never used for 03C development)
-#   WC  → 1  (wild-card)
-#   DIV → 2  (divisional)
-#   CON → 3  (conference / championship)
-#   SB  → 4  (Super Bowl)
-#   REG → 99 (regular season — after postseason chronologically)
+# Priority is the sort key, lower = earlier within the NFL season-year:
+#   PRE → 0  (preseason; never used for 03C development)
+#   REG → 1  (regular season)
+#   WC  → 2  (wild-card)
+#   DIV → 3  (divisional)
+#   CON → 4  (conference / championship)
+#   SB  → 5  (Super Bowl)
+#
+# The authoritative chronological identity is (season, season_type_priority,
+# week): REG(S) < postseason(S) < REG(S+1). The ``season`` column is the NFL
+# season-year, not the calendar year in which postseason games were played.
 #
 # Games within a block ordered by:
 #   1. scheduled_start_utc (ascending)
@@ -34,11 +38,11 @@ import xgboost as xgb
 #
 SEASON_TYPE_PRIORITY: dict[str, int] = {
     "PRE": 0,
-    "REG": 99,
-    "WC": 1,
-    "DIV": 2,
-    "CON": 3,
-    "SB": 4,
+    "REG": 1,
+    "WC": 2,
+    "DIV": 3,
+    "CON": 4,
+    "SB": 5,
 }
 
 MIN_SEASON = 2018

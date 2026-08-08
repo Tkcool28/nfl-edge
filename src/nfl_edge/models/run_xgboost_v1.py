@@ -37,9 +37,10 @@ from pathlib import Path
 import polars as pl
 
 # --- Authority constants (recorded at Task 03C-5, frozen) ------------------
-SELECTED_ARTIFACT_SHA = "357c975539f8b14a7e7668275cf6919cf323f578478a33a5c9025a1c046531d5"
-SCORECARD_JSON_SHA = "1450a5da294a6ccaaa9e45c000ce9da6fb45a40fe2a641662462b317280c3af1"
-SELECTED_LOCK_SHA = "c4c048c917e53226b1876315a5fd4caddafe81353f3ebfe7d18f06ca44e59da1"
+SELECTED_ARTIFACT_SHA = "de674cdf44498ce13cea3b6dbd5b6d742d9edd5414c739d3bd3441fb56f50c80"
+SCORECARD_JSON_SHA = "2036670f892e5535404bb0bf56c73a88868fb9786dbc7e62139201aca67a90ab"
+SELECTED_LOCK_SHA = "1af6070ed96307476a16d5f879fe4ead2ffbce2e89a9ddf9bfcba28942141ca6"
+CHRONOLOGY_AUDIT_SHA = "33e7b8fb026a4af7daa665ce42336519fd10ed22e0daeac7890861faa5f02d1a"
 
 CANONICAL_CONFIG_SHA = "6aa585239ea20c7cd43da5837128101c83c5ce25645c8769e391a4dfc175a3be"
 CANDIDATE_EVIDENCE_SHA = "faf89503d42527e899ff6441f022298433aed61df812d3bead695fc1dce25e01"
@@ -110,11 +111,11 @@ class XgboostV1CanonicalRunner:
         )
         self.contract_path = self.dev_dir / "xgboost_feature_contract_v1.json"
         self.config_path = self.root / "config" / "xgboost_v1.yaml"
-        self.selected_candidate_path = self.dev_dir / "xgboost_selected_candidate_v1.json"
-        self.selected_lock_path = (
-            self.dev_dir / "xgboost_selected_v1_lock" / "SELECTED_V1_LOCK_MANIFEST.json"
-        )
-        self.scorecard_json_path = self.dev_dir / "xgboost_v1_scorecard.json"
+        self.corrected_dir = self.dev_dir / "chronology_corrected"
+        self.selected_candidate_path = self.corrected_dir / "xgboost_v1_chronology_corrected_selected_candidate.json"
+        self.selected_lock_path = self.corrected_dir / "SELECTED_V1_CHRONOLOGY_CORRECTED_LOCK_MANIFEST.json"
+        self.scorecard_json_path = self.corrected_dir / "xgboost_v1_chronology_corrected_scorecard.json"
+        self.chronology_audit_path = self.dev_dir / "xgboost_chronology_remediation_audit_v1.json"
         sys.path.insert(0, str(self.root / "src"))
 
     # -- Verification -----------------------------------------------------
@@ -128,10 +129,15 @@ class XgboostV1CanonicalRunner:
         checks = {
             "selected_artifact": _sha256_file(self.selected_candidate_path),
             "selected_lock": _sha256_file(self.selected_lock_path),
+            "chronology_audit": _sha256_file(self.chronology_audit_path),
         }
+        audit = _load_json(self.chronology_audit_path)
+        if audit.get("CHRONOLOGY_VIOLATIONS") != 0:
+            raise ValueError("Corrected chronology audit contains violations")
         expected = {
             "selected_artifact": SELECTED_ARTIFACT_SHA,
             "selected_lock": SELECTED_LOCK_SHA,
+            "chronology_audit": CHRONOLOGY_AUDIT_SHA,
         }
         if self.scorecard_json_path.exists():
             checks["scorecard_json"] = _sha256_file(self.scorecard_json_path)
@@ -255,8 +261,7 @@ class XgboostV1CanonicalRunner:
                         "block_id": block_key.block_id,
                         "scheduled_start": row_data.get("scheduled_start_utc"),
                         "target": row_data.get("target_home_win"),
-                        "binary_score_eligible": row_data.get("target_home_win") is not None
-                        and bool(row_data.get("target_home_win")) in (True, False),
+                        "binary_score_eligible": row_data.get("target_home_win") in (0, 1),
                         "prediction_probability": float(prob),
                         "warmup": False,
                         "warmup_reason": None,
@@ -372,6 +377,11 @@ class XgboostV1CanonicalRunner:
             "total_rows": pred_df.height,
             "scored_rows": len(scored),
             "warmup_rows": int(pred_df.filter(pl.col("warmup")).height),
+            "tie_or_nonbinary_rows": int(
+                pred_df.filter((~pl.col("binary_score_eligible")) & (~pl.col("warmup"))).height
+            ),
+            "fitted_blocks": int(bs_df.filter(pl.col("fit_status") == "fitted").height),
+            "warmup_blocks": int(bs_df.filter(pl.col("fit_status") != "fitted").height),
             "prediction_logical_hash": pred_hash,
             "block_state_logical_hash": bs_hash,
             "verification_metrics": {
@@ -381,10 +391,13 @@ class XgboostV1CanonicalRunner:
                 "roc_auc": round(auc, 6) if auc is not None else None,
             },
             "run_status": "COMPLETE",
-            "2025_HOLDOUT_ACCESSED": False,
+            "2025_HOLDOUT_PERFORMANCE_EVALUATED": False,
+            "2025_HOLDOUT_USED_FOR_SELECTION": False,
+            "2025_HOLDOUT_USED_FOR_RETUNING": False,
+            "2025_ROWS_USED_BY_CANONICAL_MODEL_RUNNER": False,
             "MARKET_DATA_USED": False,
+            "PRODUCTION_DEPLOYED": False,
             "POST_RESULT_RETUNING_OCCURRED": False,
-            "production_deployed": False,
             "canonical_runner_purpose": (
                 "Deterministic canonical reproduction of accepted XGBoost V1 "
                 "conservative development output from frozen inputs."

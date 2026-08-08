@@ -1,0 +1,30 @@
+{
+  "artifact": "xgboost_three_candidate_chronology_corrected_deterministic_replay_proof",
+  "status": "DETERMINISTIC_REPLAY_PASS",
+  "chronology_status": "CHRONOLOGY_CORRECTED_RERUN",
+  "prediction_logical_hash": {
+    "first": "efae1f467860d4f54a375f9bfbfed025a578181f2f312b7057a4e0fc65fd81e4",
+    "replay": "efae1f467860d4f54a375f9bfbfed025a578181f2f312b7057a4e0fc65fd81e4"
+  },
+  "block_state_logical_hash": {
+    "first": "43d7f90f2c241a3a18c7bcb22f33cc3346797c007dbce3f8336b77badd71f4b6",
+    "replay": "43d7f90f2c241a3a18c7bcb22f33cc3346797c007dbce3f8336b77badd71f4b6"
+  },
+  "metric_evidence_sha256": {
+    "first": "e2c4c4ebaef8d4d6baf72e33248e3289e902c43fbdae4b02fbd51954c65fc013",
+    "replay": "e2c4c4ebaef8d4d6baf72e33248e3289e902c43fbdae4b02fbd51954c65fc013"
+  },
+  "prediction_rows": {
+    "first": 5826,
+    "replay": 5826
+  },
+  "block_state_rows": {
+    "first": 453,
+    "replay": 453
+  },
+  "metric_evidence_equal": true,
+  "prediction_logical_hash_equal": true,
+  "block_state_logical_hash_equal": true,
+  "metric_evidence_sha256_equal": true,
+  "deterministic_replay_pass": true
+}

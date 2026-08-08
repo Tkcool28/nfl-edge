@@ -28,6 +28,7 @@ import pytest
 from nfl_edge.backtest.xgboost_walk_forward import (
     CANDIDATE_ORDER,
     CANONICAL_CONFIG_SHA,
+    SEASON_TYPE_PRIORITY,
     SHARED_SETTINGS,
     WARMUP_INSUFFICIENT_FIT_BLOCKS,
     WARMUP_INSUFFICIENT_FIT_ROWS,
@@ -45,10 +46,6 @@ from nfl_edge.backtest.xgboost_walk_forward import (
     sort_blocks,
     validate_season,
 )
-
-SEASON_TYPE_PRIORITY = {
-    "PRE": 0, "REG": 99, "WC": 1, "DIV": 2, "CON": 3, "SB": 4,
-}
 
 FEATURE_COLS = [
     "feat_0", "feat_1", "feat_2", "feat_3", "feat_4",
@@ -156,37 +153,93 @@ class TestSyntheticChronology:
 class TestBlockOrdering:
     """Test 6: Block ordering by (season, season_type_priority, week)."""
 
-    def test_block_ordering_season_priority_week(self):
-        block_keys = [
-            BlockKey(2020, 1, "WC", 1),
-            BlockKey(2019, 99, "REG", 5),
-            BlockKey(2020, 99, "REG", 1),
-            BlockKey(2020, 2, "DIV", 1),
-            BlockKey(2019, 99, "REG", 1),
-            BlockKey(2020, 4, "SB", 1),
+    def _nfl_season_transition_df(self) -> pl.DataFrame:
+        """Synthetic NFL season-year blocks; no production/holdout data is used."""
+        blocks = [
+            (2019, "REG", 1),
+            (2019, "REG", 17),
+            (2019, "WC", 1),
+            (2019, "DIV", 1),
+            (2019, "CON", 1),
+            (2019, "SB", 1),
+            (2020, "REG", 1),
+            (2020, "REG", 17),
+            (2020, "WC", 1),
+            (2020, "DIV", 1),
+            (2020, "CON", 1),
+            (2020, "SB", 1),
         ]
-        ordered = sorted(block_keys)
-        # 2019 REG week 1 < 2019 REG week 5 < 2020 WC < 2020 DIV < 2020 CON < 2020 SB < 2020 REG
-        assert ordered[0] == BlockKey(2019, 99, "REG", 1)
-        assert ordered[1] == BlockKey(2019, 99, "REG", 5)
-        assert ordered[2] == BlockKey(2020, 1, "WC", 1)
-        assert ordered[3] == BlockKey(2020, 2, "DIV", 1)
-        assert ordered[4] == BlockKey(2020, 4, "SB", 1)
-        assert ordered[5] == BlockKey(2020, 99, "REG", 1)
+        return pl.DataFrame(
+            [
+                make_game(
+                    season,
+                    season_type,
+                    week,
+                    f"{season}_{season_type}_{week:02d}",
+                    f"{season}-09-01T12:00:00Z",
+                )
+                for season, season_type, week in blocks
+            ]
+        )
+
+    def test_same_season_regular_then_postseason_ordering(self):
+        keys = compute_block_keys(self._nfl_season_transition_df())
+        order_2020 = [key.display_id for key in keys if key.season == 2020]
+        assert order_2020 == [
+            "2020_REG_01",
+            "2020_REG_17",
+            "2020_WC_01",
+            "2020_DIV_01",
+            "2020_CON_01",
+            "2020_SB_01",
+        ]
+
+    def test_full_nfl_season_year_transition_ordering(self):
+        keys = compute_block_keys(self._nfl_season_transition_df())
+        assert [key.display_id for key in keys] == [
+            "2019_REG_01",
+            "2019_REG_17",
+            "2019_WC_01",
+            "2019_DIV_01",
+            "2019_CON_01",
+            "2019_SB_01",
+            "2020_REG_01",
+            "2020_REG_17",
+            "2020_WC_01",
+            "2020_DIV_01",
+            "2020_CON_01",
+            "2020_SB_01",
+        ]
+        assert keys[5] < keys[6]  # 2019 SB < 2020 REG Week 1
+
+    def test_prior_blocks_respect_same_season_postseason_boundary(self):
+        df = self._nfl_season_transition_df()
+        keys = compute_block_keys(df)
+        current_2020_reg = next(key for key in keys if key.display_id == "2020_REG_01")
+        prior_to_2020_reg = {key.display_id for key in compute_block_keys(filter_prior_blocks(df, current_2020_reg))}
+        assert "2019_SB_01" in prior_to_2020_reg
+        assert not any(key.startswith("2020_WC_") for key in prior_to_2020_reg)
+
+        current_2020_sb = next(key for key in keys if key.display_id == "2020_SB_01")
+        prior_to_2020_sb = {key.display_id for key in compute_block_keys(filter_prior_blocks(df, current_2020_sb))}
+        assert "2020_REG_01" in prior_to_2020_sb
+        assert "2020_REG_17" in prior_to_2020_sb
 
     def test_block_id_deterministic(self):
-        bk = BlockKey(2020, 99, "REG", 3)
-        assert bk.block_id == "2020_99_03"
+        bk = BlockKey(2020, SEASON_TYPE_PRIORITY["REG"], "REG", 3)
+        assert bk.block_id == "2020_01_03"
         assert bk.display_id == "2020_REG_03"
 
     def test_season_type_priority_values(self):
-        """Verify exact priority values per spec."""
-        assert SEASON_TYPE_PRIORITY["PRE"] == 0
-        assert SEASON_TYPE_PRIORITY["WC"] == 1
-        assert SEASON_TYPE_PRIORITY["DIV"] == 2
-        assert SEASON_TYPE_PRIORITY["CON"] == 3
-        assert SEASON_TYPE_PRIORITY["SB"] == 4
-        assert SEASON_TYPE_PRIORITY["REG"] == 99
+        """NFL season-year order: PRE < REG < WC < DIV < CON < SB."""
+        assert SEASON_TYPE_PRIORITY == {
+            "PRE": 0,
+            "REG": 1,
+            "WC": 2,
+            "DIV": 3,
+            "CON": 4,
+            "SB": 5,
+        }
 
     def test_game_ordering_within_block(self):
         """Games within block ordered by scheduled_start_utc, then game_id."""

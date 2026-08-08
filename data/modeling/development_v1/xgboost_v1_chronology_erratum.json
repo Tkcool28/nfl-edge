@@ -1,0 +1,63 @@
+{
+  "artifact": "xgboost_v1_chronology_erratum",
+  "status": "XGBOOST_V1_SELECTION_PENDING_CHRONOLOGY_CORRECTED_RERUN",
+  "defect": {
+    "description": "The original walk-forward engine treated postseason blocks as earlier than regular-season blocks within the same NFL season-year.",
+    "previous_season_type_priority": {"PRE": 0, "WC": 1, "DIV": 2, "CON": 3, "SB": 4, "REG": 99},
+    "corrected_season_type_priority": {"PRE": 0, "REG": 1, "WC": 2, "DIV": 3, "CON": 4, "SB": 5},
+    "required_invariant": "REG(S) < WC(S) < DIV(S) < CON(S) < SB(S) < REG(S+1)",
+    "block_comparison_identity": "(season, season_type_priority, week)"
+  },
+  "invalidated_result_artifacts": [
+    "data/modeling/development_v1/xgboost_candidate_predictions_2018_2024.parquet",
+    "data/modeling/development_v1/xgboost_block_state_2018_2024.parquet",
+    "data/modeling/development_v1/xgboost_development_run_manifest_v1.json",
+    "data/modeling/development_v1/xgboost_candidate_metrics_v1.json",
+    "data/modeling/development_v1/xgboost_season_metrics_v1.json",
+    "data/modeling/development_v1/xgboost_early_late_metrics_v1.json",
+    "data/modeling/development_v1/xgboost_reliability_tables_v1.json",
+    "data/modeling/development_v1/xgboost_probability_extremity_v1.json",
+    "data/modeling/development_v1/xgboost_iteration_summary_v1.json",
+    "data/modeling/development_v1/xgboost_common_row_comparison_v1.json",
+    "data/modeling/development_v1/xgboost_qb_elo_comparison_v1.json",
+    "data/modeling/development_v1/xgboost_expected_margin_context_v1.json",
+    "data/modeling/development_v1/xgboost_blocked_bootstrap_v1.json",
+    "data/modeling/development_v1/xgboost_03c4b_first_run_preservation_manifest.json",
+    "data/modeling/development_v1/xgboost_selected_candidate_v1.json",
+    "data/modeling/development_v1/xgboost_v1_scorecard.json",
+    "data/modeling/development_v1/xgboost_v1_scorecard.md",
+    "data/modeling/development_v1/xgboost_v1_row_accounting_erratum.json",
+    "data/modeling/development_v1/xgboost_selected_v1_lock/SELECTED_V1_LOCK_MANIFEST.json",
+    "data/modeling/development_v1/xgboost_selected_v1_lock/SELECTED_V1_LOCK_MANIFEST_V2.json",
+    "data/modeling/development_v1/xgboost_v1_canonical_replay_proof.json",
+    "data/modeling/development_v1/xgboost_v1_holdout_boundary_note.json"
+  ],
+  "invalidated_artifact_status": "INVALIDATED_BY_CHRONOLOGY_DEFECT",
+  "valid_components": [
+    "Task 03C-1 environment/isolation",
+    "Task 03C-2 frozen 2018-2024 development extraction",
+    "132-feature contract",
+    "Task 03C-3 prospective candidate definitions",
+    "original prospective candidate lock",
+    "frozen candidate parameter hashes",
+    "market-data exclusions",
+    "2025 development exclusion",
+    "roof_category deterministic categorical representation decision"
+  ],
+  "prospective_lock_hashes": {
+    "canonical_config_sha256": "6aa585239ea20c7cd43da5837128101c83c5ce25645c8769e391a4dfc175a3be",
+    "candidate_evidence_sha256": "faf89503d42527e899ff6441f022298433aed61df812d3bead695fc1dce25e01",
+    "original_prospective_lock_sha256": "e0f2d54734e1cf236ea20e573857367c4df9e12fa251b9bcf1762a19cc127af7"
+  },
+  "selected_runner_authority_issue": "DEFERRED_UNTIL_POST_RERUN_SELECTION",
+  "deferred_action": "Do not repair run_xgboost_v1.py selected-lock authority until a corrected chronology rerun produces a new selection lock.",
+  "non_actions": {
+    "candidate_hyperparameters_changed": false,
+    "candidate_selected": false,
+    "model_fit_or_prediction_rerun": false,
+    "2025_holdout_performance_evaluated": false,
+    "2025_holdout_used_for_selection": false,
+    "2025_holdout_used_for_retuning": false,
+    "market_data_used": false
+  }
+}

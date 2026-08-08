@@ -1,0 +1,112 @@
+{
+  "LOWER_CORRELATION_NOTE": "LOWER_CORRELATION_MAY_INDICATE_COMPLEMENTARY_SIGNAL_OR_ADDITIONAL_NOISE_AND_REQUIRES_OUT_OF_SAMPLE_STACK_TESTING",
+  "STANDALONE_SELECTION_DOES_NOT_AUTHORIZE_ENSEMBLE_INPUT_SELECTION": true,
+  "artifact": "xgboost_future_stack_candidates_v1",
+  "candidates": {
+    "balanced": {
+      "aggregate_metrics": {
+        "accuracy": 0.612085,
+        "brier_score": 0.235156,
+        "logloss": 0.664845,
+        "max_probability": 0.954302,
+        "mean_probability": 0.55652,
+        "min_probability": 0.07555,
+        "roc_auc": 0.643633,
+        "scored_rows": 1655,
+        "std_probability": 0.139236,
+        "warmup_rows": 0
+      },
+      "candidate_correlations": {
+        "balanced_vs_expressive": 0.8952,
+        "conservative_vs_balanced": 0.907886,
+        "qb_elo_vs_balanced": 0.652752
+      },
+      "corrected_prediction_ledger": "chronology_corrected/xgboost_candidate_predictions_2018_2024.parquet",
+      "parameter_hash": "3548924be19dcab76d07e4eeba34a23755a8b6fc43e44dd2db4c65f36ca2d1de",
+      "qb_elo_correlation": 0.652752,
+      "status": "FUTURE_BLEND_CANDIDATE_PRESERVED_NOT_SELECTED_STANDALONE"
+    },
+    "conservative": {
+      "aggregate_metrics": {
+        "accuracy": 0.607855,
+        "brier_score": 0.232639,
+        "logloss": 0.657508,
+        "max_probability": 0.921787,
+        "mean_probability": 0.556618,
+        "min_probability": 0.121301,
+        "roc_auc": 0.649541,
+        "scored_rows": 1655,
+        "std_probability": 0.130179,
+        "warmup_rows": 0
+      },
+      "candidate_correlations": {
+        "conservative_vs_balanced": 0.907886,
+        "conservative_vs_expressive": 0.885323,
+        "qb_elo_vs_conservative": 0.67349
+      },
+      "corrected_prediction_ledger": "chronology_corrected/xgboost_candidate_predictions_2018_2024.parquet",
+      "parameter_hash": "a044ba76fd138bde1a52e364fd7fce5de042a2ddfdb6cdac22e592d4819ed58b",
+      "qb_elo_correlation": 0.67349,
+      "status": "SELECTED_XGBOOST_V1_STANDALONE"
+    },
+    "expressive": {
+      "aggregate_metrics": {
+        "accuracy": 0.61148,
+        "brier_score": 0.236656,
+        "logloss": 0.667412,
+        "max_probability": 0.954443,
+        "mean_probability": 0.561548,
+        "min_probability": 0.075396,
+        "roc_auc": 0.635017,
+        "scored_rows": 1655,
+        "std_probability": 0.135215,
+        "warmup_rows": 0
+      },
+      "candidate_correlations": {
+        "balanced_vs_expressive": 0.8952,
+        "conservative_vs_expressive": 0.885323,
+        "qb_elo_vs_expressive": 0.622993
+      },
+      "corrected_prediction_ledger": "chronology_corrected/xgboost_candidate_predictions_2018_2024.parquet",
+      "parameter_hash": "48e65199f99e7c6d79c5cc29670d6a80012758b2c6fd1800ecf08c7d5ab0c54a",
+      "qb_elo_correlation": 0.622993,
+      "status": "FUTURE_BLEND_CANDIDATE_PRESERVED_NOT_SELECTED_STANDALONE"
+    }
+  },
+  "future_feature_overlap_research": {
+    "FUTURE_FEATURE_OVERLAP_RESEARCH_NOT_IMPLEMENTED": true,
+    "future_work": [
+      "direct feature correlations",
+      "near-duplicate rolling-window features",
+      "structurally redundant home/away families",
+      "grouped feature importance",
+      "grouped SHAP only after V1 closure",
+      "candidate-specific split/gain usage",
+      "candidate interaction differences and incremental stack value"
+    ],
+    "not_implemented": [
+      "feature pruning",
+      "SHAP",
+      "132-feature contract modification"
+    ],
+    "scope": "roughly 70+ team-performance features"
+  },
+  "future_stack_experiment": {
+    "FUTURE_BLEND_RESEARCH_NOT_IMPLEMENTED": true,
+    "models": [
+      "QB-Elo alone",
+      "QB-Elo + conservative XGB",
+      "QB-Elo + balanced XGB",
+      "QB-Elo + expressive XGB"
+    ],
+    "requirements": [
+      "strict chronological out-of-sample predictions",
+      "Brier",
+      "logloss",
+      "calibration",
+      "ROC-AUC",
+      "blocked-bootstrap improvement vs QB-Elo alone"
+    ]
+  },
+  "status": "FUTURE_BLEND_RESEARCH_NOT_IMPLEMENTED"
+}
