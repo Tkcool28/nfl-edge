@@ -1,0 +1,45 @@
+{
+  "dataset_name": "stathead_actual_starter_candidates_v1",
+  "source": "SPORTS_REFERENCE_STATHEAD_PLAYER_GAME_FINDER",
+  "source_product": "Football Player Game Stats Finder",
+  "query_description": "For single games, from 2018 to 2024, started the game, played QB, in the regular season or the postseason, sorted by descending Date.",
+  "export_header": "Rk,Player,Day,G#,Week,Date,Age,Team,,Opp,Result,Pos.,Player-additional",
+  "expected_rank_min": 1,
+  "observed_rank_max_from_manual_export": 3921,
+  "raw_row_semantics": "candidate rows returned by Stathead query; not automatically accepted actual-QB starters",
+  "starter_evidence_class_for_accepted_downstream_rows": "POSTGAME_ACTUAL_STARTER",
+  "historical_model_usage_for_accepted_downstream_rows": "ORACLE_STARTER_IDENTITY_ONLY",
+  "canonical_development_seasons": [2018, 2019, 2020, 2021, 2022, 2023, 2024],
+  "canonical_development_game_count": 1942,
+  "required_final_accepted_starter_assignment_count": 3884,
+  "holdout_nfl_season": 2025,
+  "holdout_rule": "Do not inspect or use 2025 NFL-season outcomes/starter data. Jan/Feb 2025 games belonging to the 2024 postseason are development rows, not holdout rows.",
+  "raw_preservation_rules": [
+    "Preserve literal Stathead rows and anomalies.",
+    "Do not silently repair or normalize raw files in place.",
+    "Do not infer actual starter from attempts, yards, snaps, fantasy stats, result, or other target-game statistics.",
+    "Write cleaned/reconciled outputs to new versioned files.",
+    "Do not alter existing frozen historical game files."
+  ],
+  "known_raw_anomaly_classes": [
+    "BYE_ROWS",
+    "MULTIPLE_QB_CLASSIFIED_ROWS_SAME_TEAM_GAME",
+    "QB_CLASSIFIED_PLAYER_STARTED_OTHER_POSITION",
+    "ODD_DISPLAY_NAME_FORMATTING",
+    "OTHER_STARTER_AMBIGUITY_REQUIRING_EXPLICIT_VALIDATION"
+  ],
+  "recovery_method": "manual Stathead CSV copy/paste from subscriber UI into ChatGPT conversation, then durable repository recovery",
+  "recovery_status": "IN_PROGRESS_LITERAL_ROW_ARCHIVE",
+  "recovery_note": "Conversation summaries prove that ranks 1-3921 were manually acquired, but a row is marked durable only after its literal CSV text is committed. Hidden/skipped chat turns are not reconstructed from summaries.",
+  "downstream_cleaning_contract": {
+    "join_target": "existing canonical 2018-2024 development games",
+    "reject_non_game_rows": true,
+    "require_exactly_two_accepted_starters_per_canonical_game": true,
+    "pfr_id_source_column": "Player-additional",
+    "identity_mapping": "PFR ID -> nflverse player crosswalk -> canonical GSIS ID",
+    "fuzzy_identity_matching_allowed": false,
+    "unresolved_identity_mappings_must_be_explicit": true,
+    "manual_exceptions_must_be_auditable": true,
+    "original_historical_files_must_remain_unchanged": true
+  }
+}
