@@ -1,0 +1,26 @@
+{
+  "research_rows": 99,
+  "exception_keys_matched": 99,
+  "multi_candidate_rows": 50,
+  "multi_exact_name_matches": 49,
+  "multi_name_form_mismatches": 1,
+  "multi_name_form_resolved": 1,
+  "multi_true_identity_mismatches": 51,
+  "multi_unresolved": 0,
+  "zero_candidate_rows": 49,
+  "zero_exact_name_resolved": 48,
+  "zero_name_form_resolved": 0,
+  "zero_unresolved": 1,
+  "pfr_resolved": 98,
+  "pfr_unresolved": 1,
+  "gsis_resolved": 98,
+  "gsis_unresolved": 1,
+  "exact_unresolved_game_side_keys": [
+    "2020_12_NO_DEN:home"
+  ],
+  "crosswalk_sha256": "c2da9ec0ac104ba4a1240c164c48452e8dfefe49425a482a0e3073267d6b97ba",
+  "output_sha256": {
+    "audit": "2a49b6dea033aaf7a707f0c5b12c3920907f205e5748abdcdee1fda35138588e",
+    "ledger": "1f85cef28c94d4f0b648c3241bb2fc77f4dc0cc3abf27dbe70d0b09ea968632c"
+  }
+}
