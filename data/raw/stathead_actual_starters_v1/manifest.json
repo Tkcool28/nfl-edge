@@ -29,16 +29,13 @@
     "OTHER_STARTER_AMBIGUITY_REQUIRING_EXPLICIT_VALIDATION"
   ],
   "recovery_method": "manual Stathead CSV copy/paste from subscriber UI into ChatGPT conversation, then durable repository recovery",
-  "recovery_status": "IN_PROGRESS_LITERAL_ROW_ARCHIVE",
+  "recovery_status": "COMPLETE_LITERAL_ROW_ARCHIVE",
   "durable_rank_ranges": [
-    [1, 2200],
-    [3401, 3921]
+    [1, 3921]
   ],
-  "missing_literal_rank_ranges": [
-    [2201, 3400]
-  ],
-  "durable_row_count_excluding_headers": 2721,
-  "recovery_note": "Conversation summaries prove that ranks 1-3921 were manually acquired, but a row is marked durable only after its literal CSV text is committed. Hidden/skipped chat turns are not reconstructed from summaries. Ranks 2201-3400 still require literal recovery before the raw archive is complete.",
+  "missing_literal_rank_ranges": [],
+  "durable_row_count_excluding_headers": 3921,
+  "recovery_note": "All literal Stathead CSV ranks 1-3921 are now committed in contiguous rank-partitioned raw files. The raw archive preserves the source output as evidence and remains uncleaned; downstream reconciliation must create new versioned files and must not alter these raw rows.",
   "downstream_cleaning_contract": {
     "join_target": "existing canonical 2018-2024 development games",
     "reject_non_game_rows": true,
