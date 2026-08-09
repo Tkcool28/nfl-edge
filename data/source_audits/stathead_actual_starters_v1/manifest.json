@@ -1,0 +1,72 @@
+{
+  "dataset_id": "stathead_actual_starters_v1",
+  "preservation_status": "PARTIAL_RAW_PRESERVATION",
+  "source": {
+    "publisher": "Sports Reference",
+    "product": "Stathead Football",
+    "tool": "Player Game Stats Finder",
+    "query_description": "For single games, from 2018 to 2024, started the game, played QB, in the regular season or the postseason, sorted by descending Date.",
+    "acquisition_method": "User-authenticated manual Stathead export and manual paginated CSV capture.",
+    "citation_note": "Sports Reference requests attribution/citation when using its data."
+  },
+  "verified_uploaded_source": {
+    "original_filename": "sportsref_download (2).xls",
+    "format": "HTML table exported with .xls extension by Stathead",
+    "bytes": 148584,
+    "sha256": "855bc732762699d180659e734f5348b6b5244b78c58eb3d9abe32475f94a878d",
+    "rank_min": 1,
+    "rank_max": 200,
+    "row_count": 200,
+    "rank_continuity_verified": true,
+    "durable_repo_status": "Deterministic extracted CSV is committed; original uploaded HTML bytes are fingerprinted here but are not yet stored as a repository file."
+  },
+  "extracted_artifact": {
+    "path": "data/source_audits/stathead_actual_starters_v1/extracted/stathead_qb_started_2018_2024_ranks_0001_0200.csv",
+    "format": "UTF-8 CSV",
+    "sha256": "82b497870e949537253006a4c525c62973e62fe5646d5ad072fca05dde7125e9",
+    "row_count": 200,
+    "rank_min": 1,
+    "rank_max": 200,
+    "rank_continuity_verified": true,
+    "columns": [
+      "Rk",
+      "Player",
+      "Day",
+      "G#",
+      "Week",
+      "Date",
+      "Age",
+      "Team",
+      "",
+      "Opp",
+      "Result",
+      "Pos.",
+      "Player-additional"
+    ],
+    "pfr_player_id_extraction": "HTML name_display cell data-append-csv attribute -> Player-additional",
+    "normalization_notes": [
+      "The displayed Stathead game_result HTML uses a comma after W/L/T; the derived CSV removes that single display comma to match Stathead CSV-export field shape.",
+      "No starter adjudication, deduplication, BYE removal, canonical-game matching, or identity correction is performed in this extraction."
+    ]
+  },
+  "full_source_expectation": {
+    "expected_rank_min": 1,
+    "expected_rank_max": 3921,
+    "expected_raw_row_count": 3921,
+    "durably_serialized_repo_ranges": [[1, 200]],
+    "known_historical_capture_status": "The complete ranks 1-3921 were manually captured during the Stathead acquisition session, but not all exact row text remains machine-readable in the current execution context.",
+    "status_note": "Do not claim the complete 1-3921 source export is frozen until every rank is durably serialized from exact source text or equivalent uploaded exports."
+  },
+  "known_source_quality_notes": [
+    "The raw Stathead query output contains known false-positive/non-QB-starter rows, including BYE rows and multiple QB-classified started rows for some team-games.",
+    "Raw row count 3921 must not be reduced to the expected 3884 accepted game-side starters by arbitrary deletion; canonical reconciliation and explicit ambiguity handling are required."
+  ],
+  "historical_usage": {
+    "starter_evidence_class": "POSTGAME_ACTUAL_STARTER",
+    "historical_model_usage": "ORACLE_STARTER_IDENTITY_ONLY",
+    "not_expected_starter_reconstruction": true,
+    "target_game_performance_may_resolve_ambiguity": false
+  },
+  "holdout_guardrail": "The 2025 NFL season remains sealed. Calendar-date Jan/Feb 2025 postseason rows that belong to the 2024 NFL season are allowed development-period records; no 2025 NFL-season starter/performance data is authorized.",
+  "immutability": "Raw/source-preservation artifacts are immutable. Cleaning/integration must create new derived files and leave existing historical 2018-2024 datasets intact."
+}
