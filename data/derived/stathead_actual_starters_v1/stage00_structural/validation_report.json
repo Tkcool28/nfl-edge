@@ -1,0 +1,311 @@
+{
+  "bye_shape_exception_count": 20,
+  "bye_shape_rows": [
+    {
+      "line_number": 133,
+      "normalized_output_line": "732,Sam Howell,Sun,13,14,2023-12-10,23-085,WAS,,BYE,,QB,HoweSa00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0601_0800.csv",
+      "rank": 732,
+      "source_raw_line": "732,Sam Howell,Sun,13,14,2023-12-10,23-085,WAS,BYE,,QB,HoweSa00"
+    },
+    {
+      "line_number": 142,
+      "normalized_output_line": "741,Kyler Murray,Sun,13,14,2023-12-10,26-125,ARI,,BYE,,QB,MurrKy00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0601_0800.csv",
+      "rank": 741,
+      "source_raw_line": "741,Kyler Murray,Sun,13,14,2023-12-10,26-125,ARI,BYE,,QB,MurrKy00"
+    },
+    {
+      "line_number": 156,
+      "normalized_output_line": "755,Josh Allen,Sun,12,13,2023-12-03,27-196,BUF,,BYE,,QB,AlleJo02",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0601_0800.csv",
+      "rank": 755,
+      "source_raw_line": "755,Josh Allen,Sun,12,13,2023-12-03,27-196,BUF,BYE,,QB,AlleJo02"
+    },
+    {
+      "line_number": 159,
+      "normalized_output_line": "758,Tommy DeVito,Sun,12,13,2023-12-03,25-119,NYG,,BYE,,QB,DeViTo00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0601_0800.csv",
+      "rank": 758,
+      "source_raw_line": "758,Tommy DeVito,Sun,12,13,2023-12-03,25-119,NYG,BYE,,QB,DeViTo00"
+    },
+    {
+      "line_number": 160,
+      "normalized_output_line": "759,Justin Fields,Sun,12,13,2023-12-03,24-273,CHI,,BYE,,QB,FielJu00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0601_0800.csv",
+      "rank": 759,
+      "source_raw_line": "759,Justin Fields,Sun,12,13,2023-12-03,24-273,CHI,BYE,,QB,FielJu00"
+    },
+    {
+      "line_number": 166,
+      "normalized_output_line": "765,Lamar Jackson,Sun,12,13,2023-12-03,26-330,BAL,,BYE,,QB,JackLa00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0601_0800.csv",
+      "rank": 765,
+      "source_raw_line": "765,Lamar Jackson,Sun,12,13,2023-12-03,26-330,BAL,BYE,,QB,JackLa00"
+    },
+    {
+      "line_number": 174,
+      "normalized_output_line": "773,Aidan O'Connell,Sun,12,13,2023-12-03,25-093,LVR,,BYE,,QB,OConAi00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0601_0800.csv",
+      "rank": 773,
+      "source_raw_line": "773,Aidan O'Connell,Sun,12,13,2023-12-03,25-093,LVR,BYE,,QB,OConAi00"
+    },
+    {
+      "line_number": 13,
+      "normalized_output_line": "812,Derek Carr,Sun,10,11,2023-11-19,32-236,NOR,,BYE,,QB,CarrDe02",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank": 812,
+      "source_raw_line": "812,Derek Carr,Sun,10,11,2023-11-19,32-236,NOR,BYE,,QB,CarrDe02"
+    },
+    {
+      "line_number": 23,
+      "normalized_output_line": "822,Mac Jones,Sun,10,11,2023-11-19,25-075,NWE,,BYE,,QB,JoneMa05",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank": 822,
+      "source_raw_line": "822,Mac Jones,Sun,10,11,2023-11-19,25-075,NWE,BYE,,QB,JoneMa05"
+    },
+    {
+      "line_number": 29,
+      "normalized_output_line": "828,Gardner Minshew II,Sun,10,11,2023-11-19,27-187,IND,,BYE,,QB,MinsGa00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank": 828,
+      "source_raw_line": "828,Gardner Minshew II,Sun,10,11,2023-11-19,27-187,IND,BYE,,QB,MinsGa00"
+    },
+    {
+      "line_number": 35,
+      "normalized_output_line": "834,Desmond Ridder,Sun,10,11,2023-11-19,24-080,ATL,,BYE,,QB,RiddDe00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank": 834,
+      "source_raw_line": "834,Desmond Ridder,Sun,10,11,2023-11-19,24-080,ATL,BYE,,QB,RiddDe00"
+    },
+    {
+      "line_number": 56,
+      "normalized_output_line": "855,Jalen Hurts,Sun,9,10,2023-11-12,25-098,PHI,,BYE,,QB,HurtJa00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank": 855,
+      "source_raw_line": "855,Jalen Hurts,Sun,9,10,2023-11-12,25-098,PHI,BYE,,QB,HurtJa00"
+    },
+    {
+      "line_number": 62,
+      "normalized_output_line": "861,Patrick Mahomes,Sun,9,10,2023-11-12,28-057,KAN,,BYE,,QB,MahoPa00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank": 861,
+      "source_raw_line": "861,Patrick Mahomes,Sun,9,10,2023-11-12,28-057,KAN,BYE,,QB,MahoPa00"
+    },
+    {
+      "line_number": 71,
+      "normalized_output_line": "870,Matthew Stafford,Sun,9,10,2023-11-12,35-278,LAR,,BYE,,QB,StafMa00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank": 870,
+      "source_raw_line": "870,Matthew Stafford,Sun,9,10,2023-11-12,35-278,LAR,BYE,,QB,StafMa00"
+    },
+    {
+      "line_number": 73,
+      "normalized_output_line": "872,Tua Tagovailoa,Sun,9,10,2023-11-12,25-255,MIA,,BYE,,QB,TagoTu00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank": 872,
+      "source_raw_line": "872,Tua Tagovailoa,Sun,9,10,2023-11-12,25-255,MIA,BYE,,QB,TagoTu00"
+    },
+    {
+      "line_number": 85,
+      "normalized_output_line": "884,Jared Goff,Sun,8,9,2023-11-05,29-022,DET,,BYE,,QB,GoffJa00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank": 884,
+      "source_raw_line": "884,Jared Goff,Sun,8,9,2023-11-05,29-022,DET,BYE,,QB,GoffJa00"
+    },
+    {
+      "line_number": 92,
+      "normalized_output_line": "891,Trevor Lawrence,Sun,8,9,2023-11-05,23-030,JAX,,BYE,,QB,LawrTr00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank": 891,
+      "source_raw_line": "891,Trevor Lawrence,Sun,8,9,2023-11-05,23-030,JAX,BYE,,QB,LawrTr00"
+    },
+    {
+      "line_number": 102,
+      "normalized_output_line": "901,Brock Purdy,Sun,8,9,2023-11-05,23-303,SFO,,BYE,,QB,PurdBr00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank": 901,
+      "source_raw_line": "901,Brock Purdy,Sun,8,9,2023-11-05,23-303,SFO,BYE,,QB,PurdBr00"
+    },
+    {
+      "line_number": 109,
+      "normalized_output_line": "908,Russell Wilson,Sun,8,9,2023-11-05,34-341,DEN,,BYE,,QB,WilsRu00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank": 908,
+      "source_raw_line": "908,Russell Wilson,Sun,8,9,2023-11-05,34-341,DEN,BYE,,QB,WilsRu00"
+    },
+    {
+      "line_number": 162,
+      "normalized_output_line": "961,Malik Willis,Sun,6,7,2023-10-22,24-150,TEN,,BYE,,QB,WillMa00",
+      "partition": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank": 961,
+      "source_raw_line": "961,Malik Willis,Sun,6,7,2023-10-22,24-150,TEN,BYE,,QB,WillMa00"
+    }
+  ],
+  "combined_output_csv": "data/derived/stathead_actual_starters_v1/stage00_structural/stathead_qb_started_2018_2024_raw_combined.csv",
+  "combined_output_sha256": "d18570652f83b598416c7691921c1ab39acc3748a35acd43850f282c397be14f",
+  "duplicate_ranks": [],
+  "expected_rank_max": 3921,
+  "expected_rank_min": 1,
+  "expected_row_count": 3921,
+  "guardrails": [
+    "Raw partition files are read-only evidence.",
+    "No BYE rows are removed in this stage.",
+    "No multiple-candidate team-games are resolved in this stage.",
+    "No target-game performance statistic is used.",
+    "No existing frozen historical file is modified.",
+    "No 2025 NFL-season starter/performance data is accessed."
+  ],
+  "malformed_rows": [],
+  "missing_ranks": [],
+  "observed_unique_rank_count": 3921,
+  "out_of_range_ranks": [],
+  "partitions": [
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0001_0200.csv",
+      "rank_max": 200,
+      "rank_min": 1,
+      "row_count_excluding_header": 200,
+      "sha256": "82b497870e949537253006a4c525c62973e62fe5646d5ad072fca05dde7125e9"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0201_0400.csv",
+      "rank_max": 400,
+      "rank_min": 201,
+      "row_count_excluding_header": 200,
+      "sha256": "ec7df3c289828c0250908f7b9eb17e7ceada262f1c0eb2f60577f8e77903ff75"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0401_0600.csv",
+      "rank_max": 600,
+      "rank_min": 401,
+      "row_count_excluding_header": 200,
+      "sha256": "b9b4db1ff2dbf7bb0d82d3eb2f6c6f6b8d6b32e168b38519636f7099ca13b1aa"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0601_0800.csv",
+      "rank_max": 800,
+      "rank_min": 601,
+      "row_count_excluding_header": 200,
+      "sha256": "014631a92fa3fa61c3bf0baf5a4647c5284ed698b263e7d87ddda83ff6eb69d9"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_0801_1000.csv",
+      "rank_max": 1000,
+      "rank_min": 801,
+      "row_count_excluding_header": 200,
+      "sha256": "0cf6be8109d962a2f32d6d2991f8bae0c35912cdb9aba8e0b45e2b747b9b0944"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_1001_1200.csv",
+      "rank_max": 1200,
+      "rank_min": 1001,
+      "row_count_excluding_header": 200,
+      "sha256": "7f61c134157eb89e27dce1477c9bfd36fca473d33efa7ec59d831278944adc03"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_1201_1400.csv",
+      "rank_max": 1400,
+      "rank_min": 1201,
+      "row_count_excluding_header": 200,
+      "sha256": "6398dd79c1f0d19ceb0d04dfe9eaec027da364c4757076ba7515cf80a39cf7de"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_1401_1600.csv",
+      "rank_max": 1600,
+      "rank_min": 1401,
+      "row_count_excluding_header": 200,
+      "sha256": "b98e5cdeb4b9d8f7ea66b28a803aedb6601048dcd241eda271fff726457fbb1c"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_1601_1800.csv",
+      "rank_max": 1800,
+      "rank_min": 1601,
+      "row_count_excluding_header": 200,
+      "sha256": "8ce030f85f0a604b2907176c655077ec516b6a13ec329fabae8ef465458248d5"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_1801_2000.csv",
+      "rank_max": 2000,
+      "rank_min": 1801,
+      "row_count_excluding_header": 200,
+      "sha256": "6d1264993768ed2c6317db43c34618f13d88259b34392ed2254eff2c9bb3ed04"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_2001_2200.csv",
+      "rank_max": 2200,
+      "rank_min": 2001,
+      "row_count_excluding_header": 200,
+      "sha256": "987840272718dd1e6336b4864abdbfe117147b135ba3af8e0bca9d857c32820b"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_2201_2400.csv",
+      "rank_max": 2400,
+      "rank_min": 2201,
+      "row_count_excluding_header": 200,
+      "sha256": "3cbd63ef01fccd2aefe74c425ad5a30b87693e6d8e6af8730b28a3a47508eb48"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_2401_2600.csv",
+      "rank_max": 2600,
+      "rank_min": 2401,
+      "row_count_excluding_header": 200,
+      "sha256": "7d1b836a8a18a03a7f3d481794bcfc3f9686173c5d11de40bacf2c70afc731f5"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_2601_2800.csv",
+      "rank_max": 2800,
+      "rank_min": 2601,
+      "row_count_excluding_header": 200,
+      "sha256": "3b20fc2e9b2b35da68aaae6edcb2e0af494e025cf3432e4e42152d857f0502ec"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_2801_3000.csv",
+      "rank_max": 3000,
+      "rank_min": 2801,
+      "row_count_excluding_header": 200,
+      "sha256": "44d3b21740460028df18cc2d0f2d895b910d9f3c263d56f73745572249a42a11"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_3001_3200.csv",
+      "rank_max": 3200,
+      "rank_min": 3001,
+      "row_count_excluding_header": 200,
+      "sha256": "f62cb1ebdd20f7b880311419c10e6618a88b51d619e4ba22f48a9d02333d1102"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_3201_3400.csv",
+      "rank_max": 3400,
+      "rank_min": 3201,
+      "row_count_excluding_header": 200,
+      "sha256": "b237cb33174d2c9fb5fcf84685a909939d773cfe6d644c1dcec6f5e9a136bb0d"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_3401_3600.csv",
+      "rank_max": 3600,
+      "rank_min": 3401,
+      "row_count_excluding_header": 200,
+      "sha256": "08918a36fbfe93b44f3fa7b1a26c0ddf62aa8a9d2555e1ded3be344aeef7ca9b"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_3601_3800.csv",
+      "rank_max": 3800,
+      "rank_min": 3601,
+      "row_count_excluding_header": 200,
+      "sha256": "3a7805b4850cd1f3d8a9a81e90177244fbb8b444e03da66b6eaefdddec00756b"
+    },
+    {
+      "path": "data/raw/stathead_actual_starters_v1/chat_pastes/ranks_3801_3921.csv",
+      "rank_max": 3921,
+      "rank_min": 3801,
+      "row_count_excluding_header": 121,
+      "sha256": "9cdd4a7c47cf25b19844f9cf281be2c5500f80691b1ebf29a67a1e8185789c6f"
+    }
+  ],
+  "physical_raw_row_count_excluding_headers": 3921,
+  "semantic_cleaning_performed": false,
+  "source_partition_count": 20,
+  "stage": "stage00_structural_raw_validation",
+  "starter_adjudication_performed": false,
+  "structural_ok": true
+}
