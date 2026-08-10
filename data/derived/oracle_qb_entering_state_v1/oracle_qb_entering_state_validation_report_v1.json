@@ -1,0 +1,42 @@
+{
+  "game_side_rows": 3884,
+  "unique_game_side_keys": 3884,
+  "game_rows": 1942,
+  "unique_game_ids": 1942,
+  "starter_identities_matched": 3884,
+  "starter_identities_unmatched": 0,
+  "zero_prior_sample_sides": 80,
+  "prior_sample_sides": 3804,
+  "same_block_rows_used": 0,
+  "target_game_rows_used": 0,
+  "future_block_rows_used": 0,
+  "nfl_2025_rows_used": 0,
+  "min_qb_adjustment": -50.0,
+  "max_qb_adjustment": 50.0,
+  "mean_abs_qb_adjustment": 37.95459102284628,
+  "season_game_counts": {
+    "2018": 267,
+    "2019": 267,
+    "2020": 269,
+    "2021": 285,
+    "2022": 284,
+    "2023": 285,
+    "2024": 285
+  },
+  "postseason_games": 87,
+  "kendall_hinton_key": "2020_12_NO_DEN:home",
+  "kendall_hinton_prior_dropbacks": 0,
+  "kendall_hinton_prior_total_passing_epa": 0.0,
+  "kendall_hinton_shrunk_passing_epa": -0.05,
+  "kendall_hinton_qb_adjustment_elo": 0.0,
+  "qb_stats_passing_epa_semantics": "GAME_TOTAL_EPA_ON_PASS_ATTEMPTS_AND_SACKS",
+  "qb_stats_prior_epa_aggregation": "SUM(passing_epa) / SUM(attempts + sacks_suffered)",
+  "qb_stats_dropback_definition": "attempts + sacks_suffered",
+  "starter_input_sha256": "38732823861bb1def3c216ce9189b651a2dc4d0737d2f65f88f17e97f40b2a1a",
+  "qb_stats_source_sha256": "7b34e88ba66a2ee23f6b7645d3c731731270dc64213010c22535ba1a1f52a062",
+  "qb_elo_config_sha256": "3afd5940ee46238b8b63f571a0309530b4c3abb3097f15c22a2d29a2328e8167",
+  "output_sha256": {
+    "oracle_qb_entering_state_game_sides_2018_2024_v1.csv": "fee3628da76c3aa1c25d58d0f7db65568bb6336b965e4cb9be15b9c637f6b9e7",
+    "oracle_qb_pregame_adjustments_by_game_2018_2024_v1.csv": "71483ad0957218d0d3157f47cb21958fffa76e7739481efbb40f099a78b87bef"
+  }
+}
