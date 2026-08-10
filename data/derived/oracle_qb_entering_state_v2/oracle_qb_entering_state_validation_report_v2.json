@@ -1,0 +1,46 @@
+{
+  "side_rows": 3884,
+  "unique_side_keys": 3884,
+  "game_rows": 1942,
+  "unique_game_ids": 1942,
+  "starter_identities_matched": 3884,
+  "starter_identities_unmatched": 0,
+  "zero_history_target_sides": 78,
+  "nonzero_history_target_sides": 3806,
+  "measured_target_game_source_rows_used": 0,
+  "measured_same_canonical_block_source_rows_used": 0,
+  "measured_future_availability_rows_used": 0,
+  "measured_2025_source_rows_used": 0,
+  "total_eligible_source_qb_rows_examined": 135220,
+  "min_qb_adjustment": -50.0,
+  "max_qb_adjustment": 50.0,
+  "mean_abs_qb_adjustment": 35.562706755384816,
+  "season_game_counts": {
+    "2018": 267,
+    "2019": 267,
+    "2020": 269,
+    "2021": 285,
+    "2022": 284,
+    "2023": 285,
+    "2024": 285
+  },
+  "postseason_games": 87,
+  "kendall_hinton": {
+    "game_id": "2020_12_NO_DEN",
+    "team_side": "home",
+    "gsis_id": "00-0035864",
+    "semantic_exception_flag": true,
+    "eligible_prior_qb_source_rows": 0
+  },
+  "primary_model_input": "data/derived/oracle_qb_entering_state_v2/oracle_qb_pregame_adjustments_by_game_2018_2024_v2.parquet",
+  "sha256": {
+    "oracle_qb_entering_state_game_sides_2018_2024_v2.csv": "38fa0bbe808922f7eccc0ed1cc0eb6b80e0604af53fcb5a65a94fb415bcb24fc",
+    "oracle_qb_entering_state_game_sides_2018_2024_v2.parquet": "ced25679f934ed5d11f706a704b379ef6416d8de65301871f72afb4304c97d4d",
+    "oracle_qb_pregame_adjustments_by_game_2018_2024_v2.csv": "ac0c1c2fb6239a816bd4d2514784e43f2ec9d42790f2a3713d5806ee6b3bc039",
+    "oracle_qb_pregame_adjustments_by_game_2018_2024_v2.parquet": "268368c81913e183d7e9ea5050c0da0a01be619790b75c5bab9362c97349e886",
+    "starter_input": "38732823861bb1def3c216ce9189b651a2dc4d0737d2f65f88f17e97f40b2a1a",
+    "qb_stats": "7b34e88ba66a2ee23f6b7645d3c731731270dc64213010c22535ba1a1f52a062",
+    "features_config": "399902d3027f94d4af769cce3766fb7d75c3189c7692a75e7217325899ce38e5",
+    "qb_elo_config": "3afd5940ee46238b8b63f571a0309530b4c3abb3097f15c22a2d29a2328e8167"
+  }
+}
