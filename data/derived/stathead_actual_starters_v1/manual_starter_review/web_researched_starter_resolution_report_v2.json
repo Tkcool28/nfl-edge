@@ -1,0 +1,20 @@
+{
+  "research_rows": 99,
+  "resolved_pfr": 99,
+  "unresolved_pfr": 0,
+  "resolved_gsis": 99,
+  "unresolved_gsis": 0,
+  "special_semantic_exceptions": 1,
+  "special_semantic_exception_keys": [
+    "2020_12_NO_DEN:home"
+  ],
+  "kendall_hinton": {
+    "pfr_id": "HintKe00",
+    "gsis_id": "00-0035864",
+    "official_statistical_qb_start_credit": "NONE",
+    "source_notes": "Denver Broncos official postgame recap, Under extreme circumstances, Vic Fangio proud of Broncos fight in loss to Saints (2020-11-29); NFL.com QB Index noting no official QB start; PFR /players/H/HintKe00.htm"
+  },
+  "output_sha256": {
+    "web_researched_starter_resolutions_v2.csv": "333a399288bda0405e6e8c10ac391740b681cf2de9b55ecc87afe60222df022d"
+  }
+}
