@@ -1,0 +1,12 @@
+{
+  "task04c_identity": true,
+  "pairable": true,
+  "pre_boundary_sanity_passed": true,
+  "week1_4_n": 445,
+  "combined_audit_rows": 960,
+  "combined_audit_pass": 960,
+  "best_nonzero_week1_4_brier": {
+    "candidate": "regression_025",
+    "brier": 0.23466207414670273
+  }
+}

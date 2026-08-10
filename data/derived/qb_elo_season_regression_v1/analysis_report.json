@@ -1,0 +1,3397 @@
+{
+  "paired_vs_000": [
+    {
+      "candidate": "regression_025",
+      "reference": "regression_000",
+      "segment": "week1_4",
+      "n": 445,
+      "mean_brier_delta": -0.0020182251533136086,
+      "median_brier_delta": 0.0046358092767076475,
+      "mean_logloss_delta": -0.011651506585970455,
+      "median_logloss_delta": 0.010938362817763059,
+      "brier_improve": 145,
+      "brier_worsen": 237,
+      "brier_tie": 63,
+      "ll_improve": 145,
+      "ll_worsen": 237,
+      "ll_tie": 63,
+      "aggregate_brier_equiv": -0.0020182251533135687
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "regression_000",
+      "segment": "week1_4",
+      "n": 445,
+      "mean_brier_delta": -0.0012097573504477063,
+      "median_brier_delta": 0.006661734749630915,
+      "mean_logloss_delta": -0.011600995765673852,
+      "median_logloss_delta": 0.01512826655578925,
+      "brier_improve": 145,
+      "brier_worsen": 237,
+      "brier_tie": 63,
+      "ll_improve": 145,
+      "ll_worsen": 237,
+      "ll_tie": 63,
+      "aggregate_brier_equiv": -0.0012097573504476766
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "regression_000",
+      "segment": "week1_4",
+      "n": 445,
+      "mean_brier_delta": 0.0017845002458653325,
+      "median_brier_delta": 0.010593220348002114,
+      "mean_logloss_delta": -0.00624335482584605,
+      "median_logloss_delta": 0.02638239924302288,
+      "brier_improve": 142,
+      "brier_worsen": 240,
+      "brier_tie": 63,
+      "ll_improve": 142,
+      "ll_worsen": 240,
+      "ll_tie": 63,
+      "aggregate_brier_equiv": 0.0017845002458653503
+    },
+    {
+      "candidate": "regression_025",
+      "reference": "regression_000",
+      "segment": "weeks5plus",
+      "n": 1410,
+      "mean_brier_delta": -0.0036686757224311385,
+      "median_brier_delta": 0.0008808558295505054,
+      "mean_logloss_delta": -0.01190304377632,
+      "median_logloss_delta": 0.0026065378899426117,
+      "brier_improve": 501,
+      "brier_worsen": 716,
+      "brier_tie": 193,
+      "ll_improve": 501,
+      "ll_worsen": 716,
+      "ll_tie": 193,
+      "aggregate_brier_equiv": -0.003668675722431125
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "regression_000",
+      "segment": "weeks5plus",
+      "n": 1410,
+      "mean_brier_delta": -0.004589781763943573,
+      "median_brier_delta": 0.0013701818826034572,
+      "mean_logloss_delta": -0.014848848144810096,
+      "median_logloss_delta": 0.0040163853928872895,
+      "brier_improve": 499,
+      "brier_worsen": 718,
+      "brier_tie": 193,
+      "ll_improve": 499,
+      "ll_worsen": 718,
+      "ll_tie": 193,
+      "aggregate_brier_equiv": -0.0045897817639435345
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "regression_000",
+      "segment": "weeks5plus",
+      "n": 1410,
+      "mean_brier_delta": -0.004844419963687085,
+      "median_brier_delta": 0.001645740565454446,
+      "mean_logloss_delta": -0.015999593570308564,
+      "median_logloss_delta": 0.005499228717780358,
+      "brier_improve": 495,
+      "brier_worsen": 722,
+      "brier_tie": 193,
+      "ll_improve": 495,
+      "ll_worsen": 722,
+      "ll_tie": 193,
+      "aggregate_brier_equiv": -0.004844419963687063
+    },
+    {
+      "candidate": "regression_025",
+      "reference": "regression_000",
+      "segment": "reg",
+      "n": 1855,
+      "mean_brier_delta": -0.0032727455319959357,
+      "median_brier_delta": 0.0015564756647856437,
+      "mean_logloss_delta": -0.011842701970548814,
+      "median_logloss_delta": 0.003996340678914634,
+      "brier_improve": 646,
+      "brier_worsen": 953,
+      "brier_tie": 256,
+      "ll_improve": 646,
+      "ll_worsen": 953,
+      "ll_tie": 256,
+      "aggregate_brier_equiv": -0.003272745531995913
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "regression_000",
+      "segment": "reg",
+      "n": 1855,
+      "mean_brier_delta": -0.003778940327821923,
+      "median_brier_delta": 0.00237145331737193,
+      "mean_logloss_delta": -0.014069713746580647,
+      "median_logloss_delta": 0.006388807798891061,
+      "brier_improve": 644,
+      "brier_worsen": 955,
+      "brier_tie": 256,
+      "ll_improve": 644,
+      "ll_worsen": 955,
+      "ll_tie": 256,
+      "aggregate_brier_equiv": -0.003778940327821917
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "regression_000",
+      "segment": "reg",
+      "n": 1855,
+      "mean_brier_delta": -0.0032541938217728935,
+      "median_brier_delta": 0.0034472361199704912,
+      "mean_logloss_delta": -0.013659148157216475,
+      "median_logloss_delta": 0.008864331972419037,
+      "brier_improve": 637,
+      "brier_worsen": 962,
+      "brier_tie": 256,
+      "ll_improve": 637,
+      "ll_worsen": 962,
+      "ll_tie": 256,
+      "aggregate_brier_equiv": -0.0032541938217728883
+    },
+    {
+      "candidate": "regression_025",
+      "reference": "regression_000",
+      "segment": "postseason",
+      "n": 87,
+      "mean_brier_delta": -0.004404305779110984,
+      "median_brier_delta": 0.0002697202213056346,
+      "mean_logloss_delta": -0.010014257533799639,
+      "median_logloss_delta": 0.0008453842786004806,
+      "brier_improve": 31,
+      "brier_worsen": 45,
+      "brier_tie": 11,
+      "ll_improve": 31,
+      "ll_worsen": 45,
+      "ll_tie": 11,
+      "aggregate_brier_equiv": -0.00440430577911094
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "regression_000",
+      "segment": "postseason",
+      "n": 87,
+      "mean_brier_delta": -0.006023546513570515,
+      "median_brier_delta": 8.518964476628144e-05,
+      "mean_logloss_delta": -0.013370265556631766,
+      "median_logloss_delta": 0.00017646280766114852,
+      "brier_improve": 32,
+      "brier_worsen": 44,
+      "brier_tie": 11,
+      "ll_improve": 32,
+      "ll_worsen": 44,
+      "ll_tie": 11,
+      "aggregate_brier_equiv": -0.006023546513570482
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "regression_000",
+      "segment": "postseason",
+      "n": 87,
+      "mean_brier_delta": -0.007442303486418445,
+      "median_brier_delta": 0.00119762919717252,
+      "mean_logloss_delta": -0.016125288193425572,
+      "median_logloss_delta": 0.0026346242672302678,
+      "brier_improve": 32,
+      "brier_worsen": 44,
+      "brier_tie": 11,
+      "ll_improve": 32,
+      "ll_worsen": 44,
+      "ll_tie": 11,
+      "aggregate_brier_equiv": -0.007442303486418389
+    },
+    {
+      "candidate": "regression_025",
+      "reference": "regression_000",
+      "segment": "full",
+      "n": 1942,
+      "mean_brier_delta": -0.0033234384987822427,
+      "median_brier_delta": 0.0015193235419472947,
+      "mean_logloss_delta": -0.01176078916622483,
+      "median_logloss_delta": 0.0039031382414034255,
+      "brier_improve": 677,
+      "brier_worsen": 998,
+      "brier_tie": 267,
+      "ll_improve": 677,
+      "ll_worsen": 998,
+      "ll_tie": 267,
+      "aggregate_brier_equiv": -0.0033234384987822496
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "regression_000",
+      "segment": "full",
+      "n": 1942,
+      "mean_brier_delta": -0.0038794968356283743,
+      "median_brier_delta": 0.0022164193972731387,
+      "mean_logloss_delta": -0.01403837904394133,
+      "median_logloss_delta": 0.006078400531443484,
+      "brier_improve": 676,
+      "brier_worsen": 999,
+      "brier_tie": 267,
+      "ll_improve": 676,
+      "ll_worsen": 999,
+      "ll_tie": 267,
+      "aggregate_brier_equiv": -0.0038794968356283543
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "regression_000",
+      "segment": "full",
+      "n": 1942,
+      "mean_brier_delta": -0.0034418176841952224,
+      "median_brier_delta": 0.0029784212376094384,
+      "mean_logloss_delta": -0.013769629199003394,
+      "median_logloss_delta": 0.007521309262317026,
+      "brier_improve": 669,
+      "brier_worsen": 1006,
+      "brier_tie": 267,
+      "ll_improve": 669,
+      "ll_worsen": 1006,
+      "ll_tie": 267,
+      "aggregate_brier_equiv": -0.003441817684195242
+    }
+  ],
+  "paired_vs_0333": [
+    {
+      "candidate": "regression_000",
+      "reference": "task04c_reference_0333",
+      "segment": "week1_4",
+      "n": 445,
+      "mean_brier_delta": 0.001736132973517487,
+      "median_brier_delta": -0.006136988653894726,
+      "mean_logloss_delta": 0.012119401262123072,
+      "median_logloss_delta": -0.014819557110119286,
+      "brier_improve": 238,
+      "brier_worsen": 144,
+      "brier_tie": 63,
+      "ll_improve": 238,
+      "ll_worsen": 144,
+      "ll_tie": 63,
+      "aggregate_brier_equiv": 0.0017361329735174347
+    },
+    {
+      "candidate": "regression_025",
+      "reference": "task04c_reference_0333",
+      "segment": "week1_4",
+      "n": 445,
+      "mean_brier_delta": -0.00028209217979612103,
+      "median_brier_delta": -0.0015958474334066622,
+      "mean_logloss_delta": 0.00046789467615261746,
+      "median_logloss_delta": -0.0037986617576507564,
+      "brier_improve": 238,
+      "brier_worsen": 144,
+      "brier_tie": 63,
+      "ll_improve": 238,
+      "ll_worsen": 144,
+      "ll_tie": 63,
+      "aggregate_brier_equiv": -0.000282092179796134
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "task04c_reference_0333",
+      "segment": "week1_4",
+      "n": 445,
+      "mean_brier_delta": 0.0005263756230697807,
+      "median_brier_delta": 0.0015419829191580525,
+      "mean_logloss_delta": 0.0005184054964492175,
+      "median_logloss_delta": 0.00347724078282996,
+      "brier_improve": 139,
+      "brier_worsen": 243,
+      "brier_tie": 63,
+      "ll_improve": 139,
+      "ll_worsen": 243,
+      "ll_tie": 63,
+      "aggregate_brier_equiv": 0.000526375623069758
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "task04c_reference_0333",
+      "segment": "week1_4",
+      "n": 445,
+      "mean_brier_delta": 0.003520633219382819,
+      "median_brier_delta": 0.006448077879742692,
+      "mean_logloss_delta": 0.005876046436277019,
+      "median_logloss_delta": 0.0151228207358034,
+      "brier_improve": 135,
+      "brier_worsen": 247,
+      "brier_tie": 63,
+      "ll_improve": 135,
+      "ll_worsen": 247,
+      "ll_tie": 63,
+      "aggregate_brier_equiv": 0.003520633219382785
+    },
+    {
+      "candidate": "regression_000",
+      "reference": "task04c_reference_0333",
+      "segment": "weeks5plus",
+      "n": 1410,
+      "mean_brier_delta": 0.004269229853532372,
+      "median_brier_delta": -0.00137749166685795,
+      "mean_logloss_delta": 0.01380520106243607,
+      "median_logloss_delta": -0.0036543185731644917,
+      "brier_improve": 719,
+      "brier_worsen": 498,
+      "brier_tie": 193,
+      "ll_improve": 719,
+      "ll_worsen": 498,
+      "ll_tie": 193,
+      "aggregate_brier_equiv": 0.004269229853532341
+    },
+    {
+      "candidate": "regression_025",
+      "reference": "task04c_reference_0333",
+      "segment": "weeks5plus",
+      "n": 1410,
+      "mean_brier_delta": 0.0006005541311012337,
+      "median_brier_delta": -0.000272780359475279,
+      "mean_logloss_delta": 0.0019021572861160716,
+      "median_logloss_delta": -0.000900255405574632,
+      "brier_improve": 723,
+      "brier_worsen": 494,
+      "brier_tie": 193,
+      "ll_improve": 723,
+      "ll_worsen": 494,
+      "ll_tie": 193,
+      "aggregate_brier_equiv": 0.0006005541311012164
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "task04c_reference_0333",
+      "segment": "weeks5plus",
+      "n": 1410,
+      "mean_brier_delta": -0.0003205519104112011,
+      "median_brier_delta": 0.00025034771115666626,
+      "mean_logloss_delta": -0.0010436470823740247,
+      "median_logloss_delta": 0.0006552446744063772,
+      "brier_improve": 494,
+      "brier_worsen": 723,
+      "brier_tie": 193,
+      "ll_improve": 494,
+      "ll_worsen": 723,
+      "ll_tie": 193,
+      "aggregate_brier_equiv": -0.00032055191041119313
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "task04c_reference_0333",
+      "segment": "weeks5plus",
+      "n": 1410,
+      "mean_brier_delta": -0.0005751901101547132,
+      "median_brier_delta": 0.0007511593438151512,
+      "mean_logloss_delta": -0.0021943925078724913,
+      "median_logloss_delta": 0.0018061235223597594,
+      "brier_improve": 492,
+      "brier_worsen": 725,
+      "brier_tie": 193,
+      "ll_improve": 492,
+      "ll_worsen": 725,
+      "ll_tie": 193,
+      "aggregate_brier_equiv": -0.0005751901101547219
+    },
+    {
+      "candidate": "regression_000",
+      "reference": "task04c_reference_0333",
+      "segment": "reg",
+      "n": 1855,
+      "mean_brier_delta": 0.0036615597125045428,
+      "median_brier_delta": -0.0020639840205867715,
+      "mean_logloss_delta": 0.01340079086775182,
+      "median_logloss_delta": -0.005319576554808747,
+      "brier_improve": 957,
+      "brier_worsen": 642,
+      "brier_tie": 256,
+      "ll_improve": 957,
+      "ll_worsen": 642,
+      "ll_tie": 256,
+      "aggregate_brier_equiv": 0.0036615597125045363
+    },
+    {
+      "candidate": "regression_025",
+      "reference": "task04c_reference_0333",
+      "segment": "reg",
+      "n": 1855,
+      "mean_brier_delta": 0.0003888141805086069,
+      "median_brier_delta": -0.00048737938259216934,
+      "mean_logloss_delta": 0.001558088897203006,
+      "median_logloss_delta": -0.0013157884176073775,
+      "brier_improve": 961,
+      "brier_worsen": 638,
+      "brier_tie": 256,
+      "ll_improve": 961,
+      "ll_worsen": 638,
+      "ll_tie": 256,
+      "aggregate_brier_equiv": 0.00038881418050862315
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "task04c_reference_0333",
+      "segment": "reg",
+      "n": 1855,
+      "mean_brier_delta": -0.00011738061531738068,
+      "median_brier_delta": 0.0004611088796370212,
+      "mean_logloss_delta": -0.0006689228788288264,
+      "median_logloss_delta": 0.0012467445382105258,
+      "brier_improve": 633,
+      "brier_worsen": 966,
+      "brier_tie": 256,
+      "ll_improve": 633,
+      "ll_worsen": 966,
+      "ll_tie": 256,
+      "aggregate_brier_equiv": -0.00011738061531738064
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "task04c_reference_0333",
+      "segment": "reg",
+      "n": 1855,
+      "mean_brier_delta": 0.0004073658907316488,
+      "median_brier_delta": 0.0016610934436142658,
+      "mean_logloss_delta": -0.0002583572894646572,
+      "median_logloss_delta": 0.0042646232945602325,
+      "brier_improve": 627,
+      "brier_worsen": 972,
+      "brier_tie": 256,
+      "ll_improve": 627,
+      "ll_worsen": 972,
+      "ll_tie": 256,
+      "aggregate_brier_equiv": 0.00040736589073164797
+    },
+    {
+      "candidate": "regression_000",
+      "reference": "task04c_reference_0333",
+      "segment": "postseason",
+      "n": 87,
+      "mean_brier_delta": 0.0053707447553161475,
+      "median_brier_delta": -0.0005513033254763294,
+      "mean_logloss_delta": 0.012040885245906408,
+      "median_logloss_delta": -0.001725660393614492,
+      "brier_improve": 45,
+      "brier_worsen": 31,
+      "brier_tie": 11,
+      "ll_improve": 45,
+      "ll_worsen": 31,
+      "ll_tie": 11,
+      "aggregate_brier_equiv": 0.005370744755316098
+    },
+    {
+      "candidate": "regression_025",
+      "reference": "task04c_reference_0333",
+      "segment": "postseason",
+      "n": 87,
+      "mean_brier_delta": 0.0009664389762051632,
+      "median_brier_delta": 0.0,
+      "mean_logloss_delta": 0.00202662771210677,
+      "median_logloss_delta": 0.0,
+      "brier_improve": 43,
+      "brier_worsen": 33,
+      "brier_tie": 11,
+      "ll_improve": 43,
+      "ll_worsen": 33,
+      "ll_tie": 11,
+      "aggregate_brier_equiv": 0.0009664389762051584
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "task04c_reference_0333",
+      "segment": "postseason",
+      "n": 87,
+      "mean_brier_delta": -0.0006528017582543683,
+      "median_brier_delta": 0.0,
+      "mean_logloss_delta": -0.001329380310725358,
+      "median_logloss_delta": 0.0,
+      "brier_improve": 34,
+      "brier_worsen": 42,
+      "brier_tie": 11,
+      "ll_improve": 34,
+      "ll_worsen": 42,
+      "ll_tie": 11,
+      "aggregate_brier_equiv": -0.0006528017582543844
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "task04c_reference_0333",
+      "segment": "postseason",
+      "n": 87,
+      "mean_brier_delta": -0.0020715587311022974,
+      "median_brier_delta": 0.0,
+      "mean_logloss_delta": -0.004084402947519166,
+      "median_logloss_delta": 0.0,
+      "brier_improve": 33,
+      "brier_worsen": 43,
+      "brier_tie": 11,
+      "ll_improve": 33,
+      "ll_worsen": 43,
+      "ll_tie": 11,
+      "aggregate_brier_equiv": -0.002071558731102291
+    },
+    {
+      "candidate": "regression_000",
+      "reference": "task04c_reference_0333",
+      "segment": "full",
+      "n": 1942,
+      "mean_brier_delta": 0.0037381297942370912,
+      "median_brier_delta": -0.0018936350981943496,
+      "mean_logloss_delta": 0.013339868216309725,
+      "median_logloss_delta": -0.005015919327781115,
+      "brier_improve": 1002,
+      "brier_worsen": 673,
+      "brier_tie": 267,
+      "ll_improve": 1002,
+      "ll_worsen": 673,
+      "ll_tie": 267,
+      "aggregate_brier_equiv": 0.0037381297942370995
+    },
+    {
+      "candidate": "regression_025",
+      "reference": "task04c_reference_0333",
+      "segment": "full",
+      "n": 1942,
+      "mean_brier_delta": 0.00041469129545484805,
+      "median_brier_delta": -0.0004365647771701894,
+      "mean_logloss_delta": 0.0015790790500848945,
+      "median_logloss_delta": -0.0010935108027076215,
+      "brier_improve": 1004,
+      "brier_worsen": 671,
+      "brier_tie": 267,
+      "ll_improve": 1004,
+      "ll_worsen": 671,
+      "ll_tie": 267,
+      "aggregate_brier_equiv": 0.00041469129545484984
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "task04c_reference_0333",
+      "segment": "full",
+      "n": 1942,
+      "mean_brier_delta": -0.00014136704139128275,
+      "median_brier_delta": 0.00041701020803945653,
+      "mean_logloss_delta": -0.0006985108276316061,
+      "median_logloss_delta": 0.00113346213082971,
+      "brier_improve": 667,
+      "brier_worsen": 1008,
+      "brier_tie": 267,
+      "ll_improve": 667,
+      "ll_worsen": 1008,
+      "ll_tie": 267,
+      "aggregate_brier_equiv": -0.0001413670413912549
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "task04c_reference_0333",
+      "segment": "full",
+      "n": 1942,
+      "mean_brier_delta": 0.00029631211004186843,
+      "median_brier_delta": 0.0016239136574483087,
+      "mean_logloss_delta": -0.0004297609826936695,
+      "median_logloss_delta": 0.0040234895712339125,
+      "brier_improve": 660,
+      "brier_worsen": 1015,
+      "brier_tie": 267,
+      "ll_improve": 660,
+      "ll_worsen": 1015,
+      "ll_tie": 267,
+      "aggregate_brier_equiv": 0.00029631211004185753
+    }
+  ],
+  "distributional_vs_0333": [
+    {
+      "candidate": "regression_025",
+      "reference": "task04c_reference_0333",
+      "segment": "week1_4",
+      "n": 445,
+      "mean_brier_delta": -0.00028209217979612103,
+      "median_brier_delta": -0.0015958474334066622,
+      "mean_logloss_delta": 0.00046789467615261746,
+      "median_logloss_delta": -0.0037986617576507564,
+      "brier_improve": 238,
+      "brier_worsen": 144,
+      "brier_tie": 63,
+      "ll_improve": 238,
+      "ll_worsen": 144,
+      "ll_tie": 63
+    },
+    {
+      "candidate": "regression_025",
+      "reference": "task04c_reference_0333",
+      "segment": "full",
+      "n": 1942,
+      "mean_brier_delta": 0.00041469129545484805,
+      "median_brier_delta": -0.0004365647771701894,
+      "mean_logloss_delta": 0.0015790790500848945,
+      "median_logloss_delta": -0.0010935108027076215,
+      "brier_improve": 1004,
+      "brier_worsen": 671,
+      "brier_tie": 267,
+      "ll_improve": 1004,
+      "ll_worsen": 671,
+      "ll_tie": 267
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "task04c_reference_0333",
+      "segment": "week1_4",
+      "n": 445,
+      "mean_brier_delta": 0.0005263756230697807,
+      "median_brier_delta": 0.0015419829191580525,
+      "mean_logloss_delta": 0.0005184054964492175,
+      "median_logloss_delta": 0.00347724078282996,
+      "brier_improve": 139,
+      "brier_worsen": 243,
+      "brier_tie": 63,
+      "ll_improve": 139,
+      "ll_worsen": 243,
+      "ll_tie": 63
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "task04c_reference_0333",
+      "segment": "full",
+      "n": 1942,
+      "mean_brier_delta": -0.00014136704139128275,
+      "median_brier_delta": 0.00041701020803945653,
+      "mean_logloss_delta": -0.0006985108276316061,
+      "median_logloss_delta": 0.00113346213082971,
+      "brier_improve": 667,
+      "brier_worsen": 1008,
+      "brier_tie": 267,
+      "ll_improve": 667,
+      "ll_worsen": 1008,
+      "ll_tie": 267
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "task04c_reference_0333",
+      "segment": "week1_4",
+      "n": 445,
+      "mean_brier_delta": 0.003520633219382819,
+      "median_brier_delta": 0.006448077879742692,
+      "mean_logloss_delta": 0.005876046436277019,
+      "median_logloss_delta": 0.0151228207358034,
+      "brier_improve": 135,
+      "brier_worsen": 247,
+      "brier_tie": 63,
+      "ll_improve": 135,
+      "ll_worsen": 247,
+      "ll_tie": 63
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "task04c_reference_0333",
+      "segment": "full",
+      "n": 1942,
+      "mean_brier_delta": 0.00029631211004186843,
+      "median_brier_delta": 0.0016239136574483087,
+      "mean_logloss_delta": -0.0004297609826936695,
+      "median_logloss_delta": 0.0040234895712339125,
+      "brier_improve": 660,
+      "brier_worsen": 1015,
+      "brier_tie": 267,
+      "ll_improve": 660,
+      "ll_worsen": 1015,
+      "ll_tie": 267
+    }
+  ],
+  "bootstrap_vs_0333": [
+    {
+      "candidate": "regression_025",
+      "reference": "task04c_reference_0333",
+      "segment": "week1_4",
+      "game_bootstrap": {
+        "method": "game_paired_bootstrap",
+        "n_resamples": 5000,
+        "seed": 20260810,
+        "mean_delta": -0.00028209217979612103,
+        "percentile_2_5": -0.0016300471053545718,
+        "percentile_97_5": 0.0011254083938801918,
+        "proportion_favoring_candidate": 0.6632,
+        "proportion_favoring_reference": 0.3368
+      },
+      "season_cluster": {
+        "method": "season_cluster_bootstrap",
+        "seasons": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "n_seasons": 6,
+        "n_resamples": 5000,
+        "seed": 20260810,
+        "mean_delta": -0.0003286152356263713,
+        "percentile_2_5": -0.0011952059916679064,
+        "percentile_97_5": 0.0004185981974725125,
+        "proportion_favoring_candidate": 0.77,
+        "proportion_favoring_reference": 0.23
+      }
+    },
+    {
+      "candidate": "regression_025",
+      "reference": "task04c_reference_0333",
+      "segment": "full",
+      "game_bootstrap": {
+        "method": "game_paired_bootstrap",
+        "n_resamples": 5000,
+        "seed": 20260810,
+        "mean_delta": 0.00041469129545484805,
+        "percentile_2_5": -7.890080254333144e-05,
+        "percentile_97_5": 0.0009308160314589785,
+        "proportion_favoring_candidate": 0.0518,
+        "proportion_favoring_reference": 0.9482
+      },
+      "season_cluster": {
+        "method": "season_cluster_bootstrap",
+        "seasons": [
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "n_seasons": 7,
+        "n_resamples": 5000,
+        "seed": 20260810,
+        "mean_delta": 0.00041469129545484805,
+        "percentile_2_5": 6.153089488555635e-05,
+        "percentile_97_5": 0.0008483264165037251,
+        "proportion_favoring_candidate": 0.0014,
+        "proportion_favoring_reference": 0.9986
+      }
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "task04c_reference_0333",
+      "segment": "week1_4",
+      "game_bootstrap": {
+        "method": "game_paired_bootstrap",
+        "n_resamples": 5000,
+        "seed": 20260810,
+        "mean_delta": 0.0005263756230697807,
+        "percentile_2_5": -0.000571914629370254,
+        "percentile_97_5": 0.0015760027312681935,
+        "proportion_favoring_candidate": 0.1594,
+        "proportion_favoring_reference": 0.8406
+      },
+      "season_cluster": {
+        "method": "season_cluster_bootstrap",
+        "seasons": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "n_seasons": 6,
+        "n_resamples": 5000,
+        "seed": 20260810,
+        "mean_delta": 0.0006131862624765771,
+        "percentile_2_5": 5.147190735513196e-05,
+        "percentile_97_5": 0.0012546949148679386,
+        "proportion_favoring_candidate": 0.0164,
+        "proportion_favoring_reference": 0.9836
+      }
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "task04c_reference_0333",
+      "segment": "full",
+      "game_bootstrap": {
+        "method": "game_paired_bootstrap",
+        "n_resamples": 5000,
+        "seed": 20260810,
+        "mean_delta": -0.00014136704139128275,
+        "percentile_2_5": -0.0005366883683362139,
+        "percentile_97_5": 0.00023361608843436985,
+        "proportion_favoring_candidate": 0.7542,
+        "proportion_favoring_reference": 0.2458
+      },
+      "season_cluster": {
+        "method": "season_cluster_bootstrap",
+        "seasons": [
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "n_seasons": 7,
+        "n_resamples": 5000,
+        "seed": 20260810,
+        "mean_delta": -0.00014136704139128275,
+        "percentile_2_5": -0.0004408823722434229,
+        "percentile_97_5": 0.00010333807981290575,
+        "proportion_favoring_candidate": 0.8366,
+        "proportion_favoring_reference": 0.1634
+      }
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "task04c_reference_0333",
+      "segment": "week1_4",
+      "game_bootstrap": {
+        "method": "game_paired_bootstrap",
+        "n_resamples": 5000,
+        "seed": 20260810,
+        "mean_delta": 0.003520633219382819,
+        "percentile_2_5": -0.0006616047512220866,
+        "percentile_97_5": 0.007580458357076952,
+        "proportion_favoring_candidate": 0.0468,
+        "proportion_favoring_reference": 0.9532
+      },
+      "season_cluster": {
+        "method": "season_cluster_bootstrap",
+        "seasons": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "n_seasons": 6,
+        "n_resamples": 5000,
+        "seed": 20260810,
+        "mean_delta": 0.004101261211061137,
+        "percentile_2_5": 0.0019656555669999437,
+        "percentile_97_5": 0.006496587061362896,
+        "proportion_favoring_candidate": 0.0,
+        "proportion_favoring_reference": 1.0
+      }
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "task04c_reference_0333",
+      "segment": "full",
+      "game_bootstrap": {
+        "method": "game_paired_bootstrap",
+        "n_resamples": 5000,
+        "seed": 20260810,
+        "mean_delta": 0.00029631211004186843,
+        "percentile_2_5": -0.001189861951063052,
+        "percentile_97_5": 0.0017008167370415382,
+        "proportion_favoring_candidate": 0.3378,
+        "proportion_favoring_reference": 0.6622
+      },
+      "season_cluster": {
+        "method": "season_cluster_bootstrap",
+        "seasons": [
+          2018,
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "n_seasons": 7,
+        "n_resamples": 5000,
+        "seed": 20260810,
+        "mean_delta": 0.00029631211004186843,
+        "percentile_2_5": -0.0007071716678798612,
+        "percentile_97_5": 0.0011773978490116706,
+        "proportion_favoring_candidate": 0.2686,
+        "proportion_favoring_reference": 0.7314
+      }
+    }
+  ],
+  "season_stability_week1_4": {
+    "vs_000": {
+      "regression_025/brier": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            0.004719913734492273
+          ],
+          [
+            2020,
+            63,
+            0.0008160511522740209
+          ],
+          [
+            2021,
+            64,
+            -0.0054797700065941785
+          ],
+          [
+            2022,
+            64,
+            -0.005562575298275842
+          ],
+          [
+            2023,
+            64,
+            -0.0021251857218165145
+          ],
+          [
+            2024,
+            64,
+            -0.006314906177857719
+          ]
+        ],
+        "seasons_improved": [
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "seasons_worsened": [
+          2019,
+          2020
+        ],
+        "seasons_tied": [
+          2018
+        ],
+        "n_improved": 4,
+        "n_worsened": 2,
+        "n_tied": 1,
+        "strongest_improvement": {
+          "season": 2024,
+          "delta": -0.006314906177857719
+        },
+        "strongest_deterioration": {
+          "season": 2019,
+          "delta": 0.004719913734492273
+        }
+      },
+      "regression_025/ll": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            0.008866402852133375
+          ],
+          [
+            2020,
+            63,
+            0.0015777935368868226
+          ],
+          [
+            2021,
+            64,
+            -0.028616738658094932
+          ],
+          [
+            2022,
+            64,
+            -0.027884793520282426
+          ],
+          [
+            2023,
+            64,
+            -0.012463690359816548
+          ],
+          [
+            2024,
+            64,
+            -0.022330165012823665
+          ]
+        ],
+        "seasons_improved": [
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "seasons_worsened": [
+          2019,
+          2020
+        ],
+        "seasons_tied": [
+          2018
+        ],
+        "n_improved": 4,
+        "n_worsened": 2,
+        "n_tied": 1,
+        "strongest_improvement": {
+          "season": 2021,
+          "delta": -0.028616738658094932
+        },
+        "strongest_deterioration": {
+          "season": 2019,
+          "delta": 0.008866402852133375
+        }
+      },
+      "regression_040/brier": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            0.008841720501094788
+          ],
+          [
+            2020,
+            63,
+            0.0031497258420119223
+          ],
+          [
+            2021,
+            64,
+            -0.005818967083179867
+          ],
+          [
+            2022,
+            64,
+            -0.005738081951387299
+          ],
+          [
+            2023,
+            64,
+            -0.001206656964123324
+          ],
+          [
+            2024,
+            64,
+            -0.007451968072636886
+          ]
+        ],
+        "seasons_improved": [
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "seasons_worsened": [
+          2019,
+          2020
+        ],
+        "seasons_tied": [
+          2018
+        ],
+        "n_improved": 4,
+        "n_worsened": 2,
+        "n_tied": 1,
+        "strongest_improvement": {
+          "season": 2024,
+          "delta": -0.007451968072636886
+        },
+        "strongest_deterioration": {
+          "season": 2019,
+          "delta": 0.008841720501094788
+        }
+      },
+      "regression_040/ll": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            0.017058494528956032
+          ],
+          [
+            2020,
+            63,
+            0.007402715877726067
+          ],
+          [
+            2021,
+            64,
+            -0.03391543653971932
+          ],
+          [
+            2022,
+            64,
+            -0.03264258870629824
+          ],
+          [
+            2023,
+            64,
+            -0.01099637902647121
+          ],
+          [
+            2024,
+            64,
+            -0.027187773404789943
+          ]
+        ],
+        "seasons_improved": [
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "seasons_worsened": [
+          2019,
+          2020
+        ],
+        "seasons_tied": [
+          2018
+        ],
+        "n_improved": 4,
+        "n_worsened": 2,
+        "n_tied": 1,
+        "strongest_improvement": {
+          "season": 2021,
+          "delta": -0.03391543653971932
+        },
+        "strongest_deterioration": {
+          "season": 2019,
+          "delta": 0.017058494528956032
+        }
+      },
+      "regression_060/brier": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            0.016012935463850925
+          ],
+          [
+            2020,
+            63,
+            0.008418532962611818
+          ],
+          [
+            2021,
+            64,
+            -0.003321227754474179
+          ],
+          [
+            2022,
+            64,
+            -0.0034206475152193487
+          ],
+          [
+            2023,
+            64,
+            0.0020849855772339804
+          ],
+          [
+            2024,
+            64,
+            -0.006984983767807325
+          ]
+        ],
+        "seasons_improved": [
+          2021,
+          2022,
+          2024
+        ],
+        "seasons_worsened": [
+          2019,
+          2020,
+          2023
+        ],
+        "seasons_tied": [
+          2018
+        ],
+        "n_improved": 3,
+        "n_worsened": 3,
+        "n_tied": 1,
+        "strongest_improvement": {
+          "season": 2024,
+          "delta": -0.006984983767807325
+        },
+        "strongest_deterioration": {
+          "season": 2019,
+          "delta": 0.016012935463850925
+        }
+      },
+      "regression_060/ll": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            0.031529221915720544
+          ],
+          [
+            2020,
+            63,
+            0.01978436200781718
+          ],
+          [
+            2021,
+            64,
+            -0.0316653067821178
+          ],
+          [
+            2022,
+            64,
+            -0.030876561665886128
+          ],
+          [
+            2023,
+            64,
+            -0.0034987699158482884
+          ],
+          [
+            2024,
+            64,
+            -0.027881997334341067
+          ]
+        ],
+        "seasons_improved": [
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "seasons_worsened": [
+          2019,
+          2020
+        ],
+        "seasons_tied": [
+          2018
+        ],
+        "n_improved": 4,
+        "n_worsened": 2,
+        "n_tied": 1,
+        "strongest_improvement": {
+          "season": 2021,
+          "delta": -0.0316653067821178
+        },
+        "strongest_deterioration": {
+          "season": 2019,
+          "delta": 0.031529221915720544
+        }
+      }
+    },
+    "vs_0333": {
+      "regression_000/brier": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            -0.006872920490148795
+          ],
+          [
+            2020,
+            63,
+            -0.0019334476758589914
+          ],
+          [
+            2021,
+            64,
+            0.005920289318714573
+          ],
+          [
+            2022,
+            64,
+            0.0058957127539184
+          ],
+          [
+            2023,
+            64,
+            0.0017962211620557627
+          ],
+          [
+            2024,
+            64,
+            0.007128095010213954
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [
+            2019,
+            2020
+          ],
+          "seasons_worsened": [
+            2021,
+            2022,
+            2023,
+            2024
+          ],
+          "seasons_tied": [],
+          "n_improved": 2,
+          "n_worsened": 4,
+          "n_tied": 0,
+          "strongest_improvement": {
+            "season": 2019,
+            "delta": -0.006872920490148795
+          },
+          "strongest_deterioration": {
+            "season": 2024,
+            "delta": 0.007128095010213954
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_000/ll": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            -0.01312415182452118
+          ],
+          [
+            2020,
+            63,
+            -0.004397922115763638
+          ],
+          [
+            2021,
+            64,
+            0.03241997631748465
+          ],
+          [
+            2022,
+            64,
+            0.031315408939151114
+          ],
+          [
+            2023,
+            64,
+            0.012202918274861228
+          ],
+          [
+            2024,
+            64,
+            0.025577699904170373
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [
+            2019,
+            2020
+          ],
+          "seasons_worsened": [
+            2021,
+            2022,
+            2023,
+            2024
+          ],
+          "seasons_tied": [],
+          "n_improved": 2,
+          "n_worsened": 4,
+          "n_tied": 0,
+          "strongest_improvement": {
+            "season": 2019,
+            "delta": -0.01312415182452118
+          },
+          "strongest_deterioration": {
+            "season": 2021,
+            "delta": 0.03241997631748465
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_025/brier": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            -0.002153006755656523
+          ],
+          [
+            2020,
+            63,
+            -0.0011173965235849708
+          ],
+          [
+            2021,
+            64,
+            0.00044051931212039767
+          ],
+          [
+            2022,
+            64,
+            0.0003331374556425588
+          ],
+          [
+            2023,
+            64,
+            -0.00032896455976075126
+          ],
+          [
+            2024,
+            64,
+            0.0008131888323562359
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [
+            2019,
+            2020,
+            2023
+          ],
+          "seasons_worsened": [
+            2021,
+            2022,
+            2024
+          ],
+          "seasons_tied": [],
+          "n_improved": 3,
+          "n_worsened": 3,
+          "n_tied": 0,
+          "strongest_improvement": {
+            "season": 2019,
+            "delta": -0.002153006755656523
+          },
+          "strongest_deterioration": {
+            "season": 2024,
+            "delta": 0.0008131888323562359
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_025/ll": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            -0.004257748972387804
+          ],
+          [
+            2020,
+            63,
+            -0.0028201285788768157
+          ],
+          [
+            2021,
+            64,
+            0.003803237659389717
+          ],
+          [
+            2022,
+            64,
+            0.0034306154188686855
+          ],
+          [
+            2023,
+            64,
+            -0.00026077208495532125
+          ],
+          [
+            2024,
+            64,
+            0.0032475348913467007
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [
+            2019,
+            2020,
+            2023
+          ],
+          "seasons_worsened": [
+            2021,
+            2022,
+            2024
+          ],
+          "seasons_tied": [],
+          "n_improved": 3,
+          "n_worsened": 3,
+          "n_tied": 0,
+          "strongest_improvement": {
+            "season": 2019,
+            "delta": -0.004257748972387804
+          },
+          "strongest_deterioration": {
+            "season": 2021,
+            "delta": 0.003803237659389717
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_040/brier": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            0.0019688000109459934
+          ],
+          [
+            2020,
+            63,
+            0.00121627816615293
+          ],
+          [
+            2021,
+            64,
+            0.00010132223553470799
+          ],
+          [
+            2022,
+            64,
+            0.00015763080253110046
+          ],
+          [
+            2023,
+            64,
+            0.0005895641979324399
+          ],
+          [
+            2024,
+            64,
+            -0.0003238730624229319
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [
+            2024
+          ],
+          "seasons_worsened": [
+            2019,
+            2020,
+            2021,
+            2022,
+            2023
+          ],
+          "seasons_tied": [],
+          "n_improved": 1,
+          "n_worsened": 5,
+          "n_tied": 0,
+          "strongest_improvement": {
+            "season": 2024,
+            "delta": -0.0003238730624229319
+          },
+          "strongest_deterioration": {
+            "season": 2019,
+            "delta": 0.0019688000109459934
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_040/ll": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            0.0039343427044348555
+          ],
+          [
+            2020,
+            63,
+            0.0030047937619624306
+          ],
+          [
+            2021,
+            64,
+            -0.0014954602222346678
+          ],
+          [
+            2022,
+            64,
+            -0.0013271797671471279
+          ],
+          [
+            2023,
+            64,
+            0.0012065392483900132
+          ],
+          [
+            2024,
+            64,
+            -0.0016100735006195793
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [
+            2021,
+            2022,
+            2024
+          ],
+          "seasons_worsened": [
+            2019,
+            2020,
+            2023
+          ],
+          "seasons_tied": [],
+          "n_improved": 3,
+          "n_worsened": 3,
+          "n_tied": 0,
+          "strongest_improvement": {
+            "season": 2024,
+            "delta": -0.0016100735006195793
+          },
+          "strongest_deterioration": {
+            "season": 2019,
+            "delta": 0.0039343427044348555
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_060/brier": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            0.009140014973702124
+          ],
+          [
+            2020,
+            63,
+            0.006485085286752828
+          ],
+          [
+            2021,
+            64,
+            0.002599061564240399
+          ],
+          [
+            2022,
+            64,
+            0.0024750652386990495
+          ],
+          [
+            2023,
+            64,
+            0.003881206739289743
+          ],
+          [
+            2024,
+            64,
+            0.00014311124240662734
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [],
+          "seasons_worsened": [
+            2019,
+            2020,
+            2021,
+            2022,
+            2023,
+            2024
+          ],
+          "seasons_tied": [],
+          "n_improved": 0,
+          "n_worsened": 6,
+          "n_tied": 0,
+          "strongest_improvement": null,
+          "strongest_deterioration": {
+            "season": 2019,
+            "delta": 0.009140014973702124
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_060/ll": {
+        "rows": [
+          [
+            2018,
+            63,
+            0.0
+          ],
+          [
+            2019,
+            63,
+            0.018405070091199353
+          ],
+          [
+            2020,
+            63,
+            0.015386439892053547
+          ],
+          [
+            2021,
+            64,
+            0.0007546695353668484
+          ],
+          [
+            2022,
+            64,
+            0.0004388472732649888
+          ],
+          [
+            2023,
+            64,
+            0.008704148359012932
+          ],
+          [
+            2024,
+            64,
+            -0.0023042974301706945
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [
+            2024
+          ],
+          "seasons_worsened": [
+            2019,
+            2020,
+            2021,
+            2022,
+            2023
+          ],
+          "seasons_tied": [],
+          "n_improved": 1,
+          "n_worsened": 5,
+          "n_tied": 0,
+          "strongest_improvement": {
+            "season": 2024,
+            "delta": -0.0023042974301706945
+          },
+          "strongest_deterioration": {
+            "season": 2019,
+            "delta": 0.018405070091199353
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      }
+    }
+  },
+  "season_stability_full": {
+    "vs_000": {
+      "regression_025/brier": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            -0.0008714916819264599
+          ],
+          [
+            2020,
+            269,
+            -0.0030238883316509335
+          ],
+          [
+            2021,
+            285,
+            -0.002982726080511683
+          ],
+          [
+            2022,
+            284,
+            -0.008439581784810881
+          ],
+          [
+            2023,
+            285,
+            -0.005319743699616163
+          ],
+          [
+            2024,
+            285,
+            -0.0022630112635927155
+          ]
+        ],
+        "seasons_improved": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "seasons_worsened": [],
+        "seasons_tied": [
+          2018
+        ],
+        "n_improved": 6,
+        "n_worsened": 0,
+        "n_tied": 1,
+        "strongest_improvement": {
+          "season": 2022,
+          "delta": -0.008439581784810881
+        },
+        "strongest_deterioration": null
+      },
+      "regression_025/ll": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            -0.0026246713999845237
+          ],
+          [
+            2020,
+            269,
+            -0.009169092241812152
+          ],
+          [
+            2021,
+            285,
+            -0.013553670028882069
+          ],
+          [
+            2022,
+            284,
+            -0.029820040410925792
+          ],
+          [
+            2023,
+            285,
+            -0.01798926359632806
+          ],
+          [
+            2024,
+            285,
+            -0.007766848856412185
+          ]
+        ],
+        "seasons_improved": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "seasons_worsened": [],
+        "seasons_tied": [
+          2018
+        ],
+        "n_improved": 6,
+        "n_worsened": 0,
+        "n_tied": 1,
+        "strongest_improvement": {
+          "season": 2022,
+          "delta": -0.029820040410925792
+        },
+        "strongest_deterioration": null
+      },
+      "regression_040/brier": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            -0.0007259135203824956
+          ],
+          [
+            2020,
+            269,
+            -0.0033991575376816573
+          ],
+          [
+            2021,
+            285,
+            -0.002996380133397043
+          ],
+          [
+            2022,
+            284,
+            -0.010855990871811437
+          ],
+          [
+            2023,
+            285,
+            -0.006658077433624252
+          ],
+          [
+            2024,
+            285,
+            -0.0020742763263729563
+          ]
+        ],
+        "seasons_improved": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "seasons_worsened": [],
+        "seasons_tied": [
+          2018
+        ],
+        "n_improved": 6,
+        "n_worsened": 0,
+        "n_tied": 1,
+        "strongest_improvement": {
+          "season": 2022,
+          "delta": -0.010855990871811437
+        },
+        "strongest_deterioration": null
+      },
+      "regression_040/ll": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            -0.0025307600204537875
+          ],
+          [
+            2020,
+            269,
+            -0.01058622883330917
+          ],
+          [
+            2021,
+            285,
+            -0.015543954167847025
+          ],
+          [
+            2022,
+            284,
+            -0.03782981088756049
+          ],
+          [
+            2023,
+            285,
+            -0.02207735175785465
+          ],
+          [
+            2024,
+            285,
+            -0.007976789967791519
+          ]
+        ],
+        "seasons_improved": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "seasons_worsened": [],
+        "seasons_tied": [
+          2018
+        ],
+        "n_improved": 6,
+        "n_worsened": 0,
+        "n_tied": 1,
+        "strongest_improvement": {
+          "season": 2022,
+          "delta": -0.03782981088756049
+        },
+        "strongest_deterioration": null
+      },
+      "regression_060/brier": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            0.0003175724096123225
+          ],
+          [
+            2020,
+            269,
+            -0.002455803643959075
+          ],
+          [
+            2021,
+            285,
+            -0.0015226071070832113
+          ],
+          [
+            2022,
+            284,
+            -0.01207513126358963
+          ],
+          [
+            2023,
+            285,
+            -0.007057049918767542
+          ],
+          [
+            2024,
+            285,
+            -0.0008198282969182491
+          ]
+        ],
+        "seasons_improved": [
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "seasons_worsened": [
+          2019
+        ],
+        "seasons_tied": [
+          2018
+        ],
+        "n_improved": 5,
+        "n_worsened": 1,
+        "n_tied": 1,
+        "strongest_improvement": {
+          "season": 2022,
+          "delta": -0.01207513126358963
+        },
+        "strongest_deterioration": {
+          "season": 2019,
+          "delta": 0.0003175724096123225
+        }
+      },
+      "regression_060/ll": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            -0.0004513242995674856
+          ],
+          [
+            2020,
+            269,
+            -0.008892564810121397
+          ],
+          [
+            2021,
+            285,
+            -0.013806638683016027
+          ],
+          [
+            2022,
+            284,
+            -0.042145506905995965
+          ],
+          [
+            2023,
+            285,
+            -0.023535151016231784
+          ],
+          [
+            2024,
+            285,
+            -0.005671166164803285
+          ]
+        ],
+        "seasons_improved": [
+          2019,
+          2020,
+          2021,
+          2022,
+          2023,
+          2024
+        ],
+        "seasons_worsened": [],
+        "seasons_tied": [
+          2018
+        ],
+        "n_improved": 6,
+        "n_worsened": 0,
+        "n_tied": 1,
+        "strongest_improvement": {
+          "season": 2022,
+          "delta": -0.042145506905995965
+        },
+        "strongest_deterioration": null
+      }
+    },
+    "vs_0333": {
+      "regression_000/brier": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            0.0008561745108249733
+          ],
+          [
+            2020,
+            269,
+            0.0033547453164030085
+          ],
+          [
+            2021,
+            285,
+            0.0031267025469760732
+          ],
+          [
+            2022,
+            284,
+            0.009965766324518538
+          ],
+          [
+            2023,
+            285,
+            0.006188704012769365
+          ],
+          [
+            2024,
+            285,
+            0.002257033228824698
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [],
+          "seasons_worsened": [
+            2019,
+            2020,
+            2021,
+            2022,
+            2023,
+            2024
+          ],
+          "seasons_tied": [],
+          "n_improved": 0,
+          "n_worsened": 6,
+          "n_tied": 0,
+          "strongest_improvement": null,
+          "strongest_deterioration": {
+            "season": 2022,
+            "delta": 0.009965766324518538
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_000/ll": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            0.0027276712024993186
+          ],
+          [
+            2020,
+            269,
+            0.010274984686789503
+          ],
+          [
+            2021,
+            285,
+            0.015079298531095908
+          ],
+          [
+            2022,
+            284,
+            0.034888874950540306
+          ],
+          [
+            2023,
+            285,
+            0.020652564859796
+          ],
+          [
+            2024,
+            285,
+            0.008146468182112806
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [],
+          "seasons_worsened": [
+            2019,
+            2020,
+            2021,
+            2022,
+            2023,
+            2024
+          ],
+          "seasons_tied": [],
+          "n_improved": 0,
+          "n_worsened": 6,
+          "n_tied": 0,
+          "strongest_improvement": null,
+          "strongest_deterioration": {
+            "season": 2022,
+            "delta": 0.034888874950540306
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_025/brier": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            -1.5317171101486413e-05
+          ],
+          [
+            2020,
+            269,
+            0.00033085698475207603
+          ],
+          [
+            2021,
+            285,
+            0.00014397646646439056
+          ],
+          [
+            2022,
+            284,
+            0.001526184539707657
+          ],
+          [
+            2023,
+            285,
+            0.0008689603131532016
+          ],
+          [
+            2024,
+            285,
+            -5.978034768017561e-06
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [
+            2019,
+            2024
+          ],
+          "seasons_worsened": [
+            2020,
+            2021,
+            2022,
+            2023
+          ],
+          "seasons_tied": [],
+          "n_improved": 2,
+          "n_worsened": 4,
+          "n_tied": 0,
+          "strongest_improvement": {
+            "season": 2019,
+            "delta": -1.5317171101486413e-05
+          },
+          "strongest_deterioration": {
+            "season": 2022,
+            "delta": 0.001526184539707657
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_025/ll": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            0.00010299980251479525
+          ],
+          [
+            2020,
+            269,
+            0.0011058924449773497
+          ],
+          [
+            2021,
+            285,
+            0.0015256285022138406
+          ],
+          [
+            2022,
+            284,
+            0.005068834539614521
+          ],
+          [
+            2023,
+            285,
+            0.002663301263467941
+          ],
+          [
+            2024,
+            285,
+            0.0003796193257006185
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [],
+          "seasons_worsened": [
+            2019,
+            2020,
+            2021,
+            2022,
+            2023,
+            2024
+          ],
+          "seasons_tied": [],
+          "n_improved": 0,
+          "n_worsened": 6,
+          "n_tied": 0,
+          "strongest_improvement": null,
+          "strongest_deterioration": {
+            "season": 2022,
+            "delta": 0.005068834539614521
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_040/brier": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            0.00013026099044247794
+          ],
+          [
+            2020,
+            269,
+            -4.4412221278648875e-05
+          ],
+          [
+            2021,
+            285,
+            0.00013032241357903112
+          ],
+          [
+            2022,
+            284,
+            -0.000890224547292901
+          ],
+          [
+            2023,
+            285,
+            -0.0004693734208548866
+          ],
+          [
+            2024,
+            285,
+            0.0001827569024517421
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [
+            2020,
+            2022,
+            2023
+          ],
+          "seasons_worsened": [
+            2019,
+            2021,
+            2024
+          ],
+          "seasons_tied": [],
+          "n_improved": 3,
+          "n_worsened": 3,
+          "n_tied": 0,
+          "strongest_improvement": {
+            "season": 2022,
+            "delta": -0.000890224547292901
+          },
+          "strongest_deterioration": {
+            "season": 2024,
+            "delta": 0.0001827569024517421
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_040/ll": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            0.00019691118204553335
+          ],
+          [
+            2020,
+            269,
+            -0.00031124414651966664
+          ],
+          [
+            2021,
+            285,
+            -0.00046465563675111556
+          ],
+          [
+            2022,
+            284,
+            -0.0029409359370201763
+          ],
+          [
+            2023,
+            285,
+            -0.0014247868980586454
+          ],
+          [
+            2024,
+            285,
+            0.00016967821432128382
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [
+            2020,
+            2021,
+            2022,
+            2023
+          ],
+          "seasons_worsened": [
+            2019,
+            2024
+          ],
+          "seasons_tied": [],
+          "n_improved": 4,
+          "n_worsened": 2,
+          "n_tied": 0,
+          "strongest_improvement": {
+            "season": 2022,
+            "delta": -0.0029409359370201763
+          },
+          "strongest_deterioration": {
+            "season": 2019,
+            "delta": 0.00019691118204553335
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_060/brier": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            0.001173746920437296
+          ],
+          [
+            2020,
+            269,
+            0.0008989416724439338
+          ],
+          [
+            2021,
+            285,
+            0.001604095439892863
+          ],
+          [
+            2022,
+            284,
+            -0.0021093649390710955
+          ],
+          [
+            2023,
+            285,
+            -0.0008683459059981782
+          ],
+          [
+            2024,
+            285,
+            0.001437204931906449
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [
+            2022,
+            2023
+          ],
+          "seasons_worsened": [
+            2019,
+            2020,
+            2021,
+            2024
+          ],
+          "seasons_tied": [],
+          "n_improved": 2,
+          "n_worsened": 4,
+          "n_tied": 0,
+          "strongest_improvement": {
+            "season": 2022,
+            "delta": -0.0021093649390710955
+          },
+          "strongest_deterioration": {
+            "season": 2021,
+            "delta": 0.001604095439892863
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      },
+      "regression_060/ll": {
+        "rows": [
+          [
+            2018,
+            267,
+            0.0
+          ],
+          [
+            2019,
+            267,
+            0.0022763469029318324
+          ],
+          [
+            2020,
+            269,
+            0.0013824198766681014
+          ],
+          [
+            2021,
+            285,
+            0.0012726598480798797
+          ],
+          [
+            2022,
+            284,
+            -0.007256631955455655
+          ],
+          [
+            2023,
+            285,
+            -0.0028825861564357835
+          ],
+          [
+            2024,
+            285,
+            0.0024753020173095214
+          ]
+        ],
+        "summary_2019_2024": {
+          "seasons_improved": [
+            2022,
+            2023
+          ],
+          "seasons_worsened": [
+            2019,
+            2020,
+            2021,
+            2024
+          ],
+          "seasons_tied": [],
+          "n_improved": 2,
+          "n_worsened": 4,
+          "n_tied": 0,
+          "strongest_improvement": {
+            "season": 2022,
+            "delta": -0.007256631955455655
+          },
+          "strongest_deterioration": {
+            "season": 2024,
+            "delta": 0.0024753020173095214
+          }
+        },
+        "summary_2018": {
+          "seasons_improved": [],
+          "seasons_worsened": [],
+          "seasons_tied": [
+            2018
+          ],
+          "n_improved": 0,
+          "n_worsened": 0,
+          "n_tied": 1,
+          "strongest_improvement": null,
+          "strongest_deterioration": null
+        }
+      }
+    }
+  },
+  "probability_shift": [
+    {
+      "candidate": "regression_025",
+      "reference": "task04c_reference_0333",
+      "segment": "week1_4",
+      "n": 445,
+      "mean_abs_prob_diff": 0.011765536950636426,
+      "median_abs_prob_diff": 0.01093150471695259,
+      "max_abs_prob_diff": 0.04973067457478392,
+      "p90_abs_prob_diff": 0.024613732564727975,
+      "p95_abs_prob_diff": 0.03003592387856576
+    },
+    {
+      "candidate": "regression_025",
+      "reference": "task04c_reference_0333",
+      "segment": "full",
+      "n": 1942,
+      "mean_abs_prob_diff": 0.00869566785641324,
+      "median_abs_prob_diff": 0.007079171917548879,
+      "max_abs_prob_diff": 0.04973067457478392,
+      "p90_abs_prob_diff": 0.019655236828461355,
+      "p95_abs_prob_diff": 0.02291402951952089
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "task04c_reference_0333",
+      "segment": "week1_4",
+      "n": 445,
+      "mean_abs_prob_diff": 0.009208146692593431,
+      "median_abs_prob_diff": 0.00816189224831032,
+      "max_abs_prob_diff": 0.03668204428162136,
+      "p90_abs_prob_diff": 0.019375881104182216,
+      "p95_abs_prob_diff": 0.023789963830946614
+    },
+    {
+      "candidate": "regression_040",
+      "reference": "task04c_reference_0333",
+      "segment": "full",
+      "n": 1942,
+      "mean_abs_prob_diff": 0.006671078452180819,
+      "median_abs_prob_diff": 0.005387252185700908,
+      "max_abs_prob_diff": 0.03668204428162136,
+      "p90_abs_prob_diff": 0.015334096602210195,
+      "p95_abs_prob_diff": 0.018141542659429116
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "task04c_reference_0333",
+      "segment": "week1_4",
+      "n": 445,
+      "mean_abs_prob_diff": 0.03539212610083661,
+      "median_abs_prob_diff": 0.03090869521844053,
+      "max_abs_prob_diff": 0.13871401348608697,
+      "p90_abs_prob_diff": 0.07760637940270465,
+      "p95_abs_prob_diff": 0.08758217975578013
+    },
+    {
+      "candidate": "regression_060",
+      "reference": "task04c_reference_0333",
+      "segment": "full",
+      "n": 1942,
+      "mean_abs_prob_diff": 0.025085340962461844,
+      "median_abs_prob_diff": 0.020262863512159,
+      "max_abs_prob_diff": 0.13871401348608697,
+      "p90_abs_prob_diff": 0.057813802218495275,
+      "p95_abs_prob_diff": 0.06947393966560704
+    }
+  ],
+  "era_week1_4_vs_000": [
+    {
+      "candidate": "regression_025",
+      "era": "2019_2020",
+      "seasons": [
+        2019,
+        2020
+      ],
+      "reference": "regression_000",
+      "n": 126,
+      "mean_brier_delta": 0.002767982443383146,
+      "median_brier_delta": 0.010920205388159875,
+      "mean_logloss_delta": 0.005222098194510099,
+      "median_logloss_delta": 0.03338652907297465,
+      "brier_improve": 40,
+      "brier_worsen": 86,
+      "brier_tie": 0,
+      "ll_improve": 40,
+      "ll_worsen": 86,
+      "ll_tie": 0
+    },
+    {
+      "candidate": "regression_025",
+      "era": "2021_2024",
+      "seasons": [
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "reference": "regression_000",
+      "n": 256,
+      "mean_brier_delta": -0.004870609301136064,
+      "median_brier_delta": 0.010467237141339961,
+      "mean_logloss_delta": -0.022823846887754393,
+      "median_logloss_delta": 0.03125981413356958,
+      "brier_improve": 105,
+      "brier_worsen": 151,
+      "brier_tie": 0,
+      "ll_improve": 105,
+      "ll_worsen": 151,
+      "ll_tie": 0
+    },
+    {
+      "candidate": "regression_040",
+      "era": "2019_2020",
+      "seasons": [
+        2019,
+        2020
+      ],
+      "reference": "regression_000",
+      "n": 126,
+      "mean_brier_delta": 0.005995723171553355,
+      "median_brier_delta": 0.02040499930804077,
+      "mean_logloss_delta": 0.012230605203341053,
+      "median_logloss_delta": 0.05176183392417349,
+      "brier_improve": 39,
+      "brier_worsen": 87,
+      "brier_tie": 0,
+      "ll_improve": 39,
+      "ll_worsen": 87,
+      "ll_tie": 0
+    },
+    {
+      "candidate": "regression_040",
+      "era": "2021_2024",
+      "seasons": [
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "reference": "regression_000",
+      "n": 256,
+      "mean_brier_delta": -0.005053918517831844,
+      "median_brier_delta": 0.0187822380994021,
+      "mean_logloss_delta": -0.026185544419319674,
+      "median_logloss_delta": 0.050589676878837364,
+      "brier_improve": 106,
+      "brier_worsen": 150,
+      "brier_tie": 0,
+      "ll_improve": 106,
+      "ll_worsen": 150,
+      "ll_tie": 0
+    },
+    {
+      "candidate": "regression_060",
+      "era": "2019_2020",
+      "seasons": [
+        2019,
+        2020
+      ],
+      "reference": "regression_000",
+      "n": 126,
+      "mean_brier_delta": 0.01221573421323137,
+      "median_brier_delta": 0.033091137783863106,
+      "mean_logloss_delta": 0.02565679196176886,
+      "median_logloss_delta": 0.0765022611599464,
+      "brier_improve": 41,
+      "brier_worsen": 85,
+      "brier_tie": 0,
+      "ll_improve": 41,
+      "ll_worsen": 85,
+      "ll_tie": 0
+    },
+    {
+      "candidate": "regression_060",
+      "era": "2021_2024",
+      "seasons": [
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "reference": "regression_000",
+      "n": 256,
+      "mean_brier_delta": -0.0029104683650667184,
+      "median_brier_delta": 0.02945457540638924,
+      "mean_logloss_delta": -0.023480658924548314,
+      "median_logloss_delta": 0.07012720087518404,
+      "brier_improve": 101,
+      "brier_worsen": 155,
+      "brier_tie": 0,
+      "ll_improve": 101,
+      "ll_worsen": 155,
+      "ll_tie": 0
+    }
+  ],
+  "preseason_elo_spread": [
+    {
+      "season": 2018,
+      "games_w1": 16,
+      "mean_abs_elo_dev_w1": 0.0,
+      "median_abs_elo_dev_w1": 0.0,
+      "p90_abs_elo_dev_w1": 0.0
+    },
+    {
+      "season": 2019,
+      "games_w1": 16,
+      "mean_abs_elo_dev_w1": 80.32825799189621,
+      "median_abs_elo_dev_w1": 79.00142689918187,
+      "p90_abs_elo_dev_w1": 133.59390814235766
+    },
+    {
+      "season": 2020,
+      "games_w1": 16,
+      "mean_abs_elo_dev_w1": 98.51598481186073,
+      "median_abs_elo_dev_w1": 84.11533021633034,
+      "p90_abs_elo_dev_w1": 198.74310748428016
+    },
+    {
+      "season": 2021,
+      "games_w1": 16,
+      "mean_abs_elo_dev_w1": 108.03620325694087,
+      "median_abs_elo_dev_w1": 96.80916923602513,
+      "p90_abs_elo_dev_w1": 214.15139165071324
+    },
+    {
+      "season": 2022,
+      "games_w1": 16,
+      "mean_abs_elo_dev_w1": 106.23178308506824,
+      "median_abs_elo_dev_w1": 85.5546908392821,
+      "p90_abs_elo_dev_w1": 211.41699568912543
+    },
+    {
+      "season": 2023,
+      "games_w1": 16,
+      "mean_abs_elo_dev_w1": 96.31980760493784,
+      "median_abs_elo_dev_w1": 84.58822028556267,
+      "p90_abs_elo_dev_w1": 197.56394608901059
+    },
+    {
+      "season": 2024,
+      "games_w1": 16,
+      "mean_abs_elo_dev_w1": 99.68002331138766,
+      "median_abs_elo_dev_w1": 84.07634790234283,
+      "p90_abs_elo_dev_w1": 212.32544000005427
+    }
+  ],
+  "transition_forensics": {
+    "rows": 960,
+    "unique_keys": 960,
+    "unique_keys_expect": 960,
+    "no_duplicate_keys": true,
+    "all_pass": true,
+    "transition_pairs": [
+      [
+        2018,
+        2019
+      ],
+      [
+        2019,
+        2020
+      ],
+      [
+        2020,
+        2021
+      ],
+      [
+        2021,
+        2022
+      ],
+      [
+        2022,
+        2023
+      ],
+      [
+        2023,
+        2024
+      ]
+    ],
+    "transition_pairs_correct": true,
+    "new_seasons": [
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "formula_expected_matches": true,
+    "actual_equals_expected": true,
+    "transition_block_is_first_reg_w01": true,
+    "no_postseason_new_season": true,
+    "prior_state_exists_all_true": true
+  },
+  "first_divergence": {
+    "regression_025_vs_regression_000": {
+      "first_divergence_season_set": [
+        2019
+      ],
+      "all_first_divergence_at_2019": true,
+      "n_teams": 32
+    },
+    "regression_025_vs_task04c_reference_0333": {
+      "first_divergence_season_set": [
+        2019
+      ],
+      "all_first_divergence_at_2019": true,
+      "n_teams": 32
+    },
+    "regression_040_vs_regression_000": {
+      "first_divergence_season_set": [
+        2019
+      ],
+      "all_first_divergence_at_2019": true,
+      "n_teams": 32
+    },
+    "regression_040_vs_task04c_reference_0333": {
+      "first_divergence_season_set": [
+        2019
+      ],
+      "all_first_divergence_at_2019": true,
+      "n_teams": 32
+    },
+    "regression_060_vs_regression_000": {
+      "first_divergence_season_set": [
+        2019
+      ],
+      "all_first_divergence_at_2019": true,
+      "n_teams": 32
+    },
+    "regression_060_vs_task04c_reference_0333": {
+      "first_divergence_season_set": [
+        2019
+      ],
+      "all_first_divergence_at_2019": true,
+      "n_teams": 32
+    },
+    "task04c_reference_0333_vs_regression_000": {
+      "first_divergence_season_set": [
+        2019
+      ],
+      "all_first_divergence_at_2019": true,
+      "n_teams": 32
+    }
+  },
+  "spot_checks": [
+    {
+      "example": "high_prior",
+      "team": "BAL",
+      "previous_season": 2019,
+      "new_season": 2020,
+      "candidate": "regression_000",
+      "fraction": 0.0,
+      "prior_R": 1734.6286330719415,
+      "mean_M": 1500.0,
+      "expected": 1734.6286330719415,
+      "actual": 1734.6286330719415,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "high_prior",
+      "team": "BAL",
+      "previous_season": 2019,
+      "new_season": 2020,
+      "candidate": "regression_025",
+      "fraction": 0.25,
+      "prior_R": 1724.0021858641492,
+      "mean_M": 1500.0,
+      "expected": 1668.0016393981118,
+      "actual": 1668.0016393981118,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "high_prior",
+      "team": "BAL",
+      "previous_season": 2019,
+      "new_season": 2020,
+      "candidate": "regression_040",
+      "fraction": 0.4,
+      "prior_R": 1718.042760038289,
+      "mean_M": 1500.0,
+      "expected": 1630.8256560229734,
+      "actual": 1630.8256560229734,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "high_prior",
+      "team": "BAL",
+      "previous_season": 2019,
+      "new_season": 2020,
+      "candidate": "regression_060",
+      "fraction": 0.6,
+      "prior_R": 1710.5277131310668,
+      "mean_M": 1500.0,
+      "expected": 1584.2110852524268,
+      "actual": 1584.2110852524268,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "high_prior",
+      "team": "BAL",
+      "previous_season": 2019,
+      "new_season": 2020,
+      "candidate": "task04c_reference_0333",
+      "fraction": 0.333,
+      "prior_R": 1720.668284845423,
+      "mean_M": 1500.0,
+      "expected": 1647.1857459918972,
+      "actual": 1647.1857459918972,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "low_prior",
+      "team": "JAX",
+      "previous_season": 2021,
+      "new_season": 2022,
+      "candidate": "regression_000",
+      "fraction": 0.0,
+      "prior_R": 1210.3172239466012,
+      "mean_M": 1500.0,
+      "expected": 1210.3172239466012,
+      "actual": 1210.3172239466012,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "low_prior",
+      "team": "JAX",
+      "previous_season": 2021,
+      "new_season": 2022,
+      "candidate": "regression_025",
+      "fraction": 0.25,
+      "prior_R": 1249.6272452106432,
+      "mean_M": 1500.0,
+      "expected": 1312.2204339079824,
+      "actual": 1312.2204339079824,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "low_prior",
+      "team": "JAX",
+      "previous_season": 2021,
+      "new_season": 2022,
+      "candidate": "regression_040",
+      "fraction": 0.4,
+      "prior_R": 1269.0651646628382,
+      "mean_M": 1500.0,
+      "expected": 1361.4390987977029,
+      "actual": 1361.4390987977029,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "low_prior",
+      "team": "JAX",
+      "previous_season": 2021,
+      "new_season": 2022,
+      "candidate": "regression_060",
+      "fraction": 0.6,
+      "prior_R": 1291.401624559334,
+      "mean_M": 1500.0,
+      "expected": 1416.5606498237337,
+      "actual": 1416.5606498237337,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "low_prior",
+      "team": "JAX",
+      "previous_season": 2021,
+      "new_season": 2022,
+      "candidate": "task04c_reference_0333",
+      "fraction": 0.333,
+      "prior_R": 1260.7054005205564,
+      "mean_M": 1500.0,
+      "expected": 1340.390502147211,
+      "actual": 1340.390502147211,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "near_1500",
+      "team": "NE",
+      "previous_season": 2022,
+      "new_season": 2023,
+      "candidate": "regression_000",
+      "fraction": 0.0,
+      "prior_R": 1512.1880630230203,
+      "mean_M": 1500.0,
+      "expected": 1512.1880630230203,
+      "actual": 1512.1880630230203,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "near_1500",
+      "team": "NE",
+      "previous_season": 2022,
+      "new_season": 2023,
+      "candidate": "regression_025",
+      "fraction": 0.25,
+      "prior_R": 1503.498625489949,
+      "mean_M": 1500.0,
+      "expected": 1502.623969117462,
+      "actual": 1502.623969117462,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "near_1500",
+      "team": "NE",
+      "previous_season": 2022,
+      "new_season": 2023,
+      "candidate": "regression_040",
+      "fraction": 0.4,
+      "prior_R": 1499.892425614846,
+      "mean_M": 1500.0,
+      "expected": 1499.9354553689075,
+      "actual": 1499.9354553689075,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "near_1500",
+      "team": "NE",
+      "previous_season": 2022,
+      "new_season": 2023,
+      "candidate": "regression_060",
+      "fraction": 0.6,
+      "prior_R": 1496.158463655938,
+      "mean_M": 1500.0,
+      "expected": 1498.4633854623753,
+      "actual": 1498.4633854623753,
+      "abs_error": 0.0,
+      "status": "PASS"
+    },
+    {
+      "example": "near_1500",
+      "team": "NE",
+      "previous_season": 2022,
+      "new_season": 2023,
+      "candidate": "task04c_reference_0333",
+      "fraction": 0.333,
+      "prior_R": 1501.396418234655,
+      "mean_M": 1500.0,
+      "expected": 1500.9314109625147,
+      "actual": 1500.9314109625147,
+      "abs_error": 0.0,
+      "status": "PASS"
+    }
+  ]
+}

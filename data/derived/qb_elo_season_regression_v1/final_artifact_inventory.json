@@ -1,0 +1,78 @@
+{
+  "predictions_regression_000.parquet": {
+    "bytes": 77913,
+    "sha256": "59a3c31976264585bf077f2d094dd7373fc12c4a5df5a9cf2f2d1ca2b94b1d0f"
+  },
+  "predictions_regression_025.parquet": {
+    "bytes": 77836,
+    "sha256": "e75a03471c73721b638b5a0d9d565bab2e3df1bdc4c9a2159e6d945ac2ca95cf"
+  },
+  "predictions_regression_040.parquet": {
+    "bytes": 77786,
+    "sha256": "14032cbb42a5305c71b185b8d92d0a88e2c7d07cc224f18254f73cb2d7880e42"
+  },
+  "predictions_regression_060.parquet": {
+    "bytes": 77734,
+    "sha256": "ab583e519cba9733812a4ef03d4ca553539cf68a84efa4bbc0962e22971fc453"
+  },
+  "predictions_task04c_reference_0333.parquet": {
+    "bytes": 77869,
+    "sha256": "e22f62a5211f2e0f2a4af2dc18763e12159a218c808a27abf31099e1e762a79a"
+  },
+  "season_boundary_audit_all.parquet": {
+    "bytes": 27349,
+    "sha256": "2d27a20f2d5fe9426b59814e8f733bca3ca4d8544133e0619cd1693779d74b39"
+  },
+  "season_boundary_audit_regression_000.parquet": {
+    "bytes": 11220,
+    "sha256": "0bfebbd344366c0e5e7ab31263d130e39cfa19620b76bcab6e28ba18aa7dbc7b"
+  },
+  "season_boundary_audit_regression_025.parquet": {
+    "bytes": 11225,
+    "sha256": "a614991490386f88269be1c8f903ff6326f2681bc9748445ae099a731c02977c"
+  },
+  "season_boundary_audit_regression_040.parquet": {
+    "bytes": 11202,
+    "sha256": "daf808905e163ed86ce57181dec93cbfe7d9e48fed377055b297aeaf94dd03ac"
+  },
+  "season_boundary_audit_regression_060.parquet": {
+    "bytes": 11186,
+    "sha256": "455fe12983ea44e1f75e20c049347adac0b8e89fc00fd6148e103f699cb0884e"
+  },
+  "season_boundary_audit_task04c_reference_0333.parquet": {
+    "bytes": 11270,
+    "sha256": "f9b86bda0d50dc943dd6a28bc7e53403c59b5dcc0c9c7f0c803d1e198aa1b347"
+  },
+  "metrics_segments.json": {
+    "bytes": 10763,
+    "sha256": "4e579e9cbd094a9e5fef55f4d24e1c23f549cf2f142f76a8ada1fc8e7168f90b"
+  },
+  "metrics_season_week1_4.json": {
+    "bytes": 7022,
+    "sha256": "a3c9a9855fe452607ceb3b97f89355a3f15ffbc5e1b7583e7acf229e90f4f8b4"
+  },
+  "pairability_matrix.json": {
+    "bytes": 1564,
+    "sha256": "7dc2ddc61d7aac2f8786b9e1eb973faad895dfbef004c0960e574bc5612a87f2"
+  },
+  "identity_verification.json": {
+    "bytes": 557,
+    "sha256": "8fd318c84b417e4eed91fb2c5b1c9099d926c37acb3a5b9718e559043602aef2"
+  },
+  "replay_determinism.json": {
+    "bytes": 907,
+    "sha256": "0601e08643c03de68c7dffa71bcccc35025ef5556f1b690cda3030e1b7ab7345"
+  },
+  "paired_comparisons.parquet": {
+    "bytes": 7810,
+    "sha256": "b93597ae7c3826517203616299fbcffd7ffb99095ed10150782edb5010143f6c"
+  },
+  "analysis_report.json": {
+    "bytes": 82569,
+    "sha256": "0801f4682b7a62da9f84693c2ab76d6e39ebe0a7f94271930b22efda060b4f79"
+  },
+  "summary.json": {
+    "bytes": 276,
+    "sha256": "4ba110e79cdeaba1ffb7bcbed8083aab553d11d7b7c0f62ce031fa04dde893f9"
+  }
+}

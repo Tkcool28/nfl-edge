@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "checks": {
+    "2018_home_elo_before_identical": true,
+    "2018_away_elo_before_identical": true,
+    "2018_predicted_home_win_probability_identical": true,
+    "qb_home_identical_all": true,
+    "qb_away_identical_all": true,
+    "regression_000_2018_2019_all_pass": true,
+    "regression_025_2018_2019_all_pass": true,
+    "regression_040_2018_2019_all_pass": true,
+    "regression_060_2018_2019_all_pass": true,
+    "task04c_reference_0333_2018_2019_all_pass": true
+  },
+  "ari_2018_2019_sample": {
+    "regression_000": {
+      "prior": 1342.842940829625,
+      "expected": 1342.842940829625,
+      "actual": 1342.842940829625,
+      "frac": 0.0
+    },
+    "regression_025": {
+      "prior": 1342.842940829625,
+      "expected": 1382.1322056222186,
+      "actual": 1382.1322056222186,
+      "frac": 0.25
+    },
+    "regression_040": {
+      "prior": 1342.842940829625,
+      "expected": 1405.705764497775,
+      "actual": 1405.705764497775,
+      "frac": 0.4
+    },
+    "regression_060": {
+      "prior": 1342.842940829625,
+      "expected": 1437.13717633185,
+      "actual": 1437.13717633185,
+      "frac": 0.6
+    },
+    "task04c_reference_0333": {
+      "prior": 1342.842940829625,
+      "expected": 1395.1762415333599,
+      "actual": 1395.1762415333599,
+      "frac": 0.333
+    }
+  }
+}
