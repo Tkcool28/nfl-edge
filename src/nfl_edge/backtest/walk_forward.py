@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import hashlib
 import json as json_lib
+from collections.abc import Callable
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -225,6 +226,7 @@ def _predict_block(
     model_version: str,
     exposure: dict[str, int],
     created_at: datetime,
+    qb_adjustment_resolver: "Callable[[str], tuple[float, float]] | None" = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Pass 1: predict every game in the block from the frozen state.
 
@@ -284,8 +286,26 @@ def _predict_block(
         # confirmed pregame QB data, so the contribution is exactly
         # 0.0 and the certainty state is UNKNOWN. This matches the
         # documented Task 03A baseline behavior.
-        home_qb_adj = 0.0
-        away_qb_adj = 0.0
+        #
+        # Task 04C seam: when an explicit ``qb_adjustment_resolver`` is
+        # supplied (evaluation-only oracle harness), the resolver returns
+        # ``(home_qb_adj, away_qb_adj)`` for a given ``game_id``. When
+        # None, it resolves to (0.0, 0.0) -- byte-identical to the
+        # existing baseline. The resolver only affects the prediction
+        # probability (via elo_probability_home); it never reaches the
+        # postgame team-Elo transition (update_state_with_margin).
+        if qb_adjustment_resolver is None:
+            home_qb_adj = 0.0
+            away_qb_adj = 0.0
+            qb_certainty = "UNKNOWN"
+        else:
+            home_qb_adj, away_qb_adj = qb_adjustment_resolver(game_id)
+            home_qb_adj = float(home_qb_adj)
+            away_qb_adj = float(away_qb_adj)
+            # Task 04C oracle: adjustments are frozen oracle-identity
+            # values (CONFIRMED semantics), distinct from the dev-window
+            # UNKNOWN label.
+            qb_certainty = "CONFIRMED"
 
         p_home = elo_probability_home(
             home_elo=home_elo_before,
@@ -337,7 +357,7 @@ def _predict_block(
                 "home_qb_adjustment": home_qb_adj,
                 "away_qb_adjustment": away_qb_adj,
                 "qb_adjustment_net": home_qb_adj - away_qb_adj,
-                "qb_certainty_state": "UNKNOWN",
+                "qb_certainty_state": qb_certainty,
                 "predicted_home_win_probability": p_home,
                 "actual_margin": actual_margin,
                 "actual_home_win": actual_home_win,
@@ -569,6 +589,7 @@ def run_development_walk_forward(
     config: dict[str, Any] | None = None,
     created_at: datetime | None = None,
     project_root: str | Path | None = None,
+    qb_adjustment_resolver: "Callable[[str], tuple[float, float]] | None" = None,
 ) -> dict[str, Any]:
     """Run the development-only expanding walk-forward for the QB-Elo
     baseline.
@@ -696,6 +717,7 @@ def run_development_walk_forward(
             model_version="v1.0.0",
             exposure=exposure,
             created_at=created_at,
+            qb_adjustment_resolver=qb_adjustment_resolver,
         )
         predictions_all.extend(block_predictions)
 
