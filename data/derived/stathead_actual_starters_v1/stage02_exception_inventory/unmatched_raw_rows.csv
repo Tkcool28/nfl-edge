@@ -1,0 +1,16 @@
+rank,player_name,pfr_id,raw_date,raw_team,raw_location,raw_opp,raw_pos,reconciliation_reason,raw_result,diagnosis
+454,Sam Darnold,DarnSa00,2024-09-29,MIN,,GNB,QB,raw home indicator contradicts canonical team side,W 31-29,OPPONENT_MISMATCH
+460,Daniel Jones,JoneDa05,2024-09-29,NYG,,DAL,QB,no canonical date/team/opponent identity match,L 15-20,DATE_MISMATCH
+462,Will Levis,LeviWi00,2024-09-29,TEN,@,MIA,QB,no canonical date/team/opponent identity match,W 31-12,DATE_MISMATCH
+469,Dak Prescott,PresDa01,2024-09-29,DAL,@,NYG,QB,no canonical date/team/opponent identity match,W 20-15,DATE_MISMATCH
+651,Easton Stick,SticEa00,2023-12-31,LAC,,KAN,QB,no canonical date/team/opponent identity match,L 12-13,OPPONENT_MISMATCH
+652,Jarrett Stidham,StidJa00,2023-12-31,DEN,,LVR,QB,no canonical date/team/opponent identity match,W 16-9,OPPONENT_MISMATCH
+655,Deshaun Watson,WatsDe00,2023-12-31,CLE,,NYJ,QB,no canonical date/team/opponent identity match,W 37-20,DATE_MISMATCH
+683,Tyrod Taylor,TaylTy00,2023-12-24,NYG,@,PHI,QB,no canonical date/team/opponent identity match,L 25-33,DATE_MISMATCH
+705,Nick Mullens,MullNi00,2023-12-17,MIN,@,CIN,QB,no canonical date/team/opponent identity match,L 24-27 (OT),DATE_MISMATCH
+716,Jarrett Stidham,StidJa00,2023-12-17,DEN,@,DET,QB,no canonical date/team/opponent identity match,L 17-42,DATE_MISMATCH
+801,Dak Prescott,PresDa01,2023-11-26,DAL,,WAS,QB,no canonical date/team/opponent identity match,W 45-10,DATE_MISMATCH
+845,Tyson Bagent,BageTy00,2023-11-12,CHI,,CAR,QB,no canonical date/team/opponent identity match,W 16-13,DATE_MISMATCH
+875,Russell Wilson,WilsRu00,2023-11-12,DEN,@,BUF,QB,no canonical date/team/opponent identity match,W 24-22,DATE_MISMATCH
+876,Bryce Young,YounBr01,2023-11-12,CAR,@,CHI,QB,no canonical date/team/opponent identity match,L 13-16,DATE_MISMATCH
+877,Josh Allen,AlleJo02,2023-11-05,BUF,@,NYJ,QB,no canonical date/team/opponent identity match,L 18-24,OPPONENT_MISMATCH

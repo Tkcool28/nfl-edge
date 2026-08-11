@@ -1,0 +1,50 @@
+{
+  "ambiguous_game_matches": 0,
+  "bye_rows": 20,
+  "canonical_game_count": 1942,
+  "canonical_game_side_count": 3884,
+  "distribution_of_candidate_counts": {
+    "0": 49,
+    "1": 3785,
+    "2": 49,
+    "3": 1
+  },
+  "game_sides_with_0_candidates": 49,
+  "game_sides_with_1_candidate": 3785,
+  "game_sides_with_2plus_candidates": 50,
+  "guardrails": [
+    "identity fields only",
+    "no starter adjudication",
+    "BYE rows retained",
+    "no 2025 NFL season input"
+  ],
+  "matched_raw_rows": 3886,
+  "neutral_site_rows": 14,
+  "neutral_site_rows_matched": 14,
+  "outputs": {
+    "/root/workspaces/nfl-edge-stathead-stage00/data/derived/stathead_actual_starters_v1/stage01_canonical_reconciliation/game_side_candidates.csv": "1a48a8389a08b116d79c865fc06a246b1313888e4d572497ad7178b953af1d75",
+    "/root/workspaces/nfl-edge-stathead-stage00/data/derived/stathead_actual_starters_v1/stage01_canonical_reconciliation/reconciliation_report.json": "f3b7699acac366bc955319829a410b784a8c9cb625b3008269fcbc670aaa170d",
+    "/root/workspaces/nfl-edge-stathead-stage00/data/derived/stathead_actual_starters_v1/stage01_canonical_reconciliation/row_reconciliation.csv": "fb370e92badb6ee75f4ec23b858042bed7415ce5043843931242e43ccd183fe8"
+  },
+  "postseason_game_count": 87,
+  "raw_row_count": 3921,
+  "stage": "stage01_canonical_game_reconciliation",
+  "super_bowl_game_count": 7,
+  "team_normalization_map_used": {
+    "GNB": "GB",
+    "JAC": "JAX",
+    "KAN": "KC",
+    "LA": "LAR",
+    "LVR": "LV",
+    "NOR": "NO",
+    "NWE": "NE",
+    "OAK": "LV",
+    "SD": "LAC",
+    "SDG": "LAC",
+    "SFO": "SF",
+    "STL": "LAR",
+    "TAM": "TB",
+    "WAS": "WAS"
+  },
+  "unmatched_raw_rows": 15
+}
