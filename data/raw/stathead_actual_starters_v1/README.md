@@ -5,7 +5,7 @@ This directory preserves the **raw Sports Reference Stathead Player Game Stats F
 ## Source semantics
 
 - Source: `SPORTS_REFERENCE_STATHEAD_PLAYER_GAME_FINDER`
-- Query intent: single player games, seasons 2018 through 2024, regular season or postseason, position QB, `Started Game`, sorted by descending Date.
+- Query intent: single player games, seasons 2018 through 2024, regular season or postseason, position QB, `Started Game`, sorted by descending Date (as requested in the original Stathead query).
 - Raw columns exported by Stathead:
 
 ```text
@@ -45,3 +45,9 @@ The raw Stathead export was manually copied from the subscriber UI in mobile-bro
 Because repository writes cannot directly read hidden/skipped chat turns, recovery is being staged with an explicit manifest. A rank is considered safely recovered only when the literal CSV row has been committed here. Coverage summaries from chat are not substituted for missing literal rows.
 
 See `manifest.json` for the recovery/validation contract.
+
+## Provenance scope (verified vs. intended)
+
+The archive verifies **rank continuity (1..3921, no missing or duplicate ranks)** and **intact literal rows** (no normalization, re-sort, or row edits). The descending-Date ordering was the **intended** Stathead query sort; **strict descending-Date order is NOT independently verified** from this archive. Local +/-1-day rank/date inversions (39 observed) exist and are **preserved literally**, consistent with Stathead's per-date secondary sort / manual page-boundary behavior in a stable query — and are not, by themselves, proof that the underlying query or export sort changed or that it stayed fixed.
+
+Downstream reconstruction must **not rely on raw rank/date sort order**: it joins raw rows to canonical games on explicit `(raw Date, normalized team, opponent, location)` identity. See `manifest.json` → `sort_order_provenance`.

@@ -24,8 +24,8 @@
   },
   "postseason_games": 87,
   "super_bowl_games": 7,
-  "crosswalk_path": "/root/nfl-edge-task04a-raw/crosswalk/players.csv.gz",
-  "crosswalk_sha256": "c2da9ec0ac104ba4a1240c164c48452e8dfefe49425a482a0e3073267d6b97ba",
+  "crosswalk_path": "data/derived/stathead_actual_starters_v1/identity_crosswalk/task04a_player_crosswalk_v1.csv",
+  "crosswalk_sha256": "d554c7c2ab5114bc70d0f04a46feba0ef46ab53c717769f8c04f88b98e976742",
   "output_sha256": {
     "actual_starting_qb_game_sides_2018_2024_v1.csv": "38732823861bb1def3c216ce9189b651a2dc4d0737d2f65f88f17e97f40b2a1a",
     "actual_starting_qbs_by_game_2018_2024_v1.csv": "73a4dc286f3c68818f456063172492e81f21fa037ec05ec010dc17764a9f9670",
