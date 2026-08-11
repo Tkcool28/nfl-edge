@@ -10,6 +10,8 @@ These are evaluation-only fixture tests. They do NOT run the full
 
 from __future__ import annotations
 
+import hashlib
+import json
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -449,3 +451,131 @@ def test_baseline_default_resolver_None_unchanged():
     assert preds_default[0]["predicted_home_win_probability"] == pytest.approx(
         preds_explicit[0]["predicted_home_win_probability"]
     )
+
+
+# ---------------------------------------------------------------------------
+# Full-engine resolver fail-closed + run identity tests (Phase 4D)
+# ---------------------------------------------------------------------------
+def _write_oracle_fixture(game_ids, tmp_path: Path, name: str) -> Path:
+    """Write an oracle adjustment parquet containing the given game_ids."""
+    df = pl.DataFrame(
+        {
+            "game_id": game_ids,
+            "home_qb_adjustment_elo": [ORACLE_HOME] * len(game_ids),
+            "away_qb_adjustment_elo": [ORACLE_AWAY] * len(game_ids),
+        }
+    )
+    path = tmp_path / name
+    df.write_parquet(path)
+    return path
+
+
+def test_extra_oracle_row_fails_before_prediction_write(tmp_path):
+    """Oracle with all canonical games PLUS one extra must fail before a
+    prediction parquet is written."""
+    games = pl.DataFrame(
+        [
+            _block_row("G1", "AAA", "BBB", margin=7, home_win=True),
+        ]
+    )
+    oracle_path = _write_oracle_fixture(["G1", "EXTRA"], tmp_path, "oracle_extra.parquet")
+    oracle = OracleQBAdjustments(oracle_path)
+    out = tmp_path / "out_extra"
+    with pytest.raises(OracleAdjustmentError):
+        run_development_walk_forward(
+            games_path=_write_games_fixture(games, tmp_path),
+            team_features_path=TEAM_PATH,
+            output_dir=out,
+            project_root=REPO_ROOT,
+            qb_adjustment_resolver=oracle,
+            created_at=AS_OF,
+        )
+    assert not (out / "qb_elo_predictions_2018_2024.parquet").exists()
+
+
+def test_missing_oracle_row_fails_before_prediction_write(tmp_path):
+    """Oracle missing a canonical game must fail before prediction write."""
+    games = pl.DataFrame(
+        [
+            _block_row("G1", "AAA", "BBB", margin=7, home_win=True),
+            _block_row("G2", "CCC", "DDD", margin=-3, home_win=False),
+        ]
+    )
+    oracle_path = _write_oracle_fixture(["G1"], tmp_path, "oracle_missing.parquet")
+    oracle = OracleQBAdjustments(oracle_path)
+    out = tmp_path / "out_missing"
+    with pytest.raises(OracleAdjustmentError):
+        run_development_walk_forward(
+            games_path=_write_games_fixture(games, tmp_path),
+            team_features_path=TEAM_PATH,
+            output_dir=out,
+            project_root=REPO_ROOT,
+            qb_adjustment_resolver=oracle,
+            created_at=AS_OF,
+        )
+    assert not (out / "qb_elo_predictions_2018_2024.parquet").exists()
+
+
+def test_same_timestamp_run_identities_and_manifest(tmp_path):
+    """Baseline and oracle runs at identical timestamp must differ in run_id
+    and backtest config while sharing model config."""
+    games = pl.DataFrame(
+        [
+            _block_row("G1", "AAA", "BBB", margin=7, home_win=True),
+            _block_row("G2", "CCC", "DDD", margin=-3, home_win=False),
+        ]
+    )
+    games_path = _write_games_fixture(games, tmp_path)
+    oracle_path = _write_oracle_fixture(["G1", "G2"], tmp_path, "oracle_pair.parquet")
+    oracle = OracleQBAdjustments(oracle_path)
+    oracle_sha = hashlib.sha256(oracle_path.read_bytes()).hexdigest()
+
+    base_out = tmp_path / "base_out"
+    run_development_walk_forward(
+        games_path=games_path, team_features_path=TEAM_PATH, output_dir=base_out,
+        project_root=REPO_ROOT, qb_adjustment_resolver=None, created_at=AS_OF,
+    )
+    ora_out = tmp_path / "ora_out"
+    run_development_walk_forward(
+        games_path=games_path, team_features_path=TEAM_PATH, output_dir=ora_out,
+        project_root=REPO_ROOT, qb_adjustment_resolver=oracle, created_at=AS_OF,
+    )
+
+    base_manifest = json.loads((base_out / "qb_elo_run_manifest_v1.json").read_text())
+    ora_manifest = json.loads((ora_out / "qb_elo_run_manifest_v1.json").read_text())
+
+    # 1. run IDs differ
+    assert base_manifest["run_id"] != ora_manifest["run_id"]
+    # 2. baseline retains ordinary form
+    assert base_manifest["run_id"].startswith("qb_elo-v1.0.0-")
+    assert "-oracle-" not in base_manifest["run_id"]
+    # 3. oracle contains suffix
+    assert f"-oracle-{oracle_sha[:12]}" in ora_manifest["run_id"]
+    # 4. baseline manifest has no oracle block
+    assert "qb_adjustment_resolver" not in base_manifest
+    # 5. oracle manifest has the resolver block
+    rb = ora_manifest["qb_adjustment_resolver"]
+    for key in (
+        "mode", "implementation", "oracle_artifact_path", "oracle_artifact_sha256",
+        "historical_model_usage", "starter_evidence_class",
+    ):
+        assert rb.get(key), f"missing {key}"
+    assert rb["mode"] == "ORACLE"
+    assert rb["oracle_artifact_sha256"] == oracle_sha
+    # 6. backtest-config hashes differ
+    assert base_manifest["backtest_config_sha256"] != ora_manifest["backtest_config_sha256"]
+    # 7. model-config hashes equal
+    assert base_manifest["model_config_sha256"] == ora_manifest["model_config_sha256"]
+
+
+def test_authoritative_oracle_manifest_identity(tmp_path):
+    """The authoritative frozen oracle parquet yields the expected SHA and the
+    full resolver identity contract."""
+    oracle = OracleQBAdjustments(ORACLE_PATH)
+    assert oracle.oracle_artifact_sha256 == "268368c81913e183d7e9ea5050c0da0a01be619790b75c5bab9362c97349e886"
+    ident = oracle.manifest_identity()
+    assert ident["mode"] == "ORACLE"
+    assert ident["implementation"] == "nfl_edge.backtest.task04c_paired_evaluation.OracleQBAdjustments"
+    assert ident["historical_model_usage"] == "ORACLE_STARTER_IDENTITY_ONLY"
+    assert ident["starter_evidence_class"] == "POSTGAME_ACTUAL_STARTER"
+    assert ident["oracle_artifact_sha256"] == "268368c81913e183d7e9ea5050c0da0a01be619790b75c5bab9362c97349e886"
