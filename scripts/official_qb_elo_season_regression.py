@@ -391,10 +391,32 @@ def main(argv: list[str] | None = None) -> int:
         "week1_4_n": int(metrics["regression_000"]["week1_4"]["n_scored"]),
         "combined_audit_rows": int(combined.height),
         "combined_audit_pass": int(combined.filter(pl.col("status") == "PASS").height),
+        "replay_validation_passed": bool(
+            all(
+                replay[lb]["game_id_order_identical"] and replay[lb]["metrics_equal"]
+                for lb in replay
+            )
+        ),
         "best_nonzero_week1_4_brier": {"candidate": best, "brier": metrics[best]["week1_4"]["brier"]},
     }
     (out_root / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps(summary, indent=2))
+
+    # ---- Official run aggregate fail-closed gate (Phase 5B-1) ----
+    # Every validation produced by this workflow must pass before the run is
+    # treated as official. A failed gate returns nonzero instead of silently
+    # reporting success; nothing that failed is promoted to "true".
+    official_gates = {
+        "identity": bool(identity["identity_passed"]),
+        "pairability": bool(pair["pairable"]),
+        "boundary_sanity": bool(sanity["passed"]),
+        "combined_audit": int(combined.filter(pl.col("status") == "PASS").height) == int(combined.height),
+        "replay_validation": bool(summary["replay_validation_passed"]),
+    }
+    failed = [k for k, v in official_gates.items() if not v]
+    if failed:
+        sys.stderr.write(f"OFFICIAL RUN FAILED GATES: {failed}\n")
+        return 1
     return 0
 
 

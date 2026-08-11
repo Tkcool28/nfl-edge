@@ -676,3 +676,159 @@ def test_week1_4_metrics_helper_on_full_run(tmp_path):
         (pl.col("week") <= 4) & (pl.col("season_type") == "REG")
     ).height
     assert w14["n_scored"] == float(w14_rows)
+
+
+# ---------------------------------------------------------------------------
+# Phase 5B-1: fail-closed workflow enforcement
+# ---------------------------------------------------------------------------
+def _load_script(rel: str):
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(Path(rel).stem, REPO_ROOT / rel)
+    assert spec is not None and spec.loader is not None
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+_OFFICIAL = _load_script("scripts/official_qb_elo_season_regression.py")
+_FINALIZE = _load_script("scripts/finalize_qb_elo_season_regression.py")
+
+
+def _fixture_root(root: Path) -> Path:
+    import shutil as _sh
+    dst = root / "fixture"
+    (dst / "data/derived").mkdir(parents=True, exist_ok=True)
+    _sh.copytree(
+        REPO_ROOT / "data/derived/qb_elo_season_regression_v1",
+        dst / "data/derived/qb_elo_season_regression_v1",
+    )
+    (dst / "config").mkdir(parents=True, exist_ok=True)
+    _sh.copy2(REPO_ROOT / "config/qb_elo_v1.yaml", dst / "config/qb_elo_v1.yaml")
+    return dst
+
+
+def _official_metrics_fake() -> dict:
+    base = {
+        "week1_4": {"n_scored": 445.0, "brier": 0.23, "log_loss": 0.66, "accuracy": 0.60},
+        "weeks5plus": {"n_scored": 1410.0, "brier": 0.22, "log_loss": 0.63, "accuracy": 0.65},
+        "reg": {"n_scored": 1855.0, "brier": 0.22, "log_loss": 0.63, "accuracy": 0.64},
+        "postseason": {"n_scored": 87.0, "brier": 0.22, "log_loss": 0.64, "accuracy": 0.62},
+        "full": {"n_scored": 1942.0, "brier": 0.22, "log_loss": 0.63, "accuracy": 0.64},
+        "season_week1_4": {str(y): {"n_scored": 63.0, "brier": 0.24, "log_loss": 0.67, "accuracy": 0.59}
+                           for y in [2018, 2019, 2020, 2021, 2022, 2023, 2024]},
+    }
+    out = {}
+    for label in ("regression_000", "regression_025", "regression_040",
+                  "regression_060", "task04c_reference_0333"):
+        m = dict(base)
+        m["label"] = label
+        m["fraction"] = _OFFICIAL.CANDIDATE_FRACTIONS[label]
+        m["role"] = _OFFICIAL.ROLE[label]
+        out[label] = m
+    return out
+
+
+def _patch_official(monkeypatch, *, identity=True, pair=True, sanity=True,
+                    audit_pass=True, replay=True) -> dict:
+    metrics = _official_metrics_fake()
+
+    def fake_run_candidate(root, out_root, label, oracle, base_config):
+        audit = pl.DataFrame({"status": ["PASS"] if audit_pass else ["FAIL"]})
+        return {
+            "label": label, "fraction": _OFFICIAL.CANDIDATE_FRACTIONS[label],
+            "role": _OFFICIAL.ROLE[label],
+            "preds": pl.DataFrame({"game_id": ["G"]}),
+            "state": pl.DataFrame({"game_id": ["G"]}),
+            "artifact": pl.DataFrame({"game_id": ["G"]}),
+            "audit": audit, "run_dir": str(out_root / "runs" / label),
+        }
+
+    monkeypatch.setattr(_OFFICIAL, "run_candidate", fake_run_candidate)
+    monkeypatch.setattr(_OFFICIAL, "collect_metrics", lambda res: metrics[res["label"]])
+    monkeypatch.setattr(_OFFICIAL, "verify_identity",
+                        lambda res, committed: {"identity_passed": identity})
+    monkeypatch.setattr(_OFFICIAL, "pairability",
+                        lambda results: {"pairable": pair, "matrix": {}})
+    monkeypatch.setattr(_OFFICIAL, "pre_boundary_sanity",
+                        lambda results: {"passed": sanity, "checks": {}})
+    monkeypatch.setattr(
+        _OFFICIAL, "replay_check",
+        lambda results, root, out_root, oracle, base_config, labels: {
+            lb: {"game_id_order_identical": replay, "max_prob_diff": 0.0,
+                 "metrics_equal": replay} for lb in labels
+        },
+    )
+    return metrics
+
+
+@pytest.mark.parametrize("kwargs,expect_fail", [
+    ({"identity": False}, True),
+    ({"pair": False}, True),
+    ({"sanity": False}, True),
+    ({"audit_pass": False}, True),
+    ({"replay": False}, True),
+    ({"identity": True, "pair": True, "sanity": True, "audit_pass": True, "replay": True}, False),
+])
+def test_official_workflow_gate_nonzero_on_failure(tmp_path, monkeypatch, kwargs, expect_fail):
+    _patch_official(monkeypatch, **kwargs)
+    out = tmp_path / "official_out"
+    rc = _OFFICIAL.main(["--project-root", str(REPO_ROOT), "--out", str(out)])
+    if expect_fail:
+        assert rc != 0
+    else:
+        assert rc == 0
+    assert (out / "summary.json").exists()
+
+
+def test_finalize_reconciliation_false_returns_nonzero(tmp_path, monkeypatch):
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    bad = pl.DataFrame([{
+        "mean_brier_delta": 0.5, "aggregate_brier_equiv": -0.5,
+        "candidate": "x", "reference": "y", "segment": "full",
+    }])
+    bad.write_parquet(out / "paired_comparisons.parquet")
+    assert _FINALIZE.main(["--project-root", str(root)]) != 0
+
+
+def test_finalize_reproducibility_false_returns_nonzero(tmp_path, monkeypatch):
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    stored = pl.read_parquet(out / "predictions_regression_000.parquet")
+    stored.head(100).write_parquet(out / "predictions_regression_000.parquet")
+    assert _FINALIZE.main(["--project-root", str(root)]) != 0
+
+
+def test_finalize_transition_audit_false_returns_nonzero(tmp_path, monkeypatch):
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    audit = pl.read_parquet(out / "season_boundary_audit_all.parquet")
+    audit.with_columns(pl.lit("FAIL").alias("status")).write_parquet(
+        out / "season_boundary_audit_all.parquet")
+    assert _FINALIZE.main(["--project-root", str(root)]) != 0
+
+
+def test_finalize_seal_2025_false_returns_nonzero(tmp_path, monkeypatch):
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    stored = pl.read_parquet(out / "predictions_regression_000.parquet")
+    dt = stored["season"].dtype
+    first = stored.head(1).with_columns(pl.lit(2025, dtype=dt).alias("season"))
+    rest = stored.tail(stored.height - 1)
+    pl.concat([first, rest], how="vertical").write_parquet(
+        out / "predictions_regression_000.parquet")
+    assert _FINALIZE.main(["--project-root", str(root)]) != 0
+
+
+def test_finalize_config_mismatch_returns_nonzero(tmp_path, monkeypatch):
+    root = _fixture_root(tmp_path)
+    monkeypatch.setattr(
+        _FINALIZE, "load_canonical_config",
+        lambda root_dir: {"season_mean_reversion_fraction": 0.25},
+    )
+    assert _FINALIZE.main(["--project-root", str(root)]) != 0
+
+
+def test_finalize_all_pass_returns_zero(tmp_path):
+    root = _fixture_root(tmp_path)
+    assert _FINALIZE.main(["--project-root", str(root)]) == 0

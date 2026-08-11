@@ -28,7 +28,9 @@ import polars as pl
 from nfl_edge.backtest.task04d_season_regression_evaluation import (
     CANDIDATE_FRACTIONS,
     CANDIDATE_LABELS,
+    TASK04C_REFERENCE_FRACTION,
     build_prediction_artifact,
+    load_canonical_config,
 )
 
 SEASONS = [2018, 2019, 2020, 2021, 2022, 2023, 2024]
@@ -313,6 +315,50 @@ def main(argv: list[str] | None = None) -> int:
     print("\n=== INVENTORY (files) ===", len(inventory))
     print("\nWROTE final_evidence_summary.json / final_artifact_inventory.json / "
           "artifact_reproducibility.json")
+
+    # ---- Finalization aggregate fail-closed gate (Phase 5B-1) ----
+    # All serialized validation booleans must be true before finalization can
+    # report success. Failed evidence is still written for diagnosis, but the
+    # process returns nonzero so automation never publishes a failed package as
+    # validated. Nothing false is promoted to true.
+    finalize_gates = {}
+    if not isinstance(reconcile_ok, bool):
+        finalize_gates["paired_reconciliation"] = bool(reconcile_ok)
+    else:
+        finalize_gates["paired_reconciliation"] = reconcile_ok
+    # Reproducibility: every candidate prediction must equal its engine rebuild.
+    finalize_gates["artifact_reproducibility"] = bool(
+        all(v["logical_equal_to_rebuild"] for v in repro.values())
+    )
+    # Transition audit: the combined season-boundary audit must be all PASS.
+    finalize_gates["transition_audit"] = bool(
+        (audit["status"] == "PASS").all()
+    )
+    # 2025 seal: every 2025 count must be zero.
+    finalize_gates["seal_2025"] = all(
+        v == 0 for k, v in seal.items() if k != "expected"
+    )
+    # Config / incumbent consistency: the production season reversion fraction
+    # read from config/qb_elo_v1.yaml must equal the Task04D incumbent fraction.
+    cfg = load_canonical_config(root)
+    config_fraction = float(cfg["season_mean_reversion_fraction"])
+    finalize_gates["config_reference_consistency"] = (
+        abs(config_fraction - TASK04C_REFERENCE_FRACTION) <= 1e-9
+    )
+
+    failed_gates = [k for k, v in finalize_gates.items() if not v]
+    if failed_gates:
+        sys.stderr.write(
+            f"FINALIZATION FAILED GATES: {failed_gates} "
+            f"(config_reversion={config_fraction}, "
+            f"reference={TASK04C_REFERENCE_FRACTION})\n"
+        )
+        return 1
+    else:
+        sys.stderr.write(
+            f"FINALIZATION GATES PASS: config_reversion={config_fraction}, "
+            f"reference={TASK04C_REFERENCE_FRACTION}\n"
+        )
     return 0
 
 
