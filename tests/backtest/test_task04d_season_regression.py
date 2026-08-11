@@ -8,6 +8,8 @@ development universe / 2025 exclusion, and the 33.3% Task04C identity gate.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import math
 import tempfile
 from datetime import datetime, timezone
@@ -948,3 +950,82 @@ def test_self_inventory_non_recursive(tmp_path):
     # The finalizer treats the inventory file as declared (no recursive self-SHA).
     prov = _FINALIZE.build_provenance(root, root / "data/derived/qb_elo_season_regression_v1")
     assert prov["repository_state_id"]  # deterministic finite fingerprint
+
+
+# ---------------------------------------------------------------------------
+# Phase 5B-3: finalizer write-order / self-reference correction
+# ---------------------------------------------------------------------------
+def test_fresh_finalization_does_not_require_final_outputs(tmp_path):
+    """Deleting the three finalizer-produced outputs must not block a clean run;
+    finalization must recreate all three."""
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    for fn in ("artifact_reproducibility.json",
+               "final_evidence_summary.json", "final_artifact_inventory.json"):
+        (out / fn).unlink(missing_ok=True)
+    assert _FINALIZE.main(["--project-root", str(root)]) == 0
+    for fn in ("artifact_reproducibility.json",
+               "final_evidence_summary.json", "final_artifact_inventory.json"):
+        assert (out / fn).is_file(), f"finalizer did not create {fn}"
+
+
+def test_repro_sha_matches_post_write_bytes(tmp_path):
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    assert _FINALIZE.main(["--project-root", str(root)]) == 0
+    inv = json.loads((out / "final_artifact_inventory.json").read_text())
+    recorded = inv["artifact_reproducibility.json"]["sha256"]
+    actual = hashlib.sha256((out / "artifact_reproducibility.json").read_bytes()).hexdigest()
+    assert recorded == actual
+
+
+def test_summary_has_no_self_sha(tmp_path):
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    assert _FINALIZE.main(["--project-root", str(root)]) == 0
+    summary = json.loads((out / "final_evidence_summary.json").read_text())
+    entry = summary["artifact_inventory"]["final_evidence_summary.json"]
+    assert "final_evidence_summary.json" in summary["artifact_inventory"]
+    assert entry["sha256"] is None
+    assert entry.get("self_referential") is True
+    assert entry.get("inclusion_status") == "generated_by_finalizer"
+
+
+def test_inventory_no_self_sha(tmp_path):
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    assert _FINALIZE.main(["--project-root", str(root)]) == 0
+    inv = json.loads((out / "final_artifact_inventory.json").read_text())
+    assert inv["final_artifact_inventory.json"]["sha256"] is None
+    assert inv["final_artifact_inventory.json"].get("self_inventory") is True
+
+
+def test_embedded_vs_standalone_inventory_consistency(tmp_path):
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    assert _FINALIZE.main(["--project-root", str(root)]) == 0
+    summary = json.loads((out / "final_evidence_summary.json").read_text())
+    standalone = json.loads((out / "final_artifact_inventory.json").read_text())
+    assert summary["artifact_inventory"] == standalone
+
+
+def test_all_43_paths_present_in_final_inventory(tmp_path):
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    assert _FINALIZE.main(["--project-root", str(root)]) == 0
+    inv = json.loads((out / "final_artifact_inventory.json").read_text())
+    canonical = _FINALIZE.canonical_permanent_artifacts()
+    assert len(canonical) == 43
+    assert len(inv) == 43
+    assert set(inv.keys()) == set(canonical)
+    assert len(set(inv.keys())) == len(inv.keys())
+
+
+def test_ordinary_artifact_corruption_still_fails(tmp_path, monkeypatch):
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    # Corrupt an ordinary permanent artifact (JSON, read as text, covered by the
+    # prior published SHA) without crashing parquet reads upstream.
+    p = out / "metrics_segments.json"
+    p.write_text(p.read_text() + "\nCORRUPT\n")
+    assert _FINALIZE.main(["--project-root", str(root)]) != 0
