@@ -704,6 +704,29 @@ def _fixture_root(root: Path) -> Path:
     )
     (dst / "config").mkdir(parents=True, exist_ok=True)
     _sh.copy2(REPO_ROOT / "config/qb_elo_v1.yaml", dst / "config/qb_elo_v1.yaml")
+    # Wire provenance-source dependencies so all-pass finalization can succeed:
+    # Task04D source scripts, the evaluator module, and the actual Task04C
+    # inputs consumed by the workflow (committed oracle predictions + resolver).
+    (dst / "scripts").mkdir(parents=True, exist_ok=True)
+    (dst / "src/nfl_edge/backtest").mkdir(parents=True, exist_ok=True)
+    (dst / "data/derived/qb_elo_oracle_comparison_v1").mkdir(parents=True, exist_ok=True)
+    (dst / "data/derived/oracle_qb_entering_state_v2").mkdir(parents=True, exist_ok=True)
+    for name in ("finalize_qb_elo_season_regression.py",
+                 "official_qb_elo_season_regression.py",
+                 "analyze_qb_elo_season_regression.py",
+                 "evaluate_qb_elo_season_regression.py"):
+        _sh.copy2(REPO_ROOT / "scripts" / name, dst / "scripts" / name)
+    _sh.copy2(
+        REPO_ROOT / "src/nfl_edge/backtest/task04d_season_regression_evaluation.py",
+        dst / "src/nfl_edge/backtest/task04d_season_regression_evaluation.py",
+    )
+    for rel, d in (
+        ("data/derived/qb_elo_oracle_comparison_v1/qb_elo_oracle_predictions_2018_2024.parquet",
+         "data/derived/qb_elo_oracle_comparison_v1"),
+        ("data/derived/oracle_qb_entering_state_v2/oracle_qb_pregame_adjustments_by_game_2018_2024_v2.parquet",
+         "data/derived/oracle_qb_entering_state_v2"),
+    ):
+        _sh.copy2(REPO_ROOT / rel, dst / rel)
     return dst
 
 
@@ -832,3 +855,96 @@ def test_finalize_config_mismatch_returns_nonzero(tmp_path, monkeypatch):
 def test_finalize_all_pass_returns_zero(tmp_path):
     root = _fixture_root(tmp_path)
     assert _FINALIZE.main(["--project-root", str(root)]) == 0
+
+
+# ---------------------------------------------------------------------------
+# Phase 5B-2: inventory completeness + final provenance
+# ---------------------------------------------------------------------------
+def test_inventory_canonical_set_is_43_and_unique():
+    arts = _FINALIZE.canonical_permanent_artifacts()
+    assert len(arts) == 43
+    assert len(set(arts)) == 43
+    # coverage of the known formerly-missing entries
+    for fn in ("artifact_reproducibility.json", "boundary_sanity.json",
+               "final_artifact_inventory.json", "final_evidence_summary.json"):
+        assert fn in arts
+    # all five runs x four artifacts
+    for lab in CANDIDATE_LABELS:
+        for name in _FINALIZE._RUN_ARTIFACT_NAMES:
+            assert f"runs/{lab}/{name}" in arts
+
+
+def test_all_43_current_artifacts_accounted_for(tmp_path):
+    root = _fixture_root(tmp_path)
+    actual = {p.relative_to(root / "data/derived/qb_elo_season_regression_v1").as_posix()
+              for p in (root / "data/derived/qb_elo_season_regression_v1").rglob("*")
+              if p.is_file()}
+    canonical = set(_FINALIZE.canonical_permanent_artifacts())
+    assert actual == canonical, f"omitted={sorted(actual - canonical)}"
+
+
+def test_missing_permanent_run_artifact_fails(tmp_path, monkeypatch):
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    (out / "runs/regression_000/qb_elo_run_manifest_v1.json").unlink()
+    assert _FINALIZE.main(["--project-root", str(root)]) != 0
+
+
+def test_missing_top_level_artifact_fails(tmp_path, monkeypatch):
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    (out / "boundary_sanity.json").unlink()
+    assert _FINALIZE.main(["--project-root", str(root)]) != 0
+
+
+def test_duplicate_inventory_path_fails(tmp_path, monkeypatch):
+    root = _fixture_root(tmp_path)
+    original = _FINALIZE.canonical_permanent_artifacts
+
+    def _duplicated():
+        return tuple(original()) + ("summary.json",)
+
+    monkeypatch.setattr(_FINALIZE, "canonical_permanent_artifacts", _duplicated)
+    assert _FINALIZE.main(["--project-root", str(root)]) != 0
+
+
+def test_inventory_sha_mismatch_fails(tmp_path, monkeypatch):
+    root = _fixture_root(tmp_path)
+    out = root / "data/derived/qb_elo_season_regression_v1"
+    # Corrupt a required permanent artifact's bytes.
+    p = out / "metrics_segments.json"
+    p.write_text(p.read_text() + "\nCORRUPT\n")
+    assert _FINALIZE.main(["--project-root", str(root)]) != 0
+
+
+def test_provenance_fields_complete(tmp_path):
+    root = _fixture_root(tmp_path)
+    prov = _FINALIZE.build_provenance(root, root / "data/derived/qb_elo_season_regression_v1")
+    for key in (
+        "finalizer_source_path", "finalizer_source_sha256",
+        "evaluator_source_path", "evaluator_source_sha256",
+        "qb_elo_config_path", "qb_elo_config_sha256",
+        "qb_elo_config_season_mean_reversion_fraction",
+        "task04c_reference_input_path", "task04c_reference_input_sha256",
+        "task04c_oracle_resolver_input_path", "task04c_oracle_resolver_input_sha256",
+        "incumbent_reference_candidate_path", "incumbent_reference_candidate_sha256",
+        "repository_state_id",
+    ):
+        assert prov.get(key), f"missing provenance field {key}"
+    assert prov["qb_elo_config_season_mean_reversion_fraction"] == pytest.approx(0.333)
+
+
+def test_missing_provenance_source_fails(tmp_path, monkeypatch):
+    root = _fixture_root(tmp_path)
+    # Make one required provenance source unavailable.
+    (root / "config/qb_elo_v1.yaml").unlink()
+    assert _FINALIZE.main(["--project-root", str(root)]) != 0
+
+
+def test_self_inventory_non_recursive(tmp_path):
+    root = _fixture_root(tmp_path)
+    arts = _FINALIZE.canonical_permanent_artifacts()
+    assert "final_artifact_inventory.json" in arts
+    # The finalizer treats the inventory file as declared (no recursive self-SHA).
+    prov = _FINALIZE.build_provenance(root, root / "data/derived/qb_elo_season_regression_v1")
+    assert prov["repository_state_id"]  # deterministic finite fingerprint

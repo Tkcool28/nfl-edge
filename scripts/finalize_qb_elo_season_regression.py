@@ -45,9 +45,151 @@ SHORT = {
     "task04c_reference_0333": "33.3%",
 }
 
+# Canonical Task04D evidence package (relative to the Task04D derived root).
+# Single source of truth -- no competing hard-coded lists. 23 top-level
+# artifacts + 20 run artifacts (5 candidates x 4 files) = 43 permanent files.
+_RUN_ARTIFACT_NAMES: tuple[str, ...] = (
+    "qb_elo_predictions_2018_2024.parquet",
+    "qb_elo_state_transitions_2018_2024.parquet",
+    "qb_elo_run_manifest_v1.json",
+    "qb_elo_tuning_ledger_v1.json",
+)
+_TOP_LEVEL_PERMANENT: tuple[str, ...] = (
+    "analysis_report.json",
+    "artifact_reproducibility.json",
+    "boundary_sanity.json",
+    "final_artifact_inventory.json",
+    "final_evidence_summary.json",
+    "identity_verification.json",
+    "metrics_season_week1_4.json",
+    "metrics_segments.json",
+    "pairability_matrix.json",
+    "paired_comparisons.parquet",
+    "predictions_regression_000.parquet",
+    "predictions_regression_025.parquet",
+    "predictions_regression_040.parquet",
+    "predictions_regression_060.parquet",
+    "predictions_task04c_reference_0333.parquet",
+    "replay_determinism.json",
+    "season_boundary_audit_all.parquet",
+    "season_boundary_audit_regression_000.parquet",
+    "season_boundary_audit_regression_025.parquet",
+    "season_boundary_audit_regression_040.parquet",
+    "season_boundary_audit_regression_060.parquet",
+    "season_boundary_audit_task04c_reference_0333.parquet",
+    "summary.json",
+)
+
+
+def canonical_permanent_artifacts() -> tuple[str, ...]:
+    """Return the deterministic, complete set of permanent Task04D artifacts.
+
+    All paths are relative to the Task04D derived-data root. This is the
+    single source of truth for the expected permanent evidence package.
+    """
+    top = _TOP_LEVEL_PERMANENT
+    runs = tuple(
+        f"runs/{lab}/{name}"
+        for lab in CANDIDATE_LABELS
+        for name in _RUN_ARTIFACT_NAMES
+    )
+    return tuple(sorted(top + runs))
+
 
 def sha256(p: Path) -> str:
     return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def _read_sha_or_none(p: Path, rel: str) -> str:
+    """SHA-256 of a repository path, or '' if missing (fail-closed below)."""
+    full = p / rel if p is not None else Path(rel)
+    if not Path(full).is_file():
+        return ""
+    return sha256(Path(full))
+
+
+def _current_git_head(root: Path) -> str:
+    import subprocess
+
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "HEAD"],
+            capture_output=True, text=True, check=True, timeout=10,
+        )
+        return out.stdout.strip()
+    except Exception:
+        return ""
+
+
+TASK04C_REFERENCE_INPUT_REL = (
+    "data/derived/qb_elo_oracle_comparison_v1/qb_elo_oracle_predictions_2018_2024.parquet"
+)
+ORACLE_RESOLVER_INPUT_REL = (
+    "data/derived/oracle_qb_entering_state_v2"
+    "/oracle_qb_pregame_adjustments_by_game_2018_2024_v2.parquet"
+)
+CONFIG_REL = "config/qb_elo_v1.yaml"
+EVALUATOR_REL = "src/nfl_edge/backtest/task04d_season_regression_evaluation.py"
+FINALIZER_REL = "scripts/finalize_qb_elo_season_regression.py"
+OFFICIAL_RUNNER_REL = "scripts/official_qb_elo_season_regression.py"
+ANALYZE_SCRIPT_REL = "scripts/analyze_qb_elo_season_regression.py"
+EVALUATE_SCRIPT_REL = "scripts/evaluate_qb_elo_season_regression.py"
+INCUMBENT_CANDIDATE_PARQUET = "predictions_task04c_reference_0333.parquet"
+
+
+def build_provenance(root: Path, out: Path) -> dict[str, Any]:
+    """Assemble deterministic final-evidence provenance (Phase 5B-2).
+
+    Records the actual Task04D dependency edges and the frozen repository
+    state. No self-referential hashing: the final report is excluded from the
+    repository-state fingerprint so generation stays finite and deterministic.
+    `out` is the Task04D derived-data root under which candidate artifacts live.
+    """
+    config_fraction: float | None = None
+    try:
+        config_fraction = float(
+            load_canonical_config(root)["season_mean_reversion_fraction"]
+        )
+    except Exception:  # noqa: BLE001 - missing/unparseable config is a failed provenance gate
+        config_fraction = None
+    prov: dict[str, Any] = {
+        "finalizer_source_path": FINALIZER_REL,
+        "finalizer_source_sha256": _read_sha_or_none(root, FINALIZER_REL),
+        "evaluator_source_path": EVALUATOR_REL,
+        "evaluator_source_sha256": _read_sha_or_none(root, EVALUATOR_REL),
+        "official_runner_source_path": OFFICIAL_RUNNER_REL,
+        "official_runner_source_sha256": _read_sha_or_none(root, OFFICIAL_RUNNER_REL),
+        "analyze_script_source_path": ANALYZE_SCRIPT_REL,
+        "analyze_script_source_sha256": _read_sha_or_none(root, ANALYZE_SCRIPT_REL),
+        "evaluate_script_source_path": EVALUATE_SCRIPT_REL,
+        "evaluate_script_source_sha256": _read_sha_or_none(root, EVALUATE_SCRIPT_REL),
+        "qb_elo_config_path": CONFIG_REL,
+        "qb_elo_config_sha256": _read_sha_or_none(root, CONFIG_REL),
+        "qb_elo_config_season_mean_reversion_fraction": config_fraction,
+        "task04c_reference_input_path": TASK04C_REFERENCE_INPUT_REL,
+        "task04c_reference_input_sha256": _read_sha_or_none(root, TASK04C_REFERENCE_INPUT_REL),
+        "task04c_oracle_resolver_input_path": ORACLE_RESOLVER_INPUT_REL,
+        "task04c_oracle_resolver_input_sha256": _read_sha_or_none(root, ORACLE_RESOLVER_INPUT_REL),
+        "incumbent_reference_candidate_path": INCUMBENT_CANDIDATE_PARQUET,
+        "incumbent_reference_candidate_sha256": _read_sha_or_none(out, INCUMBENT_CANDIDATE_PARQUET),
+        "git_head_sha": _current_git_head(root),
+    }
+    # Deterministic content-based repository-state fingerprint (excludes the
+    # final report itself to avoid recursive self-hash).
+    fp_input = "|".join(
+        [
+            prov["finalizer_source_sha256"],
+            prov["evaluator_source_sha256"],
+            prov["qb_elo_config_sha256"],
+            prov["task04c_reference_input_sha256"],
+            prov["incumbent_reference_candidate_sha256"] or "",
+        ]
+    )
+    prov["repository_state_id"] = (
+        hashlib.sha256(fp_input.encode("utf-8")).hexdigest()
+        if fp_input else ""
+    )
+    return prov
 
 
 def artifact_metrics(df: pl.DataFrame) -> dict[str, Any]:
@@ -231,29 +373,69 @@ def main(argv: list[str] | None = None) -> int:
         "expected": 0,
     }
 
-    # ---- 10. Artifact inventory ----
-    inventory_files = (
-        [f"predictions_{lab}.parquet" for lab in CANDIDATE_LABELS]
-        + ["season_boundary_audit_all.parquet"]
-        + [f"season_boundary_audit_{lab}.parquet" for lab in CANDIDATE_LABELS]
-        + [
-            "metrics_segments.json",
-            "metrics_season_week1_4.json",
-            "pairability_matrix.json",
-            "identity_verification.json",
-            "replay_determinism.json",
-            "paired_comparisons.parquet",
-            "analysis_report.json",
-            "summary.json",
-        ]
-    )
-    inventory = {
-        fn: {"bytes": p.stat().st_size, "sha256": sha256(p)}
-        for fn in inventory_files
-        if (p := out / fn).is_file()
-    }
+    # ---- 10. Artifact inventory (canonical permanent set, fail-closed) ----
+    canonical = canonical_permanent_artifacts()
+    canonical_set = set(canonical)
+    # Self-inventory recursion rule: the inventory file itself cannot embed its
+    # own final SHA (self-reference). We record its path + role + deterministic
+    # inclusion status, and omit sha256 for that one entry. Every other
+    # permanent artifact records its SHA-256 from actual file bytes.
+    inventory = {}
+    for fn in canonical:
+        p = out / fn
+        entry: dict[str, Any] = {"role": "permanent_artifact"}
+        if p.is_file():
+            entry["bytes"] = int(p.stat().st_size)
+            if fn != "final_artifact_inventory.json":
+                entry["sha256"] = sha256(p)
+            else:
+                # Self-inventory: declared without recursive self-SHA.
+                entry["sha256"] = None
+                entry["self_inventory"] = True
+                entry["inclusion_status"] = "declared"
+        else:
+            entry["missing"] = True
+        inventory[fn] = entry
 
-    # ---- 11. Assemble evidence summary ----
+    # Inventory completeness gate inputs (evaluated in the aggregate below).
+    duplicate_paths = [w for w in set(canonical) if canonical.count(w) > 1]
+    missing_expected = sorted(canonical_set - set(inventory))
+    inventory_missing_files = [fn for fn, e in inventory.items() if e.get("missing")]
+    declared_inventory = set(inventory.keys())
+
+    # Corruption detection: if a previously published final_artifact_inventory
+    # exists, verify every non-self SHA it declared still matches the current
+    # file bytes. This detects a permanent artifact that changed after it was
+    # documented (the freshly-generated SHAs above always match by construction).
+    prior_inventory_path = out / "final_artifact_inventory.json"
+    inventory_sha_mismatches: list[str] = []
+    if prior_inventory_path.is_file():
+        try:
+            prior = json.loads(prior_inventory_path.read_text()) or {}
+        except Exception:  # noqa: BLE001 - malformed prior manifest is itself a mismatch
+            prior = {}
+        for prior_fn, prior_entry in prior.items():
+            if not isinstance(prior_entry, dict) or prior_entry.get("sha256") is None:
+                continue  # skip self-inventory / non-sha entries
+            prior_p = out / prior_fn
+            if not prior_p.is_file():
+                inventory_sha_mismatches.append(prior_fn)
+                continue
+            if sha256(prior_p) != prior_entry["sha256"]:
+                inventory_sha_mismatches.append(prior_fn)
+
+    inventory_ok = bool(
+        not duplicate_paths
+        and not missing_expected
+        and not inventory_missing_files
+        and not inventory_sha_mismatches
+        and declared_inventory == canonical_set
+    )
+
+    # ---- 11. Final-evidence provenance (Phase 5B-2) ----
+    provenance = build_provenance(root, out)
+
+    # ---- 12. Assemble evidence summary ----
     evidence = {
         "task04d_stage": "final_evidence_package",
         "model_selection_performed": False,
@@ -289,6 +471,7 @@ def main(argv: list[str] | None = None) -> int:
         "artifact_reproducibility": repro,
         "seal_2025": seal,
         "artifact_inventory": inventory,
+        "provenance": provenance,
     }
     (out / "final_evidence_summary.json").write_text(
         json.dumps(evidence, indent=2, default=str) + "\n"
@@ -338,12 +521,28 @@ def main(argv: list[str] | None = None) -> int:
     finalize_gates["seal_2025"] = all(
         v == 0 for k, v in seal.items() if k != "expected"
     )
+    # Inventory completeness: canonical permanent set == declared inventory,
+    # no missing files, no duplicate paths, all recorded SHAs match bytes.
+    finalize_gates["inventory_complete"] = inventory_ok
+    # Provenance completeness: every mandatory provenance source must exist
+    # and be hashable (non-empty SHA). Fail closed if any is unavailable.
+    provenance_required = [
+        "finalizer_source_sha256", "evaluator_source_sha256",
+        "official_runner_source_sha256", "analyze_script_source_sha256",
+        "evaluate_script_source_sha256", "qb_elo_config_sha256",
+        "task04c_reference_input_sha256", "task04c_oracle_resolver_input_sha256",
+        "incumbent_reference_candidate_sha256",
+    ]
+    finalize_gates["provenance_sources_present"] = all(
+        provenance.get(k) for k in provenance_required
+    )
     # Config / incumbent consistency: the production season reversion fraction
     # read from config/qb_elo_v1.yaml must equal the Task04D incumbent fraction.
-    cfg = load_canonical_config(root)
-    config_fraction = float(cfg["season_mean_reversion_fraction"])
+    # A missing/unparseable config already fails the provenance-source gate.
+    config_fraction = provenance["qb_elo_config_season_mean_reversion_fraction"]
     finalize_gates["config_reference_consistency"] = (
-        abs(config_fraction - TASK04C_REFERENCE_FRACTION) <= 1e-9
+        config_fraction is not None
+        and abs(config_fraction - TASK04C_REFERENCE_FRACTION) <= 1e-9
     )
 
     failed_gates = [k for k, v in finalize_gates.items() if not v]
