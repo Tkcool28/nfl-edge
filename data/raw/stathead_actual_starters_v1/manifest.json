@@ -2,7 +2,7 @@
   "dataset_name": "stathead_actual_starter_candidates_v1",
   "source": "SPORTS_REFERENCE_STATHEAD_PLAYER_GAME_FINDER",
   "source_product": "Football Player Game Stats Finder",
-  "query_description": "For single games, from 2018 to 2024, started the game, played QB, in the regular season or the postseason, sorted by descending Date.",
+  "query_description": "query requested from the Stathead Football Player Game Stats Finder (by the recovery operator): single games, from 2018 to 2024, started the game, played QB, in the regular season or the postseason, sorted by descending Date.",
   "export_header": "Rk,Player,Day,G#,Week,Date,Age,Team,,Opp,Result,Pos.,Player-additional",
   "expected_rank_min": 1,
   "observed_rank_max_from_manual_export": 3921,
@@ -36,6 +36,18 @@
   "missing_literal_rank_ranges": [],
   "durable_row_count_excluding_headers": 3921,
   "recovery_note": "All literal Stathead CSV ranks 1-3921 are now committed in contiguous rank-partitioned raw files. The raw archive preserves the source output as evidence and remains uncleaned; downstream reconciliation must create new versioned files and must not alter these raw rows.",
+  "sort_order_provenance": {
+    "intended_source_query_sort": "sort by descending Date, as requested in the original Stathead query (see query_description)",
+    "verified_rank_continuity": "ranks 1..3921 verified contiguous with no missing or duplicate rank values",
+    "verified_literal_row_archive": "all committed raw rows preserved literally (3,921 rows; no normalization, no re-sort, no row edits)",
+    "verified_strict_descending_date": "NOT independently verified",
+    "observed_local_date_inversions": 39,
+    "inversions_crossing_partition_boundaries": 0,
+    "inversion_interpretation": "localized +/-1-day rank/date micro-misplacements consistent with Stathead's per-date secondary sort / manual page-boundary behavior in a stable query; not evidence that the underlying query or export sort changed materially, and not independently proof that it stayed fixed. Rows are preserved literally; no reordering was applied.",
+    "downstream_sort_dependency": "downstream starter reconciliation must NOT rely on raw rank/date sort order; it joins raw rows to canonical games on explicit (raw Date, normalized team, opponent, location) identity.",
+    "evidence_class": "POSTGAME_ACTUAL_STARTER",
+    "historical_model_usage": "ORACLE_STARTER_IDENTITY_ONLY"
+  },
   "downstream_cleaning_contract": {
     "join_target": "existing canonical 2018-2024 development games",
     "reject_non_game_rows": true,

@@ -1,0 +1,19 @@
+{
+  "artifact": "task04a_player_crosswalk_v1.csv",
+  "extracted_row_count": 138,
+  "extraction_rule": "retain only rows whose pfr_id appears among the 138 distinct PFR identities consumed by Task04A (union of Stage01 candidate_pfr_ids and web_researched_starter_resolutions_v2 actual_starting_qb_pfr_id); deterministic ordering by pfr_id; no duplicates; no blank required gsis_id for consumed identities.",
+  "historical_external_path": "/root/nfl-edge-task04a-raw/crosswalk/players.csv.gz",
+  "output_sha256": "d554c7c2ab5114bc70d0f04a46feba0ef46ab53c717769f8c04f88b98e976742",
+  "purpose": "repository-contained subset to reproduce Task04A identity mapping deterministically without the external full crosswalk.",
+  "retained_columns": [
+    "pfr_id",
+    "gsis_id",
+    "display_name",
+    "position"
+  ],
+  "source_date": "not recorded",
+  "source_description": "nflverse player crosswalk",
+  "source_full_crosswalk_sha256": "c2da9ec0ac104ba4a1240c164c48452e8dfefe49425a482a0e3073267d6b97ba",
+  "source_row_count": 25038,
+  "source_url": "not recorded"
+}
