@@ -1,0 +1,324 @@
+{
+  "binary_scored_games": 1935,
+  "binary_scoring_policy": "EXCLUDE_TIED_GAMES",
+  "coverage": {
+    "games": 1942,
+    "games_2025_target": 0,
+    "post": 87,
+    "reg": 1855,
+    "season_counts": {
+      "2018": 267,
+      "2019": 267,
+      "2020": 269,
+      "2021": 285,
+      "2022": 284,
+      "2023": 285,
+      "2024": 285
+    }
+  },
+  "coverage_games": 1942,
+  "dataset": "task04c_oracle_vs_baseline_v1",
+  "favorite_flips": {
+    "baseline_eq_0.50": 0,
+    "flip_count": 126,
+    "oracle_eq_0.50": 0
+  },
+  "games_2025_target": 0,
+  "input_artifact_hashes": {
+    "baseline_file": "2583040157fbec09404f9f783fb0d85a9d408fb9fa7560cc3de1e263fb670fee",
+    "oracle_file": "46a3842ddc7058b79172655c42c27b33dd7ed95ae3e1c06c7b1dccda835e1f89"
+  },
+  "official_verdict": "RESERVED_FOR_MASTER_REVIEW",
+  "primary_scorecard": {
+    "accuracy_delta": 0.013436692506459957,
+    "baseline_accuracy": 0.635142118863049,
+    "baseline_brier": 0.22395829179893426,
+    "baseline_logloss": 0.6396576506911166,
+    "brier_delta": -0.0024697719173422117,
+    "bss": 0.011027820838888758,
+    "logloss_delta": -0.005140752550476968,
+    "oracle_accuracy": 0.648578811369509,
+    "oracle_brier": 0.22148851988159204,
+    "oracle_logloss": 0.6345168981406396
+  },
+  "probability_impact": {
+    "changed": 1455,
+    "count_ge_0.02": 1085,
+    "count_ge_0.05": 535,
+    "count_ge_0.10": 70,
+    "max_abs_delta_p": 0.14217453970434035,
+    "mean_abs_delta_p": 0.03233561548685864,
+    "median_abs_delta_p": 0.025649109222438016,
+    "unchanged": 487
+  },
+  "provenance": {
+    "baseline_predictions_path": "data/derived/qb_elo_oracle_comparison_v1/qb_elo_baseline_predictions_2018_2024.parquet",
+    "baseline_predictions_sha256": "2583040157fbec09404f9f783fb0d85a9d408fb9fa7560cc3de1e263fb670fee",
+    "baseline_transitions_path": "data/derived/qb_elo_oracle_comparison_v1/qb_elo_baseline_transitions_2018_2024.parquet",
+    "baseline_transitions_sha256": "4797c15b49fea644665ce9e590b540581be3d840b41d1084ce51d150dbf53ca0",
+    "evaluator_source_path": "scripts/task04c_build_oracle_comparison_report.py",
+    "evaluator_source_sha256": "d2023333f7daf6986934831e4453c2991f049edff81cae5b69c19e829e831a3a",
+    "git_commit_sha": "21128df73e20eadba77ed7caffd07f42b8151ff7",
+    "oracle_input_path": "data/derived/oracle_qb_entering_state_v2/oracle_qb_pregame_adjustments_by_game_2018_2024_v2.parquet",
+    "oracle_input_sha256": "268368c81913e183d7e9ea5050c0da0a01be619790b75c5bab9362c97349e886",
+    "oracle_predictions_path": "data/derived/qb_elo_oracle_comparison_v1/qb_elo_oracle_predictions_2018_2024.parquet",
+    "oracle_predictions_sha256": "46a3842ddc7058b79172655c42c27b33dd7ed95ae3e1c06c7b1dccda835e1f89",
+    "oracle_transitions_path": "data/derived/qb_elo_oracle_comparison_v1/qb_elo_oracle_transitions_2018_2024.parquet",
+    "oracle_transitions_sha256": "4797c15b49fea644665ce9e590b540581be3d840b41d1084ce51d150dbf53ca0",
+    "qb_elo_config_path": "config/qb_elo_v1.yaml",
+    "qb_elo_config_sha256": "3afd5940ee46238b8b63f571a0309530b4c3abb3097f15c22a2d29a2328e8167",
+    "repository_state_id": "3de7df7a6870e053a79e1086e073d7bb526f50a57b31299e5171c238de5e7341",
+    "starter_ledger_path": "data/derived/stathead_actual_starters_v1/final_oracle_starters/actual_starting_qb_game_sides_2018_2024_v1.csv",
+    "starter_ledger_sha256": "38732823861bb1def3c216ce9189b651a2dc4d0737d2f65f88f17e97f40b2a1a"
+  },
+  "reg_post": {
+    "POST": {
+      "baseline_accuracy": 0.6206896551724138,
+      "baseline_brier": 0.22499125566959954,
+      "baseline_logloss": 0.6400813258828268,
+      "binary_scored_games": 87,
+      "coverage_games": 87,
+      "mean_abs_delta_p": 0.01090348166216772,
+      "oracle_accuracy": 0.6206896551724138,
+      "oracle_brier": 0.22331072996449752,
+      "oracle_logloss": 0.6360561680691583,
+      "tied_games": 0
+    },
+    "REG": {
+      "baseline_accuracy": 0.6358225108225108,
+      "baseline_brier": 0.2239096620063217,
+      "baseline_logloss": 0.6396377049434555,
+      "binary_scored_games": 1848,
+      "coverage_games": 1855,
+      "mean_abs_delta_p": 0.03334078834009212,
+      "oracle_accuracy": 0.6498917748917749,
+      "oracle_brier": 0.22140273401729926,
+      "oracle_logloss": 0.634444432510888,
+      "tied_games": 7
+    }
+  },
+  "season": {
+    "2018": {
+      "baseline_accuracy": 0.6226415094339622,
+      "baseline_brier": 0.22715973451983576,
+      "baseline_logloss": 0.6454285876582025,
+      "binary_scored_games": 265,
+      "coverage_games": 267,
+      "mean_abs_delta_p": 0.031976528653846495,
+      "oracle_accuracy": 0.6377358490566037,
+      "oracle_brier": 0.22341387301120857,
+      "oracle_logloss": 0.6367929350789049,
+      "tied_games": 2
+    },
+    "2019": {
+      "baseline_accuracy": 0.6428571428571429,
+      "baseline_brier": 0.22377328642098854,
+      "baseline_logloss": 0.6403517056118846,
+      "binary_scored_games": 266,
+      "coverage_games": 267,
+      "mean_abs_delta_p": 0.03028855115825478,
+      "oracle_accuracy": 0.6428571428571429,
+      "oracle_brier": 0.2246086634667308,
+      "oracle_logloss": 0.6403869149778495,
+      "tied_games": 1
+    },
+    "2020": {
+      "baseline_accuracy": 0.6567164179104478,
+      "baseline_brier": 0.21622503558766984,
+      "baseline_logloss": 0.6240096423770297,
+      "binary_scored_games": 268,
+      "coverage_games": 269,
+      "mean_abs_delta_p": 0.025527950959386498,
+      "oracle_accuracy": 0.6492537313432836,
+      "oracle_brier": 0.21505015346314155,
+      "oracle_logloss": 0.6222928427003783,
+      "tied_games": 1
+    },
+    "2021": {
+      "baseline_accuracy": 0.6197183098591549,
+      "baseline_brier": 0.23089527467775858,
+      "baseline_logloss": 0.655654542745511,
+      "binary_scored_games": 284,
+      "coverage_games": 285,
+      "mean_abs_delta_p": 0.030763973256713747,
+      "oracle_accuracy": 0.6443661971830986,
+      "oracle_brier": 0.2253783865340793,
+      "oracle_logloss": 0.6445762549883242,
+      "tied_games": 1
+    },
+    "2022": {
+      "baseline_accuracy": 0.6276595744680851,
+      "baseline_brier": 0.22385684500111805,
+      "baseline_logloss": 0.637878953321553,
+      "binary_scored_games": 282,
+      "coverage_games": 284,
+      "mean_abs_delta_p": 0.03572240721817293,
+      "oracle_accuracy": 0.6312056737588653,
+      "oracle_brier": 0.2237366328143496,
+      "oracle_logloss": 0.63969575282557,
+      "tied_games": 2
+    },
+    "2023": {
+      "baseline_accuracy": 0.6035087719298246,
+      "baseline_brier": 0.23360298263633203,
+      "baseline_logloss": 0.6612696362018109,
+      "binary_scored_games": 285,
+      "coverage_games": 285,
+      "mean_abs_delta_p": 0.03824827809974447,
+      "oracle_accuracy": 0.6385964912280702,
+      "oracle_brier": 0.2304419203753227,
+      "oracle_logloss": 0.6535633089371755,
+      "tied_games": 0
+    },
+    "2024": {
+      "baseline_accuracy": 0.6736842105263158,
+      "baseline_brier": 0.2119692031843865,
+      "baseline_logloss": 0.6125657516286415,
+      "binary_scored_games": 285,
+      "coverage_games": 285,
+      "mean_abs_delta_p": 0.033299350424637664,
+      "oracle_accuracy": 0.6947368421052632,
+      "oracle_brier": 0.20778640167138676,
+      "oracle_logloss": 0.6042219898871256,
+      "tied_games": 0
+    }
+  },
+  "tie_game_ids": [
+    "2018_01_PIT_CLE",
+    "2018_02_MIN_GB",
+    "2019_01_DET_ARI",
+    "2020_03_CIN_PHI",
+    "2021_10_DET_PIT",
+    "2022_01_IND_HOU",
+    "2022_13_WAS_NYG"
+  ],
+  "tied_games": 7,
+  "weeks_1_4": {
+    "2018": {
+      "baseline_accuracy": 0.6229508196721312,
+      "baseline_brier": 0.2403719714590019,
+      "baseline_logloss": 0.6739233264390868,
+      "binary_scored_games": 61,
+      "coverage_games": 63,
+      "mean_abs_delta_p": 0.0251379291893159,
+      "oracle_accuracy": 0.6065573770491803,
+      "oracle_brier": 0.23851156109714208,
+      "oracle_logloss": 0.6700526720661162,
+      "tied_games": 2
+    },
+    "2019": {
+      "baseline_accuracy": 0.6451612903225806,
+      "baseline_brier": 0.2265757200294265,
+      "baseline_logloss": 0.6464977308863682,
+      "binary_scored_games": 62,
+      "coverage_games": 63,
+      "mean_abs_delta_p": 0.03258785096024441,
+      "oracle_accuracy": 0.6129032258064516,
+      "oracle_brier": 0.23281180789912123,
+      "oracle_logloss": 0.6577619116378602,
+      "tied_games": 1
+    },
+    "2020": {
+      "baseline_accuracy": 0.6774193548387096,
+      "baseline_brier": 0.2063123675461988,
+      "baseline_logloss": 0.6000716936001997,
+      "binary_scored_games": 62,
+      "coverage_games": 63,
+      "mean_abs_delta_p": 0.028030850827303402,
+      "oracle_accuracy": 0.6612903225806451,
+      "oracle_brier": 0.20122330008248243,
+      "oracle_logloss": 0.5874732006513979,
+      "tied_games": 1
+    },
+    "2021": {
+      "baseline_accuracy": 0.5625,
+      "baseline_brier": 0.2389499007614553,
+      "baseline_logloss": 0.6726512834356243,
+      "binary_scored_games": 64,
+      "coverage_games": 64,
+      "mean_abs_delta_p": 0.029461816221962076,
+      "oracle_accuracy": 0.625,
+      "oracle_brier": 0.23450868119878224,
+      "oracle_logloss": 0.6665036308543558,
+      "tied_games": 0
+    },
+    "2022": {
+      "baseline_accuracy": 0.5714285714285714,
+      "baseline_brier": 0.2471965998680638,
+      "baseline_logloss": 0.6904559177721009,
+      "binary_scored_games": 63,
+      "coverage_games": 64,
+      "mean_abs_delta_p": 0.028552791174774377,
+      "oracle_accuracy": 0.5555555555555556,
+      "oracle_brier": 0.25247254221934806,
+      "oracle_logloss": 0.7049654908506371,
+      "tied_games": 1
+    },
+    "2023": {
+      "baseline_accuracy": 0.609375,
+      "baseline_brier": 0.2343818282660267,
+      "baseline_logloss": 0.659561406682838,
+      "binary_scored_games": 64,
+      "coverage_games": 64,
+      "mean_abs_delta_p": 0.03759907675593309,
+      "oracle_accuracy": 0.65625,
+      "oracle_brier": 0.220658508209293,
+      "oracle_logloss": 0.6288768294983178,
+      "tied_games": 0
+    },
+    "2024": {
+      "baseline_accuracy": 0.5625,
+      "baseline_brier": 0.2517648950747681,
+      "baseline_logloss": 0.6988930341928942,
+      "binary_scored_games": 64,
+      "coverage_games": 64,
+      "mean_abs_delta_p": 0.03633461741066801,
+      "oracle_accuracy": 0.546875,
+      "oracle_brier": 0.2590425204754855,
+      "oracle_logloss": 0.7159876413252009,
+      "tied_games": 0
+    }
+  },
+  "weeks_1_4_aggregate": {
+    "baseline_accuracy": 0.6068181818181818,
+    "baseline_brier": 0.23518482141572727,
+    "baseline_logloss": 0.6633775372875477,
+    "binary_scored_games": 440,
+    "coverage_games": 445,
+    "mean_abs_delta_p": 0.03111766079010342,
+    "oracle_accuracy": 0.6090909090909091,
+    "oracle_brier": 0.23426039435034524,
+    "oracle_logloss": 0.661859487247594,
+    "tied_games": 5
+  },
+  "zero_history": {
+    "games_exactly_one_zero_side": 42,
+    "games_two_zero_sides": 18,
+    "group_A": {
+      "baseline_accuracy": 0.6896551724137931,
+      "baseline_brier": 0.21380529441071527,
+      "baseline_logloss": 0.6182948489450146,
+      "binary_scored_games": 58,
+      "coverage_games": 60,
+      "mean_abs_delta_p": 0.02906736481786046,
+      "oracle_accuracy": 0.6896551724137931,
+      "oracle_brier": 0.21067169831494112,
+      "oracle_logloss": 0.6117074056375775,
+      "tied_games": 2
+    },
+    "group_B": {
+      "baseline_accuracy": 0.6334576451784762,
+      "baseline_brier": 0.2242720232046438,
+      "baseline_logloss": 0.6403177692320192,
+      "binary_scored_games": 1877,
+      "coverage_games": 1882,
+      "mean_abs_delta_p": 0.03243981051350045,
+      "oracle_accuracy": 0.6473095364944059,
+      "oracle_brier": 0.22182276370197862,
+      "oracle_logloss": 0.6352217199654547,
+      "tied_games": 5
+    },
+    "nonzero_history_sides": 3806,
+    "zero_history_sides": 78
+  }
+}

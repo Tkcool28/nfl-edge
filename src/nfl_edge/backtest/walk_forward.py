@@ -41,13 +41,14 @@ from __future__ import annotations
 
 import hashlib
 import json as json_lib
+from collections.abc import Callable
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import polars as pl
 
-from ..common.errors import StateLedgerCorruptionError
+from ..common.errors import StateLedgerCorruptionError, WalkForwardError
 from .blocks import (
     DEVELOPMENT_SEASON_MAX,
     SEALED_HOLDOUT_SEASON,
@@ -76,8 +77,6 @@ def _load_games(path: Path) -> pl.DataFrame:
     The filter is explicit so that accidental 2025 leakage can be
     detected by tests that poison 2025 values.
     """
-
-    from ..common.errors import WalkForwardError
 
     frame = pl.read_parquet(path)
     if frame.height == 0:
@@ -108,6 +107,52 @@ def new_run_id(model_name: str, model_version: str, created_at: datetime) -> str
 
     stamp = created_at.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     return f"{model_name}-{model_version}-{stamp}"
+
+
+def _require_resolver_identity(
+    resolver: Callable[[str], tuple[float, float]],
+) -> dict[str, Any]:
+    """Fail closed unless a resolver supplied to the full walk-forward engine
+    exposes exact-universe validation AND the narrow oracle provenance
+    contract (mode, implementation, artifact path/SHA, usage semantics).
+
+    Returns the resolver's manifest identity dict. A provenance-less arbitrary
+    callable is rejected rather than silently accepted for an oracle run.
+    """
+    if not hasattr(resolver, "assert_coverage"):
+        raise WalkForwardError(
+            "run_development_walk_forward",
+            "non-None qb_adjustment_resolver must expose assert_coverage(...)",
+        )
+    if not hasattr(resolver, "manifest_identity"):
+        raise WalkForwardError(
+            "run_development_walk_forward",
+            "non-None qb_adjustment_resolver must expose manifest_identity(...)",
+        )
+    try:
+        identity = resolver.manifest_identity()
+    except Exception as exc:  # noqa: BLE001 - propagate a clear WalkForwardError
+        raise WalkForwardError(
+            "run_development_walk_forward",
+            f"resolver manifest_identity() failed: {exc}",
+        ) from exc
+    required = (
+        "mode", "implementation", "oracle_artifact_path",
+        "oracle_artifact_sha256", "historical_model_usage",
+        "starter_evidence_class",
+    )
+    missing = [k for k in required if not identity.get(k)]
+    if missing:
+        raise WalkForwardError(
+            "run_development_walk_forward",
+            f"resolver manifest_identity missing fields: {missing}",
+        )
+    if identity["mode"] != "ORACLE":
+        raise WalkForwardError(
+            "run_development_walk_forward",
+            f"expected ORACLE resolver mode, got {identity['mode']!r}",
+        )
+    return dict(identity)
 
 
 def _sha256_bytes(data: bytes) -> str:
@@ -225,6 +270,7 @@ def _predict_block(
     model_version: str,
     exposure: dict[str, int],
     created_at: datetime,
+    qb_adjustment_resolver: "Callable[[str], tuple[float, float]] | None" = None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Pass 1: predict every game in the block from the frozen state.
 
@@ -284,8 +330,26 @@ def _predict_block(
         # confirmed pregame QB data, so the contribution is exactly
         # 0.0 and the certainty state is UNKNOWN. This matches the
         # documented Task 03A baseline behavior.
-        home_qb_adj = 0.0
-        away_qb_adj = 0.0
+        #
+        # Task 04C seam: when an explicit ``qb_adjustment_resolver`` is
+        # supplied (evaluation-only oracle harness), the resolver returns
+        # ``(home_qb_adj, away_qb_adj)`` for a given ``game_id``. When
+        # None, it resolves to (0.0, 0.0) -- byte-identical to the
+        # existing baseline. The resolver only affects the prediction
+        # probability (via elo_probability_home); it never reaches the
+        # postgame team-Elo transition (update_state_with_margin).
+        if qb_adjustment_resolver is None:
+            home_qb_adj = 0.0
+            away_qb_adj = 0.0
+            qb_certainty = "UNKNOWN"
+        else:
+            home_qb_adj, away_qb_adj = qb_adjustment_resolver(game_id)
+            home_qb_adj = float(home_qb_adj)
+            away_qb_adj = float(away_qb_adj)
+            # Task 04C oracle: adjustments are frozen oracle-identity
+            # values (CONFIRMED semantics), distinct from the dev-window
+            # UNKNOWN label.
+            qb_certainty = "CONFIRMED"
 
         p_home = elo_probability_home(
             home_elo=home_elo_before,
@@ -337,7 +401,7 @@ def _predict_block(
                 "home_qb_adjustment": home_qb_adj,
                 "away_qb_adjustment": away_qb_adj,
                 "qb_adjustment_net": home_qb_adj - away_qb_adj,
-                "qb_certainty_state": "UNKNOWN",
+                "qb_certainty_state": qb_certainty,
                 "predicted_home_win_probability": p_home,
                 "actual_margin": actual_margin,
                 "actual_home_win": actual_home_win,
@@ -569,6 +633,7 @@ def run_development_walk_forward(
     config: dict[str, Any] | None = None,
     created_at: datetime | None = None,
     project_root: str | Path | None = None,
+    qb_adjustment_resolver: "Callable[[str], tuple[float, float]] | None" = None,
 ) -> dict[str, Any]:
     """Run the development-only expanding walk-forward for the QB-Elo
     baseline.
@@ -629,6 +694,23 @@ def run_development_walk_forward(
     )
     run_id = new_run_id("qb_elo", "v1.0.0", created_at)
     games = _load_games(games_path)
+    # --- Task04C resolver fail-closed contract (before any prediction work) ---
+    # A non-None resolver supplied to the full walk-forward engine must expose
+    # exact-universe coverage validation AND the narrow oracle provenance
+    # identity. This runs BEFORE block iteration / _predict_block / output
+    # writing, so an oracle artifact with missing or extra canonical game IDs
+    # fails before a prediction parquet is written.
+    resolver_identity: dict[str, Any] | None = None
+    if qb_adjustment_resolver is not None:
+        resolver_identity = _require_resolver_identity(qb_adjustment_resolver)
+        unique_dev_game_ids = sorted(
+            set(games["game_id"].to_list())
+        )
+        qb_adjustment_resolver.assert_coverage(
+            unique_dev_game_ids, where="task04c.walk_forward.coverage"
+        )
+        oracle_sha = resolver_identity["oracle_artifact_sha256"]
+        run_id = f"{run_id}-oracle-{oracle_sha[:12]}"
     teams = _extract_teams_from_games(games)
     state = initial_state(teams, elo_config)
     blocks = build_development_blocks(games)
@@ -696,6 +778,7 @@ def run_development_walk_forward(
             model_version="v1.0.0",
             exposure=exposure,
             created_at=created_at,
+            qb_adjustment_resolver=qb_adjustment_resolver,
         )
         predictions_all.extend(block_predictions)
 
@@ -784,6 +867,33 @@ def run_development_walk_forward(
 
     # Run manifest. All paths are repository-relative; no absolute
     # host paths participate.
+    # Backtest configuration: baseline payload is byte-identical to the prior
+    # behavior. For an oracle run, deterministic resolver identity fields are
+    # added so baseline and oracle backtest-config hashes differ.
+    backtest_payload: dict[str, Any] = {
+        "development_end_season": DEVELOPMENT_SEASON_MAX,
+        "method": "expanding_weekly_walk_forward",
+        "two_pass_block": True,
+        "update_path": "nfl_edge.models.qb_elo.update_state_with_margin",
+        "mov_path": "nfl_edge.models.qb_elo.mov_multiplier",
+        "exposure_kind": "prior_state_exposure",
+    }
+    # Oracle resolver blocks in the manifest and backtest config.
+    resolver_block: dict[str, Any] | None = None
+    if resolver_identity is not None:
+        resolver_block = {
+            "mode": resolver_identity["mode"],
+            "implementation": resolver_identity["implementation"],
+            "oracle_artifact_path": resolver_identity["oracle_artifact_path"],
+            "oracle_artifact_sha256": resolver_identity["oracle_artifact_sha256"],
+            "historical_model_usage": resolver_identity["historical_model_usage"],
+            "starter_evidence_class": resolver_identity["starter_evidence_class"],
+        }
+        backtest_payload.update({
+            "qb_adjustment_mode": resolver_identity["mode"],
+            "qb_adjustment_artifact_sha256": resolver_identity["oracle_artifact_sha256"],
+            "qb_adjustment_resolver": resolver_identity["implementation"],
+        })
     manifest: dict[str, Any] = {
         "run_id": run_id,
         "run_type": "development_walk_forward",
@@ -796,16 +906,7 @@ def run_development_walk_forward(
         "model_name": "qb_elo",
         "model_version": "v1.0.0",
         "model_config_sha256": canonical_config_sha256(config_data),
-        "backtest_config_sha256": canonical_json_sha256(
-            {
-                "development_end_season": DEVELOPMENT_SEASON_MAX,
-                "method": "expanding_weekly_walk_forward",
-                "two_pass_block": True,
-                "update_path": "nfl_edge.models.qb_elo.update_state_with_margin",
-                "mov_path": "nfl_edge.models.qb_elo.mov_multiplier",
-                "exposure_kind": "prior_state_exposure",
-            }
-        ),
+        "backtest_config_sha256": canonical_json_sha256(backtest_payload),
         "model_code_fingerprint": model_fingerprint,
         "backtest_code_fingerprint": backtest_fingerprint,
         "random_seed": 20260802,
@@ -841,6 +942,8 @@ def run_development_walk_forward(
             "single_zero_sum_delta": True,
         },
     }
+    if resolver_block is not None:
+        manifest["qb_adjustment_resolver"] = resolver_block
 
     (output_dir / "qb_elo_run_manifest_v1.json").write_text(
         json_lib.dumps(manifest, indent=2, sort_keys=True) + "\n"
