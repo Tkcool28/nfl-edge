@@ -24,6 +24,7 @@ row-for-row.
 
 from __future__ import annotations
 
+import hashlib
 from collections.abc import Callable, Iterable, Mapping
 from pathlib import Path
 from typing import Any
@@ -50,10 +51,22 @@ class OracleQBAdjustments:
 
     Fail-closed: construction validates the artifact and any resolution of
     an unknown game_id raises rather than silently zero-filling.
+
+    Provenance: the object preserves the source oracle parquet path and its
+    SHA-256 (computed from the actual file bytes). ``manifest_identity``
+    exposes the narrow contract the walk-forward engine requires to make an
+    oracle run distinguishable from a baseline run.
     """
+
+    # Narrow resolver provenance contract used by the full walk-forward engine.
+    MODE = "ORACLE"
+    IMPLEMENTATION = "nfl_edge.backtest.task04c_paired_evaluation.OracleQBAdjustments"
+    HISTORICAL_MODEL_USAGE = "ORACLE_STARTER_IDENTITY_ONLY"
+    STARTER_EVIDENCE_CLASS = "POSTGAME_ACTUAL_STARTER"
 
     def __init__(self, oracle_parquet: str | Path) -> None:
         self._path = Path(oracle_parquet)
+        self._sha256 = hashlib.sha256(self._path.read_bytes()).hexdigest()
         self._frame = pl.read_parquet(self._path)
         self._validate_artifact()
         pairs = self._frame.select(
@@ -131,6 +144,34 @@ class OracleQBAdjustments:
             problems.append(f"extra oracle game_ids outside universe: {extra[:10]} ({len(extra)})")
         if problems:
             raise OracleAdjustmentError(where, "; ".join(problems))
+
+    @property
+    def oracle_artifact_path(self) -> Path:
+        """Source oracle parquet path preserved on construction."""
+        return Path(self._path)
+
+    @property
+    def oracle_artifact_sha256(self) -> str:
+        """SHA-256 of the oracle parquet bytes (computed, never hard-coded)."""
+        return self._sha256
+
+    def manifest_identity(self, project_root: "str | Path | None" = None) -> dict[str, Any]:
+        """Narrow resolver provenance contract for the walk-forward run
+        identity and manifest.
+
+        ``project_root`` is accepted for signature compatibility but is not
+        required because SHA-256 is computed from the preserved absolute
+        artifact path's bytes.
+        """
+        del project_root  # unused; SHA is derived from the actual file bytes
+        return {
+            "mode": self.MODE,
+            "implementation": self.IMPLEMENTATION,
+            "oracle_artifact_path": str(self._path),
+            "oracle_artifact_sha256": self._sha256,
+            "historical_model_usage": self.HISTORICAL_MODEL_USAGE,
+            "starter_evidence_class": self.STARTER_EVIDENCE_CLASS,
+        }
 
 
 def make_resolver(
