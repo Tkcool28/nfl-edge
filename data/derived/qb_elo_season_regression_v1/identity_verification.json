@@ -1,0 +1,23 @@
+{
+  "identity_passed": true,
+  "game_id_order_identical": true,
+  "max_abs_diff_by_column": {
+    "home_elo_before": 0.0,
+    "away_elo_before": 0.0,
+    "home_qb_adjustment": 0.0,
+    "away_qb_adjustment": 0.0,
+    "predicted_home_win_probability": 0.0
+  },
+  "my_metrics": {
+    "n_scored": 1942.0,
+    "brier": 0.22191821000551404,
+    "log_loss": 0.6355069913546556,
+    "accuracy": 0.6477857878475798
+  },
+  "accepted_metrics": {
+    "brier": 0.221918210006,
+    "log_loss": 0.635506991355,
+    "accuracy": 0.647785787848
+  },
+  "metric_match": true
+}

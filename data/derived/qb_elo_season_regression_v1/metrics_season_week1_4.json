@@ -1,0 +1,317 @@
+[
+  {
+    "candidate": "regression_000",
+    "fraction": 0.0,
+    "season": 2018,
+    "n": 63.0,
+    "brier": 0.2413076491443992,
+    "log_loss": 0.6756834180149822,
+    "accuracy": 0.5873015873015873
+  },
+  {
+    "candidate": "regression_000",
+    "fraction": 0.0,
+    "season": 2019,
+    "n": 63.0,
+    "brier": 0.22509187117426793,
+    "log_loss": 0.6429428037262611,
+    "accuracy": 0.6031746031746031
+  },
+  {
+    "candidate": "regression_000",
+    "fraction": 0.0,
+    "season": 2020,
+    "n": 63.0,
+    "brier": 0.2049029623620035,
+    "log_loss": 0.5954333100094282,
+    "accuracy": 0.7301587301587301
+  },
+  {
+    "candidate": "regression_000",
+    "fraction": 0.0,
+    "season": 2021,
+    "n": 64.0,
+    "brier": 0.24042897051749684,
+    "log_loss": 0.6989236071718407,
+    "accuracy": 0.671875
+  },
+  {
+    "candidate": "regression_000",
+    "fraction": 0.0,
+    "season": 2022,
+    "n": 64.0,
+    "brier": 0.2558000093070956,
+    "log_loss": 0.7307681399275784,
+    "accuracy": 0.546875
+  },
+  {
+    "candidate": "regression_000",
+    "fraction": 0.0,
+    "season": 2023,
+    "n": 64.0,
+    "brier": 0.22245472937134883,
+    "log_loss": 0.6410797477731787,
+    "accuracy": 0.671875
+  },
+  {
+    "candidate": "regression_000",
+    "fraction": 0.0,
+    "season": 2024,
+    "n": 64.0,
+    "brier": 0.2661706154856995,
+    "log_loss": 0.7415653412293716,
+    "accuracy": 0.578125
+  },
+  {
+    "candidate": "regression_025",
+    "fraction": 0.25,
+    "season": 2018,
+    "n": 63.0,
+    "brier": 0.2413076491443992,
+    "log_loss": 0.6756834180149822,
+    "accuracy": 0.5873015873015873
+  },
+  {
+    "candidate": "regression_025",
+    "fraction": 0.25,
+    "season": 2019,
+    "n": 63.0,
+    "brier": 0.2298117849087602,
+    "log_loss": 0.6518092065783945,
+    "accuracy": 0.6190476190476191
+  },
+  {
+    "candidate": "regression_025",
+    "fraction": 0.25,
+    "season": 2020,
+    "n": 63.0,
+    "brier": 0.20571901351427757,
+    "log_loss": 0.5970111035463147,
+    "accuracy": 0.6666666666666666
+  },
+  {
+    "candidate": "regression_025",
+    "fraction": 0.25,
+    "season": 2021,
+    "n": 64.0,
+    "brier": 0.2349492005109026,
+    "log_loss": 0.6703068685137455,
+    "accuracy": 0.640625
+  },
+  {
+    "candidate": "regression_025",
+    "fraction": 0.25,
+    "season": 2022,
+    "n": 64.0,
+    "brier": 0.25023743400881976,
+    "log_loss": 0.7028833464072961,
+    "accuracy": 0.5625
+  },
+  {
+    "candidate": "regression_025",
+    "fraction": 0.25,
+    "season": 2023,
+    "n": 64.0,
+    "brier": 0.2203295436495323,
+    "log_loss": 0.6286160574133626,
+    "accuracy": 0.671875
+  },
+  {
+    "candidate": "regression_025",
+    "fraction": 0.25,
+    "season": 2024,
+    "n": 64.0,
+    "brier": 0.25985570930784174,
+    "log_loss": 0.7192351762165478,
+    "accuracy": 0.546875
+  },
+  {
+    "candidate": "regression_040",
+    "fraction": 0.4,
+    "season": 2018,
+    "n": 63.0,
+    "brier": 0.2413076491443992,
+    "log_loss": 0.6756834180149822,
+    "accuracy": 0.5873015873015873
+  },
+  {
+    "candidate": "regression_040",
+    "fraction": 0.4,
+    "season": 2019,
+    "n": 63.0,
+    "brier": 0.2339335916753627,
+    "log_loss": 0.6600012982552171,
+    "accuracy": 0.6190476190476191
+  },
+  {
+    "candidate": "regression_040",
+    "fraction": 0.4,
+    "season": 2020,
+    "n": 63.0,
+    "brier": 0.20805268820401548,
+    "log_loss": 0.6028360258871541,
+    "accuracy": 0.6507936507936508
+  },
+  {
+    "candidate": "regression_040",
+    "fraction": 0.4,
+    "season": 2021,
+    "n": 64.0,
+    "brier": 0.23461000343431695,
+    "log_loss": 0.6650081706321213,
+    "accuracy": 0.609375
+  },
+  {
+    "candidate": "regression_040",
+    "fraction": 0.4,
+    "season": 2022,
+    "n": 64.0,
+    "brier": 0.25006192735570837,
+    "log_loss": 0.6981255512212804,
+    "accuracy": 0.5625
+  },
+  {
+    "candidate": "regression_040",
+    "fraction": 0.4,
+    "season": 2023,
+    "n": 64.0,
+    "brier": 0.22124807240722544,
+    "log_loss": 0.6300833687467079,
+    "accuracy": 0.65625
+  },
+  {
+    "candidate": "regression_040",
+    "fraction": 0.4,
+    "season": 2024,
+    "n": 64.0,
+    "brier": 0.2587186474130626,
+    "log_loss": 0.7143775678245814,
+    "accuracy": 0.546875
+  },
+  {
+    "candidate": "regression_060",
+    "fraction": 0.6,
+    "season": 2018,
+    "n": 63.0,
+    "brier": 0.2413076491443992,
+    "log_loss": 0.6756834180149822,
+    "accuracy": 0.5873015873015873
+  },
+  {
+    "candidate": "regression_060",
+    "fraction": 0.6,
+    "season": 2019,
+    "n": 63.0,
+    "brier": 0.2411048066381188,
+    "log_loss": 0.6744720256419819,
+    "accuracy": 0.5873015873015873
+  },
+  {
+    "candidate": "regression_060",
+    "fraction": 0.6,
+    "season": 2020,
+    "n": 63.0,
+    "brier": 0.21332149532461536,
+    "log_loss": 0.6152176720172452,
+    "accuracy": 0.6190476190476191
+  },
+  {
+    "candidate": "regression_060",
+    "fraction": 0.6,
+    "season": 2021,
+    "n": 64.0,
+    "brier": 0.23710774276302266,
+    "log_loss": 0.6672583003897228,
+    "accuracy": 0.59375
+  },
+  {
+    "candidate": "regression_060",
+    "fraction": 0.6,
+    "season": 2022,
+    "n": 64.0,
+    "brier": 0.25237936179187637,
+    "log_loss": 0.6998915782616925,
+    "accuracy": 0.59375
+  },
+  {
+    "candidate": "regression_060",
+    "fraction": 0.6,
+    "season": 2023,
+    "n": 64.0,
+    "brier": 0.2245397149485828,
+    "log_loss": 0.6375809778573308,
+    "accuracy": 0.640625
+  },
+  {
+    "candidate": "regression_060",
+    "fraction": 0.6,
+    "season": 2024,
+    "n": 64.0,
+    "brier": 0.2591856317178921,
+    "log_loss": 0.7136833438950302,
+    "accuracy": 0.53125
+  },
+  {
+    "candidate": "task04c_reference_0333",
+    "fraction": 0.333,
+    "season": 2018,
+    "n": 63.0,
+    "brier": 0.2413076491443992,
+    "log_loss": 0.6756834180149822,
+    "accuracy": 0.5873015873015873
+  },
+  {
+    "candidate": "task04c_reference_0333",
+    "fraction": 0.333,
+    "season": 2019,
+    "n": 63.0,
+    "brier": 0.23196479166441664,
+    "log_loss": 0.6560669555507824,
+    "accuracy": 0.6190476190476191
+  },
+  {
+    "candidate": "task04c_reference_0333",
+    "fraction": 0.333,
+    "season": 2020,
+    "n": 63.0,
+    "brier": 0.20683641003786254,
+    "log_loss": 0.5998312321251916,
+    "accuracy": 0.6507936507936508
+  },
+  {
+    "candidate": "task04c_reference_0333",
+    "fraction": 0.333,
+    "season": 2021,
+    "n": 64.0,
+    "brier": 0.23450868119878224,
+    "log_loss": 0.6665036308543558,
+    "accuracy": 0.625
+  },
+  {
+    "candidate": "task04c_reference_0333",
+    "fraction": 0.333,
+    "season": 2022,
+    "n": 64.0,
+    "brier": 0.24990429655317725,
+    "log_loss": 0.6994527309884274,
+    "accuracy": 0.5625
+  },
+  {
+    "candidate": "task04c_reference_0333",
+    "fraction": 0.333,
+    "season": 2023,
+    "n": 64.0,
+    "brier": 0.220658508209293,
+    "log_loss": 0.6288768294983178,
+    "accuracy": 0.65625
+  },
+  {
+    "candidate": "task04c_reference_0333",
+    "fraction": 0.333,
+    "season": 2024,
+    "n": 64.0,
+    "brier": 0.2590425204754855,
+    "log_loss": 0.7159876413252009,
+    "accuracy": 0.546875
+  }
+]

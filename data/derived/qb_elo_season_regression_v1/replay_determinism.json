@@ -1,0 +1,36 @@
+{
+  "regression_000": {
+    "game_id_order_identical": true,
+    "max_prob_diff": 0.0,
+    "metrics_equal": true,
+    "official_metrics": {
+      "n_scored": 1942.0,
+      "brier": 0.2256563397997509,
+      "log_loss": 0.6488468595709656,
+      "accuracy": 0.6405767250257467
+    },
+    "replay_metrics": {
+      "n_scored": 1942.0,
+      "brier": 0.2256563397997509,
+      "log_loss": 0.6488468595709656,
+      "accuracy": 0.6405767250257467
+    }
+  },
+  "regression_025": {
+    "game_id_order_identical": true,
+    "max_prob_diff": 0.0,
+    "metrics_equal": true,
+    "official_metrics": {
+      "n_scored": 1942.0,
+      "brier": 0.2223329013009684,
+      "log_loss": 0.6370860704047423,
+      "accuracy": 0.6472708547888775
+    },
+    "replay_metrics": {
+      "n_scored": 1942.0,
+      "brier": 0.2223329013009684,
+      "log_loss": 0.6370860704047423,
+      "accuracy": 0.6472708547888775
+    }
+  }
+}

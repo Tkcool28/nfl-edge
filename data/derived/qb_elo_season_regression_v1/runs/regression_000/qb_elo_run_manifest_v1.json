@@ -1,0 +1,39 @@
+{
+  "backtest_code_fingerprint": "bdea72f243603551a51235fed0fdb605153ae20ced6c651b9472216fa4dce815",
+  "backtest_config_sha256": "a36f9b5e63b24285be2f217ffc1de7f6592623604bae8a643f8edad2f1bcadf3",
+  "created_at_utc": "2026-08-10T16:00:00Z",
+  "data_version": "frozen-baseline-v1",
+  "development_seasons": "2018-2024",
+  "feature_code_fingerprint": "75345700155a2e90713438c1541cf76c85915693b8bdcd53a25176caab2e210f",
+  "feature_manifest_sha256": "aec492811357cddff1c1dbb0701623df2d2c234f5109522a0cacc63ca244b987",
+  "feature_version": "features-v1",
+  "maximum_prediction_as_of_utc": "2025-02-04T12:00:00Z",
+  "minimum_prediction_as_of_utc": "2018-09-04T12:00:00Z",
+  "model_code_fingerprint": "5ed4ea3113ad3993e0fce0a3eb1730ab24f19adf4181d4002a0b4c00f7c26b33",
+  "model_config_sha256": "ae962271cee9619eb996103775fc09352cf986c1044f520871a6df4d9f12848b",
+  "model_name": "qb_elo",
+  "model_version": "v1.0.0",
+  "prediction_ledger": {
+    "file_sha256": "0a6d36261678c385cabf3e46db4fe4afc28fd0d7d6074a7bdeff030f42e15232",
+    "logical_content_sha256": "e254992c81c3f675ffc461c888974a33f9a51d912cf404919055075ff109f956",
+    "path": "data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet",
+    "rows": 1942
+  },
+  "random_seed": 20260802,
+  "run_id": "qb_elo-v1.0.0-20260810T160000Z",
+  "run_type": "development_walk_forward",
+  "scored_row_policy": "only 2018-2024 rows scored; 2025 is sealed and excluded",
+  "sealed_holdout_season": 2025,
+  "state_ledger": {
+    "file_sha256": "abc2fc912962b327748d184602d6b0244557d2487b39c82b5d5b3ef6faebcfc7",
+    "logical_content_sha256": "1464b95739b330435bc483a6dd23bc091979c63cf7ea3534a35d027b136ae875",
+    "path": "data/modeling/development_v1/qb_elo_state_transitions_2018_2024.parquet",
+    "rows": 3884
+  },
+  "two_pass_block_proof": {
+    "predict_pass_does_not_mutate_state": true,
+    "single_zero_sum_delta": true,
+    "update_pass_uses_canonical_path": true
+  },
+  "warm_up_policy": "all predictions scored; no warmup required. warmup_excluded_games = 0"
+}
