@@ -8,10 +8,15 @@ demonstrated on the same Hermes worker.)
 
 ## External test provenance
 
-The external full-data test ran on a remote VPS with sufficient memory for
-the seven-season PBP build under pytest.
+The validation bundle was exported from this VPS (where the PBP artifacts and
+the prior Phase-3E build evidence live), its hashes/inventory were independently
+verified, and the bundle was then uploaded into an **independent external
+ChatGPT Work/cloud execution environment**. The dependencies used for the test
+were installed in that cloud environment. The original VPS absolute PBP path was
+unavailable there, so a temporary external test copy was made; the only
+executable difference from the original test was the PBP root path.
 
-Result archive:
+Result archive (as present and verified on this VPS):
 ```
 /tmp/task05c_phase3e_external_validation.zip
   byte_size:  117595520

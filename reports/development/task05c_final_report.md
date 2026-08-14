@@ -21,10 +21,18 @@ All gates pass. The accepted Totals V1 feature implementation is complete with:
 |---|---|
 | Starting branch | `feat/totals-feature-contract-v1` |
 | Starting HEAD | `bc1d85414dd2c7c8fafb572946706c1cc0394345` |
-| Working branch | `feat/totals-feature-contract-v1` (no merges) |
-| Working HEAD | `bc1d854…` (unchanged) — no commits yet |
-| origin/main | `bc1d854…` — in sync, 0 ahead / 0 behind |
+| Final working branch | `feat/totals-feature-contract-v1` (no merges) |
+| Final working HEAD | `433eadc0bbc30d152cd43c319d078025cce37fa0` |
+| Ahead of origin/main | 2 commits |
+| origin/main | `bc1d85414dd2c7c8fafb572946706c1cc0394345` |
 | Production `/root/nfl-edge` | untouched on `main @ bc1d854…` |
+
+Commits on the feature branch:
+
+```
+62ccf6eef085602e34b097cfa23d222b97f41e09  feat: implement Totals V1 feature contract
+433eadc0bbc30d152cd43c319d078025cce37fa0  docs: close Task05C totals feature inventory and audits
+```
 
 ---
 
@@ -252,7 +260,7 @@ NFL 2024 postseason games played in Jan/Feb 2025 remain INCLUDED (13 games). No 
 |---|---|---|---|
 | Closeout tests (17 assertions) | 18 | 0 | Added 18 focused tests covering all §9 items |
 | Existing lightweight contract/leakage tests | 556 | 1 | One skip = durable-path smoke test when PBP root exists |
-| Heavy end-to-end builder test | EXTERNAL PASS | 0 | Proved externally (VPS, 150.98s, PASS) |
+| Heavy end-to-end builder test | EXTERNAL PASS | 0 | Proved in an independent external ChatGPT Work/cloud execution environment (150.98s, PASS) |
 
 The external full-data test is documented in:
 `reports/development/task05c_phase3e_external_validation_addendum.md`
@@ -272,7 +280,9 @@ External validation zip: `/tmp/task05c_phase3e_external_validation.zip` (1175955
 
 ## 27. Git status
 
-All Task05C implementation is currently **untracked** (uncommitted). No staged changes. No tracked modifications from base. No `.env`/`venv`/secrets/caches staged.
+All Task05C work is committed on the feature branch (2 commits ahead of
+`origin/main`). No staged changes. No tracked modifications from base. No
+`.env`/`venv`/secrets/caches staged.
 
 Unrelated production-runtime artifacts in `/root/nfl-edge` (Sleeper source-audit files) are NOT staged and were not touched.
 
@@ -280,7 +290,16 @@ Unrelated production-runtime artifacts in `/root/nfl-edge` (Sleeper source-audit
 
 ## 28. Commit(s)
 
-A logical Task05C commit(s) will be created after this report. See §Git closeout below.
+Two logical commits were created:
+
+- `62ccf6eef085602e34b097cfa23d222b97f41e09`
+  `feat: implement Totals V1 feature contract`
+  (source, tests, builder scripts, contract, derived feature/identity artifacts, existing audits)
+- `433eadc0bbc30d152cd43c319d078025cce37fa0`
+  `docs: close Task05C totals feature inventory and audits`
+  (manifests, closeout scripts, coverage/parity/redundancy reports, external-validation addendum, closeout tests, modeling table, final report)
+
+Neither commit was pushed. No merge was performed (user handles merge).
 
 ---
 
