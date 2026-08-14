@@ -258,13 +258,56 @@ NFL 2024 postseason games played in Jan/Feb 2025 remain INCLUDED (13 games). No 
 
 | Test suite | Passed | Skipped | Notes |
 |---|---|---|---|
-| Closeout tests (17 assertions) | 18 | 0 | Added 18 focused tests covering all §9 items |
-| Existing lightweight contract/leakage tests | 556 | 1 | One skip = durable-path smoke test when PBP root exists |
+| Closeout tests (`test_totals_v1_closeout.py`) | 25 | 0 | §9 assertions + PR-hardening adversarial tests |
+| `tests/features/` total (excludes heavy end-to-end) | 563 | 1 | One skip = durable-path smoke test; heavy `test_end_to_end_builder` deselected |
 | Heavy end-to-end builder test | EXTERNAL PASS | 0 | Proved in an independent external ChatGPT Work/cloud execution environment (150.98s, PASS) |
 
 The external full-data test is documented in:
 `reports/development/task05c_phase3e_external_validation_addendum.md`
 External validation zip: `/tmp/task05c_phase3e_external_validation.zip` (117595520 bytes, SHA `07cdf5ee72b7…`). The passing external test proved features.width=90, columns=EXACT_90_COLUMNS, identity.width=7, exact identity columns, feature/identity alignment, and no leakage.
+
+## 25b. PR #14 hardening remediation
+
+A PR review identified two narrow robustness gaps in the modeling-table
+assembly, both addressed without changing any feature/PBP/semantics logic:
+
+1. **Predictor alignment (Finding A).** The prior assembly attached the
+   90-feature predictors to the identity/score join by positional row index
+   *after* the score join, implicitly relying on Polars join ordering. The
+   canonical accepted artifact was **not** shown to be corrupted. The builder
+   (`scripts/build_totals_v1_modeling_table.py`) was refactored to make
+   alignment **explicit and fail-closed**: one deterministic row key is
+   stamped on the original identity and original feature frames *before* any
+   score join; scores join the keyed identity by `game_id`; predictors join
+   back by the preserved explicit row key; row-key uniqueness, no row
+   loss/duplication, and exact one-to-one identity coverage are enforced. Final
+   deterministic `game_id` sort happens only at the end. Score-input row order
+   can no longer change which predictors attach to which game.
+2. **False hard-fail coverage (Finding B).** The old duplicate-score and
+   missing-target tests only asserted on injected data without invoking the
+   production path. They now call the real `assemble_modeling_table`
+   production logic and assert the raised `TotalsModelingTableError`.
+
+Adversarial production-path tests added:
+- score-order shuffle, reverse, and sort-by-other-field → `game→predictor`
+  mapping proven identical;
+- duplicate `game_id` → production hard-fail;
+- missing/unmatched score row and explicit null score → production hard-fail;
+- feature/identity height mismatch → production hard-fail;
+- duplicated preserved row key and dropped row key (fragment) → fail-closed;
+- refactored builder's 90-predictor projection equals the accepted feature
+  artifact exactly through the identity bridge.
+
+Holdout/season/leakage requirements are unchanged and re-validated: 1942 rows,
+correct season counts, 2024 postseason = 13, `2024_22_KC_PHI` present,
+NFL season-2025 rows = 0, sportsbook fields absent, target isolation intact.
+
+**Reproducibility after remediation:** the refactored builder reproduces the
+accepted modeling table byte-for-byte — logical fingerprint
+`a4aa982c882d11945585d671d1b1ef315f323ee413e4614b9bc5be442789dc9e` and
+parquet byte SHA-256 `c379e6a933054248f8da331839e619479a95e56003c27681370114abe353a4cc`
+are identical to the accepted artifact. Build-twice determinism verified
+(logical_fp and byte SHA equal across BUILD1/BUILD2).
 
 ---
 
@@ -372,7 +415,7 @@ The later Ridge/XGBoost/CatBoost totals-model bake-off should consume:
 | Missingness/cold-start audit complete | ✓ |
 | Production-parity assessment complete | ✓ |
 | Redundancy report complete | ✓ |
-| Focused tests pass (18 + 556 = 574) | ✓ |
+| Focused tests pass (25 closeout + 538 lightweight = 563 total in tests/features) | ✓ |
 | New closeout outputs reproducible | ✓ |
 | External heavy full-data PASS accurately recorded | ✓ |
 | No prohibited model training occurred | ✓ (no Ridge/ElasticNet/XGB/CatBoost/NGBoost/HP search) |

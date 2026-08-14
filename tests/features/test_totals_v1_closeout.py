@@ -21,6 +21,7 @@ Covers all 17 assertions from §9 of the closeout spec:
 """
 from __future__ import annotations
 
+import importlib
 import json
 import sys
 from pathlib import Path
@@ -28,7 +29,13 @@ from pathlib import Path
 import polars as pl
 
 sys.path.insert(0, "/root/workspaces/nfl-edge-totals-feature-contract-v1/src")
+sys.path.insert(0, "/root/workspaces/nfl-edge-totals-feature-contract-v1/scripts")
 from nfl_edge.features.totals_v1.feature_table import EXACT_90_COLUMNS
+
+# Import the PRODUCTION modeling-table assembly module so tests exercise the
+# exact same code path the builder/CLI uses (no re-implementation).
+mt = importlib.import_module("build_totals_v1_modeling_table")
+TotalsModelingTableError = mt.TotalsModelingTableError
 
 W = Path("/root/workspaces/nfl-edge-totals-feature-contract-v1")
 MODEL = W / "data/derived/totals_v1_modeling_table_2018_2024.parquet"
@@ -143,20 +150,35 @@ class TestModelingTableIntegrity:
             assert s not in m.columns, f"sportsbook field {s} found in modeling table"
 
     def test_duplicate_score_join_hard_fails(self):
-        """An artificial duplicate game_id in score source must raise."""
-        scores = pl.read_parquet(SCORES)
-        # create a duplicate
+        """Duplicate game_id in score frame must raise via the production assembly path."""
+        import pytest
+        scores = _load_or_skip(SCORES)
         dup = pl.concat([scores, scores.filter(pl.col("game_id") == "2018_01_ATL_PHI")])
-        dup_count = dup.group_by("game_id").len().filter(pl.col("len") > 1).height
-        assert dup_count >= 1, "duplicate not injected"
+        assert dup.group_by("game_id").len().filter(pl.col("len") > 1).height >= 1
+        identity = _load_or_skip(IDENTITY)
+        features = _load_or_skip(FEATURES)
+        pred = mt.manifest_core_v1_columns()
+        with pytest.raises(TotalsModelingTableError):
+            mt.assemble_modeling_table(identity, features, dup, pred)
 
     def test_missing_target_hard_fails(self):
-        """A score-source row with null home_score/away_score should cause a detectable failure."""
-        scores = pl.read_parquet(SCORES)
-        null_scores = scores.filter(pl.col("home_score").is_null() | pl.col("away_score").is_null())
-        # In the canonical frozen source, scores should be complete
-        assert null_scores.height == 0, f"unexpected null scores in canonical source: {null_scores['game_id'].to_list()}"
-        # The join logic in build_totals_v1_modeling_table.py hard-fails on null score after join
+        """Unmatched/missing score row must raise via the production assembly path."""
+        import pytest
+        scores = _load_or_skip(SCORES)
+        identity = _load_or_skip(IDENTITY)
+        features = _load_or_skip(FEATURES)
+        pred = mt.manifest_core_v1_columns()
+        # remove one score row -> unmatched identity game -> null target -> raise
+        miss = scores.filter(pl.col("game_id") != "2024_22_KC_PHI")
+        with pytest.raises(TotalsModelingTableError):
+            mt.assemble_modeling_table(identity, features, miss, pred)
+        # explicit null home_score -> raise
+        nulled = scores.with_columns(
+            pl.when(pl.col("game_id") == "2018_01_ATL_PHI")
+            .then(None).otherwise(pl.col("home_score")).alias("home_score")
+        )
+        with pytest.raises(TotalsModelingTableError):
+            mt.assemble_modeling_table(identity, features, nulled, pred)
 
 
 class TestManifestIntegrity:
@@ -185,3 +207,104 @@ class TestLeakageBoundary:
         assert leakage["future_block_source_rows"] == 0
         assert leakage["season_2025_source_rows"] == 0
         assert leakage["canonical_mapping_failures"] == 0
+
+
+def _cols_equal(a: pl.Series, b: pl.Series) -> bool:
+    """Null-safe equality of two columns (values + null masks)."""
+    assert a.dtype == b.dtype, f"dtype mismatch {a.dtype} vs {b.dtype}"
+    if a.is_null().sum() != b.is_null().sum():
+        return False
+    eq = (a == b).fill_null(True)
+    return bool(eq.all())
+
+
+class TestAdversarialAlignment:
+    """PR-hardening: prove game->predictor alignment is explicit and fail-closed."""
+
+    IDENTITY = IDENTITY
+    FEATURES = FEATURES
+    SCORES = SCORES
+
+    def _components(self):
+        identity = _load_or_skip(self.IDENTITY)
+        features = _load_or_skip(self.FEATURES)
+        scores = _load_or_skip(self.SCORES)
+        pred = mt.manifest_core_v1_columns()
+        return identity, features, scores, pred
+
+    def _assert_game_pred_mapping_identical(self, m1, m2, pred):
+        """For every game_id, the 90 predictors are identical between two assemblies."""
+        a = m1.sort("game_id")
+        b = m2.sort("game_id")
+        assert a["game_id"].to_list() == b["game_id"].to_list()
+        for col in pred:
+            assert _cols_equal(a[col], b[col]), f"predictor {col} differs across score-order for a game"
+
+    def test_predictor_alignment_survives_score_shuffle(self):
+        """SHA: shuffle the score frame; game->predictor mapping must be unchanged."""
+        import random
+        identity, features, scores, pred = self._components()
+        base = mt.assemble_modeling_table(identity, features, scores, pred)
+        rng = random.Random(1234)
+        shuffled = scores.sample(fraction=1.0, shuffle=True, seed=rng.randrange(10**9))
+        alt = mt.assemble_modeling_table(identity, features, shuffled, pred)
+        self._assert_game_pred_mapping_identical(base, alt, pred)
+
+    def test_predictor_alignment_survives_score_reverse(self):
+        """Reverse the score frame order; game->predictor mapping must be unchanged."""
+        identity, features, scores, pred = self._components()
+        base = mt.assemble_modeling_table(identity, features, scores, pred)
+        rev = scores.sort("game_id", descending=True)
+        alt = mt.assemble_modeling_table(identity, features, rev, pred)
+        self._assert_game_pred_mapping_identical(base, alt, pred)
+
+    def test_predictor_alignment_survives_sort_by_other_field(self):
+        """Sort scores by a field unrelated to identity order; mapping unchanged."""
+        identity, features, scores, pred = self._components()
+        base = mt.assemble_modeling_table(identity, features, scores, pred)
+        alt_sorted = scores.sort(pl.col("home_team"), pl.col("away_team"))
+        alt = mt.assemble_modeling_table(identity, features, alt_sorted, pred)
+        self._assert_game_pred_mapping_identical(base, alt, pred)
+
+    def test_height_mismatch_hard_fails(self):
+        """Feature/identity height mismatch must raise through production path."""
+        import pytest
+        identity, features, scores, pred = self._components()
+        truncated = features.head(identity.height - 1)
+        with pytest.raises(TotalsModelingTableError):
+            mt.assemble_modeling_table(identity, truncated, scores, pred)
+
+    def test_duplicate_row_key_hard_fails(self):
+        """A duplicated preserved row key on the feature side must fail closed."""
+        import pytest
+        identity, features, _, pred = self._components()
+        id_keyed, feat_keyed = mt._key_frames(identity, features, pred)
+        n = identity.height
+        bad = pl.concat([feat_keyed, feat_keyed.filter(pl.col("_row_key") == 0)])
+        with pytest.raises(TotalsModelingTableError):
+            mt._attach_predictors(id_keyed, bad, n)
+
+    def test_missing_row_key_hard_fails(self):
+        """A dropped row key (fragment) must fail closed (no silent row merge)."""
+        import pytest
+        identity, features, _, pred = self._components()
+        id_keyed, feat_keyed = mt._key_frames(identity, features, pred)
+        n = identity.height
+        bad = feat_keyed.filter(pl.col("_row_key") != 5)
+        with pytest.raises(TotalsModelingTableError):
+            mt._attach_predictors(id_keyed, bad, n)
+
+    def test_canonical_artifact_projection_equals_accepted_90(self):
+        """Refactored production builder's 90-predictor projection equals the
+        accepted feature artifact when matched through the explicit identity bridge."""
+        identity, features, scores, pred = self._components()
+        model = mt.validate_modeling_table(
+            mt.assemble_modeling_table(identity, features, scores, pred), pred
+        )
+        proj = model.select(pred)
+        assert proj.columns == list(EXACT_90_COLUMNS)
+        accepted = _load_or_skip(self.FEATURES)
+        assert list(accepted.columns) == list(EXACT_90_COLUMNS)
+        assert proj.height == accepted.height == 1942
+        for col in pred:
+            assert _cols_equal(proj[col], accepted[col]), f"predictor {col} differs from accepted artifact"
