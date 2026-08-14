@@ -84,15 +84,20 @@ def validate_and_project_scores(scores: pl.DataFrame,
     Fail-closed on: duplicate game_id, out-of-window season handling (NFL
     season==2025 excluded BEFORE any join), and non-unique projection.
     """
-    if "game_id" not in scores.columns:
-        raise TotalsModelingTableError("score source missing game_id")
-    dup = scores.group_by("game_id").len().filter(pl.col("len") > 1)
+    required_cols = ["game_id", "season", "home_score", "away_score"]
+    missing = [col for col in required_cols if col not in scores.columns]
+    if missing:
+        raise TotalsModelingTableError(f"score source missing required columns: {missing}")
+
+    # NFL season, not calendar year: bound sealed 2025 rows before any
+    # development invariant can inspect or be affected by them.
+    sc = scores.filter(pl.col("season") <= allowed_max_season)
+    dup = sc.group_by("game_id").len().filter(pl.col("len") > 1)
     if dup.height > 0:
         raise TotalsModelingTableError(
-            f"duplicate game_id in score source: {dup['game_id'].to_list()}"
+            f"duplicate game_id in bounded score source: {dup['game_id'].to_list()}"
         )
-    sc = scores.filter(pl.col("season") <= allowed_max_season)
-    sc = sc.select(["game_id", "season", "home_score", "away_score"]).unique(subset=["game_id"])
+    sc = sc.select(required_cols)
     if sc.height != expected_rows:
         raise TotalsModelingTableError(
             f"score source post-bound rows {sc.height} != {expected_rows}"

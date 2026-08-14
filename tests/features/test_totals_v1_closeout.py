@@ -181,6 +181,86 @@ class TestModelingTableIntegrity:
             mt.assemble_modeling_table(identity, features, nulled, pred)
 
 
+class TestScoreSourceDevelopmentBoundary:
+    """Season-bound score validation must isolate the 2018–2024 build."""
+
+    def _components(self):
+        return (
+            _load_or_skip(IDENTITY),
+            _load_or_skip(FEATURES),
+            _load_or_skip(SCORES),
+            mt.manifest_core_v1_columns(),
+        )
+
+    def _assemble(self, identity, features, scores, predictor_cols):
+        return mt.validate_modeling_table(
+            mt.assemble_modeling_table(identity, features, scores, predictor_cols),
+            predictor_cols,
+        )
+
+    def test_season_2025_duplicate_is_ignored_by_development_assembly(self):
+        """A duplicate sealed-season row cannot alter the development model table."""
+        identity, features, scores, pred = self._components()
+        base = self._assemble(identity, features, scores, pred)
+        duplicate_2025 = scores.filter(pl.col("season") == 2025).head(1)
+        assert duplicate_2025.height == 1
+        mutated = pl.concat([scores, duplicate_2025])
+        assert mutated.group_by("game_id").len().filter(pl.col("len") > 1).height >= 1
+        actual = self._assemble(identity, features, mutated, pred)
+        assert actual["game_id"].to_list() == base["game_id"].to_list()
+        assert actual.select(["home_score", "away_score", "target_total_points"]).equals(
+            base.select(["home_score", "away_score", "target_total_points"])
+        )
+        assert actual.select(pred).equals(base.select(pred))
+
+    def test_development_season_duplicate_still_hard_fails(self):
+        """A duplicate 2018–2024 game remains a fail-closed score-source error."""
+        import pytest
+        identity, features, scores, pred = self._components()
+        duplicate_development = scores.filter(pl.col("season") <= 2024).head(1)
+        mutated = pl.concat([scores, duplicate_development])
+        with pytest.raises(TotalsModelingTableError, match="duplicate game_id"):
+            mt.assemble_modeling_table(identity, features, mutated, pred)
+
+    def test_season_2025_null_score_is_ignored_by_development_assembly(self):
+        """A null sealed-season score cannot enter development target validation."""
+        identity, features, scores, pred = self._components()
+        base = self._assemble(identity, features, scores, pred)
+        game_id_2025 = scores.filter(pl.col("season") == 2025).item(0, "game_id")
+        mutated = scores.with_columns(
+            pl.when(pl.col("game_id") == game_id_2025)
+            .then(None)
+            .otherwise(pl.col("home_score"))
+            .alias("home_score")
+        )
+        actual = self._assemble(identity, features, mutated, pred)
+        assert actual["game_id"].to_list() == base["game_id"].to_list()
+        assert actual.select(["home_score", "away_score", "target_total_points"]).equals(
+            base.select(["home_score", "away_score", "target_total_points"])
+        )
+        assert actual.select(pred).equals(base.select(pred))
+
+    def test_development_season_null_score_still_hard_fails(self):
+        """A null 2018–2024 score remains a fail-closed target-validation error."""
+        import pytest
+        identity, features, scores, pred = self._components()
+        game_id_development = scores.filter(pl.col("season") <= 2024).item(0, "game_id")
+        mutated = scores.with_columns(
+            pl.when(pl.col("game_id") == game_id_development)
+            .then(None)
+            .otherwise(pl.col("home_score"))
+            .alias("home_score")
+        )
+        with pytest.raises(TotalsModelingTableError, match="missing/unmatched target score"):
+            mt.assemble_modeling_table(identity, features, mutated, pred)
+
+    def test_nfl_season_2024_postseason_game_is_preserved(self):
+        """Calendar-2025 Super Bowl remains because its NFL season is 2024."""
+        identity, features, scores, pred = self._components()
+        model = self._assemble(identity, features, scores, pred)
+        assert "2024_22_KC_PHI" in model["game_id"].to_list()
+
+
 class TestManifestIntegrity:
     """Tests 8–9."""
 

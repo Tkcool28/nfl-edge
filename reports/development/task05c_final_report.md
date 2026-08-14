@@ -258,8 +258,8 @@ NFL 2024 postseason games played in Jan/Feb 2025 remain INCLUDED (13 games). No 
 
 | Test suite | Passed | Skipped | Notes |
 |---|---|---|---|
-| Closeout tests (`test_totals_v1_closeout.py`) | 25 | 0 | §9 assertions + PR-hardening adversarial tests |
-| `tests/features/` total (excludes heavy end-to-end) | 563 | 1 | One skip = durable-path smoke test; heavy `test_end_to_end_builder` deselected |
+| Closeout tests (`test_totals_v1_closeout.py`) | 30 | 0 | §9 assertions + both PR-hardening adversarial test groups |
+| `tests/features/` total (excludes heavy end-to-end) | 567 | 1 | One skip = durable-path smoke test; heavy `test_end_to_end_builder` deselected once |
 | Heavy end-to-end builder test | EXTERNAL PASS | 0 | Proved in an independent external ChatGPT Work/cloud execution environment (150.98s, PASS) |
 
 The external full-data test is documented in:
@@ -308,6 +308,24 @@ accepted modeling table byte-for-byte — logical fingerprint
 parquet byte SHA-256 `c379e6a933054248f8da331839e619479a95e56003c27681370114abe353a4cc`
 are identical to the accepted artifact. Build-twice determinism verified
 (logical_fp and byte SHA equal across BUILD1/BUILD2).
+
+## 25c. Second independent hardening note — sealed 2025 score boundary
+
+Independent rereview found that score-source duplicate validation ran before the
+NFL season-2025 development boundary. This was a fail-closed hardening issue,
+not demonstrated leakage in the accepted artifact. Validation is now ordered as
+required schema validation → `season <= 2024` restriction → bounded-frame
+duplicate/row-count/unique-id validation → normal assembly/target checks.
+
+Real production-path adversarial tests prove that an injected duplicate
+season-2025 score row and a season-2025 null score cannot affect the 2018–2024
+assembly: final `game_id` order, target columns, and all 90 predictors remain
+identical to canonical assembly. A duplicate or null score in a development
+season still raises `TotalsModelingTableError`. `2024_22_KC_PHI` remains
+present, preserving NFL-season-2024 postseason games played in calendar 2025.
+The accepted modeling artifact remained unchanged: logical fingerprint
+`a4aa982c882d11945585d671d1b1ef315f323ee413e4614b9bc5be442789dc9e`, byte
+SHA-256 `c379e6a933054248f8da331839e619479a95e56003c27681370114abe353a4cc`.
 
 ---
 
