@@ -1,0 +1,38 @@
+{
+  "drive_result_audit": {
+    "total_possessions": 43469,
+    "pos_with_zero_nonnull_result": 2,
+    "pos_with_exactly_one_distinct": 43467,
+    "pos_with_gt_one_distinct": 0,
+    "blocking_conflicts_present": false,
+    "conflict_examples": []
+  },
+  "team_normalization_audit": {
+    "known_alias_to_canonical": {
+      "LA": [
+        "LAR"
+      ]
+    },
+    "alias_seasons": {
+      "LA": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ]
+    },
+    "unknown_unmapped_abbr_counts": {},
+    "unknown_count": 0,
+    "canonical_games_scanned": 1942,
+    "missing_raw_home_count": 0,
+    "missing_raw_away_count": 0,
+    "missing_canonical_home_count": 0,
+    "missing_canonical_away_count": 0,
+    "raw_collapsed_home_away_count": 0,
+    "canonical_collapsed_home_away_count": 0,
+    "ambiguous_count": 0
+  }
+}
