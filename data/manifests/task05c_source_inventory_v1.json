@@ -1,0 +1,552 @@
+{
+  "schema_version": "task05c_source_inventory_v1",
+  "pbp_manifest": {
+    "2018": {
+      "season": 2018,
+      "filename": "play_by_play_2018.parquet",
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2018.parquet",
+      "exists": true,
+      "byte_size": 19072097,
+      "sha256": "2e6f2dce7c7ebd46e985cabe0c17eb72b39a77f98cb4478409294f50b5820150",
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    "2019": {
+      "season": 2019,
+      "filename": "play_by_play_2019.parquet",
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2019.parquet",
+      "exists": true,
+      "byte_size": 19119729,
+      "sha256": "60c3067017db2d28a78f66a79b657268be8578d9a5288e6a827efdcd7fe42540",
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    "2020": {
+      "season": 2020,
+      "filename": "play_by_play_2020.parquet",
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2020.parquet",
+      "exists": true,
+      "byte_size": 19311336,
+      "sha256": "73b7dbf66fa8cb9356f58bf6b1f15a0fee197ecc10cf4983b640cb9679b15cb4",
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    "2021": {
+      "season": 2021,
+      "filename": "play_by_play_2021.parquet",
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2021.parquet",
+      "exists": true,
+      "byte_size": 20249925,
+      "sha256": "333ad34378e5339d5172717cc83378e908daf02c8699416ab3e17c2ec10f78d8",
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    "2022": {
+      "season": 2022,
+      "filename": "play_by_play_2022.parquet",
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2022.parquet",
+      "exists": true,
+      "byte_size": 20426548,
+      "sha256": "931121d8897779d7944e2a293e92ed8799c8e5cceef84096ac42339003fedc09",
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    "2023": {
+      "season": 2023,
+      "filename": "play_by_play_2023.parquet",
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2023.parquet",
+      "exists": true,
+      "byte_size": 20534088,
+      "sha256": "bd3484731408def6b0ec93225bba2bd7b2c65769ca707a2b9444d891abdc6776",
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    "2024": {
+      "season": 2024,
+      "filename": "play_by_play_2024.parquet",
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2024.parquet",
+      "exists": true,
+      "byte_size": 20576368,
+      "sha256": "6d432dd4308329bfddaef633309ea119f9ca46d52cbb3c09f47172a2e8efcd01",
+      "byte_ok": true,
+      "sha_ok": true
+    }
+  },
+  "pbp_all_integrity_pass": true,
+  "sources": [
+    {
+      "season": 2018,
+      "artifact_path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2018.parquet",
+      "format": "parquet",
+      "seasons": [
+        2018
+      ],
+      "relevance": "nflverse promoted PBP; canonical source for Totals V1 PBP-derived features",
+      "initial_task05c_classification": "SOURCE_REQUIRED",
+      "acquisition_status": "ACQUIRED",
+      "sha256": "2e6f2dce7c7ebd46e985cabe0c17eb72b39a77f98cb4478409294f50b5820150",
+      "byte_size": 19072097,
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    {
+      "season": 2019,
+      "artifact_path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2019.parquet",
+      "format": "parquet",
+      "seasons": [
+        2019
+      ],
+      "relevance": "nflverse promoted PBP; canonical source for Totals V1 PBP-derived features",
+      "initial_task05c_classification": "SOURCE_REQUIRED",
+      "acquisition_status": "ACQUIRED",
+      "sha256": "60c3067017db2d28a78f66a79b657268be8578d9a5288e6a827efdcd7fe42540",
+      "byte_size": 19119729,
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    {
+      "season": 2020,
+      "artifact_path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2020.parquet",
+      "format": "parquet",
+      "seasons": [
+        2020
+      ],
+      "relevance": "nflverse promoted PBP; canonical source for Totals V1 PBP-derived features",
+      "initial_task05c_classification": "SOURCE_REQUIRED",
+      "acquisition_status": "ACQUIRED",
+      "sha256": "73b7dbf66fa8cb9356f58bf6b1f15a0fee197ecc10cf4983b640cb9679b15cb4",
+      "byte_size": 19311336,
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    {
+      "season": 2021,
+      "artifact_path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2021.parquet",
+      "format": "parquet",
+      "seasons": [
+        2021
+      ],
+      "relevance": "nflverse promoted PBP; canonical source for Totals V1 PBP-derived features",
+      "initial_task05c_classification": "SOURCE_REQUIRED",
+      "acquisition_status": "ACQUIRED",
+      "sha256": "333ad34378e5339d5172717cc83378e908daf02c8699416ab3e17c2ec10f78d8",
+      "byte_size": 20249925,
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    {
+      "season": 2022,
+      "artifact_path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2022.parquet",
+      "format": "parquet",
+      "seasons": [
+        2022
+      ],
+      "relevance": "nflverse promoted PBP; canonical source for Totals V1 PBP-derived features",
+      "initial_task05c_classification": "SOURCE_REQUIRED",
+      "acquisition_status": "ACQUIRED",
+      "sha256": "931121d8897779d7944e2a293e92ed8799c8e5cceef84096ac42339003fedc09",
+      "byte_size": 20426548,
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    {
+      "season": 2023,
+      "artifact_path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2023.parquet",
+      "format": "parquet",
+      "seasons": [
+        2023
+      ],
+      "relevance": "nflverse promoted PBP; canonical source for Totals V1 PBP-derived features",
+      "initial_task05c_classification": "SOURCE_REQUIRED",
+      "acquisition_status": "ACQUIRED",
+      "sha256": "bd3484731408def6b0ec93225bba2bd7b2c65769ca707a2b9444d891abdc6776",
+      "byte_size": 20534088,
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    {
+      "season": 2024,
+      "artifact_path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2024.parquet",
+      "format": "parquet",
+      "seasons": [
+        2024
+      ],
+      "relevance": "nflverse promoted PBP; canonical source for Totals V1 PBP-derived features",
+      "initial_task05c_classification": "SOURCE_REQUIRED",
+      "acquisition_status": "ACQUIRED",
+      "sha256": "6d432dd4308329bfddaef633309ea119f9ca46d52cbb3c09f47172a2e8efcd01",
+      "byte_size": 20576368,
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    {
+      "artifact_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/frozen/games/games_2018_2025.parquet",
+      "format": "parquet",
+      "seasons": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "relevance": "Canonical games table: identity/block/team/roof mapping + home_score/away_score",
+      "initial_task05c_classification": "AVAILABLE_RAW",
+      "rows": 2227,
+      "columns_count": 19,
+      "sample_columns": [
+        "game_id",
+        "season",
+        "season_type",
+        "week",
+        "away_team",
+        "home_team",
+        "away_score",
+        "home_score",
+        "neutral_site_source",
+        "venue_id"
+      ],
+      "sha256": "90783bfe6a1a014d9a61d24dce94d6da91cffafc684ee4fa1437eb3e8327a908",
+      "byte_size": 43513
+    },
+    {
+      "artifact_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/raw/source_snapshots/v1/schedules_2018_2025_frozen-baseline-v1.parquet",
+      "format": "parquet",
+      "seasons": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "relevance": "Frozen schedule: rest/gameday/roof/surface; PBP context projected from this",
+      "initial_task05c_classification": "AVAILABLE_RAW",
+      "rows": 2227,
+      "columns_count": 46,
+      "sample_columns": [
+        "game_id",
+        "season",
+        "game_type",
+        "week",
+        "gameday",
+        "weekday",
+        "gametime",
+        "away_team",
+        "away_score",
+        "home_team"
+      ],
+      "sha256": "9fdfa5f3401f0ee834c986b0e61518b01c8e52ac823057f52c76abe6b29c83eb",
+      "byte_size": 127477
+    },
+    {
+      "artifact_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/frozen/team_game_stats/team_game_stats_2018_2025.parquet",
+      "format": "parquet",
+      "seasons": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "relevance": "Frozen team game stats: passing_epa/rushing_epa (audit cross-check only per contract)",
+      "initial_task05c_classification": "AVAILABLE_RAW",
+      "rows": 4454,
+      "columns_count": 12,
+      "sample_columns": [
+        "game_id",
+        "season",
+        "week",
+        "season_type",
+        "team",
+        "opponent",
+        "passing_epa",
+        "rushing_epa",
+        "passing_yards",
+        "rushing_yards"
+      ],
+      "sha256": "b63494e712f66aab280a977020ea763455835847f82e2cc7e44f40da8cc23e3c",
+      "byte_size": 102142
+    },
+    {
+      "artifact_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/frozen/qb_game_stats/qb_game_stats_2018_2025.parquet",
+      "format": "parquet",
+      "seasons": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "relevance": "Frozen QB game stats (NOT used for Totals V1 QB state; Oracle interface reused)",
+      "initial_task05c_classification": "AVAILABLE_RAW",
+      "rows": 5314,
+      "columns_count": 14,
+      "sample_columns": [
+        "game_id",
+        "season",
+        "week",
+        "season_type",
+        "team",
+        "player_id",
+        "player_name",
+        "passing_epa",
+        "passing_cpoe",
+        "attempts"
+      ],
+      "sha256": "7b34e88ba66a2ee23f6b7645d3c731731270dc64213010c22535ba1a1f52a062",
+      "byte_size": 117490
+    },
+    {
+      "artifact_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/frozen/rosters/rosters_2018_2025.parquet",
+      "format": "parquet",
+      "seasons": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "relevance": "Frozen rosters (not directly used by Totals V1; reference/potential future use)",
+      "initial_task05c_classification": "AVAILABLE_RAW",
+      "rows": 24862,
+      "columns_count": 9,
+      "sample_columns": [
+        "season",
+        "week",
+        "team",
+        "player_id",
+        "full_name",
+        "position",
+        "status",
+        "rookie_year",
+        "timestamp_quality"
+      ],
+      "sha256": "2c1c22524dbe464483485b7e9942ceaf8ab3e9daea7d894121deacbfcae3a5d6",
+      "byte_size": 196273
+    },
+    {
+      "artifact_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/frozen/depth_chart_snapshots/depth_chart_snapshots_2018_2025.parquet",
+      "format": "parquet",
+      "seasons": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "relevance": "Frozen depth chart snapshots (deferred per contract; not in Totals V1)",
+      "initial_task05c_classification": "DEFER",
+      "rows": 813157,
+      "columns_count": 11,
+      "sample_columns": [
+        "season",
+        "week",
+        "team",
+        "player_id",
+        "player_name",
+        "pos_name",
+        "pos_slot",
+        "pos_rank",
+        "source_dt",
+        "timestamp_quality"
+      ],
+      "sha256": "c455675056205e7fa3f0788a0693b8713e2d3c498efc09b63579f66d961fabdd",
+      "byte_size": 864648
+    },
+    {
+      "artifact_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/frozen/venues/venues_2018_2025.parquet",
+      "format": "parquet",
+      "seasons": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "relevance": "Frozen venues: venue metadata (not directly used; roof/surface via games or schedules)",
+      "initial_task05c_classification": "AVAILABLE_RAW",
+      "rows": 39,
+      "columns_count": 4,
+      "sample_columns": [
+        "venue_id",
+        "venue_name",
+        "roof_type",
+        "neutral_site_source"
+      ],
+      "sha256": "0acfca15c61e214a2957fbe156115b80eb27828175d59da53e722ecd14ddd180",
+      "byte_size": 2350
+    },
+    {
+      "artifact_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/derived/oracle_qb_entering_state_v2/oracle_qb_entering_state_game_sides_2018_2024_v2.parquet",
+      "format": "parquet",
+      "seasons": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "relevance": "Accepted Oracle QB entering-state v2 interface: Totals V1 QB features joined from this",
+      "initial_task05c_classification": "DERIVABLE_EXISTING",
+      "rows": 3884,
+      "columns_count": 51,
+      "sample_columns": [
+        "season",
+        "week",
+        "season_type",
+        "game_id",
+        "side",
+        "team",
+        "opponent",
+        "actual_starting_qb_name",
+        "actual_starting_qb_pfr_id",
+        "actual_starting_qb_gsis_id"
+      ],
+      "sha256": "ced25679f934ed5d11f706a704b379ef6416d8de65301871f72afb4304c97d4d",
+      "byte_size": 462686
+    },
+    {
+      "artifact_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/derived/totals_v1_features_2018_2024.parquet",
+      "format": "parquet",
+      "seasons": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "relevance": "Final Totals V1 90-feature artifact (accepted build output)",
+      "initial_task05c_classification": "DERIVABLE_EXISTING",
+      "rows": 1942,
+      "columns_count": 90,
+      "sample_columns": [
+        "away_rest_days",
+        "away_rest_days_missing",
+        "home_rest_days",
+        "home_rest_days_missing",
+        "roof_category",
+        "roof_missing",
+        "surface_category",
+        "surface_missing",
+        "away_qb_passing_epa",
+        "away_qb_passing_epa_imputed"
+      ],
+      "sha256": "d33d88cb97756e0074408ea4e859b6ae30e5ae7cfa428b3080799613c042a9f6",
+      "byte_size": 609139
+    },
+    {
+      "artifact_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/derived/totals_v1_feature_identity_2018_2024.parquet",
+      "format": "parquet",
+      "seasons": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "relevance": "Final Totals V1 7-col identity artifact (accepted build output)",
+      "initial_task05c_classification": "DERIVABLE_EXISTING",
+      "rows": 1942,
+      "columns_count": 7,
+      "sample_columns": [
+        "game_id",
+        "season",
+        "season_type",
+        "week",
+        "home_team",
+        "away_team",
+        "block_id"
+      ],
+      "sha256": "67db18cd117fa2c789153d322807ae987159ea321e3c98ff56e077bbe1e8bf61",
+      "byte_size": 15465
+    },
+    {
+      "artifact_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/derived/totals_v1_modeling_table_2018_2024.parquet",
+      "format": "parquet",
+      "seasons": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "relevance": "Final Totals V1 modeling table (90 features + 7 identity + home_score + away_score + target_total_points)",
+      "initial_task05c_classification": "DERIVABLE_EXISTING",
+      "rows": 1942,
+      "columns_count": 100,
+      "sample_columns": [
+        "game_id",
+        "season",
+        "season_type",
+        "week",
+        "home_team",
+        "away_team",
+        "block_id",
+        "away_rest_days",
+        "away_rest_days_missing",
+        "home_rest_days"
+      ],
+      "sha256": "c379e6a933054248f8da331839e619479a95e56003c27681370114abe353a4cc",
+      "byte_size": 630462
+    },
+    {
+      "artifact_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/derived/features_v1/xgboost_development_2018_2024.parquet",
+      "format": "parquet",
+      "seasons": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "relevance": "Prior Expected-Margin XGBoost development table (not Totals V1; cross-reference only)",
+      "initial_task05c_classification": "DERIVABLE_EXISTING",
+      "rows": 1942,
+      "columns_count": 313,
+      "sample_columns": [
+        "game_id",
+        "season",
+        "season_type",
+        "week",
+        "home_team",
+        "away_team",
+        "feature_as_of_utc",
+        "prediction_as_of_utc",
+        "source_available_at_utc",
+        "scheduled_start_utc"
+      ],
+      "sha256": "fb4e45d28e337617043d578cb088e366aa217984bb200efca844e13111dc10f8",
+      "byte_size": 686064
+    }
+  ]
+}

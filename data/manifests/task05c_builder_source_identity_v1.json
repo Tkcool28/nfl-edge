@@ -1,0 +1,105 @@
+{
+  "aggregate_builder_source_hash": "23abd12b7dfaf5bee364ca94c86ea819233b6b3a10342d09daa1548b6fab2ebf",
+  "file_hashes": [
+    {
+      "path": "src/nfl_edge/features/__init__.py",
+      "sha256": "8edd18a0b3a039cda5dcac2aeed7139247b3f3b5dfa090348d5d3fa7ad9f7a5b"
+    },
+    {
+      "path": "src/nfl_edge/features/__main__.py",
+      "sha256": "f6671239be2757762c2cbdd049be4995fba6ab06ee2627ce9b3377fd16bd79b0"
+    },
+    {
+      "path": "src/nfl_edge/features/availability.py",
+      "sha256": "63d92dd7da8680da3351190e472e02e33eb08121f9f27ec938406f1aec56619a"
+    },
+    {
+      "path": "src/nfl_edge/features/oracle_qb_entering_state.py",
+      "sha256": "64a48ad2832f417c129d16c0a105e1ff25bc98f3436b4be87f179bc6563f3e6d"
+    },
+    {
+      "path": "src/nfl_edge/features/oracle_qb_entering_state_v2.py",
+      "sha256": "d461c6a004f48628887fba482d6069b32a3c521352750e91c2e9a1799e25f3e3"
+    },
+    {
+      "path": "src/nfl_edge/features/pipeline.py",
+      "sha256": "9578cb36de937674f98e5c87d2cefcecf1103445499a6c0d15cccaf7ba9f4e9b"
+    },
+    {
+      "path": "src/nfl_edge/features/qb.py",
+      "sha256": "1d43bad89267c13dee247dcf76248576b1f435c51f7ae40a7fb102d2f3a9104c"
+    },
+    {
+      "path": "src/nfl_edge/features/starters.py",
+      "sha256": "370f836cfa6238070cd66274b028dac2fcf8b2f9470a2c1167e3a33dbd39c818"
+    },
+    {
+      "path": "src/nfl_edge/features/team.py",
+      "sha256": "cb6627af716cb72367d41bb35e6ea98b5d115a06d24640a3557e950c0135545d"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/__init__.py",
+      "sha256": "2b0ce81362a09f9f9579c9dc8eab3e54514b6160251643ba98ee06baed1cc8b9"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/block_state.py",
+      "sha256": "d031dee972d58e2d13b852e8fb4f059d3926bd8620f1ff7bf1401a23115ab87f"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/chronology.py",
+      "sha256": "59ae373e39590d4a0677f7caa4973849d5d5585e39d02b30672a7873b94dab8f"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/context.py",
+      "sha256": "449d3473cdba0527d453504e66bea47a9fd101f1eeb4ef22bff7756cc196ff2a"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/context_features.py",
+      "sha256": "65f2b5c3f0178adb9f672107cba32de0d8011f467b421da3a3fa832018870782"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/drive_observations.py",
+      "sha256": "395420fcfc6b80870ac276a4dfd31c82a3c9205def5a18d0a6123935fc033a1a"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/entering_state.py",
+      "sha256": "7fe9b57ab7bbcfe19e9b7c6a7010eb294e6e2a724d92edb3609c1aafe589847e"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/feature_table.py",
+      "sha256": "b967288b9f5a159a1ef3c07655f3240c0bc425d1659d354a51b918ad25de138b"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/game_observations.py",
+      "sha256": "e71a06a9abe4b4ddbca5994e7f14d02206871ca995859e1421998f1d26ae5fb1"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/manifest.py",
+      "sha256": "196fad68038c52a949652ae56d323277b6f0261f94fb1cfccd25d4568d0685c3"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/mapping.py",
+      "sha256": "974d46c22ad7f87e039b358a719249ae19ffdad6c7f9dd28ca6a4f45f0ee4dca"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/pace_observations.py",
+      "sha256": "0ef92b40198ff2215d41a99c29d209aa4bb641166a8a1a951975f46b211e1742"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/pbp_semantics.py",
+      "sha256": "dbf15ea050b2aaaa3117f2e665f1d4f2d6679c2dcfadb12b213a4c9e834a23d1"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/provenance.py",
+      "sha256": "2195e19da2319eabe1dee9c5781305c7c45894ea596e6655c59d7cc6ecdc54e4"
+    },
+    {
+      "path": "src/nfl_edge/features/totals_v1/season.py",
+      "sha256": "cf02a5a588f4e94157a5cdc874107762e693a13c14159e8686f9dc61b618069f"
+    },
+    {
+      "path": "src/nfl_edge/features/validation.py",
+      "sha256": "204efe7760364fd27f57b008657b036e1778788909beabbfa31bd0aa6f2b6b94"
+    }
+  ]
+}

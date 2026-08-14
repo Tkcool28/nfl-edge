@@ -1,0 +1,165 @@
+{
+  "label": "SHUFFLED",
+  "max_season": 2024,
+  "shuffle_pct": 1.0,
+  "feature_width": 90,
+  "feature_height": 1942,
+  "identity_width": 7,
+  "identity_height": 1942,
+  "feature_columns_match_exact90": true,
+  "identity_columns_match": true,
+  "feature_fingerprint_sha256": "db2461ff00727406361850523292f552ff3cbbf2f67760fc7a6d0f79f46a2803",
+  "identity_fingerprint_sha256": "e98d135540bca39f735bc70dec2d38b04d543883059ed2c658a5ce0bb180a4f6",
+  "feature_parquet_sha256": "d33d88cb97756e0074408ea4e859b6ae30e5ae7cfa428b3080799613c042a9f6",
+  "identity_parquet_sha256": "67db18cd117fa2c789153d322807ae987159ea321e3c98ff56e077bbe1e8bf61",
+  "feature_parquet_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/derived/phase3e_audit/run_SHUFFLED_features.parquet",
+  "identity_parquet_path": "/root/workspaces/nfl-edge-totals-feature-contract-v1/data/derived/phase3e_audit/run_SHUFFLED_identity.parquet",
+  "pbp_manifest": {
+    "2018": {
+      "season": 2018,
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2018.parquet",
+      "exists": true,
+      "byte_size": 19072097,
+      "sha256": "2e6f2dce7c7ebd46e985cabe0c17eb72b39a77f98cb4478409294f50b5820150",
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    "2019": {
+      "season": 2019,
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2019.parquet",
+      "exists": true,
+      "byte_size": 19119729,
+      "sha256": "60c3067017db2d28a78f66a79b657268be8578d9a5288e6a827efdcd7fe42540",
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    "2020": {
+      "season": 2020,
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2020.parquet",
+      "exists": true,
+      "byte_size": 19311336,
+      "sha256": "73b7dbf66fa8cb9356f58bf6b1f15a0fee197ecc10cf4983b640cb9679b15cb4",
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    "2021": {
+      "season": 2021,
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2021.parquet",
+      "exists": true,
+      "byte_size": 20249925,
+      "sha256": "333ad34378e5339d5172717cc83378e908daf02c8699416ab3e17c2ec10f78d8",
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    "2022": {
+      "season": 2022,
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2022.parquet",
+      "exists": true,
+      "byte_size": 20426548,
+      "sha256": "931121d8897779d7944e2a293e92ed8799c8e5cceef84096ac42339003fedc09",
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    "2023": {
+      "season": 2023,
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2023.parquet",
+      "exists": true,
+      "byte_size": 20534088,
+      "sha256": "bd3484731408def6b0ec93225bba2bd7b2c65769ca707a2b9444d891abdc6776",
+      "byte_ok": true,
+      "sha_ok": true
+    },
+    "2024": {
+      "season": 2024,
+      "path": "/var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1/play_by_play_2024.parquet",
+      "exists": true,
+      "byte_size": 20576368,
+      "sha256": "6d432dd4308329bfddaef633309ea119f9ca46d52cbb3c09f47172a2e8efcd01",
+      "byte_ok": true,
+      "sha_ok": true
+    }
+  },
+  "season_counts": {
+    "2018": {
+      "total": 267,
+      "reg": 256,
+      "post": 11
+    },
+    "2019": {
+      "total": 267,
+      "reg": 256,
+      "post": 11
+    },
+    "2020": {
+      "total": 269,
+      "reg": 256,
+      "post": 13
+    },
+    "2021": {
+      "total": 285,
+      "reg": 272,
+      "post": 13
+    },
+    "2022": {
+      "total": 284,
+      "reg": 271,
+      "post": 13
+    },
+    "2023": {
+      "total": 285,
+      "reg": 272,
+      "post": 13
+    },
+    "2024": {
+      "total": 285,
+      "reg": 272,
+      "post": 13
+    }
+  },
+  "total_rows": 1942,
+  "post2024_postseason_count": 13,
+  "kc_phi_present": true,
+  "season2025_rows": 0,
+  "provenance": {
+    "num_records": 151,
+    "leakage_sums": {
+      "same_game_source_rows": 0,
+      "same_block_source_rows": 0,
+      "future_block_source_rows": 0,
+      "season_2025_source_rows": 0,
+      "canonical_mapping_failures": 0
+    },
+    "all_clean": true,
+    "dropback_fallback_rows_total": 0,
+    "sample_truthfulness": [
+      {
+        "target": "2018_REG_W01",
+        "found_record": true,
+        "num_sources": 0,
+        "target_in_sources": false,
+        "all_sources_strictly_earlier": true
+      },
+      {
+        "target": "2021_REG_W02",
+        "found_record": true,
+        "num_sources": 64,
+        "target_in_sources": false,
+        "all_sources_strictly_earlier": true
+      },
+      {
+        "target": "2024_WC_W19",
+        "found_record": true,
+        "num_sources": 147,
+        "target_in_sources": false,
+        "all_sources_strictly_earlier": true
+      },
+      {
+        "target": "2024_SB_W22",
+        "found_record": true,
+        "num_sources": 150,
+        "target_in_sources": false,
+        "all_sources_strictly_earlier": true
+      }
+    ]
+  }
+}
