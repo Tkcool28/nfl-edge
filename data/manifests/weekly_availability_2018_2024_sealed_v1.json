@@ -1,0 +1,72 @@
+{
+  "artifact_kind": "sealed_weekly_availability_metadata",
+  "canonical_availability_order": [
+    "season",
+    "week",
+    "season_type"
+  ],
+  "output": {
+    "block_count": 1,
+    "max_nfl_season": 2024,
+    "min_nfl_season": 2018,
+    "path": "data/derived/features_v1/weekly_availability_2018_2024.parquet",
+    "row_count": 151,
+    "schema": {
+      "availability_quality": "String",
+      "availability_rule": "String",
+      "eligible_for_features_at_utc": "Datetime(time_unit='us', time_zone='UTC')",
+      "prediction_as_of_utc": "Datetime(time_unit='us', time_zone='UTC')",
+      "season": "Int32",
+      "season_type": "String",
+      "week": "Int32",
+      "week_completed_at_boundary_utc": "Datetime(time_unit='us', time_zone='UTC')",
+      "week_first_game_date": "Date",
+      "week_last_game_date": "Date"
+    },
+    "seasons": [
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "sha256": "6baad6c5690808d9fff3d59e305413eef9e2cb74a4e1f32c8fdb3d3e51ff9f8d"
+  },
+  "sealing_statement": "Subsequent Task05D tasks must read only data/derived/features_v1/weekly_availability_2018_2024.parquet and must not open data/derived/features_v1/weekly_availability_2018_2025.parquet.",
+  "source": {
+    "block_count": 1,
+    "path": "data/derived/features_v1/weekly_availability_2018_2025.parquet",
+    "row_count": 173,
+    "schema": {
+      "availability_quality": "String",
+      "availability_rule": "String",
+      "eligible_for_features_at_utc": "Datetime(time_unit='us', time_zone='UTC')",
+      "prediction_as_of_utc": "Datetime(time_unit='us', time_zone='UTC')",
+      "season": "Int32",
+      "season_type": "String",
+      "week": "Int32",
+      "week_completed_at_boundary_utc": "Datetime(time_unit='us', time_zone='UTC')",
+      "week_first_game_date": "Date",
+      "week_last_game_date": "Date"
+    },
+    "sha256": "5cb883da6677175ba4ade814a0c153f26812731cf78f4883568d14e88cd6bb64"
+  },
+  "validation": {
+    "duplicate_season_season_type_week_rows": 0,
+    "eligible_for_features_at_utc_null_count": 0,
+    "expected_schema_exact": true,
+    "expected_seasons": [
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "filter": "NFL season >= 2018 and NFL season <= 2024; no calendar-date filtering applied",
+    "prediction_as_of_utc_null_count": 0
+  }
+}
