@@ -1,0 +1,396 @@
+# ============================================================================
+# MARKET EDGE VALIDATION V1 — OUTCOME-BLIND PREREGISTRATION CONFIG (FINAL)
+# ============================================================================
+# Task 05E-D3C. FINAL PREREGISTRATION FREEZE. Outcome-blind; frozen BEFORE any
+# outcome inspection. This is the end of methodology design for the primary
+# study; after this commit the primary discovery methodology MUST NOT change in
+# response to historical win/loss/ROI/cover/total results.
+# Do NOT open outcomes. Do NOT alter this file's methodology once pinned.
+# Every analysis downstream MUST load this file and reject a changed
+# fingerprint (see fingerprint.sha256_self) — software must FAIL CLOSED if this
+# frozen document changes unexpectedly.
+#
+# Ownership / lineage
+#   repo      : /root/nfl-edge   (production HEAD b8055348110ceb96933298e01b74d6b45afad89d)
+#   worktree  : /root/workspaces/nfl-edge-task-05e-edge-prereg-v1
+#   branch    : feat/task-05e-edge-preregistration-v1
+#   task      : 05E-D3C  (finalize / freeze methodology only)
+# ============================================================================
+
+version: "1"
+purpose: "Preregister the FINAL methodology to test whether model-vs-market disagreement contains useful betting edge across seven frozen hypothesis families."
+preregistration_only: true
+
+# ---------------------------------------------------------------------------
+fingerprint:
+  base_head: "b8055348110ceb96933298e01b74d6b45afad89d"
+  schema_version: "1"
+  sha256_self: "e0cff2756488aeda7f2f1ec3f5d322c48b507f482947cc07300dfb240bee2137"
+  data_canonical:
+    games_table: "data/market_data/canonical/canonical_games.parquet"
+    book_market_table: "data/market_data/canonical/canonical_book_market.parquet"
+  canonical_n_games: 1408
+
+seasons:                                   # NFL seasons. NEVER calendar years.
+  observation_universe: [2020, 2021, 2022, 2023, 2024]
+  discovery: [2020, 2021, 2022]
+  confirmation: [2023, 2024]
+  sealed: [2025]                           # FINAL PRODUCT HOLDOUT, hard boundary
+  sealed_policy: "HARD_REJECT season==2025 at every entry point; never used for discovery/confirmation/edge-family-selection/top-card-selector design"
+
+# ---------------------------------------------------------------------------
+# FROZEN MARKET ARCHITECTURE
+books:
+  universe: [draftkings, fanduel, pinnacle, betonlineag, williamhill_us,
+             betmgm, betrivers, bovada, lowvig, betus]
+  actionable_primary: [draftkings, fanduel]   # auto-fed production books
+  benchmark_primary: pinnacle                 # reference / benchmark, never actionable
+  benchmark_secondary: betonlineag            # secondary historical audit only (for robustness)
+  secondary_audit_only: true                  # other books MUST NOT define the primary product signal
+  manual_offer_supported: true                # product may accept manually entered offers; edge evaluator evaluates ANY actionable offer
+markets: [h2h, spreads, totals]
+
+# ---------------------------------------------------------------------------
+# A) VIG REMOVAL — deterministic two-way proportional normalization on ML only.
+vig_removal:
+  method: proportional_normalization
+  scope: h2h_only
+  formula: |
+    q_home = 1 / decimal(american->decimal(price_home))
+    q_away = 1 / decimal(american->decimal(price_away))
+    p_home = q_home / (q_home + q_away)
+    p_away = q_away / (q_home + q_away)
+  note: "No alternative no-vig method may be chosen after outcome inspection."
+
+# ---------------------------------------------------------------------------
+# B) ACTIONABLE MARKET CONSTRUCTION (DK/FD auto-populated; manual offers allowed)
+actionable_price:
+  rule: "best_price_between_primary_actionable_books"
+  books: [draftkings, fanduel]
+  moneyline: >
+    For the SELECTED side take the actionable book (DK or FD) with the BETTER
+    American price (larger payoff) for that side. If one exists use it; if
+    neither exists the candidate is NOT actionable.
+  point_markets: |
+    SPREAD: normalize to selected side; choose the NUMERICALLY GREATEST selected-side spread
+            (e.g. +3.5 > +3 ; -2.5 > -3). If identical line choose the better price.
+            If still identical use a deterministic fixed book tie-break.
+    TOTAL OVER : take the LOWEST total line first; if identical choose the better price.
+    TOTAL UNDER: take the HIGHEST total line first; if identical choose the better price.
+    Do NOT optimize line-vs-juice trade using outcomes.
+  if_single_actionable_book_available: "the available one is usable"
+  if_no_actionable_available: "candidate NOT actionable (excluded from EV/returns)"
+  pinnacle_never_substituted_as_actionable: true
+
+# ---------------------------------------------------------------------------
+# C) BENCHMARK MARKET construction — two-layer, per book preserved.
+benchmark:
+  primary_disagreement_target: pinnacle
+  robustness_consensus_targets: [pinnacle, betonlineag]
+  per_book_preserved: true
+  cases:
+    - name: pinnacle_only
+      primary: "model vs pinnacle (no-vig / line)"
+      robustness: "model vs pinnacle"
+    - name: betonline_only
+      primary: "excluded (Pinnacle missing; never silently substitute with BO)"
+      robustness: "model vs betonline (flagged secondary-audit-only consensus)"
+    - name: both_exist
+      primary: "model vs Pinnacle"
+      robustness: "model vs unweighted mean of (Pinnacle, BetOnline) no-vig / line"
+    - name: neither
+      primary: "no benchmark -> disagreement not defined for that game-market (excluded)"
+      robustness: "not defined"
+
+# ---------------------------------------------------------------------------
+# K) split
+split:
+  discovery: [2020, 2021, 2022]
+  confirmation: [2023, 2024]
+  sealed: [2025]
+  confirmation_method_identical: true
+  note: "2025 sealed; never used as dev/eval. Primary discovery methodology must not change after this freeze."
+
+# ---------------------------------------------------------------------------
+# D) MONEYLINE EDGE — four frozen model views, tested SEPARATELY; no stacker.
+moneyline:
+  models:
+    - oracle_qb_elo     # view A
+    - xgboost            # view B
+    - avg                # view C: untrained 50/50 average AVG=(QB_ELO+XGB)/2
+  corroborated: true    # view D: QB-Elo and XGB independently indicate the SAME
+                        #         side is underpriced versus Pinnacle
+  no_stacker: true      # do NOT fit a stacker; complementarity evaluated from results
+                        # and may motivate a SEPARATE future stacking study only.
+  positive_edge_definition:
+    edge_side: "model_probability_side - pinnacle_no_vig_probability_side"
+    positive_edge_candidate: "the single side with edge > 0"
+    no_05_requirement: true     # do NOT require model_probability > 0.50; value underdogs eligible
+  avg_definition: |
+    p_avg = (p_qbelo + p_xgb) / 2
+    avg_edge_pp = (p_avg_selected_side - pinnacle_selected_side) * 100
+  disaggregation_separate:
+    MODEL_DISAGREEMENT: "(model prob - market prob) * 100, per positive-edge side"
+    MODEL_IMPLIED_EV: "p_model * actionable_decimal_price - 1   (NOT realized ROI)"
+  disagreement:
+    definition: probability_points
+    formula: |
+      POSITIVE_EDGE_CANDIDATE = side where (model_probability_side - pinnacle_no_vig_probability_side) > 0
+      disagreement_pp = ( model_probability[positive_edge_side] - pinnacle_no_vig[positive_edge_side] ) * 100
+  actionable_ev: |
+    MODEL_IMPLIED_EV = p_model[positive_edge_side] * actionable_decimal_price - 1
+      at BEST actionable DK/FD price. Disagreement (model vs market belief) is NOT
+      the same as actionable EV (whether the available price is favorable).
+      MODEL_IMPLIED_EV is NOT realized ROI.
+
+# ---------------------------------------------------------------------------
+# E) SPREAD EDGE DEFINITION (orientation-explicit; Expected-Margin)
+spread:
+  model: "expected_margin expected_home_margin"
+  model_retuned_on_market: false
+  define: |
+    L = canonical home spread line (e.g. -3.5 means home -3.5).
+    signed  = expected_home_margin + L
+    home_candidate_edge = expected_home_margin + L
+    away_candidate_edge = - (expected_home_margin + L)
+  selected_side: |
+    if expected_home_margin + L  > 0 -> HOME
+    if < 0 -> AWAY
+    if ~0 -> no spread candidate
+  disagreement_points: "|expected_home_margin + L| (absolute selected-side advantage; orientation-safe)"
+  returns: use actual selected actionable DK/FD spread and price under frozen line-shopping rule
+
+# ---------------------------------------------------------------------------
+# F) TOTAL EDGE DEFINITION (Ridge Totals V1 R4, alpha=100; frozen, not retuned)
+total:
+  model: "ridge_totals_v1_r4 (candidate_id R4, alpha=100)"
+  model_retuned_on_market: false
+  define: |
+    P = R4 predicted total
+    O = canonical market total line
+    over_edge  = P - O
+    under_edge = O - P
+  selected_side: "P > O -> OVER; P < O -> UNDER; P == O -> no candidate"
+  disagreement_points: "|P - O|"
+  returns: use actual actionable DK/FD total + price under frozen line-shopping rule
+  expected_margin_total: "may remain secondary context only"
+
+# ---------------------------------------------------------------------------
+# I) candidate-side selection
+candidate_side_selection:
+  moneyline: "single side with positive edge (model_probability_side - pinnacle_no_vig_probability_side) > 0; NO model>0.50 requirement"
+  spread: "HOME if expected_home_margin + L > 0 else AWAY"
+  total: "OVER if P > O, UNDER if P < O"
+  frequency_based: false
+
+# ---------------------------------------------------------------------------
+# J) returns price representation
+returns:
+  rate_unit: "selected-side american -> decimal at T-60 from the ACTUAL actionable book"
+  synthetic_consensus_price_used: false
+  unit_stake: 1.0     # edge validation uses FLAT 1-unit staking
+  staking_separated_from_edge_selection: true  # staking strategy (Kelly etc.) is a SEPARATE future module
+
+# ---------------------------------------------------------------------------
+# L) EDGE BUCKETS (frozen coarse human-readable ranges; NOT outcome-optimized;
+#    no observation dropped above an arbitrary upper cap)
+buckets:
+  moneyline_disagreement_pp:                      # FINAL 5 primary bins
+    labels: ["0-2","2-4","4-8","8-12","12+"]
+    edges_pp: [0,2,4,8,12,1000]                  # half-open [lo,hi); last is open-ended
+  moneyline_disagreement_pp_bins_independent_for: [QB_ELO, XGB, AVG]
+  corroborated_bins: "corroborated candidates analyzed using the relevant disagreement measure(s) without inventing outcome-optimized thresholds"
+  spread_disagreement_pts:
+    labels: ["0-1","1-2","2-3","3-4","4+"]
+    edges_pts: [0,1,2,3,4,1000]
+  total_disagreement_pts:
+    labels: ["0-1","1-2","2-3","3-4","4+"]
+    edges_pts: [0,1,2,3,4,1000]
+
+# ---------------------------------------------------------------------------
+# MONEYLINE NORMAL +EV DOG-VALUE HYPOTHESIS (frozen ONE broad human-readable zone)
+moneyline_dog_value_zone:
+  frozen_hypothesis: true
+  zone: |
+    model_win_probability 40% <= p_model < 50%
+    AND actual best DK/FD American price +111 through +200 inclusive
+    AND model edge versus Pinnacle positive
+  evaluate_for: [QB_ELO, XGB, AVG, CORROBORATED]
+  note: |
+    Not a guarantee the weekly +EV card must be a dog. Predefined because the
+    outcome-blind census showed adequate sample. Do NOT carve into arbitrary
+    narrow price/probability windows to chase results.
+  long_dogs: |
+    +201 and higher = separately reported higher-risk population; may inform
+    BIG OPPORTUNITY research only. NOT folded into the normal +EV dog hypothesis.
+
+# ---------------------------------------------------------------------------
+# price_band (reporting taxonomy; frozen now)
+price_band:
+  bands:
+    favorite:          { american_max: -201 }
+    short_priced_dog:  { american_min: -200, american_max: -111 }
+    moderate_dog:      { american_min: -110, american_max: +124 }
+    longer_dog:        { american_min: +125 }
+  band_on: "selected-side actionable american price"
+  frozen_now: true
+
+# ---------------------------------------------------------------------------
+# M) minimum-N (evidence guards; frozen BEFORE outcomes)
+minimum_N:
+  report_bucket_min_pool: 25
+  normal_ev_min: { discovery: 50, confirmation: 50, per_season_min: 5 }
+  big_opportunity_min: { discovery: 50, confirmation: 40, per_season_min: 10 }
+  limited_sample_mark: "bucket/family below its min is reported but marked LIMITED_SAMPLE"
+  selected_before_results: true
+
+# ---------------------------------------------------------------------------
+# O) bootstrap (dependence-aware; PRIMARY uncertainty)
+bootstrap:
+  resampling_unit: "NFL season-week block (block key = season + canonical NFL week/postseason block identity); all candidates from the same season-week stay together; sample blocks with replacement within the relevant analysis pool"
+  iid_game_as_sole_estimate: false
+  replicates: 5000
+  confidence_interval: "95% percentile interval (primary interval)"
+  metric: "actual-price flat-stake ROI (primary); hit rate secondary where relevant"
+  per_season_report: true
+  pools: "discovery separate, confirmation separate, pooled both"
+
+# ---------------------------------------------------------------------------
+# CONCENTRATION — preregistered DIAGNOSTICS, no arbitrary post-hoc cutoffs
+concentration_checks:
+  diagnostics_only: true
+  frozen_for_disqualification: false        # do NOT freeze arbitrary numeric disqualifier cutoffs now
+  no_post_hoc_exclusions: true             # a deterministic disqualifier, if ever needed, must be defined BEFORE confirmation is opened
+  diagnostics: |
+    - largest season share
+    - largest selected-team share where applicable
+    - largest selected-QB share where appropriate
+    - actionable DK vs FD source share
+    - price-band concentration
+    - observable actionable/benchmark book source share
+    - single-sportsbook dependence on results
+  compare: "a result obviously dominated by one identity may not receive the strongest product label, but no post-hoc numerical cutoff may be invented after outcomes"
+
+# ---------------------------------------------------------------------------
+# EVIDENCE LABELS — three frozen evidence gates (§16)
+evidence_labels:
+  STRONG_VALIDATION:
+    requires_all:
+      - positive actual-price ROI in DISCOVERY
+      - positive actual-price ROI in CONFIRMATION
+      - hit rate exceeds actual-price break-even in BOTH pools
+      - pooled week-block 95% ROI lower bound > 0
+      - no catastrophic season instability
+      - sufficient N under frozen minimum rules
+  SUPPORTED_USABLE:
+    requires_all:
+      - same favorable direction in discovery and confirmation
+      - positive pooled actual-price ROI
+      - pooled hit rate exceeds pooled actual-price break-even
+      - no obvious single-season dependence
+      - sufficient N
+      - uncertainty may still include zero (modest real edges may not clear a 95% lower-bound gate with limited NFL sample)
+  FAILED_TO_VALIDATE:
+    if_any:
+      - direction reverses materially in confirmation
+      - pooled performance fails break-even
+      - strong season instability dominates
+      - other preregistered core checks fail
+    note: "Do not promote a failed bucket because it has one attractive discovery sub-period."
+
+# ---------------------------------------------------------------------------
+# NORMAL +EV QUALIFICATION CRITERIA (product lane)
+normal_plus_ev_criteria:
+  not_highest_roi_only: true
+  not_requiring_underdog: true
+  requires:
+    - "bucket N >= normal_ev_min in discovery AND confirmation"
+    - "validated positive edge"
+    - "realistic actionable price"
+    - "repeatability"
+    - "manageable variance"
+    - "casual-user usability"
+    - "evidence label per evidence_labels (STRONG_VALIDATION or SUPPORTED_USABLE)"
+  note: "95% statistical significance is NOT the only useful-edge gate. The final weekly +EV ranking rule is NOT optimized here."
+
+# ---------------------------------------------------------------------------
+# BIG OPPORTUNITY — separate conditional section, higher evidence standard
+big_opportunity_candidate:
+  temp_label: "BIG_OPPORTUNITY_CANDIDATE"
+  higher_evidence_standard: true
+  conditional_section: true         # not required weekly
+  no_65_pct_hit_threshold: true     # never freeze a 65% hit-rate threshold; never move a bucket boundary to hit a desired rate
+  appears_only_if_all:
+    - "bucket N >= big_opportunity_min in discovery AND confirmation"
+    - "positive discovery performance"
+    - "positive unchanged confirmation performance"
+    - "actual-price results above break-even"
+    - "meaningful sample"
+    - "dependence-aware support"
+    - "acceptable consistency/concentration"
+    - "evidence not obviously caused by stale/outlier quotes"
+    - "larger disagreement signal does not collapse in confirmation"
+  if_not_qualified: "NO_BIG_OPPORTUNITY_SIGNAL_YET  (valid scientific result)"
+
+# ---------------------------------------------------------------------------
+# WEEKLY TOP-CARD PRODUCT ARCHITECTURE (frozen; ranking formulas NOT optimized here)
+weekly_top_cards:
+  counts: "exactly ONE HIT RATE, ONE BALANCED, ONE +EV weekly top play, above the board"
+  defined_by_task_this_study: false
+  ranking_formulas_frozen_later: |
+    A separate task will freeze deterministic weekly ranking logic:
+      HIT RATE : reliability / estimated win probability prioritized
+      BALANCED : confidence AND price/value jointly prioritized
+      +EV      : validated expected-value opportunity prioritized with reasonable variance/product usability
+  this_study_validates: "edge families only; does NOT optimize the final weekly top-card ranking formula"
+  all_game_board: "every game shows ML / SPREAD / TOTAL with relevant model opinions below the three headline cards; a game need not be a top-3 card to appear"
+  2025_role: "untouched end-to-end historical simulation of the eventual weekly top cards, only AFTER selectors are frozen; NOT used while designing selectors"
+
+# ---------------------------------------------------------------------------
+# TRIAL ACCOUNTING / ANTI-OVERFITTING
+hypothesis_families:                                 # §13 — FROZEN, exactly these seven
+  - ML_QBELO_DISAGREEMENT
+  - ML_XGB_DISAGREEMENT
+  - ML_AVG_DISAGREEMENT
+  - ML_CORROBORATED_DISAGREEMENT
+  - ML_DOG_VALUE_ZONE
+  - SPREAD_DISAGREEMENT
+  - TOTAL_R4_DISAGREEMENT
+exploratory_post_discovery_label: >
+  Any new substantive hypothesis family added after discovery outcomes are
+  inspected MUST be labeled EXPLORATORY_POST_DISCOVERY and CANNOT be treated as
+  confirmation-validated using the same 2023-24 pool.
+trial_accounting:
+  locked_before_confirmation: true   # candidate findings promoted to confirmation LOCKED before confirmation outcomes opened
+  no_change_between_discovery_and_confirmation: true  # no model/side/bucket/price-zone/formula changes
+  limited_promoted_set: "small, understandable set of frozen families"
+
+# ---------------------------------------------------------------------------
+# MARKET FRESHNESS / DISPERSION — sanity diagnostics ONLY, not production signals
+market_freshness:
+  diagnostics_only: true
+  is_production_signal: false
+  no_freshness_filter_frozen: true
+  no_dispersion_grid: false          # DK/FD/Pinnacle dispersion is NOT a new optimization grid
+  purpose: "detect obvious outlier/stale-market situations when interpreting extreme model disagreements"
+
+anti_threshold_fishing:
+  config_locked_by_sha256: true
+  frozen_before_outcomes: true
+  no_quantile_optimized_buckets: true
+  confirmation_method_identical: true
+  inspection_rule: "no outcome file (scores/winner/ROI/ATS/totals result) opened while authoring this config"
+
+architecture: "football model -> independent estimate -> vs market data ->
+               disagreement -> edge / recommendation layer -> weekly top-card selector (future)"
+project_objectives:
+  normal_plus_ev: >
+    Meaningful value without extreme risk; usable regularly off a weekly slot.
+    Not hard-coded 'must be an underdog'. Balances validated positive EV,
+    realistic actionable price, repeatability, manageable variance, casual
+    usability. Ranking rule frozen in a separate task, not here.
+  big_opportunity_signal: >
+    Separate conditional app section; appears only when a validated larger-
+    disagreement bucket is present; may appear weekly/occasionally/never.
+    Higher evidence standard than normal +EV. Temporary product label stays
+    BIG_OPPORTUNITY_CANDIDATE (name not final).
