@@ -13,6 +13,7 @@ from nfl_edge.market_data.manifest import (
     BOOKS_BENCHMARK,
     BOOKS_OTHER,
     BOOKS_SECONDARY,
+    EXPECTED_PLAN_SHA256,
     MARKETS,
     SCHEDULE_SOURCE_PATH,
     build_schedule_source_metadata,
@@ -67,6 +68,8 @@ def test_manifest_dict_is_machine_readable_and_frozen():
     assert list(ALLOWED_BOOKS) == m["books"]["allowed_books"]
     assert list(MARKETS) == m["markets"]
     assert m["secret"]["environment_variable"] == "ODDS_API_KEY"
+    assert m["request_plan"]["expected_sha256"] == EXPECTED_PLAN_SHA256
+    assert m["request_plan"]["expected_rows"] == 575
 
 
 def test_generated_manifest_artifacts_contain_no_secret_material():

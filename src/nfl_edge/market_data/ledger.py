@@ -32,6 +32,11 @@ import polars as pl
 
 from .manifest import LEDGER_PATH, RESPONSE_COST_HEADER
 
+# Attempt categories (resume must distinguish these exactly).
+CATEGORY_VERIFIED_SUCCESS = "VERIFIED_SUCCESS"
+CATEGORY_PAID_REJECTED = "PAID_REJECTED"
+CATEGORY_REQUEST_FAILED = "REQUEST_FAILED"
+
 LEDGER_SCHEMA: dict[str, pl.DataType] = {
     "request_plan_id": pl.Utf8,
     "season": pl.Int32,
@@ -53,6 +58,9 @@ LEDGER_SCHEMA: dict[str, pl.DataType] = {
     "raw_payload_path": pl.Utf8,
     "request_url_redacted": pl.Utf8,
     "success": pl.Boolean,
+    "attempt_category": pl.Utf8,
+    "validation_status": pl.Utf8,
+    "failure_reason": pl.Utf8,
     "error_class": pl.Utf8,
     "error_message": pl.Utf8,
 }
@@ -85,6 +93,9 @@ class LedgerEntry:
     raw_payload_path: str | None
     request_url_redacted: str
     success: bool
+    attempt_category: str
+    validation_status: str | None
+    failure_reason: str | None
     error_class: str | None
     error_message: str | None
 
@@ -110,6 +121,9 @@ class LedgerEntry:
             "raw_payload_path": self.raw_payload_path,
             "request_url_redacted": self.request_url_redacted,
             "success": self.success,
+            "attempt_category": self.attempt_category,
+            "validation_status": self.validation_status,
+            "failure_reason": self.failure_reason,
             "error_class": self.error_class,
             "error_message": self.error_message,
         }
@@ -222,15 +236,18 @@ def is_request_complete(
 ) -> bool:
     """True iff a *verified* successful raw snapshot exists for the request.
 
-    Requires all of: a ledger row with ``success``; a ``raw_payload_path``;
-    the raw file exists on disk; and the on-disk SHA-256 equals the ledger's
-    recorded ``response_content_sha256``.
+    Requires all of: a ledger row with ``attempt_category == VERIFIED_SUCCESS``
+    (and ``success`` True); a ``raw_payload_path``; the raw file exists on
+    disk; and the on-disk SHA-256 equals the ledger's recorded
+    ``response_content_sha256``.
     """
     ledger_path = Path(ledger_path)
     if not ledger_path.exists() or ledger_path.stat().st_size == 0:
         return False
     matching = load_ledger(ledger_path).filter(
-        (pl.col("request_plan_id") == request_plan_id) & (pl.col("success") == True)  # noqa: E712
+        (pl.col("request_plan_id") == request_plan_id)
+        & (pl.col("attempt_category") == CATEGORY_VERIFIED_SUCCESS)
+        & (pl.col("success") == True)  # noqa: E712
     )
     if matching.height == 0:
         return False
@@ -256,6 +273,52 @@ def completed_request_ids(
         if is_request_complete(rid, ledger_path=ledger_path, raw_root=raw_root):
             ids.add(rid)
     return ids
+
+
+def classify_request(
+    request_plan_id: str,
+    *,
+    ledger_path: str | Path = LEDGER_PATH,
+    raw_root: str | Path,
+) -> str:
+    """Classify a request id for resume into one of four states.
+
+    Returns one of:
+
+    * ``VERIFIED_SUCCESS`` — a valid paid snapshot is persisted and verified
+      (skip on resume).
+    * ``PAID_REJECTED`` — a paid 2xx response was received and persisted but
+      failed validation; MUST NOT be re-queried automatically (operator
+      remediation required).
+    * ``REQUEST_FAILED`` — the request failed before any paid snapshot was
+      accepted (network / non-2xx); stop, no automatic retry.
+    * ``ELIGIBLE`` — no prior attempt; may be issued.
+
+    Precedence: ``PAID_REJECTED`` > ``REQUEST_FAILED`` > ``VERIFIED_SUCCESS``,
+    so a rejected paid response can never be silently repurchased.
+    """
+    ledger_path = Path(ledger_path)
+    if not ledger_path.exists() or ledger_path.stat().st_size == 0:
+        return "ELIGIBLE"
+    frame = load_ledger(ledger_path).filter(
+        pl.col("request_plan_id") == request_plan_id
+    )
+    if frame.height == 0:
+        return "ELIGIBLE"
+    cats = set(frame.get_column("attempt_category").to_list())
+    if CATEGORY_PAID_REJECTED in cats:
+        return CATEGORY_PAID_REJECTED
+    if CATEGORY_REQUEST_FAILED in cats:
+        return CATEGORY_REQUEST_FAILED
+    if CATEGORY_VERIFIED_SUCCESS in cats:
+        return (
+            CATEGORY_VERIFIED_SUCCESS
+            if is_request_complete(
+                request_plan_id, ledger_path=ledger_path, raw_root=raw_root
+            )
+            else CATEGORY_REQUEST_FAILED
+        )
+    return "ELIGIBLE"
 
 
 def ensure_secret_safe_text(text: str, *, secrets: Sequence[str] = ()) -> None:

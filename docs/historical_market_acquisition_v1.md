@@ -132,3 +132,41 @@ hash, redacted URL). Normalization later never mutates raw.
 | Plan SHA-256 + meta | `data/manifests/historical_market_request_plan_v1.json` |
 | Raw payloads (future) | `data/market_data/raw/{season}/{request_plan_id}.json` |
 | Ledger (future) | `data/market_data/ledger/historical_acquisition_ledger_v1.parquet` |
+
+## 10. Operator contract — where the real pull may run
+
+**Do NOT launch the 17,250-credit acquisition from a disposable worktree.**
+The real `--execute` pull must be run only from the intended durable
+production checkout **after this feature branch has been reviewed, merged,
+and synchronized into it**. A disposable worktree is not a durable home for
+paid raw payloads or the resume ledger.
+
+* Raw historical payloads and the acquisition ledger must live in the durable
+  canonical repo/data location intended for later normalization
+  (`data/market_data/raw/...`, `data/market_data/ledger/...`), not in a
+  throwaway checkout that could be removed.
+* The 17,250-credit run is **irreversible spend**; the operator must confirm
+  the checkout is the production checkout before `--execute`.
+
+## 11. Live-run safety (pre-pull remediation)
+
+Before `--execute` issues any network call it now, in order:
+
+1. **Validates the runtime plan contract** (`run_live_acquisition`) — rows
+   575, seasons 2020–2024, per-season 107/111/116/120/121, unique
+   `request_plan_id`, 1,408 games with no duplicates, no 2025, bookmaker
+   allowlist == frozen 10, markets `h2h,spreads,totals`, credit projection
+   17,250, and the request-plan SHA-256 ==
+   `1591542e16cfeaa7eeef6d6e04a87db00c67ec8b988b1559c6645b9a06d20e4a`.
+   Any violation → stop before network.
+2. **Acquires an exclusive fail-fast lock** — a second concurrent `--execute`
+   worker is blocked before any API call.
+3. **Classifies every request id** against the ledger: `VERIFIED_SUCCESS`
+   (skip), `PAID_REJECTED` (stop, operator remediation required, never
+   re-query), `REQUEST_FAILED` (stop, no automatic retry), else eligible.
+4. **Enforces the credit ceiling** — projected max = remaining eligible × 30,
+   capped at 17,250, reported before executing.
+
+Every paid 2xx response is preserved immutably and ledgered **before** any
+post-response validation, so a paid-but-invalid response is never lost and
+never repurchased.

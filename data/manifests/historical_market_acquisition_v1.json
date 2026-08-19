@@ -95,6 +95,11 @@
     "lock_dir": "data/market_data/lock",
     "root": "data/market_data/raw"
   },
+  "request_plan": {
+    "expected_rows": 575,
+    "expected_sha256": "1591542e16cfeaa7eeef6d6e04a87db00c67ec8b988b1559c6645b9a06d20e4a",
+    "path": "data/manifests/historical_market_request_plan_v1.parquet"
+  },
   "schedule_source": {
     "kickoff_columns": [
       "gameday",

@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import polars as pl
@@ -20,6 +20,7 @@ from .kickoffs import Cluster, ClusterError, build_clusters, load_kickoff_frame
 from .manifest import (
     ALLOWED_BOOKS,
     EXPECTED_CLUSTERS_BY_SEASON,
+    EXPECTED_PLAN_SHA256,
     EXPECTED_TOTAL_CLUSTERS,
     EXPECTED_TOTAL_GAMES,
     MANIFEST_REQUEST_PLAN_PATH,
@@ -27,6 +28,10 @@ from .manifest import (
     SCHEDULE_SOURCE_PATH,
     write_manifest,
 )
+
+
+class PlanContractError(RuntimeError):
+    """Raised when the loaded plan violates the frozen acquisition contract."""
 
 PLAN_SCHEMA: dict[str, pl.DataType] = {
     "request_plan_id": pl.Utf8,
@@ -157,8 +162,7 @@ def write_request_plan(
             "path": SCHEDULE_SOURCE_PATH,
             "sha256": schedule_sha256,
         },
-        "generated_at_utc": __import__("datetime")
-        .datetime.now(__import__("datetime").timezone.utc)
+        "generated_at_utc": datetime.now(timezone.utc)
         .isoformat(timespec="seconds")
         .replace("+00:00", "Z"),
         "credits_expected": int(plan.height * 30),
@@ -166,3 +170,87 @@ def write_request_plan(
     }
     json_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
     return digest
+
+
+def _plan_games(plan: pl.DataFrame) -> list[str]:
+    games: list[str] = []
+    for cell in plan.get_column("target_game_ids").to_list():
+        games.extend(g for g in str(cell).split(",") if g)
+    return games
+
+
+def validate_plan_contract(
+    plan: pl.DataFrame,
+    plan_path: str | Path | None = None,
+) -> None:
+    """Fail closed on any runtime plan-contract violation (before network).
+
+    Validates the loaded request plan against the frozen contract:
+
+    * rows == 575
+    * seasons exactly {2020..2024}; per-season counts 107/111/116/120/121
+    * request_plan_id unique
+    * 1,408 game assignments, no duplicates, no 2025
+    * bookmaker allowlist exactly the frozen 10; markets h2h,spreads,totals
+    * expected credit projection == 17,250
+    * request-plan SHA-256 matches the frozen expected hash (when a path is
+      given)
+
+    Raises :class:`PlanContractError` listing every violation. The live
+    acquisition wrapper calls this BEFORE the first network call.
+    """
+    errors: list[str] = []
+
+    if plan.height != EXPECTED_TOTAL_CLUSTERS:
+        errors.append(f"rows {plan.height} != {EXPECTED_TOTAL_CLUSTERS}")
+
+    seasons = sorted(set(plan.get_column("season").to_list()))
+    if seasons != [2020, 2021, 2022, 2023, 2024]:
+        errors.append(f"seasons {seasons} != [2020..2024]")
+
+    if 2025 in seasons:
+        errors.append("plan contains 2025 rows (sealed holdout leak)")
+
+    per_season = {
+        int(r["season"]): int(r["n"])
+        for r in plan.group_by("season").agg(pl.len().alias("n")).to_dicts()
+    }
+    if per_season != EXPECTED_CLUSTERS_BY_SEASON:
+        errors.append(f"per-season counts {per_season} != {EXPECTED_CLUSTERS_BY_SEASON}")
+
+    if plan["request_plan_id"].n_unique() != plan.height:
+        errors.append("duplicate request_plan_id")
+
+    games = _plan_games(plan)
+    if len(games) != EXPECTED_TOTAL_GAMES:
+        errors.append(f"game assignments {len(games)} != {EXPECTED_TOTAL_GAMES}")
+    if len(games) != len(set(games)):
+        errors.append("duplicate game assignments")
+
+    books = plan.get_column("requested_bookmaker_keys").unique().to_list()
+    if len(books) != 1 or books[0].split(",") != list(ALLOWED_BOOKS):
+        errors.append("bookmaker allowlist != frozen 10")
+    markets = plan.get_column("requested_markets").unique().to_list()
+    if len(markets) != 1 or markets[0].split(",") != list(MARKETS):
+        errors.append("markets != h2h,spreads,totals")
+
+    projected_credits = int(plan["expected_credits"].sum())
+    if projected_credits != EXPECTED_TOTAL_CLUSTERS * 30:
+        errors.append(f"projected credits {projected_credits} != 17250")
+
+    if plan_path is not None:
+        plan_path = Path(plan_path)
+        if not plan_path.exists():
+            errors.append(f"plan file missing at {plan_path}")
+        else:
+            actual = hashlib.sha256(plan_path.read_bytes()).hexdigest()
+            if actual != EXPECTED_PLAN_SHA256:
+                errors.append(
+                    f"plan sha256 {actual[:16]}... != frozen {EXPECTED_PLAN_SHA256[:16]}..."
+                )
+
+    if errors:
+        raise PlanContractError(
+            "request-plan contract violated; stopping before any network "
+            "call: " + "; ".join(errors)
+        )

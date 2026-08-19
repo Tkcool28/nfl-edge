@@ -7,10 +7,14 @@ from pathlib import Path
 import pytest
 
 from nfl_edge.market_data.ledger import (
+    CATEGORY_PAID_REJECTED,
+    CATEGORY_REQUEST_FAILED,
+    CATEGORY_VERIFIED_SUCCESS,
     LEDGER_SCHEMA,
     LedgerEntry,
     _utc_now_iso,
     append_ledger_entry,
+    classify_request,
     completed_request_ids,
     is_request_complete,
     sha256_of_file,
@@ -18,7 +22,16 @@ from nfl_edge.market_data.ledger import (
 )
 
 
-def _entry(*, request_plan_id="md_2020_001", sha=None, raw="2020/md_2020_001.json", success=True):
+def _entry(
+    *,
+    request_plan_id="md_2020_001",
+    sha=None,
+    raw="2020/md_2020_001.json",
+    success=True,
+    category=CATEGORY_VERIFIED_SUCCESS,
+    validation_status="PASS",
+    failure_reason=None,
+):
     return LedgerEntry(
         request_plan_id=request_plan_id,
         season=2020,
@@ -40,6 +53,9 @@ def _entry(*, request_plan_id="md_2020_001", sha=None, raw="2020/md_2020_001.jso
         raw_payload_path=raw,
         request_url_redacted="https://example/?apiKey=REDACTED",
         success=success,
+        attempt_category=category,
+        validation_status=validation_status,
+        failure_reason=failure_reason,
         error_class=None,
         error_message=None,
     )
@@ -108,3 +124,50 @@ def test_ledger_schema_is_stable():
     assert "response_content_sha256" in LEDGER_SCHEMA
     assert "request_url_redacted" in LEDGER_SCHEMA
     assert "x_requests_last" in LEDGER_SCHEMA
+    assert "attempt_category" in LEDGER_SCHEMA
+    assert "validation_status" in LEDGER_SCHEMA
+    assert "failure_reason" in LEDGER_SCHEMA
+
+
+# --- resume classification (PAID_REJECTED / REQUEST_FAILED / VERIFIED_SUCCESS) ----
+
+def test_classify_eligible_when_no_ledger(tmp_path):
+    raw_root = tmp_path / "raw"
+    ledger = tmp_path / "ledger.parquet"
+    assert classify_request("md_2020_001", ledger_path=ledger, raw_root=raw_root) == "ELIGIBLE"
+
+
+def test_classify_paid_rejected_is_not_requeried(tmp_path):
+    raw_root = tmp_path / "raw"
+    ledger = tmp_path / "ledger.parquet"
+    append_ledger_entry(
+        _entry(category=CATEGORY_PAID_REJECTED, success=False,
+               validation_status="COST_MISMATCH", failure_reason="cost"),
+        ledger,
+    )
+    assert classify_request("md_2020_001", ledger_path=ledger, raw_root=raw_root) == CATEGORY_PAID_REJECTED
+
+
+def test_classify_request_failed(tmp_path):
+    raw_root = tmp_path / "raw"
+    ledger = tmp_path / "ledger.parquet"
+    append_ledger_entry(
+        _entry(category=CATEGORY_REQUEST_FAILED, success=False,
+               validation_status="HTTP_429", failure_reason="status=429"),
+        ledger,
+    )
+    assert classify_request("md_2020_001", ledger_path=ledger, raw_root=raw_root) == CATEGORY_REQUEST_FAILED
+
+
+def test_classify_verified_success_requires_raw_and_hash(tmp_path):
+    raw_root = tmp_path / "raw"
+    ledger = tmp_path / "ledger.parquet"
+    raw = raw_root / "2020" / "md_2020_001.json"
+    raw.parent.mkdir(parents=True)
+    raw.write_bytes(b"x")
+    digest = sha256_of_file(raw)
+    append_ledger_entry(_entry(sha=digest, raw="2020/md_2020_001.json"), ledger)
+    assert classify_request("md_2020_001", ledger_path=ledger, raw_root=raw_root) == CATEGORY_VERIFIED_SUCCESS
+    # Without a matching raw file it degrades to REQUEST_FAILED, never ELIGIBLE.
+    raw.unlink()
+    assert classify_request("md_2020_001", ledger_path=ledger, raw_root=raw_root) == CATEGORY_REQUEST_FAILED

@@ -18,13 +18,13 @@ from pathlib import Path
 
 import polars as pl
 
-from nfl_edge.market_data.ledger import LEDGER_PATH, completed_request_ids
+from nfl_edge.market_data.ledger import LEDGER_PATH
 from nfl_edge.market_data.manifest import (
     MANIFEST_REQUEST_PLAN_PATH,
     ODDS_API_KEY_ENV,
     RAW_ROOT,
 )
-from nfl_edge.market_data.runner import AcquisitionStop, run_plan
+from nfl_edge.market_data.runner import AcquisitionStop, run_live_acquisition, run_plan
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -92,15 +92,27 @@ def main() -> None:
     api_key = os.environ.get(ODDS_API_KEY_ENV)  # not an enumeration
     if not api_key:
         raise SystemExit(f"{ODDS_API_KEY_ENV} not set; refusing to execute (no key on disk).")
-    rep = run_plan(
+    # run_live_acquisition validates the plan contract (SHA-256 etc.) and
+    # holds the exclusive fail-fast lock BEFORE any network call.
+    rep = run_live_acquisition(
         plan,
-        execute=True,
+        plan_path=Path(args.plan),
         api_key=api_key,
         raw_root=raw_root,
         ledger_path=ledger_path,
         timeout_seconds=args.timeout,
     )
-    print(f"executed={rep['executed']} skipped_completed={rep['skipped_completed']}")
+    print(
+        "executed=%d skipped_completed=%d remaining_eligible=%d "
+        "projected_max_credits=%d (cap %d)"
+        % (
+            rep["executed"],
+            rep["skipped_completed"],
+            rep["remaining_eligible_requests"],
+            rep["projected_max_credits"],
+            rep["credit_cap"],
+        )
+    )
 
 
 if __name__ == "__main__":

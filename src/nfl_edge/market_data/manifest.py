@@ -96,6 +96,12 @@ LOCK_FILENAME = "acquisition.lock"
 MANIFEST_REQUEST_PLAN_PATH = "data/manifests/historical_market_request_plan_v1.parquet"
 MANIFEST_REQUEST_PLAN_JSON = "data/manifests/historical_market_request_plan_v1.json"
 
+# Frozen SHA-256 of the deterministic request-plan artifact. Enforced in
+# executable code before any live network call (see validate_plan_contract).
+EXPECTED_PLAN_SHA256 = (
+    "1591542e16cfeaa7eeef6d6e04a87db00c67ec8b988b1559c6645b9a06d20e4a"
+)
+
 
 def manifest_dict() -> dict[str, Any]:
     """Serialize the frozen manifest to a plain dict (JSON-able)."""
@@ -149,6 +155,11 @@ def manifest_dict() -> dict[str, Any]:
             "inspected or scored in this task; 2025 stays sealed."
         ),
         "secret": {"environment_variable": ODDS_API_KEY_ENV},
+        "request_plan": {
+            "path": MANIFEST_REQUEST_PLAN_PATH,
+            "expected_rows": EXPECTED_TOTAL_CLUSTERS,
+            "expected_sha256": EXPECTED_PLAN_SHA256,
+        },
         "raw": {
             "root": RAW_ROOT,
             "immutable": True,

@@ -2,18 +2,24 @@
 
 from __future__ import annotations
 
+import hashlib
 from collections import Counter
 from datetime import timedelta, timezone
+from pathlib import Path
 
 import pytest
 
 from nfl_edge.market_data.manifest import (
     EXPECTED_CLUSTERS_BY_SEASON,
+    EXPECTED_PLAN_SHA256,
     EXPECTED_TOTAL_CLUSTERS,
     EXPECTED_TOTAL_GAMES,
+    MANIFEST_REQUEST_PLAN_PATH,
     SCHEDULE_SOURCE_PATH,
 )
-from nfl_edge.market_data.plan import build_request_plan, plan_frame
+from nfl_edge.market_data.plan import build_request_plan, plan_frame, validate_plan_contract
+
+SCHEDULE_PLAN_PATH = Path(__file__).resolve().parents[2] / MANIFEST_REQUEST_PLAN_PATH
 
 
 @pytest.fixture(scope="module")
@@ -94,3 +100,14 @@ def test_request_plan_rebuild_is_deterministic(built):
     plan, _ = built
     rebuilt, _ = build_request_plan(SCHEDULE_SOURCE_PATH)
     assert plan.equals(rebuilt)
+
+
+def test_validate_plan_contract_passes_on_frozen_plan(built):
+    # The frozen plan must satisfy the full runtime contract (no exception),
+    # and its on-disk SHA-256 must equal the frozen expected hash.
+    plan, _ = built
+    validate_plan_contract(plan, plan_path=SCHEDULE_PLAN_PATH)
+    assert (
+        hashlib.sha256(Path(SCHEDULE_PLAN_PATH).read_bytes()).hexdigest()
+        == EXPECTED_PLAN_SHA256
+    )
