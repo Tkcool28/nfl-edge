@@ -1,25 +1,23 @@
-# Task 05E-D3C — Final Edge-Validation Preregistration (Freeze)
+# Task 05E-D3C-A1 — Final Preregistration Pre-Outcome Amendment
 
-Status: **EDGE_PREREGISTRATION_FROZEN** (outcome-blind; no outcomes opened)
+Status: **EDGE_PREREGISTRATION_AMENDED_PRE_OUTCOME** (outcome-blind; no outcomes opened)
 Repo: `/root/nfl-edge` — production `main` @ `b8055348110ceb96933298e01b74d6b45afad89d` (untouched)
 Worktree: `/root/workspaces/nfl-edge-task-05e-edge-prereg-v1`
 Branch: `feat/task-05e-edge-preregistration-v1`
 Pinned config: `config/market_edge_validation_v1.yaml`
-Fingerprint (SHA-256): `e0cff2756488aeda7f2f1ec3f5d322c48b507f482947cc07300dfb240bee2137`
+Fingerprint (SHA-256, AMENDED): `d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c`
+Superseded prior fingerprint: `e0cff2756488aeda7f2f1ec3f5d322c48b507f482947cc07300dfb240bee2137`
+Superseded provisional (OBSOLETE): `d178922bedd5ebe206d883828d230083db5d7742263c811fddff69547fe8901f`
 
-> This is the **final, authoritative, outcome-blind preregistration**. It freezes
-> the methodology that a *later* step uses to test whether model-vs-market
-> disagreement contains useful betting edge. No outcomes, final scores, winners,
-> ATS covers, totals results, ROIs, or bet results were opened, computed, or
-> stored. No 2025 data used. No football model trained, retuned, or stacked.
-> No bucket/minimum-N/price-zone threshold was selected from returns.
->
-> **This is the end of methodology design for the primary study.** After this
-> commit the primary discovery methodology MUST NOT change in response to
-> historical win/loss/ROI/cover/total results. The previous provisional
-> fingerprint `d178922bedd5ebe206d883828d230083db5d7742263c811fddff69547fe8901f`
-> is OBSOLETE. The fingerprint above is the authoritative frozen methodology
-> hash; downstream discovery tooling FAILS CLOSED if this document changes.
+> This is an **outcome-blind mechanical/semantic amendment** to the frozen
+> preregistration. **No historical outcomes have been opened.** No discovery
+> started; no scores, winners, ATS, totals results, hit rates, ROI, or profit
+> inspected; no model roles, edge buckets, hypothesis families, sample
+> thresholds, bootstrap methodology, season splits, dog-value hypothesis, or
+> product architecture changed. This amendment only (1) fixes the reporting
+> price-band taxonomy, (2) corrects the `no_dispersion_grid` boolean, and
+> (3) operationalizes the evidence-label consistency language into
+> deterministic, outcome-blind diagnostics.
 
 ---
 
@@ -291,23 +289,41 @@ thresholds to improve them.
 
 ---
 
-## 15. Normal +EV evidence labels (frozen)
+## 15. Normal +EV evidence labels (frozen, deterministic)
 
-95% statistical significance is NOT the only useful-edge gate. Three labels:
+95% statistical significance is NOT the only useful-edge gate. Three labels.
+The consistency terms below are replaced by the explicit deterministic
+diagnostics in §15a — frozen NOW, outcome-blind:
 
 - **A. STRONG_VALIDATION** — requires positive actual-price ROI in discovery,
   positive in confirmation, hit rate above actual-price break-even in both
-  pools, pooled week-block 95% ROI lower bound > 0, no catastrophic season
-  instability, sufficient N.
+  pools, pooled week-block 95% ROI lower bound > 0, **NOT
+  CATASTROPHIC_SEASON_INSTABILITY**, sufficient N.
 - **B. SUPPORTED_USABLE** — same favorable direction in discovery and
   confirmation, positive pooled actual-price ROI, pooled hit rate above pooled
-  break-even, no obvious single-season dependence, sufficient N. Uncertainty may
+  break-even, **NOT SEASON_DOMINANCE**, sufficient N. Uncertainty may
   still include zero (modest real edges may not clear a 95% lower-bound gate
   with limited NFL sample).
-- **C. FAILED_TO_VALIDATE** — direction reverses materially in confirmation,
-  pooled performance fails break-even, strong season instability dominates, or
-  other preregistered core checks fail. Do not promote a failed bucket for one
-  attractive discovery sub-period.
+- **C. FAILED_TO_VALIDATE** — **DIRECTION_REVERSAL**, pooled performance fails
+  break-even, **CATASTROPHIC_SEASON_INSTABILITY**, or other preregistered core
+  checks fail. Do not promote a failed bucket for one attractive discovery
+  sub-period.
+
+### 15a. Deterministic consistency diagnostics (frozen now, outcome-blind)
+
+Vague post-outcome-discretion phrases in the evidence labels are replaced by
+these exact machine-checkable definitions (no additional performance
+thresholds):
+
+- **SEASON_DOMINANCE** — the largest absolute-profit-contributing season
+  accounts for **> 60%** of pooled positive flat-stake profit.
+- **CATASTROPHIC_SEASON_INSTABILITY** — at least one season with sufficient
+  per-season sample has **ROI ≤ −20% AND pooled ROI is positive**.
+- **DIRECTION_REVERSAL** — discovery ROI and confirmation ROI have
+  **opposite signs**.
+
+These numbers are frozen now, outcome-blind; no outcome values were used to
+choose them.
 
 ---
 
@@ -376,9 +392,29 @@ risk?" — kept separate.
 ## 21. Market freshness / dispersion (diagnostics only)
 
 Retained only as sanity diagnostics. Quote freshness is **not** a production
-signal; no freshness filter is frozen. DK/FD/Pinnacle dispersion is **not** a
-new optimization grid. Purpose: detect obvious outlier/stale-market situations
-when interpreting extreme model disagreements.
+signal; no freshness filter is frozen (`no_freshness_filter_frozen: true`).
+DK/FD/Pinnacle dispersion is **not** a new optimization grid
+(`no_dispersion_grid: true`). Purpose: detect obvious outlier/stale-market
+situations when interpreting extreme model disagreements.
+
+### 21a. Price-band REPORTING taxonomy (frozen; does NOT alter dog-value hypothesis)
+
+A semantically-correct reporting taxonomy, used only to bucket/present
+selected-side actionable American prices. It is **reporting only** and does
+**not** change the separately frozen ML dog-value hypothesis:
+
+```text
+heavy_favorite      : american <= -200
+moderate_favorite   : -199 .. -111
+near_even           : -110 .. +110
+short_plus_money    : +111 .. +150
+moderate_plus_money : +151 .. +200
+long_plus_money     : american >= +201
+```
+
+> The frozen **ML dog-value hypothesis is unchanged**: `40% <= p_model < 50%`
+> **AND** best actionable DK/FD price `+111 through +200 inclusive` **AND**
+> positive model-vs-Pinnacle edge.
 
 ---
 

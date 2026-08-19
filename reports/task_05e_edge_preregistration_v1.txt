@@ -1,6 +1,6 @@
-TASK 05E-D3C — FINAL EDGE-VALIDATION PREREGISTRATION FREEZE
-==========================================================
-Status              : EDGE_PREREGISTRATION_FROZEN
+TASK 05E-D3C-A1 — FINAL PREREGISTRATION PRE-OUTCOME DEFECT AMENDMENT
+====================================================================
+Status              : EDGE_PREREGISTRATION_AMENDED_PRE_OUTCOME
 Repo                : /root/nfl-edge
 Production branch   : main
 Production HEAD     : b8055348110ceb96933298e01b74d6b45afad89d (untouched; verified)
@@ -8,100 +8,63 @@ Worktree            : /root/workspaces/nfl-edge-task-05e-edge-prereg-v1
 Branch              : feat/task-05e-edge-preregistration-v1
 Pinned config       : config/market_edge_validation_v1.yaml
 Full fingerprint
-  (SHA-256, FINAL)  : e0cff2756488aeda7f2f1ec3f5d322c48b507f482947cc07300dfb240bee2137
+  (SHA-256, AMENDED): d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c
+Prior frozen
+  (SUPERSEDED)      : e0cff2756488aeda7f2f1ec3f5d322c48b507f482947cc07300dfb240bee2137
 Previous provisional
   (OBSOLETE)        : d178922bedd5ebe206d883828d230083db5d7742263c811fddff69547fe8901f
 
-OUTCOME-BLIND / PREREGISTRATION-ONLY
-  No outcomes, final scores, winners, ATS covers, totals results, ROIs, or bet
-  results were opened, computed, joined, or stored. No 2025 / sealed data used.
-  No football model was trained, retuned, or stacked. Buckets, minimum-N,
-  dog-zone, and price-zones were frozen from the outcome-blind census, NOT
-  selected from returns. STOP condition honored — frozen and committed; nothing
-  pushed, merged, or opened beyond these artifacts. No discovery/confirmation
-  outcome analysis started.
+OUTCOME-BLIND / PRE-OUTCOME AMENDMENT ONLY
+  This is a mechanical/semantic correction BEFORE any outcomes are opened. No
+  historical outcomes exist in this analysis. No scores, winners, ATS covers,
+  totals results, hit rates, ROI, or profit were opened, computed, joined, or
+  stored. No 2025 / sealed data used. No football model was trained, retuned,
+  or stacked. No model roles, edge buckets, hypothesis families, sample
+  thresholds, bootstrap methodology, season splits, dog-value hypothesis, or
+  product architecture were changed. Changes are limited to: (1) price-band
+  reporting taxonomy, (2) no_dispersion_grid boolean, (3) deterministic
+  consistency diagnostics for the evidence labels. STOP honored — no discovery,
+  no push, no PR.
 
-FINAL ITEMIZED FROZEN METHODOLOGY:
-  1  Split                 : DISCOVERY [2020,2021,2022]; CONFIRMATION [2023,2024]
-                            (identical method); 2025 SEALED final-product holdout
-  2  Market architecture   : ACTIONABLE = DraftKings/FanDuel (auto-fed);
-                            BENCHMARK = Pinnacle; SECONDARY-AUDIT = BetOnline +
-                            other acquired books (never primary signal);
-                            manual offers supported -> edge evaluator handles ANY
-                            actionable offer
-  3  Vig removal           : two-way proportional normalization (ML h2h only);
-                            no alternative method after outcomes
-  4  ML model views        : A) Oracle QB-Elo  B) XGBoost  C) AVG=(QB_ELO+XGB)/2
-                            D) CORROBORATED (QB-ELO & XGB both underprice same
-                            side vs Pinnacle); NO STACKER
-  5  ML positive edge      : candidate = side with (model_prob - pin_novig_prob)
-                            > 0; NO model>0.50 requirement; value underdogs
-                            eligible; MODEL_IMPLIED_EV = p_model*dec-1 kept
-                            separate (NOT realized ROI)
-  6  ML buckets (FINAL)    : [0,2) [2,4) [4,8) [8,12) [12,+inf) pp; open-ended
-                            (no arbitrary upper-cap drop); bins independent for
-                            QB_ELO / XGB / AVG
-  7  Dog-value zone        : 40%<=p_model<50% AND best DK/FD +111..+200 incl.
-                            AND positive edge; eval QB_ELO/XGB/AVG/CORROB;
-                            long dogs (+201+) separated for BIG OP research only
-  8  Spread cups           : expected_home_margin vs Pinnacle spread;
-                            orientation-safe |margin + L|; [0,1)[1,2)[2,3)[3,4)[4+)
-  9  Total buckets         : R4 total vs Pinnacle total; OVER if P>O, UNDER if
-                            P<O; [0,1)[1,2)[2,3)[3,4)[4+); R4 alpha=100, not retuned
- 10  Line shopping         : ML best DK/FD price; SPREAD greatest selected-side
-                            spread (then price, then deterministic tie-break);
-                            OVER lowest total, UNDER highest total (then price)
- 11  Product display states: ML BETTER/EQUAL/WORSE vs Pinnacle; SPREAD/TOTAL:
-                            NUMBER_BETTER, PRICE_BETTER, NUMBER_AND_PRICE_BETTER
-                            (GREEN/PURPLE UI concepts; NOT assumed profitable)
- 12  Hypothesis families   : EXACTLY SEVEN — ML_QBELO_DISAGREEMENT,
-                            ML_XGB_DISAGREEMENT, ML_AVG_DISAGREEMENT,
-                            ML_CORROBORATED_DISAGREEMENT, ML_DOG_VALUE_ZONE,
-                            SPREAD_DISAGREEMENT, TOTAL_R4_DISAGREEMENT
- 13  Bootstrap             : NFL season-week block bootstrap (block = season +
-                            canonical NFL week/postseason identity); sample
-                            blocks WITH replacement; 5000 replicates; 95%
-                            percentile interval; metric = actual-price flat-stake
-                            ROI; per-season reported; IID bootstrap NOT sole
- 14  Outcome metrics       : N, W/L/(push), hit rate, avg odds, break-even shot,
-                            HIT RATE - BREAK-EVEN, flat profit, flat ROI,
-                            MODEL_IMPLIED_EV, discovery/confirmation/pooled/per-
-                            season, week-block interval, week coverage, L streak,
-                            max drawdown, worst season ROI, rolling-10
- 15  Evidence labels       : A STRONG_VALIDATION  B SUPPORTED_USABLE
-                            C FAILED_TO_VALIDATE (95% significance not the only
-                            useful-edge gate)
- 16  Normal +EV objective  : validated edge, realistic price, repeatability,
-                            variance, usability; NOT highest-ROI; NOT must-be-dog;
-                            final ranking rule NOT optimized here
- 17  Big Opportunity       : conditional section, higher evidence standard;
-                            N>=50 discovery / N>=40 confirmation (+ replication/
-                            consistency); no 65% threshold; if none qualifies ->
-                            NO_BIG_OPPORTUNITY_SIGNAL_YET
- 18  Weekly top cards      : exactly ONE HIT RATE + ONE BALANCED + ONE +EV per
-                            week; ranking formulas = separate future task;
-                            all-game board below; 2025 = end-to-end simulation
-                            only after selectors frozen
- 19  Staking separation    : FLAT 1-unit for edge validation; Kelly etc. = future
-                            separate staking module; edge vs stake kept separate
- 20  Market freshness      : sanity diagnostics only; not a production signal;
-                            no freshness filter frozen; dispersion not an
-                            optimization grid
- 21  Minimum N             : report bucket >=25 (else LIMITED_SAMPLE);
-                            normal +EV 50/50; BIG OP 50/40 (+per-season N)
- 22  Concentration         : diagnostics ONLY (season/team/QB/DK-vs-FD source/price
-                            band shares); NO arbitrary 40%/40% cutoffs frozen;
-                            no post-hoc numeric disqualifier
- 23  Trial accounting      : seven frozen families only; discovery findings LOCKED
-                            before confirmation opened; no model/side/bucket/
-                            price-zone/formula changes between pools; new findings
-                            must be labeled EXPLORATORY_POST_DISCOVERY
- 24  Config sha256 (FINAL) : e0cff2756488aeda7f2f1ec3f5d322c48b507f482947cc07300dfb240bee2137
+AMENDED ITEMIZED CHANGES:
+  P1  Price-band taxonomy  : CORRECTED (reporting only) heavy_favorite <=-200;
+                            moderate_favorite -199..-111; near_even -110..+110;
+                            short_plus_money +111..+150; moderate_plus_money
+                            +151..+200; long_plus_money >=+201
+  P2  Dog-value hypothesis : UNCHANGED — 40%<=p_model<50% AND best DK/FD
+                            +111..+200 inclusive AND positive edge (not altered
+                            by P1)
+  P3  Dispersion boolean   : CORRECTED no_dispersion_grid: true (semantic
+                            contract honored; dispersion is NOT a new
+                            optimization grid)
+  P4  Consistency terms    : OPERATIONALIZED (diagnostics only, frozen
+                            outcome-blind) SEASON_DOMINANCE = largest
+                            absolute-profit-contributing season >60% of pooled
+                            positive flat-stake profit; CATASTROPHIC_SEASON
+                            _INSTABILITY = at least one sufficient-N season with
+                            ROI <= -20% AND pooled ROI positive; DIRECTION_
+                            REVERSAL = discovery ROI and confirmation ROI
+                            opposite signs. Wired into evidence labels:
+                            STRONG (NOT CATASTROPHIC_SEASON_INSTABILITY),
+                            SUPPORTED_USABLE (NOT SEASON_DOMINANCE),
+                            FAILED_TO_VALIDATE (DIRECTION_REVERSAL /
+                            CATASTROPHIC_SEASON_INSTABILITY). No additional
+                            thresholds introduced.
+
+UNCHANGED FROZEN CORE (verified by contract tests):
+  Split [2020,2021,2022]/[2023,2024]/2025 sealed; exactly seven hypothesis
+  families; ML buckets [0,2)[2,4)[4,8)[8,12)[12,+inf); positive-edge rule (no
+  0.50 req); spread+R4 total [0,1)[1,2)[2,3)[3,4)[4+); R4 alpha=100; DK/FD
+  actionable / Pinnacle benchmark; deterministic line shopping; season-week
+  block bootstrap 5000; Big-Op MIN N 50/40; weekly top-card architecture;
+  flat-stake separation; 2025 final-product-holdout role.
 
 TESTS
-  tests/contracts/test_market_edge_preregistration_v1.py — proves frozen config
-  contract + deterministic fingerprint reproduction (outcome-blind).
-  tests/contracts/test_market_edge_census_repair.py — outcome-blind census repair
+  tests/contracts/test_market_edge_preregistration_v1.py — asserts corrected
+  price taxonomy, dog-value unchanged, no_dispersion_grid==true, deterministic
+  consistency definitions, unchanged seven families/buckets/split, outcome-blind
+  construction, and fingerprint reproduction.
+  tests/contracts/test_market_edge_census_repair.py — outcome-blind census
   provenance (supporting design evidence).
 
 NEXT ACTION / STOP

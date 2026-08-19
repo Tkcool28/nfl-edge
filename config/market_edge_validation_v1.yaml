@@ -25,7 +25,7 @@ preregistration_only: true
 fingerprint:
   base_head: "b8055348110ceb96933298e01b74d6b45afad89d"
   schema_version: "1"
-  sha256_self: "e0cff2756488aeda7f2f1ec3f5d322c48b507f482947cc07300dfb240bee2137"
+  sha256_self: "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c"
   data_canonical:
     games_table: "data/market_data/canonical/canonical_games.parquet"
     book_market_table: "data/market_data/canonical/canonical_book_market.parquet"
@@ -225,15 +225,21 @@ moneyline_dog_value_zone:
     BIG OPPORTUNITY research only. NOT folded into the normal +EV dog hypothesis.
 
 # ---------------------------------------------------------------------------
-# price_band (reporting taxonomy; frozen now)
+# price_band (REPORTING taxonomy only; frozen now; does NOT alter the frozen
+# ML dog-value hypothesis which remains 40%<=p_model<50% AND DK/FD +111..+200
+# inclusive AND positive edge)
 price_band:
   bands:
-    favorite:          { american_max: -201 }
-    short_priced_dog:  { american_min: -200, american_max: -111 }
-    moderate_dog:      { american_min: -110, american_max: +124 }
-    longer_dog:        { american_min: +125 }
+    heavy_favorite:         { american_max: -200 }
+    moderate_favorite:      { american_min: -199, american_max: -111 }
+    near_even:              { american_min: -110, american_max: +110 }
+    short_plus_money:       { american_min: +111, american_max: +150 }
+    moderate_plus_money:    { american_min: +151, american_max: +200 }
+    long_plus_money:        { american_min: +201 }
   band_on: "selected-side actionable american price"
   frozen_now: true
+  reporting_only: true
+  note: "Reporting taxonomy only; the frozen ML dog-value hypothesis is NOT altered and remains 40%<=p_model<50% AND best actionable DK/FD price +111 through +200 inclusive AND positive model-vs-Pinnacle edge."
 
 # ---------------------------------------------------------------------------
 # M) minimum-N (evidence guards; frozen BEFORE outcomes)
@@ -272,7 +278,27 @@ concentration_checks:
   compare: "a result obviously dominated by one identity may not receive the strongest product label, but no post-hoc numerical cutoff may be invented after outcomes"
 
 # ---------------------------------------------------------------------------
-# EVIDENCE LABELS — three frozen evidence gates (§16)
+# DETERMINISTIC CONSISTENCY DIAGNOSTICS (operationalized outcome-blind;
+# replace vague post-outcome-discretion phrases in the evidence labels)
+consistency_diagnostics:
+  SEASON_DOMINANCE:
+    definition: "largest absolute-profit-contributing season accounts for >60% of pooled positive flat-stake profit"
+  CATASTROPHIC_SEASON_INSTABILITY:
+    definition: "at least one season with sufficient per-season sample has ROI <= -20% AND pooled ROI is positive"
+  DIRECTION_REVERSAL:
+    definition: "discovery ROI and confirmation ROI have opposite signs"
+  frozen_now_outcome_blind: true
+  no_additional_performance_thresholds: true
+  note: "These deterministic definitions are frozen NOW, outcome-blind. No additional performance thresholds are introduced. No outcome values were used to choose them."
+  phrase_mapping:
+    - { phrase: "catastrophic season instability", deterministic_term: "CATASTROPHIC_SEASON_INSTABILITY" }
+    - { phrase: "obvious single-season dependence", deterministic_term: "SEASON_DOMINANCE" }
+    - { phrase: "direction reverses materially", deterministic_term: "DIRECTION_REVERSAL" }
+    - { phrase: "strong season instability dominates", deterministic_term: "CATASTROPHIC_SEASON_INSTABILITY" }
+
+# ---------------------------------------------------------------------------
+# EVIDENCE LABELS — three frozen evidence gates (§16), with deterministic
+# consistency terms substituted for vague post-outcome-discretion phrases.
 evidence_labels:
   STRONG_VALIDATION:
     requires_all:
@@ -280,21 +306,21 @@ evidence_labels:
       - positive actual-price ROI in CONFIRMATION
       - hit rate exceeds actual-price break-even in BOTH pools
       - pooled week-block 95% ROI lower bound > 0
-      - no catastrophic season instability
+      - NOT CATASTROPHIC_SEASON_INSTABILITY (per consistency_diagnostics)
       - sufficient N under frozen minimum rules
   SUPPORTED_USABLE:
     requires_all:
       - same favorable direction in discovery and confirmation
       - positive pooled actual-price ROI
       - pooled hit rate exceeds pooled actual-price break-even
-      - no obvious single-season dependence
+      - NOT SEASON_DOMINANCE (per consistency_diagnostics)
       - sufficient N
       - uncertainty may still include zero (modest real edges may not clear a 95% lower-bound gate with limited NFL sample)
   FAILED_TO_VALIDATE:
     if_any:
-      - direction reverses materially in confirmation
+      - DIRECTION_REVERSAL (per consistency_diagnostics)
       - pooled performance fails break-even
-      - strong season instability dominates
+      - CATASTROPHIC_SEASON_INSTABILITY (per consistency_diagnostics)
       - other preregistered core checks fail
     note: "Do not promote a failed bucket because it has one attractive discovery sub-period."
 
@@ -371,7 +397,7 @@ market_freshness:
   diagnostics_only: true
   is_production_signal: false
   no_freshness_filter_frozen: true
-  no_dispersion_grid: false          # DK/FD/Pinnacle dispersion is NOT a new optimization grid
+  no_dispersion_grid: true           # DK/FD/Pinnacle dispersion is NOT a new optimization grid
   purpose: "detect obvious outlier/stale-market situations when interpreting extreme model disagreements"
 
 anti_threshold_fishing:

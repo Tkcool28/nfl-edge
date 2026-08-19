@@ -38,7 +38,8 @@ REPORT = ROOT / "reports" / "task_05e_edge_preregistration_v1.txt"
 LEDGER = ROOT / "reports" / "task_05e_d3b_hypothesis_ledger_v1.csv"
 SCRIPT = ROOT / "scripts" / "freeze_market_edge_prereg.py"
 
-PINNED_HASH = "e0cff2756488aeda7f2f1ec3f5d322c48b507f482947cc07300dfb240bee2137"
+PINNED_HASH = "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c"
+SUPERSEDED_HASH = "e0cff2756488aeda7f2f1ec3f5d322c48b507f482947cc07300dfb240bee2137"
 OBSOLETE_HASH = "d178922bedd5ebe206d883828d230083db5d7742263c811fddff69547fe8901f"
 
 OUTCOME_TERMS = [
@@ -292,16 +293,18 @@ def test_fingerprint_field_is_pinned_sha256(cfg) -> None:
 def test_pinned_hash_recomputes_over_documents() -> None:
     text = DOC.read_text(encoding="utf-8") + REPORT.read_text(encoding="utf-8")
     assert PINNED_HASH in text
-    # obsolete provisional hash documented ONLY as superseded provenance
+    # obsolete provisional hash + superseded prior hash documented as provenance
     assert "OBSOLETE" in DOC.read_text(encoding="utf-8")
-    # the doc must present the FINAL hash as the sole authoritative fingerprint line
-    assert f"Fingerprint (SHA-256): `{PINNED_HASH}`" in DOC.read_text(encoding="utf-8")
+    assert "superseded" in DOC.read_text(encoding="utf-8").lower()
+    # the doc must present the AMENDED hash as the sole authoritative fingerprint line
+    assert f"Fingerprint (SHA-256, AMENDED): `{PINNED_HASH}`" in DOC.read_text(encoding="utf-8")
+    assert SUPERSEDED_HASH != PINNED_HASH
 
 
 def test_fingerprint_authoritative_in_report() -> None:
     report = REPORT.read_text(encoding="utf-8")
-    assert "FINAL" in report
-    assert "OBSOLETE" in report
+    assert "AMENDED" in report
+    assert "SUPERSEDED" in report
     assert PINNED_HASH in report
 
 
@@ -327,9 +330,73 @@ def test_freeze_script_reproduces_the_same_hash() -> None:
 def test_prereg_doc_exists_and_mentions_stop(cfg) -> None:
     text = DOC.read_text(encoding="utf-8")
     assert "NO_BIG_OPPORTUNITY_SIGNAL_YET" in text
-    assert "EDGE_PREREGISTRATION_FROZEN" in text
+    assert "EDGE_PREREGISTRATION_AMENDED_PRE_OUTCOME" in text
     assert REPORT.exists()
-    assert "EDGE_PREREGISTRATION_FROZEN" in REPORT.read_text(encoding="utf-8")
+    assert "EDGE_PREREGISTRATION_AMENDED_PRE_OUTCOME" in REPORT.read_text(encoding="utf-8")
+
+
+def test_price_band_reporting_taxonomy_correct(cfg) -> None:
+    pb = cfg["price_band"]
+    bands = pb["bands"]
+    assert pb["reporting_only"] is True
+    assert set(bands.keys()) == {
+        "heavy_favorite", "moderate_favorite", "near_even",
+        "short_plus_money", "moderate_plus_money", "long_plus_money",
+    }
+    # exact correct taxonomy
+    assert bands["heavy_favorite"] == {"american_max": -200}
+    assert bands["moderate_favorite"] == {"american_min": -199, "american_max": -111}
+    assert bands["near_even"] == {"american_min": -110, "american_max": 110}
+    assert bands["short_plus_money"] == {"american_min": 111, "american_max": 150}
+    assert bands["moderate_plus_money"] == {"american_min": 151, "american_max": 200}
+    assert bands["long_plus_money"] == {"american_min": 201}
+
+
+def test_dog_value_zone_unchanged_by_price_amendment(cfg) -> None:
+    dog = cfg["moneyline_dog_value_zone"]
+    assert dog["frozen_hypothesis"] is True
+    zone = dog["zone"]
+    assert "40%" in zone and "50%" in zone
+    assert "+111" in zone and "+200" in zone
+    assert "positive" in zone.lower()
+    assert set(dog["evaluate_for"]) == {"QB_ELO", "XGB", "AVG", "CORROBORATED"}
+    assert "+201" in dog["long_dogs"]
+
+
+def test_dispersion_boolean_correct(cfg) -> None:
+    mf = cfg["market_freshness"]
+    assert mf["no_dispersion_grid"] is True
+    assert mf["is_production_signal"] is False
+    assert mf["no_freshness_filter_frozen"] is True
+
+
+def test_consistency_diagnostics_deterministic(cfg) -> None:
+    cd = cfg["consistency_diagnostics"]
+    assert cd["frozen_now_outcome_blind"] is True
+    assert cd["no_additional_performance_thresholds"] is True
+    assert ">60%" in cd["SEASON_DOMINANCE"]["definition"]
+    assert "-20%" in cd["CATASTROPHIC_SEASON_INSTABILITY"]["definition"]
+    assert "opposite signs" in cd["DIRECTION_REVERSAL"]["definition"]
+    # every vague phrase maps to a deterministic term
+    mapping = {m["phrase"]: m["deterministic_term"] for m in cd["phrase_mapping"]}
+    assert mapping["catastrophic season instability"] == "CATASTROPHIC_SEASON_INSTABILITY"
+    assert mapping["obvious single-season dependence"] == "SEASON_DOMINANCE"
+    assert mapping["direction reverses materially"] == "DIRECTION_REVERSAL"
+    assert mapping["strong season instability dominates"] == "CATASTROPHIC_SEASON_INSTABILITY"
+
+
+def test_evidence_labels_use_deterministic_terms(cfg) -> None:
+    ev = cfg["evidence_labels"]
+    assert set(ev) == {"STRONG_VALIDATION", "SUPPORTED_USABLE", "FAILED_TO_VALIDATE"}
+    strong = " ".join(ev["STRONG_VALIDATION"]["requires_all"]).lower()
+    supported = " ".join(ev["SUPPORTED_USABLE"]["requires_all"]).lower()
+    failed = " ".join(ev["FAILED_TO_VALIDATE"]["if_any"]).lower()
+    assert "catastrophic_season_instability" in strong
+    assert "season_dominance" in supported
+    assert "direction_reversal" in failed
+    # vague phrases removed from evidence labels
+    assert "catastrophic season instability" not in strong
+    assert "direction reverses materially" not in failed
 
 
 def test_preregistration_construction_references_no_outcome_data() -> None:
