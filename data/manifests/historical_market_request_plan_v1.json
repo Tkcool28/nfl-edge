@@ -1,0 +1,16 @@
+{
+  "credits_expected": 17250,
+  "description": "Deterministic T-60 natural-kickoff-cluster historical market acquisition request plan (575 rows). RAW acquisition only; no outcomes scored; 2025 not included.",
+  "generated_at_utc": "2026-08-19T07:05:44Z",
+  "plan_path": "data/manifests/historical_market_request_plan_v1.parquet",
+  "request_plan_id_columns": [
+    "request_plan_id"
+  ],
+  "row_count": 575,
+  "schedule_source": {
+    "path": "data/raw/source_snapshots/v1/schedules_2018_2025_frozen-baseline-v1.parquet",
+    "sha256": "9fdfa5f3401f0ee834c986b0e61518b01c8e52ac823057f52c76abe6b29c83eb"
+  },
+  "sha256": "1591542e16cfeaa7eeef6d6e04a87db00c67ec8b988b1559c6645b9a06d20e4a",
+  "version": "historical-market-request-plan-v1"
+}

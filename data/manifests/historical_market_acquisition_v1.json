@@ -1,0 +1,309 @@
+{
+  "architecture_firewall": "Market data is DOWNSTREAM-ONLY. It must never be a feature or training input to any frozen football model (Oracle QB-Elo, XGBoost, Expected-Margin, Ridge Totals). No outcomes are inspected or scored in this task; 2025 stays sealed.",
+  "books": {
+    "actionable": [
+      "draftkings",
+      "fanduel"
+    ],
+    "allowed_books": [
+      "draftkings",
+      "fanduel",
+      "pinnacle",
+      "betonlineag",
+      "williamhill_us",
+      "betmgm",
+      "betrivers",
+      "bovada",
+      "lowvig",
+      "betus"
+    ],
+    "benchmark": [
+      "pinnacle"
+    ],
+    "other": [
+      "williamhill_us",
+      "betmgm",
+      "betrivers",
+      "bovada",
+      "lowvig",
+      "betus"
+    ],
+    "roles": {
+      "betmgm": "OTHER_CONSENSUS_INPUT",
+      "betonlineag": "SECONDARY_INDEPENDENT_REFERENCE",
+      "betrivers": "OTHER_CONSENSUS_INPUT",
+      "betus": "OTHER_CONSENSUS_INPUT",
+      "bovada": "OTHER_CONSENSUS_INPUT",
+      "draftkings": "ACTIONABLE_RETAIL",
+      "fanduel": "ACTIONABLE_RETAIL",
+      "lowvig": "OTHER_CONSENSUS_INPUT",
+      "pinnacle": "PRIMARY_SHARP_BENCHMARK",
+      "williamhill_us": "OTHER_CONSENSUS_INPUT"
+    },
+    "secondary": [
+      "betonlineag"
+    ]
+  },
+  "clustering": {
+    "anchor_lead_minutes": 60,
+    "cluster_max_span_minutes": 30,
+    "expected_clusters_by_season": {
+      "2020": 107,
+      "2021": 111,
+      "2022": 116,
+      "2023": 120,
+      "2024": 121
+    },
+    "expected_total_clusters": 575,
+    "policy": "T-60_NATURAL_KICKOFF_CLUSTER_SNAPSHOT"
+  },
+  "coverage_seasons": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "credit_contract": {
+    "expected_cost_per_successful_request": 30,
+    "initial_planned_credit_cap": 17250,
+    "initial_planned_max_successful_requests": 575,
+    "no_automatic_retries": true,
+    "response_cost_header": "x-requests-last"
+  },
+  "future_preregistered_split": {
+    "confirmation": [
+      2023,
+      2024
+    ],
+    "discovery": [
+      2020,
+      2021,
+      2022
+    ],
+    "note": "Recorded as a downstream consequence only; deferred until authoritative 2018-2019 coverage is resolved or ruled out. No outcomes are scored in this task."
+  },
+  "markets": [
+    "h2h",
+    "spreads",
+    "totals"
+  ],
+  "provider": "the_odds_api",
+  "raw": {
+    "immutable": true,
+    "ledger_path": "data/market_data/ledger/historical_acquisition_ledger_v1.parquet",
+    "lock_dir": "data/market_data/lock",
+    "root": "data/market_data/raw"
+  },
+  "request_plan": {
+    "expected_rows": 575,
+    "expected_sha256": "1591542e16cfeaa7eeef6d6e04a87db00c67ec8b988b1559c6645b9a06d20e4a",
+    "path": "data/manifests/historical_market_request_plan_v1.parquet"
+  },
+  "schedule_source": {
+    "kickoff_columns": [
+      "gameday",
+      "gametime"
+    ],
+    "kickoff_timezone": "America/New_York",
+    "path": "data/raw/source_snapshots/v1/schedules_2018_2025_frozen-baseline-v1.parquet",
+    "source_file_sha256": "9fdfa5f3401f0ee834c986b0e61518b01c8e52ac823057f52c76abe6b29c83eb",
+    "source_schema": [
+      {
+        "dtype": "String",
+        "name": "game_id"
+      },
+      {
+        "dtype": "Int32",
+        "name": "season"
+      },
+      {
+        "dtype": "String",
+        "name": "game_type"
+      },
+      {
+        "dtype": "Int32",
+        "name": "week"
+      },
+      {
+        "dtype": "String",
+        "name": "gameday"
+      },
+      {
+        "dtype": "String",
+        "name": "weekday"
+      },
+      {
+        "dtype": "String",
+        "name": "gametime"
+      },
+      {
+        "dtype": "String",
+        "name": "away_team"
+      },
+      {
+        "dtype": "Int32",
+        "name": "away_score"
+      },
+      {
+        "dtype": "String",
+        "name": "home_team"
+      },
+      {
+        "dtype": "Int32",
+        "name": "home_score"
+      },
+      {
+        "dtype": "String",
+        "name": "location"
+      },
+      {
+        "dtype": "Int32",
+        "name": "result"
+      },
+      {
+        "dtype": "Int32",
+        "name": "total"
+      },
+      {
+        "dtype": "Int32",
+        "name": "overtime"
+      },
+      {
+        "dtype": "String",
+        "name": "old_game_id"
+      },
+      {
+        "dtype": "Int32",
+        "name": "gsis"
+      },
+      {
+        "dtype": "String",
+        "name": "nfl_detail_id"
+      },
+      {
+        "dtype": "String",
+        "name": "pfr"
+      },
+      {
+        "dtype": "Int32",
+        "name": "pff"
+      },
+      {
+        "dtype": "String",
+        "name": "espn"
+      },
+      {
+        "dtype": "Int32",
+        "name": "ftn"
+      },
+      {
+        "dtype": "Int32",
+        "name": "away_rest"
+      },
+      {
+        "dtype": "Int32",
+        "name": "home_rest"
+      },
+      {
+        "dtype": "Int32",
+        "name": "away_moneyline"
+      },
+      {
+        "dtype": "Int32",
+        "name": "home_moneyline"
+      },
+      {
+        "dtype": "Float64",
+        "name": "spread_line"
+      },
+      {
+        "dtype": "Int32",
+        "name": "away_spread_odds"
+      },
+      {
+        "dtype": "Int32",
+        "name": "home_spread_odds"
+      },
+      {
+        "dtype": "Float64",
+        "name": "total_line"
+      },
+      {
+        "dtype": "Int32",
+        "name": "under_odds"
+      },
+      {
+        "dtype": "Int32",
+        "name": "over_odds"
+      },
+      {
+        "dtype": "Int32",
+        "name": "div_game"
+      },
+      {
+        "dtype": "String",
+        "name": "roof"
+      },
+      {
+        "dtype": "String",
+        "name": "surface"
+      },
+      {
+        "dtype": "Int32",
+        "name": "temp"
+      },
+      {
+        "dtype": "Int32",
+        "name": "wind"
+      },
+      {
+        "dtype": "String",
+        "name": "away_qb_id"
+      },
+      {
+        "dtype": "String",
+        "name": "home_qb_id"
+      },
+      {
+        "dtype": "String",
+        "name": "away_qb_name"
+      },
+      {
+        "dtype": "String",
+        "name": "home_qb_name"
+      },
+      {
+        "dtype": "String",
+        "name": "away_coach"
+      },
+      {
+        "dtype": "String",
+        "name": "home_coach"
+      },
+      {
+        "dtype": "String",
+        "name": "referee"
+      },
+      {
+        "dtype": "String",
+        "name": "stadium_id"
+      },
+      {
+        "dtype": "String",
+        "name": "stadium"
+      }
+    ],
+    "source_schema_canonical": "[{\"name\":\"game_id\",\"dtype\":\"String\"},{\"name\":\"season\",\"dtype\":\"Int32\"},{\"name\":\"game_type\",\"dtype\":\"String\"},{\"name\":\"week\",\"dtype\":\"Int32\"},{\"name\":\"gameday\",\"dtype\":\"String\"},{\"name\":\"weekday\",\"dtype\":\"String\"},{\"name\":\"gametime\",\"dtype\":\"String\"},{\"name\":\"away_team\",\"dtype\":\"String\"},{\"name\":\"away_score\",\"dtype\":\"Int32\"},{\"name\":\"home_team\",\"dtype\":\"String\"},{\"name\":\"home_score\",\"dtype\":\"Int32\"},{\"name\":\"location\",\"dtype\":\"String\"},{\"name\":\"result\",\"dtype\":\"Int32\"},{\"name\":\"total\",\"dtype\":\"Int32\"},{\"name\":\"overtime\",\"dtype\":\"Int32\"},{\"name\":\"old_game_id\",\"dtype\":\"String\"},{\"name\":\"gsis\",\"dtype\":\"Int32\"},{\"name\":\"nfl_detail_id\",\"dtype\":\"String\"},{\"name\":\"pfr\",\"dtype\":\"String\"},{\"name\":\"pff\",\"dtype\":\"Int32\"},{\"name\":\"espn\",\"dtype\":\"String\"},{\"name\":\"ftn\",\"dtype\":\"Int32\"},{\"name\":\"away_rest\",\"dtype\":\"Int32\"},{\"name\":\"home_rest\",\"dtype\":\"Int32\"},{\"name\":\"away_moneyline\",\"dtype\":\"Int32\"},{\"name\":\"home_moneyline\",\"dtype\":\"Int32\"},{\"name\":\"spread_line\",\"dtype\":\"Float64\"},{\"name\":\"away_spread_odds\",\"dtype\":\"Int32\"},{\"name\":\"home_spread_odds\",\"dtype\":\"Int32\"},{\"name\":\"total_line\",\"dtype\":\"Float64\"},{\"name\":\"under_odds\",\"dtype\":\"Int32\"},{\"name\":\"over_odds\",\"dtype\":\"Int32\"},{\"name\":\"div_game\",\"dtype\":\"Int32\"},{\"name\":\"roof\",\"dtype\":\"String\"},{\"name\":\"surface\",\"dtype\":\"String\"},{\"name\":\"temp\",\"dtype\":\"Int32\"},{\"name\":\"wind\",\"dtype\":\"Int32\"},{\"name\":\"away_qb_id\",\"dtype\":\"String\"},{\"name\":\"home_qb_id\",\"dtype\":\"String\"},{\"name\":\"away_qb_name\",\"dtype\":\"String\"},{\"name\":\"home_qb_name\",\"dtype\":\"String\"},{\"name\":\"away_coach\",\"dtype\":\"String\"},{\"name\":\"home_coach\",\"dtype\":\"String\"},{\"name\":\"referee\",\"dtype\":\"String\"},{\"name\":\"stadium_id\",\"dtype\":\"String\"},{\"name\":\"stadium\",\"dtype\":\"String\"}]",
+    "source_schema_sha256": "e5b413bb168620d169048179a09bdfa4cb54e1039669a766f6c7b6753797f39b"
+  },
+  "secret": {
+    "environment_variable": "ODDS_API_KEY"
+  },
+  "sport": "americanfootball_nfl",
+  "unresolved_seasons": [
+    2018,
+    2019
+  ],
+  "version": "historical-market-acquisition-manifest-v1"
+}
