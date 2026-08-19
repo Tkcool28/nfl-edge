@@ -28,6 +28,10 @@ dist/
 /data/cache/
 /data/live_snapshots/private/
 
+# Derived market-data artifacts (regenerable from production RAW via
+# scripts/build_market_canonical.py --production; not committed)
+/data/market_data/
+
 # Local model experiments not explicitly promoted
 /artifacts/local/
 /artifacts/tmp/
