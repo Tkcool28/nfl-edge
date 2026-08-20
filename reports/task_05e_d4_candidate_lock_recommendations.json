@@ -1,0 +1,313 @@
+{
+  "generated_by": "Task 05E-D4 discovery (2020-2022) outcome analysis",
+  "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+  "candidates": {
+    "moneyline": [
+      "ML_DOG_VALUE_ZONE_AVG",
+      "ML_CORROBORATED_DOG_VALUE_ZONE",
+      "ML_AVG_0_2"
+    ],
+    "spread": [
+      "SPREAD_0_4"
+    ],
+    "totals": []
+  },
+  "records": {
+    "ML_DOG_VALUE_ZONE_AVG": {
+      "hypothesis_family": "ML_DOG_VALUE_ZONE",
+      "model": "AVG",
+      "bucket": "ZONE (40-50% / +111..+200 / +edge)",
+      "selected_side_rule": "single side with positive model-vs-Pinnacle edge (p_avg)",
+      "actionable_price_rule": "best DK/FD price on selected side",
+      "discovery_metrics": {
+        "N": 149,
+        "wins": 74,
+        "losses": 75,
+        "pushes": 0,
+        "hit_rate": 0.4966,
+        "avg_american": 152.42,
+        "avg_decimal": 2.5242,
+        "avg_breakeven": 0.3994,
+        "exp_wins": 59.51,
+        "realized_minus_exp": 14.49,
+        "hr_minus_be": 0.0972,
+        "profit": 37.55,
+        "roi": 0.252,
+        "avg_implied_ev": 0.1413,
+        "unique_weeks": 54,
+        "per_season": {
+          "2020": {
+            "N": 40,
+            "hit_rate": 0.55,
+            "profit": 13.71,
+            "roi": 0.3427
+          },
+          "2021": {
+            "N": 56,
+            "hit_rate": 0.5357,
+            "profit": 20.36,
+            "roi": 0.3636
+          },
+          "2022": {
+            "N": 53,
+            "hit_rate": 0.4151,
+            "profit": 3.48,
+            "roi": 0.0657
+          }
+        }
+      },
+      "week_block_bootstrap": {
+        "point_roi": 0.252,
+        "p2p5": 0.0787,
+        "p97p5": 0.4295,
+        "p_pos": 0.9974,
+        "replicates": 5000,
+        "resampling_unit": "season-week block (season + canonical week identity)"
+      },
+      "streak_drawdown": {
+        "longest_losing_streak": 5,
+        "max_drawdown": 6.75,
+        "worst_rolling10": -5.53
+      },
+      "catastrophic_season_instability": {
+        "flag": false,
+        "note": "no catastrophic season"
+      },
+      "season_dominance": {
+        "flag": false,
+        "share": 0.542,
+        "note": "largest |season profit| 20.36 vs pooled positive 37.55"
+      },
+      "positive_seasons": 3,
+      "negative_seasons": 0,
+      "worst_season_roi": 0.0657,
+      "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+      "uses_frozen_only": true
+    },
+    "ML_CORROBORATED_DOG_VALUE_ZONE": {
+      "hypothesis_family": "ML_DOG_VALUE_ZONE",
+      "model": "CORROB",
+      "bucket": "ZONE (both models underpriced same side; 40-50% / +111..+200 / +edge)",
+      "selected_side_rule": "side where QB-ELO and XGB both identify positive edge vs Pinnacle (p_avg)",
+      "actionable_price_rule": "best DK/FD price on selected side",
+      "discovery_metrics": {
+        "N": 85,
+        "wins": 42,
+        "losses": 43,
+        "pushes": 0,
+        "hit_rate": 0.4941,
+        "avg_american": 158.19,
+        "avg_decimal": 2.5819,
+        "avg_breakeven": 0.3905,
+        "exp_wins": 33.2,
+        "realized_minus_exp": 8.8,
+        "hr_minus_be": 0.1036,
+        "profit": 23.86,
+        "roi": 0.2807,
+        "avg_implied_ev": 0.183,
+        "unique_weeks": 39,
+        "per_season": {
+          "2020": {
+            "N": 24,
+            "hit_rate": 0.5833,
+            "profit": 11.96,
+            "roi": 0.4983
+          },
+          "2021": {
+            "N": 31,
+            "hit_rate": 0.4839,
+            "profit": 7.4,
+            "roi": 0.2387
+          },
+          "2022": {
+            "N": 30,
+            "hit_rate": 0.4333,
+            "profit": 4.5,
+            "roi": 0.15
+          }
+        }
+      },
+      "week_block_bootstrap": {
+        "point_roi": 0.2807,
+        "p2p5": 0.0168,
+        "p97p5": 0.5482,
+        "p_pos": 0.9824,
+        "replicates": 5000,
+        "resampling_unit": "season-week block (season + canonical week identity)"
+      },
+      "streak_drawdown": {
+        "longest_losing_streak": 6,
+        "max_drawdown": 6.0,
+        "worst_rolling10": -2.81
+      },
+      "catastrophic_season_instability": {
+        "flag": false,
+        "note": "no catastrophic season"
+      },
+      "season_dominance": {
+        "flag": false,
+        "share": 0.501,
+        "note": "largest |season profit| 11.96 vs pooled positive 23.86"
+      },
+      "positive_seasons": 3,
+      "negative_seasons": 0,
+      "worst_season_roi": 0.15,
+      "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+      "uses_frozen_only": true
+    },
+    "ML_AVG_0_2": {
+      "hypothesis_family": "ML_AVG_DISAGREEMENT",
+      "model": "AVG",
+      "bucket": "0-2 pp",
+      "selected_side_rule": "positive-edge side (p_avg)",
+      "actionable_price_rule": "best DK/FD price on selected side",
+      "discovery_metrics": {
+        "N": 136,
+        "wins": 75,
+        "losses": 61,
+        "pushes": 0,
+        "hit_rate": 0.5515,
+        "avg_american": 33.69,
+        "avg_decimal": 2.519,
+        "avg_breakeven": 0.484,
+        "exp_wins": 65.83,
+        "realized_minus_exp": 9.17,
+        "hr_minus_be": 0.0675,
+        "profit": 21.0,
+        "roi": 0.1544,
+        "avg_implied_ev": 0.002,
+        "unique_weeks": 56,
+        "per_season": {
+          "2020": {
+            "N": 42,
+            "hit_rate": 0.5476,
+            "profit": 6.05,
+            "roi": 0.1441
+          },
+          "2021": {
+            "N": 43,
+            "hit_rate": 0.5116,
+            "profit": 8.02,
+            "roi": 0.1865
+          },
+          "2022": {
+            "N": 51,
+            "hit_rate": 0.5882,
+            "profit": 6.93,
+            "roi": 0.1358
+          }
+        }
+      },
+      "week_block_bootstrap": {
+        "point_roi": 0.1544,
+        "p2p5": -0.0531,
+        "p97p5": 0.3729,
+        "p_pos": 0.925,
+        "replicates": 5000,
+        "resampling_unit": "season-week block (season + canonical week identity)"
+      },
+      "streak_drawdown": {
+        "longest_losing_streak": 5,
+        "max_drawdown": 9.29,
+        "worst_rolling10": -5.39
+      },
+      "catastrophic_season_instability": {
+        "flag": false,
+        "note": "no catastrophic season"
+      },
+      "season_dominance": {
+        "flag": false,
+        "share": 0.382,
+        "note": "largest |season profit| 8.02 vs pooled positive 21.0"
+      },
+      "positive_seasons": 3,
+      "negative_seasons": 0,
+      "worst_season_roi": 0.1358,
+      "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+      "uses_frozen_only": true
+    },
+    "SPREAD_0_4": {
+      "hypothesis_family": "SPREAD_DISAGREEMENT",
+      "model": "EXPECTED_MARGIN",
+      "bucket": "frozen low-mid bins 0-1..3-4 (disagreement < 4 pts)",
+      "selected_side_rule": "HOME if margin+L>0 else AWAY; |margin+L| oriented",
+      "actionable_price_rule": "greatest selected-side actionable DK/FD spread, then price, then fixed tie-break",
+      "discovery_metrics": {
+        "N": 467,
+        "wins": 262,
+        "losses": 198,
+        "pushes": 7,
+        "hit_rate": 0.561,
+        "avg_american": -96.04,
+        "avg_decimal": 1.9306,
+        "avg_breakeven": 0.5181,
+        "exp_wins": 241.97,
+        "realized_minus_exp": 20.03,
+        "hr_minus_be": 0.0429,
+        "profit": 45.49,
+        "roi": 0.0974,
+        "avg_implied_ev": null,
+        "unique_weeks": 63,
+        "per_season": {
+          "2020": {
+            "N": 145,
+            "hit_rate": 0.531,
+            "profit": 6.58,
+            "roi": 0.0454
+          },
+          "2021": {
+            "N": 161,
+            "hit_rate": 0.5466,
+            "profit": 8.45,
+            "roi": 0.0525
+          },
+          "2022": {
+            "N": 161,
+            "hit_rate": 0.6025,
+            "profit": 30.46,
+            "roi": 0.1892
+          }
+        }
+      },
+      "week_block_bootstrap": {
+        "point_roi": 0.0974,
+        "p2p5": 0.0115,
+        "p97p5": 0.1816,
+        "p_pos": 0.9854,
+        "replicates": 5000,
+        "resampling_unit": "season-week block (season + canonical week identity)"
+      },
+      "streak_drawdown": {
+        "longest_losing_streak": 12,
+        "max_drawdown": 13.26,
+        "worst_rolling10": -10.0
+      },
+      "catastrophic_season_instability": {
+        "flag": false,
+        "note": "no catastrophic season"
+      },
+      "season_dominance": {
+        "flag": true,
+        "share": 0.67,
+        "note": "largest |season profit| 30.46 vs pooled positive 45.49"
+      },
+      "positive_seasons": 3,
+      "negative_seasons": 0,
+      "worst_season_roi": 0.0454,
+      "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+      "uses_frozen_only": true
+    }
+  },
+  "big_opportunity_discovery_candidate": [],
+  "big_opportunity_status": "NO_BIG_OPPORTUNITY_DISCOVERY_CANDIDATE (no frozen large-disagreement ML bucket 8-12/12+ is discovery-positive; long dogs +201+ strongly negative)",
+  "notes": [
+    "All selected candidates use ONLY frozen preregistered buckets/zones; no new threshold invented.",
+    "ML_DOG_VALUE_ZONE (AVG view) is the standout: N=149, ROI +25.2%, hit 49.7% vs break-even 39.9%, week-block 95% CI (0.079, 0.430), P(ROI>0) 0.997, all three seasons positive, no catastrophic season.",
+    "ML_CORROBORATED_DOG_VALUE_ZONE: N=85, ROI +28.1%, corroboration (both models same underpriced side) inside the frozen zone.",
+    "ML_AVG_0_2: N=136, ROI +15.4%, all seasons positive, but week-block 95% CI includes zero (weaker; SUPPORTED_USABLE-class in discovery).",
+    "ML_AVG_2_4 was evaluated and EXCLUDED from the lock set due to CATASTROPHIC_SEASON_INSTABILITY (2022 ROI -24.5%, N=28).",
+    "SPREAD_0_4 = union of frozen low-mid buckets 0-1,1-2,2-3,3-4 (disagreement in [0,4)); N=467, ROI +9.7%, 95% CI (0.011,0.182), P(ROI>0) 0.985, no catastrophic season. Bucket 4+ is clearly negative and excluded.",
+    "TOTALS: none recommended - all TOTAL_R4 buckets near or below break-even; no robust edge in discovery.",
+    "These are DISCOVERY-only screening labels / lock recommendations. Confirmation (2023-24) remains CLOSED and unopened. Final STRONG/SUPPORTED/FAILED labels require confirmation."
+  ]
+}

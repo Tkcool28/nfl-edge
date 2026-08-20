@@ -1,0 +1,198 @@
+{
+  "moneyline_candidates": {
+    "AVG 0-2": {
+      "N": 136,
+      "states": {
+        "BETTER": 49,
+        "EQUAL": 15,
+        "WORSE": 72
+      }
+    },
+    "AVG 2-4": {
+      "N": 111,
+      "states": {
+        "BETTER": 42,
+        "EQUAL": 15,
+        "WORSE": 54
+      }
+    },
+    "AVG 4-8": {
+      "N": 208,
+      "states": {
+        "BETTER": 79,
+        "EQUAL": 18,
+        "WORSE": 111
+      }
+    },
+    "XGB 4-8": {
+      "N": 168,
+      "states": {
+        "BETTER": 60,
+        "EQUAL": 9,
+        "WORSE": 99
+      }
+    },
+    "QB_ELO 0-2": {
+      "N": 132,
+      "states": {
+        "BETTER": 56,
+        "EQUAL": 14,
+        "WORSE": 62
+      }
+    },
+    "CORROB 4-8": {
+      "N": 124,
+      "states": {
+        "BETTER": 50,
+        "EQUAL": 6,
+        "WORSE": 68
+      }
+    }
+  },
+  "dog_value_zone": {
+    "QB_ELO": {
+      "N": 115,
+      "states": {
+        "BETTER": 41,
+        "EQUAL": 7,
+        "WORSE": 67
+      }
+    },
+    "XGB": {
+      "N": 130,
+      "states": {
+        "BETTER": 44,
+        "EQUAL": 7,
+        "WORSE": 79
+      }
+    },
+    "AVG": {
+      "N": 149,
+      "states": {
+        "BETTER": 49,
+        "EQUAL": 9,
+        "WORSE": 91
+      }
+    },
+    "CORROB": {
+      "N": 85,
+      "states": {
+        "BETTER": 28,
+        "EQUAL": 4,
+        "WORSE": 53
+      }
+    }
+  },
+  "spread_overall": {
+    "N": 838,
+    "number_better(sum)": 430,
+    "price_better(sum)": 430,
+    "number_and_price_better(sum)": 430,
+    "pct_number_better": 0.513,
+    "pct_price_better": 0.513,
+    "pct_both": 0.513
+  },
+  "spread_by_bucket": {
+    "0-1": {
+      "N": 109,
+      "number_better(sum)": 43,
+      "price_better(sum)": 43,
+      "number_and_price_better(sum)": 43,
+      "pct_number_better": 0.394,
+      "pct_price_better": 0.394,
+      "pct_both": 0.394
+    },
+    "1-2": {
+      "N": 135,
+      "number_better(sum)": 48,
+      "price_better(sum)": 48,
+      "number_and_price_better(sum)": 48,
+      "pct_number_better": 0.356,
+      "pct_price_better": 0.356,
+      "pct_both": 0.356
+    },
+    "2-3": {
+      "N": 117,
+      "number_better(sum)": 42,
+      "price_better(sum)": 42,
+      "number_and_price_better(sum)": 42,
+      "pct_number_better": 0.359,
+      "pct_price_better": 0.359,
+      "pct_both": 0.359
+    },
+    "3-4": {
+      "N": 106,
+      "number_better(sum)": 49,
+      "price_better(sum)": 49,
+      "number_and_price_better(sum)": 49,
+      "pct_number_better": 0.462,
+      "pct_price_better": 0.462,
+      "pct_both": 0.462
+    },
+    "4+": {
+      "N": 371,
+      "number_better(sum)": 248,
+      "price_better(sum)": 248,
+      "number_and_price_better(sum)": 248,
+      "pct_number_better": 0.668,
+      "pct_price_better": 0.668,
+      "pct_both": 0.668
+    }
+  },
+  "total_overall": {
+    "N": 838,
+    "number_better(sum)": 0,
+    "price_better(sum)": 0,
+    "number_and_price_better(sum)": 0,
+    "pct_number_better": 0.0,
+    "pct_price_better": 0.0,
+    "pct_both": 0.0
+  },
+  "total_by_bucket": {
+    "0-1": {
+      "N": 192,
+      "number_better(sum)": 0,
+      "price_better(sum)": 0,
+      "number_and_price_better(sum)": 0,
+      "pct_number_better": 0.0,
+      "pct_price_better": 0.0,
+      "pct_both": 0.0
+    },
+    "1-2": {
+      "N": 160,
+      "number_better(sum)": 0,
+      "price_better(sum)": 0,
+      "number_and_price_better(sum)": 0,
+      "pct_number_better": 0.0,
+      "pct_price_better": 0.0,
+      "pct_both": 0.0
+    },
+    "2-3": {
+      "N": 161,
+      "number_better(sum)": 0,
+      "price_better(sum)": 0,
+      "number_and_price_better(sum)": 0,
+      "pct_number_better": 0.0,
+      "pct_price_better": 0.0,
+      "pct_both": 0.0
+    },
+    "3-4": {
+      "N": 129,
+      "number_better(sum)": 0,
+      "price_better(sum)": 0,
+      "number_and_price_better(sum)": 0,
+      "pct_number_better": 0.0,
+      "pct_price_better": 0.0,
+      "pct_both": 0.0
+    },
+    "4+": {
+      "N": 196,
+      "number_better(sum)": 0,
+      "price_better(sum)": 0,
+      "number_and_price_better(sum)": 0,
+      "pct_number_better": 0.0,
+      "pct_price_better": 0.0,
+      "pct_both": 0.0
+    }
+  }
+}
