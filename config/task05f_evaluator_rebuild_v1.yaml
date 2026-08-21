@@ -49,6 +49,11 @@ point_market_contract:
   complement_only_exact_same_line: true
   independently_shopped_sides_may_overlap: true
   push_probability_method: integer_lattice_half_point_bin
+  probability_smoothing:
+    family: jeffreys
+    half_point_beta_prior: [0.5, 0.5]
+    integer_line_dirichlet_prior: [0.5, 0.5, 0.5]
+    outcome_tuned: false
 
 shopping:
   moneyline: best_price
