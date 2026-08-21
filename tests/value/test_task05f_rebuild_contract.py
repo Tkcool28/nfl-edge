@@ -10,6 +10,8 @@ from nfl_edge.value.wager_economics import (
     empirical_spread_probabilities,
     empirical_total_probabilities,
     expected_value_three_way,
+    fair_american_three_way,
+    fair_decimal_three_way,
     line_allows_push,
     moneyline_settlement,
     spread_residual_threshold,
@@ -21,6 +23,14 @@ def test_three_way_probability_contract_and_ev_push_zero():
     p = OutcomeProbabilities(p_win=0.50, p_push=0.05, p_loss=0.45)
     # +100: +1 on win, 0 on push, -1 on loss => +0.05 EV.
     assert expected_value_three_way(p, 100) == pytest.approx(0.05)
+
+
+def test_three_way_fair_price_accounts_for_push_mass():
+    p = OutcomeProbabilities(p_win=0.50, p_push=0.05, p_loss=0.45)
+    # Zero-EV decimal = 1 + p_loss/p_win = 1.90, i.e. about -111 American.
+    assert fair_decimal_three_way(p) == pytest.approx(1.9)
+    assert fair_american_three_way(p) == -111
+    assert expected_value_three_way(p, fair_american_three_way(p)) == pytest.approx(0.0, abs=0.001)
 
 
 def test_strict_value_is_any_positive_ev_not_minimum_threshold():
@@ -85,14 +95,16 @@ def test_asymmetric_shopped_spreads_are_evaluated_at_their_own_lines():
     away = empirical_spread_probabilities(residuals, 3.0, "away", +3.5)
     assert home.p_push == 0.0
     assert away.p_push == 0.0
-    assert home.p_win == pytest.approx(3 / 5)
-    assert away.p_win == pytest.approx(3 / 5)
+    # Jeffreys Beta(1/2,1/2): raw 3/5 becomes 3.5/6.
+    assert home.p_win == pytest.approx(3.5 / 6.0)
+    assert away.p_win == pytest.approx(3.5 / 6.0)
     assert home.p_win + away.p_win > 1.0  # legitimate middle, not evaluator incoherence
 
 
 def test_exact_mirrored_integer_spreads_include_push_mass():
     # Integer line allows a push. The continuity cell around residual threshold 0
-    # represents the single integer margin equal to 3.
+    # represents the single integer margin equal to 3. Symmetric Jeffreys smoothing
+    # preserves 1/3 for the balanced 1/1/1 count case.
     residuals = [-1.0, 0.0, 1.0]
     home = empirical_spread_probabilities(residuals, 3.0, "home", -3.0)
     away = empirical_spread_probabilities(residuals, 3.0, "away", +3.0)
@@ -116,8 +128,9 @@ def test_asymmetric_shopped_totals_are_not_forced_complements():
     residuals = [-1.0, -0.25, 0.0, 0.25, 1.0]
     over = empirical_total_probabilities(residuals, 45.0, "over", 44.5)
     under = empirical_total_probabilities(residuals, 45.0, "under", 45.5)
-    assert over.p_win == pytest.approx(4 / 5)
-    assert under.p_win == pytest.approx(4 / 5)
+    # Raw 4/5 with fixed Jeffreys Beta smoothing -> 4.5/6.
+    assert over.p_win == pytest.approx(4.5 / 6.0)
+    assert under.p_win == pytest.approx(4.5 / 6.0)
     assert over.p_push == 0.0
     assert under.p_push == 0.0
     assert over.p_win + under.p_win > 1.0  # both wagers can win when final total is 45
