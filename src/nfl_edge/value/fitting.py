@@ -2,6 +2,7 @@ from __future__ import annotations
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from .contracts import EvaluatorState
+from .market_math import normal_cdf
 from .uncertainty import block_bootstrap_calibration_radius
 
 def fit_global_lambda(model:list[float],market:list[float],y:list[int])->float:
@@ -31,7 +32,7 @@ def fit_ml_states(rows:list[dict],version:str,config_sha:str)->dict[str,Evaluato
 def fit_point_states(rows:list[dict],market_type:str,version:str,config_sha:str)->dict[str,EvaluatorState]:
     n=len(rows); residual=[float(r["residual"]) for r in rows];sigma=float(np.std(residual,ddof=1)) if n>1 else 14.0
     sigma=max(sigma,1e-6); z=[float(r["delta"])/sigma for r in rows]; y=[int(r["y"]) for r in rows]
-    boot=block_bootstrap_calibration_radius([(r["block"],.5,r["y"]) for r in rows]) if n else 1.0
+    boot=block_bootstrap_calibration_radius([(r["block"],normal_cdf(v),r["y"]) for r,v in zip(rows,z)]) if n else 1.0
     out={"normal_cdf":EvaluatorState(market_type,"normal_cdf",version,n,{"sigma":sigma},uncertainty=boot,config_sha256=config_sha)}
     if n>=128:
       it,co=_lr([[v] for v in z],y);out["calibrated_normal"]=EvaluatorState(market_type,"calibrated_normal",version,n,{"sigma":sigma,"intercept":it,"slope":co[0]},uncertainty=boot,config_sha256=config_sha)
