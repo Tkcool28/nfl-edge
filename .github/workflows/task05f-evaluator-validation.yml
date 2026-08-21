@@ -1,0 +1,81 @@
+name: Task05F Evaluator Validation
+
+on:
+  push:
+    branches:
+      - feat/task05f-evaluator-rebuild-v1
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'src/nfl_edge/value/**'
+      - 'scripts/task05f_*'
+      - 'tests/value/**'
+      - 'config/task05f_evaluator_rebuild_v1.yaml'
+      - 'docs/task05f_evaluator_rebuild_v1.md'
+      - '.github/workflows/task05f-evaluator-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evaluator-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install evaluator test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest scipy
+
+      - name: Enforce evaluator-only scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=3ed8d740a88b59d46e27e206f39757307a6a13da
+          git cat-file -e "$BASE^{commit}"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/task05f_changed_paths.txt
+          if grep -E '^(src/nfl_edge/models/|src/nfl_edge/backtest/expected_margin|data/modeling/|data/frozen/|reports/task05d/|reports/task05e_remediated/|config/expected_margin|config/.*qb|config/.*xgb)' /tmp/task05f_changed_paths.txt; then
+            echo 'ERROR: Task05F rebuild modified frozen football-model/data scope.' >&2
+            exit 1
+          fi
+
+      - name: Run Task05F value-layer tests
+        run: pytest -q tests/value/
+
+      - name: Verify 2025 remains sealed in evaluator runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'SEALED={2025}' scripts/market_evaluator_v1_runner.py
+          grep -q 'pl.col("season").is_in(DEV)' scripts/market_evaluator_v1_runner.py
+
+      - name: Record validation provenance
+        shell: bash
+        run: |
+          mkdir -p artifacts/task05f
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "evaluator_only",\n  "sealed_season": 2025\n}\n' \
+            "$GITHUB_SHA" \
+            '3ed8d740a88b59d46e27e206f39757307a6a13da' \
+            > artifacts/task05f/ci_provenance.json
+          cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
+
+      - name: Upload evaluator validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05f-evaluator-validation-${{ github.sha }}
+          path: artifacts/task05f/
+          if-no-files-found: error
