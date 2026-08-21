@@ -10,6 +10,7 @@ from nfl_edge.value.wager_economics import (
     empirical_spread_probabilities,
     empirical_total_probabilities,
     expected_value_three_way,
+    line_allows_push,
     moneyline_settlement,
     spread_residual_threshold,
     total_residual_threshold,
@@ -60,27 +61,38 @@ def test_moneyline_tie_is_push_not_loss():
     assert moneyline_settlement("away", 21, 20) is Settlement.LOSS
 
 
+def test_point_line_push_eligibility_uses_integer_score_lattice():
+    assert line_allows_push(-3.0)
+    assert line_allows_push(45.0)
+    assert not line_allows_push(-3.5)
+    assert not line_allows_push(45.5)
+
+
 def test_spread_threshold_is_offer_specific():
-    # Expected home margin +3.
-    # HOME -3: threshold residual 0 (win when residual > 0).
-    # AWAY +3.5: threshold residual +0.5 (win when residual < +0.5).
-    # They are NOT exact complements because both can win when 0 < residual < .5.
-    assert spread_residual_threshold(3.0, "home", -3.0) == pytest.approx((0.0, "gt"))
-    assert spread_residual_threshold(3.0, "away", +3.5) == pytest.approx((0.5, "lt"))
+    t_home, d_home = spread_residual_threshold(3.0, "home", -2.5)
+    t_away, d_away = spread_residual_threshold(3.0, "away", +3.5)
+    assert t_home == pytest.approx(-0.5)
+    assert d_home == "gt"
+    assert t_away == pytest.approx(+0.5)
+    assert d_away == "lt"
 
 
-def test_asymmetric_shopped_spreads_are_not_forced_complements():
-    residuals = [-2.0, -1.0, 0.0, 0.25, 0.75, 1.0, 2.0]
-    home = empirical_spread_probabilities(residuals, 3.0, "home", -3.0)
+def test_asymmetric_shopped_spreads_are_evaluated_at_their_own_lines():
+    # HOME -2.5 and AWAY +3.5 are not a mirrored pair. Both wagers win if the
+    # actual home margin is exactly 3, represented here by residual 0.
+    residuals = [-2.0, -1.0, 0.0, 1.0, 2.0]
+    home = empirical_spread_probabilities(residuals, 3.0, "home", -2.5)
     away = empirical_spread_probabilities(residuals, 3.0, "away", +3.5)
-    assert home.p_win == pytest.approx(4 / 7)
-    assert home.p_push == pytest.approx(1 / 7)
-    assert away.p_win == pytest.approx(4 / 7)
+    assert home.p_push == 0.0
     assert away.p_push == 0.0
-    assert home.p_win + away.p_win > 1.0  # legitimate overlap, not incoherence
+    assert home.p_win == pytest.approx(3 / 5)
+    assert away.p_win == pytest.approx(3 / 5)
+    assert home.p_win + away.p_win > 1.0  # legitimate middle, not evaluator incoherence
 
 
 def test_exact_mirrored_integer_spreads_include_push_mass():
+    # Integer line allows a push. The continuity cell around residual threshold 0
+    # represents the single integer margin equal to 3.
     residuals = [-1.0, 0.0, 1.0]
     home = empirical_spread_probabilities(residuals, 3.0, "home", -3.0)
     away = empirical_spread_probabilities(residuals, 3.0, "away", +3.0)
@@ -92,8 +104,12 @@ def test_exact_mirrored_integer_spreads_include_push_mass():
 
 
 def test_total_threshold_is_exact_line_specific():
-    assert total_residual_threshold(45.0, "over", 44.5) == pytest.approx((-0.5, "gt"))
-    assert total_residual_threshold(45.0, "under", 45.5) == pytest.approx((0.5, "lt"))
+    t_over, d_over = total_residual_threshold(45.0, "over", 44.5)
+    t_under, d_under = total_residual_threshold(45.0, "under", 45.5)
+    assert t_over == pytest.approx(-0.5)
+    assert d_over == "gt"
+    assert t_under == pytest.approx(+0.5)
+    assert d_under == "lt"
 
 
 def test_asymmetric_shopped_totals_are_not_forced_complements():
@@ -102,7 +118,19 @@ def test_asymmetric_shopped_totals_are_not_forced_complements():
     under = empirical_total_probabilities(residuals, 45.0, "under", 45.5)
     assert over.p_win == pytest.approx(4 / 5)
     assert under.p_win == pytest.approx(4 / 5)
-    assert over.p_win + under.p_win > 1.0  # both wagers can win when final total is in the middle
+    assert over.p_push == 0.0
+    assert under.p_push == 0.0
+    assert over.p_win + under.p_win > 1.0  # both wagers can win when final total is 45
+
+
+def test_integer_total_line_estimates_push_mass_from_lattice_cell():
+    residuals = [-1.0, 0.0, 1.0]
+    over = empirical_total_probabilities(residuals, 45.0, "over", 45.0)
+    under = empirical_total_probabilities(residuals, 45.0, "under", 45.0)
+    assert over.p_push == pytest.approx(1 / 3)
+    assert under.p_push == pytest.approx(1 / 3)
+    assert over.p_win == pytest.approx(1 / 3)
+    assert under.p_win == pytest.approx(1 / 3)
 
 
 def test_probability_object_rejects_missing_mass():
