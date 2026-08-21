@@ -14,7 +14,6 @@ DEV=[2020,2021,2022,2023,2024]; SEALED={2025}; VERSION="market_evaluator_v1"
 
 def cfg_load(path:Path):
     raw=path.read_bytes();cfg=yaml.safe_load(raw);return cfg,hashlib.sha256(raw).hexdigest()
-def season_from_gid(gid:str)->int:return int(str(gid).split("_",1)[0])
 def assert_not_sealed_seasons(seasons)->None:
     bad=SEALED.intersection({int(s) for s in seasons})
     if bad:raise RuntimeError(f"SEALED season requested before materialization: {sorted(bad)}")
@@ -70,21 +69,19 @@ def materialize_training(games,idx,prior_gids):
       ph,pa=_pin(idx,gid,"moneyline","home"),_pin(idx,gid,"moneyline","away")
       if ph and pa and g["qbelo_home"] is not None and g["xgb_home"] is not None:
         p_home,_=proportional_no_vig(ph.price_american,pa.price_american);ml.append({"block":block,"qb":float(g["qbelo_home"]),"xgb":float(g["xgb_home"]),"pin":p_home,"y":_grade_ml("home",hs,as_)})
-      for side in ("home","away"):
-        o=_best(idx,gid,"spread",side)
-        if o and g["expected_home_margin"] is not None:
-          y=_grade_sp(side,float(o.line),hs,as_)
-          if y is not None:
-            sm=float(g["expected_home_margin"]) if side=="home" else -float(g["expected_home_margin"]);res=(hs-as_-float(g["expected_home_margin"])) if side=="home" else (as_-hs+float(g["expected_home_margin"]))
-            spr.append({"block":block,"delta":sm+float(o.line),"market_level":abs(float(o.line)),"residual":res,"y":y})
-      residual_total=(hs+as_)-float(g["predicted_total"]) if g["predicted_total"] is not None else None
-      if residual_total is not None:
-       for side in ("over","under"):
-        o=_best(idx,gid,"total",side)
+      o=_best(idx,gid,"spread","home")
+      if o and g["expected_home_margin"] is not None:
+        y=_grade_sp("home",float(o.line),hs,as_)
+        if y is not None:
+          residual=hs-as_-float(g["expected_home_margin"])
+          spr.append({"block":block,"delta":float(g["expected_home_margin"])+float(o.line),"market_level":abs(float(o.line)),"residual":residual,"y":y})
+      if g["predicted_total"] is not None:
+        o=_best(idx,gid,"total","over")
         if o:
-          y=_grade_total(side,float(o.line),hs,as_)
+          y=_grade_total("over",float(o.line),hs,as_)
           if y is not None:
-            d=(float(g["predicted_total"])-float(o.line)) if side=="over" else (float(o.line)-float(g["predicted_total"]));tot.append({"block":block,"delta":d,"market_level":float(o.line),"residual":residual_total,"y":y})
+            residual=(hs+as_)-float(g["predicted_total"])
+            tot.append({"block":block,"delta":float(g["predicted_total"])-float(o.line),"market_level":float(o.line),"residual":residual,"y":y})
     return ml,spr,tot
 
 def run(root:Path,cfg_path:Path,out:Path):
