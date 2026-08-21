@@ -1,0 +1,71 @@
+version: "1.0.0"
+status: "PREREGISTERED_BEFORE_TASK05F_EXPERIMENTS"
+architecture_reference: "NFL EDGE Market Evaluation Layer V1.1 (2026-08-20)"
+development:
+  seasons: [2020, 2021, 2022, 2023, 2024]
+  sealed_seasons: [2025]
+  block: "season-week"
+  chronology: "expanding_walk_forward_prior_blocks_only"
+  cold_start: "fail_closed_to_market_or_unsupported"
+  minimum_training_games: 128
+markets:
+  benchmark_book: "pinnacle"
+  actionable_books: ["draftkings", "fanduel"]
+  deterministic_book_tiebreak: ["draftkings", "fanduel"]
+  snapshot_semantics: "canonical pregame snapshot; preserve book identity and timestamp"
+ml:
+  required_baselines: ["pinnacle", "raw_qbelo", "raw_xgb", "exact_avg", "global_shrinkage"]
+  candidate_families: ["global_shrinkage", "reliability_aware_shrinkage", "strong_logistic"]
+  combined_candidates_require_both_models: true
+  market_regions: [[0.0, 0.40], [0.40, 0.60], [0.60, 1.0]]
+  disagreement_split_pp: 5.0
+  strong_logistic_C: 0.05
+spread:
+  required_baselines: ["normal_cdf", "calibrated_normal", "strong_logistic"]
+  sigma_source: "prior-block expected_home_margin residuals only"
+  shopping: "best selected-side number, then best price, then deterministic book"
+  strong_logistic_C: 0.05
+totals:
+  required_baselines: ["normal_cdf", "calibrated_normal", "strong_logistic"]
+  sigma_source: "prior-block Ridge R4 total residuals only"
+  shopping_over: "lowest line, then best price, then deterministic book"
+  shopping_under: "highest line, then best price, then deterministic book"
+  strong_logistic_C: 0.05
+selection_rule:
+  primary: "probability quality and calibration"
+  simplicity_tolerance_brier: 0.002
+  simplicity_tolerance_logloss: 0.005
+  roi_never_primary: true
+probability:
+  clip: [0.01, 0.99]
+  pushes_excluded_from_binary_probability_metrics: true
+reliability:
+  tiers: ["HIGH", "MEDIUM", "LOW", "UNSUPPORTED"]
+  min_support_low: 128
+  min_support_medium: 256
+  min_support_high: 512
+  high_max_uncertainty: 0.025
+  medium_max_uncertainty: 0.045
+  max_out_of_support_distance: 0.10
+  max_constituent_disagreement_high: 0.08
+  max_constituent_disagreement_medium: 0.15
+uncertainty:
+  method: "deterministic season-week block bootstrap calibration-gap radius"
+  bootstrap_replicates: 1000
+  seed: 20260820
+  interval_quantile: 0.90
+staking_probability:
+  method: "shrink evaluator edge toward Pinnacle/break-even anchor by reliability and uncertainty"
+  reliability_haircut: {HIGH: 1.0, MEDIUM: 0.70, LOW: 0.35, UNSUPPORTED: 0.0}
+unsupported:
+  fail_closed: true
+  conditions: ["sealed season", "invalid offer", "missing required football signal", "missing benchmark when required", "insufficient prior support", "out_of_support"]
+output:
+  schema_version: "market_candidate_v1"
+  preserve_all_books: true
+  arbitrary_offer_compatible: true
+  frontend_color_comparison_fields: ["benchmark_line", "benchmark_price_american", "offer_line", "offer_price_american", "book"]
+security:
+  safe_manifest_fields_only: true
+  serialize_environment: false
+  prohibited: ["api_key", "token", "password", "authorization", "environment_dump"]
