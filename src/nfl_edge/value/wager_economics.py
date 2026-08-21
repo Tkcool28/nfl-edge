@@ -157,6 +157,12 @@ def total_residual_threshold(
     raise ValueError("total side must be over or under")
 
 
+def line_allows_push(line: float, *, atol: float = 1e-9) -> bool:
+    """NFL score/margin totals are integers, so only integer point lines can push."""
+    x = float(line)
+    return isclose(x, round(x), rel_tol=0.0, abs_tol=atol)
+
+
 def empirical_outcome_probabilities(
     residuals: Iterable[float],
     threshold: float,
@@ -164,11 +170,10 @@ def empirical_outcome_probabilities(
     *,
     atol: float = 1e-9,
 ) -> OutcomeProbabilities:
-    """Empirical WIN/PUSH/LOSS probabilities for an exact wager threshold.
+    """Empirical WIN/PUSH/LOSS probabilities using exact threshold equality.
 
-    This is a deterministic probability primitive, not a selected production
-    evaluator family. No ROI-derived tuning, bucket selection, or model fitting
-    occurs here.
+    This generic primitive is useful when the residual support itself is discrete.
+    Point-market helpers below use an integer-lattice continuity bin for push mass.
     """
     vals = [float(x) for x in residuals]
     if not vals:
@@ -186,6 +191,54 @@ def empirical_outcome_probabilities(
     return OutcomeProbabilities(win / n, push / n, loss / n)
 
 
+def empirical_lattice_outcome_probabilities(
+    residuals: Iterable[float],
+    threshold: float,
+    direction: Literal["gt", "lt"],
+    *,
+    push_possible: bool,
+) -> OutcomeProbabilities:
+    """Empirical probabilities with a one-score-point continuity bin for pushes.
+
+    Football margins/totals live on the integer score lattice while model residuals
+    are continuous because model predictions are continuous. For an integer line,
+    a push is the single integer outcome centered at `threshold`; in residual space
+    that integer cell is represented by [threshold-0.5, threshold+0.5).
+
+    For half-point/non-integer lines push is impossible and the exact threshold
+    splits win/loss mass directly.
+    """
+    vals = [float(x) for x in residuals]
+    if not vals:
+        raise ValueError("at least one prior residual is required")
+    t = float(threshold)
+    win = push = loss = 0
+    if not push_possible:
+        for r in vals:
+            won = (r > t) if direction == "gt" else (r < t)
+            if won:
+                win += 1
+            else:
+                loss += 1
+    else:
+        lo, hi = t - 0.5, t + 0.5
+        for r in vals:
+            if lo <= r < hi:
+                push += 1
+            elif direction == "gt":
+                if r >= hi:
+                    win += 1
+                else:
+                    loss += 1
+            else:
+                if r < lo:
+                    win += 1
+                else:
+                    loss += 1
+    n = float(len(vals))
+    return OutcomeProbabilities(win / n, push / n, loss / n)
+
+
 def empirical_spread_probabilities(
     residuals: Iterable[float],
     expected_home_margin: float,
@@ -193,7 +246,12 @@ def empirical_spread_probabilities(
     line: float,
 ) -> OutcomeProbabilities:
     threshold, direction = spread_residual_threshold(expected_home_margin, side, line)
-    return empirical_outcome_probabilities(residuals, threshold, direction)
+    return empirical_lattice_outcome_probabilities(
+        residuals,
+        threshold,
+        direction,
+        push_possible=line_allows_push(line),
+    )
 
 
 def empirical_total_probabilities(
@@ -203,4 +261,9 @@ def empirical_total_probabilities(
     line: float,
 ) -> OutcomeProbabilities:
     threshold, direction = total_residual_threshold(predicted_total, side, line)
-    return empirical_outcome_probabilities(residuals, threshold, direction)
+    return empirical_lattice_outcome_probabilities(
+        residuals,
+        threshold,
+        direction,
+        push_possible=line_allows_push(line),
+    )
