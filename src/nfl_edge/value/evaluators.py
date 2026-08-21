@@ -23,7 +23,7 @@ def evaluate_ml(game:GameState, offer:NormalizedOffer, state:EvaluatorState, pin
     x=None if game.xgb_home is None else _side_prob(game.xgb_home,offer.side)
     avg=exact_avg(game,offer.side)
     fam=state.family
-    if fam in {"global_shrinkage","reliability_aware_shrinkage","strong_logistic"} and avg is None:
+    if fam in {"exact_avg","global_shrinkage","reliability_aware_shrinkage","strong_logistic"} and avg is None:
         return EvaluationResult(None,None,None,None,"UNSUPPORTED",None,state.training_n,state.version,{},False,"exact_avg_requires_both_models")
     if fam=="pinnacle":p=pinnacle_no_vig_selected
     elif fam=="raw_qbelo":

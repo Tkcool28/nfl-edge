@@ -8,6 +8,23 @@ def state(mt,fam,**p):return EvaluatorState(mt,fam,"v1",512,p,uncertainty=.01)
 def test_exact_avg_requires_both():
  g=GameState("g",2024,"1",None,.6,None);assert exact_avg(g,"home") is None
  g=GameState("g",2024,"1",None,.6,.4);assert exact_avg(g,"home")==pytest.approx(.5)
+def test_exact_avg_family_fails_closed_on_missing_constituent():
+ # exact_avg via the evaluator family must fail closed (regression for TypeError crash)
+ # both present -> evaluations normally
+ o=NormalizedOffer("moneyline","home","manual",-110,source="manual")
+ g_both=GameState("g",2024,"1",None,.6,.4)
+ r=evaluate_offer(g_both,o,state("moneyline","exact_avg"),pinnacle_no_vig_selected=.5)
+ assert r.supported and r.actionable_probability is not None and r.actionable_probability==pytest.approx(.5)
+ # xgb missing -> fail closed, no crash, no single-model fallback
+ g_no_xgb=GameState("g",2024,"1",None,.6,None)
+ r=evaluate_offer(g_no_xgb,o,state("moneyline","exact_avg"),pinnacle_no_vig_selected=.5)
+ assert r.supported is False and r.reliability=="UNSUPPORTED" and r.actionable_probability is None
+ assert r.reason=="exact_avg_requires_both_models"
+ # qbelo missing -> fail closed
+ g_no_q=GameState("g",2024,"1",None,None,.4)
+ r=evaluate_offer(g_no_q,o,state("moneyline","exact_avg"),pinnacle_no_vig_selected=.5)
+ assert r.supported is False and r.reliability=="UNSUPPORTED" and r.actionable_probability is None
+ assert r.reason=="exact_avg_requires_both_models"
 def test_no_vig_math():
  a,b=proportional_no_vig(-110,-110);assert a==pytest.approx(.5) and b==pytest.approx(.5)
 def test_ml_orientation_and_two_probs():
