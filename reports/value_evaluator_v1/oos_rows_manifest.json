@@ -1,17 +1,16 @@
 {
-  "artifact": "OOS evaluator row-level artifact (not committed, oversized)",
-  "storage_path": "/tmp/task05f-oos-out/per_row.json",
-  "file_sha256": "7e8e41eb477b5f5b4aebf39e5d77bbc5c15e01c334ffcc621625be4ce617d5ed",
-  "row_count": 31109,
+  "artifact": "OOS evaluator row-level artifact (remediated), not committed (oversized)",
+  "storage_path": "/tmp/rem-oos/rows_pry.json",
+  "file_sha256": "0bd0e2897d7ca9a8b61f7c8c59920e5fa86319e8daae0280ff321fb3535ba564",
+  "row_count": 34994,
   "columns": [
-    "be",
     "block",
+    "dec",
     "ev",
     "game_id",
-    "market",
     "p",
     "price",
-    "price_dec",
+    "reason",
     "rel",
     "season",
     "side",
@@ -21,37 +20,27 @@
     2020,
     2024
   ],
-  "seasons": [
-    2020,
-    2021,
-    2022,
-    2023,
-    2024
-  ],
-  "block_count_by_market": {
-    "moneyline": 98,
-    "spread": 100,
-    "total": 100
-  },
+  "season_count": 5,
+  "block_count": 109,
   "family_row_counts": {
-    "moneyline/pinnacle": 2494,
-    "moneyline/raw_qbelo": 2494,
-    "moneyline/raw_xgb": 2208,
-    "moneyline/exact_avg": 2208,
-    "moneyline/global_shrinkage": 2208,
-    "moneyline/reliability_aware_shrinkage": 2208,
-    "moneyline/strong_logistic": 2208,
-    "spread/normal_cdf": 2501,
+    "moneyline/exact_avg": 2816,
+    "moneyline/global_shrinkage": 2816,
+    "moneyline/pinnacle": 2816,
+    "moneyline/raw_qbelo": 2816,
+    "moneyline/raw_xgb": 2816,
+    "moneyline/reliability_aware_shrinkage": 2816,
+    "moneyline/strong_logistic": 2494,
     "spread/calibrated_normal": 2501,
+    "spread/normal_cdf": 2760,
     "spread/strong_logistic": 2501,
-    "total/normal_cdf": 2526,
     "total/calibrated_normal": 2526,
+    "total/normal_cdf": 2790,
     "total/strong_logistic": 2526
   },
   "distinct_games_by_market": {
-    "moneyline": 1247,
-    "spread": 1262,
-    "total": 1273
+    "moneyline": 1408,
+    "spread": 1393,
+    "total": 1406
   },
-  "generated_by": "market_evaluator_v1_runner.py"
+  "config_sha256": "74656de2f8ef03c0f7b1446d701856ef97fbb8136da4c01234d27875a8bf75c7"
 }

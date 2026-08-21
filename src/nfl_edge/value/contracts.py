@@ -37,6 +37,13 @@ class GameState:
     football_model_version: str = "frozen_task05f_inputs"
 
 @dataclass(frozen=True)
+class SupportFeature:
+    name: str
+    min_value: float
+    max_value: float
+    span: float  # safe floor applied at construction
+
+@dataclass(frozen=True)
 class EvaluatorState:
     market_type: str
     family: str
@@ -45,8 +52,10 @@ class EvaluatorState:
     parameters: Mapping[str, Any]
     support_min: float | None = None
     support_max: float | None = None
-    uncertainty: float = 0.0
+    uncertainty: float | None = None
     config_sha256: str = ""
+    stable_blocks: bool = True
+    support_features: tuple[SupportFeature, ...] = ()
 
 @dataclass(frozen=True)
 class EvaluationResult:

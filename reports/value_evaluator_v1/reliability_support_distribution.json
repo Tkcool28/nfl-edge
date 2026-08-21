@@ -1,0 +1,292 @@
+{
+  "config_sha": "74656de2f8ef03c0f7b1446d701856ef97fbb8136da4c01234d27875a8bf75c7",
+  "dev_seasons": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "reliability_formula": "tier(support_n, uncertainty, support_distance, disagreement, stable_blocks)",
+  "support_distance_formula": "max over per-feature [0 if inside [min,max] else norm distance beyond bound / span]; threshold 0.10",
+  "stability_rule": ">=4 distinct prior blocks AND block-bootstrap 0.90 quantile radius <= 0.05; else unstable (capped LOW)",
+  "uncertainty_definition": "chronological block-bootstrap calibration-gap radius (0.90 quantile) of that family's own probability over PRIOR blocks only",
+  "distributions": {
+    "moneyline": {
+      "pinnacle": {
+        "total_evals": 2816,
+        "supported": {
+          "LOW": 1510,
+          "MEDIUM": 936,
+          "HIGH": 44
+        },
+        "unsupported": 326,
+        "unsupported_reasons": {
+          "out_of_support": 109,
+          "insufficient_prior_support": 217
+        },
+        "supported_by_reason": null,
+        "per_season_n": {
+          "2020": 538,
+          "2021": 570,
+          "2022": 568,
+          "2023": 570,
+          "2024": 570
+        }
+      },
+      "raw_qbelo": {
+        "total_evals": 2816,
+        "supported": {
+          "LOW": 1992,
+          "MEDIUM": 498
+        },
+        "unsupported": 326,
+        "unsupported_reasons": {
+          "out_of_support": 109,
+          "insufficient_prior_support": 217
+        },
+        "supported_by_reason": null,
+        "per_season_n": {
+          "2020": 538,
+          "2021": 570,
+          "2022": 568,
+          "2023": 570,
+          "2024": 570
+        }
+      },
+      "raw_xgb": {
+        "total_evals": 2816,
+        "supported": {
+          "LOW": 1294,
+          "MEDIUM": 710,
+          "HIGH": 200
+        },
+        "unsupported": 612,
+        "unsupported_reasons": {
+          "missing_xgb": 350,
+          "out_of_support": 45,
+          "insufficient_prior_support": 217
+        },
+        "supported_by_reason": null,
+        "per_season_n": {
+          "2020": 538,
+          "2021": 570,
+          "2022": 568,
+          "2023": 570,
+          "2024": 570
+        }
+      },
+      "exact_avg": {
+        "total_evals": 2816,
+        "supported": {
+          "LOW": 1480,
+          "MEDIUM": 724
+        },
+        "unsupported": 612,
+        "unsupported_reasons": {
+          "exact_avg_requires_both_models": 350,
+          "out_of_support": 45,
+          "insufficient_prior_support": 217
+        },
+        "supported_by_reason": null,
+        "per_season_n": {
+          "2020": 538,
+          "2021": 570,
+          "2022": 568,
+          "2023": 570,
+          "2024": 570
+        }
+      },
+      "global_shrinkage": {
+        "total_evals": 2816,
+        "supported": {
+          "LOW": 1370,
+          "MEDIUM": 796,
+          "HIGH": 38
+        },
+        "unsupported": 612,
+        "unsupported_reasons": {
+          "exact_avg_requires_both_models": 350,
+          "out_of_support": 45,
+          "insufficient_prior_support": 217
+        },
+        "supported_by_reason": null,
+        "per_season_n": {
+          "2020": 538,
+          "2021": 570,
+          "2022": 568,
+          "2023": 570,
+          "2024": 570
+        }
+      },
+      "reliability_aware_shrinkage": {
+        "total_evals": 2816,
+        "supported": {
+          "LOW": 1370,
+          "MEDIUM": 748,
+          "HIGH": 86
+        },
+        "unsupported": 612,
+        "unsupported_reasons": {
+          "exact_avg_requires_both_models": 350,
+          "out_of_support": 45,
+          "insufficient_prior_support": 217
+        },
+        "supported_by_reason": null,
+        "per_season_n": {
+          "2020": 538,
+          "2021": 570,
+          "2022": 568,
+          "2023": 570,
+          "2024": 570
+        }
+      },
+      "strong_logistic": {
+        "total_evals": 2494,
+        "supported": {
+          "LOW": 720,
+          "MEDIUM": 874,
+          "HIGH": 610
+        },
+        "unsupported": 290,
+        "unsupported_reasons": {
+          "out_of_support": 4,
+          "exact_avg_requires_both_models": 286
+        },
+        "supported_by_reason": null,
+        "per_season_n": {
+          "2020": 216,
+          "2021": 570,
+          "2022": 568,
+          "2023": 570,
+          "2024": 570
+        }
+      }
+    },
+    "spread": {
+      "normal_cdf": {
+        "total_evals": 2760,
+        "supported": {
+          "LOW": 392,
+          "MEDIUM": 1983,
+          "HIGH": 122
+        },
+        "unsupported": 263,
+        "unsupported_reasons": {
+          "out_of_support": 42,
+          "insufficient_prior_support": 221
+        },
+        "supported_by_reason": null,
+        "per_season_n": {
+          "2020": 529,
+          "2021": 567,
+          "2022": 554,
+          "2023": 547,
+          "2024": 563
+        }
+      },
+      "calibrated_normal": {
+        "total_evals": 2501,
+        "supported": {
+          "LOW": 253,
+          "MEDIUM": 1363,
+          "HIGH": 881
+        },
+        "unsupported": 4,
+        "unsupported_reasons": {
+          "out_of_support": 4
+        },
+        "supported_by_reason": null,
+        "per_season_n": {
+          "2020": 270,
+          "2021": 567,
+          "2022": 554,
+          "2023": 547,
+          "2024": 563
+        }
+      },
+      "strong_logistic": {
+        "total_evals": 2501,
+        "supported": {
+          "LOW": 253,
+          "MEDIUM": 1309,
+          "HIGH": 935
+        },
+        "unsupported": 4,
+        "unsupported_reasons": {
+          "out_of_support": 4
+        },
+        "supported_by_reason": null,
+        "per_season_n": {
+          "2020": 270,
+          "2021": 567,
+          "2022": 554,
+          "2023": 547,
+          "2024": 563
+        }
+      }
+    },
+    "total": {
+      "normal_cdf": {
+        "total_evals": 2790,
+        "supported": {
+          "LOW": 2122,
+          "MEDIUM": 397
+        },
+        "unsupported": 271,
+        "unsupported_reasons": {
+          "out_of_support": 43,
+          "insufficient_prior_support": 228
+        },
+        "supported_by_reason": null,
+        "per_season_n": {
+          "2020": 532,
+          "2021": 567,
+          "2022": 563,
+          "2023": 564,
+          "2024": 564
+        }
+      },
+      "calibrated_normal": {
+        "total_evals": 2526,
+        "supported": {
+          "LOW": 329,
+          "MEDIUM": 1610,
+          "HIGH": 580
+        },
+        "unsupported": 7,
+        "unsupported_reasons": {
+          "out_of_support": 7
+        },
+        "supported_by_reason": null,
+        "per_season_n": {
+          "2020": 268,
+          "2021": 567,
+          "2022": 563,
+          "2023": 564,
+          "2024": 564
+        }
+      },
+      "strong_logistic": {
+        "total_evals": 2526,
+        "supported": {
+          "LOW": 361,
+          "MEDIUM": 1612,
+          "HIGH": 546
+        },
+        "unsupported": 7,
+        "unsupported_reasons": {
+          "out_of_support": 7
+        },
+        "supported_by_reason": null,
+        "per_season_n": {
+          "2020": 268,
+          "2021": 567,
+          "2022": 563,
+          "2023": 564,
+          "2024": 564
+        }
+      }
+    }
+  }
+}
