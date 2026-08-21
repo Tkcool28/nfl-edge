@@ -17,7 +17,7 @@ from enum import Enum
 from math import isclose
 from typing import Iterable, Literal
 
-from .market_math import american_to_decimal
+from .market_math import american_to_decimal, decimal_to_american
 
 
 class Settlement(str, Enum):
@@ -65,6 +65,17 @@ def expected_value_three_way(prob: OutcomeProbabilities, american_price: int | f
     """Expected profit per 1-unit stake. Push contributes exactly zero."""
     win_profit = american_to_decimal(american_price) - 1.0
     return float(prob.p_win) * win_profit - float(prob.p_loss)
+
+
+def fair_decimal_three_way(prob: OutcomeProbabilities) -> float:
+    """Zero-EV decimal price under explicit push economics."""
+    if prob.p_win <= 0.0:
+        raise ValueError("fair price undefined when p_win <= 0")
+    return 1.0 + float(prob.p_loss) / float(prob.p_win)
+
+
+def fair_american_three_way(prob: OutcomeProbabilities) -> int:
+    return decimal_to_american(fair_decimal_three_way(prob))
 
 
 def classify_price(
@@ -191,6 +202,17 @@ def empirical_outcome_probabilities(
     return OutcomeProbabilities(win / n, push / n, loss / n)
 
 
+def _jeffreys_probabilities(win: int, push: int, loss: int, *, push_possible: bool) -> OutcomeProbabilities:
+    """Preregistered fixed Jeffreys smoothing; never fitted to ROI."""
+    if push_possible:
+        # Symmetric Dirichlet(1/2, 1/2, 1/2) over WIN/PUSH/LOSS.
+        den = float(win + push + loss) + 1.5
+        return OutcomeProbabilities((win + 0.5) / den, (push + 0.5) / den, (loss + 0.5) / den)
+    # Push is structurally impossible: Jeffreys Beta(1/2,1/2) over WIN/LOSS.
+    den = float(win + loss) + 1.0
+    return OutcomeProbabilities((win + 0.5) / den, 0.0, (loss + 0.5) / den)
+
+
 def empirical_lattice_outcome_probabilities(
     residuals: Iterable[float],
     threshold: float,
@@ -206,7 +228,8 @@ def empirical_lattice_outcome_probabilities(
     that integer cell is represented by [threshold-0.5, threshold+0.5).
 
     For half-point/non-integer lines push is impossible and the exact threshold
-    splits win/loss mass directly.
+    splits win/loss mass directly. Fixed Jeffreys smoothing is then applied exactly
+    as preregistered in config/task05f_evaluator_rebuild_v1.yaml.
     """
     vals = [float(x) for x in residuals]
     if not vals:
@@ -235,8 +258,7 @@ def empirical_lattice_outcome_probabilities(
                     win += 1
                 else:
                     loss += 1
-    n = float(len(vals))
-    return OutcomeProbabilities(win / n, push / n, loss / n)
+    return _jeffreys_probabilities(win, push, loss, push_possible=push_possible)
 
 
 def empirical_spread_probabilities(
