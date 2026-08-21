@@ -1,7 +1,7 @@
 {
-  "artifact": "OOS evaluator row-level artifact (remediated), not committed (oversized)",
-  "storage_path": "/tmp/rem-oos/rows_pry.json",
-  "file_sha256": "0bd0e2897d7ca9a8b61f7c8c59920e5fa86319e8daae0280ff321fb3535ba564",
+  "artifact": "OOS evaluator row-level artifact (orientation-fix run), not committed (oversized)",
+  "storage_path": "/tmp/orient-oos/rows.json",
+  "file_sha256": "eba0d5301163d7479948855f63ecb1ca71e0d5d8b5cbd54e9206b6ef2635de84",
   "row_count": 34994,
   "columns": [
     "block",
@@ -20,7 +20,6 @@
     2020,
     2024
   ],
-  "season_count": 5,
   "block_count": 109,
   "family_row_counts": {
     "moneyline/exact_avg": 2816,

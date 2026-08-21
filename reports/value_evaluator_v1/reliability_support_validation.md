@@ -39,15 +39,21 @@ Do-not-silently-change threshold: `MAX_OUT_OF_SUPPORT_DISTANCE = 0.10` (from fro
 
 | Market | Feature name | Meaning |
 |---|---|---|
-| moneyline | `pin` | Pinnacle no-vig probability (selected side) |
-| moneyline | `avg_pin_gap` | signed `exact_avg - Pinnacle` disagreement |
-| moneyline | `qb_xgb_gap` | `|QB-Elo - XGBoost|` constituent disagreement |
-| spread | `delta` | selected-side Expected-Margin advantage relative to spread line |
-| spread | `market_magnitude` | abs of the spread line used by the evaluator |
-| total | `delta` | `predicted_total - total` (Over orientation; canonical delta) |
-| total | `market_magnitude` | the total-market line level used by the evaluator |
+| moneyline | `pin` | selected-side Pinnacle no-vig probability |
+| moneyline | `avg_pin_gap` | **signed** `exact_avg - Pinnacle` (direction of model disagreement is meaningful) |
+| moneyline | `qb_xgb_gap` | **absolute** `|QB-Elo - XGBoost|` constituent disagreement |
+| spread | `delta_magnitude` | **abs**(selected-side Expected-Margin advantage relative to line) — orientation-invariant |
+| spread | `market_magnitude` | abs(spread line) |
+| total | `delta_magnitude` | **abs**(predicted_total − total line) — orientation-invariant |
+| total | `market_magnitude` | total-line level |
 
-Baseline/raw families (Pinnacle, raw QB-Elo, raw XGB, exact AVG) carry the moneyline envelope tuned to the game state; combined/shrinkage families carry the disagreement features they depend on.
+Side-mirror invariance (V1 consistency fix): spread `delta_magnitude = |delta|` and total
+`delta_magnitude = |delta|` put the reflected side (away/under) in the same support space as
+the canonical HOME/OVER orientation, so equivalent mirrored offers classify identically w.r.t.
+delta support. This is **support-only**: the evaluator probability formulas continue to use the
+selected-side **signed** delta (Normal-CDF / calibrated-Normal / strong-logistic unchanged).
+Mirrored sides are never treated as extra training observations (one canonical orientation per
+game).
 
 ## 4. Stability rule (explicit, single, pre-declared)
 

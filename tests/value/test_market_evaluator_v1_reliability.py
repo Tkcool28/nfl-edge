@@ -200,3 +200,135 @@ def test_football_models_sportsbook_independent():
                 assert not any(a.name.startswith("nfl_edge.value") for a in node.names), p
             elif isinstance(node, ast.ImportFrom):
                 assert not (node.module or "").startswith("nfl_edge.value"), p
+
+
+# ---------------------------------------------------------------------------
+# Defect #1: ML avg_pin_gap signed-coordinate consistency
+# ---------------------------------------------------------------------------
+
+def _ml_state_with_signed_support(lo, hi):
+    """Signed avg_pin_gap support envelope helper."""
+    return EvaluatorState(
+        "moneyline", "global_shrinkage", "v1", 1000, {"lambda": 0.5},
+        uncertainty=0.02, stable_blocks=True,
+        support_features=(
+            SupportFeature("pin", 0.1, 0.8, 0.7),
+            SupportFeature("avg_pin_gap", lo, hi, max(hi - lo, 1e-6)),
+            SupportFeature("qb_xgb_gap", 0.0, 0.5, 0.5),
+        ))
+
+
+def test_ml_signed_avg_pin_gap_is_preserved():
+    # Historical envelope negatively skewed [-0.15, -0.03]; a -0.07 signed gap is inside.
+    state = _ml_state_with_signed_support(-0.15, -0.03)
+    game = GameState("g", 2024, "1", None, 0.43, 0.43)  # avg = 0.43
+    offer = NormalizedOffer("moneyline", "home", "manual", -110, source="manual")
+    r = evaluate_offer(game, offer, state, pinnacle_no_vig_selected=0.50)
+    # signed gap = -0.07, inside [-0.15, -0.03] -> supported (buggy abs() would flag it)
+    assert r.supported is True
+    assert r.reason is None
+
+
+def test_ml_negative_supported_gap_stays_supported():
+    # -0.10 inside [-0.15,-0.03], supported (old abs() -> +0.10, beyond max -0.03 -> false UNSUPPORTED)
+    state = _ml_state_with_signed_support(-0.15, -0.03)
+    game = GameState("g", 2024, "1", None, 0.40, 0.40)  # avg 0.40, pin 0.5 -> -0.10
+    offer = NormalizedOffer("moneyline", "home", "manual", -100, source="manual")
+    r = evaluate_offer(game, offer, state, pinnacle_no_vig_selected=0.50)
+    assert r.reliability != "UNSUPPORTED"
+    assert r.reason is None
+
+
+def test_ml_positive_opposite_gap_can_be_out_of_support():
+    # +0.07 lies above historical max -0.03 -> legitimately outside negative-skew support.
+    state = _ml_state_with_signed_support(-0.15, -0.03)
+    game = GameState("g", 2024, "1", None, 0.57, 0.57)  # avg 0.57, pin 0.5 -> +0.07
+    offer = NormalizedOffer("moneyline", "home", "manual", -100, source="manual")
+    r = evaluate_offer(game, offer, state, pinnacle_no_vig_selected=0.50)
+    assert r.supported is False
+    assert r.reason == "out_of_support"
+
+
+def test_ml_side_flip_support_coherent_signed():
+    # home: signed gap -0.07 inside support; away flip -> +0.07 gap (outside) -> coherent.
+    state = _ml_state_with_signed_support(-0.15, -0.03)
+    game = GameState("g", 2024, "1", None, 0.43, 0.43)
+    offer_home = NormalizedOffer("moneyline", "home", "manual", -100, source="manual")
+    # home side gap -0.07 -> supported; away side flips prob -> gap +0.07 -> out_of_support
+    r_home = evaluate_offer(game, offer_home, state, pinnacle_no_vig_selected=0.50)
+    assert r_home.supported is True
+    offer_away = NormalizedOffer("moneyline", "away", "manual", -100, source="manual")
+    r_away = evaluate_offer(game, offer_away, state, pinnacle_no_vig_selected=0.50)
+    assert r_away.supported is False and r_away.reason == "out_of_support"
+
+
+# ---------------------------------------------------------------------------
+# Defect #2: point-market orientation-invariant support (delta_magnitude)
+# ---------------------------------------------------------------------------
+
+def _point_state(market_type, lo, hi):
+    # market magnitude envelope differs: spread lines ~0-7, total lines ~35-60
+    ml_lo, ml_hi = (0.0, 7.0) if market_type == "spread" else (35.0, 60.0)
+    return EvaluatorState(
+        market_type, "normal_cdf", "v1", 1000, {"sigma": 10.0},
+        uncertainty=0.02, stable_blocks=True,
+        support_features=(
+            SupportFeature("delta_magnitude", lo, hi, max(hi - lo, 1e-6)),
+            SupportFeature("market_magnitude", ml_lo, ml_hi, ml_hi - ml_lo),
+        ))
+
+
+def test_spread_home_away_delta_magnitude_invariant():
+    # home delta +1, away delta -1 => both see abs(delta)=1
+    state = _point_state("spread", 0.5, 3.0)
+    game = GameState("g", 2024, "1", None, expected_home_margin=4.0)
+    home = NormalizedOffer("spread", "home", "manual", -110, -3)
+    away = NormalizedOffer("spread", "away", "manual", -110, 3)
+    # home delta = expected_margin(+4 selected) + line(-3) = +1; school in support
+    r_home = evaluate_offer(game, home, state)
+    # away delta = -4 + 3 = -1; absolute 1, within same support
+    r_away = evaluate_offer(game, away, state)
+    # Both within support w.r.t. delta (market_magnitude 3 within 0..7)
+    assert r_home.reason is None or r_home.reason in ("spread",)
+    assert r_away.reason is None
+    assert r_home.supported is True and r_away.supported is True
+    # probabilities complement (selected-side signed math)
+    assert abs(r_home.actionable_probability + r_away.actionable_probability - 1.0) < 1e-6
+
+
+def test_total_over_under_delta_magnitude_invariant():
+    # predicted total 48, market 45: over delta +3, under delta -3, both abs=3
+    state = _point_state("total", 1.0, 5.0)
+    game = GameState("g", 2024, "1", None, predicted_total_r4=48.0)
+    over = NormalizedOffer("total", "over", "manual", -110, 45)
+    under = NormalizedOffer("total", "under", "manual", -110, 45)
+    r_over = evaluate_offer(game, over, state)
+    r_under = evaluate_offer(game, under, state)
+    assert r_over.supported is True and r_under.supported is True
+    assert abs(r_over.actionable_probability + r_under.actionable_probability - 1.0) < 1e-6
+
+
+def test_no_opposite_side_training_duplication():
+    # Fit on ONE canonical orientation per prior game only (spread home, total over).
+    from nfl_edge.value.fitting import fit_point_states, _point_support_features
+    # spread training uses home orientation only -> rows carry one delta per game
+    rows = [
+        {"block": f"20{(i // 5) % 4:02d}-{i % 5:02d}", "delta": 2.0, "market_level": 4.0, "residual": 3.0, "y": i % 2}
+        for i in range(20)
+    ]
+    states = fit_point_states(rows, "spread", "v1", "c")
+    feats = {f.name: f for f in states["normal_cdf"].support_features}
+    # support feature is delta_magnitude now
+    assert "delta_magnitude" in feats
+    assert feats["delta_magnitude"].max_value == pytest.approx(2.0)  # abs(2.0) from one-per-game
+    # No away-mirrored rows were added: max feature == the single canonical delta magnitude
+    assert states["normal_cdf"].training_n == 20  # one observation per game, no doubling
+
+
+def test_point_support_out_of_support_threshold_still_works():
+    # delta magnitude well beyond support -> out_of_support
+    state = _point_state("spread", 0.5, 3.0)
+    game = GameState("g", 2024, "1", None, expected_home_margin=20.0)
+    offer = NormalizedOffer("spread", "home", "manual", -110, -3)
+    r = evaluate_offer(game, offer, state)
+    assert r.supported is False and r.reason == "out_of_support"

@@ -12,14 +12,19 @@ def exact_avg(game:GameState, side:str)->float|None:
     return (_side_prob(game.qbelo_home,side)+_side_prob(game.xgb_home,side))/2.0
 
 def _moneyline_feature_values(q: float|None, x: float|None, avg: float|None, pin: float, state: EvaluatorState) -> list[float]:
-    """Build the per-feature values (same order as state.support_features)."""
+    """Build the per-feature values (same order as state.support_features).
+
+    avg_pin_gap uses the SIGNED coordinate (avg - pin), matching the historical
+    support envelope coordinate (whose sign reflects the direction of football-
+    model disagreement relative to the market). qb_xgb_gap stays absolute.
+    """
     fam = state.family
     values = []
     for f in state.support_features:
         if f.name == "pin":
             values.append(pin)
         elif f.name == "avg_pin_gap":
-            values.append(None if avg is None else abs(avg - pin))
+            values.append(None if avg is None else (avg - pin))
         elif f.name == "qb_xgb_gap":
             values.append(None if q is None or x is None else abs(q - x))
         else:
@@ -27,10 +32,15 @@ def _moneyline_feature_values(q: float|None, x: float|None, avg: float|None, pin
     return values
 
 def _point_feature_values(delta: float, market: float|None, state: EvaluatorState) -> list[float]:
+    """Build the per-feature values (same order as state.support_features).
+
+    delta_magnitude uses abs(selected-side delta) so mirrored sides share one
+    orientation-invariant support space. market_magnitude uses abs(line).
+    """
     out = []
     for f in state.support_features:
-        if f.name == "delta":
-            out.append(delta)
+        if f.name == "delta_magnitude":
+            out.append(abs(delta))
         elif f.name == "market_magnitude":
             out.append(None if market is None else abs(market))
         else:

@@ -12,6 +12,19 @@ Task05F is a downstream evaluator only. It does not modify or retrain QB-Elo, ch
 
 `NormalizedOffer` is source-agnostic. A DK/FD/Pinnacle feed row, historical row, or manual user input is normalized into the same object. Manual offers do not mutate evaluator state.
 
+## Support-coordinate system (v1.1 — Task05F consistency fix)
+
+Historical support envelopes and live/manual evaluations share one coordinate definition:
+
+- Moneyline:
+  - `pin` = selected-side Pinnacle no-vig probability (as-is)
+  - `avg_pin_gap` = **signed** `exact_avg_selected_side - pinnacle_no_vig_selected` (direction of model-vs-market disagreement is meaningful)
+  - `qb_xgb_gap` = **absolute** `|QB-Elo - XGBoost|` constituent disagreement
+- Spread: `delta_magnitude` = **abs(selected-side Expected-Margin advantage relative to line)**; `market_magnitude` = abs(spread line) — orientation-invariant, so home/away mirrored sides share one support space.
+- Totals: `delta_magnitude` = **abs(predicted_total - total line)**; `market_magnitude` = total-line level — orientation-invariant, so over/under mirrored sides share one support space.
+
+Probability formulas keep using selected-side **signed** deltas (Normal-CDF / calibrated-Normal / strong-logistic unchanged); only support-distance uses absolute magnitude. Same-block or future-block support is never used (prior blocks only).
+
 ## Evaluator families
 
 Moneyline: Pinnacle, raw QB-Elo, raw XGB, exact AVG, global market shrinkage, tiny reliability-aware shrinkage, strongly regularized logistic. Exact AVG and combined candidates fail closed unless both constituents exist.

@@ -1,54 +1,54 @@
 {
   "moneyline": {
     "pinnacle": {
-      "n_scored": 2490,
+      "n_scored": 2488,
       "n_games": 1245,
-      "hit_rate": 0.4988,
-      "avg_implied_break_even": 0.5156,
-      "flat_stake_roi": -0.04348,
-      "avg_model_ev": -0.02822,
-      "auc": 0.729,
+      "hit_rate": 0.4984,
+      "avg_implied_break_even": 0.5154,
+      "flat_stake_roi": -0.04368,
+      "avg_model_ev": -0.02823,
+      "auc": 0.7285,
       "per_season_n": {
-        "2020": 212,
+        "2020": 211,
         "2021": 570,
         "2022": 568,
         "2023": 570,
-        "2024": 570
+        "2024": 569
       },
       "per_season_hit": {
-        "2020": 0.5,
+        "2020": 0.498,
         "2021": 0.498,
         "2022": 0.496,
         "2023": 0.5,
-        "2024": 0.5
+        "2024": 0.499
       },
       "rel_dist": {
         "HIGH": 0.018,
         "MEDIUM": 0.376,
-        "LOW": 0.606
+        "LOW": 0.607
       }
     },
     "raw_qbelo": {
-      "n_scored": 2490,
+      "n_scored": 2488,
       "n_games": 1245,
-      "hit_rate": 0.4988,
-      "avg_implied_break_even": 0.5156,
-      "flat_stake_roi": -0.04348,
-      "avg_model_ev": 0.01446,
-      "auc": 0.6877,
+      "hit_rate": 0.4984,
+      "avg_implied_break_even": 0.5154,
+      "flat_stake_roi": -0.04368,
+      "avg_model_ev": 0.01492,
+      "auc": 0.6882,
       "per_season_n": {
-        "2020": 212,
+        "2020": 211,
         "2021": 570,
         "2022": 568,
         "2023": 570,
-        "2024": 570
+        "2024": 569
       },
       "per_season_hit": {
-        "2020": 0.5,
+        "2020": 0.498,
         "2021": 0.498,
         "2022": 0.496,
         "2023": 0.5,
-        "2024": 0.5
+        "2024": 0.499
       },
       "rel_dist": {
         "HIGH": 0.0,
@@ -57,26 +57,26 @@
       }
     },
     "raw_xgb": {
-      "n_scored": 2204,
+      "n_scored": 2202,
       "n_games": 1102,
-      "hit_rate": 0.4991,
-      "avg_implied_break_even": 0.5159,
-      "flat_stake_roi": -0.04882,
-      "avg_model_ev": 0.07058,
-      "auc": 0.6753,
+      "hit_rate": 0.4986,
+      "avg_implied_break_even": 0.5156,
+      "flat_stake_roi": -0.04906,
+      "avg_model_ev": 0.07105,
+      "auc": 0.6757,
       "per_season_n": {
-        "2020": 206,
+        "2020": 205,
         "2021": 500,
         "2022": 498,
         "2023": 500,
-        "2024": 500
+        "2024": 499
       },
       "per_season_hit": {
-        "2020": 0.5,
+        "2020": 0.498,
         "2021": 0.498,
         "2022": 0.498,
         "2023": 0.5,
-        "2024": 0.5
+        "2024": 0.499
       },
       "rel_dist": {
         "HIGH": 0.091,
@@ -85,26 +85,26 @@
       }
     },
     "exact_avg": {
-      "n_scored": 2204,
+      "n_scored": 2202,
       "n_games": 1102,
-      "hit_rate": 0.4991,
-      "avg_implied_break_even": 0.5159,
-      "flat_stake_roi": -0.04882,
-      "avg_model_ev": 0.04232,
-      "auc": 0.6981,
+      "hit_rate": 0.4986,
+      "avg_implied_break_even": 0.5156,
+      "flat_stake_roi": -0.04906,
+      "avg_model_ev": 0.04282,
+      "auc": 0.6986,
       "per_season_n": {
-        "2020": 206,
+        "2020": 205,
         "2021": 500,
         "2022": 498,
         "2023": 500,
-        "2024": 500
+        "2024": 499
       },
       "per_season_hit": {
-        "2020": 0.5,
+        "2020": 0.498,
         "2021": 0.498,
         "2022": 0.498,
         "2023": 0.5,
-        "2024": 0.5
+        "2024": 0.499
       },
       "rel_dist": {
         "HIGH": 0.0,
@@ -113,26 +113,26 @@
       }
     },
     "global_shrinkage": {
-      "n_scored": 2204,
+      "n_scored": 2202,
       "n_games": 1102,
-      "hit_rate": 0.4991,
-      "avg_implied_break_even": 0.5159,
-      "flat_stake_roi": -0.04882,
-      "avg_model_ev": -0.02855,
-      "auc": 0.7405,
+      "hit_rate": 0.4986,
+      "avg_implied_break_even": 0.5156,
+      "flat_stake_roi": -0.04906,
+      "avg_model_ev": -0.02856,
+      "auc": 0.74,
       "per_season_n": {
-        "2020": 206,
+        "2020": 205,
         "2021": 500,
         "2022": 498,
         "2023": 500,
-        "2024": 500
+        "2024": 499
       },
       "per_season_hit": {
-        "2020": 0.5,
+        "2020": 0.498,
         "2021": 0.498,
         "2022": 0.498,
         "2023": 0.5,
-        "2024": 0.5
+        "2024": 0.499
       },
       "rel_dist": {
         "HIGH": 0.017,
@@ -141,26 +141,26 @@
       }
     },
     "reliability_aware_shrinkage": {
-      "n_scored": 2204,
+      "n_scored": 2202,
       "n_games": 1102,
-      "hit_rate": 0.4991,
-      "avg_implied_break_even": 0.5159,
-      "flat_stake_roi": -0.04882,
-      "avg_model_ev": -0.03046,
-      "auc": 0.7406,
+      "hit_rate": 0.4986,
+      "avg_implied_break_even": 0.5156,
+      "flat_stake_roi": -0.04906,
+      "avg_model_ev": -0.03045,
+      "auc": 0.7401,
       "per_season_n": {
-        "2020": 206,
+        "2020": 205,
         "2021": 500,
         "2022": 498,
         "2023": 500,
-        "2024": 500
+        "2024": 499
       },
       "per_season_hit": {
-        "2020": 0.5,
+        "2020": 0.498,
         "2021": 0.498,
         "2022": 0.498,
         "2023": 0.5,
-        "2024": 0.5
+        "2024": 0.499
       },
       "rel_dist": {
         "HIGH": 0.039,
@@ -169,54 +169,54 @@
       }
     },
     "strong_logistic": {
-      "n_scored": 2204,
+      "n_scored": 2202,
       "n_games": 1102,
-      "hit_rate": 0.4991,
-      "avg_implied_break_even": 0.5159,
-      "flat_stake_roi": -0.04882,
-      "avg_model_ev": 0.10342,
-      "auc": 0.7263,
+      "hit_rate": 0.4986,
+      "avg_implied_break_even": 0.5156,
+      "flat_stake_roi": -0.04906,
+      "avg_model_ev": 0.10381,
+      "auc": 0.726,
       "per_season_n": {
-        "2020": 206,
+        "2020": 205,
         "2021": 500,
         "2022": 498,
         "2023": 500,
-        "2024": 500
+        "2024": 499
       },
       "per_season_hit": {
-        "2020": 0.5,
+        "2020": 0.498,
         "2021": 0.498,
         "2022": 0.498,
         "2023": 0.5,
-        "2024": 0.5
+        "2024": 0.499
       },
       "rel_dist": {
         "HIGH": 0.277,
-        "MEDIUM": 0.397,
+        "MEDIUM": 0.396,
         "LOW": 0.327
       }
     }
   },
   "spread": {
     "normal_cdf": {
-      "n_scored": 2497,
+      "n_scored": 2499,
       "n_games": 1261,
       "hit_rate": 0.5046,
       "avg_implied_break_even": 0.5247,
       "flat_stake_roi": -0.03842,
-      "avg_model_ev": -0.04123,
+      "avg_model_ev": -0.04068,
       "auc": 0.5008,
       "per_season_n": {
-        "2020": 267,
+        "2020": 268,
         "2021": 567,
-        "2022": 553,
+        "2022": 554,
         "2023": 547,
         "2024": 563
       },
       "per_season_hit": {
-        "2020": 0.502,
+        "2020": 0.5,
         "2021": 0.503,
-        "2022": 0.506,
+        "2022": 0.507,
         "2023": 0.508,
         "2024": 0.503
       },
@@ -227,80 +227,80 @@
       }
     },
     "calibrated_normal": {
-      "n_scored": 2497,
+      "n_scored": 2499,
       "n_games": 1261,
       "hit_rate": 0.5046,
       "avg_implied_break_even": 0.5247,
       "flat_stake_roi": -0.03842,
-      "avg_model_ev": -0.05746,
+      "avg_model_ev": -0.05742,
       "auc": 0.4931,
       "per_season_n": {
-        "2020": 267,
+        "2020": 268,
         "2021": 567,
-        "2022": 553,
+        "2022": 554,
         "2023": 547,
         "2024": 563
       },
       "per_season_hit": {
-        "2020": 0.502,
+        "2020": 0.5,
         "2021": 0.503,
-        "2022": 0.506,
+        "2022": 0.507,
         "2023": 0.508,
         "2024": 0.503
       },
       "rel_dist": {
         "HIGH": 0.353,
         "MEDIUM": 0.546,
-        "LOW": 0.101
+        "LOW": 0.102
       }
     },
     "strong_logistic": {
-      "n_scored": 2497,
+      "n_scored": 2499,
       "n_games": 1261,
       "hit_rate": 0.5046,
       "avg_implied_break_even": 0.5247,
       "flat_stake_roi": -0.03842,
-      "avg_model_ev": -0.05696,
+      "avg_model_ev": -0.05658,
       "auc": 0.5018,
       "per_season_n": {
-        "2020": 267,
+        "2020": 268,
         "2021": 567,
-        "2022": 553,
+        "2022": 554,
         "2023": 547,
         "2024": 563
       },
       "per_season_hit": {
-        "2020": 0.502,
+        "2020": 0.5,
         "2021": 0.503,
-        "2022": 0.506,
+        "2022": 0.507,
         "2023": 0.508,
         "2024": 0.503
       },
       "rel_dist": {
         "HIGH": 0.374,
         "MEDIUM": 0.524,
-        "LOW": 0.101
+        "LOW": 0.102
       }
     }
   },
   "total": {
     "normal_cdf": {
-      "n_scored": 2519,
-      "n_games": 1270,
-      "hit_rate": 0.5046,
+      "n_scored": 2518,
+      "n_games": 1269,
+      "hit_rate": 0.5048,
       "avg_implied_break_even": 0.5246,
-      "flat_stake_roi": -0.0379,
-      "avg_model_ev": -0.03942,
-      "auc": 0.5135,
+      "flat_stake_roi": -0.03752,
+      "avg_model_ev": -0.03917,
+      "auc": 0.5131,
       "per_season_n": {
-        "2020": 265,
+        "2020": 264,
         "2021": 567,
         "2022": 561,
         "2023": 562,
         "2024": 564
       },
       "per_season_hit": {
-        "2020": 0.498,
+        "2020": 0.5,
         "2021": 0.503,
         "2022": 0.504,
         "2023": 0.505,
@@ -313,22 +313,22 @@
       }
     },
     "calibrated_normal": {
-      "n_scored": 2519,
-      "n_games": 1270,
-      "hit_rate": 0.5046,
+      "n_scored": 2518,
+      "n_games": 1269,
+      "hit_rate": 0.5048,
       "avg_implied_break_even": 0.5246,
-      "flat_stake_roi": -0.0379,
-      "avg_model_ev": -0.07943,
-      "auc": 0.4996,
+      "flat_stake_roi": -0.03752,
+      "avg_model_ev": -0.07945,
+      "auc": 0.4999,
       "per_season_n": {
-        "2020": 265,
+        "2020": 264,
         "2021": 567,
         "2022": 561,
         "2023": 562,
         "2024": 564
       },
       "per_season_hit": {
-        "2020": 0.498,
+        "2020": 0.5,
         "2021": 0.503,
         "2022": 0.504,
         "2023": 0.505,
@@ -337,26 +337,26 @@
       "rel_dist": {
         "HIGH": 0.23,
         "MEDIUM": 0.639,
-        "LOW": 0.131
+        "LOW": 0.13
       }
     },
     "strong_logistic": {
-      "n_scored": 2519,
-      "n_games": 1270,
-      "hit_rate": 0.5046,
+      "n_scored": 2518,
+      "n_games": 1269,
+      "hit_rate": 0.5048,
       "avg_implied_break_even": 0.5246,
-      "flat_stake_roi": -0.0379,
-      "avg_model_ev": -0.09469,
-      "auc": 0.5053,
+      "flat_stake_roi": -0.03752,
+      "avg_model_ev": -0.09465,
+      "auc": 0.505,
       "per_season_n": {
-        "2020": 265,
+        "2020": 264,
         "2021": 567,
         "2022": 561,
         "2023": 562,
         "2024": 564
       },
       "per_season_hit": {
-        "2020": 0.498,
+        "2020": 0.5,
         "2021": 0.503,
         "2022": 0.504,
         "2023": 0.505,

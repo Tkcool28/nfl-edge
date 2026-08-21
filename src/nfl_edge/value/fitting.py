@@ -142,10 +142,16 @@ def fit_ml_states(rows, version, config_sha):
 
 
 def _point_support_features(rows):
-    deltas = [float(r["delta"]) for r in rows]
+    """Orientation-invariant support envelope over prior point-market training rows.
+
+    delta_magnitude = abs(delta) so mirrored sides (away/under) live in the same
+    support space as their canonical HOME/OVER counterparts. Probability math still
+    uses the signed canonical delta; only the support-distance envelope uses |delta|.
+    """
+    deltas = [abs(float(r["delta"])) for r in rows]
     lines = [abs(float(r["market_level"])) for r in rows]
     return (
-        support_feature("delta", deltas),
+        support_feature("delta_magnitude", deltas),
         support_feature("market_magnitude", lines),
     )
 
