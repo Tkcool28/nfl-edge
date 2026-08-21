@@ -1,7 +1,7 @@
 import pytest
 from nfl_edge.value.contracts import CANDIDATE_COLUMNS,EvaluatorState,GameState,NormalizedOffer,candidate_row
 from nfl_edge.value.evaluators import evaluate_offer,exact_avg
-from nfl_edge.value.market_math import proportional_no_vig,shop_spread,shop_total,offer_vs_benchmark
+from nfl_edge.value.market_math import proportional_no_vig,shop_moneyline,shop_spread,shop_total,offer_vs_benchmark
 from nfl_edge.value.reliability import ReliabilityEvidence,tier
 
 def state(mt,fam,**p):return EvaluatorState(mt,fam,"v1",512,p,uncertainty=.01)
@@ -24,6 +24,8 @@ def test_total_sign_semantics():
  assert evaluate_offer(g,NormalizedOffer("total","over","manual",-110,45),state("total","normal_cdf",sigma=10)).actionable_probability>.5
  assert evaluate_offer(g,NormalizedOffer("total","under","manual",-110,45),state("total","normal_cdf",sigma=10)).actionable_probability<.5
 def test_shopping_rules():
+ ml=[NormalizedOffer("moneyline","home","draftkings",-120),NormalizedOffer("moneyline","home","fanduel",-115)]
+ assert shop_moneyline(ml).book=="fanduel"
  xs=[NormalizedOffer("spread","home","draftkings",-115,3.5),NormalizedOffer("spread","home","fanduel",-105,3)]
  assert shop_spread(xs).book=="draftkings"
  ovs=[NormalizedOffer("total","over","draftkings",-115,45),NormalizedOffer("total","over","fanduel",-105,45.5)]
