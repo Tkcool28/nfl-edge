@@ -1,0 +1,52 @@
+{
+ "task": "05E remediation \u2014 permanent repo-native scorer/replay",
+ "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+ "candidate_lock_hash": "41c909823a58e9fb5d7de6a4be8c4de55537974d61ddaedffd12acd8c119ead0",
+ "method": "src/nfl_edge/market_edge (scoring/shopping/candidates/aggregate)",
+ "corrections": {
+  "1_avg_both_constituents": "AVG exists only when QB-Elo AND XGBoost predictions both exist for the game; no fallback",
+  "2_spread_shopping": "selected-side best number first, then better price, then deterministic tie-break",
+  "3_exact_raw_boundaries": "buckets/dog-zone/price boundaries use exact raw numeric values, no rounded/report bins",
+  "4_one_row_ledger": "single authoritative row-ledger feeds all grading and reporting",
+  "5_deterministic_grading": "same-side W/L/P from game_id/final score; actual DK/FD actionable prices; Pinnacle benchmark only"
+ },
+ "periods_run_separately": [
+  "DISCOVERY 2020-2022",
+  "CONFIRMATION 2023-2024"
+ ],
+ "sealed_2025": {
+  "touched": false,
+  "policy": "HARD_REJECT"
+ },
+ "ledger_artifact_hashes": {
+  "discovery_ledger.parquet": "d2340406c79a8d13f457da962eca710167c357ea95694a289f61b28d39720d39",
+  "discovery_ledger.csv": "d44f4eededd03e592d1e9d7036047b388558d56f375ac2b5e2ca2b78f8fac686",
+  "discovery_summary_json": "7cbd2ebe1034f0afff1eb1bec9397bb4167d1635ad50181246ba3a1c59f57fd6",
+  "confirmation_ledger.parquet": "e6664ebc3500571741dc673aeb505314586c9d6fb777c2e40067122145d1c65f",
+  "confirmation_ledger.csv": "7903f2ecdef3cc541fa09f193ae81650247885bb278df43acc8a71002f4758a6",
+  "confirmation_summary_json": "3b329e4e9eb037af8358f8ce58f42a4e06d3881941922ace5988b4f78daa3893"
+ },
+ "superseded_invalid_implementation": [
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/reports/task_05e_d4_discovery_results.csv",
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/reports/task_05e_d4_discovery_results.md",
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/reports/task_05e_d4_discovery_provenance.json",
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/reports/task_05e_d4_big_opportunity_screen.json",
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/reports/task_05e_d4_candidate_lock_recommendations.json",
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/reports/task_05e_d4_complementarity.json",
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/reports/task_05e_d4_display_diagnostics.json",
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/reports/task_05e_d5_confirmation_results.csv",
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/reports/task_05e_d5_confirmation_results.md",
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/reports/task_05e_d5_confirmation_provenance.json",
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/reports/task_05e_d5_final_evidence_labels.json",
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/reports/task_05e_d5_product_alignment.json",
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/data/modeling/development_v1/market_edge_confirmation_scored_v1.parquet",
+  "/root/workspaces/nfl-edge-task-05e-edge-prereg-v1/data/modeling/development_v1/market_edge_discovery_scored_v1.parquet"
+ ],
+ "old_artifact_hashes": {
+  "d4": "e6e49a55e6daefe510fdfc274fd8c3ca99cfb532652864bb916df92e43ce059c",
+  "d5.csv": "e9f15ba0b5090f502103da6dfd9736cea8365e6469228c156bde6da632b20d57",
+  "d5.md": "3cdfb9c0484cfda9e48e58cf374a0eb475b6e76150a9cbb79df77aad2a1dad7e",
+  "d5_scored": "16dd3b57ce22fc8dc3dfd7e13cae8ff4643e21ae4c25a2b96d1ba14166ac437e",
+  "d4_scored": "61e5c55d3b627a2dd50977e22b21f910f9126ede6280f6d25e8888890503328f"
+ }
+}

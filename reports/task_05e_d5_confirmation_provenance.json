@@ -1,0 +1,31 @@
+{
+  "task": "05E-D5 Phase B confirmation (2023-2024 ONLY)",
+  "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+  "candidate_lock_hash": "41c909823a58e9fb5d7de6a4be8c4de55537974d61ddaedffd12acd8c119ead0",
+  "lock_commit": "aab7a6c558ff324b208052ec1caae05efa0e5717",
+  "input_hashes": {
+    "config_market_edge_validation_v1.yaml": "ef373dae3fc16fcb2c24d1f721aa7668cd838346277401e5189bf9884291d825",
+    "task_05e_d5_candidate_lock.json": "5cb8b0422190a8a3fe15db3433f74ced9ac77d872273bce45edc20a1156ded8d",
+    "games_2018_2025.parquet": "90783bfe6a1a014d9a61d24dce94d6da91cffafc684ee4fa1437eb3e8327a908",
+    "market_edge_census_v1.parquet": "cac0a0a2000b2195c2e469f1485429191670a14e70ff5e927fbce34b4f14e51c"
+  },
+  "outcome_bearing_columns": [
+    "home_score",
+    "away_score",
+    "margin_home",
+    "total_score"
+  ],
+  "exact_seasons_present_in_outcome_frames": [
+    2023,
+    2024
+  ],
+  "confirmation_only_assertion": true,
+  "sealed_2025_loaded": false,
+  "sealed_2025_used": false,
+  "2020_2021_2022_absent_from_confirmation": true,
+  "model_training": false,
+  "model_retuning": false,
+  "stacker": false,
+  "odds_api": false,
+  "discovery_not_rejoined": "discovery outcome rows NOT re-joined into any confirmation graded frame"
+}

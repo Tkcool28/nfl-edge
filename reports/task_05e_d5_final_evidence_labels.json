@@ -1,0 +1,17 @@
+{
+  "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+  "lock_hash": "41c909823a58e9fb5d7de6a4be8c4de55537974d61ddaedffd12acd8c119ead0",
+  "lock_commit": "aab7a6c558ff324b208052ec1caae05efa0e5717",
+  "labels": {
+    "ML_DOG_VALUE_ZONE_AVG": "FAILED_TO_VALIDATE",
+    "ML_CORROBORATED_DOG_VALUE_ZONE": "FAILED_TO_VALIDATE",
+    "ML_AVG_0_2": "FAILED_TO_VALIDATE",
+    "SPREAD_0_4_DISCOVERY_UNION": "FAILED_TO_VALIDATE"
+  },
+  "basis": {
+    "all_four_direction_reversed": true,
+    "discovery_roi_all_positive": true,
+    "confirmation_roi_all_negative": true,
+    "result": "No locked discovery candidate replicated on 2023-24. Each shows DIRECTION_REVERSAL (discovery>0, confirmation<0). Mechanically FAILED_TO_VALIDATE. No rescue, no promotion, no threshold move."
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "ML_DOG_VALUE_ZONE_AVG_ZONE": {
+    "N": 101,
+    "wins": 32,
+    "losses": 69,
+    "pushes": 0,
+    "hit_rate": 0.3168,
+    "avg_american": 146.8,
+    "avg_decimal": 2.468,
+    "avg_breakeven": 0.4083,
+    "profit": -23.32,
+    "roi": -0.2309,
+    "hr_minus_be": -0.0915,
+    "unique_weeks": 33,
+    "avg_edge_pp": 5.3671,
+    "per_season": {
+      "2023": {
+        "N": 58,
+        "hit_rate": 0.2931,
+        "profit": -16.56,
+        "roi": -0.2855,
+        "hr_minus_be": -0.1141
+      },
+      "2024": {
+        "N": 43,
+        "hit_rate": 0.3488,
+        "profit": -6.76,
+        "roi": -0.1572,
+        "hr_minus_be": -0.0609
+      }
+    }
+  },
+  "ML_DOG_VALUE_ZONE_CORROB_ZONE": {
+    "N": 55,
+    "wins": 15,
+    "losses": 40,
+    "pushes": 0,
+    "hit_rate": 0.2727,
+    "avg_american": 153.49,
+    "avg_decimal": 2.5349,
+    "avg_breakeven": 0.3978,
+    "profit": -17.52,
+    "roi": -0.3185,
+    "hr_minus_be": -0.1251,
+    "unique_weeks": 28,
+    "avg_edge_pp": 7.4383,
+    "per_season": {
+      "2023": {
+        "N": 34,
+        "hit_rate": 0.2941,
+        "profit": -8.7,
+        "roi": -0.2559,
+        "hr_minus_be": -0.1008
+      },
+      "2024": {
+        "N": 21,
+        "hit_rate": 0.2381,
+        "profit": -8.82,
+        "roi": -0.42,
+        "hr_minus_be": -0.1643
+      }
+    }
+  },
+  "ML_AVG_DISAGREEMENT_AVG_0-2": {
+    "N": 90,
+    "wins": 33,
+    "losses": 57,
+    "pushes": 0,
+    "hit_rate": 0.3667,
+    "avg_american": 44.69,
+    "avg_decimal": 2.4553,
+    "avg_breakeven": 0.4696,
+    "profit": -25.322,
+    "roi": -0.2814,
+    "hr_minus_be": -0.1029,
+    "unique_weeks": 34,
+    "avg_edge_pp": 0.9593,
+    "per_season": {
+      "2023": {
+        "N": 42,
+        "hit_rate": 0.1905,
+        "profit": -25.554,
+        "roi": -0.6084,
+        "hr_minus_be": -0.2627
+      },
+      "2024": {
+        "N": 48,
+        "hit_rate": 0.5208,
+        "profit": 0.232,
+        "roi": 0.0048,
+        "hr_minus_be": 0.0369
+      }
+    }
+  },
+  "SPREAD_DISAGREEMENT_EXPECTED_MARGIN_UNION": {
+    "N": 340,
+    "wins": 172,
+    "losses": 158,
+    "pushes": 10,
+    "hit_rate": 0.5059,
+    "avg_american": -104.55,
+    "avg_decimal": 1.9076,
+    "avg_breakeven": 0.5245,
+    "profit": -1.784,
+    "roi": -0.0052,
+    "hr_minus_be": -0.0186,
+    "unique_weeks": 42,
+    "avg_edge_pp": 1.8885,
+    "per_season": {
+      "2023": {
+        "N": 163,
+        "hit_rate": 0.454,
+        "profit": -14.247,
+        "roi": -0.0874,
+        "hr_minus_be": -0.0714
+      },
+      "2024": {
+        "N": 177,
+        "hit_rate": 0.5537,
+        "profit": 12.463,
+        "roi": 0.0704,
+        "hr_minus_be": 0.0301
+      }
+    }
+  }
+}

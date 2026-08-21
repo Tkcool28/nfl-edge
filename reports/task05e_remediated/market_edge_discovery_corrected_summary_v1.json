@@ -1,0 +1,154 @@
+{
+  "ML_DOG_VALUE_ZONE_AVG_ZONE": {
+    "N": 131,
+    "wins": 66,
+    "losses": 65,
+    "pushes": 0,
+    "hit_rate": 0.5038,
+    "avg_american": 152.49,
+    "avg_decimal": 2.5249,
+    "avg_breakeven": 0.3993,
+    "profit": 35.16,
+    "roi": 0.2684,
+    "hr_minus_be": 0.1046,
+    "unique_weeks": 48,
+    "avg_edge_pp": 6.4759,
+    "per_season": {
+      "2020": {
+        "N": 36,
+        "hit_rate": 0.5833,
+        "profit": 15.56,
+        "roi": 0.4322,
+        "hr_minus_be": 0.1776
+      },
+      "2021": {
+        "N": 49,
+        "hit_rate": 0.5102,
+        "profit": 14.65,
+        "roi": 0.299,
+        "hr_minus_be": 0.1138
+      },
+      "2022": {
+        "N": 46,
+        "hit_rate": 0.4348,
+        "profit": 4.95,
+        "roi": 0.1076,
+        "hr_minus_be": 0.0375
+      }
+    }
+  },
+  "ML_DOG_VALUE_ZONE_CORROB_ZONE": {
+    "N": 85,
+    "wins": 42,
+    "losses": 43,
+    "pushes": 0,
+    "hit_rate": 0.4941,
+    "avg_american": 158.19,
+    "avg_decimal": 2.5819,
+    "avg_breakeven": 0.3905,
+    "profit": 23.86,
+    "roi": 0.2807,
+    "hr_minus_be": 0.1036,
+    "unique_weeks": 39,
+    "avg_edge_pp": 8.1652,
+    "per_season": {
+      "2020": {
+        "N": 24,
+        "hit_rate": 0.5833,
+        "profit": 11.96,
+        "roi": 0.4983,
+        "hr_minus_be": 0.191
+      },
+      "2021": {
+        "N": 31,
+        "hit_rate": 0.4839,
+        "profit": 7.4,
+        "roi": 0.2387,
+        "hr_minus_be": 0.0945
+      },
+      "2022": {
+        "N": 30,
+        "hit_rate": 0.4333,
+        "profit": 4.5,
+        "roi": 0.15,
+        "hr_minus_be": 0.0431
+      }
+    }
+  },
+  "ML_AVG_DISAGREEMENT_AVG_0-2": {
+    "N": 126,
+    "wins": 69,
+    "losses": 57,
+    "pushes": 0,
+    "hit_rate": 0.5476,
+    "avg_american": 31.62,
+    "avg_decimal": 2.5356,
+    "avg_breakeven": 0.4855,
+    "profit": 17.298,
+    "roi": 0.1373,
+    "hr_minus_be": 0.0621,
+    "unique_weeks": 49,
+    "avg_edge_pp": 0.9711,
+    "per_season": {
+      "2020": {
+        "N": 39,
+        "hit_rate": 0.5385,
+        "profit": 5.381,
+        "roi": 0.138,
+        "hr_minus_be": 0.02
+      },
+      "2021": {
+        "N": 37,
+        "hit_rate": 0.4865,
+        "profit": 3.991,
+        "roi": 0.1079,
+        "hr_minus_be": 0.0386
+      },
+      "2022": {
+        "N": 50,
+        "hit_rate": 0.6,
+        "profit": 7.926,
+        "roi": 0.1585,
+        "hr_minus_be": 0.1123
+      }
+    }
+  },
+  "SPREAD_DISAGREEMENT_EXPECTED_MARGIN_UNION": {
+    "N": 460,
+    "wins": 262,
+    "losses": 192,
+    "pushes": 6,
+    "hit_rate": 0.5696,
+    "avg_american": -104.56,
+    "avg_decimal": 1.909,
+    "avg_breakeven": 0.524,
+    "profit": 46.09,
+    "roi": 0.1002,
+    "hr_minus_be": 0.0455,
+    "unique_weeks": 63,
+    "avg_edge_pp": 1.9609,
+    "per_season": {
+      "2020": {
+        "N": 145,
+        "hit_rate": 0.5448,
+        "profit": 7.407,
+        "roi": 0.0511,
+        "hr_minus_be": 0.0219
+      },
+      "2021": {
+        "N": 154,
+        "hit_rate": 0.5455,
+        "profit": 6.764,
+        "roi": 0.0439,
+        "hr_minus_be": 0.0207
+      },
+      "2022": {
+        "N": 161,
+        "hit_rate": 0.6149,
+        "profit": 31.919,
+        "roi": 0.1983,
+        "hr_minus_be": 0.0905
+      }
+    }
+  }
+}
