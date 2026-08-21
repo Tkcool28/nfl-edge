@@ -1,0 +1,8 @@
+hypothesis_id,family,desc,model,frozen,prereg_fingerprint
+ML_QBELO_DISAGREEMENT,ML_disagreement,QB-Elo positive edge over Pinnacle no-vig (no 0.50 req; candidate = side with edge>0),QB_ELO,true,d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c
+ML_XGB_DISAGREEMENT,ML_disagreement,XGBoost positive edge over Pinnacle no-vig (no 0.50 req; candidate = side with edge>0),XGB,true,d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c
+ML_AVG_DISAGREEMENT,ML_disagreement,50/50 avg edge p_avg=(QB+XGB)/2 over Pinnacle no-vig (positive-edge side),AVG,true,d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c
+ML_CORROBORATED_DISAGREEMENT,ML_disagreement,QB_ELO & XGB both independently indicate SAME side underpriced vs Pinnacle,BOTH,true,d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c
+ML_DOG_VALUE_ZONE,dog_zone,40%<=p_model<50% AND best DK/FD price +111..+200 inclusive AND positive edge; eval QB_ELO/XGB/AVG/CORROB,QB_ELO_XGB_AVG_CORROB,true,d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c
+SPREAD_DISAGREEMENT,point_disagreement,expected_margin (expected_home_margin) vs Pinnacle spread; orientation-safe |margin+L|,expected_margin,true,d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c
+TOTAL_R4_DISAGREEMENT,point_disagreement,Ridge Totals V1 R4 (alpha=100) predicted total vs Pinnacle total (over/under),ridge_R4,true,d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c

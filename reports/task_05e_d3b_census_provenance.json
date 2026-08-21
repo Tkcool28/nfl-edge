@@ -1,0 +1,26 @@
+{
+  "production_head": "b8055348110ceb96933298e01b74d6b45afad89d",
+  "r4_artifact": "/root/nfl-edge/reports/task05d/task05d_ridge_predictions.parquet",
+  "r4_manifest": "/root/nfl-edge/reports/task05d/task05d_ridge_run_manifest.json",
+  "r4_artifact_bytes_sha256": "bb70ba29cad4e724aa7aacbebc59ccfff71e0794f5638dfdf173cdfec8",
+  "r4_prediction_logical_hash_from_manifest": "b0cf9ad15293020e65f1f7c6fd4bedd659a150f6b86f31dfb375e111e3a67a79",
+  "r4_candidate_id_used": "R4",
+  "r4_alpha": 100,
+  "r4_fit_performed_in_census": false,
+  "observed_total_loaded": false,
+  "seasons_2025_used": false,
+  "scores_winners_ats_totals_loaded": false,
+  "model_training_or_retuning_or_stacker": false,
+  "odds_api_calls": false,
+  "realized_hit_rate_roi_profit_calculated": false,
+  "position_product_counts": {
+    "ml_positive_edge_rows": 4049,
+    "ml_two_sided_diag_rows": 8098,
+    "spread_rows": 1408,
+    "total_r4_rows": 1408
+  },
+  "positivity_pathology": {
+    "zero_pos_side_pairs": 0,
+    "one_plus_pos_side_pairs": 0
+  }
+}

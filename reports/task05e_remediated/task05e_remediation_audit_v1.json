@@ -1,0 +1,146 @@
+{
+  "task": "05E pass-2 deterministic scorer remediation audit",
+  "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+  "candidate_lock_sha": "41c909823a58e9fb5d7de6a4be8c4de55537974d61ddaedffd12acd8c119ead0",
+  "before_source": "Frozen D4/D5 artifacts (invalid implementation, price-first spread)",
+  "after_source": "reports/task05e_remediated corrected ledgers (pass-2 repo-native scorer)",
+  "shopping_effect": {
+    "DISCOVERY": {
+      "union_N_after": 460,
+      "rows_with_changed_reconstructed_line_vs_census": 150,
+      "rows_with_changed_price_vs_census": 141
+    },
+    "CONFIRMATION": {
+      "union_N_after": 340,
+      "rows_with_changed_reconstructed_line_vs_census": 120,
+      "rows_with_changed_price_vs_census": 115
+    }
+  },
+  "spread_same_row_line_delta": {
+    "DISCOVERY_changed_reconstructed_line_vs_census": 150,
+    "CONFIRMATION_changed_reconstructed_line_vs_census": 120
+  },
+  "candidates": {
+    "ML_DOG_VALUE_ZONE_AVG": {
+      "definition_unchanged": true,
+      "DISCOVERY": {
+        "BEFORE(N,roi)": [
+          149,
+          0.252
+        ],
+        "AFTER(N,roi)": [
+          131,
+          0.2684
+        ],
+        "after_hit_rate": 0.5038,
+        "after_profit": 35.16
+      },
+      "CONFIRMATION": {
+        "BEFORE(N,roi)": [
+          112,
+          -0.2372
+        ],
+        "AFTER(N,roi)": [
+          101,
+          -0.2309
+        ],
+        "after_hit_rate": 0.3168,
+        "after_profit": -23.32
+      },
+      "ml_results_changed": true,
+      "spread_note": null
+    },
+    "ML_CORROBORATED_DOG_VALUE_ZONE": {
+      "definition_unchanged": true,
+      "DISCOVERY": {
+        "BEFORE(N,roi)": [
+          85,
+          0.2807
+        ],
+        "AFTER(N,roi)": [
+          85,
+          0.2807
+        ],
+        "after_hit_rate": 0.4941,
+        "after_profit": 23.86
+      },
+      "CONFIRMATION": {
+        "BEFORE(N,roi)": [
+          55,
+          -0.3185
+        ],
+        "AFTER(N,roi)": [
+          55,
+          -0.3185
+        ],
+        "after_hit_rate": 0.2727,
+        "after_profit": -17.52
+      },
+      "ml_results_changed": false,
+      "spread_note": null
+    },
+    "ML_AVG_0_2": {
+      "definition_unchanged": true,
+      "DISCOVERY": {
+        "BEFORE(N,roi)": [
+          136,
+          0.1544
+        ],
+        "AFTER(N,roi)": [
+          126,
+          0.1373
+        ],
+        "after_hit_rate": 0.5476,
+        "after_profit": 17.298
+      },
+      "CONFIRMATION": {
+        "BEFORE(N,roi)": [
+          104,
+          -0.1464
+        ],
+        "AFTER(N,roi)": [
+          90,
+          -0.2814
+        ],
+        "after_hit_rate": 0.3667,
+        "after_profit": -25.322
+      },
+      "ml_results_changed": true,
+      "spread_note": null
+    },
+    "SPREAD_0_4_DISCOVERY_UNION": {
+      "definition_unchanged": true,
+      "DISCOVERY": {
+        "BEFORE(N,roi)": [
+          467,
+          0.3946
+        ],
+        "AFTER(N,roi)": [
+          460,
+          0.1002
+        ],
+        "after_hit_rate": 0.5696,
+        "after_profit": 46.09
+      },
+      "CONFIRMATION": {
+        "BEFORE(N,roi)": [
+          342,
+          -0.0136
+        ],
+        "AFTER(N,roi)": [
+          340,
+          -0.0052
+        ],
+        "after_hit_rate": 0.5059,
+        "after_profit": -1.784
+      },
+      "ml_results_changed": false,
+      "spread_note": "SPREAD candidate only; reconstructed number-first shopping replaces the stale price-first census act_line/act_price. N and line/price/ROI shift per the shopper audit below."
+    }
+  },
+  "ml_changed_where_expected": false,
+  "sealed_2025": {
+    "touched": false,
+    "policy": "HARD_REJECT"
+  }
+}

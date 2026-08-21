@@ -1,0 +1,72 @@
+TASK 05E-D3C-A1 — FINAL PREREGISTRATION PRE-OUTCOME DEFECT AMENDMENT
+====================================================================
+Status              : EDGE_PREREGISTRATION_AMENDED_PRE_OUTCOME
+Repo                : /root/nfl-edge
+Production branch   : main
+Production HEAD     : b8055348110ceb96933298e01b74d6b45afad89d (untouched; verified)
+Worktree            : /root/workspaces/nfl-edge-task-05e-edge-prereg-v1
+Branch              : feat/task-05e-edge-preregistration-v1
+Pinned config       : config/market_edge_validation_v1.yaml
+Full fingerprint
+  (SHA-256, AMENDED): d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c
+Prior frozen
+  (SUPERSEDED)      : e0cff2756488aeda7f2f1ec3f5d322c48b507f482947cc07300dfb240bee2137
+Previous provisional
+  (OBSOLETE)        : d178922bedd5ebe206d883828d230083db5d7742263c811fddff69547fe8901f
+
+OUTCOME-BLIND / PRE-OUTCOME AMENDMENT ONLY
+  This is a mechanical/semantic correction BEFORE any outcomes are opened. No
+  historical outcomes exist in this analysis. No scores, winners, ATS covers,
+  totals results, hit rates, ROI, or profit were opened, computed, joined, or
+  stored. No 2025 / sealed data used. No football model was trained, retuned,
+  or stacked. No model roles, edge buckets, hypothesis families, sample
+  thresholds, bootstrap methodology, season splits, dog-value hypothesis, or
+  product architecture were changed. Changes are limited to: (1) price-band
+  reporting taxonomy, (2) no_dispersion_grid boolean, (3) deterministic
+  consistency diagnostics for the evidence labels. STOP honored — no discovery,
+  no push, no PR.
+
+AMENDED ITEMIZED CHANGES:
+  P1  Price-band taxonomy  : CORRECTED (reporting only) heavy_favorite <=-200;
+                            moderate_favorite -199..-111; near_even -110..+110;
+                            short_plus_money +111..+150; moderate_plus_money
+                            +151..+200; long_plus_money >=+201
+  P2  Dog-value hypothesis : UNCHANGED — 40%<=p_model<50% AND best DK/FD
+                            +111..+200 inclusive AND positive edge (not altered
+                            by P1)
+  P3  Dispersion boolean   : CORRECTED no_dispersion_grid: true (semantic
+                            contract honored; dispersion is NOT a new
+                            optimization grid)
+  P4  Consistency terms    : OPERATIONALIZED (diagnostics only, frozen
+                            outcome-blind) SEASON_DOMINANCE = largest
+                            absolute-profit-contributing season >60% of pooled
+                            positive flat-stake profit; CATASTROPHIC_SEASON
+                            _INSTABILITY = at least one sufficient-N season with
+                            ROI <= -20% AND pooled ROI positive; DIRECTION_
+                            REVERSAL = discovery ROI and confirmation ROI
+                            opposite signs. Wired into evidence labels:
+                            STRONG (NOT CATASTROPHIC_SEASON_INSTABILITY),
+                            SUPPORTED_USABLE (NOT SEASON_DOMINANCE),
+                            FAILED_TO_VALIDATE (DIRECTION_REVERSAL /
+                            CATASTROPHIC_SEASON_INSTABILITY). No additional
+                            thresholds introduced.
+
+UNCHANGED FROZEN CORE (verified by contract tests):
+  Split [2020,2021,2022]/[2023,2024]/2025 sealed; exactly seven hypothesis
+  families; ML buckets [0,2)[2,4)[4,8)[8,12)[12,+inf); positive-edge rule (no
+  0.50 req); spread+R4 total [0,1)[1,2)[2,3)[3,4)[4+); R4 alpha=100; DK/FD
+  actionable / Pinnacle benchmark; deterministic line shopping; season-week
+  block bootstrap 5000; Big-Op MIN N 50/40; weekly top-card architecture;
+  flat-stake separation; 2025 final-product-holdout role.
+
+TESTS
+  tests/contracts/test_market_edge_preregistration_v1.py — asserts corrected
+  price taxonomy, dog-value unchanged, no_dispersion_grid==true, deterministic
+  consistency definitions, unchanged seven families/buckets/split, outcome-blind
+  construction, and fingerprint reproduction.
+  tests/contracts/test_market_edge_census_repair.py — outcome-blind census
+  provenance (supporting design evidence).
+
+NEXT ACTION / STOP
+  Awaiting review. Do NOT run discovery/confirmation, open outcomes, modify
+  models, push, or open a PR until explicitly authorized.

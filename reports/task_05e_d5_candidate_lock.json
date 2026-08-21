@@ -1,0 +1,316 @@
+{
+  "schema_version": "1",
+  "lock_kind": "DISCOVERY_CANDIDATE_LOCK",
+  "generated_by": "Task 05E-D5 Phase A",
+  "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+  "prereg_commit": "45897d5ba6722ce22c16dfbb44e60777b3091d7e",
+  "confirmation_seasons": [
+    2023,
+    2024
+  ],
+  "sealed_seasons": [
+    2025
+  ],
+  "total_seasons_open_to_confirmation": "2023-2024 only; 2025 sealed",
+  "candidates": [
+    {
+      "candidate_id": "ML_DOG_VALUE_ZONE_AVG",
+      "hypothesis_family": "ML_DOG_VALUE_ZONE",
+      "model": "AVG",
+      "exact_definition": "40% <= p_avg < 50% AND best actionable DK/FD ML price +111 through +200 inclusive AND AVG positive edge vs Pinnacle",
+      "exact_frozen_bucket": "dog-value zone: [40%,50%) p_avg; [+111,+200] American; positive edge",
+      "selected_side_rule": "single AVG positive-edge side",
+      "actionable_price_rule": "best DK/FD selected-side moneyline",
+      "discovery": {
+        "N": 149,
+        "wins": 74,
+        "losses": 75,
+        "pushes": 0,
+        "hit_rate": 0.4966,
+        "avg_american": 152.42,
+        "avg_decimal": 2.5242,
+        "avg_breakeven": 0.3994,
+        "exp_wins": 59.51,
+        "realized_minus_exp": 14.49,
+        "hr_minus_be": 0.0972,
+        "profit": 37.55,
+        "roi": 0.252,
+        "avg_implied_ev": 0.1413,
+        "unique_weeks": 54,
+        "bootstrap_ci": {
+          "point": 0.252,
+          "p2p5": 0.0787,
+          "p97p5": 0.4295,
+          "p_pos": 0.9974
+        },
+        "per_season": {
+          "2020": {
+            "N": 40,
+            "hit_rate": 0.55,
+            "profit": 13.71,
+            "roi": 0.3427
+          },
+          "2021": {
+            "N": 56,
+            "hit_rate": 0.5357,
+            "profit": 20.36,
+            "roi": 0.3636
+          },
+          "2022": {
+            "N": 53,
+            "hit_rate": 0.4151,
+            "profit": 3.48,
+            "roi": 0.0657
+          }
+        },
+        "streak_drawdown": {
+          "longest_losing_streak": 5,
+          "max_drawdown": 6.75,
+          "worst_rolling10": -5.53
+        },
+        "catastrophic": false,
+        "season_dominance": false
+      },
+      "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+      "prereg_commit": "45897d5ba6722ce22c16dfbb44e60777b3091d7e",
+      "discovery_artifact_hashes": {
+        "config_market_edge_validation_v1.yaml": "ef373dae3fc16fcb2c24d1f721aa7668cd838346277401e5189bf9884291d825",
+        "task_05e_d4_discovery_results.csv": "e6e49a55e6daefe510fdfc274fd8c3ca99cfb532652864bb916df92e43ce059c",
+        "task_05e_d4_discovery_results.md": "de25e222169346c1b51da76c24601d7345e23513fde282db38d0bbd87c7b0969",
+        "task_05e_d4_candidate_lock_recommendations.json": "b1b6e7d70bf8a2874e5275dde52cb9b7176f4f8ada81fa8870b6987ed3fdb353",
+        "task_05e_d4_discovery_provenance.json": "b90c590f2f7b68e1bd50e30ad3bfddaee93d8871fc9f036ea528deba914f00a8",
+        "market_edge_discovery_scored_v1.parquet": "61e5c55d3b627a2dd50977e22b21f910f9126ede6280f6d25e8888890503328f"
+      },
+      "locked_before_confirmation": true
+    },
+    {
+      "candidate_id": "ML_CORROBORATED_DOG_VALUE_ZONE",
+      "hypothesis_family": "ML_DOG_VALUE_ZONE",
+      "model": "CORROBORATED",
+      "exact_definition": "QB-Elo AND XGB both identify the SAME selected side as underpriced vs Pinnacle AND frozen dog-value zone 40%<=p<50% AND +111..+200 inclusive AND positive edge",
+      "exact_frozen_bucket": "dog-value zone under corroboration (both models, same side)",
+      "selected_side_rule": "side where QB-ELO and XGB both underprice same side; p_avg in zone",
+      "actionable_price_rule": "best DK/FD selected-side moneyline",
+      "discovery": {
+        "N": 85,
+        "wins": 42,
+        "losses": 43,
+        "pushes": 0,
+        "hit_rate": 0.4941,
+        "avg_american": 158.19,
+        "avg_decimal": 2.5819,
+        "avg_breakeven": 0.3905,
+        "exp_wins": 33.2,
+        "realized_minus_exp": 8.8,
+        "hr_minus_be": 0.1036,
+        "profit": 23.86,
+        "roi": 0.2807,
+        "avg_implied_ev": 0.183,
+        "unique_weeks": 39,
+        "bootstrap_ci": {
+          "point": 0.2807,
+          "p2p5": 0.0168,
+          "p97p5": 0.5482,
+          "p_pos": 0.9824
+        },
+        "per_season": {
+          "2020": {
+            "N": 24,
+            "hit_rate": 0.5833,
+            "profit": 11.96,
+            "roi": 0.4983
+          },
+          "2021": {
+            "N": 31,
+            "hit_rate": 0.4839,
+            "profit": 7.4,
+            "roi": 0.2387
+          },
+          "2022": {
+            "N": 30,
+            "hit_rate": 0.4333,
+            "profit": 4.5,
+            "roi": 0.15
+          }
+        },
+        "streak_drawdown": {
+          "longest_losing_streak": 6,
+          "max_drawdown": 6.0,
+          "worst_rolling10": -2.81
+        },
+        "catastrophic": false,
+        "season_dominance": false
+      },
+      "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+      "prereg_commit": "45897d5ba6722ce22c16dfbb44e60777b3091d7e",
+      "discovery_artifact_hashes": {
+        "config_market_edge_validation_v1.yaml": "ef373dae3fc16fcb2c24d1f721aa7668cd838346277401e5189bf9884291d825",
+        "task_05e_d4_discovery_results.csv": "e6e49a55e6daefe510fdfc274fd8c3ca99cfb532652864bb916df92e43ce059c",
+        "task_05e_d4_discovery_results.md": "de25e222169346c1b51da76c24601d7345e23513fde282db38d0bbd87c7b0969",
+        "task_05e_d4_candidate_lock_recommendations.json": "b1b6e7d70bf8a2874e5275dde52cb9b7176f4f8ada81fa8870b6987ed3fdb353",
+        "task_05e_d4_discovery_provenance.json": "b90c590f2f7b68e1bd50e30ad3bfddaee93d8871fc9f036ea528deba914f00a8",
+        "market_edge_discovery_scored_v1.parquet": "61e5c55d3b627a2dd50977e22b21f910f9126ede6280f6d25e8888890503328f"
+      },
+      "locked_before_confirmation": true,
+      "subset_marker": "INCREMENTAL/SUBSET TEST relative to ML_DOG_VALUE_ZONE_AVG; NOT statistically independent"
+    },
+    {
+      "candidate_id": "ML_AVG_0_2",
+      "hypothesis_family": "ML_AVG_DISAGREEMENT",
+      "model": "AVG",
+      "exact_definition": "positive-edge AVG side AND 0 <= AVG disagreement < 2 percentage points",
+      "exact_frozen_bucket": "ML bucket 0-2 pp: [0,2)",
+      "selected_side_rule": "positive-edge AVG side",
+      "actionable_price_rule": "best selected-side DK/FD ML price",
+      "discovery": {
+        "N": 136,
+        "wins": 75,
+        "losses": 61,
+        "pushes": 0,
+        "hit_rate": 0.5515,
+        "avg_american": 33.69,
+        "avg_decimal": 2.519,
+        "avg_breakeven": 0.484,
+        "exp_wins": 65.83,
+        "realized_minus_exp": 9.17,
+        "hr_minus_be": 0.0675,
+        "profit": 21.0,
+        "roi": 0.1544,
+        "avg_implied_ev": 0.002,
+        "unique_weeks": 56,
+        "bootstrap_ci": {
+          "point": 0.1544,
+          "p2p5": -0.0531,
+          "p97p5": 0.3729,
+          "p_pos": 0.925
+        },
+        "per_season": {
+          "2020": {
+            "N": 42,
+            "hit_rate": 0.5476,
+            "profit": 6.05,
+            "roi": 0.1441
+          },
+          "2021": {
+            "N": 43,
+            "hit_rate": 0.5116,
+            "profit": 8.02,
+            "roi": 0.1865
+          },
+          "2022": {
+            "N": 51,
+            "hit_rate": 0.5882,
+            "profit": 6.93,
+            "roi": 0.1358
+          }
+        },
+        "streak_drawdown": {
+          "longest_losing_streak": 5,
+          "max_drawdown": 9.29,
+          "worst_rolling10": -5.39
+        },
+        "catastrophic": false,
+        "season_dominance": false
+      },
+      "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+      "prereg_commit": "45897d5ba6722ce22c16dfbb44e60777b3091d7e",
+      "discovery_artifact_hashes": {
+        "config_market_edge_validation_v1.yaml": "ef373dae3fc16fcb2c24d1f721aa7668cd838346277401e5189bf9884291d825",
+        "task_05e_d4_discovery_results.csv": "e6e49a55e6daefe510fdfc274fd8c3ca99cfb532652864bb916df92e43ce059c",
+        "task_05e_d4_discovery_results.md": "de25e222169346c1b51da76c24601d7345e23513fde282db38d0bbd87c7b0969",
+        "task_05e_d4_candidate_lock_recommendations.json": "b1b6e7d70bf8a2874e5275dde52cb9b7176f4f8ada81fa8870b6987ed3fdb353",
+        "task_05e_d4_discovery_provenance.json": "b90c590f2f7b68e1bd50e30ad3bfddaee93d8871fc9f036ea528deba914f00a8",
+        "market_edge_discovery_scored_v1.parquet": "61e5c55d3b627a2dd50977e22b21f910f9126ede6280f6d25e8888890503328f"
+      },
+      "locked_before_confirmation": true,
+      "candidate_strength": "secondary; weaker bootstrap evidence; not promoted merely for high discovery ROI"
+    },
+    {
+      "candidate_id": "SPREAD_0_4_DISCOVERY_UNION",
+      "hypothesis_family": "SPREAD_DISAGREEMENT",
+      "model": "EXPECTED_MARGIN",
+      "exact_definition": "selected-side disagreement belongs to ANY of the four frozen buckets [0,1),[1,2),[2,3),[3,4) - equivalent union [0,4)",
+      "exact_frozen_bucket": "DISCOVERY_SELECTED_UNION_OF_FROZEN_BUCKETS: [0,1),[1,2),[2,3),[3,4); 4+ excluded",
+      "selected_side_rule": "HOME if margin+L>0 else AWAY; |margin+L| orientation-safe",
+      "actionable_price_rule": "greatest selected-side actionable DK/FD spread, then price, then deterministic fixed book tie-break",
+      "discovery": {
+        "N": 467,
+        "wins": 262,
+        "losses": 198,
+        "pushes": 7,
+        "hit_rate": 0.561,
+        "avg_american": -96.04,
+        "avg_decimal": 1.9306,
+        "avg_breakeven": 0.5181,
+        "exp_wins": 241.97,
+        "realized_minus_exp": 20.03,
+        "hr_minus_be": 0.0429,
+        "profit": 45.49,
+        "roi": 0.0974,
+        "unique_weeks": 63,
+        "bootstrap_ci": {
+          "point": 0.0974,
+          "p2p5": 0.0115,
+          "p97p5": 0.1816,
+          "p_pos": 0.9854
+        },
+        "per_season": {
+          "2020": {
+            "N": 145,
+            "hit_rate": 0.531,
+            "profit": 6.58,
+            "roi": 0.0454
+          },
+          "2021": {
+            "N": 161,
+            "hit_rate": 0.5466,
+            "profit": 8.45,
+            "roi": 0.0525
+          },
+          "2022": {
+            "N": 161,
+            "hit_rate": 0.6025,
+            "profit": 30.46,
+            "roi": 0.1892
+          }
+        },
+        "streak_drawdown": {
+          "longest_losing_streak": 12,
+          "max_drawdown": 13.26,
+          "worst_rolling10": -10.0
+        },
+        "catastrophic": false,
+        "season_dominance": true
+      },
+      "prereg_fingerprint": "d195340940e5c9d6c9f62bbfbb8f8f50836013e05334e870f0905d3592d62e5c",
+      "prereg_commit": "45897d5ba6722ce22c16dfbb44e60777b3091d7e",
+      "discovery_artifact_hashes": {
+        "config_market_edge_validation_v1.yaml": "ef373dae3fc16fcb2c24d1f721aa7668cd838346277401e5189bf9884291d825",
+        "task_05e_d4_discovery_results.csv": "e6e49a55e6daefe510fdfc274fd8c3ca99cfb532652864bb916df92e43ce059c",
+        "task_05e_d4_discovery_results.md": "de25e222169346c1b51da76c24601d7345e23513fde282db38d0bbd87c7b0969",
+        "task_05e_d4_candidate_lock_recommendations.json": "b1b6e7d70bf8a2874e5275dde52cb9b7176f4f8ada81fa8870b6987ed3fdb353",
+        "task_05e_d4_discovery_provenance.json": "b90c590f2f7b68e1bd50e30ad3bfddaee93d8871fc9f036ea528deba914f00a8",
+        "market_edge_discovery_scored_v1.parquet": "61e5c55d3b627a2dd50977e22b21f910f9126ede6280f6d25e8888890503328f"
+      },
+      "locked_before_confirmation": true,
+      "union_label": "DISCOVERY_SELECTED_UNION_OF_FROZEN_BUCKETS",
+      "union_note": "NOT an original standalone preregistered bucket; discovery-selected union of four contiguous individually-preregistered buckets that were all positive. No boundary changed. 4+ (>=4 pts) excluded."
+    }
+  ],
+  "not_advancing": {
+    "totals_status": "NO_CONFIRMATION_PRIORITY",
+    "big_opportunity_status": "NO_BIG_OPPORTUNITY_DISCOVERY_CANDIDATE",
+    "excluded": [
+      "ML_AVG_2_4",
+      "QB_ELO_disagreement_buckets",
+      "XGB_disagreement_buckets",
+      "generic_corroborated_ml",
+      "SPREAD_4+",
+      "all_R4_total_buckets",
+      "long_dogs_+201+",
+      "8-12_ML_big_opportunity",
+      "12+_ML_big_opportunity"
+    ]
+  },
+  "candidate_lock_sha256": "41c909823a58e9fb5d7de6a4be8c4de55537974d61ddaedffd12acd8c119ead0"
+}

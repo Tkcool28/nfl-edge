@@ -1,0 +1,6895 @@
+{
+  "sealed_2025": {
+    "touched": false,
+    "firewall": "2025 hard-rejected on every raw graded/model frame before filtering (mirrors corrected main scorer; no 2025 outcome/model row read into results).",
+    "frozen_2025_games_excluded": 285,
+    "development_seasons_graded": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ]
+  },
+  "candidate_N": {
+    "DOG_AVG": {
+      "N": 232,
+      "wins": 98,
+      "pushes": 0,
+      "hit_rate": 0.4224,
+      "profit": 11.84,
+      "roi": 0.051,
+      "avg_breakeven": 0.4032,
+      "hr_minus_be": 0.0192,
+      "avg_p_model": 0.4493,
+      "avg_price": 150.01,
+      "avg_edge_pp": 5.9932,
+      "brier": 0.2419
+    },
+    "DOG_CORROB": {
+      "N": 140,
+      "wins": 57,
+      "pushes": 0,
+      "hit_rate": 0.4071,
+      "profit": 6.34,
+      "roi": 0.0453,
+      "avg_breakeven": 0.3934,
+      "hr_minus_be": 0.0137,
+      "avg_p_model": 0.4578,
+      "avg_price": 156.34,
+      "avg_edge_pp": 7.8796,
+      "brier": 0.242
+    },
+    "AVG_0_2": {
+      "N": 216,
+      "wins": 102,
+      "pushes": 0,
+      "hit_rate": 0.4722,
+      "profit": -8.0237,
+      "roi": -0.0371,
+      "avg_breakeven": 0.4789,
+      "hr_minus_be": -0.0067,
+      "avg_p_model": 0.4746,
+      "avg_price": 37.06,
+      "avg_edge_pp": 0.9662,
+      "brier": 0.2067
+    }
+  },
+  "per_season_primary": {
+    "DOG_AVG": {
+      "2020": {
+        "N": 36,
+        "wins": 21,
+        "pushes": 0,
+        "hit_rate": 0.5833,
+        "profit": 15.56,
+        "roi": 0.4322,
+        "avg_breakeven": 0.4057,
+        "hr_minus_be": 0.1776,
+        "avg_p_model": 0.4571,
+        "avg_price": 148.14,
+        "avg_edge_pp": 6.2819,
+        "brier": 0.2571
+      },
+      "2021": {
+        "N": 49,
+        "wins": 25,
+        "pushes": 0,
+        "hit_rate": 0.5102,
+        "profit": 14.65,
+        "roi": 0.299,
+        "avg_breakeven": 0.3964,
+        "hr_minus_be": 0.1138,
+        "avg_p_model": 0.4469,
+        "avg_price": 154.2,
+        "avg_edge_pp": 6.3804,
+        "brier": 0.2484
+      },
+      "2022": {
+        "N": 46,
+        "wins": 20,
+        "pushes": 0,
+        "hit_rate": 0.4348,
+        "profit": 4.95,
+        "roi": 0.1076,
+        "avg_breakeven": 0.3972,
+        "hr_minus_be": 0.0375,
+        "avg_p_model": 0.4507,
+        "avg_price": 154.07,
+        "avg_edge_pp": 6.7294,
+        "brier": 0.2448
+      },
+      "2023": {
+        "N": 58,
+        "wins": 17,
+        "pushes": 0,
+        "hit_rate": 0.2931,
+        "profit": -16.56,
+        "roi": -0.2855,
+        "avg_breakeven": 0.4072,
+        "hr_minus_be": -0.1141,
+        "avg_p_model": 0.4435,
+        "avg_price": 147.55,
+        "avg_edge_pp": 5.146,
+        "brier": 0.2251
+      },
+      "2024": {
+        "N": 43,
+        "wins": 15,
+        "pushes": 0,
+        "hit_rate": 0.3488,
+        "profit": -6.76,
+        "roi": -0.1572,
+        "avg_breakeven": 0.4097,
+        "hr_minus_be": -0.0609,
+        "avg_p_model": 0.4519,
+        "avg_price": 145.79,
+        "avg_edge_pp": 5.6654,
+        "brier": 0.2413
+      }
+    },
+    "DOG_CORROB": {
+      "2020": {
+        "N": 24,
+        "wins": 14,
+        "pushes": 0,
+        "hit_rate": 0.5833,
+        "profit": 11.96,
+        "roi": 0.4983,
+        "avg_breakeven": 0.3923,
+        "hr_minus_be": 0.191,
+        "avg_p_model": 0.4618,
+        "avg_price": 156.25,
+        "avg_edge_pp": 8.1759,
+        "brier": 0.2614
+      },
+      "2021": {
+        "N": 31,
+        "wins": 15,
+        "pushes": 0,
+        "hit_rate": 0.4839,
+        "profit": 7.4,
+        "roi": 0.2387,
+        "avg_breakeven": 0.3894,
+        "hr_minus_be": 0.0945,
+        "avg_p_model": 0.452,
+        "avg_price": 159.0,
+        "avg_edge_pp": 7.5837,
+        "brier": 0.236
+      },
+      "2022": {
+        "N": 30,
+        "wins": 13,
+        "pushes": 0,
+        "hit_rate": 0.4333,
+        "profit": 4.5,
+        "roi": 0.15,
+        "avg_breakeven": 0.3903,
+        "hr_minus_be": 0.0431,
+        "avg_p_model": 0.4635,
+        "avg_price": 158.9,
+        "avg_edge_pp": 8.7577,
+        "brier": 0.2464
+      },
+      "2023": {
+        "N": 34,
+        "wins": 10,
+        "pushes": 0,
+        "hit_rate": 0.2941,
+        "profit": -8.7,
+        "roi": -0.2559,
+        "avg_breakeven": 0.395,
+        "hr_minus_be": -0.1008,
+        "avg_p_model": 0.4499,
+        "avg_price": 155.44,
+        "avg_edge_pp": 7.0058,
+        "brier": 0.2325
+      },
+      "2024": {
+        "N": 21,
+        "wins": 5,
+        "pushes": 0,
+        "hit_rate": 0.2381,
+        "profit": -8.82,
+        "roi": -0.42,
+        "avg_breakeven": 0.4024,
+        "hr_minus_be": -0.1643,
+        "avg_p_model": 0.4666,
+        "avg_price": 150.33,
+        "avg_edge_pp": 8.1384,
+        "brier": 0.2378
+      }
+    },
+    "AVG_0_2": {
+      "2020": {
+        "N": 39,
+        "wins": 21,
+        "pushes": 0,
+        "hit_rate": 0.5385,
+        "profit": 5.3808,
+        "roi": 0.138,
+        "avg_breakeven": 0.5185,
+        "hr_minus_be": 0.02,
+        "avg_p_model": 0.515,
+        "avg_price": -13.64,
+        "avg_edge_pp": 0.9877,
+        "brier": 0.2402
+      },
+      "2021": {
+        "N": 37,
+        "wins": 18,
+        "pushes": 0,
+        "hit_rate": 0.4865,
+        "profit": 3.991,
+        "roi": 0.1079,
+        "avg_breakeven": 0.4479,
+        "hr_minus_be": 0.0386,
+        "avg_p_model": 0.443,
+        "avg_price": 82.38,
+        "avg_edge_pp": 1.0041,
+        "brier": 0.2054
+      },
+      "2022": {
+        "N": 50,
+        "wins": 30,
+        "pushes": 0,
+        "hit_rate": 0.6,
+        "profit": 7.9263,
+        "roi": 0.1585,
+        "avg_breakeven": 0.4877,
+        "hr_minus_be": 0.1123,
+        "avg_p_model": 0.4852,
+        "avg_price": 29.36,
+        "avg_edge_pp": 0.9338,
+        "brier": 0.2027
+      },
+      "2023": {
+        "N": 42,
+        "wins": 8,
+        "pushes": 0,
+        "hit_rate": 0.1905,
+        "profit": -25.5541,
+        "roi": -0.6084,
+        "avg_breakeven": 0.4532,
+        "hr_minus_be": -0.2627,
+        "avg_p_model": 0.4485,
+        "avg_price": 71.83,
+        "avg_edge_pp": 0.9795,
+        "brier": 0.2113
+      },
+      "2024": {
+        "N": 48,
+        "wins": 25,
+        "pushes": 0,
+        "hit_rate": 0.5208,
+        "profit": 0.2323,
+        "roi": 0.0048,
+        "avg_breakeven": 0.4839,
+        "hr_minus_be": 0.0369,
+        "avg_p_model": 0.478,
+        "avg_price": 20.94,
+        "avg_edge_pp": 0.9417,
+        "brier": 0.1808
+      }
+    }
+  },
+  "d1_home_away": {
+    "DOG_AVG": [
+      {
+        "candidate": "DOG_AVG",
+        "season": 2020,
+        "side": "home",
+        "N": 20,
+        "wins": 10,
+        "pushes": 0,
+        "hit_rate": 0.5,
+        "profit": 5.0,
+        "roi": 0.25,
+        "avg_breakeven": 0.4029,
+        "hr_minus_be": 0.0971,
+        "avg_p_model": 0.4639,
+        "avg_price": 149.9,
+        "avg_edge_pp": 7.1582,
+        "brier": 0.2504
+      },
+      {
+        "candidate": "DOG_AVG",
+        "season": 2020,
+        "side": "away",
+        "N": 16,
+        "wins": 11,
+        "pushes": 0,
+        "hit_rate": 0.6875,
+        "profit": 10.56,
+        "roi": 0.66,
+        "avg_breakeven": 0.4093,
+        "hr_minus_be": 0.2782,
+        "avg_p_model": 0.4486,
+        "avg_price": 145.94,
+        "avg_edge_pp": 5.1866,
+        "brier": 0.2655
+      },
+      {
+        "candidate": "DOG_AVG",
+        "season": 2021,
+        "side": "home",
+        "N": 19,
+        "wins": 8,
+        "pushes": 0,
+        "hit_rate": 0.4211,
+        "profit": 1.76,
+        "roi": 0.0926,
+        "avg_breakeven": 0.3862,
+        "hr_minus_be": 0.0348,
+        "avg_p_model": 0.4518,
+        "avg_price": 160.63,
+        "avg_edge_pp": 7.8859,
+        "brier": 0.2367
+      },
+      {
+        "candidate": "DOG_AVG",
+        "season": 2021,
+        "side": "away",
+        "N": 30,
+        "wins": 17,
+        "pushes": 0,
+        "hit_rate": 0.5667,
+        "profit": 12.89,
+        "roi": 0.4297,
+        "avg_breakeven": 0.4029,
+        "hr_minus_be": 0.1638,
+        "avg_p_model": 0.4437,
+        "avg_price": 150.13,
+        "avg_edge_pp": 5.4268,
+        "brier": 0.2558
+      },
+      {
+        "candidate": "DOG_AVG",
+        "season": 2022,
+        "side": "home",
+        "N": 20,
+        "wins": 10,
+        "pushes": 0,
+        "hit_rate": 0.5,
+        "profit": 6.48,
+        "roi": 0.324,
+        "avg_breakeven": 0.388,
+        "hr_minus_be": 0.112,
+        "avg_p_model": 0.4575,
+        "avg_price": 159.6,
+        "avg_edge_pp": 8.1121,
+        "brier": 0.2547
+      },
+      {
+        "candidate": "DOG_AVG",
+        "season": 2022,
+        "side": "away",
+        "N": 26,
+        "wins": 10,
+        "pushes": 0,
+        "hit_rate": 0.3846,
+        "profit": -1.53,
+        "roi": -0.0588,
+        "avg_breakeven": 0.4043,
+        "hr_minus_be": -0.0197,
+        "avg_p_model": 0.4454,
+        "avg_price": 149.81,
+        "avg_edge_pp": 5.6658,
+        "brier": 0.2372
+      },
+      {
+        "candidate": "DOG_AVG",
+        "season": 2023,
+        "side": "home",
+        "N": 24,
+        "wins": 10,
+        "pushes": 0,
+        "hit_rate": 0.4167,
+        "profit": 0.42,
+        "roi": 0.0175,
+        "avg_breakeven": 0.4078,
+        "hr_minus_be": 0.0089,
+        "avg_p_model": 0.4513,
+        "avg_price": 147.92,
+        "avg_edge_pp": 5.5168,
+        "brier": 0.2429
+      },
+      {
+        "candidate": "DOG_AVG",
+        "season": 2023,
+        "side": "away",
+        "N": 34,
+        "wins": 7,
+        "pushes": 0,
+        "hit_rate": 0.2059,
+        "profit": -16.98,
+        "roi": -0.4994,
+        "avg_breakeven": 0.4068,
+        "hr_minus_be": -0.2009,
+        "avg_p_model": 0.438,
+        "avg_price": 147.29,
+        "avg_edge_pp": 4.8842,
+        "brier": 0.2125
+      },
+      {
+        "candidate": "DOG_AVG",
+        "season": 2024,
+        "side": "home",
+        "N": 16,
+        "wins": 2,
+        "pushes": 0,
+        "hit_rate": 0.125,
+        "profit": -10.84,
+        "roi": -0.6775,
+        "avg_breakeven": 0.4018,
+        "hr_minus_be": -0.2768,
+        "avg_p_model": 0.4562,
+        "avg_price": 150.38,
+        "avg_edge_pp": 6.5017,
+        "brier": 0.2288
+      },
+      {
+        "candidate": "DOG_AVG",
+        "season": 2024,
+        "side": "away",
+        "N": 27,
+        "wins": 13,
+        "pushes": 0,
+        "hit_rate": 0.4815,
+        "profit": 4.08,
+        "roi": 0.1511,
+        "avg_breakeven": 0.4144,
+        "hr_minus_be": 0.067,
+        "avg_p_model": 0.4493,
+        "avg_price": 143.07,
+        "avg_edge_pp": 5.1699,
+        "brier": 0.2487
+      },
+      {
+        "candidate": "DOG_AVG",
+        "season": "POOL",
+        "side": "home",
+        "N": 99,
+        "wins": 40,
+        "pushes": 0,
+        "hit_rate": 0.404,
+        "profit": 2.82,
+        "roi": 0.0285,
+        "avg_breakeven": 0.3977,
+        "hr_minus_be": 0.0063,
+        "avg_p_model": 0.456,
+        "avg_price": 153.52,
+        "avg_edge_pp": 6.9866,
+        "brier": 0.2433
+      },
+      {
+        "candidate": "DOG_AVG",
+        "season": "POOL",
+        "side": "away",
+        "N": 133,
+        "wins": 58,
+        "pushes": 0,
+        "hit_rate": 0.4361,
+        "profit": 9.02,
+        "roi": 0.0678,
+        "avg_breakeven": 0.4073,
+        "hr_minus_be": 0.0288,
+        "avg_p_model": 0.4443,
+        "avg_price": 147.41,
+        "avg_edge_pp": 5.2538,
+        "brier": 0.2408
+      }
+    ],
+    "DOG_CORROB": [
+      {
+        "candidate": "DOG_CORROB",
+        "season": 2020,
+        "side": "home",
+        "N": 14,
+        "wins": 7,
+        "pushes": 0,
+        "hit_rate": 0.5,
+        "profit": 4.4,
+        "roi": 0.3143,
+        "avg_breakeven": 0.39,
+        "hr_minus_be": 0.11,
+        "avg_p_model": 0.4708,
+        "avg_price": 157.64,
+        "avg_edge_pp": 9.1976,
+        "brier": 0.2534
+      },
+      {
+        "candidate": "DOG_CORROB",
+        "season": 2020,
+        "side": "away",
+        "N": 10,
+        "wins": 7,
+        "pushes": 0,
+        "hit_rate": 0.7,
+        "profit": 7.56,
+        "roi": 0.756,
+        "avg_breakeven": 0.3956,
+        "hr_minus_be": 0.3044,
+        "avg_p_model": 0.4492,
+        "avg_price": 154.3,
+        "avg_edge_pp": 6.7455,
+        "brier": 0.2726
+      },
+      {
+        "candidate": "DOG_CORROB",
+        "season": 2021,
+        "side": "home",
+        "N": 11,
+        "wins": 5,
+        "pushes": 0,
+        "hit_rate": 0.4545,
+        "profit": 2.13,
+        "roi": 0.1936,
+        "avg_breakeven": 0.3738,
+        "hr_minus_be": 0.0808,
+        "avg_p_model": 0.4597,
+        "avg_price": 169.18,
+        "avg_edge_pp": 9.9034,
+        "brier": 0.2301
+      },
+      {
+        "candidate": "DOG_CORROB",
+        "season": 2021,
+        "side": "away",
+        "N": 20,
+        "wins": 10,
+        "pushes": 0,
+        "hit_rate": 0.5,
+        "profit": 5.27,
+        "roi": 0.2635,
+        "avg_breakeven": 0.398,
+        "hr_minus_be": 0.102,
+        "avg_p_model": 0.4477,
+        "avg_price": 153.4,
+        "avg_edge_pp": 6.3079,
+        "brier": 0.2392
+      },
+      {
+        "candidate": "DOG_CORROB",
+        "season": 2022,
+        "side": "home",
+        "N": 15,
+        "wins": 7,
+        "pushes": 0,
+        "hit_rate": 0.4667,
+        "profit": 4.0,
+        "roi": 0.2667,
+        "avg_breakeven": 0.3814,
+        "hr_minus_be": 0.0853,
+        "avg_p_model": 0.4634,
+        "avg_price": 164.13,
+        "avg_edge_pp": 9.3823,
+        "brier": 0.2474
+      },
+      {
+        "candidate": "DOG_CORROB",
+        "season": 2022,
+        "side": "away",
+        "N": 15,
+        "wins": 6,
+        "pushes": 0,
+        "hit_rate": 0.4,
+        "profit": 0.5,
+        "roi": 0.0333,
+        "avg_breakeven": 0.3992,
+        "hr_minus_be": 0.0008,
+        "avg_p_model": 0.4637,
+        "avg_price": 153.67,
+        "avg_edge_pp": 8.133,
+        "brier": 0.2455
+      },
+      {
+        "candidate": "DOG_CORROB",
+        "season": 2023,
+        "side": "home",
+        "N": 15,
+        "wins": 5,
+        "pushes": 0,
+        "hit_rate": 0.3333,
+        "profit": -2.0,
+        "roi": -0.1333,
+        "avg_breakeven": 0.3917,
+        "hr_minus_be": -0.0583,
+        "avg_p_model": 0.4524,
+        "avg_price": 158.0,
+        "avg_edge_pp": 7.4222,
+        "brier": 0.2382
+      },
+      {
+        "candidate": "DOG_CORROB",
+        "season": 2023,
+        "side": "away",
+        "N": 19,
+        "wins": 5,
+        "pushes": 0,
+        "hit_rate": 0.2632,
+        "profit": -6.7,
+        "roi": -0.3526,
+        "avg_breakeven": 0.3976,
+        "hr_minus_be": -0.1344,
+        "avg_p_model": 0.448,
+        "avg_price": 153.42,
+        "avg_edge_pp": 6.6771,
+        "brier": 0.228
+      },
+      {
+        "candidate": "DOG_CORROB",
+        "season": 2024,
+        "side": "home",
+        "N": 8,
+        "wins": 0,
+        "pushes": 0,
+        "hit_rate": 0.0,
+        "profit": -8.0,
+        "roi": -1.0,
+        "avg_breakeven": 0.3934,
+        "hr_minus_be": -0.3934,
+        "avg_p_model": 0.4721,
+        "avg_price": 156.0,
+        "avg_edge_pp": 9.1766,
+        "brier": 0.2231
+      },
+      {
+        "candidate": "DOG_CORROB",
+        "season": 2024,
+        "side": "away",
+        "N": 13,
+        "wins": 5,
+        "pushes": 0,
+        "hit_rate": 0.3846,
+        "profit": -0.82,
+        "roi": -0.0631,
+        "avg_breakeven": 0.4079,
+        "hr_minus_be": -0.0233,
+        "avg_p_model": 0.4632,
+        "avg_price": 146.85,
+        "avg_edge_pp": 7.4995,
+        "brier": 0.2468
+      },
+      {
+        "candidate": "DOG_CORROB",
+        "season": "POOL",
+        "side": "home",
+        "N": 63,
+        "wins": 24,
+        "pushes": 0,
+        "hit_rate": 0.381,
+        "profit": 0.53,
+        "roi": 0.0084,
+        "avg_breakeven": 0.3859,
+        "hr_minus_be": -0.005,
+        "avg_p_model": 0.4629,
+        "avg_price": 161.08,
+        "avg_edge_pp": 8.9394,
+        "brier": 0.2404
+      },
+      {
+        "candidate": "DOG_CORROB",
+        "season": "POOL",
+        "side": "away",
+        "N": 77,
+        "wins": 33,
+        "pushes": 0,
+        "hit_rate": 0.4286,
+        "profit": 5.81,
+        "roi": 0.0755,
+        "avg_breakeven": 0.3995,
+        "hr_minus_be": 0.0291,
+        "avg_p_model": 0.4537,
+        "avg_price": 152.47,
+        "avg_edge_pp": 7.0125,
+        "brier": 0.2433
+      }
+    ],
+    "AVG_0_2": [
+      {
+        "candidate": "AVG_0_2",
+        "season": 2020,
+        "side": "home",
+        "N": 16,
+        "wins": 10,
+        "pushes": 0,
+        "hit_rate": 0.625,
+        "profit": 1.1605,
+        "roi": 0.0725,
+        "avg_breakeven": 0.6143,
+        "hr_minus_be": 0.0107,
+        "avg_p_model": 0.6091,
+        "avg_price": -158.06,
+        "avg_edge_pp": 1.0388,
+        "brier": 0.2195
+      },
+      {
+        "candidate": "AVG_0_2",
+        "season": 2020,
+        "side": "away",
+        "N": 23,
+        "wins": 11,
+        "pushes": 0,
+        "hit_rate": 0.4783,
+        "profit": 4.2203,
+        "roi": 0.1835,
+        "avg_breakeven": 0.4518,
+        "hr_minus_be": 0.0265,
+        "avg_p_model": 0.4496,
+        "avg_price": 86.83,
+        "avg_edge_pp": 0.9522,
+        "brier": 0.2547
+      },
+      {
+        "candidate": "AVG_0_2",
+        "season": 2021,
+        "side": "home",
+        "N": 16,
+        "wins": 11,
+        "pushes": 0,
+        "hit_rate": 0.6875,
+        "profit": 8.4862,
+        "roi": 0.5304,
+        "avg_breakeven": 0.5666,
+        "hr_minus_be": 0.1209,
+        "avg_p_model": 0.5604,
+        "avg_price": -74.5,
+        "avg_edge_pp": 0.9395,
+        "brier": 0.2455
+      },
+      {
+        "candidate": "AVG_0_2",
+        "season": 2021,
+        "side": "away",
+        "N": 21,
+        "wins": 7,
+        "pushes": 0,
+        "hit_rate": 0.3333,
+        "profit": -4.4953,
+        "roi": -0.2141,
+        "avg_breakeven": 0.3575,
+        "hr_minus_be": -0.0241,
+        "avg_p_model": 0.3535,
+        "avg_price": 201.9,
+        "avg_edge_pp": 1.0532,
+        "brier": 0.1749
+      },
+      {
+        "candidate": "AVG_0_2",
+        "season": 2022,
+        "side": "home",
+        "N": 19,
+        "wins": 15,
+        "pushes": 0,
+        "hit_rate": 0.7895,
+        "profit": 7.446,
+        "roi": 0.3919,
+        "avg_breakeven": 0.5804,
+        "hr_minus_be": 0.209,
+        "avg_p_model": 0.5781,
+        "avg_price": -107.16,
+        "avg_edge_pp": 1.0321,
+        "brier": 0.2015
+      },
+      {
+        "candidate": "AVG_0_2",
+        "season": 2022,
+        "side": "away",
+        "N": 31,
+        "wins": 15,
+        "pushes": 0,
+        "hit_rate": 0.4839,
+        "profit": 0.4803,
+        "roi": 0.0155,
+        "avg_breakeven": 0.4308,
+        "hr_minus_be": 0.0531,
+        "avg_p_model": 0.4282,
+        "avg_price": 113.03,
+        "avg_edge_pp": 0.8735,
+        "brier": 0.2034
+      },
+      {
+        "candidate": "AVG_0_2",
+        "season": 2023,
+        "side": "home",
+        "N": 18,
+        "wins": 6,
+        "pushes": 0,
+        "hit_rate": 0.3333,
+        "profit": -7.2841,
+        "roi": -0.4047,
+        "avg_breakeven": 0.5145,
+        "hr_minus_be": -0.1812,
+        "avg_p_model": 0.5117,
+        "avg_price": -1.83,
+        "avg_edge_pp": 0.9353,
+        "brier": 0.2254
+      },
+      {
+        "candidate": "AVG_0_2",
+        "season": 2023,
+        "side": "away",
+        "N": 24,
+        "wins": 2,
+        "pushes": 0,
+        "hit_rate": 0.0833,
+        "profit": -18.27,
+        "roi": -0.7612,
+        "avg_breakeven": 0.4072,
+        "hr_minus_be": -0.3238,
+        "avg_p_model": 0.4012,
+        "avg_price": 127.08,
+        "avg_edge_pp": 1.0126,
+        "brier": 0.2008
+      },
+      {
+        "candidate": "AVG_0_2",
+        "season": 2024,
+        "side": "home",
+        "N": 18,
+        "wins": 12,
+        "pushes": 0,
+        "hit_rate": 0.6667,
+        "profit": -0.692,
+        "roi": -0.0384,
+        "avg_breakeven": 0.6205,
+        "hr_minus_be": 0.0462,
+        "avg_p_model": 0.6139,
+        "avg_price": -177.78,
+        "avg_edge_pp": 1.0142,
+        "brier": 0.1309
+      },
+      {
+        "candidate": "AVG_0_2",
+        "season": 2024,
+        "side": "away",
+        "N": 30,
+        "wins": 13,
+        "pushes": 0,
+        "hit_rate": 0.4333,
+        "profit": 0.9243,
+        "roi": 0.0308,
+        "avg_breakeven": 0.402,
+        "hr_minus_be": 0.0313,
+        "avg_p_model": 0.3965,
+        "avg_price": 140.17,
+        "avg_edge_pp": 0.8982,
+        "brier": 0.2107
+      },
+      {
+        "candidate": "AVG_0_2",
+        "season": "POOL",
+        "side": "home",
+        "N": 87,
+        "wins": 54,
+        "pushes": 0,
+        "hit_rate": 0.6207,
+        "profit": 9.1166,
+        "roi": 0.1048,
+        "avg_breakeven": 0.5788,
+        "hr_minus_be": 0.0419,
+        "avg_p_model": 0.5742,
+        "avg_price": -103.33,
+        "avg_edge_pp": 0.9926,
+        "brier": 0.2032
+      },
+      {
+        "candidate": "AVG_0_2",
+        "season": "POOL",
+        "side": "away",
+        "N": 129,
+        "wins": 48,
+        "pushes": 0,
+        "hit_rate": 0.3721,
+        "profit": -17.1404,
+        "roi": -0.1329,
+        "avg_breakeven": 0.4115,
+        "hr_minus_be": -0.0394,
+        "avg_p_model": 0.4074,
+        "avg_price": 131.75,
+        "avg_edge_pp": 0.9484,
+        "brier": 0.2091
+      }
+    ]
+  },
+  "d2_market_identity": {
+    "DOG_AVG": {
+      "rows": 232,
+      "not_plus_money_on_selected": 0,
+      "selected_is_favorite_by_novig": 0,
+      "price_attached_opponent": 0,
+      "underdog_by_novig_count": 232,
+      "underdog_by_offered_count": 232,
+      "inversion_or_attachment_game_ids": []
+    },
+    "DOG_CORROB": {
+      "rows": 140,
+      "not_plus_money_on_selected": 0,
+      "selected_is_favorite_by_novig": 0,
+      "price_attached_opponent": 0,
+      "underdog_by_novig_count": 140,
+      "underdog_by_offered_count": 140,
+      "inversion_or_attachment_game_ids": []
+    }
+  },
+  "d3_row_recomputation": {
+    "DOG_AVG": {
+      "rows_checked": 50,
+      "mismatch_count": 0,
+      "mismatch_game_ids": []
+    },
+    "DOG_CORROB": {
+      "rows_checked": 140,
+      "mismatch_count": 0,
+      "mismatch_game_ids": []
+    }
+  },
+  "d4_calibration_season": {
+    "2020": {
+      "AVG": {
+        "N": 36,
+        "observed_win": 0.5833,
+        "mean_pred_p": 0.4571,
+        "calibration_gap_pp": -12.62,
+        "brier": 0.2571
+      },
+      "QB": {
+        "N": 27,
+        "observed_win": 0.5556,
+        "mean_pred_p": 0.4565,
+        "calibration_gap_pp": -9.91,
+        "brier": 0.2784
+      },
+      "XGB": {
+        "N": 33,
+        "observed_win": 0.6061,
+        "mean_pred_p": 0.488,
+        "calibration_gap_pp": -11.8,
+        "brier": 0.2429
+      }
+    },
+    "2021": {
+      "AVG": {
+        "N": 49,
+        "observed_win": 0.5102,
+        "mean_pred_p": 0.4469,
+        "calibration_gap_pp": -6.33,
+        "brier": 0.2484
+      },
+      "QB": {
+        "N": 34,
+        "observed_win": 0.4706,
+        "mean_pred_p": 0.4551,
+        "calibration_gap_pp": -1.55,
+        "brier": 0.2362
+      },
+      "XGB": {
+        "N": 46,
+        "observed_win": 0.5217,
+        "mean_pred_p": 0.4764,
+        "calibration_gap_pp": -4.54,
+        "brier": 0.2427
+      }
+    },
+    "2022": {
+      "AVG": {
+        "N": 46,
+        "observed_win": 0.4348,
+        "mean_pred_p": 0.4507,
+        "calibration_gap_pp": 1.59,
+        "brier": 0.2448
+      },
+      "QB": {
+        "N": 31,
+        "observed_win": 0.4194,
+        "mean_pred_p": 0.4426,
+        "calibration_gap_pp": 2.33,
+        "brier": 0.2583
+      },
+      "XGB": {
+        "N": 45,
+        "observed_win": 0.4444,
+        "mean_pred_p": 0.4901,
+        "calibration_gap_pp": 4.57,
+        "brier": 0.2412
+      }
+    },
+    "2023": {
+      "AVG": {
+        "N": 58,
+        "observed_win": 0.2931,
+        "mean_pred_p": 0.4435,
+        "calibration_gap_pp": 15.04,
+        "brier": 0.2251
+      },
+      "QB": {
+        "N": 43,
+        "observed_win": 0.3023,
+        "mean_pred_p": 0.4554,
+        "calibration_gap_pp": 15.31,
+        "brier": 0.2389
+      },
+      "XGB": {
+        "N": 49,
+        "observed_win": 0.2857,
+        "mean_pred_p": 0.4627,
+        "calibration_gap_pp": 17.7,
+        "brier": 0.2265
+      }
+    },
+    "2024": {
+      "AVG": {
+        "N": 43,
+        "observed_win": 0.3488,
+        "mean_pred_p": 0.4519,
+        "calibration_gap_pp": 10.3,
+        "brier": 0.2413
+      },
+      "QB": {
+        "N": 31,
+        "observed_win": 0.3548,
+        "mean_pred_p": 0.4619,
+        "calibration_gap_pp": 10.71,
+        "brier": 0.2338
+      },
+      "XGB": {
+        "N": 33,
+        "observed_win": 0.2727,
+        "mean_pred_p": 0.4934,
+        "calibration_gap_pp": 22.07,
+        "brier": 0.2537
+      }
+    }
+  },
+  "d4b_pband": {
+    "2020_40-45": {
+      "N": 15,
+      "wins": 8,
+      "pushes": 0,
+      "hit_rate": 0.5333,
+      "profit": 4.54,
+      "roi": 0.3027,
+      "avg_breakeven": 0.4036,
+      "hr_minus_be": 0.1298,
+      "avg_p_model": 0.4282,
+      "avg_price": 149.53,
+      "avg_edge_pp": 3.6596,
+      "brier": 0.2566
+    },
+    "2020_45-50": {
+      "N": 21,
+      "wins": 13,
+      "pushes": 0,
+      "hit_rate": 0.619,
+      "profit": 11.02,
+      "roi": 0.5248,
+      "avg_breakeven": 0.4073,
+      "hr_minus_be": 0.2118,
+      "avg_p_model": 0.4777,
+      "avg_price": 147.14,
+      "avg_edge_pp": 8.155,
+      "brier": 0.2575
+    },
+    "2021_40-45": {
+      "N": 28,
+      "wins": 11,
+      "pushes": 0,
+      "hit_rate": 0.3929,
+      "profit": -0.55,
+      "roi": -0.0196,
+      "avg_breakeven": 0.3929,
+      "hr_minus_be": -0.0001,
+      "avg_p_model": 0.4282,
+      "avg_price": 155.93,
+      "avg_edge_pp": 5.0183,
+      "brier": 0.2402
+    },
+    "2021_45-50": {
+      "N": 21,
+      "wins": 14,
+      "pushes": 0,
+      "hit_rate": 0.6667,
+      "profit": 15.2,
+      "roi": 0.7238,
+      "avg_breakeven": 0.4011,
+      "hr_minus_be": 0.2656,
+      "avg_p_model": 0.4718,
+      "avg_price": 151.9,
+      "avg_edge_pp": 8.1965,
+      "brier": 0.2592
+    },
+    "2022_40-45": {
+      "N": 18,
+      "wins": 7,
+      "pushes": 0,
+      "hit_rate": 0.3889,
+      "profit": -0.09,
+      "roi": -0.005,
+      "avg_breakeven": 0.3935,
+      "hr_minus_be": -0.0046,
+      "avg_p_model": 0.4243,
+      "avg_price": 155.94,
+      "avg_edge_pp": 4.3836,
+      "brier": 0.2365
+    },
+    "2022_45-50": {
+      "N": 28,
+      "wins": 13,
+      "pushes": 0,
+      "hit_rate": 0.4643,
+      "profit": 5.04,
+      "roi": 0.18,
+      "avg_breakeven": 0.3997,
+      "hr_minus_be": 0.0646,
+      "avg_p_model": 0.4676,
+      "avg_price": 152.86,
+      "avg_edge_pp": 8.2375,
+      "brier": 0.2502
+    },
+    "2023_40-45": {
+      "N": 36,
+      "wins": 8,
+      "pushes": 0,
+      "hit_rate": 0.2222,
+      "profit": -15.44,
+      "roi": -0.4289,
+      "avg_breakeven": 0.3936,
+      "hr_minus_be": -0.1713,
+      "avg_p_model": 0.425,
+      "avg_price": 156.0,
+      "avg_edge_pp": 4.8579,
+      "brier": 0.2099
+    },
+    "2023_45-50": {
+      "N": 22,
+      "wins": 9,
+      "pushes": 0,
+      "hit_rate": 0.4091,
+      "profit": -1.12,
+      "roi": -0.0509,
+      "avg_breakeven": 0.4295,
+      "hr_minus_be": -0.0204,
+      "avg_p_model": 0.4738,
+      "avg_price": 133.73,
+      "avg_edge_pp": 5.6172,
+      "brier": 0.25
+    },
+    "2024_40-45": {
+      "N": 18,
+      "wins": 8,
+      "pushes": 0,
+      "hit_rate": 0.4444,
+      "profit": 1.56,
+      "roi": 0.0867,
+      "avg_breakeven": 0.4066,
+      "hr_minus_be": 0.0378,
+      "avg_p_model": 0.4262,
+      "avg_price": 147.61,
+      "avg_edge_pp": 3.3692,
+      "brier": 0.2428
+    },
+    "2024_45-50": {
+      "N": 25,
+      "wins": 7,
+      "pushes": 0,
+      "hit_rate": 0.28,
+      "profit": -8.32,
+      "roi": -0.3328,
+      "avg_breakeven": 0.412,
+      "hr_minus_be": -0.132,
+      "avg_p_model": 0.4703,
+      "avg_price": 144.48,
+      "avg_edge_pp": 7.3188,
+      "brier": 0.2402
+    }
+  },
+  "d5_interaction": [
+    {
+      "season": 2020,
+      "side": "home",
+      "band": "40-45",
+      "N": 5,
+      "wins": 2,
+      "pushes": 0,
+      "hit_rate": 0.4,
+      "profit": -0.14,
+      "roi": -0.028,
+      "avg_breakeven": 0.4115,
+      "hr_minus_be": -0.0115,
+      "avg_p_model": 0.4278,
+      "avg_price": 144.4,
+      "avg_edge_pp": 2.7626,
+      "brier": 0.2367
+    },
+    {
+      "season": 2020,
+      "side": "home",
+      "band": "45-50",
+      "N": 15,
+      "wins": 8,
+      "pushes": 0,
+      "hit_rate": 0.5333,
+      "profit": 5.14,
+      "roi": 0.3427,
+      "avg_breakeven": 0.4001,
+      "hr_minus_be": 0.1333,
+      "avg_p_model": 0.476,
+      "avg_price": 151.73,
+      "avg_edge_pp": 8.6233,
+      "brier": 0.255
+    },
+    {
+      "season": 2020,
+      "side": "away",
+      "band": "40-45",
+      "N": 10,
+      "wins": 6,
+      "pushes": 0,
+      "hit_rate": 0.6,
+      "profit": 4.68,
+      "roi": 0.468,
+      "avg_breakeven": 0.3996,
+      "hr_minus_be": 0.2004,
+      "avg_p_model": 0.4284,
+      "avg_price": 152.1,
+      "avg_edge_pp": 4.108,
+      "brier": 0.2666
+    },
+    {
+      "season": 2020,
+      "side": "away",
+      "band": "45-50",
+      "N": 6,
+      "wins": 5,
+      "pushes": 0,
+      "hit_rate": 0.8333,
+      "profit": 5.88,
+      "roi": 0.98,
+      "avg_breakeven": 0.4253,
+      "hr_minus_be": 0.408,
+      "avg_p_model": 0.4822,
+      "avg_price": 135.67,
+      "avg_edge_pp": 6.9841,
+      "brier": 0.2637
+    },
+    {
+      "season": 2021,
+      "side": "home",
+      "band": "40-45",
+      "N": 11,
+      "wins": 3,
+      "pushes": 0,
+      "hit_rate": 0.2727,
+      "profit": -3.37,
+      "roi": -0.3064,
+      "avg_breakeven": 0.3845,
+      "hr_minus_be": -0.1118,
+      "avg_p_model": 0.4335,
+      "avg_price": 161.73,
+      "avg_edge_pp": 6.4955,
+      "brier": 0.2253
+    },
+    {
+      "season": 2021,
+      "side": "home",
+      "band": "45-50",
+      "N": 8,
+      "wins": 5,
+      "pushes": 0,
+      "hit_rate": 0.625,
+      "profit": 5.13,
+      "roi": 0.6412,
+      "avg_breakeven": 0.3886,
+      "hr_minus_be": 0.2364,
+      "avg_p_model": 0.4769,
+      "avg_price": 159.12,
+      "avg_edge_pp": 9.7978,
+      "brier": 0.2525
+    },
+    {
+      "season": 2021,
+      "side": "away",
+      "band": "40-45",
+      "N": 17,
+      "wins": 8,
+      "pushes": 0,
+      "hit_rate": 0.4706,
+      "profit": 2.82,
+      "roi": 0.1659,
+      "avg_breakeven": 0.3983,
+      "hr_minus_be": 0.0723,
+      "avg_p_model": 0.4247,
+      "avg_price": 152.18,
+      "avg_edge_pp": 4.0624,
+      "brier": 0.2499
+    },
+    {
+      "season": 2021,
+      "side": "away",
+      "band": "45-50",
+      "N": 13,
+      "wins": 9,
+      "pushes": 0,
+      "hit_rate": 0.6923,
+      "profit": 10.07,
+      "roi": 0.7746,
+      "avg_breakeven": 0.4088,
+      "hr_minus_be": 0.2835,
+      "avg_p_model": 0.4686,
+      "avg_price": 147.46,
+      "avg_edge_pp": 7.2111,
+      "brier": 0.2634
+    },
+    {
+      "season": 2022,
+      "side": "home",
+      "band": "40-45",
+      "N": 6,
+      "wins": 3,
+      "pushes": 0,
+      "hit_rate": 0.5,
+      "profit": 2.21,
+      "roi": 0.3683,
+      "avg_breakeven": 0.3699,
+      "hr_minus_be": 0.1301,
+      "avg_p_model": 0.4283,
+      "avg_price": 171.0,
+      "avg_edge_pp": 6.8481,
+      "brier": 0.2601
+    },
+    {
+      "season": 2022,
+      "side": "home",
+      "band": "45-50",
+      "N": 14,
+      "wins": 7,
+      "pushes": 0,
+      "hit_rate": 0.5,
+      "profit": 4.27,
+      "roi": 0.305,
+      "avg_breakeven": 0.3958,
+      "hr_minus_be": 0.1042,
+      "avg_p_model": 0.4701,
+      "avg_price": 154.71,
+      "avg_edge_pp": 8.6539,
+      "brier": 0.2524
+    },
+    {
+      "season": 2022,
+      "side": "away",
+      "band": "40-45",
+      "N": 12,
+      "wins": 4,
+      "pushes": 0,
+      "hit_rate": 0.3333,
+      "profit": -2.3,
+      "roi": -0.1917,
+      "avg_breakeven": 0.4052,
+      "hr_minus_be": -0.0719,
+      "avg_p_model": 0.4223,
+      "avg_price": 148.42,
+      "avg_edge_pp": 3.1513,
+      "brier": 0.2246
+    },
+    {
+      "season": 2022,
+      "side": "away",
+      "band": "45-50",
+      "N": 14,
+      "wins": 6,
+      "pushes": 0,
+      "hit_rate": 0.4286,
+      "profit": 0.77,
+      "roi": 0.055,
+      "avg_breakeven": 0.4035,
+      "hr_minus_be": 0.025,
+      "avg_p_model": 0.4652,
+      "avg_price": 151.0,
+      "avg_edge_pp": 7.821,
+      "brier": 0.248
+    },
+    {
+      "season": 2023,
+      "side": "home",
+      "band": "40-45",
+      "N": 12,
+      "wins": 5,
+      "pushes": 0,
+      "hit_rate": 0.4167,
+      "profit": 1.16,
+      "roi": 0.0967,
+      "avg_breakeven": 0.378,
+      "hr_minus_be": 0.0387,
+      "avg_p_model": 0.4285,
+      "avg_price": 166.83,
+      "avg_edge_pp": 6.3468,
+      "brier": 0.2358
+    },
+    {
+      "season": 2023,
+      "side": "home",
+      "band": "45-50",
+      "N": 12,
+      "wins": 5,
+      "pushes": 0,
+      "hit_rate": 0.4167,
+      "profit": -0.74,
+      "roi": -0.0617,
+      "avg_breakeven": 0.4376,
+      "hr_minus_be": -0.021,
+      "avg_p_model": 0.4741,
+      "avg_price": 129.0,
+      "avg_edge_pp": 4.6867,
+      "brier": 0.25
+    },
+    {
+      "season": 2023,
+      "side": "away",
+      "band": "40-45",
+      "N": 24,
+      "wins": 3,
+      "pushes": 0,
+      "hit_rate": 0.125,
+      "profit": -16.6,
+      "roi": -0.6917,
+      "avg_breakeven": 0.4014,
+      "hr_minus_be": -0.2764,
+      "avg_p_model": 0.4232,
+      "avg_price": 150.58,
+      "avg_edge_pp": 4.1135,
+      "brier": 0.1969
+    },
+    {
+      "season": 2023,
+      "side": "away",
+      "band": "45-50",
+      "N": 10,
+      "wins": 4,
+      "pushes": 0,
+      "hit_rate": 0.4,
+      "profit": -0.38,
+      "roi": -0.038,
+      "avg_breakeven": 0.4198,
+      "hr_minus_be": -0.0198,
+      "avg_p_model": 0.4735,
+      "avg_price": 139.4,
+      "avg_edge_pp": 6.7338,
+      "brier": 0.2501
+    },
+    {
+      "season": 2024,
+      "side": "home",
+      "band": "40-45",
+      "N": 5,
+      "wins": 2,
+      "pushes": 0,
+      "hit_rate": 0.4,
+      "profit": 0.16,
+      "roi": 0.032,
+      "avg_breakeven": 0.4066,
+      "hr_minus_be": -0.0066,
+      "avg_p_model": 0.425,
+      "avg_price": 147.2,
+      "avg_edge_pp": 2.7675,
+      "brier": 0.2449
+    },
+    {
+      "season": 2024,
+      "side": "home",
+      "band": "45-50",
+      "N": 11,
+      "wins": 0,
+      "pushes": 0,
+      "hit_rate": 0.0,
+      "profit": -11.0,
+      "roi": -1.0,
+      "avg_breakeven": 0.3996,
+      "hr_minus_be": -0.3996,
+      "avg_p_model": 0.4704,
+      "avg_price": 151.82,
+      "avg_edge_pp": 8.1991,
+      "brier": 0.2214
+    },
+    {
+      "season": 2024,
+      "side": "away",
+      "band": "40-45",
+      "N": 13,
+      "wins": 6,
+      "pushes": 0,
+      "hit_rate": 0.4615,
+      "profit": 1.4,
+      "roi": 0.1077,
+      "avg_breakeven": 0.4066,
+      "hr_minus_be": 0.0549,
+      "avg_p_model": 0.4267,
+      "avg_price": 147.77,
+      "avg_edge_pp": 3.6005,
+      "brier": 0.2419
+    },
+    {
+      "season": 2024,
+      "side": "away",
+      "band": "45-50",
+      "N": 14,
+      "wins": 7,
+      "pushes": 0,
+      "hit_rate": 0.5,
+      "profit": 2.68,
+      "roi": 0.1914,
+      "avg_breakeven": 0.4217,
+      "hr_minus_be": 0.0783,
+      "avg_p_model": 0.4702,
+      "avg_price": 138.71,
+      "avg_edge_pp": 6.6271,
+      "brier": 0.255
+    },
+    {
+      "season": 2020,
+      "side": "home",
+      "edgeband": "0-5",
+      "N": 6,
+      "wins": 3,
+      "pushes": 0,
+      "hit_rate": 0.5,
+      "profit": 0.6,
+      "roi": 0.1,
+      "avg_breakeven": 0.4318,
+      "hr_minus_be": 0.0682,
+      "avg_p_model": 0.4409,
+      "avg_price": 132.67,
+      "avg_edge_pp": 1.9691,
+      "brier": 0.2373
+    },
+    {
+      "season": 2020,
+      "side": "away",
+      "edgeband": "0-5",
+      "N": 7,
+      "wins": 5,
+      "pushes": 0,
+      "hit_rate": 0.7143,
+      "profit": 4.58,
+      "roi": 0.6543,
+      "avg_breakeven": 0.4258,
+      "hr_minus_be": 0.2885,
+      "avg_p_model": 0.4354,
+      "avg_price": 135.71,
+      "avg_edge_pp": 2.0249,
+      "brier": 0.2744
+    },
+    {
+      "season": 2021,
+      "side": "home",
+      "edgeband": "0-5",
+      "N": 6,
+      "wins": 2,
+      "pushes": 0,
+      "hit_rate": 0.3333,
+      "profit": -1.33,
+      "roi": -0.2217,
+      "avg_breakeven": 0.4244,
+      "hr_minus_be": -0.091,
+      "avg_p_model": 0.4455,
+      "avg_price": 135.83,
+      "avg_edge_pp": 3.4304,
+      "brier": 0.2351
+    },
+    {
+      "season": 2021,
+      "side": "away",
+      "edgeband": "0-5",
+      "N": 15,
+      "wins": 9,
+      "pushes": 0,
+      "hit_rate": 0.6,
+      "profit": 6.72,
+      "roi": 0.448,
+      "avg_breakeven": 0.4224,
+      "hr_minus_be": 0.1776,
+      "avg_p_model": 0.4358,
+      "avg_price": 137.6,
+      "avg_edge_pp": 2.5664,
+      "brier": 0.2689
+    },
+    {
+      "season": 2022,
+      "side": "home",
+      "edgeband": "0-5",
+      "N": 5,
+      "wins": 2,
+      "pushes": 0,
+      "hit_rate": 0.4,
+      "profit": -0.2,
+      "roi": -0.04,
+      "avg_breakeven": 0.4164,
+      "hr_minus_be": -0.0164,
+      "avg_p_model": 0.445,
+      "avg_price": 142.0,
+      "avg_edge_pp": 3.1604,
+      "brier": 0.2501
+    },
+    {
+      "season": 2022,
+      "side": "away",
+      "edgeband": "0-5",
+      "N": 13,
+      "wins": 6,
+      "pushes": 0,
+      "hit_rate": 0.4615,
+      "profit": 0.49,
+      "roi": 0.0377,
+      "avg_breakeven": 0.4336,
+      "hr_minus_be": 0.0279,
+      "avg_p_model": 0.4368,
+      "avg_price": 131.31,
+      "avg_edge_pp": 1.6094,
+      "brier": 0.2447
+    },
+    {
+      "season": 2023,
+      "side": "home",
+      "edgeband": "0-5",
+      "N": 13,
+      "wins": 6,
+      "pushes": 0,
+      "hit_rate": 0.4615,
+      "profit": 0.72,
+      "roi": 0.0554,
+      "avg_breakeven": 0.4273,
+      "hr_minus_be": 0.0342,
+      "avg_p_model": 0.4449,
+      "avg_price": 135.46,
+      "avg_edge_pp": 2.8812,
+      "brier": 0.2395
+    },
+    {
+      "season": 2023,
+      "side": "away",
+      "edgeband": "0-5",
+      "N": 18,
+      "wins": 3,
+      "pushes": 0,
+      "hit_rate": 0.1667,
+      "profit": -11.26,
+      "roi": -0.6256,
+      "avg_breakeven": 0.424,
+      "hr_minus_be": -0.2573,
+      "avg_p_model": 0.429,
+      "avg_price": 136.28,
+      "avg_edge_pp": 2.4554,
+      "brier": 0.1958
+    },
+    {
+      "season": 2024,
+      "side": "home",
+      "edgeband": "0-5",
+      "N": 5,
+      "wins": 1,
+      "pushes": 0,
+      "hit_rate": 0.2,
+      "profit": -2.64,
+      "roi": -0.528,
+      "avg_breakeven": 0.4221,
+      "hr_minus_be": -0.2221,
+      "avg_p_model": 0.4351,
+      "avg_price": 137.2,
+      "avg_edge_pp": 1.9208,
+      "brier": 0.2178
+    },
+    {
+      "season": 2024,
+      "side": "away",
+      "edgeband": "0-5",
+      "N": 13,
+      "wins": 7,
+      "pushes": 0,
+      "hit_rate": 0.5385,
+      "profit": 2.76,
+      "roi": 0.2123,
+      "avg_breakeven": 0.4402,
+      "hr_minus_be": 0.0983,
+      "avg_p_model": 0.4414,
+      "avg_price": 127.69,
+      "avg_edge_pp": 1.9075,
+      "brier": 0.249
+    },
+    {
+      "season": 2020,
+      "side": "home",
+      "edgeband": "5-8",
+      "N": 5,
+      "wins": 2,
+      "pushes": 0,
+      "hit_rate": 0.4,
+      "profit": 0.09,
+      "roi": 0.018,
+      "avg_breakeven": 0.3993,
+      "hr_minus_be": 0.0007,
+      "avg_p_model": 0.4577,
+      "avg_price": 150.8,
+      "avg_edge_pp": 6.6178,
+      "brier": 0.2497
+    },
+    {
+      "season": 2020,
+      "side": "away",
+      "edgeband": "5-8",
+      "N": 6,
+      "wins": 4,
+      "pushes": 0,
+      "hit_rate": 0.6667,
+      "profit": 3.98,
+      "roi": 0.6633,
+      "avg_breakeven": 0.4028,
+      "hr_minus_be": 0.2639,
+      "avg_p_model": 0.4508,
+      "avg_price": 150.0,
+      "avg_edge_pp": 6.1264,
+      "brier": 0.2706
+    },
+    {
+      "season": 2021,
+      "side": "home",
+      "edgeband": "5-8",
+      "N": 4,
+      "wins": 2,
+      "pushes": 0,
+      "hit_rate": 0.5,
+      "profit": 1.28,
+      "roi": 0.32,
+      "avg_breakeven": 0.3799,
+      "hr_minus_be": 0.1201,
+      "avg_p_model": 0.4349,
+      "avg_price": 163.25,
+      "avg_edge_pp": 6.9275,
+      "brier": 0.2606
+    },
+    {
+      "season": 2021,
+      "side": "away",
+      "edgeband": "5-8",
+      "N": 8,
+      "wins": 3,
+      "pushes": 0,
+      "hit_rate": 0.375,
+      "profit": -0.6,
+      "roi": -0.075,
+      "avg_breakeven": 0.3978,
+      "hr_minus_be": -0.0228,
+      "avg_p_model": 0.4445,
+      "avg_price": 152.88,
+      "avg_edge_pp": 5.953,
+      "brier": 0.2246
+    },
+    {
+      "season": 2022,
+      "side": "home",
+      "edgeband": "5-8",
+      "N": 3,
+      "wins": 2,
+      "pushes": 0,
+      "hit_rate": 0.6667,
+      "profit": 1.93,
+      "roi": 0.6433,
+      "avg_breakeven": 0.4103,
+      "hr_minus_be": 0.2564,
+      "avg_p_model": 0.4571,
+      "avg_price": 145.0,
+      "avg_edge_pp": 6.8038,
+      "brier": 0.2643
+    },
+    {
+      "season": 2022,
+      "side": "away",
+      "edgeband": "5-8",
+      "N": 4,
+      "wins": 0,
+      "pushes": 0,
+      "hit_rate": 0.0,
+      "profit": -4.0,
+      "roi": -1.0,
+      "avg_breakeven": 0.4002,
+      "hr_minus_be": -0.4002,
+      "avg_p_model": 0.4407,
+      "avg_price": 150.75,
+      "avg_edge_pp": 5.9292,
+      "brier": 0.1956
+    },
+    {
+      "season": 2023,
+      "side": "home",
+      "edgeband": "5-8",
+      "N": 6,
+      "wins": 2,
+      "pushes": 0,
+      "hit_rate": 0.3333,
+      "profit": -1.2,
+      "roi": -0.2,
+      "avg_breakeven": 0.4096,
+      "hr_minus_be": -0.0762,
+      "avg_p_model": 0.465,
+      "avg_price": 145.5,
+      "avg_edge_pp": 6.833,
+      "brier": 0.2405
+    },
+    {
+      "season": 2023,
+      "side": "away",
+      "edgeband": "5-8",
+      "N": 11,
+      "wins": 3,
+      "pushes": 0,
+      "hit_rate": 0.2727,
+      "profit": -3.48,
+      "roi": -0.3164,
+      "avg_breakeven": 0.3976,
+      "hr_minus_be": -0.1248,
+      "avg_p_model": 0.4449,
+      "avg_price": 152.73,
+      "avg_edge_pp": 6.6053,
+      "brier": 0.2336
+    },
+    {
+      "season": 2024,
+      "side": "home",
+      "edgeband": "5-8",
+      "N": 6,
+      "wins": 1,
+      "pushes": 0,
+      "hit_rate": 0.1667,
+      "profit": -3.2,
+      "roi": -0.5333,
+      "avg_breakeven": 0.4095,
+      "hr_minus_be": -0.2428,
+      "avg_p_model": 0.4539,
+      "avg_price": 145.33,
+      "avg_edge_pp": 5.7762,
+      "brier": 0.2364
+    },
+    {
+      "season": 2024,
+      "side": "away",
+      "edgeband": "5-8",
+      "N": 8,
+      "wins": 3,
+      "pushes": 0,
+      "hit_rate": 0.375,
+      "profit": -0.66,
+      "roi": -0.0825,
+      "avg_breakeven": 0.3979,
+      "hr_minus_be": -0.0229,
+      "avg_p_model": 0.4462,
+      "avg_price": 153.12,
+      "avg_edge_pp": 6.529,
+      "brier": 0.2372
+    },
+    {
+      "season": 2020,
+      "side": "home",
+      "edgeband": "8+",
+      "N": 9,
+      "wins": 5,
+      "pushes": 0,
+      "hit_rate": 0.5556,
+      "profit": 4.31,
+      "roi": 0.4789,
+      "avg_breakeven": 0.3857,
+      "hr_minus_be": 0.1699,
+      "avg_p_model": 0.4827,
+      "avg_price": 160.89,
+      "avg_edge_pp": 10.9178,
+      "brier": 0.2595
+    },
+    {
+      "season": 2020,
+      "side": "away",
+      "edgeband": "8+",
+      "N": 3,
+      "wins": 2,
+      "pushes": 0,
+      "hit_rate": 0.6667,
+      "profit": 2.0,
+      "roi": 0.6667,
+      "avg_breakeven": 0.3836,
+      "hr_minus_be": 0.283,
+      "avg_p_model": 0.4748,
+      "avg_price": 161.67,
+      "avg_edge_pp": 10.6842,
+      "brier": 0.2346
+    },
+    {
+      "season": 2021,
+      "side": "home",
+      "edgeband": "8+",
+      "N": 9,
+      "wins": 4,
+      "pushes": 0,
+      "hit_rate": 0.4444,
+      "profit": 1.81,
+      "roi": 0.2011,
+      "avg_breakeven": 0.3636,
+      "hr_minus_be": 0.0808,
+      "avg_p_model": 0.4635,
+      "avg_price": 176.0,
+      "avg_edge_pp": 11.2823,
+      "brier": 0.2272
+    },
+    {
+      "season": 2021,
+      "side": "away",
+      "edgeband": "8+",
+      "N": 7,
+      "wins": 5,
+      "pushes": 0,
+      "hit_rate": 0.7143,
+      "profit": 6.77,
+      "roi": 0.9671,
+      "avg_breakeven": 0.3669,
+      "hr_minus_be": 0.3474,
+      "avg_p_model": 0.46,
+      "avg_price": 173.86,
+      "avg_edge_pp": 10.955,
+      "brier": 0.2633
+    },
+    {
+      "season": 2022,
+      "side": "home",
+      "edgeband": "8+",
+      "N": 12,
+      "wins": 6,
+      "pushes": 0,
+      "hit_rate": 0.5,
+      "profit": 4.75,
+      "roi": 0.3958,
+      "avg_breakeven": 0.3706,
+      "hr_minus_be": 0.1294,
+      "avg_p_model": 0.4629,
+      "avg_price": 170.58,
+      "avg_edge_pp": 10.5025,
+      "brier": 0.2543
+    },
+    {
+      "season": 2022,
+      "side": "away",
+      "edgeband": "8+",
+      "N": 9,
+      "wins": 4,
+      "pushes": 0,
+      "hit_rate": 0.4444,
+      "profit": 1.98,
+      "roi": 0.22,
+      "avg_breakeven": 0.3638,
+      "hr_minus_be": 0.0806,
+      "avg_p_model": 0.46,
+      "avg_price": 176.11,
+      "avg_edge_pp": 11.4079,
+      "brier": 0.245
+    },
+    {
+      "season": 2023,
+      "side": "home",
+      "edgeband": "8+",
+      "N": 5,
+      "wins": 2,
+      "pushes": 0,
+      "hit_rate": 0.4,
+      "profit": 0.9,
+      "roi": 0.18,
+      "avg_breakeven": 0.355,
+      "hr_minus_be": 0.045,
+      "avg_p_model": 0.4515,
+      "avg_price": 183.2,
+      "avg_edge_pp": 10.7899,
+      "brier": 0.2546
+    },
+    {
+      "season": 2023,
+      "side": "away",
+      "edgeband": "8+",
+      "N": 5,
+      "wins": 1,
+      "pushes": 0,
+      "hit_rate": 0.2,
+      "profit": -2.24,
+      "roi": -0.448,
+      "avg_breakeven": 0.3652,
+      "hr_minus_be": -0.1652,
+      "avg_p_model": 0.4554,
+      "avg_price": 175.0,
+      "avg_edge_pp": 9.8413,
+      "brier": 0.2266
+    },
+    {
+      "season": 2024,
+      "side": "home",
+      "edgeband": "8+",
+      "N": 5,
+      "wins": 0,
+      "pushes": 0,
+      "hit_rate": 0.0,
+      "profit": -5.0,
+      "roi": -1.0,
+      "avg_breakeven": 0.3722,
+      "hr_minus_be": -0.3722,
+      "avg_p_model": 0.4801,
+      "avg_price": 169.6,
+      "avg_edge_pp": 11.9533,
+      "brier": 0.2306
+    },
+    {
+      "season": 2024,
+      "side": "away",
+      "edgeband": "8+",
+      "N": 6,
+      "wins": 3,
+      "pushes": 0,
+      "hit_rate": 0.5,
+      "profit": 1.98,
+      "roi": 0.33,
+      "avg_breakeven": 0.3807,
+      "hr_minus_be": 0.1193,
+      "avg_p_model": 0.4704,
+      "avg_price": 163.0,
+      "avg_edge_pp": 10.426,
+      "brier": 0.2634
+    }
+  ],
+  "d6_book_mix": {
+    "DOG_AVG": {
+      "book_mix": [
+        {
+          "season": "ALL",
+          "mix": {
+            "draftkings": {
+              "N": 126,
+              "profit": 8.88
+            },
+            "fanduel": {
+              "N": 106,
+              "profit": 2.96
+            }
+          }
+        },
+        {
+          "season": 2020,
+          "mix": {
+            "fanduel": {
+              "N": 17,
+              "profit": 5.04
+            },
+            "draftkings": {
+              "N": 19,
+              "profit": 10.52
+            }
+          }
+        },
+        {
+          "season": 2021,
+          "mix": {
+            "fanduel": {
+              "N": 20,
+              "profit": 6.3
+            },
+            "draftkings": {
+              "N": 29,
+              "profit": 8.35
+            }
+          }
+        },
+        {
+          "season": 2022,
+          "mix": {
+            "fanduel": {
+              "N": 17,
+              "profit": 4.0
+            },
+            "draftkings": {
+              "N": 29,
+              "profit": 0.95
+            }
+          }
+        },
+        {
+          "season": 2023,
+          "mix": {
+            "draftkings": {
+              "N": 32,
+              "profit": -6.16
+            },
+            "fanduel": {
+              "N": 26,
+              "profit": -10.4
+            }
+          }
+        },
+        {
+          "season": 2024,
+          "mix": {
+            "fanduel": {
+              "N": 26,
+              "profit": -1.98
+            },
+            "draftkings": {
+              "N": 17,
+              "profit": -4.78
+            }
+          }
+        }
+      ],
+      "price_bands": [
+        {
+          "season": "ALL",
+          "band": "111-125",
+          "N": 31,
+          "wins": 19,
+          "pushes": 0,
+          "hit_rate": 0.6129,
+          "profit": 10.76,
+          "roi": 0.3471,
+          "avg_breakeven": 0.4559,
+          "hr_minus_be": 0.157,
+          "avg_p_model": 0.4641,
+          "avg_price": 119.42,
+          "avg_edge_pp": 2.4284,
+          "brier": 0.2601
+        },
+        {
+          "season": "ALL",
+          "band": "126-150",
+          "N": 103,
+          "wins": 41,
+          "pushes": 0,
+          "hit_rate": 0.3981,
+          "profit": -5.32,
+          "roi": -0.0517,
+          "avg_breakeven": 0.4206,
+          "hr_minus_be": -0.0226,
+          "avg_p_model": 0.4496,
+          "avg_price": 137.96,
+          "avg_edge_pp": 4.3475,
+          "brier": 0.2393
+        },
+        {
+          "season": "ALL",
+          "band": "151-175",
+          "N": 59,
+          "wins": 21,
+          "pushes": 0,
+          "hit_rate": 0.3559,
+          "profit": -3.63,
+          "roi": -0.0615,
+          "avg_breakeven": 0.3811,
+          "hr_minus_be": -0.0251,
+          "avg_p_model": 0.4441,
+          "avg_price": 162.63,
+          "avg_edge_pp": 7.6854,
+          "brier": 0.2393
+        },
+        {
+          "season": "ALL",
+          "band": "176-200",
+          "N": 39,
+          "wins": 17,
+          "pushes": 0,
+          "hit_rate": 0.4359,
+          "profit": 10.03,
+          "roi": 0.2572,
+          "avg_breakeven": 0.3486,
+          "hr_minus_be": 0.0873,
+          "avg_p_model": 0.4446,
+          "avg_price": 187.08,
+          "avg_edge_pp": 10.613,
+          "brier": 0.2381
+        },
+        {
+          "season": 2020,
+          "band": "111-125",
+          "N": 5,
+          "wins": 5,
+          "pushes": 0,
+          "hit_rate": 1.0,
+          "profit": 6.0,
+          "roi": 1.2,
+          "avg_breakeven": 0.4546,
+          "hr_minus_be": 0.5454,
+          "avg_p_model": 0.4567,
+          "avg_price": 120.0,
+          "avg_edge_pp": 1.3045,
+          "brier": 0.2952
+        },
+        {
+          "season": 2020,
+          "band": "126-150",
+          "N": 17,
+          "wins": 9,
+          "pushes": 0,
+          "hit_rate": 0.5294,
+          "profit": 4.59,
+          "roi": 0.27,
+          "avg_breakeven": 0.4184,
+          "hr_minus_be": 0.111,
+          "avg_p_model": 0.462,
+          "avg_price": 139.35,
+          "avg_edge_pp": 5.6944,
+          "brier": 0.2489
+        },
+        {
+          "season": 2020,
+          "band": "151-175",
+          "N": 9,
+          "wins": 4,
+          "pushes": 0,
+          "hit_rate": 0.4444,
+          "profit": 1.33,
+          "roi": 0.1478,
+          "avg_breakeven": 0.3851,
+          "hr_minus_be": 0.0594,
+          "avg_p_model": 0.4581,
+          "avg_price": 159.89,
+          "avg_edge_pp": 8.2394,
+          "brier": 0.2515
+        },
+        {
+          "season": 2020,
+          "band": "176-200",
+          "N": 5,
+          "wins": 3,
+          "pushes": 0,
+          "hit_rate": 0.6,
+          "profit": 3.64,
+          "roi": 0.728,
+          "avg_breakeven": 0.3512,
+          "hr_minus_be": 0.2488,
+          "avg_p_model": 0.4389,
+          "avg_price": 185.0,
+          "avg_edge_pp": 9.7331,
+          "brier": 0.2572
+        },
+        {
+          "season": 2021,
+          "band": "111-125",
+          "N": 4,
+          "wins": 1,
+          "pushes": 0,
+          "hit_rate": 0.25,
+          "profit": -1.75,
+          "roi": -0.4375,
+          "avg_breakeven": 0.4548,
+          "hr_minus_be": -0.2048,
+          "avg_p_model": 0.4702,
+          "avg_price": 120.0,
+          "avg_edge_pp": 3.0656,
+          "brier": 0.2311
+        },
+        {
+          "season": 2021,
+          "band": "126-150",
+          "N": 19,
+          "wins": 12,
+          "pushes": 0,
+          "hit_rate": 0.6316,
+          "profit": 9.57,
+          "roi": 0.5037,
+          "avg_breakeven": 0.4219,
+          "hr_minus_be": 0.2096,
+          "avg_p_model": 0.4481,
+          "avg_price": 137.21,
+          "avg_edge_pp": 3.8295,
+          "brier": 0.2609
+        },
+        {
+          "season": 2021,
+          "band": "151-175",
+          "N": 15,
+          "wins": 7,
+          "pushes": 0,
+          "hit_rate": 0.4667,
+          "profit": 3.47,
+          "roi": 0.2313,
+          "avg_breakeven": 0.3829,
+          "hr_minus_be": 0.0838,
+          "avg_p_model": 0.4378,
+          "avg_price": 161.4,
+          "avg_edge_pp": 6.9669,
+          "brier": 0.2517
+        },
+        {
+          "season": 2021,
+          "band": "176-200",
+          "N": 11,
+          "wins": 5,
+          "pushes": 0,
+          "hit_rate": 0.4545,
+          "profit": 3.36,
+          "roi": 0.3055,
+          "avg_breakeven": 0.3496,
+          "hr_minus_be": 0.105,
+          "avg_p_model": 0.4486,
+          "avg_price": 186.18,
+          "avg_edge_pp": 11.192,
+          "brier": 0.2286
+        },
+        {
+          "season": 2022,
+          "band": "111-125",
+          "N": 9,
+          "wins": 5,
+          "pushes": 0,
+          "hit_rate": 0.5556,
+          "profit": 2.09,
+          "roi": 0.2322,
+          "avg_breakeven": 0.452,
+          "hr_minus_be": 0.1035,
+          "avg_p_model": 0.4666,
+          "avg_price": 121.33,
+          "avg_edge_pp": 2.8459,
+          "brier": 0.2551
+        },
+        {
+          "season": 2022,
+          "band": "126-150",
+          "N": 12,
+          "wins": 4,
+          "pushes": 0,
+          "hit_rate": 0.3333,
+          "profit": -2.6,
+          "roi": -0.2167,
+          "avg_breakeven": 0.4182,
+          "hr_minus_be": -0.0849,
+          "avg_p_model": 0.4444,
+          "avg_price": 139.33,
+          "avg_edge_pp": 4.1893,
+          "brier": 0.2386
+        },
+        {
+          "season": 2022,
+          "band": "151-175",
+          "N": 19,
+          "wins": 7,
+          "pushes": 0,
+          "hit_rate": 0.3684,
+          "profit": -0.35,
+          "roi": -0.0184,
+          "avg_breakeven": 0.3767,
+          "hr_minus_be": -0.0083,
+          "avg_p_model": 0.445,
+          "avg_price": 165.63,
+          "avg_edge_pp": 8.1961,
+          "brier": 0.2374
+        },
+        {
+          "season": 2022,
+          "band": "176-200",
+          "N": 6,
+          "wins": 4,
+          "pushes": 0,
+          "hit_rate": 0.6667,
+          "profit": 5.81,
+          "roi": 0.9683,
+          "avg_breakeven": 0.3379,
+          "hr_minus_be": 0.3287,
+          "avg_p_model": 0.4575,
+          "avg_price": 196.0,
+          "avg_edge_pp": 12.9906,
+          "brier": 0.2654
+        },
+        {
+          "season": 2023,
+          "band": "111-125",
+          "N": 6,
+          "wins": 3,
+          "pushes": 0,
+          "hit_rate": 0.5,
+          "profit": 0.42,
+          "roi": 0.07,
+          "avg_breakeven": 0.4611,
+          "hr_minus_be": 0.0389,
+          "avg_p_model": 0.4672,
+          "avg_price": 117.0,
+          "avg_edge_pp": 2.5287,
+          "brier": 0.2466
+        },
+        {
+          "season": 2023,
+          "band": "126-150",
+          "N": 34,
+          "wins": 10,
+          "pushes": 0,
+          "hit_rate": 0.2941,
+          "profit": -10.32,
+          "roi": -0.3035,
+          "avg_breakeven": 0.4215,
+          "hr_minus_be": -0.1274,
+          "avg_p_model": 0.4471,
+          "avg_price": 137.47,
+          "avg_edge_pp": 4.1388,
+          "brier": 0.2273
+        },
+        {
+          "season": 2023,
+          "band": "151-175",
+          "N": 8,
+          "wins": 1,
+          "pushes": 0,
+          "hit_rate": 0.125,
+          "profit": -5.32,
+          "roi": -0.665,
+          "avg_breakeven": 0.3801,
+          "hr_minus_be": -0.2551,
+          "avg_p_model": 0.4229,
+          "avg_price": 163.25,
+          "avg_edge_pp": 6.0615,
+          "brier": 0.2027
+        },
+        {
+          "season": 2023,
+          "band": "176-200",
+          "N": 10,
+          "wins": 3,
+          "pushes": 0,
+          "hit_rate": 0.3,
+          "profit": -1.34,
+          "roi": -0.134,
+          "avg_breakeven": 0.348,
+          "hr_minus_be": -0.048,
+          "avg_p_model": 0.4336,
+          "avg_price": 187.6,
+          "avg_edge_pp": 9.4081,
+          "brier": 0.2226
+        },
+        {
+          "season": 2024,
+          "band": "111-125",
+          "N": 7,
+          "wins": 5,
+          "pushes": 0,
+          "hit_rate": 0.7143,
+          "profit": 4.0,
+          "roi": 0.5714,
+          "avg_breakeven": 0.4582,
+          "hr_minus_be": 0.2561,
+          "avg_p_model": 0.4601,
+          "avg_price": 118.29,
+          "avg_edge_pp": 2.2444,
+          "brier": 0.2697
+        },
+        {
+          "season": 2024,
+          "band": "126-150",
+          "N": 21,
+          "wins": 6,
+          "pushes": 0,
+          "hit_rate": 0.2857,
+          "profit": -6.56,
+          "roi": -0.3124,
+          "avg_breakeven": 0.4213,
+          "hr_minus_be": -0.1356,
+          "avg_p_model": 0.4481,
+          "avg_price": 137.52,
+          "avg_edge_pp": 4.1542,
+          "brier": 0.2321
+        },
+        {
+          "season": 2024,
+          "band": "151-175",
+          "N": 8,
+          "wins": 2,
+          "pushes": 0,
+          "hit_rate": 0.25,
+          "profit": -2.76,
+          "roi": -0.345,
+          "avg_breakeven": 0.3846,
+          "hr_minus_be": -0.1346,
+          "avg_p_model": 0.4588,
+          "avg_price": 160.25,
+          "avg_edge_pp": 8.8202,
+          "brier": 0.2434
+        },
+        {
+          "season": 2024,
+          "band": "176-200",
+          "N": 7,
+          "wins": 2,
+          "pushes": 0,
+          "hit_rate": 0.2857,
+          "profit": -1.44,
+          "roi": -0.2057,
+          "avg_breakeven": 0.3553,
+          "hr_minus_be": -0.0696,
+          "avg_p_model": 0.4468,
+          "avg_price": 181.57,
+          "avg_edge_pp": 10.0147,
+          "brier": 0.2381
+        }
+      ]
+    },
+    "DOG_CORROB": {
+      "book_mix": [
+        {
+          "season": "ALL",
+          "mix": {
+            "draftkings": {
+              "N": 74,
+              "profit": 1.7
+            },
+            "fanduel": {
+              "N": 66,
+              "profit": 4.64
+            }
+          }
+        },
+        {
+          "season": 2020,
+          "mix": {
+            "fanduel": {
+              "N": 12,
+              "profit": 3.32
+            },
+            "draftkings": {
+              "N": 12,
+              "profit": 8.64
+            }
+          }
+        },
+        {
+          "season": 2021,
+          "mix": {
+            "draftkings": {
+              "N": 16,
+              "profit": 1.3
+            },
+            "fanduel": {
+              "N": 15,
+              "profit": 6.1
+            }
+          }
+        },
+        {
+          "season": 2022,
+          "mix": {
+            "draftkings": {
+              "N": 18,
+              "profit": 0.3
+            },
+            "fanduel": {
+              "N": 12,
+              "profit": 4.2
+            }
+          }
+        },
+        {
+          "season": 2023,
+          "mix": {
+            "fanduel": {
+              "N": 14,
+              "profit": -5.66
+            },
+            "draftkings": {
+              "N": 20,
+              "profit": -3.04
+            }
+          }
+        },
+        {
+          "season": 2024,
+          "mix": {
+            "fanduel": {
+              "N": 13,
+              "profit": -3.32
+            },
+            "draftkings": {
+              "N": 8,
+              "profit": -5.5
+            }
+          }
+        }
+      ],
+      "price_bands": [
+        {
+          "season": "ALL",
+          "band": "111-125",
+          "N": 13,
+          "wins": 6,
+          "pushes": 0,
+          "hit_rate": 0.4615,
+          "profit": 0.3,
+          "roi": 0.0231,
+          "avg_breakeven": 0.4538,
+          "hr_minus_be": 0.0078,
+          "avg_p_model": 0.472,
+          "avg_price": 120.46,
+          "avg_edge_pp": 3.8014,
+          "brier": 0.2437
+        },
+        {
+          "season": "ALL",
+          "band": "126-150",
+          "N": 52,
+          "wins": 23,
+          "pushes": 0,
+          "hit_rate": 0.4423,
+          "profit": 3.18,
+          "roi": 0.0612,
+          "avg_breakeven": 0.4192,
+          "hr_minus_be": 0.0231,
+          "avg_p_model": 0.4654,
+          "avg_price": 138.81,
+          "avg_edge_pp": 6.1308,
+          "brier": 0.248
+        },
+        {
+          "season": "ALL",
+          "band": "151-175",
+          "N": 39,
+          "wins": 13,
+          "pushes": 0,
+          "hit_rate": 0.3333,
+          "profit": -4.61,
+          "roi": -0.1182,
+          "avg_breakeven": 0.3805,
+          "hr_minus_be": -0.0472,
+          "avg_p_model": 0.4536,
+          "avg_price": 163.03,
+          "avg_edge_pp": 8.8056,
+          "brier": 0.2393
+        },
+        {
+          "season": "ALL",
+          "band": "176-200",
+          "N": 36,
+          "wins": 15,
+          "pushes": 0,
+          "hit_rate": 0.4167,
+          "profit": 7.47,
+          "roi": 0.2075,
+          "avg_breakeven": 0.3482,
+          "hr_minus_be": 0.0684,
+          "avg_p_model": 0.4463,
+          "avg_price": 187.39,
+          "avg_edge_pp": 10.8754,
+          "brier": 0.2357
+        },
+        {
+          "season": 2020,
+          "band": "126-150",
+          "N": 11,
+          "wins": 7,
+          "pushes": 0,
+          "hit_rate": 0.6364,
+          "profit": 5.99,
+          "roi": 0.5445,
+          "avg_breakeven": 0.417,
+          "hr_minus_be": 0.2193,
+          "avg_p_model": 0.4749,
+          "avg_price": 140.09,
+          "avg_edge_pp": 7.2879,
+          "brier": 0.2667
+        },
+        {
+          "season": 2020,
+          "band": "151-175",
+          "N": 8,
+          "wins": 4,
+          "pushes": 0,
+          "hit_rate": 0.5,
+          "profit": 2.33,
+          "roi": 0.2913,
+          "avg_breakeven": 0.3842,
+          "hr_minus_be": 0.1158,
+          "avg_p_model": 0.4582,
+          "avg_price": 160.5,
+          "avg_edge_pp": 8.4237,
+          "brier": 0.2568
+        },
+        {
+          "season": 2020,
+          "band": "176-200",
+          "N": 5,
+          "wins": 3,
+          "pushes": 0,
+          "hit_rate": 0.6,
+          "profit": 3.64,
+          "roi": 0.728,
+          "avg_breakeven": 0.3512,
+          "hr_minus_be": 0.2488,
+          "avg_p_model": 0.4389,
+          "avg_price": 185.0,
+          "avg_edge_pp": 9.7331,
+          "brier": 0.2572
+        },
+        {
+          "season": 2021,
+          "band": "111-125",
+          "N": 2,
+          "wins": 1,
+          "pushes": 0,
+          "hit_rate": 0.5,
+          "profit": 0.25,
+          "roi": 0.125,
+          "avg_breakeven": 0.4548,
+          "hr_minus_be": 0.0452,
+          "avg_p_model": 0.4683,
+          "avg_price": 120.0,
+          "avg_edge_pp": 2.9915,
+          "brier": 0.2391
+        },
+        {
+          "season": 2021,
+          "band": "126-150",
+          "N": 11,
+          "wins": 8,
+          "pushes": 0,
+          "hit_rate": 0.7273,
+          "profit": 8.07,
+          "roi": 0.7336,
+          "avg_breakeven": 0.4203,
+          "hr_minus_be": 0.307,
+          "avg_p_model": 0.4588,
+          "avg_price": 138.18,
+          "avg_edge_pp": 4.8893,
+          "brier": 0.2614
+        },
+        {
+          "season": 2021,
+          "band": "151-175",
+          "N": 7,
+          "wins": 1,
+          "pushes": 0,
+          "hit_rate": 0.1429,
+          "profit": -4.28,
+          "roi": -0.6114,
+          "avg_breakeven": 0.3848,
+          "hr_minus_be": -0.242,
+          "avg_p_model": 0.442,
+          "avg_price": 160.14,
+          "avg_edge_pp": 7.4596,
+          "brier": 0.2068
+        },
+        {
+          "season": 2021,
+          "band": "176-200",
+          "N": 11,
+          "wins": 5,
+          "pushes": 0,
+          "hit_rate": 0.4545,
+          "profit": 3.36,
+          "roi": 0.3055,
+          "avg_breakeven": 0.3496,
+          "hr_minus_be": 0.105,
+          "avg_p_model": 0.4486,
+          "avg_price": 186.18,
+          "avg_edge_pp": 11.192,
+          "brier": 0.2286
+        },
+        {
+          "season": 2022,
+          "band": "111-125",
+          "N": 6,
+          "wins": 2,
+          "pushes": 0,
+          "hit_rate": 0.3333,
+          "profit": -1.53,
+          "roi": -0.255,
+          "avg_breakeven": 0.4513,
+          "hr_minus_be": -0.1179,
+          "avg_p_model": 0.4724,
+          "avg_price": 121.67,
+          "avg_edge_pp": 3.6931,
+          "brier": 0.2341
+        },
+        {
+          "season": 2022,
+          "band": "126-150",
+          "N": 5,
+          "wins": 2,
+          "pushes": 0,
+          "hit_rate": 0.4,
+          "profit": -0.2,
+          "roi": -0.04,
+          "avg_breakeven": 0.4171,
+          "hr_minus_be": -0.0171,
+          "avg_p_model": 0.47,
+          "avg_price": 140.0,
+          "avg_edge_pp": 6.8852,
+          "brier": 0.2501
+        },
+        {
+          "season": 2022,
+          "band": "151-175",
+          "N": 13,
+          "wins": 5,
+          "pushes": 0,
+          "hit_rate": 0.3846,
+          "profit": 0.42,
+          "roi": 0.0323,
+          "avg_breakeven": 0.3759,
+          "hr_minus_be": 0.0087,
+          "avg_p_model": 0.4597,
+          "avg_price": 166.23,
+          "avg_edge_pp": 9.8617,
+          "brier": 0.2419
+        },
+        {
+          "season": 2022,
+          "band": "176-200",
+          "N": 6,
+          "wins": 4,
+          "pushes": 0,
+          "hit_rate": 0.6667,
+          "profit": 5.81,
+          "roi": 0.9683,
+          "avg_breakeven": 0.3379,
+          "hr_minus_be": 0.3287,
+          "avg_p_model": 0.4575,
+          "avg_price": 196.0,
+          "avg_edge_pp": 12.9906,
+          "brier": 0.2654
+        },
+        {
+          "season": 2023,
+          "band": "111-125",
+          "N": 2,
+          "wins": 1,
+          "pushes": 0,
+          "hit_rate": 0.5,
+          "profit": 0.14,
+          "roi": 0.07,
+          "avg_breakeven": 0.4569,
+          "hr_minus_be": 0.0431,
+          "avg_p_model": 0.4841,
+          "avg_price": 119.0,
+          "avg_edge_pp": 5.483,
+          "brier": 0.2537
+        },
+        {
+          "season": 2023,
+          "band": "126-150",
+          "N": 17,
+          "wins": 5,
+          "pushes": 0,
+          "hit_rate": 0.2941,
+          "profit": -5.18,
+          "roi": -0.3047,
+          "avg_breakeven": 0.4197,
+          "hr_minus_be": -0.1255,
+          "avg_p_model": 0.4611,
+          "avg_price": 138.53,
+          "avg_edge_pp": 5.8176,
+          "brier": 0.2385
+        },
+        {
+          "season": 2023,
+          "band": "151-175",
+          "N": 5,
+          "wins": 1,
+          "pushes": 0,
+          "hit_rate": 0.2,
+          "profit": -2.32,
+          "roi": -0.464,
+          "avg_breakeven": 0.3801,
+          "hr_minus_be": -0.1801,
+          "avg_p_model": 0.4308,
+          "avg_price": 163.2,
+          "avg_edge_pp": 6.8503,
+          "brier": 0.2236
+        },
+        {
+          "season": 2023,
+          "band": "176-200",
+          "N": 10,
+          "wins": 3,
+          "pushes": 0,
+          "hit_rate": 0.3,
+          "profit": -1.34,
+          "roi": -0.134,
+          "avg_breakeven": 0.348,
+          "hr_minus_be": -0.048,
+          "avg_p_model": 0.4336,
+          "avg_price": 187.6,
+          "avg_edge_pp": 9.4081,
+          "brier": 0.2226
+        },
+        {
+          "season": 2024,
+          "band": "111-125",
+          "N": 3,
+          "wins": 2,
+          "pushes": 0,
+          "hit_rate": 0.6667,
+          "profit": 1.44,
+          "roi": 0.48,
+          "avg_breakeven": 0.4561,
+          "hr_minus_be": 0.2106,
+          "avg_p_model": 0.4657,
+          "avg_price": 119.33,
+          "avg_edge_pp": 3.4368,
+          "brier": 0.2595
+        },
+        {
+          "season": 2024,
+          "band": "126-150",
+          "N": 8,
+          "wins": 1,
+          "pushes": 0,
+          "hit_rate": 0.125,
+          "profit": -5.5,
+          "roi": -0.6875,
+          "avg_breakeven": 0.421,
+          "hr_minus_be": -0.296,
+          "avg_p_model": 0.4678,
+          "avg_price": 137.75,
+          "avg_edge_pp": 6.4408,
+          "brier": 0.2226
+        },
+        {
+          "season": 2024,
+          "band": "151-175",
+          "N": 6,
+          "wins": 2,
+          "pushes": 0,
+          "hit_rate": 0.3333,
+          "profit": -0.76,
+          "roi": -0.1267,
+          "avg_breakeven": 0.381,
+          "hr_minus_be": -0.0477,
+          "avg_p_model": 0.4667,
+          "avg_price": 162.67,
+          "avg_edge_pp": 10.2262,
+          "brier": 0.2613
+        },
+        {
+          "season": 2024,
+          "band": "176-200",
+          "N": 4,
+          "wins": 0,
+          "pushes": 0,
+          "hit_rate": 0.0,
+          "profit": -4.0,
+          "roi": -1.0,
+          "avg_breakeven": 0.3569,
+          "hr_minus_be": -0.3569,
+          "avg_p_model": 0.4646,
+          "avg_price": 180.25,
+          "avg_edge_pp": 11.9281,
+          "brier": 0.2165
+        }
+      ]
+    },
+    "AVG_0_2": {
+      "book_mix": [
+        {
+          "season": "ALL",
+          "mix": {
+            "fanduel": {
+              "N": 90,
+              "profit": -12.01
+            },
+            "draftkings": {
+              "N": 126,
+              "profit": 3.986
+            }
+          }
+        },
+        {
+          "season": 2020,
+          "mix": {
+            "fanduel": {
+              "N": 10,
+              "profit": 3.221
+            },
+            "draftkings": {
+              "N": 29,
+              "profit": 2.16
+            }
+          }
+        },
+        {
+          "season": 2021,
+          "mix": {
+            "draftkings": {
+              "N": 23,
+              "profit": 6.741
+            },
+            "fanduel": {
+              "N": 14,
+              "profit": -2.75
+            }
+          }
+        },
+        {
+          "season": 2022,
+          "mix": {
+            "fanduel": {
+              "N": 24,
+              "profit": 0.579
+            },
+            "draftkings": {
+              "N": 26,
+              "profit": 7.347
+            }
+          }
+        },
+        {
+          "season": 2023,
+          "mix": {
+            "draftkings": {
+              "N": 22,
+              "profit": -13.078
+            },
+            "fanduel": {
+              "N": 20,
+              "profit": -12.476
+            }
+          }
+        },
+        {
+          "season": 2024,
+          "mix": {
+            "fanduel": {
+              "N": 22,
+              "profit": -0.583
+            },
+            "draftkings": {
+              "N": 26,
+              "profit": 0.816
+            }
+          }
+        }
+      ],
+      "price_bands": [
+        {
+          "season": "ALL",
+          "band": "111-125",
+          "N": 16,
+          "wins": 10,
+          "pushes": 0,
+          "hit_rate": 0.625,
+          "profit": 5.83,
+          "roi": 0.3644,
+          "avg_breakeven": 0.4598,
+          "hr_minus_be": 0.1652,
+          "avg_p_model": 0.4534,
+          "avg_price": 117.56,
+          "avg_edge_pp": 0.7533,
+          "brier": 0.2639
+        },
+        {
+          "season": "ALL",
+          "band": "126-150",
+          "N": 34,
+          "wins": 9,
+          "pushes": 0,
+          "hit_rate": 0.2647,
+          "profit": -12.89,
+          "roi": -0.3791,
+          "avg_breakeven": 0.4212,
+          "hr_minus_be": -0.1565,
+          "avg_p_model": 0.4168,
+          "avg_price": 137.68,
+          "avg_edge_pp": 0.9887,
+          "brier": 0.2155
+        },
+        {
+          "season": "ALL",
+          "band": "151-175",
+          "N": 17,
+          "wins": 9,
+          "pushes": 0,
+          "hit_rate": 0.5294,
+          "profit": 6.49,
+          "roi": 0.3818,
+          "avg_breakeven": 0.3828,
+          "hr_minus_be": 0.1466,
+          "avg_p_model": 0.3838,
+          "avg_price": 161.35,
+          "avg_edge_pp": 0.9093,
+          "brier": 0.2729
+        },
+        {
+          "season": "ALL",
+          "band": "176-200",
+          "N": 6,
+          "wins": 0,
+          "pushes": 0,
+          "hit_rate": 0.0,
+          "profit": -6.0,
+          "roi": -1.0,
+          "avg_breakeven": 0.3393,
+          "hr_minus_be": -0.3393,
+          "avg_p_model": 0.3396,
+          "avg_price": 194.83,
+          "avg_edge_pp": 1.0013,
+          "brier": 0.1155
+        },
+        {
+          "season": 2020,
+          "band": "111-125",
+          "N": 4,
+          "wins": 4,
+          "pushes": 0,
+          "hit_rate": 1.0,
+          "profit": 4.78,
+          "roi": 1.195,
+          "avg_breakeven": 0.4556,
+          "hr_minus_be": 0.5444,
+          "avg_p_model": 0.4526,
+          "avg_price": 119.5,
+          "avg_edge_pp": 0.8549,
+          "brier": 0.2997
+        },
+        {
+          "season": 2020,
+          "band": "126-150",
+          "N": 5,
+          "wins": 1,
+          "pushes": 0,
+          "hit_rate": 0.2,
+          "profit": -2.72,
+          "roi": -0.544,
+          "avg_breakeven": 0.4162,
+          "hr_minus_be": -0.2162,
+          "avg_p_model": 0.4205,
+          "avg_price": 140.8,
+          "avg_edge_pp": 1.4914,
+          "brier": 0.205
+        },
+        {
+          "season": 2020,
+          "band": "151-175",
+          "N": 2,
+          "wins": 1,
+          "pushes": 0,
+          "hit_rate": 0.5,
+          "profit": 0.63,
+          "roi": 0.315,
+          "avg_breakeven": 0.3753,
+          "hr_minus_be": 0.1247,
+          "avg_p_model": 0.3867,
+          "avg_price": 166.5,
+          "avg_edge_pp": 0.9535,
+          "brier": 0.2597
+        },
+        {
+          "season": 2020,
+          "band": "176-200",
+          "N": 1,
+          "wins": 0,
+          "pushes": 0,
+          "hit_rate": 0.0,
+          "profit": -1.0,
+          "roi": -1.0,
+          "avg_breakeven": 0.3472,
+          "hr_minus_be": -0.3472,
+          "avg_p_model": 0.3398,
+          "avg_price": 188.0,
+          "avg_edge_pp": 0.7136,
+          "brier": 0.1155
+        },
+        {
+          "season": 2021,
+          "band": "111-125",
+          "N": 2,
+          "wins": 0,
+          "pushes": 0,
+          "hit_rate": 0.0,
+          "profit": -2.0,
+          "roi": -1.0,
+          "avg_breakeven": 0.4651,
+          "hr_minus_be": -0.4651,
+          "avg_p_model": 0.4545,
+          "avg_price": 115.0,
+          "avg_edge_pp": 0.4571,
+          "brier": 0.2066
+        },
+        {
+          "season": 2021,
+          "band": "126-150",
+          "N": 4,
+          "wins": 3,
+          "pushes": 0,
+          "hit_rate": 0.75,
+          "profit": 2.95,
+          "roi": 0.7375,
+          "avg_breakeven": 0.4306,
+          "hr_minus_be": 0.3194,
+          "avg_p_model": 0.4249,
+          "avg_price": 132.25,
+          "avg_edge_pp": 0.9834,
+          "brier": 0.2835
+        },
+        {
+          "season": 2021,
+          "band": "151-175",
+          "N": 3,
+          "wins": 2,
+          "pushes": 0,
+          "hit_rate": 0.6667,
+          "profit": 2.32,
+          "roi": 0.7733,
+          "avg_breakeven": 0.3799,
+          "hr_minus_be": 0.2868,
+          "avg_p_model": 0.3741,
+          "avg_price": 163.33,
+          "avg_edge_pp": 0.6065,
+          "brier": 0.3158
+        },
+        {
+          "season": 2021,
+          "band": "176-200",
+          "N": 1,
+          "wins": 0,
+          "pushes": 0,
+          "hit_rate": 0.0,
+          "profit": -1.0,
+          "roi": -1.0,
+          "avg_breakeven": 0.3356,
+          "hr_minus_be": -0.3356,
+          "avg_p_model": 0.3307,
+          "avg_price": 198.0,
+          "avg_edge_pp": 1.0177,
+          "brier": 0.1093
+        },
+        {
+          "season": 2022,
+          "band": "111-125",
+          "N": 3,
+          "wins": 2,
+          "pushes": 0,
+          "hit_rate": 0.6667,
+          "profit": 1.37,
+          "roi": 0.4567,
+          "avg_breakeven": 0.4583,
+          "hr_minus_be": 0.2084,
+          "avg_p_model": 0.4501,
+          "avg_price": 118.33,
+          "avg_edge_pp": 0.5771,
+          "brier": 0.2684
+        },
+        {
+          "season": 2022,
+          "band": "126-150",
+          "N": 5,
+          "wins": 3,
+          "pushes": 0,
+          "hit_rate": 0.6,
+          "profit": 2.1,
+          "roi": 0.42,
+          "avg_breakeven": 0.4207,
+          "hr_minus_be": 0.1793,
+          "avg_p_model": 0.4109,
+          "avg_price": 138.0,
+          "avg_edge_pp": 0.5839,
+          "brier": 0.2785
+        },
+        {
+          "season": 2022,
+          "band": "151-175",
+          "N": 7,
+          "wins": 5,
+          "pushes": 0,
+          "hit_rate": 0.7143,
+          "profit": 5.86,
+          "roi": 0.8371,
+          "avg_breakeven": 0.3889,
+          "hr_minus_be": 0.3254,
+          "avg_p_model": 0.3899,
+          "avg_price": 157.14,
+          "avg_edge_pp": 0.9144,
+          "brier": 0.3112
+        },
+        {
+          "season": 2023,
+          "band": "111-125",
+          "N": 4,
+          "wins": 2,
+          "pushes": 0,
+          "hit_rate": 0.5,
+          "profit": 0.28,
+          "roi": 0.07,
+          "avg_breakeven": 0.4632,
+          "hr_minus_be": 0.0368,
+          "avg_p_model": 0.4588,
+          "avg_price": 116.0,
+          "avg_edge_pp": 1.0515,
+          "brier": 0.243
+        },
+        {
+          "season": 2023,
+          "band": "126-150",
+          "N": 11,
+          "wins": 0,
+          "pushes": 0,
+          "hit_rate": 0.0,
+          "profit": -11.0,
+          "roi": -1.0,
+          "avg_breakeven": 0.4212,
+          "hr_minus_be": -0.4212,
+          "avg_p_model": 0.4134,
+          "avg_price": 137.64,
+          "avg_edge_pp": 0.9562,
+          "brier": 0.1711
+        },
+        {
+          "season": 2023,
+          "band": "151-175",
+          "N": 4,
+          "wins": 1,
+          "pushes": 0,
+          "hit_rate": 0.25,
+          "profit": -1.32,
+          "roi": -0.33,
+          "avg_breakeven": 0.3775,
+          "hr_minus_be": -0.1275,
+          "avg_p_model": 0.3773,
+          "avg_price": 165.0,
+          "avg_edge_pp": 0.9442,
+          "brier": 0.2105
+        },
+        {
+          "season": 2023,
+          "band": "176-200",
+          "N": 1,
+          "wins": 0,
+          "pushes": 0,
+          "hit_rate": 0.0,
+          "profit": -1.0,
+          "roi": -1.0,
+          "avg_breakeven": 0.3333,
+          "hr_minus_be": -0.3333,
+          "avg_p_model": 0.3432,
+          "avg_price": 200.0,
+          "avg_edge_pp": 1.394,
+          "brier": 0.1178
+        },
+        {
+          "season": 2024,
+          "band": "111-125",
+          "N": 3,
+          "wins": 2,
+          "pushes": 0,
+          "hit_rate": 0.6667,
+          "profit": 1.4,
+          "roi": 0.4667,
+          "avg_breakeven": 0.4588,
+          "hr_minus_be": 0.2079,
+          "avg_p_model": 0.45,
+          "avg_price": 118.0,
+          "avg_edge_pp": 0.5937,
+          "brier": 0.2775
+        },
+        {
+          "season": 2024,
+          "band": "126-150",
+          "N": 9,
+          "wins": 2,
+          "pushes": 0,
+          "hit_rate": 0.2222,
+          "profit": -4.22,
+          "roi": -0.4689,
+          "avg_breakeven": 0.42,
+          "hr_minus_be": -0.1978,
+          "avg_p_model": 0.4187,
+          "avg_price": 138.22,
+          "avg_edge_pp": 0.9762,
+          "brier": 0.2103
+        },
+        {
+          "season": 2024,
+          "band": "151-175",
+          "N": 1,
+          "wins": 0,
+          "pushes": 0,
+          "hit_rate": 0.0,
+          "profit": -1.0,
+          "roi": -1.0,
+          "avg_breakeven": 0.3846,
+          "hr_minus_be": -0.3846,
+          "avg_p_model": 0.3903,
+          "avg_price": 160.0,
+          "avg_edge_pp": 1.5541,
+          "brier": 0.1524
+        },
+        {
+          "season": 2024,
+          "band": "176-200",
+          "N": 3,
+          "wins": 0,
+          "pushes": 0,
+          "hit_rate": 0.0,
+          "profit": -3.0,
+          "roi": -1.0,
+          "avg_breakeven": 0.3399,
+          "hr_minus_be": -0.3399,
+          "avg_p_model": 0.3414,
+          "avg_price": 194.33,
+          "avg_edge_pp": 0.9609,
+          "brier": 0.1168
+        }
+      ]
+    }
+  },
+  "d7_distributions": {
+    "ALL": {
+      "fair_prob": {
+        "mean": 0.3894,
+        "quartiles": [
+          0.3609,
+          0.392,
+          0.4177
+        ]
+      },
+      "model_edge_pp": {
+        "mean": 5.9932,
+        "quartiles": [
+          2.7898,
+          5.6887,
+          8.7356
+        ]
+      }
+    },
+    "2020": {
+      "fair_prob": {
+        "mean": 0.3943,
+        "quartiles": [
+          0.3762,
+          0.3933,
+          0.419
+        ]
+      },
+      "model_edge_pp": {
+        "mean": 6.2819,
+        "quartiles": [
+          2.4623,
+          6.2272,
+          9.7234
+        ]
+      }
+    },
+    "2021": {
+      "fair_prob": {
+        "mean": 0.3831,
+        "quartiles": [
+          0.3578,
+          0.3813,
+          0.4177
+        ]
+      },
+      "model_edge_pp": {
+        "mean": 6.3804,
+        "quartiles": [
+          3.7692,
+          5.5867,
+          9.5754
+        ]
+      }
+    },
+    "2022": {
+      "fair_prob": {
+        "mean": 0.3834,
+        "quartiles": [
+          0.3529,
+          0.383,
+          0.4152
+        ]
+      },
+      "model_edge_pp": {
+        "mean": 6.7294,
+        "quartiles": [
+          2.4553,
+          7.017,
+          9.7979
+        ]
+      }
+    },
+    "2023": {
+      "fair_prob": {
+        "mean": 0.3921,
+        "quartiles": [
+          0.3669,
+          0.3933,
+          0.4177
+        ]
+      },
+      "model_edge_pp": {
+        "mean": 5.146,
+        "quartiles": [
+          2.5132,
+          4.7569,
+          7.4626
+        ]
+      }
+    },
+    "2024": {
+      "fair_prob": {
+        "mean": 0.3952,
+        "quartiles": [
+          0.3707,
+          0.4013,
+          0.4141
+        ]
+      },
+      "model_edge_pp": {
+        "mean": 5.6654,
+        "quartiles": [
+          2.5452,
+          5.5782,
+          8.0111
+        ]
+      }
+    }
+  },
+  "d8_team_concentration": {
+    "DOG_AVG": {
+      "total_rows": 232,
+      "by_team": [
+        {
+          "team": "SF",
+          "N": 5,
+          "profit": 7.26,
+          "wins": 5,
+          "abs_profit": 7.26
+        },
+        {
+          "team": "LAC",
+          "N": 6,
+          "profit": -6.0,
+          "wins": 0,
+          "abs_profit": 6.0
+        },
+        {
+          "team": "WAS",
+          "N": 9,
+          "profit": 5.67,
+          "wins": 6,
+          "abs_profit": 5.67
+        },
+        {
+          "team": "NYG",
+          "N": 9,
+          "profit": 5.02,
+          "wins": 5,
+          "abs_profit": 5.02
+        },
+        {
+          "team": "CHI",
+          "N": 5,
+          "profit": -5.0,
+          "wins": 0,
+          "abs_profit": 5.0
+        },
+        {
+          "team": "DEN",
+          "N": 7,
+          "profit": -4.68,
+          "wins": 1,
+          "abs_profit": 4.68
+        },
+        {
+          "team": "MIA",
+          "N": 7,
+          "profit": -4.54,
+          "wins": 1,
+          "abs_profit": 4.54
+        },
+        {
+          "team": "CLE",
+          "N": 9,
+          "profit": -3.8499999999999996,
+          "wins": 2,
+          "abs_profit": 3.8499999999999996
+        },
+        {
+          "team": "HOU",
+          "N": 11,
+          "profit": 3.66,
+          "wins": 6,
+          "abs_profit": 3.66
+        },
+        {
+          "team": "GB",
+          "N": 4,
+          "profit": 3.54,
+          "wins": 3,
+          "abs_profit": 3.54
+        },
+        {
+          "team": "TEN",
+          "N": 9,
+          "profit": 3.5300000000000002,
+          "wins": 5,
+          "abs_profit": 3.5300000000000002
+        },
+        {
+          "team": "ARI",
+          "N": 9,
+          "profit": 3.46,
+          "wins": 5,
+          "abs_profit": 3.46
+        },
+        {
+          "team": "DET",
+          "N": 8,
+          "profit": -3.02,
+          "wins": 2,
+          "abs_profit": 3.02
+        },
+        {
+          "team": "BUF",
+          "N": 4,
+          "profit": 2.96,
+          "wins": 3,
+          "abs_profit": 2.96
+        },
+        {
+          "team": "PIT",
+          "N": 8,
+          "profit": 2.84,
+          "wins": 4,
+          "abs_profit": 2.84
+        },
+        {
+          "team": "NE",
+          "N": 10,
+          "profit": -2.8,
+          "wins": 3,
+          "abs_profit": 2.8
+        },
+        {
+          "team": "IND",
+          "N": 10,
+          "profit": 2.65,
+          "wins": 5,
+          "abs_profit": 2.65
+        },
+        {
+          "team": "LV",
+          "N": 10,
+          "profit": -2.49,
+          "wins": 3,
+          "abs_profit": 2.49
+        },
+        {
+          "team": "CAR",
+          "N": 9,
+          "profit": -2.12,
+          "wins": 3,
+          "abs_profit": 2.12
+        },
+        {
+          "team": "DAL",
+          "N": 7,
+          "profit": 1.62,
+          "wins": 3,
+          "abs_profit": 1.62
+        },
+        {
+          "team": "TB",
+          "N": 8,
+          "profit": 1.52,
+          "wins": 4,
+          "abs_profit": 1.52
+        },
+        {
+          "team": "PHI",
+          "N": 3,
+          "profit": 1.5,
+          "wins": 2,
+          "abs_profit": 1.5
+        },
+        {
+          "team": "JAX",
+          "N": 8,
+          "profit": 1.35,
+          "wins": 4,
+          "abs_profit": 1.35
+        },
+        {
+          "team": "CIN",
+          "N": 4,
+          "profit": -1.3,
+          "wins": 1,
+          "abs_profit": 1.3
+        },
+        {
+          "team": "KC",
+          "N": 3,
+          "profit": 1.28,
+          "wins": 2,
+          "abs_profit": 1.28
+        },
+        {
+          "team": "BAL",
+          "N": 1,
+          "profit": -1.0,
+          "wins": 0,
+          "abs_profit": 1.0
+        },
+        {
+          "team": "NO",
+          "N": 6,
+          "profit": -0.8400000000000001,
+          "wins": 2,
+          "abs_profit": 0.8400000000000001
+        },
+        {
+          "team": "ATL",
+          "N": 9,
+          "profit": 0.74,
+          "wins": 4,
+          "abs_profit": 0.74
+        },
+        {
+          "team": "SEA",
+          "N": 10,
+          "profit": 0.6299999999999999,
+          "wins": 4,
+          "abs_profit": 0.6299999999999999
+        },
+        {
+          "team": "MIN",
+          "N": 7,
+          "profit": 0.26,
+          "wins": 3,
+          "abs_profit": 0.26
+        },
+        {
+          "team": "LAR",
+          "N": 10,
+          "profit": -0.15999999999999992,
+          "wins": 4,
+          "abs_profit": 0.15999999999999992
+        },
+        {
+          "team": "NYJ",
+          "N": 7,
+          "profit": 0.1499999999999999,
+          "wins": 3,
+          "abs_profit": 0.1499999999999999
+        }
+      ],
+      "concentration": [
+        {
+          "scope": "ALL",
+          "rows": 232,
+          "total_abs_loss": 37.8,
+          "largest_abs_contributor": {
+            "team": "SF",
+            "profit": 7.26,
+            "abs_profit": 7.26,
+            "N": 5
+          },
+          "max_candidate_count_team": {
+            "team": "HOU",
+            "N": 11
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "LAC",
+              "profit": -6.0,
+              "N": 6
+            },
+            {
+              "team": "CHI",
+              "profit": -5.0,
+              "N": 5
+            },
+            {
+              "team": "DEN",
+              "profit": -4.68,
+              "N": 7
+            },
+            {
+              "team": "MIA",
+              "profit": -4.54,
+              "N": 7
+            },
+            {
+              "team": "CLE",
+              "profit": -3.85,
+              "N": 9
+            }
+          ],
+          "largest_loss_share": 0.1587,
+          "largest_loss_share_pct": 15.9,
+          "top3_loss_concentration": 0.4148,
+          "top3_loss_concentration_pct": 41.5
+        },
+        {
+          "scope": "DISCOVERY",
+          "rows": 131,
+          "total_abs_loss": 18.46,
+          "largest_abs_contributor": {
+            "team": "SF",
+            "profit": 7.26,
+            "abs_profit": 7.26,
+            "N": 5
+          },
+          "max_candidate_count_team": {
+            "team": "HOU",
+            "N": 8
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "CHI",
+              "profit": -4.0,
+              "N": 4
+            },
+            {
+              "team": "LAC",
+              "profit": -3.0,
+              "N": 3
+            },
+            {
+              "team": "PIT",
+              "profit": -2.16,
+              "N": 5
+            },
+            {
+              "team": "DET",
+              "profit": -2.02,
+              "N": 7
+            },
+            {
+              "team": "DEN",
+              "profit": -1.68,
+              "N": 4
+            }
+          ],
+          "largest_loss_share": 0.2167,
+          "largest_loss_share_pct": 21.7,
+          "top3_loss_concentration": 0.4962,
+          "top3_loss_concentration_pct": 49.6
+        },
+        {
+          "scope": "CONFIRMATION",
+          "rows": 101,
+          "total_abs_loss": 40.16,
+          "largest_abs_contributor": {
+            "team": "PIT",
+            "profit": 5.0,
+            "abs_profit": 5.0,
+            "N": 3
+          },
+          "max_candidate_count_team": {
+            "team": "LAR",
+            "N": 7
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "NE",
+              "profit": -5.0,
+              "N": 5
+            },
+            {
+              "team": "LAR",
+              "profit": -4.66,
+              "N": 7
+            },
+            {
+              "team": "LV",
+              "profit": -4.0,
+              "N": 4
+            },
+            {
+              "team": "MIA",
+              "profit": -4.0,
+              "N": 4
+            },
+            {
+              "team": "CLE",
+              "profit": -3.0,
+              "N": 3
+            }
+          ],
+          "largest_loss_share": 0.1245,
+          "largest_loss_share_pct": 12.5,
+          "top3_loss_concentration": 0.3401,
+          "top3_loss_concentration_pct": 34.0
+        },
+        {
+          "scope": "season_2020",
+          "rows": 36,
+          "total_abs_loss": 9.78,
+          "largest_abs_contributor": {
+            "team": "CAR",
+            "profit": 2.63,
+            "abs_profit": 2.63,
+            "N": 2
+          },
+          "max_candidate_count_team": {
+            "team": "HOU",
+            "N": 3
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "LV",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "DEN",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "DET",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "SEA",
+              "profit": -1.0,
+              "N": 1
+            },
+            {
+              "team": "CIN",
+              "profit": -1.0,
+              "N": 1
+            }
+          ],
+          "largest_loss_share": 0.2045,
+          "largest_loss_share_pct": 20.4,
+          "top3_loss_concentration": 0.6135,
+          "top3_loss_concentration_pct": 61.3
+        },
+        {
+          "scope": "season_2021",
+          "rows": 49,
+          "total_abs_loss": 13.16,
+          "largest_abs_contributor": {
+            "team": "SF",
+            "profit": 4.7,
+            "abs_profit": 4.7,
+            "N": 3
+          },
+          "max_candidate_count_team": {
+            "team": "SF",
+            "N": 3
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "NYJ",
+              "profit": -3.0,
+              "N": 3
+            },
+            {
+              "team": "CLE",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "CAR",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "DET",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "LAC",
+              "profit": -2.0,
+              "N": 2
+            }
+          ],
+          "largest_loss_share": 0.228,
+          "largest_loss_share_pct": 22.8,
+          "top3_loss_concentration": 0.5319,
+          "top3_loss_concentration_pct": 53.2
+        },
+        {
+          "scope": "season_2022",
+          "rows": 46,
+          "total_abs_loss": 14.45,
+          "largest_abs_contributor": {
+            "team": "NO",
+            "profit": -3.0,
+            "abs_profit": 3.0,
+            "N": 3
+          },
+          "max_candidate_count_team": {
+            "team": "NO",
+            "N": 3
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "NO",
+              "profit": -3.0,
+              "N": 3
+            },
+            {
+              "team": "CHI",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "PIT",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "MIA",
+              "profit": -1.0,
+              "N": 1
+            },
+            {
+              "team": "DEN",
+              "profit": -1.0,
+              "N": 1
+            }
+          ],
+          "largest_loss_share": 0.2076,
+          "largest_loss_share_pct": 20.8,
+          "top3_loss_concentration": 0.4844,
+          "top3_loss_concentration_pct": 48.4
+        },
+        {
+          "scope": "season_2023",
+          "rows": 58,
+          "total_abs_loss": 32.66,
+          "largest_abs_contributor": {
+            "team": "PIT",
+            "profit": 5.0,
+            "abs_profit": 5.0,
+            "N": 3
+          },
+          "max_candidate_count_team": {
+            "team": "TEN",
+            "N": 4
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "LAR",
+              "profit": -3.0,
+              "N": 3
+            },
+            {
+              "team": "MIA",
+              "profit": -3.0,
+              "N": 3
+            },
+            {
+              "team": "NE",
+              "profit": -3.0,
+              "N": 3
+            },
+            {
+              "team": "CAR",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "CLE",
+              "profit": -2.0,
+              "N": 2
+            }
+          ],
+          "largest_loss_share": 0.0919,
+          "largest_loss_share_pct": 9.2,
+          "top3_loss_concentration": 0.2756,
+          "top3_loss_concentration_pct": 27.6
+        },
+        {
+          "scope": "season_2024",
+          "rows": 43,
+          "total_abs_loss": 15.48,
+          "largest_abs_contributor": {
+            "team": "NYG",
+            "profit": -2.0,
+            "abs_profit": 2.0,
+            "N": 2
+          },
+          "max_candidate_count_team": {
+            "team": "SEA",
+            "N": 5
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "NYG",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "NE",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "LV",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "LAR",
+              "profit": -1.66,
+              "N": 4
+            },
+            {
+              "team": "MIA",
+              "profit": -1.0,
+              "N": 1
+            }
+          ],
+          "largest_loss_share": 0.1292,
+          "largest_loss_share_pct": 12.9,
+          "top3_loss_concentration": 0.3876,
+          "top3_loss_concentration_pct": 38.8
+        }
+      ]
+    },
+    "DOG_CORROB": {
+      "total_rows": 140,
+      "by_team": [
+        {
+          "team": "NYG",
+          "N": 7,
+          "profit": 7.02,
+          "wins": 5,
+          "abs_profit": 7.02
+        },
+        {
+          "team": "WAS",
+          "N": 5,
+          "profit": 5.07,
+          "wins": 4,
+          "abs_profit": 5.07
+        },
+        {
+          "team": "CHI",
+          "N": 5,
+          "profit": -5.0,
+          "wins": 0,
+          "abs_profit": 5.0
+        },
+        {
+          "team": "DET",
+          "N": 5,
+          "profit": -5.0,
+          "wins": 0,
+          "abs_profit": 5.0
+        },
+        {
+          "team": "GB",
+          "N": 3,
+          "profit": 4.54,
+          "wins": 3,
+          "abs_profit": 4.54
+        },
+        {
+          "team": "TEN",
+          "N": 6,
+          "profit": 4.23,
+          "wins": 4,
+          "abs_profit": 4.23
+        },
+        {
+          "team": "LAC",
+          "N": 4,
+          "profit": -4.0,
+          "wins": 0,
+          "abs_profit": 4.0
+        },
+        {
+          "team": "IND",
+          "N": 9,
+          "profit": 3.65,
+          "wins": 5,
+          "abs_profit": 3.65
+        },
+        {
+          "team": "ARI",
+          "N": 4,
+          "profit": 3.5599999999999996,
+          "wins": 3,
+          "abs_profit": 3.5599999999999996
+        },
+        {
+          "team": "MIA",
+          "N": 6,
+          "profit": -3.54,
+          "wins": 1,
+          "abs_profit": 3.54
+        },
+        {
+          "team": "DAL",
+          "N": 3,
+          "profit": 2.8200000000000003,
+          "wins": 2,
+          "abs_profit": 2.8200000000000003
+        },
+        {
+          "team": "NE",
+          "N": 5,
+          "profit": -2.7,
+          "wins": 1,
+          "abs_profit": 2.7
+        },
+        {
+          "team": "DEN",
+          "N": 5,
+          "profit": -2.6799999999999997,
+          "wins": 1,
+          "abs_profit": 2.6799999999999997
+        },
+        {
+          "team": "NO",
+          "N": 5,
+          "profit": -2.52,
+          "wins": 1,
+          "abs_profit": 2.52
+        },
+        {
+          "team": "LV",
+          "N": 5,
+          "profit": 2.51,
+          "wins": 3,
+          "abs_profit": 2.51
+        },
+        {
+          "team": "SEA",
+          "N": 8,
+          "profit": -2.25,
+          "wins": 2,
+          "abs_profit": 2.25
+        },
+        {
+          "team": "CIN",
+          "N": 2,
+          "profit": -2.0,
+          "wins": 0,
+          "abs_profit": 2.0
+        },
+        {
+          "team": "BUF",
+          "N": 3,
+          "profit": 1.76,
+          "wins": 2,
+          "abs_profit": 1.76
+        },
+        {
+          "team": "ATL",
+          "N": 6,
+          "profit": 1.6,
+          "wins": 3,
+          "abs_profit": 1.6
+        },
+        {
+          "team": "JAX",
+          "N": 4,
+          "profit": -1.5,
+          "wins": 1,
+          "abs_profit": 1.5
+        },
+        {
+          "team": "PIT",
+          "N": 7,
+          "profit": 1.42,
+          "wins": 3,
+          "abs_profit": 1.42
+        },
+        {
+          "team": "HOU",
+          "N": 4,
+          "profit": 1.4,
+          "wins": 2,
+          "abs_profit": 1.4
+        },
+        {
+          "team": "SF",
+          "N": 1,
+          "profit": 1.38,
+          "wins": 1,
+          "abs_profit": 1.38
+        },
+        {
+          "team": "TB",
+          "N": 4,
+          "profit": -1.24,
+          "wins": 1,
+          "abs_profit": 1.24
+        },
+        {
+          "team": "KC",
+          "N": 1,
+          "profit": -1.0,
+          "wins": 0,
+          "abs_profit": 1.0
+        },
+        {
+          "team": "BAL",
+          "N": 1,
+          "profit": -1.0,
+          "wins": 0,
+          "abs_profit": 1.0
+        },
+        {
+          "team": "PHI",
+          "N": 1,
+          "profit": -1.0,
+          "wins": 0,
+          "abs_profit": 1.0
+        },
+        {
+          "team": "MIN",
+          "N": 4,
+          "profit": 0.74,
+          "wins": 2,
+          "abs_profit": 0.74
+        },
+        {
+          "team": "CAR",
+          "N": 5,
+          "profit": -0.32000000000000006,
+          "wins": 2,
+          "abs_profit": 0.32000000000000006
+        },
+        {
+          "team": "CLE",
+          "N": 5,
+          "profit": 0.15000000000000013,
+          "wins": 2,
+          "abs_profit": 0.15000000000000013
+        },
+        {
+          "team": "NYJ",
+          "N": 2,
+          "profit": 0.1399999999999999,
+          "wins": 1,
+          "abs_profit": 0.1399999999999999
+        },
+        {
+          "team": "LAR",
+          "N": 5,
+          "profit": 0.10000000000000009,
+          "wins": 2,
+          "abs_profit": 0.10000000000000009
+        }
+      ],
+      "concentration": [
+        {
+          "scope": "ALL",
+          "rows": 140,
+          "total_abs_loss": 35.75,
+          "largest_abs_contributor": {
+            "team": "NYG",
+            "profit": 7.02,
+            "abs_profit": 7.02,
+            "N": 7
+          },
+          "max_candidate_count_team": {
+            "team": "IND",
+            "N": 9
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "CHI",
+              "profit": -5.0,
+              "N": 5
+            },
+            {
+              "team": "DET",
+              "profit": -5.0,
+              "N": 5
+            },
+            {
+              "team": "LAC",
+              "profit": -4.0,
+              "N": 4
+            },
+            {
+              "team": "MIA",
+              "profit": -3.54,
+              "N": 6
+            },
+            {
+              "team": "NE",
+              "profit": -2.7,
+              "N": 5
+            }
+          ],
+          "largest_loss_share": 0.1399,
+          "largest_loss_share_pct": 14.0,
+          "top3_loss_concentration": 0.3916,
+          "top3_loss_concentration_pct": 39.2
+        },
+        {
+          "scope": "DISCOVERY",
+          "rows": 85,
+          "total_abs_loss": 18.42,
+          "largest_abs_contributor": {
+            "team": "NYG",
+            "profit": 4.72,
+            "abs_profit": 4.72,
+            "N": 4
+          },
+          "max_candidate_count_team": {
+            "team": "SEA",
+            "N": 5
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "CHI",
+              "profit": -4.0,
+              "N": 4
+            },
+            {
+              "team": "DET",
+              "profit": -4.0,
+              "N": 4
+            },
+            {
+              "team": "NO",
+              "profit": -2.52,
+              "N": 5
+            },
+            {
+              "team": "PIT",
+              "profit": -2.16,
+              "N": 5
+            },
+            {
+              "team": "LAC",
+              "profit": -1.0,
+              "N": 1
+            }
+          ],
+          "largest_loss_share": 0.2172,
+          "largest_loss_share_pct": 21.7,
+          "top3_loss_concentration": 0.5711,
+          "top3_loss_concentration_pct": 57.1
+        },
+        {
+          "scope": "CONFIRMATION",
+          "rows": 55,
+          "total_abs_loss": 31.74,
+          "largest_abs_contributor": {
+            "team": "PIT",
+            "profit": 3.58,
+            "abs_profit": 3.58,
+            "N": 2
+          },
+          "max_candidate_count_team": {
+            "team": "TB",
+            "N": 4
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "LAC",
+              "profit": -3.0,
+              "N": 3
+            },
+            {
+              "team": "NE",
+              "profit": -3.0,
+              "N": 3
+            },
+            {
+              "team": "SEA",
+              "profit": -3.0,
+              "N": 3
+            },
+            {
+              "team": "MIA",
+              "profit": -3.0,
+              "N": 3
+            },
+            {
+              "team": "LAR",
+              "profit": -3.0,
+              "N": 3
+            }
+          ],
+          "largest_loss_share": 0.0945,
+          "largest_loss_share_pct": 9.5,
+          "top3_loss_concentration": 0.2836,
+          "top3_loss_concentration_pct": 28.4
+        },
+        {
+          "scope": "season_2020",
+          "rows": 24,
+          "total_abs_loss": 8.0,
+          "largest_abs_contributor": {
+            "team": "LV",
+            "profit": -2.0,
+            "abs_profit": 2.0,
+            "N": 2
+          },
+          "max_candidate_count_team": {
+            "team": "TEN",
+            "N": 2
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "LV",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "DET",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "HOU",
+              "profit": -1.0,
+              "N": 1
+            },
+            {
+              "team": "CHI",
+              "profit": -1.0,
+              "N": 1
+            },
+            {
+              "team": "SEA",
+              "profit": -1.0,
+              "N": 1
+            }
+          ],
+          "largest_loss_share": 0.25,
+          "largest_loss_share_pct": 25.0,
+          "top3_loss_concentration": 0.625,
+          "top3_loss_concentration_pct": 62.5
+        },
+        {
+          "scope": "season_2021",
+          "rows": 31,
+          "total_abs_loss": 9.16,
+          "largest_abs_contributor": {
+            "team": "LV",
+            "profit": 3.29,
+            "abs_profit": 3.29,
+            "N": 2
+          },
+          "max_candidate_count_team": {
+            "team": "PIT",
+            "N": 3
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "CAR",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "CHI",
+              "profit": -1.0,
+              "N": 1
+            },
+            {
+              "team": "DET",
+              "profit": -1.0,
+              "N": 1
+            },
+            {
+              "team": "MIA",
+              "profit": -1.0,
+              "N": 1
+            },
+            {
+              "team": "NO",
+              "profit": -1.0,
+              "N": 1
+            }
+          ],
+          "largest_loss_share": 0.2183,
+          "largest_loss_share_pct": 21.8,
+          "top3_loss_concentration": 0.4367,
+          "top3_loss_concentration_pct": 43.7
+        },
+        {
+          "scope": "season_2022",
+          "rows": 30,
+          "total_abs_loss": 14.0,
+          "largest_abs_contributor": {
+            "team": "NO",
+            "profit": -3.0,
+            "abs_profit": 3.0,
+            "N": 3
+          },
+          "max_candidate_count_team": {
+            "team": "NO",
+            "N": 3
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "NO",
+              "profit": -3.0,
+              "N": 3
+            },
+            {
+              "team": "PIT",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "CHI",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "MIN",
+              "profit": -1.0,
+              "N": 1
+            },
+            {
+              "team": "BAL",
+              "profit": -1.0,
+              "N": 1
+            }
+          ],
+          "largest_loss_share": 0.2143,
+          "largest_loss_share_pct": 21.4,
+          "top3_loss_concentration": 0.5,
+          "top3_loss_concentration_pct": 50.0
+        },
+        {
+          "scope": "season_2023",
+          "rows": 34,
+          "total_abs_loss": 20.24,
+          "largest_abs_contributor": {
+            "team": "PIT",
+            "profit": 3.58,
+            "abs_profit": 3.58,
+            "N": 2
+          },
+          "max_candidate_count_team": {
+            "team": "TB",
+            "N": 3
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "JAX",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "LAC",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "ATL",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "MIA",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "CLE",
+              "profit": -2.0,
+              "N": 2
+            }
+          ],
+          "largest_loss_share": 0.0988,
+          "largest_loss_share_pct": 9.9,
+          "top3_loss_concentration": 0.2964,
+          "top3_loss_concentration_pct": 29.6
+        },
+        {
+          "scope": "season_2024",
+          "rows": 21,
+          "total_abs_loss": 14.0,
+          "largest_abs_contributor": {
+            "team": "SEA",
+            "profit": -3.0,
+            "abs_profit": 3.0,
+            "N": 3
+          },
+          "max_candidate_count_team": {
+            "team": "SEA",
+            "N": 3
+          },
+          "bottom_loss_teams": [
+            {
+              "team": "SEA",
+              "profit": -3.0,
+              "N": 3
+            },
+            {
+              "team": "NE",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "LAR",
+              "profit": -2.0,
+              "N": 2
+            },
+            {
+              "team": "TB",
+              "profit": -1.0,
+              "N": 1
+            },
+            {
+              "team": "MIA",
+              "profit": -1.0,
+              "N": 1
+            }
+          ],
+          "largest_loss_share": 0.2143,
+          "largest_loss_share_pct": 21.4,
+          "top3_loss_concentration": 0.5,
+          "top3_loss_concentration_pct": 50.0
+        }
+      ]
+    }
+  },
+  "d9_chronology": {
+    "by_week": [
+      {
+        "season": 2020,
+        "week": "003",
+        "cum_profit": 1.52,
+        "cum_wins": 1,
+        "cum_roi": 1.52,
+        "n": 1
+      },
+      {
+        "season": 2020,
+        "week": "004",
+        "cum_profit": 2.95,
+        "cum_wins": 2,
+        "cum_roi": 1.475,
+        "n": 2
+      },
+      {
+        "season": 2020,
+        "week": "004",
+        "cum_profit": 1.95,
+        "cum_wins": 2,
+        "cum_roi": 0.65,
+        "n": 3
+      },
+      {
+        "season": 2020,
+        "week": "004",
+        "cum_profit": 3.55,
+        "cum_wins": 3,
+        "cum_roi": 0.8875,
+        "n": 4
+      },
+      {
+        "season": 2020,
+        "week": "004",
+        "cum_profit": 5.05,
+        "cum_wins": 4,
+        "cum_roi": 1.01,
+        "n": 5
+      },
+      {
+        "season": 2020,
+        "week": "005",
+        "cum_profit": 6.25,
+        "cum_wins": 5,
+        "cum_roi": 1.0417,
+        "n": 6
+      },
+      {
+        "season": 2020,
+        "week": "006",
+        "cum_profit": 5.25,
+        "cum_wins": 5,
+        "cum_roi": 0.75,
+        "n": 7
+      },
+      {
+        "season": 2020,
+        "week": "006",
+        "cum_profit": 6.45,
+        "cum_wins": 6,
+        "cum_roi": 0.8063,
+        "n": 8
+      },
+      {
+        "season": 2020,
+        "week": "006",
+        "cum_profit": 7.63,
+        "cum_wins": 7,
+        "cum_roi": 0.8478,
+        "n": 9
+      },
+      {
+        "season": 2020,
+        "week": "007",
+        "cum_profit": 6.63,
+        "cum_wins": 7,
+        "cum_roi": 0.663,
+        "n": 10
+      },
+      {
+        "season": 2020,
+        "week": "007",
+        "cum_profit": 8.29,
+        "cum_wins": 8,
+        "cum_roi": 0.7536,
+        "n": 11
+      },
+      {
+        "season": 2020,
+        "week": "007",
+        "cum_profit": 9.67,
+        "cum_wins": 9,
+        "cum_roi": 0.8058,
+        "n": 12
+      },
+      {
+        "season": 2020,
+        "week": "007",
+        "cum_profit": 8.67,
+        "cum_wins": 9,
+        "cum_roi": 0.6669,
+        "n": 13
+      },
+      {
+        "season": 2020,
+        "week": "008",
+        "cum_profit": 7.67,
+        "cum_wins": 9,
+        "cum_roi": 0.5479,
+        "n": 14
+      },
+      {
+        "season": 2020,
+        "week": "008",
+        "cum_profit": 9.13,
+        "cum_wins": 10,
+        "cum_roi": 0.6087,
+        "n": 15
+      },
+      {
+        "season": 2020,
+        "week": "009",
+        "cum_profit": 8.13,
+        "cum_wins": 10,
+        "cum_roi": 0.5081,
+        "n": 16
+      },
+      {
+        "season": 2020,
+        "week": "009",
+        "cum_profit": 9.61,
+        "cum_wins": 11,
+        "cum_roi": 0.5653,
+        "n": 17
+      },
+      {
+        "season": 2020,
+        "week": "009",
+        "cum_profit": 11.07,
+        "cum_wins": 12,
+        "cum_roi": 0.615,
+        "n": 18
+      },
+      {
+        "season": 2020,
+        "week": "010",
+        "cum_profit": 10.07,
+        "cum_wins": 12,
+        "cum_roi": 0.53,
+        "n": 19
+      },
+      {
+        "season": 2020,
+        "week": "010",
+        "cum_profit": 9.07,
+        "cum_wins": 12,
+        "cum_roi": 0.4535,
+        "n": 20
+      },
+      {
+        "season": 2020,
+        "week": "010",
+        "cum_profit": 11.07,
+        "cum_wins": 13,
+        "cum_roi": 0.5271,
+        "n": 21
+      },
+      {
+        "season": 2020,
+        "week": "010",
+        "cum_profit": 10.07,
+        "cum_wins": 13,
+        "cum_roi": 0.4577,
+        "n": 22
+      },
+      {
+        "season": 2020,
+        "week": "011",
+        "cum_profit": 9.07,
+        "cum_wins": 13,
+        "cum_roi": 0.3943,
+        "n": 23
+      },
+      {
+        "season": 2020,
+        "week": "011",
+        "cum_profit": 10.87,
+        "cum_wins": 14,
+        "cum_roi": 0.4529,
+        "n": 24
+      },
+      {
+        "season": 2020,
+        "week": "011",
+        "cum_profit": 12.09,
+        "cum_wins": 15,
+        "cum_roi": 0.4836,
+        "n": 25
+      },
+      {
+        "season": 2020,
+        "week": "012",
+        "cum_profit": 11.09,
+        "cum_wins": 15,
+        "cum_roi": 0.4265,
+        "n": 26
+      },
+      {
+        "season": 2020,
+        "week": "012",
+        "cum_profit": 12.64,
+        "cum_wins": 16,
+        "cum_roi": 0.4681,
+        "n": 27
+      },
+      {
+        "season": 2020,
+        "week": "012",
+        "cum_profit": 13.92,
+        "cum_wins": 17,
+        "cum_roi": 0.4971,
+        "n": 28
+      },
+      {
+        "season": 2020,
+        "week": "012",
+        "cum_profit": 15.22,
+        "cum_wins": 18,
+        "cum_roi": 0.5248,
+        "n": 29
+      },
+      {
+        "season": 2020,
+        "week": "013",
+        "cum_profit": 14.22,
+        "cum_wins": 18,
+        "cum_roi": 0.474,
+        "n": 30
+      },
+      {
+        "season": 2020,
+        "week": "014",
+        "cum_profit": 13.22,
+        "cum_wins": 18,
+        "cum_roi": 0.4265,
+        "n": 31
+      },
+      {
+        "season": 2020,
+        "week": "014",
+        "cum_profit": 14.52,
+        "cum_wins": 19,
+        "cum_roi": 0.4538,
+        "n": 32
+      },
+      {
+        "season": 2020,
+        "week": "015",
+        "cum_profit": 16.36,
+        "cum_wins": 20,
+        "cum_roi": 0.4958,
+        "n": 33
+      },
+      {
+        "season": 2020,
+        "week": "017",
+        "cum_profit": 15.36,
+        "cum_wins": 20,
+        "cum_roi": 0.4518,
+        "n": 34
+      },
+      {
+        "season": 2020,
+        "week": "018",
+        "cum_profit": 14.36,
+        "cum_wins": 20,
+        "cum_roi": 0.4103,
+        "n": 35
+      },
+      {
+        "season": 2020,
+        "week": "019",
+        "cum_profit": 15.56,
+        "cum_wins": 21,
+        "cum_roi": 0.4322,
+        "n": 36
+      },
+      {
+        "season": 2021,
+        "week": "003",
+        "cum_profit": 1.3,
+        "cum_wins": 1,
+        "cum_roi": 1.3,
+        "n": 1
+      },
+      {
+        "season": 2021,
+        "week": "003",
+        "cum_profit": 0.3,
+        "cum_wins": 1,
+        "cum_roi": 0.15,
+        "n": 2
+      },
+      {
+        "season": 2021,
+        "week": "004",
+        "cum_profit": -0.7,
+        "cum_wins": 1,
+        "cum_roi": -0.2333,
+        "n": 3
+      },
+      {
+        "season": 2021,
+        "week": "004",
+        "cum_profit": 0.55,
+        "cum_wins": 2,
+        "cum_roi": 0.1375,
+        "n": 4
+      },
+      {
+        "season": 2021,
+        "week": "005",
+        "cum_profit": 1.85,
+        "cum_wins": 3,
+        "cum_roi": 0.37,
+        "n": 5
+      },
+      {
+        "season": 2021,
+        "week": "005",
+        "cum_profit": 0.85,
+        "cum_wins": 3,
+        "cum_roi": 0.1417,
+        "n": 6
+      },
+      {
+        "season": 2021,
+        "week": "005",
+        "cum_profit": -0.15,
+        "cum_wins": 3,
+        "cum_roi": -0.0214,
+        "n": 7
+      },
+      {
+        "season": 2021,
+        "week": "006",
+        "cum_profit": 1.3,
+        "cum_wins": 4,
+        "cum_roi": 0.1625,
+        "n": 8
+      },
+      {
+        "season": 2021,
+        "week": "006",
+        "cum_profit": 0.3,
+        "cum_wins": 4,
+        "cum_roi": 0.0333,
+        "n": 9
+      },
+      {
+        "season": 2021,
+        "week": "006",
+        "cum_profit": -0.7,
+        "cum_wins": 4,
+        "cum_roi": -0.07,
+        "n": 10
+      },
+      {
+        "season": 2021,
+        "week": "006",
+        "cum_profit": -1.7,
+        "cum_wins": 4,
+        "cum_roi": -0.1545,
+        "n": 11
+      },
+      {
+        "season": 2021,
+        "week": "006",
+        "cum_profit": 0.14,
+        "cum_wins": 5,
+        "cum_roi": 0.0117,
+        "n": 12
+      },
+      {
+        "season": 2021,
+        "week": "006",
+        "cum_profit": 1.49,
+        "cum_wins": 6,
+        "cum_roi": 0.1146,
+        "n": 13
+      },
+      {
+        "season": 2021,
+        "week": "007",
+        "cum_profit": 3.29,
+        "cum_wins": 7,
+        "cum_roi": 0.235,
+        "n": 14
+      },
+      {
+        "season": 2021,
+        "week": "007",
+        "cum_profit": 2.29,
+        "cum_wins": 7,
+        "cum_roi": 0.1527,
+        "n": 15
+      },
+      {
+        "season": 2021,
+        "week": "008",
+        "cum_profit": 3.89,
+        "cum_wins": 8,
+        "cum_roi": 0.2431,
+        "n": 16
+      },
+      {
+        "season": 2021,
+        "week": "008",
+        "cum_profit": 2.89,
+        "cum_wins": 8,
+        "cum_roi": 0.17,
+        "n": 17
+      },
+      {
+        "season": 2021,
+        "week": "008",
+        "cum_profit": 4.57,
+        "cum_wins": 9,
+        "cum_roi": 0.2539,
+        "n": 18
+      },
+      {
+        "season": 2021,
+        "week": "009",
+        "cum_profit": 3.57,
+        "cum_wins": 9,
+        "cum_roi": 0.1879,
+        "n": 19
+      },
+      {
+        "season": 2021,
+        "week": "009",
+        "cum_profit": 2.57,
+        "cum_wins": 9,
+        "cum_roi": 0.1285,
+        "n": 20
+      },
+      {
+        "season": 2021,
+        "week": "010",
+        "cum_profit": 1.57,
+        "cum_wins": 9,
+        "cum_roi": 0.0748,
+        "n": 21
+      },
+      {
+        "season": 2021,
+        "week": "010",
+        "cum_profit": 0.57,
+        "cum_wins": 9,
+        "cum_roi": 0.0259,
+        "n": 22
+      },
+      {
+        "season": 2021,
+        "week": "010",
+        "cum_profit": 2.17,
+        "cum_wins": 10,
+        "cum_roi": 0.0943,
+        "n": 23
+      },
+      {
+        "season": 2021,
+        "week": "010",
+        "cum_profit": 3.69,
+        "cum_wins": 11,
+        "cum_roi": 0.1538,
+        "n": 24
+      },
+      {
+        "season": 2021,
+        "week": "010",
+        "cum_profit": 2.69,
+        "cum_wins": 11,
+        "cum_roi": 0.1076,
+        "n": 25
+      },
+      {
+        "season": 2021,
+        "week": "011",
+        "cum_profit": 4.14,
+        "cum_wins": 12,
+        "cum_roi": 0.1592,
+        "n": 26
+      },
+      {
+        "season": 2021,
+        "week": "011",
+        "cum_profit": 3.14,
+        "cum_wins": 12,
+        "cum_roi": 0.1163,
+        "n": 27
+      },
+      {
+        "season": 2021,
+        "week": "011",
+        "cum_profit": 4.64,
+        "cum_wins": 13,
+        "cum_roi": 0.1657,
+        "n": 28
+      },
+      {
+        "season": 2021,
+        "week": "012",
+        "cum_profit": 3.64,
+        "cum_wins": 13,
+        "cum_roi": 0.1255,
+        "n": 29
+      },
+      {
+        "season": 2021,
+        "week": "012",
+        "cum_profit": 4.96,
+        "cum_wins": 14,
+        "cum_roi": 0.1653,
+        "n": 30
+      },
+      {
+        "season": 2021,
+        "week": "012",
+        "cum_profit": 3.96,
+        "cum_wins": 14,
+        "cum_roi": 0.1277,
+        "n": 31
+      },
+      {
+        "season": 2021,
+        "week": "012",
+        "cum_profit": 5.68,
+        "cum_wins": 15,
+        "cum_roi": 0.1775,
+        "n": 32
+      },
+      {
+        "season": 2021,
+        "week": "012",
+        "cum_profit": 4.68,
+        "cum_wins": 15,
+        "cum_roi": 0.1418,
+        "n": 33
+      },
+      {
+        "season": 2021,
+        "week": "013",
+        "cum_profit": 6.52,
+        "cum_wins": 16,
+        "cum_roi": 0.1918,
+        "n": 34
+      },
+      {
+        "season": 2021,
+        "week": "013",
+        "cum_profit": 7.82,
+        "cum_wins": 17,
+        "cum_roi": 0.2234,
+        "n": 35
+      },
+      {
+        "season": 2021,
+        "week": "013",
+        "cum_profit": 6.82,
+        "cum_wins": 17,
+        "cum_roi": 0.1894,
+        "n": 36
+      },
+      {
+        "season": 2021,
+        "week": "014",
+        "cum_profit": 5.82,
+        "cum_wins": 17,
+        "cum_roi": 0.1573,
+        "n": 37
+      },
+      {
+        "season": 2021,
+        "week": "014",
+        "cum_profit": 7.22,
+        "cum_wins": 18,
+        "cum_roi": 0.19,
+        "n": 38
+      },
+      {
+        "season": 2021,
+        "week": "014",
+        "cum_profit": 6.22,
+        "cum_wins": 18,
+        "cum_roi": 0.1595,
+        "n": 39
+      },
+      {
+        "season": 2021,
+        "week": "015",
+        "cum_profit": 8.2,
+        "cum_wins": 19,
+        "cum_roi": 0.205,
+        "n": 40
+      },
+      {
+        "season": 2021,
+        "week": "015",
+        "cum_profit": 7.2,
+        "cum_wins": 19,
+        "cum_roi": 0.1756,
+        "n": 41
+      },
+      {
+        "season": 2021,
+        "week": "017",
+        "cum_profit": 6.2,
+        "cum_wins": 19,
+        "cum_roi": 0.1476,
+        "n": 42
+      },
+      {
+        "season": 2021,
+        "week": "018",
+        "cum_profit": 7.65,
+        "cum_wins": 20,
+        "cum_roi": 0.1779,
+        "n": 43
+      },
+      {
+        "season": 2021,
+        "week": "018",
+        "cum_profit": 6.65,
+        "cum_wins": 20,
+        "cum_roi": 0.1511,
+        "n": 44
+      },
+      {
+        "season": 2021,
+        "week": "018",
+        "cum_profit": 8.55,
+        "cum_wins": 21,
+        "cum_roi": 0.19,
+        "n": 45
+      },
+      {
+        "season": 2021,
+        "week": "018",
+        "cum_profit": 10.2,
+        "cum_wins": 22,
+        "cum_roi": 0.2217,
+        "n": 46
+      },
+      {
+        "season": 2021,
+        "week": "019",
+        "cum_profit": 11.65,
+        "cum_wins": 23,
+        "cum_roi": 0.2479,
+        "n": 47
+      },
+      {
+        "season": 2021,
+        "week": "020",
+        "cum_profit": 13.35,
+        "cum_wins": 24,
+        "cum_roi": 0.2781,
+        "n": 48
+      },
+      {
+        "season": 2021,
+        "week": "020",
+        "cum_profit": 14.65,
+        "cum_wins": 25,
+        "cum_roi": 0.299,
+        "n": 49
+      },
+      {
+        "season": 2022,
+        "week": "003",
+        "cum_profit": -1.0,
+        "cum_wins": 0,
+        "cum_roi": -1.0,
+        "n": 1
+      },
+      {
+        "season": 2022,
+        "week": "003",
+        "cum_profit": 0.98,
+        "cum_wins": 1,
+        "cum_roi": 0.49,
+        "n": 2
+      },
+      {
+        "season": 2022,
+        "week": "003",
+        "cum_profit": -0.02,
+        "cum_wins": 1,
+        "cum_roi": -0.0067,
+        "n": 3
+      },
+      {
+        "season": 2022,
+        "week": "004",
+        "cum_profit": -1.02,
+        "cum_wins": 1,
+        "cum_roi": -0.255,
+        "n": 4
+      },
+      {
+        "season": 2022,
+        "week": "004",
+        "cum_profit": -2.02,
+        "cum_wins": 1,
+        "cum_roi": -0.404,
+        "n": 5
+      },
+      {
+        "season": 2022,
+        "week": "004",
+        "cum_profit": -3.02,
+        "cum_wins": 1,
+        "cum_roi": -0.5033,
+        "n": 6
+      },
+      {
+        "season": 2022,
+        "week": "004",
+        "cum_profit": -1.9,
+        "cum_wins": 2,
+        "cum_roi": -0.2714,
+        "n": 7
+      },
+      {
+        "season": 2022,
+        "week": "004",
+        "cum_profit": -2.9,
+        "cum_wins": 2,
+        "cum_roi": -0.3625,
+        "n": 8
+      },
+      {
+        "season": 2022,
+        "week": "004",
+        "cum_profit": -1.25,
+        "cum_wins": 3,
+        "cum_roi": -0.1389,
+        "n": 9
+      },
+      {
+        "season": 2022,
+        "week": "005",
+        "cum_profit": -2.25,
+        "cum_wins": 3,
+        "cum_roi": -0.225,
+        "n": 10
+      },
+      {
+        "season": 2022,
+        "week": "005",
+        "cum_profit": -0.27,
+        "cum_wins": 4,
+        "cum_roi": -0.0245,
+        "n": 11
+      },
+      {
+        "season": 2022,
+        "week": "005",
+        "cum_profit": 1.23,
+        "cum_wins": 5,
+        "cum_roi": 0.1025,
+        "n": 12
+      },
+      {
+        "season": 2022,
+        "week": "005",
+        "cum_profit": 2.78,
+        "cum_wins": 6,
+        "cum_roi": 0.2138,
+        "n": 13
+      },
+      {
+        "season": 2022,
+        "week": "005",
+        "cum_profit": 1.78,
+        "cum_wins": 6,
+        "cum_roi": 0.1271,
+        "n": 14
+      },
+      {
+        "season": 2022,
+        "week": "006",
+        "cum_profit": 3.78,
+        "cum_wins": 7,
+        "cum_roi": 0.252,
+        "n": 15
+      },
+      {
+        "season": 2022,
+        "week": "006",
+        "cum_profit": 5.08,
+        "cum_wins": 8,
+        "cum_roi": 0.3175,
+        "n": 16
+      },
+      {
+        "season": 2022,
+        "week": "006",
+        "cum_profit": 6.83,
+        "cum_wins": 9,
+        "cum_roi": 0.4018,
+        "n": 17
+      },
+      {
+        "season": 2022,
+        "week": "007",
+        "cum_profit": 8.58,
+        "cum_wins": 10,
+        "cum_roi": 0.4767,
+        "n": 18
+      },
+      {
+        "season": 2022,
+        "week": "007",
+        "cum_profit": 7.58,
+        "cum_wins": 10,
+        "cum_roi": 0.3989,
+        "n": 19
+      },
+      {
+        "season": 2022,
+        "week": "007",
+        "cum_profit": 9.43,
+        "cum_wins": 11,
+        "cum_roi": 0.4715,
+        "n": 20
+      },
+      {
+        "season": 2022,
+        "week": "008",
+        "cum_profit": 8.43,
+        "cum_wins": 11,
+        "cum_roi": 0.4014,
+        "n": 21
+      },
+      {
+        "season": 2022,
+        "week": "008",
+        "cum_profit": 9.98,
+        "cum_wins": 12,
+        "cum_roi": 0.4536,
+        "n": 22
+      },
+      {
+        "season": 2022,
+        "week": "008",
+        "cum_profit": 8.98,
+        "cum_wins": 12,
+        "cum_roi": 0.3904,
+        "n": 23
+      },
+      {
+        "season": 2022,
+        "week": "008",
+        "cum_profit": 7.98,
+        "cum_wins": 12,
+        "cum_roi": 0.3325,
+        "n": 24
+      },
+      {
+        "season": 2022,
+        "week": "009",
+        "cum_profit": 6.98,
+        "cum_wins": 12,
+        "cum_roi": 0.2792,
+        "n": 25
+      },
+      {
+        "season": 2022,
+        "week": "009",
+        "cum_profit": 8.66,
+        "cum_wins": 13,
+        "cum_roi": 0.3331,
+        "n": 26
+      },
+      {
+        "season": 2022,
+        "week": "009",
+        "cum_profit": 9.91,
+        "cum_wins": 14,
+        "cum_roi": 0.367,
+        "n": 27
+      },
+      {
+        "season": 2022,
+        "week": "009",
+        "cum_profit": 8.91,
+        "cum_wins": 14,
+        "cum_roi": 0.3182,
+        "n": 28
+      },
+      {
+        "season": 2022,
+        "week": "009",
+        "cum_profit": 7.91,
+        "cum_wins": 14,
+        "cum_roi": 0.2728,
+        "n": 29
+      },
+      {
+        "season": 2022,
+        "week": "010",
+        "cum_profit": 9.16,
+        "cum_wins": 15,
+        "cum_roi": 0.3053,
+        "n": 30
+      },
+      {
+        "season": 2022,
+        "week": "010",
+        "cum_profit": 8.16,
+        "cum_wins": 15,
+        "cum_roi": 0.2632,
+        "n": 31
+      },
+      {
+        "season": 2022,
+        "week": "010",
+        "cum_profit": 9.88,
+        "cum_wins": 16,
+        "cum_roi": 0.3088,
+        "n": 32
+      },
+      {
+        "season": 2022,
+        "week": "010",
+        "cum_profit": 11.18,
+        "cum_wins": 17,
+        "cum_roi": 0.3388,
+        "n": 33
+      },
+      {
+        "season": 2022,
+        "week": "011",
+        "cum_profit": 10.18,
+        "cum_wins": 17,
+        "cum_roi": 0.2994,
+        "n": 34
+      },
+      {
+        "season": 2022,
+        "week": "011",
+        "cum_profit": 11.4,
+        "cum_wins": 18,
+        "cum_roi": 0.3257,
+        "n": 35
+      },
+      {
+        "season": 2022,
+        "week": "011",
+        "cum_profit": 10.4,
+        "cum_wins": 18,
+        "cum_roi": 0.2889,
+        "n": 36
+      },
+      {
+        "season": 2022,
+        "week": "013",
+        "cum_profit": 9.4,
+        "cum_wins": 18,
+        "cum_roi": 0.2541,
+        "n": 37
+      },
+      {
+        "season": 2022,
+        "week": "013",
+        "cum_profit": 8.4,
+        "cum_wins": 18,
+        "cum_roi": 0.2211,
+        "n": 38
+      },
+      {
+        "season": 2022,
+        "week": "013",
+        "cum_profit": 7.4,
+        "cum_wins": 18,
+        "cum_roi": 0.1897,
+        "n": 39
+      },
+      {
+        "season": 2022,
+        "week": "015",
+        "cum_profit": 6.4,
+        "cum_wins": 18,
+        "cum_roi": 0.16,
+        "n": 40
+      },
+      {
+        "season": 2022,
+        "week": "016",
+        "cum_profit": 7.65,
+        "cum_wins": 19,
+        "cum_roi": 0.1866,
+        "n": 41
+      },
+      {
+        "season": 2022,
+        "week": "016",
+        "cum_profit": 6.65,
+        "cum_wins": 19,
+        "cum_roi": 0.1583,
+        "n": 42
+      },
+      {
+        "season": 2022,
+        "week": "017",
+        "cum_profit": 5.65,
+        "cum_wins": 19,
+        "cum_roi": 0.1314,
+        "n": 43
+      },
+      {
+        "season": 2022,
+        "week": "017",
+        "cum_profit": 4.65,
+        "cum_wins": 19,
+        "cum_roi": 0.1057,
+        "n": 44
+      },
+      {
+        "season": 2022,
+        "week": "018",
+        "cum_profit": 5.95,
+        "cum_wins": 20,
+        "cum_roi": 0.1322,
+        "n": 45
+      },
+      {
+        "season": 2022,
+        "week": "020",
+        "cum_profit": 4.95,
+        "cum_wins": 20,
+        "cum_roi": 0.1076,
+        "n": 46
+      },
+      {
+        "season": 2023,
+        "week": "003",
+        "cum_profit": -1.0,
+        "cum_wins": 0,
+        "cum_roi": -1.0,
+        "n": 1
+      },
+      {
+        "season": 2023,
+        "week": "003",
+        "cum_profit": -2.0,
+        "cum_wins": 0,
+        "cum_roi": -1.0,
+        "n": 2
+      },
+      {
+        "season": 2023,
+        "week": "003",
+        "cum_profit": -3.0,
+        "cum_wins": 0,
+        "cum_roi": -1.0,
+        "n": 3
+      },
+      {
+        "season": 2023,
+        "week": "004",
+        "cum_profit": -4.0,
+        "cum_wins": 0,
+        "cum_roi": -1.0,
+        "n": 4
+      },
+      {
+        "season": 2023,
+        "week": "004",
+        "cum_profit": -2.7,
+        "cum_wins": 1,
+        "cum_roi": -0.54,
+        "n": 5
+      },
+      {
+        "season": 2023,
+        "week": "004",
+        "cum_profit": -3.7,
+        "cum_wins": 1,
+        "cum_roi": -0.6167,
+        "n": 6
+      },
+      {
+        "season": 2023,
+        "week": "004",
+        "cum_profit": -4.7,
+        "cum_wins": 1,
+        "cum_roi": -0.6714,
+        "n": 7
+      },
+      {
+        "season": 2023,
+        "week": "004",
+        "cum_profit": -3.32,
+        "cum_wins": 2,
+        "cum_roi": -0.415,
+        "n": 8
+      },
+      {
+        "season": 2023,
+        "week": "004",
+        "cum_profit": -1.56,
+        "cum_wins": 3,
+        "cum_roi": -0.1733,
+        "n": 9
+      },
+      {
+        "season": 2023,
+        "week": "005",
+        "cum_profit": 0.34,
+        "cum_wins": 4,
+        "cum_roi": 0.034,
+        "n": 10
+      },
+      {
+        "season": 2023,
+        "week": "005",
+        "cum_profit": 1.48,
+        "cum_wins": 5,
+        "cum_roi": 0.1345,
+        "n": 11
+      },
+      {
+        "season": 2023,
+        "week": "005",
+        "cum_profit": 0.48,
+        "cum_wins": 5,
+        "cum_roi": 0.04,
+        "n": 12
+      },
+      {
+        "season": 2023,
+        "week": "006",
+        "cum_profit": -0.52,
+        "cum_wins": 5,
+        "cum_roi": -0.04,
+        "n": 13
+      },
+      {
+        "season": 2023,
+        "week": "006",
+        "cum_profit": -1.52,
+        "cum_wins": 5,
+        "cum_roi": -0.1086,
+        "n": 14
+      },
+      {
+        "season": 2023,
+        "week": "006",
+        "cum_profit": -2.52,
+        "cum_wins": 5,
+        "cum_roi": -0.168,
+        "n": 15
+      },
+      {
+        "season": 2023,
+        "week": "007",
+        "cum_profit": -3.52,
+        "cum_wins": 5,
+        "cum_roi": -0.22,
+        "n": 16
+      },
+      {
+        "season": 2023,
+        "week": "007",
+        "cum_profit": -2.1,
+        "cum_wins": 6,
+        "cum_roi": -0.1235,
+        "n": 17
+      },
+      {
+        "season": 2023,
+        "week": "007",
+        "cum_profit": -0.8,
+        "cum_wins": 7,
+        "cum_roi": -0.0444,
+        "n": 18
+      },
+      {
+        "season": 2023,
+        "week": "008",
+        "cum_profit": -1.8,
+        "cum_wins": 7,
+        "cum_roi": -0.0947,
+        "n": 19
+      },
+      {
+        "season": 2023,
+        "week": "009",
+        "cum_profit": -2.8,
+        "cum_wins": 7,
+        "cum_roi": -0.14,
+        "n": 20
+      },
+      {
+        "season": 2023,
+        "week": "009",
+        "cum_profit": -3.8,
+        "cum_wins": 7,
+        "cum_roi": -0.181,
+        "n": 21
+      },
+      {
+        "season": 2023,
+        "week": "009",
+        "cum_profit": -4.8,
+        "cum_wins": 7,
+        "cum_roi": -0.2182,
+        "n": 22
+      },
+      {
+        "season": 2023,
+        "week": "009",
+        "cum_profit": -5.8,
+        "cum_wins": 7,
+        "cum_roi": -0.2522,
+        "n": 23
+      },
+      {
+        "season": 2023,
+        "week": "009",
+        "cum_profit": -4.5,
+        "cum_wins": 8,
+        "cum_roi": -0.1875,
+        "n": 24
+      },
+      {
+        "season": 2023,
+        "week": "010",
+        "cum_profit": -3.36,
+        "cum_wins": 9,
+        "cum_roi": -0.1344,
+        "n": 25
+      },
+      {
+        "season": 2023,
+        "week": "010",
+        "cum_profit": -4.36,
+        "cum_wins": 9,
+        "cum_roi": -0.1677,
+        "n": 26
+      },
+      {
+        "season": 2023,
+        "week": "010",
+        "cum_profit": -5.36,
+        "cum_wins": 9,
+        "cum_roi": -0.1985,
+        "n": 27
+      },
+      {
+        "season": 2023,
+        "week": "010",
+        "cum_profit": -6.36,
+        "cum_wins": 9,
+        "cum_roi": -0.2271,
+        "n": 28
+      },
+      {
+        "season": 2023,
+        "week": "011",
+        "cum_profit": -7.36,
+        "cum_wins": 9,
+        "cum_roi": -0.2538,
+        "n": 29
+      },
+      {
+        "season": 2023,
+        "week": "011",
+        "cum_profit": -6.06,
+        "cum_wins": 10,
+        "cum_roi": -0.202,
+        "n": 30
+      },
+      {
+        "season": 2023,
+        "week": "011",
+        "cum_profit": -4.76,
+        "cum_wins": 11,
+        "cum_roi": -0.1535,
+        "n": 31
+      },
+      {
+        "season": 2023,
+        "week": "012",
+        "cum_profit": -5.76,
+        "cum_wins": 11,
+        "cum_roi": -0.18,
+        "n": 32
+      },
+      {
+        "season": 2023,
+        "week": "012",
+        "cum_profit": -6.76,
+        "cum_wins": 11,
+        "cum_roi": -0.2048,
+        "n": 33
+      },
+      {
+        "season": 2023,
+        "week": "012",
+        "cum_profit": -5.62,
+        "cum_wins": 12,
+        "cum_roi": -0.1653,
+        "n": 34
+      },
+      {
+        "season": 2023,
+        "week": "012",
+        "cum_profit": -6.62,
+        "cum_wins": 12,
+        "cum_roi": -0.1891,
+        "n": 35
+      },
+      {
+        "season": 2023,
+        "week": "013",
+        "cum_profit": -7.62,
+        "cum_wins": 12,
+        "cum_roi": -0.2117,
+        "n": 36
+      },
+      {
+        "season": 2023,
+        "week": "013",
+        "cum_profit": -8.62,
+        "cum_wins": 12,
+        "cum_roi": -0.233,
+        "n": 37
+      },
+      {
+        "season": 2023,
+        "week": "013",
+        "cum_profit": -9.62,
+        "cum_wins": 12,
+        "cum_roi": -0.2532,
+        "n": 38
+      },
+      {
+        "season": 2023,
+        "week": "014",
+        "cum_profit": -7.62,
+        "cum_wins": 13,
+        "cum_roi": -0.1954,
+        "n": 39
+      },
+      {
+        "season": 2023,
+        "week": "014",
+        "cum_profit": -6.16,
+        "cum_wins": 14,
+        "cum_roi": -0.154,
+        "n": 40
+      },
+      {
+        "season": 2023,
+        "week": "014",
+        "cum_profit": -7.16,
+        "cum_wins": 14,
+        "cum_roi": -0.1746,
+        "n": 41
+      },
+      {
+        "season": 2023,
+        "week": "014",
+        "cum_profit": -8.16,
+        "cum_wins": 14,
+        "cum_roi": -0.1943,
+        "n": 42
+      },
+      {
+        "season": 2023,
+        "week": "015",
+        "cum_profit": -9.16,
+        "cum_wins": 14,
+        "cum_roi": -0.213,
+        "n": 43
+      },
+      {
+        "season": 2023,
+        "week": "015",
+        "cum_profit": -7.74,
+        "cum_wins": 15,
+        "cum_roi": -0.1759,
+        "n": 44
+      },
+      {
+        "season": 2023,
+        "week": "015",
+        "cum_profit": -8.74,
+        "cum_wins": 15,
+        "cum_roi": -0.1942,
+        "n": 45
+      },
+      {
+        "season": 2023,
+        "week": "015",
+        "cum_profit": -9.74,
+        "cum_wins": 15,
+        "cum_roi": -0.2117,
+        "n": 46
+      },
+      {
+        "season": 2023,
+        "week": "016",
+        "cum_profit": -10.74,
+        "cum_wins": 15,
+        "cum_roi": -0.2285,
+        "n": 47
+      },
+      {
+        "season": 2023,
+        "week": "016",
+        "cum_profit": -11.74,
+        "cum_wins": 15,
+        "cum_roi": -0.2446,
+        "n": 48
+      },
+      {
+        "season": 2023,
+        "week": "017",
+        "cum_profit": -12.74,
+        "cum_wins": 15,
+        "cum_roi": -0.26,
+        "n": 49
+      },
+      {
+        "season": 2023,
+        "week": "017",
+        "cum_profit": -13.74,
+        "cum_wins": 15,
+        "cum_roi": -0.2748,
+        "n": 50
+      },
+      {
+        "season": 2023,
+        "week": "017",
+        "cum_profit": -14.74,
+        "cum_wins": 15,
+        "cum_roi": -0.289,
+        "n": 51
+      },
+      {
+        "season": 2023,
+        "week": "017",
+        "cum_profit": -13.06,
+        "cum_wins": 16,
+        "cum_roi": -0.2512,
+        "n": 52
+      },
+      {
+        "season": 2023,
+        "week": "018",
+        "cum_profit": -14.06,
+        "cum_wins": 16,
+        "cum_roi": -0.2653,
+        "n": 53
+      },
+      {
+        "season": 2023,
+        "week": "018",
+        "cum_profit": -15.06,
+        "cum_wins": 16,
+        "cum_roi": -0.2789,
+        "n": 54
+      },
+      {
+        "season": 2023,
+        "week": "018",
+        "cum_profit": -13.56,
+        "cum_wins": 17,
+        "cum_roi": -0.2465,
+        "n": 55
+      },
+      {
+        "season": 2023,
+        "week": "018",
+        "cum_profit": -14.56,
+        "cum_wins": 17,
+        "cum_roi": -0.26,
+        "n": 56
+      },
+      {
+        "season": 2023,
+        "week": "019",
+        "cum_profit": -15.56,
+        "cum_wins": 17,
+        "cum_roi": -0.273,
+        "n": 57
+      },
+      {
+        "season": 2023,
+        "week": "019",
+        "cum_profit": -16.56,
+        "cum_wins": 17,
+        "cum_roi": -0.2855,
+        "n": 58
+      },
+      {
+        "season": 2024,
+        "week": "003",
+        "cum_profit": -1.0,
+        "cum_wins": 0,
+        "cum_roi": -1.0,
+        "n": 1
+      },
+      {
+        "season": 2024,
+        "week": "004",
+        "cum_profit": -2.0,
+        "cum_wins": 0,
+        "cum_roi": -1.0,
+        "n": 2
+      },
+      {
+        "season": 2024,
+        "week": "004",
+        "cum_profit": -0.76,
+        "cum_wins": 1,
+        "cum_roi": -0.2533,
+        "n": 3
+      },
+      {
+        "season": 2024,
+        "week": "004",
+        "cum_profit": -1.76,
+        "cum_wins": 1,
+        "cum_roi": -0.44,
+        "n": 4
+      },
+      {
+        "season": 2024,
+        "week": "004",
+        "cum_profit": -0.24,
+        "cum_wins": 2,
+        "cum_roi": -0.048,
+        "n": 5
+      },
+      {
+        "season": 2024,
+        "week": "005",
+        "cum_profit": -1.24,
+        "cum_wins": 2,
+        "cum_roi": -0.2067,
+        "n": 6
+      },
+      {
+        "season": 2024,
+        "week": "005",
+        "cum_profit": -2.24,
+        "cum_wins": 2,
+        "cum_roi": -0.32,
+        "n": 7
+      },
+      {
+        "season": 2024,
+        "week": "005",
+        "cum_profit": -3.24,
+        "cum_wins": 2,
+        "cum_roi": -0.405,
+        "n": 8
+      },
+      {
+        "season": 2024,
+        "week": "005",
+        "cum_profit": -4.24,
+        "cum_wins": 2,
+        "cum_roi": -0.4711,
+        "n": 9
+      },
+      {
+        "season": 2024,
+        "week": "006",
+        "cum_profit": -3.04,
+        "cum_wins": 3,
+        "cum_roi": -0.304,
+        "n": 10
+      },
+      {
+        "season": 2024,
+        "week": "006",
+        "cum_profit": -4.04,
+        "cum_wins": 3,
+        "cum_roi": -0.3673,
+        "n": 11
+      },
+      {
+        "season": 2024,
+        "week": "006",
+        "cum_profit": -5.04,
+        "cum_wins": 3,
+        "cum_roi": -0.42,
+        "n": 12
+      },
+      {
+        "season": 2024,
+        "week": "007",
+        "cum_profit": -6.04,
+        "cum_wins": 3,
+        "cum_roi": -0.4646,
+        "n": 13
+      },
+      {
+        "season": 2024,
+        "week": "007",
+        "cum_profit": -4.88,
+        "cum_wins": 4,
+        "cum_roi": -0.3486,
+        "n": 14
+      },
+      {
+        "season": 2024,
+        "week": "007",
+        "cum_profit": -5.88,
+        "cum_wins": 4,
+        "cum_roi": -0.392,
+        "n": 15
+      },
+      {
+        "season": 2024,
+        "week": "007",
+        "cum_profit": -4.46,
+        "cum_wins": 5,
+        "cum_roi": -0.2787,
+        "n": 16
+      },
+      {
+        "season": 2024,
+        "week": "008",
+        "cum_profit": -2.7,
+        "cum_wins": 6,
+        "cum_roi": -0.1588,
+        "n": 17
+      },
+      {
+        "season": 2024,
+        "week": "008",
+        "cum_profit": -1.5,
+        "cum_wins": 7,
+        "cum_roi": -0.0833,
+        "n": 18
+      },
+      {
+        "season": 2024,
+        "week": "009",
+        "cum_profit": -2.5,
+        "cum_wins": 7,
+        "cum_roi": -0.1316,
+        "n": 19
+      },
+      {
+        "season": 2024,
+        "week": "009",
+        "cum_profit": -3.5,
+        "cum_wins": 7,
+        "cum_roi": -0.175,
+        "n": 20
+      },
+      {
+        "season": 2024,
+        "week": "009",
+        "cum_profit": -4.5,
+        "cum_wins": 7,
+        "cum_roi": -0.2143,
+        "n": 21
+      },
+      {
+        "season": 2024,
+        "week": "011",
+        "cum_profit": -5.5,
+        "cum_wins": 7,
+        "cum_roi": -0.25,
+        "n": 22
+      },
+      {
+        "season": 2024,
+        "week": "011",
+        "cum_profit": -3.78,
+        "cum_wins": 8,
+        "cum_roi": -0.1643,
+        "n": 23
+      },
+      {
+        "season": 2024,
+        "week": "011",
+        "cum_profit": -4.78,
+        "cum_wins": 8,
+        "cum_roi": -0.1992,
+        "n": 24
+      },
+      {
+        "season": 2024,
+        "week": "011",
+        "cum_profit": -5.78,
+        "cum_wins": 8,
+        "cum_roi": -0.2312,
+        "n": 25
+      },
+      {
+        "season": 2024,
+        "week": "012",
+        "cum_profit": -6.78,
+        "cum_wins": 8,
+        "cum_roi": -0.2608,
+        "n": 26
+      },
+      {
+        "season": 2024,
+        "week": "012",
+        "cum_profit": -7.78,
+        "cum_wins": 8,
+        "cum_roi": -0.2881,
+        "n": 27
+      },
+      {
+        "season": 2024,
+        "week": "013",
+        "cum_profit": -8.78,
+        "cum_wins": 8,
+        "cum_roi": -0.3136,
+        "n": 28
+      },
+      {
+        "season": 2024,
+        "week": "013",
+        "cum_profit": -9.78,
+        "cum_wins": 8,
+        "cum_roi": -0.3372,
+        "n": 29
+      },
+      {
+        "season": 2024,
+        "week": "014",
+        "cum_profit": -10.78,
+        "cum_wins": 8,
+        "cum_roi": -0.3593,
+        "n": 30
+      },
+      {
+        "season": 2024,
+        "week": "014",
+        "cum_profit": -9.28,
+        "cum_wins": 9,
+        "cum_roi": -0.2994,
+        "n": 31
+      },
+      {
+        "season": 2024,
+        "week": "014",
+        "cum_profit": -7.82,
+        "cum_wins": 10,
+        "cum_roi": -0.2444,
+        "n": 32
+      },
+      {
+        "season": 2024,
+        "week": "015",
+        "cum_profit": -6.62,
+        "cum_wins": 11,
+        "cum_roi": -0.2006,
+        "n": 33
+      },
+      {
+        "season": 2024,
+        "week": "015",
+        "cum_profit": -7.62,
+        "cum_wins": 11,
+        "cum_roi": -0.2241,
+        "n": 34
+      },
+      {
+        "season": 2024,
+        "week": "015",
+        "cum_profit": -6.28,
+        "cum_wins": 12,
+        "cum_roi": -0.1794,
+        "n": 35
+      },
+      {
+        "season": 2024,
+        "week": "015",
+        "cum_profit": -7.28,
+        "cum_wins": 12,
+        "cum_roi": -0.2022,
+        "n": 36
+      },
+      {
+        "season": 2024,
+        "week": "015",
+        "cum_profit": -5.92,
+        "cum_wins": 13,
+        "cum_roi": -0.16,
+        "n": 37
+      },
+      {
+        "season": 2024,
+        "week": "016",
+        "cum_profit": -6.92,
+        "cum_wins": 13,
+        "cum_roi": -0.1821,
+        "n": 38
+      },
+      {
+        "season": 2024,
+        "week": "016",
+        "cum_profit": -5.12,
+        "cum_wins": 14,
+        "cum_roi": -0.1313,
+        "n": 39
+      },
+      {
+        "season": 2024,
+        "week": "017",
+        "cum_profit": -6.12,
+        "cum_wins": 14,
+        "cum_roi": -0.153,
+        "n": 40
+      },
+      {
+        "season": 2024,
+        "week": "018",
+        "cum_profit": -7.12,
+        "cum_wins": 14,
+        "cum_roi": -0.1737,
+        "n": 41
+      },
+      {
+        "season": 2024,
+        "week": "018",
+        "cum_profit": -8.12,
+        "cum_wins": 14,
+        "cum_roi": -0.1933,
+        "n": 42
+      },
+      {
+        "season": 2024,
+        "week": "019",
+        "cum_profit": -6.76,
+        "cum_wins": 15,
+        "cum_roi": -0.1572,
+        "n": 43
+      }
+    ]
+  },
+  "d10_constituent_disagreement": {
+    "ALL": {
+      "N": 140,
+      "mean_abs_spread_pp": 6.609,
+      "std_spread_pp": 4.74,
+      "n_qb_higher": 59,
+      "n_xgb_higher": 81
+    },
+    "2020": {
+      "N": 24,
+      "mean_abs_spread_pp": 6.36,
+      "std_spread_pp": 4.821,
+      "n_qb_higher": 11,
+      "n_xgb_higher": 13
+    },
+    "2021": {
+      "N": 31,
+      "mean_abs_spread_pp": 6.596,
+      "std_spread_pp": 4.162,
+      "n_qb_higher": 15,
+      "n_xgb_higher": 16
+    },
+    "2022": {
+      "N": 30,
+      "mean_abs_spread_pp": 6.524,
+      "std_spread_pp": 5.059,
+      "n_qb_higher": 7,
+      "n_xgb_higher": 23
+    },
+    "2023": {
+      "N": 34,
+      "mean_abs_spread_pp": 5.965,
+      "std_spread_pp": 4.408,
+      "n_qb_higher": 19,
+      "n_xgb_higher": 15
+    },
+    "2024": {
+      "N": 21,
+      "mean_abs_spread_pp": 8.077,
+      "std_spread_pp": 5.585,
+      "n_qb_higher": 7,
+      "n_xgb_higher": 14
+    }
+  },
+  "d11_orientation_join": {
+    "rows_checked": 232,
+    "orientation_mismatch_count": 0,
+    "mismatch_rows": []
+  },
+  "d12_global_calibration": {
+    "2020": {
+      "QUARTERBACK_ELO": {
+        "N_games": 268,
+        "observed_home_win_rate": 0.5,
+        "mean_p_home": 0.5618,
+        "calibration_gap_pp": 6.18,
+        "brier": 0.2162,
+        "accuracy": 0.6567
+      },
+      "XGBOOST": {
+        "N_games": 233,
+        "observed_home_win_rate": 0.485,
+        "mean_p_home": 0.5413,
+        "calibration_gap_pp": 5.63,
+        "brier": 0.2297,
+        "accuracy": 0.6309
+      },
+      "AVG_BOTH_CONSTITUENTS": {
+        "N_games": 233,
+        "observed_home_win_rate": 0.485,
+        "mean_p_home": 0.5516,
+        "calibration_gap_pp": 6.66,
+        "brier": 0.2208,
+        "accuracy": 0.618
+      },
+      "dog_slice_AVG": {
+        "N": 36,
+        "observed_win": 0.5833,
+        "mean_pred_p": 0.4571,
+        "calibration_gap_pp": -12.62,
+        "brier": 0.2571
+      }
+    },
+    "2021": {
+      "QUARTERBACK_ELO": {
+        "N_games": 284,
+        "observed_home_win_rate": 0.5176,
+        "mean_p_home": 0.5667,
+        "calibration_gap_pp": 4.91,
+        "brier": 0.2309,
+        "accuracy": 0.6197
+      },
+      "XGBOOST": {
+        "N_games": 249,
+        "observed_home_win_rate": 0.5221,
+        "mean_p_home": 0.5332,
+        "calibration_gap_pp": 1.11,
+        "brier": 0.2295,
+        "accuracy": 0.6145
+      },
+      "AVG_BOTH_CONSTITUENTS": {
+        "N_games": 249,
+        "observed_home_win_rate": 0.5221,
+        "mean_p_home": 0.5492,
+        "calibration_gap_pp": 2.71,
+        "brier": 0.225,
+        "accuracy": 0.6185
+      },
+      "dog_slice_AVG": {
+        "N": 49,
+        "observed_win": 0.5102,
+        "mean_pred_p": 0.4469,
+        "calibration_gap_pp": -6.33,
+        "brier": 0.2484
+      }
+    },
+    "2022": {
+      "QUARTERBACK_ELO": {
+        "N_games": 282,
+        "observed_home_win_rate": 0.5674,
+        "mean_p_home": 0.5656,
+        "calibration_gap_pp": -0.18,
+        "brier": 0.2239,
+        "accuracy": 0.6277
+      },
+      "XGBOOST": {
+        "N_games": 248,
+        "observed_home_win_rate": 0.5685,
+        "mean_p_home": 0.5516,
+        "calibration_gap_pp": -1.7,
+        "brier": 0.2278,
+        "accuracy": 0.621
+      },
+      "AVG_BOTH_CONSTITUENTS": {
+        "N_games": 248,
+        "observed_home_win_rate": 0.5685,
+        "mean_p_home": 0.5595,
+        "calibration_gap_pp": -0.9,
+        "brier": 0.2211,
+        "accuracy": 0.629
+      },
+      "dog_slice_AVG": {
+        "N": 46,
+        "observed_win": 0.4348,
+        "mean_pred_p": 0.4507,
+        "calibration_gap_pp": 1.59,
+        "brier": 0.2448
+      }
+    },
+    "2023": {
+      "QUARTERBACK_ELO": {
+        "N_games": 285,
+        "observed_home_win_rate": 0.5649,
+        "mean_p_home": 0.5656,
+        "calibration_gap_pp": 0.07,
+        "brier": 0.2336,
+        "accuracy": 0.6035
+      },
+      "XGBOOST": {
+        "N_games": 250,
+        "observed_home_win_rate": 0.584,
+        "mean_p_home": 0.5574,
+        "calibration_gap_pp": -2.66,
+        "brier": 0.2347,
+        "accuracy": 0.612
+      },
+      "AVG_BOTH_CONSTITUENTS": {
+        "N_games": 250,
+        "observed_home_win_rate": 0.584,
+        "mean_p_home": 0.5628,
+        "calibration_gap_pp": -2.12,
+        "brier": 0.2303,
+        "accuracy": 0.612
+      },
+      "dog_slice_AVG": {
+        "N": 58,
+        "observed_win": 0.2931,
+        "mean_pred_p": 0.4435,
+        "calibration_gap_pp": 15.04,
+        "brier": 0.2251
+      }
+    },
+    "2024": {
+      "QUARTERBACK_ELO": {
+        "N_games": 285,
+        "observed_home_win_rate": 0.5474,
+        "mean_p_home": 0.564,
+        "calibration_gap_pp": 1.66,
+        "brier": 0.212,
+        "accuracy": 0.6737
+      },
+      "XGBOOST": {
+        "N_games": 250,
+        "observed_home_win_rate": 0.544,
+        "mean_p_home": 0.5462,
+        "calibration_gap_pp": 0.22,
+        "brier": 0.2224,
+        "accuracy": 0.648
+      },
+      "AVG_BOTH_CONSTITUENTS": {
+        "N_games": 250,
+        "observed_home_win_rate": 0.544,
+        "mean_p_home": 0.5535,
+        "calibration_gap_pp": 0.95,
+        "brier": 0.2124,
+        "accuracy": 0.696
+      },
+      "dog_slice_AVG": {
+        "N": 43,
+        "observed_win": 0.3488,
+        "mean_pred_p": 0.4519,
+        "calibration_gap_pp": 10.3,
+        "brier": 0.2413
+      }
+    }
+  },
+  "d13_statistical_reversal": {
+    "DOG_AVG": {
+      "two_proportion_hit_rate": {
+        "n_disc": 131,
+        "n_conf": 101,
+        "wins_disc": 66,
+        "wins_conf": 32,
+        "hr_disc": 0.5038,
+        "hr_conf": 0.3168,
+        "pooled_hr": 0.4224,
+        "diff_hr_disc_minus_conf": 0.187,
+        "z": 2.859,
+        "p_two_tail": 0.0043,
+        "z_continuity_corrected": 2.725,
+        "p_two_tail_continuity_corrected": 0.0064
+      },
+      "roi_disc": 0.2684,
+      "roi_conf": -0.2309,
+      "roi_diff_disc_minus_conf": 0.4993,
+      "block_bootstrap": {
+        "metric_units": "difference DISCOVERY minus CONFIRMATION (positive = reversal)",
+        "blocks_are": "frozen (season, season_week) blocks per period",
+        "n_blocks_disc": 48,
+        "n_blocks_conf": 33,
+        "B": 10000,
+        "seed": 42,
+        "diff_hit_rate": {
+          "resamples": 10000,
+          "seed": 42,
+          "observed_diff": 0.187,
+          "boot_mean": 0.1875,
+          "boot_se": 0.0567,
+          "ci_2_5": 0.076,
+          "ci_97_5": 0.299,
+          "frac_diff_positive": 0.9994
+        },
+        "diff_roi": {
+          "resamples": 10000,
+          "seed": 42,
+          "observed_diff": 0.4993,
+          "boot_mean": 0.5005,
+          "boot_se": 0.141,
+          "ci_2_5": 0.227,
+          "ci_97_5": 0.7756,
+          "frac_diff_positive": 0.9999
+        }
+      }
+    },
+    "DOG_CORROB": {
+      "two_proportion_hit_rate": {
+        "n_disc": 85,
+        "n_conf": 55,
+        "wins_disc": 42,
+        "wins_conf": 15,
+        "hr_disc": 0.4941,
+        "hr_conf": 0.2727,
+        "pooled_hr": 0.4071,
+        "diff_hr_disc_minus_conf": 0.2214,
+        "z": 2.604,
+        "p_two_tail": 0.0092,
+        "z_continuity_corrected": 2.428,
+        "p_two_tail_continuity_corrected": 0.0152
+      },
+      "roi_disc": 0.2807,
+      "roi_conf": -0.3185,
+      "roi_diff_disc_minus_conf": 0.5993,
+      "block_bootstrap": {
+        "metric_units": "difference DISCOVERY minus CONFIRMATION (positive = reversal)",
+        "blocks_are": "frozen (season, season_week) blocks per period",
+        "n_blocks_disc": 39,
+        "n_blocks_conf": 28,
+        "B": 10000,
+        "seed": 42,
+        "diff_hit_rate": {
+          "resamples": 10000,
+          "seed": 42,
+          "observed_diff": 0.2214,
+          "boot_mean": 0.2214,
+          "boot_se": 0.0725,
+          "ci_2_5": 0.0813,
+          "ci_97_5": 0.3632,
+          "frac_diff_positive": 0.9991
+        },
+        "diff_roi": {
+          "resamples": 10000,
+          "seed": 42,
+          "observed_diff": 0.5993,
+          "boot_mean": 0.5994,
+          "boot_se": 0.1836,
+          "ci_2_5": 0.2456,
+          "ci_97_5": 0.9613,
+          "frac_diff_positive": 0.9996
+        }
+      }
+    }
+  }
+}
