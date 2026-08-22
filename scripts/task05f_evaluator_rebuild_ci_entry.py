@@ -2,7 +2,7 @@
 """CI entrypoint for Task05F evaluator evidence materialization.
 
 This wrapper changes no evaluator formulas, support rules, market shopping,
-settlement logic, or outcome usage.  It only makes Polars inspect the complete
+settlement logic, or outcome usage. It only makes Polars inspect the complete
 list-of-dicts schema when materializing evaluator artifacts, avoiding a
 constructor inference failure when early chronological rows are unsupported
 (and therefore contain null probability fields) while later rows contain
@@ -25,10 +25,18 @@ RUNNER = ROOT / "scripts" / "task05f_evaluator_rebuild_runner.py"
 _ORIGINAL_DATAFRAME = pl.DataFrame
 
 
-def _schema_stable_dataframe(data=None, *args, **kwargs):
-    if isinstance(data, list) and (not data or isinstance(data[0], dict)):
-        kwargs.setdefault("infer_schema_length", None)
-    return _ORIGINAL_DATAFRAME(data, *args, **kwargs)
+class _SchemaStableDataFrame(_ORIGINAL_DATAFRAME):
+    """Polars DataFrame type with full list-of-dict schema inference.
+
+    Keeping this as a class (rather than replacing ``pl.DataFrame`` with a
+    function) preserves third-party ``isinstance(..., pl.DataFrame)`` checks,
+    including scikit-learn's dataframe detection.
+    """
+
+    def __init__(self, data=None, *args, **kwargs):
+        if isinstance(data, list) and (not data or isinstance(data[0], dict)):
+            kwargs.setdefault("infer_schema_length", None)
+        super().__init__(data, *args, **kwargs)
 
 
 def main() -> None:
@@ -40,9 +48,10 @@ def main() -> None:
     parser.add_argument("--out", required=True)
     args = parser.parse_args()
 
-    # The runner imports the same already-loaded Polars module object, so this
-    # affects DataFrame materialization only; all evaluator math is untouched.
-    pl.DataFrame = _schema_stable_dataframe
+    # The runner imports the same already-loaded Polars module object. Using a
+    # DataFrame subclass changes only constructor schema inference while
+    # preserving pl.DataFrame as a type for sklearn compatibility.
+    pl.DataFrame = _SchemaStableDataFrame
     sys.argv = [
         str(RUNNER),
         "--config",
