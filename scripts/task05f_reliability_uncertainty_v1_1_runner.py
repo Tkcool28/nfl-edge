@@ -3,9 +3,9 @@
 
 This runner reuses the preregistered/audited Phase F v1 chronology, uncertainty,
 reliability, immutable evaluator gates, diagnostics, and output contract. The
-ONLY semantic override is the point-market staking anchor: Pinnacle's V3
-line+price distribution is translated to the actionable DK/FD wager's own exact
-line before evaluator edge is conservatively shrunk for bankroll sizing.
+ONLY wagering-semantic override is the point-market staking anchor: Pinnacle's
+V3 line+price distribution is translated to the actionable DK/FD wager's own
+exact line before evaluator edge is conservatively shrunk for bankroll sizing.
 
 The superseded Phase F v1 historical run was invalidated before result
 inspection. Locked V3/V4 evaluator probabilities, fair price, strict EV, Value,
@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import json
 from pathlib import Path
 from typing import Any
 
@@ -90,10 +91,32 @@ def _exact_offer_market_anchor(row: dict[str, Any]) -> float | None:
     )
 
 
+def _canonical_immutable_payload(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Compare immutable evaluator rows independent of Phase F processing order.
+
+    The locked component board historically sorts the string ``week`` field,
+    while Phase F intentionally processes zero-padded season-week blocks in true
+    chronology. The identity and immutable values must match, but list position
+    is not itself an evaluator field.
+    """
+    fields = list(BASE.IDENTITY_FIELDS) + list(BASE.IMMUTABLE_FIELDS)
+    payload = [{field: row.get(field) for field in fields} for row in rows]
+    payload.sort(
+        key=lambda item: json.dumps(
+            {field: item.get(field) for field in BASE.IDENTITY_FIELDS},
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        )
+    )
+    return payload
+
+
 def run(root: Path, config_path: Path, out: Path) -> None:
-    # Patch only the downstream market-anchor function used by the existing
-    # Phase F chronology. No evaluator/probability function is replaced.
+    # Patch only the downstream market-anchor semantic and order-independent
+    # reproduction proof. No evaluator/probability function is replaced.
     BASE._market_anchor = _exact_offer_market_anchor
+    BASE._immutable_payload = _canonical_immutable_payload
     BASE.VERSION = VERSION
     BASE.run(root, config_path, out)
 
