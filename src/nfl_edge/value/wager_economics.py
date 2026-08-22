@@ -129,6 +129,30 @@ def moneyline_settlement(side: str, home_score: int, away_score: int) -> Settlem
     return Settlement.WIN if selected_win else Settlement.LOSS
 
 
+def moneyline_outcome_probabilities(
+    model_win_probability: float,
+    *,
+    prior_ties: int,
+    prior_games: int,
+) -> OutcomeProbabilities:
+    """Convert a frozen binary win signal to WIN/PUSH/LOSS economics.
+
+    The football-model win ratio is preserved conditional on the game not tying.
+    Tie mass is estimated only from prior completed games with a fixed Jeffreys
+    Beta(1/2,1/2) estimator. No price/ROI information enters this conversion.
+    """
+    p_model = float(model_win_probability)
+    if not 0.0 <= p_model <= 1.0:
+        raise ValueError("model_win_probability must be in [0,1]")
+    n = int(prior_games)
+    t = int(prior_ties)
+    if n < 0 or t < 0 or t > n:
+        raise ValueError("invalid prior tie counts")
+    p_push = (t + 0.5) / (n + 1.0)
+    nonpush = 1.0 - p_push
+    return OutcomeProbabilities(nonpush * p_model, p_push, nonpush * (1.0 - p_model))
+
+
 def spread_residual_threshold(
     expected_home_margin: float,
     side: str,
@@ -205,10 +229,8 @@ def empirical_outcome_probabilities(
 def _jeffreys_probabilities(win: int, push: int, loss: int, *, push_possible: bool) -> OutcomeProbabilities:
     """Preregistered fixed Jeffreys smoothing; never fitted to ROI."""
     if push_possible:
-        # Symmetric Dirichlet(1/2, 1/2, 1/2) over WIN/PUSH/LOSS.
         den = float(win + push + loss) + 1.5
         return OutcomeProbabilities((win + 0.5) / den, (push + 0.5) / den, (loss + 0.5) / den)
-    # Push is structurally impossible: Jeffreys Beta(1/2,1/2) over WIN/LOSS.
     den = float(win + loss) + 1.0
     return OutcomeProbabilities((win + 0.5) / den, 0.0, (loss + 0.5) / den)
 
