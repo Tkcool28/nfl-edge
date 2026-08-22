@@ -11,9 +11,7 @@ on:
       - 'src/nfl_edge/value/**'
       - 'scripts/task05f_evaluator_final_runner.py'
       - 'scripts/task05f_spread_contribution_diagnostic.py'
-      - 'tests/value/test_task05f_evaluator_final.py'
-      - 'tests/value/test_task05f_reliability_oos_support.py'
-      - 'tests/value/test_task05f_manual_offer_ood.py'
+      - 'tests/value/test_task05f_*.py'
       - 'config/task05f_evaluator_final_v1.yaml'
       - 'docs/task05f_evaluator_final_v1.md'
       - '.github/workflows/task05f-evaluator-validation.yml'
@@ -59,11 +57,7 @@ jobs:
           fi
 
       - name: Run evaluator contract tests
-        run: |
-          pytest -q \
-            tests/value/test_task05f_evaluator_final.py \
-            tests/value/test_task05f_reliability_oos_support.py \
-            tests/value/test_task05f_manual_offer_ood.py
+        run: pytest -q tests/value/test_task05f_*.py
 
       - name: Compile runtime
         run: |
