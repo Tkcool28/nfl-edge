@@ -7,7 +7,7 @@ import math
 from .reliability import RELIABILITY_HAIRCUT, uncertainty_factor
 
 MAX_BREAK_EVEN_CONCESSION = 0.015
-STATUSES = ("VALUE", "PLAYABLE", "LEAN", "PASS")
+STATUSES = ("VALUE", "PLAYABLE", "LEAN", "PASS", "UNSUPPORTED")
 
 
 @dataclass(frozen=True)
@@ -44,10 +44,10 @@ def assess_play_through(
     uncertainty_radius: float | None,
     maximum_concession: float = MAX_BREAK_EVEN_CONCESSION,
 ) -> PlayThroughAssessment:
+    if not supported or reliability == "UNSUPPORTED":
+        return PlayThroughAssessment(0.0, 0.0, None, None, None, "UNSUPPORTED")
     if (
-        not supported
-        or reliability == "UNSUPPORTED"
-        or strict_expected_value is None
+        strict_expected_value is None
         or conditional_nonpush_probability is None
         or current_break_even_probability is None
     ):
