@@ -4,6 +4,7 @@ from nfl_edge.value.candidate_table import (
     build_candidate_row,
     make_candidate_id,
 )
+from nfl_edge.value.play_through import STATUSES, assess_play_through
 
 
 def _upstream(price=-150, book="draftkings", snapshot="t1"):
@@ -44,3 +45,32 @@ def test_candidate_preserves_dk_fd_pinnacle_display_context():
     assert row["fanduel_price_american"] == -145
     assert row["pinnacle_price_american"] == -148
     assert row["actionable_book"] == "draftkings"
+
+
+def test_play_through_contract_keeps_unsupported_distinct_from_pass():
+    assert "UNSUPPORTED" in STATUSES
+    assessment = assess_play_through(
+        supported=False,
+        strict_expected_value=None,
+        conditional_nonpush_probability=None,
+        current_break_even_probability=None,
+        reliability="UNSUPPORTED",
+        uncertainty_radius=None,
+    )
+    assert assessment.status == "UNSUPPORTED"
+
+
+def test_candidate_normalizes_unsupported_upstream_status_to_unsupported():
+    upstream = _upstream()
+    upstream.update(
+        {
+            "supported": False,
+            "reliability": "UNSUPPORTED",
+            "price_status": "PASS",
+            "reason": "out_of_support",
+        }
+    )
+    row = build_candidate_row(upstream, CandidateOfferContext())
+    assert row["supported"] is False
+    assert row["reliability"] == "UNSUPPORTED"
+    assert row["price_status"] == "UNSUPPORTED"
