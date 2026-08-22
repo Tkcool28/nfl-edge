@@ -85,7 +85,7 @@ def test_price_aware_point_beta_is_bounded():
         threshold = float((i % 7) - 3)
         p_market = 0.50
         model = threshold + 2.0
-        actual = threshold + 5.0
+        actual = threshold + float((i % 11) - 3)
         rows.append((model, threshold, p_market, actual))
     state = fit_price_aware_point_calibration(rows, minimum_prior=128)
     assert state.supported
