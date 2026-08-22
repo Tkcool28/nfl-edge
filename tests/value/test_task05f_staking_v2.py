@@ -196,8 +196,8 @@ def test_outcome_fields_and_2025_are_rejected():
         recommend_stake_v2(_candidate(season=2025), UserRiskProfile(100.0))
 
 
-def test_deterministic_currency_rounding_and_exposure_cap_never_overshoots():
+def test_deterministic_currency_rounding_and_cap_never_overshoots():
     row = _candidate(edge=1.0, confidence=1.0, concession=0.0)
     profile = UserRiskProfile(1.01, RiskStyle.VERY_AGGRESSIVE)
     rec = recommend_stake_v2(row, profile)
-    assert rec.recommended_stake <= pytest.approx(1.01 * 0.05, abs=0.005)
+    assert rec.recommended_stake <= 1.01 * 0.05 + 1e-12
