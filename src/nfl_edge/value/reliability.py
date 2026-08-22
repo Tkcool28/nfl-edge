@@ -111,8 +111,13 @@ def make_evidence(
     constituent_disagreement: float,
     reliability_state: ReliabilityState,
 ) -> ReliabilityEvidence:
+    # HIGH/MEDIUM support must exist in both the accepted-family fit and the
+    # accepted evaluator's strictly-prior OOS calibration history. Using only
+    # the larger fit-training count could prematurely promote a tier before
+    # enough OOS reliability evidence existed.
+    effective_support_n = min(int(support_n), int(reliability_state.support_n))
     return ReliabilityEvidence(
-        support_n=int(support_n),
+        support_n=effective_support_n,
         uncertainty=reliability_state.radius,
         support_distance=float(support_distance),
         constituent_disagreement=float(constituent_disagreement),
