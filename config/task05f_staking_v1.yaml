@@ -1,0 +1,146 @@
+version: task05f_staking_v1
+status: PREREGISTERED_BEFORE_ANY_STAKING_HISTORICAL_BANKROLL_SIMULATION
+scope: user_level_risk_sizing_downstream_of_frozen_candidate_and_selector_layers
+
+architecture_source: NFL_EDGE_MARKET_EVALUATION_LAYER_V1_1_UPDATED_PLAN
+
+account_state:
+  required:
+    - bankroll
+    - staking_strategy
+  strategies:
+    - HALF_KELLY
+    - QUARTER_KELLY
+    - FLAT
+  flat_modes:
+    - BANKROLL_DERIVED
+    - MANUAL
+  strategy_is_global_across_app: true
+  bankroll_must_be_positive: true
+  manual_bankroll_updates_supported: true
+
+candidate_inputs:
+  probability_for_kelly: staking_probability
+  displayed_probability_not_used_for_kelly: actionable_probability
+  price: actionable_decimal_price
+  reliability: reliability
+  status: price_status
+  strict_value: strict_positive_value
+  supported: supported
+  staking_probability_semantics: conditional_nonpush_selected_side_probability
+
+staking_eligibility:
+  supported_required: true
+  allowed_reliability: [HIGH, MEDIUM]
+  low_reliability: NO_RECOMMENDED_STAKE
+  unsupported: NO_RECOMMENDED_STAKE
+  lean: NO_RECOMMENDED_STAKE
+  pass: NO_RECOMMENDED_STAKE
+
+kelly:
+  formula:
+    b: "actionable_decimal_price - 1"
+    p: staking_probability
+    q: "1 - staking_probability"
+    full_kelly_fraction: "(b*p - q) / b"
+  push_semantics: >-
+    staking_probability is conditional on a non-push settlement, so the standard
+    binary Kelly fraction is exactly equivalent to the WIN/PUSH/LOSS log-growth
+    solution when push wealth multiplier is 1.
+  HALF_KELLY:
+    multiplier: 0.50
+  QUARTER_KELLY:
+    multiplier: 0.25
+  hard_cap_fraction_of_bankroll: 0.05
+  requires_price_status: VALUE
+  requires_strict_positive_value: true
+  requires_positive_staking_kelly_edge: true
+  full_kelly_lte_zero: STAKE_ZERO
+  playable_never_gets_kelly_stake: true
+  kelly_may_not_create_value: true
+
+flat:
+  qualifying_price_status: [VALUE, PLAYABLE]
+  requires_reliability: [HIGH, MEDIUM]
+  BANKROLL_DERIVED:
+    fraction_of_bankroll: 0.01
+  MANUAL:
+    amount_must_be_positive: true
+    amount_must_not_exceed_bankroll: true
+    overrides_bankroll_derived_amount: true
+    caution_always_shown: true
+    caution_copy: >-
+      Manual flat stake overrides bankroll-based sizing. Larger fixed stakes can
+      create greater bankroll drawdowns than the default bankroll-based amount.
+  same_flat_amount_for_every_qualifying_wager: true
+
+rounding:
+  currency_decimals: 2
+  rule: nearest_cent_half_up
+  positive_fraction_rounding_to_zero: STAKE_ZERO
+
+output_contract:
+  - strategy
+  - bankroll
+  - recommended_stake
+  - recommended_stake_fraction
+  - reason
+  - full_kelly_fraction
+  - fractional_kelly_before_cap
+  - cap_applied
+  - manual_flat_caution
+  - staking_probability
+  - actionable_decimal_price
+
+reason_codes:
+  - STAKE_RECOMMENDED
+  - UNSUPPORTED
+  - LOW_RELIABILITY
+  - STATUS_NOT_ACTIONABLE
+  - PLAYABLE_NOT_KELLY_VALUE
+  - NOT_STRICT_VALUE
+  - NO_POSITIVE_STAKING_EDGE
+  - ROUNDED_TO_ZERO
+
+integrity:
+  no_model_change: true
+  no_probability_change: true
+  no_selector_change: true
+  no_play_through_change: true
+  no_historical_profit_input: true
+  no_kelly_fraction_tuning_from_roi: true
+  no_cap_tuning_from_roi: true
+  no_2025: true
+
+required_tests:
+  - known_full_kelly_example
+  - half_kelly_is_half_full_kelly_before_cap
+  - quarter_kelly_is_quarter_full_kelly_before_cap
+  - five_percent_cap_enforced
+  - kelly_zero_when_full_kelly_nonpositive
+  - kelly_zero_on_playable_even_if_math_would_be_positive
+  - flat_derived_is_one_percent_bankroll
+  - flat_manual_override_exact_and_caution
+  - manual_flat_cannot_exceed_bankroll
+  - low_reliability_zero_stake
+  - unsupported_zero_stake
+  - lean_and_pass_zero_stake
+  - same_flat_amount_across_qualifying_value_and_playable
+  - staking_probability_not_actionable_probability_drives_kelly
+  - deterministic_currency_rounding
+
+validation_policy:
+  2020_2024_bankroll_simulation_is_diagnostic_only: true
+  staking_parameters_may_not_change_after_simulation: true
+  independent_review_required_before_2025: true
+  sealed_2025_is_clean_holdout: true
+
+promotion:
+  production_promotion: false
+  next_required_steps:
+    - implement_staking_engine_and_account_profile
+    - synthetic_contract_tests
+    - structural_product_interface
+    - diagnostic_2020_2024_bankroll_simulation_without_retuning
+    - independent_review
+    - open_2025_once
