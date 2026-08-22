@@ -60,6 +60,9 @@ def build_candidate_row(upstream: Mapping[str, Any], context: CandidateOfferCont
     line = upstream.get("line")
     price = int(upstream["american_odds"])
     book = str(upstream["sportsbook"]).lower()
+    supported = bool(upstream.get("supported"))
+    reliability = upstream.get("reliability")
+    price_status = "UNSUPPORTED" if (not supported or reliability == "UNSUPPORTED") else upstream.get("price_status")
     row: dict[str, Any] = {
         "candidate_id": candidate_id,
         "offer_id": make_offer_id(candidate_id, book, line, price, snapshot),
@@ -91,14 +94,14 @@ def build_candidate_row(upstream: Mapping[str, Any], context: CandidateOfferCont
         "strict_positive_value": upstream.get("strict_positive_value"),
         "evaluated_edge_probability": upstream.get("evaluated_edge_probability"),
         "staking_edge_probability": upstream.get("staking_edge_probability"),
-        "supported": upstream.get("supported"),
+        "supported": supported,
         "reason": upstream.get("reason"),
-        "reliability": upstream.get("reliability"),
+        "reliability": reliability,
         "uncertainty": upstream.get("uncertainty"),
         "support_n": upstream.get("support_n"),
         "support_distance": upstream.get("support_distance"),
         "evaluator_version": upstream.get("evaluator_version"),
-        "price_status": upstream.get("price_status"),
+        "price_status": price_status,
         "play_through_confidence_multiplier": upstream.get("play_through_confidence_multiplier"),
         "play_through_break_even_concession": upstream.get("play_through_break_even_concession"),
         "play_through_break_even_probability": upstream.get("play_through_break_even_probability"),
