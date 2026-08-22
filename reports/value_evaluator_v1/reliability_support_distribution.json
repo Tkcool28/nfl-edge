@@ -1,0 +1,177 @@
+{
+  "config_sha": "74656de2f8ef03c0f7b1446d701856ef97fbb8136da4c01234d27875a8bf75c7",
+  "distribution": {
+    "moneyline": {
+      "pinnacle": {
+        "total": 2816,
+        "reliability": {
+          "UNSUPPORTED": 328,
+          "LOW": 1509,
+          "MEDIUM": 935,
+          "HIGH": 44
+        },
+        "unsupported_reasons": {
+          "out_of_support": 112,
+          "insufficient_prior_support": 216
+        }
+      },
+      "raw_qbelo": {
+        "total": 2816,
+        "reliability": {
+          "UNSUPPORTED": 328,
+          "LOW": 1991,
+          "MEDIUM": 497
+        },
+        "unsupported_reasons": {
+          "out_of_support": 112,
+          "insufficient_prior_support": 216
+        }
+      },
+      "raw_xgb": {
+        "total": 2816,
+        "reliability": {
+          "UNSUPPORTED": 614,
+          "LOW": 1293,
+          "MEDIUM": 709,
+          "HIGH": 200
+        },
+        "unsupported_reasons": {
+          "missing_xgb": 350,
+          "out_of_support": 48,
+          "insufficient_prior_support": 216
+        }
+      },
+      "exact_avg": {
+        "total": 2816,
+        "reliability": {
+          "UNSUPPORTED": 614,
+          "LOW": 1479,
+          "MEDIUM": 723
+        },
+        "unsupported_reasons": {
+          "exact_avg_requires_both_models": 350,
+          "out_of_support": 48,
+          "insufficient_prior_support": 216
+        }
+      },
+      "global_shrinkage": {
+        "total": 2816,
+        "reliability": {
+          "UNSUPPORTED": 614,
+          "LOW": 1369,
+          "MEDIUM": 795,
+          "HIGH": 38
+        },
+        "unsupported_reasons": {
+          "exact_avg_requires_both_models": 350,
+          "out_of_support": 48,
+          "insufficient_prior_support": 216
+        }
+      },
+      "reliability_aware_shrinkage": {
+        "total": 2816,
+        "reliability": {
+          "UNSUPPORTED": 614,
+          "LOW": 1369,
+          "MEDIUM": 747,
+          "HIGH": 86
+        },
+        "unsupported_reasons": {
+          "exact_avg_requires_both_models": 350,
+          "out_of_support": 48,
+          "insufficient_prior_support": 216
+        }
+      },
+      "strong_logistic": {
+        "total": 2494,
+        "reliability": {
+          "LOW": 719,
+          "UNSUPPORTED": 292,
+          "MEDIUM": 873,
+          "HIGH": 610
+        },
+        "unsupported_reasons": {
+          "out_of_support": 6,
+          "exact_avg_requires_both_models": 286
+        }
+      }
+    },
+    "spread": {
+      "normal_cdf": {
+        "total": 2760,
+        "reliability": {
+          "UNSUPPORTED": 261,
+          "LOW": 393,
+          "MEDIUM": 1984,
+          "HIGH": 122
+        },
+        "unsupported_reasons": {
+          "out_of_support": 40,
+          "insufficient_prior_support": 221
+        }
+      },
+      "calibrated_normal": {
+        "total": 2501,
+        "reliability": {
+          "LOW": 254,
+          "UNSUPPORTED": 2,
+          "MEDIUM": 1364,
+          "HIGH": 881
+        },
+        "unsupported_reasons": {
+          "out_of_support": 2
+        }
+      },
+      "strong_logistic": {
+        "total": 2501,
+        "reliability": {
+          "LOW": 254,
+          "UNSUPPORTED": 2,
+          "MEDIUM": 1310,
+          "HIGH": 935
+        },
+        "unsupported_reasons": {
+          "out_of_support": 2
+        }
+      }
+    },
+    "total": {
+      "normal_cdf": {
+        "total": 2790,
+        "reliability": {
+          "UNSUPPORTED": 272,
+          "LOW": 2121,
+          "MEDIUM": 397
+        },
+        "unsupported_reasons": {
+          "out_of_support": 44,
+          "insufficient_prior_support": 228
+        }
+      },
+      "calibrated_normal": {
+        "total": 2526,
+        "reliability": {
+          "LOW": 328,
+          "UNSUPPORTED": 8,
+          "MEDIUM": 1610,
+          "HIGH": 580
+        },
+        "unsupported_reasons": {
+          "out_of_support": 8
+        }
+      },
+      "strong_logistic": {
+        "total": 2526,
+        "reliability": {
+          "LOW": 360,
+          "UNSUPPORTED": 8,
+          "MEDIUM": 1612,
+          "HIGH": 546
+        },
+        "unsupported_reasons": {
+          "out_of_support": 8
+        }
+      }
+    }
+  }
+}
