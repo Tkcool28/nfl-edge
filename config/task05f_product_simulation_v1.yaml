@@ -1,0 +1,116 @@
+version: task05f_product_simulation_v1
+status: PREREGISTERED_BEFORE_V3_STAKING_2020_2024_PRODUCT_SIMULATION
+scope: diagnostic_end_to_end_product_and_bankroll_behavior_not_selector_acceptance
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+slate_key: block
+expected_slates: 109
+
+upstream:
+  candidate_table: config/task05f_candidate_table_v1.yaml
+  selector: config/task05f_selectors_v3_capability_prereg.yaml
+  staking: config/task05f_staking_v1.yaml
+  product_interface: config/task05f_product_interface_v1.yaml
+
+methodology_warning: >-
+  Selector V3 was designed after Selector V1/V2 development outcomes were
+  observed. Therefore 2020-2024 V3 results are post-hoc structural/product
+  diagnostics only. They cannot promote V3, change V3, tune staking, or substitute
+  for sealed-2025 holdout evidence.
+results_label: OBSERVATIONAL_ONLY_NOT_TUNED
+
+simulated_profiles:
+  - id: HALF_KELLY_100
+    initial_bankroll: 100.0
+    staking_strategy: HALF_KELLY
+  - id: QUARTER_KELLY_100
+    initial_bankroll: 100.0
+    staking_strategy: QUARTER_KELLY
+  - id: FLAT_1PCT_100
+    initial_bankroll: 100.0
+    staking_strategy: FLAT
+    flat_stake_mode: BANKROLL_DERIVED
+manual_flat_not_simulated: true
+
+selection_timing:
+  select_cards_before_outcome_join: true
+  stake_from_bankroll_at_start_of_slate: true
+  all_wagers_on_same_slate_are_concurrent: true
+  settle_after_all_slate_stakes_are_frozen: true
+
+bankroll_tracks:
+  per_card:
+    enabled: true
+    cards: [HIGH_HIT_RATE, BALANCED, VALUE]
+    independent_bankroll_per_profile_card_pair: true
+  combined_unique_top_cards:
+    enabled: true
+    duplicate_candidate_id_within_slate_is_one_wager: true
+    duplicate_card_appearance_never_multiplies_stake: true
+    all_unique_wagers_use_same_start_of_slate_bankroll: true
+
+settlement:
+  unit_profit_source: historical_outcomes.realized_profit
+  bankroll_update: "ending_bankroll = starting_bankroll + sum(recommended_stake * realized_profit_per_unit)"
+  push_profit: 0.0
+  zero_stake_rows_do_not_change_bankroll: true
+  bankroll_floor: 0.0
+  if_bankroll_reaches_zero: NO_FURTHER_STAKES
+
+reporting:
+  per_profile_card:
+    - starting_bankroll
+    - ending_bankroll
+    - return_pct
+    - recommended_card_count
+    - positive_stake_count
+    - zero_stake_actionable_count
+    - total_amount_staked
+    - max_drawdown_pct
+    - minimum_bankroll
+    - wins
+    - losses
+    - pushes
+  combined_unique_portfolio:
+    - starting_bankroll
+    - ending_bankroll
+    - return_pct
+    - unique_positive_stake_wagers
+    - total_amount_staked
+    - maximum_single_slate_exposure_pct
+    - max_drawdown_pct
+    - minimum_bankroll
+  product:
+    - no_play_counts_by_card
+    - duplicate_card_slates
+    - high_hit_value_vs_playable_mix
+    - zero_kelly_stake_on_playable_count
+
+acceptance:
+  historical_roi_is_not_acceptance_gate: true
+  historical_hit_rate_is_not_acceptance_gate: true
+  coverage_is_not_acceptance_gate: true
+  bankroll_results_may_not_change_staking_parameters: true
+  bankroll_results_may_not_change_selector_v3: true
+  hard_gates_only:
+    - deterministic_replay
+    - outcome_join_after_selection
+    - start_of_slate_stake_freeze
+    - duplicate_wager_dedup_in_combined_portfolio
+    - exact_staking_v1_reproduction
+    - sealed_2025_firewall
+
+integrity:
+  no_model_change: true
+  no_evaluator_change: true
+  no_play_through_change: true
+  no_selector_change: true
+  no_staking_change: true
+  no_roi_tuning: true
+  no_2025: true
+
+next_after_valid_diagnostic:
+  - freeze_backend_product_interfaces
+  - independent_review
+  - open_sealed_2025_once
