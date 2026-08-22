@@ -1,0 +1,134 @@
+version: task05f_selectors_v3_capability_prereg
+status: PREREGISTERED_AFTER_V1_V2_EVIDENCE_BEFORE_V3_OR_2025_OUTCOME_SCORING
+scope: deterministic_primary_card_policy_from_preexisting_evaluator_capability_status
+
+parent_selector_evidence:
+  v1_report: reports/task05f_selectors_v1/validation_summary.md
+  v2_report: reports/task05f_selectors_v2/validation_summary.md
+  v1_v2_outcomes_may_not_define_v3_rules: true
+
+upstream_capability_source:
+  locked_config: config/task05f_evaluator_locked_v1.yaml
+  rule: >-
+    Market eligibility is derived only from evaluator capability status that was
+    locked before selector V1/V2 historical evidence. Selector V1/V2 ROI, hit
+    rate, coverage, market mix, and disagreement magnitude are prohibited inputs.
+
+market_capability_registry:
+  moneyline:
+    probability_capability: ACCEPTED
+    value_capability: NOT_DEMONSTRATED_FULL_BOARD
+    locked_evidence_status: ML_FAIR_VALUE_BASE_ACCEPTED_FULL_BOARD_VALUE_EDGE_NOT_PROVEN
+  spread:
+    probability_capability: ACCEPTED
+    value_capability: ACCEPTED
+    locked_evidence_status: ACCEPTED_FROZEN
+  total:
+    probability_capability: ACCEPTED_WEAK
+    value_capability: NOT_DEMONSTRATED
+    locked_evidence_status: TOTALS_VALUE_WEAK_NO_DEMONSTRATED_EDGE
+
+product_semantics:
+  high_hit_rate_requires_probability_capability: true
+  balanced_requires_demonstrated_value_capability: true
+  value_requires_demonstrated_value_capability: true
+  raw_football_direction_is_primary_card_gate: false
+  raw_football_disagreement_reserved_for_sleeper_watch_and_diagnostics: true
+  no_market_is_promoted_by_v1_v2_selector_roi: true
+
+common_eligibility:
+  supported_required: true
+  allowed_reliability: [HIGH, MEDIUM]
+  low_reliability: INFORMATIONAL_EXPLORER_ONLY
+  unsupported: NEVER_SELECT
+  sealed_2025_loaded: false
+
+high_hit_rate:
+  capability_requirement: probability_capability_in_[ACCEPTED,ACCEPTED_WEAK]
+  markets_from_capability_registry: [moneyline, spread, total]
+  price_status: [VALUE, PLAYABLE]
+  ranking: inherit_selector_v1_high_hit_rate_exactly
+  primary_rank: actionable_probability_descending
+  strict_positive_ev_required: false
+  football_direction_gate: false
+
+balanced:
+  capability_requirement: value_capability_ACCEPTED
+  currently_eligible_markets: [spread]
+  price_status: [VALUE]
+  strict_positive_value: true
+  ranking: inherit_selector_v1_balanced_exactly
+  ranking_method: slate_relative_minimax_competition_rank
+  football_direction_gate: false
+
+value:
+  capability_requirement: value_capability_ACCEPTED
+  currently_eligible_markets: [spread]
+  price_status: [VALUE]
+  strict_positive_value: true
+  ranking: inherit_selector_v1_value_exactly
+  primary_rank: expected_value_descending
+  football_direction_gate: false
+
+no_play_policy:
+  inherit_selector_v1_exactly: true
+  forced_action: false
+
+duplicate_policy:
+  inherit_selector_v1_exactly: true
+  duplicate_wager_across_cards_allowed: true
+  forced_diversification: false
+
+sleeper_watch:
+  separate_from_primary_cards: true
+  raw_football_disagreement_may_be_used: true
+  exact_formula_status: DEFERRED
+
+validation_policy:
+  development_2020_2024_status: >-
+    Selector outcomes have already been observed under V1 and V2. Any V3 replay
+    on 2020-2024 is structural/post-hoc only and cannot promote or tune V3.
+  historical_roi_or_hit_rate_acceptance_on_2020_2024: false
+  structural_replay_without_outcomes_allowed: true
+  independent_review_required_before_opening_2025: true
+  sealed_2025_is_next_clean_selector_outcome_evidence: true
+  no_2025_before_staking_and_product_interfaces_frozen: true
+
+integrity:
+  no_model_fit: true
+  no_probability_change: true
+  no_reliability_change: true
+  no_play_through_change: true
+  no_staking_change_in_this_phase: true
+  no_ev_threshold_change: true
+  no_disagreement_gate: true
+  no_disagreement_magnitude_threshold: true
+  no_price_bucket_search: true
+  no_roi_bucket_search: true
+  no_market_specific_roi_rule: true
+  no_selector_v1_v2_outcome_input: true
+  no_2025: true
+
+required_tests:
+  - high_hit_can_select_moneyline_or_spread_from_probability_capable_markets
+  - high_hit_still_allows_playable
+  - balanced_rejects_moneyline_and_total_without_accepted_value_capability
+  - value_rejects_moneyline_and_total_without_accepted_value_capability
+  - balanced_and_value_accept_supported_medium_or_high_strict_value_spread
+  - raw_football_direction_does_not_gate_primary_cards
+  - v1_ranking_order_is_preserved_inside_each_v3_eligible_universe
+  - no_play_is_valid
+  - duplicate_selection_is_allowed
+  - low_and_unsupported_never_selected
+  - deterministic_ties
+  - outcome_fields_rejected
+  - sealed_2025_firewall
+
+promotion:
+  production_promotion: false
+  next_required_steps:
+    - implement_and_synthetic_test_v3_policy
+    - implement_user_level_staking
+    - freeze_product_interfaces
+    - independent_architecture_review
+    - open_sealed_2025_once_for_clean_selector_and_staking_holdout
