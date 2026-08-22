@@ -23,7 +23,7 @@ from .contracts import (
     ReliabilityState,
     SEALED_SEASONS,
 )
-from .market_math import american_to_decimal, break_even_probability
+from .market_math import break_even_probability
 from .reliability import (
     conservative_staking_probability,
     make_evidence,
@@ -294,9 +294,13 @@ def evaluate_point_v3(
             float(offer.line),
         )
 
+    # The support envelope is learned from historical sharp-market thresholds,
+    # but the value checked against it must be the exact wager being evaluated.
+    # This keeps arbitrary/manual offers from bypassing OOD via a normal-looking
+    # Pinnacle anchor while presenting an extreme actionable line.
     support_values = {
         "model_market_gap": abs(model_value - mu_market),
-        "anchor_threshold_magnitude": abs(float(anchor.threshold)),
+        "anchor_threshold_magnitude": abs(float(offer.line)),
     }
     distance = overall_support_distance(support_values, state.support_features)
     staking_anchor = _point_market_anchor_at_offer(
