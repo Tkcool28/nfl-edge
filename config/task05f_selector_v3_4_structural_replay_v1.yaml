@@ -1,0 +1,51 @@
+version: task05f_selector_v3_4_structural_replay_v1
+status: PREREGISTERED_BEFORE_STRUCTURAL_REPLAY_EXECUTION
+scope: no_outcome_coverage_and_suppression_diagnostic
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+expected_candidate_rows: 8448
+expected_slates: 109
+
+inputs:
+  candidate_table: config/task05f_candidate_table_v1.yaml
+  evaluated_wager_board: config/task05f_evaluated_wager_board_v1_prereg.yaml
+  selector: config/task05f_selectors_v3_4_thin_prereg.yaml
+  staking_units: config/task05f_staking_v2_1_units_prereg.yaml
+
+allowed_diagnostics:
+  - evaluator_actionable_counts
+  - actionable_market_status_reliability_mix
+  - low_reliability_actionable_count
+  - highest_football_confidence_candidate_actionability
+  - blocked_price_status_support_reliability_reason_mix
+  - card_coverage
+  - card_market_status_reliability_mix
+  - card_unit_ranges
+  - card_football_confidence_proxy_ranges
+  - distinct_card_count_per_slate
+
+forbidden:
+  open_historical_outcome_sidecar: true
+  score_wins_losses_pushes: true
+  calculate_roi: true
+  simulate_bankroll: true
+  tune_thresholds: true
+  change_evaluator_from_results: true
+  change_selector_from_results: true
+  load_2025: true
+
+determinism:
+  run_twice: true
+  require_byte_identical_json_outputs: true
+
+required_outputs:
+  - structural_summary.json
+  - selector_picks_no_outcomes.json
+  - provenance.json
+
+integrity:
+  candidate_fields_preserved: true
+  no_outcome_fields: true
+  no_historical_performance_output: true
+  no_2025: true
