@@ -56,7 +56,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "post_selector_evidence_contract_development",\n  "sealed_season": 2025,\n  "historical_play_through_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_scoring": "DISABLED_ON_ORDINARY_PUSHES"\n}\n' \
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "post_selector_evidence_contract_development",\n  "sealed_season": 2025,\n  "historical_play_through_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v2_scoring": "DISABLED_ON_ORDINARY_PUSHES"\n}\n' \
             "$GITHUB_SHA" \
             '3ed8d740a88b59d46e27e206f39757307a6a13da' \
             > artifacts/task05f/ci_provenance.json
@@ -68,6 +68,7 @@ jobs:
           sha256sum config/task05f_selectors_v1_prereg.yaml > artifacts/task05f/selectors_v1_prereg_sha256.txt
           sha256sum config/task05f_selectors_v1_implementation_lock.yaml > artifacts/task05f/selectors_v1_implementation_lock_sha256.txt
           sha256sum config/task05f_selectors_v1_historical_eval_lock.yaml > artifacts/task05f/selectors_v1_historical_eval_lock_sha256.txt
+          sha256sum config/task05f_selectors_v2_prereg.yaml > artifacts/task05f/selectors_v2_prereg_sha256.txt
 
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
@@ -76,10 +77,15 @@ jobs:
         run: |
           python -m py_compile scripts/task05f_candidate_table_v1_runner.py
           python -m py_compile scripts/task05f_selectors_v1_runner.py
+          python -m py_compile scripts/task05f_selectors_v2_runner.py
           python - <<'PY'
           from nfl_edge.value.selectors import select_primary_cards
+          from nfl_edge.value.selectors_v2 import football_signal_support, select_primary_cards_v2
           assert callable(select_primary_cards)
-          print('selector_import=PASS')
+          assert callable(football_signal_support)
+          assert callable(select_primary_cards_v2)
+          print('selector_v1_import=PASS')
+          print('selector_v2_import=PASS')
           PY
 
       - name: Verify frozen post-probability and selector contracts
@@ -96,8 +102,15 @@ jobs:
           grep -q 'balanced_equal_value_rank: competition_min_rank' config/task05f_selectors_v1_implementation_lock.yaml
           grep -q 'status: LOCKED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_historical_eval_lock.yaml
           grep -q 'results_label: OBSERVATIONAL_ONLY_NOT_TUNED' config/task05f_selectors_v1_historical_eval_lock.yaml
+          grep -q 'status: PREREGISTERED_BEFORE_V2_HISTORICAL_SCORING' config/task05f_selectors_v2_prereg.yaml
+          grep -q 'threshold: 0.0' config/task05f_selectors_v2_prereg.yaml
+          grep -q 'magnitude_used_in_ranking: false' config/task05f_selectors_v2_prereg.yaml
+          grep -q 'inherit_v1_rankings_exactly: true' config/task05f_selectors_v2_prereg.yaml
+          grep -q 'no_disagreement_magnitude_threshold: true' config/task05f_selectors_v2_prereg.yaml
+          grep -q 'no_historical_roi_input: true' config/task05f_selectors_v2_prereg.yaml
           echo 'historical_play_through_scoring=DISABLED'
-          echo 'historical_selector_scoring=DISABLED'
+          echo 'historical_selector_v1_scoring=DISABLED'
+          echo 'historical_selector_v2_scoring=DISABLED'
 
       - name: Upload contract evidence
         if: always()
