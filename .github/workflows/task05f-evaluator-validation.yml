@@ -57,7 +57,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "selector_v3_1_staking_v2_contract_development",\n  "sealed_season": 2025,\n  "historical_play_through_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v1_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v2_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v3_scoring": "DISABLED",\n  "historical_selector_v3_1_scoring": "DISABLED",\n  "historical_staking_v1_bankroll_simulation": "DISABLED",\n  "historical_staking_v2_bankroll_simulation": "DISABLED",\n  "product_simulation_v1": "SUPERSEDED_NOT_EVIDENCE",\n  "selector_v3_1_2020_2024_outcome_acceptance": false\n}\n' \
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "selector_v3_1_staking_v2_product_v2_contract_development",\n  "sealed_season": 2025,\n  "historical_play_through_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v1_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v2_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v3_scoring": "DISABLED",\n  "historical_selector_v3_1_scoring": "DISABLED",\n  "historical_staking_v1_bankroll_simulation": "DISABLED",\n  "historical_staking_v2_bankroll_simulation": "DISABLED",\n  "product_simulation_v1": "SUPERSEDED_NOT_EVIDENCE",\n  "product_simulation_v2_execution": "DISABLED_ON_ORDINARY_PUSHES",\n  "selector_v3_1_2020_2024_outcome_acceptance": false\n}\n' \
             "$GITHUB_SHA" \
             '3ed8d740a88b59d46e27e206f39757307a6a13da' \
             > artifacts/task05f/ci_provenance.json
@@ -74,11 +74,12 @@ jobs:
           sha256sum config/task05f_selectors_v3_1_product_prereg.yaml > artifacts/task05f/selectors_v3_1_product_prereg_sha256.txt
           sha256sum config/task05f_staking_v1.yaml > artifacts/task05f/staking_v1_prereg_sha256.txt
           sha256sum config/task05f_staking_v2_units_prereg.yaml > artifacts/task05f/staking_v2_units_prereg_sha256.txt
+          sha256sum config/task05f_product_simulation_v2.yaml > artifacts/task05f/product_simulation_v2_prereg_sha256.txt
 
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
 
-      - name: Compile downstream candidate selector and staking modules
+      - name: Compile downstream candidate selector staking and product modules
         run: |
           python -m py_compile scripts/task05f_candidate_table_v1_runner.py
           python -m py_compile scripts/task05f_selectors_v1_runner.py
@@ -89,6 +90,7 @@ jobs:
           python -m py_compile src/nfl_edge/value/staking_v2.py
           python -m py_compile src/nfl_edge/user/staking_profile.py
           python -m py_compile src/nfl_edge/user/staking_profile_v2.py
+          python -m py_compile scripts/task05f_product_simulation_v2_runner.py
           python - <<'PY'
           from nfl_edge.value.selectors_v3_1 import select_primary_cards_v3_1
           from nfl_edge.value.staking_v2 import evaluator_units, recommend_stake_v2
@@ -100,9 +102,10 @@ jobs:
           assert UserRiskProfile is not None
           print('selector_v3_1_import=PASS')
           print('staking_v2_import=PASS')
+          print('product_simulation_v2_compile=PASS')
           PY
 
-      - name: Verify frozen post-probability selector and staking contracts
+      - name: Verify frozen post-probability selector staking and product contracts
         shell: bash
         run: |
           set -euo pipefail
@@ -125,10 +128,17 @@ jobs:
           grep -q 'open_slate_exposure_cap_fraction: 0.15' config/task05f_staking_v2_units_prereg.yaml
           grep -q 'no_unit_tuning_from_roi: true' config/task05f_staking_v2_units_prereg.yaml
           grep -q 'no_2025: true' config/task05f_staking_v2_units_prereg.yaml
+          grep -q 'status: PREREGISTERED_BEFORE_V3_1_STAKING_V2_2020_2024_PRODUCT_SIMULATION' config/task05f_product_simulation_v2.yaml
+          grep -q 'results_label: OBSERVATIONAL_ONLY_NOT_TUNED' config/task05f_product_simulation_v2.yaml
+          grep -q 'historical_roi_is_not_acceptance_gate: true' config/task05f_product_simulation_v2.yaml
+          grep -q 'bankroll_results_may_not_change_staking_v2: true' config/task05f_product_simulation_v2.yaml
+          grep -q 'bankroll_results_may_not_change_selector_v3_1: true' config/task05f_product_simulation_v2.yaml
+          grep -q 'no_2025: true' config/task05f_product_simulation_v2.yaml
           echo 'historical_play_through_scoring=DISABLED'
           echo 'historical_selector_v3_1_outcome_scoring=DISABLED'
           echo 'historical_staking_v2_bankroll_simulation=DISABLED'
           echo 'product_simulation_v1=SUPERSEDED_NOT_EVIDENCE'
+          echo 'product_simulation_v2_execution=DISABLED_ON_ORDINARY_PUSHES'
 
       - name: Upload contract evidence
         if: always()
