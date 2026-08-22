@@ -1,0 +1,51 @@
+version: task05f_staking_v2_1_reliability
+status: PREREGISTERED_BEFORE_V2_1_HISTORICAL_BANKROLL_SCORING
+scope: evaluator_owned_units_without_low_reliability_hard_zero
+
+supersedes_for_production_staking:
+  config: config/task05f_staking_v2_units_prereg.yaml
+  reason: >-
+    The model-confidence audit showed LOW evaluator reliability was acting as a
+    hard suppression layer on otherwise supported football signals. Reliability
+    remains risk context, but LOW is no longer an automatic zero-unit decision.
+  prior_version_remains_audit_history: true
+
+eligibility:
+  supported_required: true
+  unsupported_units: 0.0
+  allowed_reliability: [HIGH, MEDIUM, LOW]
+  reliability_is_not_a_hard_unit_gate: true
+  actionable_price_status: [VALUE, PLAYABLE]
+  lean_pass_units: 0.0
+
+playable_units:
+  minimum_units_at_play_through_limit: 0.5
+  maximum_units_at_fair_boundary: 1.0
+  interpolation_space: break_even_probability
+  formula: 1.0 - 0.5 * corridor_position
+  note: >-
+    Play Through corridor width already contracts with evaluator confidence, so
+    reliability is not applied a second time as a unit haircut.
+
+value_units:
+  minimum_units: 1.0
+  maximum_units: 2.0
+  formula: 1.0 + play_through_confidence_multiplier * edge_share
+  edge_share: evaluated_edge_probability / (evaluated_edge_probability + play_through_break_even_concession)
+  note: existing confidence multiplier limits the extra unit above the 1u base
+
+user_risk_styles:
+  CAUTIOUS: {unit_fraction: 0.005, wager_cap: 0.01, slate_exposure_cap: 0.03}
+  CONSERVATIVE: {unit_fraction: 0.0075, wager_cap: 0.015, slate_exposure_cap: 0.05}
+  STANDARD: {unit_fraction: 0.01, wager_cap: 0.02, slate_exposure_cap: 0.07}
+  AGGRESSIVE: {unit_fraction: 0.015, wager_cap: 0.03, slate_exposure_cap: 0.10}
+  VERY_AGGRESSIVE: {unit_fraction: 0.025, wager_cap: 0.05, slate_exposure_cap: 0.15}
+  absolute_wager_cap_fraction: 0.05
+
+integrity:
+  no_historical_roi_input: true
+  no_hit_rate_threshold_input: true
+  no_model_change: true
+  no_evaluator_probability_change: true
+  no_play_through_change: true
+  no_2025: true
