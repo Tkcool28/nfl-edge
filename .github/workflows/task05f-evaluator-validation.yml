@@ -52,25 +52,50 @@ jobs:
             exit 1
           fi
 
+      - name: Detect bootstrap versus full evaluator checkout
+        id: mode
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -d tests/value && -f scripts/market_evaluator_v1_runner.py ]]; then
+            echo 'full=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'full=false' >> "$GITHUB_OUTPUT"
+            echo 'CI bootstrap checkout: evaluator branch files are intentionally not present yet.'
+          fi
+
+      - name: Record validation provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/task05f
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "evaluator_only",\n  "sealed_season": 2025,\n  "full_evaluator_checkout": "%s"\n}\n' \
+            "$GITHUB_SHA" \
+            '3ed8d740a88b59d46e27e206f39757307a6a13da' \
+            '${{ steps.mode.outputs.full }}' \
+            > artifacts/task05f/ci_provenance.json
+          cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
+
+      - name: Bootstrap workflow smoke check
+        if: steps.mode.outputs.full != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f .github/workflows/task05f-evaluator-validation.yml
+          test "$(wc -l < /tmp/task05f_changed_paths.txt)" -eq 1
+          grep -qx '.github/workflows/task05f-evaluator-validation.yml' /tmp/task05f_changed_paths.txt
+
       - name: Run Task05F value-layer tests
+        if: steps.mode.outputs.full == 'true'
         run: pytest -q tests/value/
 
       - name: Verify 2025 remains sealed in evaluator runner
+        if: steps.mode.outputs.full == 'true'
         shell: bash
         run: |
           set -euo pipefail
           grep -q 'SEALED={2025}' scripts/market_evaluator_v1_runner.py
           grep -q 'pl.col("season").is_in(DEV)' scripts/market_evaluator_v1_runner.py
-
-      - name: Record validation provenance
-        shell: bash
-        run: |
-          mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "evaluator_only",\n  "sealed_season": 2025\n}\n' \
-            "$GITHUB_SHA" \
-            '3ed8d740a88b59d46e27e206f39757307a6a13da' \
-            > artifacts/task05f/ci_provenance.json
-          cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
 
       - name: Upload evaluator validation evidence
         if: always()
