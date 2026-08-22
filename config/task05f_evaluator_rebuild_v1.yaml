@@ -41,6 +41,12 @@ benchmark_probability_families:
   total:
     - incumbent_calibrated_normal
 
+moneyline_contract:
+  tie_settlement: push
+  tie_probability_method: prior_only_empirical_jeffreys
+  preserve_model_conditional_win_ratio: true
+  formula: "p_push=(prior_ties+0.5)/(prior_games+1); p_win=(1-p_push)*p_model; p_loss=(1-p_push)*(1-p_model)"
+
 point_market_contract:
   outcome_states: [WIN, PUSH, LOSS]
   probability_sum_tolerance: 1.0e-9
