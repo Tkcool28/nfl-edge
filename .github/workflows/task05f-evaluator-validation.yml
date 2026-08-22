@@ -54,74 +54,70 @@ jobs:
             exit 1
           fi
 
-      - name: Record designated structural provenance
+      - name: Record corrected architecture provenance
         shell: bash
         run: |
-          mkdir -p artifacts/task05f/structural_evidence
-          printf '{\n  "commit": "%s",\n  "scope": "DESIGNATED_V3_4_STRUCTURAL_REPLAY",\n  "historical_outcomes_scored": false,\n  "bankroll_simulated": false,\n  "sealed_season": 2025\n}\n' "$GITHUB_SHA" > artifacts/task05f/structural_evidence/designated_run_provenance.json
-          sha256sum config/task05f_evaluated_wager_board_v1_prereg.yaml > artifacts/task05f/structural_evidence/evaluated_wager_board_sha256.txt
-          sha256sum config/task05f_staking_v2_1_units_prereg.yaml > artifacts/task05f/structural_evidence/staking_v2_1_sha256.txt
-          sha256sum config/task05f_selectors_v3_4_thin_prereg.yaml > artifacts/task05f/structural_evidence/selector_v3_4_sha256.txt
-          sha256sum config/task05f_selector_v3_4_structural_replay_v1.yaml > artifacts/task05f/structural_evidence/structural_replay_sha256.txt
+          mkdir -p artifacts/task05f
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "evaluated_wager_board_v1_selector_v3_4_staking_v2_1_contract",\n  "sealed_season": 2025,\n  "designated_product_v2_evidence_run": 32560871713,\n  "designated_model_confidence_audit_run": 32573369004,\n  "historical_selector_v3_4_scoring": "DISABLED",\n  "historical_staking_v2_1_bankroll_simulation": "DISABLED",\n  "structural_replay": "NOT_RUN_ON_ORDINARY_PUSHES"\n}\n' \
+            "$GITHUB_SHA" \
+            '3ed8d740a88b59d46e27e206f39757307a6a13da' \
+            > artifacts/task05f/ci_provenance.json
+          cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
+          sha256sum config/task05f_evaluator_locked_v1.yaml > artifacts/task05f/locked_config_sha256.txt
+          sha256sum config/task05f_play_through_v1_1_prereg.yaml > artifacts/task05f/play_through_v1_1_prereg_sha256.txt
+          sha256sum config/task05f_candidate_table_v1.yaml > artifacts/task05f/candidate_table_v1_sha256.txt
+          sha256sum config/task05f_evaluated_wager_board_v1_prereg.yaml > artifacts/task05f/evaluated_wager_board_v1_prereg_sha256.txt
+          sha256sum config/task05f_staking_v2_1_units_prereg.yaml > artifacts/task05f/staking_v2_1_prereg_sha256.txt
+          sha256sum config/task05f_selectors_v3_4_thin_prereg.yaml > artifacts/task05f/selectors_v3_4_prereg_sha256.txt
+          sha256sum config/task05f_model_confidence_audit_v1.yaml > artifacts/task05f/model_confidence_audit_v1_prereg_sha256.txt
 
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
 
-      - name: Verify designated structural preregistration
-        shell: bash
+      - name: Compile corrected downstream modules
         run: |
-          set -euo pipefail
-          grep -q 'status: PREREGISTERED_BEFORE_STRUCTURAL_REPLAY_EXECUTION' config/task05f_selector_v3_4_structural_replay_v1.yaml
-          grep -q 'open_historical_outcome_sidecar: true' config/task05f_selector_v3_4_structural_replay_v1.yaml
-          grep -q 'score_wins_losses_pushes: true' config/task05f_selector_v3_4_structural_replay_v1.yaml
-          grep -q 'calculate_roi: true' config/task05f_selector_v3_4_structural_replay_v1.yaml
-          grep -q 'load_2025: true' config/task05f_selector_v3_4_structural_replay_v1.yaml
+          python -m py_compile scripts/task05f_candidate_table_v1_runner.py
+          python -m py_compile src/nfl_edge/value/evaluated_wager_board.py
+          python -m py_compile src/nfl_edge/value/staking_v2_1.py
+          python -m py_compile src/nfl_edge/value/selectors_v3_4.py
+          python -m py_compile src/nfl_edge/user/staking_profile_v2.py
+          python -m py_compile scripts/task05f_model_confidence_audit_v1_runner.py
           python -m py_compile scripts/task05f_selectors_v3_4_structural_runner.py
+          python - <<'PY'
+          from nfl_edge.value.evaluated_wager_board import build_evaluated_wager_board
+          from nfl_edge.value.staking_v2_1 import evaluator_units_v2_1, recommend_stake_v2_1
+          from nfl_edge.value.selectors_v3_4 import select_primary_cards_v3_4
+          assert callable(build_evaluated_wager_board)
+          assert callable(evaluator_units_v2_1)
+          assert callable(recommend_stake_v2_1)
+          assert callable(select_primary_cards_v3_4)
+          print('evaluated_wager_board_v1_import=PASS')
+          print('staking_v2_1_import=PASS')
+          print('selector_v3_4_import=PASS')
+          print('selector_v3_4_structural_runner_compile=PASS')
+          PY
 
-      - name: Run designated structural replay twice for determinism
-        run: |
-          rm -rf artifacts/task05f/structural_a artifacts/task05f/structural_b
-          python scripts/task05f_selectors_v3_4_structural_runner.py --out artifacts/task05f/structural_a
-          python scripts/task05f_selectors_v3_4_structural_runner.py --out artifacts/task05f/structural_b
-
-      - name: Verify deterministic no-outcome structural contracts
+      - name: Verify corrected architecture contracts
         shell: bash
         run: |
           set -euo pipefail
-          diff -qr artifacts/task05f/structural_a artifacts/task05f/structural_b
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          root = Path('artifacts/task05f/structural_a')
-          s = json.loads((root/'structural_summary.json').read_text())
-          p = json.loads((root/'provenance.json').read_text())
-          assert s['candidate_rows'] == 8448
-          assert s['evaluated_wager_rows'] == 8448
-          assert s['slates'] == 109
-          assert s['development_seasons'] == [2020, 2021, 2022, 2023, 2024]
-          assert s['sealed_seasons'] == [2025]
-          assert s['outcome_sidecar_opened'] is False
-          assert s['historical_outcomes_scored'] is False
-          assert s['bankroll_simulated'] is False
-          assert p['outcome_sidecar_opened'] is False
-          assert p['sealed_2025_loaded'] is False
-          assert s['actionability']['actionable'] + s['actionability']['nonactionable'] == 8448
-          for card in ('HIGH_HIT_RATE','BALANCED','VALUE'):
-              assert s['cards'][card]['plays'] + s['cards'][card]['no_play'] == 109
-          assert sum(int(v) for v in s['slates_by_featured_card_count'].values()) == 109
-          print('v3_4_structural_hard_contracts=PASS')
-          PY
-          (
-            cd artifacts/task05f/structural_a
-            find . -type f -print0 | sort -z | xargs -0 sha256sum
-          ) > artifacts/task05f/structural_evidence/output_sha256_manifest.txt
+          grep -q 'status: PREREGISTERED_BEFORE_STRUCTURAL_REPLAY_OR_2025' config/task05f_evaluated_wager_board_v1_prereg.yaml
+          grep -q 'selector_may_recompute_wager_math: false' config/task05f_selectors_v3_4_thin_prereg.yaml
+          grep -q 'market_type_is_metadata_only: true' config/task05f_selectors_v3_4_thin_prereg.yaml
+          grep -q 'require_evaluator_actionable: true' config/task05f_selectors_v3_4_thin_prereg.yaml
+          grep -q 'status: PREREGISTERED_BEFORE_V2_1_STRUCTURAL_OR_BANKROLL_REPLAY' config/task05f_staking_v2_1_units_prereg.yaml
+          grep -q 'LOW: SIZEABLE_IF_VALUE_OR_PLAYABLE' config/task05f_staking_v2_1_units_prereg.yaml
+          grep -q 'UNSUPPORTED: ZERO' config/task05f_staking_v2_1_units_prereg.yaml
+          grep -q 'no_roi_input: true' config/task05f_evaluated_wager_board_v1_prereg.yaml
+          grep -q 'no_2025: true' config/task05f_selectors_v3_4_thin_prereg.yaml
+          echo 'historical_selector_v3_4_outcome_scoring=DISABLED'
+          echo 'historical_staking_v2_1_bankroll_simulation=DISABLED'
+          echo 'structural_replay=NOT_RUN_ON_ORDINARY_PUSHES'
 
-      - name: Upload designated structural evidence
+      - name: Upload contract evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: task05f-v3-4-structural-${{ github.sha }}
-          path: |
-            artifacts/task05f/structural_a/
-            artifacts/task05f/structural_evidence/
+          name: task05f-evaluator-contract-${{ github.sha }}
+          path: artifacts/task05f/
           if-no-files-found: error
