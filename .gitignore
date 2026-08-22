@@ -28,9 +28,17 @@ dist/
 /data/cache/
 /data/live_snapshots/private/
 
-# Derived market-data artifacts (regenerable from production RAW via
-# scripts/build_market_canonical.py --production; not committed)
+# Derived market-data artifacts are normally regenerated from production RAW.
+# Task05F requires the exact frozen 05E T-60 canonical inputs for deterministic
+# GitHub Actions validation, so ONLY these two historical canonical artifacts are
+# permitted in Git. Raw/normalized market data remains ignored.
 /data/market_data/
+!/data/market_data/
+/data/market_data/*
+!/data/market_data/canonical/
+/data/market_data/canonical/*
+!/data/market_data/canonical/canonical_games.parquet
+!/data/market_data/canonical/canonical_book_market.parquet
 
 # Local model experiments not explicitly promoted
 /artifacts/local/
