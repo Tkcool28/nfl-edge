@@ -1,0 +1,136 @@
+name: Task05G Selector Policy Validation
+
+on:
+  push:
+    branches:
+      - feat/task05g-selectors-units-v1
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'src/nfl_edge/recommendation/**'
+      - 'scripts/task05g_*'
+      - 'tests/recommendation/**'
+      - 'config/task05g_selector_unit_policy_v1.yaml'
+      - 'docs/task05g_selector_unit_policy_v1.md'
+      - '.github/workflows/task05g-selector-policy-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  task05g-policy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+
+      - name: Enforce Task05G scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=4984ea1ee38377f7f5016d2081be8f7c43bda4cd
+          git cat-file -e "$BASE^{commit}"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/task05g_paths.txt
+          if grep -E '^(src/nfl_edge/value/|src/nfl_edge/models/|src/nfl_edge/backtest/|data/modeling/|data/frozen/|reports/task05d/|reports/task05e_remediated/)' /tmp/task05g_paths.txt; then
+            echo 'ERROR: Task05G modified frozen evaluator/model/data scope.' >&2
+            exit 1
+          fi
+          git diff --quiet "$BASE"...HEAD -- src/nfl_edge/value src/nfl_edge/models src/nfl_edge/backtest data/modeling data/frozen reports/task05d reports/task05e_remediated
+
+      - name: Compile Task05G
+        run: |
+          python -m py_compile src/nfl_edge/recommendation/*.py
+          python -m py_compile scripts/task05g_selector_policy_runner.py
+
+      - name: Run frozen Task05F and focused Task05G tests
+        run: |
+          pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_policy.py
+
+      - name: Materialize frozen Task05F chronological board
+        run: |
+          python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g/upstream
+
+      - name: Verify 2025 firewall before selector evaluation
+        run: |
+          python - <<'PY'
+          import polars as pl
+          for name in ['historical_evaluator_board.parquet','candidate_table.parquet']:
+              df=pl.read_parquet('artifacts/task05g/upstream/'+name)
+              assert set(df['season'].unique().to_list()) == {2020,2021,2022,2023,2024}, (name, df['season'].unique().to_list())
+              assert 2025 not in set(df['season'].unique().to_list())
+          PY
+
+      - name: Run Task05G chronological policy twice
+        run: |
+          python scripts/task05g_selector_policy_runner.py --task05f-dir artifacts/task05g/upstream --out artifacts/task05g/policy_a
+          python scripts/task05g_selector_policy_runner.py --task05f-dir artifacts/task05g/upstream --out artifacts/task05g/policy_b
+
+      - name: Prove deterministic Task05G replay
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in chronological_selector_results.csv selector_diagnostics.json coverage_report.json season_stability_report.json unit_risk_profile_simulation.json longshot_behavior.json artifact_hashes.json; do
+            cmp "artifacts/task05g/policy_a/$name" "artifacts/task05g/policy_b/$name"
+          done
+
+      - name: Validate policy invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('artifacts/task05g/policy_a')
+          d=json.loads((p/'selector_diagnostics.json').read_text())
+          l=json.loads((p/'longshot_behavior.json').read_text())
+          r=json.loads((p/'unit_risk_profile_simulation.json').read_text())
+          assert d['development_seasons'] == [2020,2021,2022,2023,2024]
+          assert d['sealed_seasons'] == [2025]
+          assert l['selected_value_longshot_guardrail_violations'] == 0
+          assert len(r['profiles']) == 5
+          assert r['selector_identity_shared_across_profiles'] is True
+          assert r['recommended_units_shared_across_profiles'] is True
+          PY
+
+      - name: Security checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE 'os\.environ|os\.getenv|API_KEY|ACCESS_TOKEN|SECRET_KEY' src/nfl_edge/recommendation scripts/task05g_selector_policy_runner.py config/task05g_selector_unit_policy_v1.yaml; then
+            echo 'ERROR: Task05G policy scope must not serialize or depend on environment secrets.' >&2
+            exit 1
+          fi
+          if grep -E '(^|/)(\.env|.*\.pem|.*\.key|credentials.*|secrets.*)$' /tmp/task05g_paths.txt; then
+            echo 'ERROR: secret-bearing file path in Task05G diff.' >&2
+            exit 1
+          fi
+
+      - name: Record scope and frozen proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/task05g/policy_a/proofs
+          cp /tmp/task05g_paths.txt artifacts/task05g/policy_a/proofs/changed_paths.txt
+          printf '%s\n' '4984ea1ee38377f7f5016d2081be8f7c43bda4cd' > artifacts/task05g/policy_a/proofs/base_main_sha.txt
+          git diff --name-only 4984ea1ee38377f7f5016d2081be8f7c43bda4cd...HEAD -- src/nfl_edge/value src/nfl_edge/models src/nfl_edge/backtest data/modeling data/frozen reports/task05d reports/task05e_remediated > artifacts/task05g/policy_a/proofs/frozen_scope_diff.txt
+          test ! -s artifacts/task05g/policy_a/proofs/frozen_scope_diff.txt
+
+      - name: Upload Task05G evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-selector-policy-${{ github.sha }}
+          path: artifacts/task05g/policy_a/
+          if-no-files-found: error
