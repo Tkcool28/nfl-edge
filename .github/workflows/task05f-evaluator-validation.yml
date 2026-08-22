@@ -1,9 +1,9 @@
 name: Task05F Evaluator Validation
 
 on:
-  push:
+  pull_request:
     branches:
-      - feat/task05f-evaluator-rebuild-v1
+      - main
   workflow_dispatch:
 
 permissions:
@@ -46,9 +46,10 @@ jobs:
         shell: bash
         run: |
           mkdir -p artifacts/task05f/product_v2_evidence
-          printf '{\n  "commit": "%s",\n  "pre_score_contract_sha": "%s",\n  "scope": "DESIGNATED_PRODUCT_SIMULATION_V2_DIAGNOSTIC",\n  "results_label": "OBSERVATIONAL_ONLY_NOT_TUNED",\n  "sealed_season": 2025,\n  "product_simulation_v1": "SUPERSEDED_NOT_EVIDENCE",\n  "may_tune_from_results": false\n}\n' \
+          printf '{\n  "commit": "%s",\n  "pre_score_contract_sha": "%s",\n  "superseded_unobservable_attempt_sha": "%s",\n  "scope": "DESIGNATED_PRODUCT_SIMULATION_V2_DIAGNOSTIC",\n  "results_label": "OBSERVATIONAL_ONLY_NOT_TUNED",\n  "sealed_season": 2025,\n  "product_simulation_v1": "SUPERSEDED_NOT_EVIDENCE",\n  "may_tune_from_results": false\n}\n' \
             "$GITHUB_SHA" \
             'd9fa2e0e75c3d17be927e3a6f80ecbe4abf08ec8' \
+            'c9d2b70b64ed35893cc53a0fff2afd3c0b4d2982' \
             > artifacts/task05f/product_v2_evidence/designated_run_provenance.json
           sha256sum config/task05f_candidate_table_v1.yaml > artifacts/task05f/product_v2_evidence/candidate_config_sha256.txt
           sha256sum config/task05f_selectors_v3_1_product_prereg.yaml > artifacts/task05f/product_v2_evidence/selector_v3_1_sha256.txt
