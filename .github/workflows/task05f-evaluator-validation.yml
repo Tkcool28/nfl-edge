@@ -82,6 +82,7 @@ jobs:
           python -m py_compile src/nfl_edge/value/selectors_v3_4.py
           python -m py_compile src/nfl_edge/user/staking_profile_v2.py
           python -m py_compile scripts/task05f_model_confidence_audit_v1_runner.py
+          python -m py_compile scripts/task05f_selectors_v3_4_structural_runner.py
           python - <<'PY'
           from nfl_edge.value.evaluated_wager_board import build_evaluated_wager_board
           from nfl_edge.value.staking_v2_1 import evaluator_units_v2_1, recommend_stake_v2_1
@@ -93,6 +94,7 @@ jobs:
           print('evaluated_wager_board_v1_import=PASS')
           print('staking_v2_1_import=PASS')
           print('selector_v3_4_import=PASS')
+          print('selector_v3_4_structural_runner_compile=PASS')
           PY
 
       - name: Verify corrected architecture contracts
