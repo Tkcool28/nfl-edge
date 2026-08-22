@@ -67,9 +67,20 @@ jobs:
           sha256sum config/task05f_candidate_table_v1.yaml > artifacts/task05f/candidate_table_v1_sha256.txt
           sha256sum config/task05f_selectors_v1_prereg.yaml > artifacts/task05f/selectors_v1_prereg_sha256.txt
           sha256sum config/task05f_selectors_v1_implementation_lock.yaml > artifacts/task05f/selectors_v1_implementation_lock_sha256.txt
+          sha256sum config/task05f_selectors_v1_historical_eval_lock.yaml > artifacts/task05f/selectors_v1_historical_eval_lock_sha256.txt
 
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
+
+      - name: Compile downstream candidate and selector runners
+        run: |
+          python -m py_compile scripts/task05f_candidate_table_v1_runner.py
+          python -m py_compile scripts/task05f_selectors_v1_runner.py
+          python - <<'PY'
+          from nfl_edge.value.selectors import select_primary_cards
+          assert callable(select_primary_cards)
+          print('selector_import=PASS')
+          PY
 
       - name: Verify frozen post-probability and selector contracts
         shell: bash
@@ -86,6 +97,9 @@ jobs:
           grep -q 'status: LOCKED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_implementation_lock.yaml
           grep -q 'balanced_equal_value_rank: competition_min_rank' config/task05f_selectors_v1_implementation_lock.yaml
           grep -q 'selector_receives_historical_sidecar: false' config/task05f_selectors_v1_implementation_lock.yaml
+          grep -q 'status: LOCKED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_historical_eval_lock.yaml
+          grep -q 'key: block' config/task05f_selectors_v1_historical_eval_lock.yaml
+          grep -q 'outcomes_may_not_change_selection: true' config/task05f_selectors_v1_historical_eval_lock.yaml
           echo 'historical_play_through_scoring=DISABLED'
           echo 'historical_selector_scoring=DISABLED'
 
