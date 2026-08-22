@@ -4,6 +4,7 @@ from nfl_edge.value.locked_reliability import (
     cap_reliability,
     conditional_nonpush_probability,
     conservative_staking_probability,
+    exact_point_market_anchor_probability,
     expected_value_from_decimal,
     fit_candidate_uncertainty,
     staking_outcome_probabilities,
@@ -51,7 +52,55 @@ def test_final_reliability_can_never_upgrade_base_tier():
     assert cap_reliability("UNSUPPORTED", "HIGH") == "UNSUPPORTED"
 
 
-def test_missing_uncertainty_collapses_staking_probability_to_market_anchor():
+def test_exact_point_anchor_same_half_point_reproduces_pinnacle_probability():
+    above = exact_point_market_anchor_probability(
+        3.5, 0.58, 10.0, 3.5, "above", push_possible=False
+    )
+    below = exact_point_market_anchor_probability(
+        3.5, 0.58, 10.0, 3.5, "below", push_possible=False
+    )
+    assert math.isclose(above, 0.58, abs_tol=1e-12)
+    assert math.isclose(below, 0.42, abs_tol=1e-12)
+    assert math.isclose(above + below, 1.0, abs_tol=1e-12)
+
+
+def test_exact_point_anchor_moves_with_actionable_line():
+    at_pin = exact_point_market_anchor_probability(
+        3.5, 0.55, 10.0, 3.5, "above", push_possible=False
+    )
+    harder = exact_point_market_anchor_probability(
+        3.5, 0.55, 10.0, 4.5, "above", push_possible=False
+    )
+    easier = exact_point_market_anchor_probability(
+        3.5, 0.55, 10.0, 2.5, "above", push_possible=False
+    )
+    assert harder < at_pin < easier
+
+
+def test_exact_point_anchor_same_integer_line_complements_conditionally_on_nonpush():
+    above = exact_point_market_anchor_probability(
+        3.0, 0.57, 10.0, 3.0, "above", push_possible=True
+    )
+    below = exact_point_market_anchor_probability(
+        3.0, 0.57, 10.0, 3.0, "below", push_possible=True
+    )
+    assert 0.0 < above < 1.0
+    assert 0.0 < below < 1.0
+    assert math.isclose(above + below, 1.0, abs_tol=1e-12)
+
+
+def test_independently_different_point_lines_are_not_forced_to_complement():
+    above_35 = exact_point_market_anchor_probability(
+        3.5, 0.55, 10.0, 3.5, "above", push_possible=False
+    )
+    below_45 = exact_point_market_anchor_probability(
+        3.5, 0.55, 10.0, 4.5, "below", push_possible=False
+    )
+    assert not math.isclose(above_35 + below_45, 1.0, abs_tol=1e-12)
+    assert above_35 + below_45 > 1.0
+
+
+def test_missing_uncertainty_collapses_staking_probability_to_exact_market_anchor():
     q = conservative_staking_probability(0.62, 0.55, "HIGH", None)
     assert math.isclose(q, 0.55, abs_tol=1e-12)
 
