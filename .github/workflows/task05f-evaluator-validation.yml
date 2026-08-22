@@ -10,10 +10,11 @@ on:
     paths:
       - 'src/nfl_edge/value/**'
       - 'scripts/task05f_evaluator_final_runner.py'
+      - 'scripts/task05f_spread_contribution_diagnostic.py'
       - 'tests/value/test_task05f_evaluator_final.py'
       - 'config/task05f_evaluator_final_v1.yaml'
       - 'docs/task05f_evaluator_final_v1.md'
-      - '.github/workflows/task05f-evaluator-final.yml'
+      - '.github/workflows/task05f-evaluator-validation.yml'
   workflow_dispatch:
 
 permissions:
@@ -62,6 +63,7 @@ jobs:
         run: |
           python -m py_compile src/nfl_edge/value/*.py
           python -m py_compile scripts/task05f_evaluator_final_runner.py
+          python -m py_compile scripts/task05f_spread_contribution_diagnostic.py
 
       - name: Run chronological evaluator twice
         run: |
@@ -108,6 +110,12 @@ jobs:
           assert not forbidden.intersection(df.columns)
           assert set(df['season'].unique().to_list()) == {2020,2021,2022,2023,2024}
           PY
+
+      - name: Run read-only Spread V3 contribution diagnostic
+        run: |
+          python scripts/task05f_spread_contribution_diagnostic.py \
+            --artifact-dir artifacts/task05f/final_a \
+            --out artifacts/task05f/final_a/spread_contribution_diagnostic.json
 
       - name: Upload evaluator evidence
         if: always()
