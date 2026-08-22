@@ -13,6 +13,7 @@ on:
       - 'tests/value/**'
       - 'config/task05f_evaluator_rebuild_v1.yaml'
       - 'config/task05f_evaluator_rebuild_v2_prereg.yaml'
+      - 'config/task05f_evaluator_rebuild_v3_prereg.yaml'
       - 'docs/task05f_evaluator_rebuild_v1.md'
       - '.github/workflows/task05f-evaluator-validation.yml'
   workflow_dispatch:
@@ -57,12 +58,12 @@ jobs:
         shell: bash
         run: |
           mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "evaluator_only",\n  "sealed_season": 2025,\n  "candidate": "v2_preregistered_calibration"\n}\n' \
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "evaluator_only",\n  "sealed_season": 2025,\n  "candidate": "v3_preregistered_calibration"\n}\n' \
             "$GITHUB_SHA" \
             '3ed8d740a88b59d46e27e206f39757307a6a13da' \
             > artifacts/task05f/ci_provenance.json
           cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
-          sha256sum config/task05f_evaluator_rebuild_v2_prereg.yaml > artifacts/task05f/v2_prereg_sha256.txt
+          sha256sum config/task05f_evaluator_rebuild_v3_prereg.yaml > artifacts/task05f/v3_prereg_sha256.txt
 
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
@@ -71,16 +72,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'SEALED = {2025}' scripts/task05f_evaluator_rebuild_v2_runner.py
-          grep -q 'DEV = \[2020, 2021, 2022, 2023, 2024\]' scripts/task05f_evaluator_rebuild_v2_runner.py
-          grep -q 'sealed_seasons: \[2025\]' config/task05f_evaluator_rebuild_v2_prereg.yaml
+          grep -q 'SEALED = {2025}' scripts/task05f_evaluator_rebuild_v3_runner.py
+          grep -q 'DEV = \[2020, 2021, 2022, 2023, 2024\]' scripts/task05f_evaluator_rebuild_v3_runner.py
+          grep -q 'sealed_seasons: \[2025\]' config/task05f_evaluator_rebuild_v3_prereg.yaml
 
-      - name: Run chronological evaluator V2 twice
+      - name: Run chronological evaluator V3 twice
         shell: bash
         run: |
           set -euo pipefail
-          python scripts/task05f_evaluator_rebuild_v2_runner.py --out artifacts/task05f/run1
-          python scripts/task05f_evaluator_rebuild_v2_runner.py --out artifacts/task05f/run2
+          python scripts/task05f_evaluator_rebuild_v3_runner.py --out artifacts/task05f/run1
+          python scripts/task05f_evaluator_rebuild_v3_runner.py --out artifacts/task05f/run2
 
       - name: Verify deterministic evaluator outputs
         shell: bash
