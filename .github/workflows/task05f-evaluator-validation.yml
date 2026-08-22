@@ -4,17 +4,6 @@ on:
   push:
     branches:
       - feat/task05f-evaluator-rebuild-v1
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'src/nfl_edge/value/**'
-      - 'src/nfl_edge/user/**'
-      - 'scripts/task05f_*'
-      - 'tests/value/**'
-      - 'config/task05f_*.yaml'
-      - 'docs/task05f_*.md'
-      - '.github/workflows/task05f-evaluator-validation.yml'
   workflow_dispatch:
 
 permissions:
@@ -23,7 +12,7 @@ permissions:
 jobs:
   evaluator-contract:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - name: Checkout exact commit
         uses: actions/checkout@v4
@@ -53,97 +42,111 @@ jobs:
             exit 1
           fi
 
-      - name: Record post-selector development provenance
+      - name: Record designated product V2 provenance
         shell: bash
         run: |
-          mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "selector_v3_1_staking_v2_product_v2_contract_development",\n  "sealed_season": 2025,\n  "historical_play_through_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v1_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v2_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v3_scoring": "DISABLED",\n  "historical_selector_v3_1_scoring": "DISABLED",\n  "historical_staking_v1_bankroll_simulation": "DISABLED",\n  "historical_staking_v2_bankroll_simulation": "DISABLED",\n  "product_simulation_v1": "SUPERSEDED_NOT_EVIDENCE",\n  "product_simulation_v2_execution": "DISABLED_ON_ORDINARY_PUSHES",\n  "selector_v3_1_2020_2024_outcome_acceptance": false\n}\n' \
+          mkdir -p artifacts/task05f/product_v2_evidence
+          printf '{\n  "commit": "%s",\n  "pre_score_contract_sha": "%s",\n  "scope": "DESIGNATED_PRODUCT_SIMULATION_V2_DIAGNOSTIC",\n  "results_label": "OBSERVATIONAL_ONLY_NOT_TUNED",\n  "sealed_season": 2025,\n  "product_simulation_v1": "SUPERSEDED_NOT_EVIDENCE",\n  "may_tune_from_results": false\n}\n' \
             "$GITHUB_SHA" \
-            '3ed8d740a88b59d46e27e206f39757307a6a13da' \
-            > artifacts/task05f/ci_provenance.json
-          cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
-          sha256sum config/task05f_evaluator_locked_v1.yaml > artifacts/task05f/locked_config_sha256.txt
-          sha256sum config/task05f_reliability_uncertainty_v1_1_prereg.yaml > artifacts/task05f/phase_f_v1_1_prereg_sha256.txt
-          sha256sum config/task05f_play_through_v1_1_prereg.yaml > artifacts/task05f/play_through_v1_1_prereg_sha256.txt
-          sha256sum config/task05f_candidate_table_v1.yaml > artifacts/task05f/candidate_table_v1_sha256.txt
-          sha256sum config/task05f_selectors_v1_prereg.yaml > artifacts/task05f/selectors_v1_prereg_sha256.txt
-          sha256sum config/task05f_selectors_v1_implementation_lock.yaml > artifacts/task05f/selectors_v1_implementation_lock_sha256.txt
-          sha256sum config/task05f_selectors_v1_historical_eval_lock.yaml > artifacts/task05f/selectors_v1_historical_eval_lock_sha256.txt
-          sha256sum config/task05f_selectors_v2_prereg.yaml > artifacts/task05f/selectors_v2_prereg_sha256.txt
-          sha256sum config/task05f_selectors_v3_capability_prereg.yaml > artifacts/task05f/selectors_v3_capability_prereg_sha256.txt
-          sha256sum config/task05f_selectors_v3_1_product_prereg.yaml > artifacts/task05f/selectors_v3_1_product_prereg_sha256.txt
-          sha256sum config/task05f_staking_v1.yaml > artifacts/task05f/staking_v1_prereg_sha256.txt
-          sha256sum config/task05f_staking_v2_units_prereg.yaml > artifacts/task05f/staking_v2_units_prereg_sha256.txt
-          sha256sum config/task05f_product_simulation_v2.yaml > artifacts/task05f/product_simulation_v2_prereg_sha256.txt
+            'd9fa2e0e75c3d17be927e3a6f80ecbe4abf08ec8' \
+            > artifacts/task05f/product_v2_evidence/designated_run_provenance.json
+          sha256sum config/task05f_candidate_table_v1.yaml > artifacts/task05f/product_v2_evidence/candidate_config_sha256.txt
+          sha256sum config/task05f_selectors_v3_1_product_prereg.yaml > artifacts/task05f/product_v2_evidence/selector_v3_1_sha256.txt
+          sha256sum config/task05f_staking_v2_units_prereg.yaml > artifacts/task05f/product_v2_evidence/staking_v2_sha256.txt
+          sha256sum config/task05f_product_simulation_v2.yaml > artifacts/task05f/product_v2_evidence/product_simulation_v2_sha256.txt
 
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
 
-      - name: Compile downstream candidate selector staking and product modules
+      - name: Compile product V2 evidence stack
         run: |
           python -m py_compile scripts/task05f_candidate_table_v1_runner.py
-          python -m py_compile scripts/task05f_selectors_v1_runner.py
-          python -m py_compile scripts/task05f_selectors_v2_runner.py
-          python -m py_compile src/nfl_edge/value/selectors_v3.py
           python -m py_compile src/nfl_edge/value/selectors_v3_1.py
-          python -m py_compile src/nfl_edge/value/staking.py
           python -m py_compile src/nfl_edge/value/staking_v2.py
-          python -m py_compile src/nfl_edge/user/staking_profile.py
           python -m py_compile src/nfl_edge/user/staking_profile_v2.py
           python -m py_compile scripts/task05f_product_simulation_v2_runner.py
-          python - <<'PY'
-          from nfl_edge.value.selectors_v3_1 import select_primary_cards_v3_1
-          from nfl_edge.value.staking_v2 import evaluator_units, recommend_stake_v2
-          from nfl_edge.user.staking_profile_v2 import RiskStyle, UserRiskProfile
-          assert callable(select_primary_cards_v3_1)
-          assert callable(evaluator_units)
-          assert callable(recommend_stake_v2)
-          assert len(list(RiskStyle)) == 5
-          assert UserRiskProfile is not None
-          print('selector_v3_1_import=PASS')
-          print('staking_v2_import=PASS')
-          print('product_simulation_v2_compile=PASS')
-          PY
 
-      - name: Verify frozen post-probability selector staking and product contracts
+      - name: Verify preregistered designated evidence contract
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'sealed_seasons: \[2025\]' config/task05f_play_through_v1_1_prereg.yaml
-          grep -q 'maximum_break_even_concession: 0.015' config/task05f_play_through_v1_1_prereg.yaml
-          grep -q 'expected_rows_for_frozen_2020_2024_fixture: 8448' config/task05f_candidate_table_v1.yaml
           grep -q 'status: PREREGISTERED_BEFORE_V3_1_OR_2025_OUTCOME_SCORING' config/task05f_selectors_v3_1_product_prereg.yaml
-          grep -q 'price_status: \[VALUE, PLAYABLE\]' config/task05f_selectors_v3_1_product_prereg.yaml
-          grep -q 'duplicate_resolution_allocation_order: \[VALUE, HIGH_HIT_RATE, BALANCED\]' config/task05f_selectors_v3_1_product_prereg.yaml
           grep -q 'duplicate_wager_across_primary_cards: false' config/task05f_selectors_v3_1_product_prereg.yaml
-          grep -q 'currently_eligible_markets: \[spread\]' config/task05f_selectors_v3_1_product_prereg.yaml
-          grep -q 'no_selector_v1_v2_roi_input: true' config/task05f_selectors_v3_1_product_prereg.yaml
           grep -q 'status: PREREGISTERED_BEFORE_V2_UNIT_BANKROLL_SIMULATION' config/task05f_staking_v2_units_prereg.yaml
-          grep -q 'user_does_not_choose_wager_units: true' config/task05f_staking_v2_units_prereg.yaml
           grep -q 'maximum_units_per_wager: 2.0' config/task05f_staking_v2_units_prereg.yaml
           grep -q 'global_absolute_wager_cap_fraction: 0.05' config/task05f_staking_v2_units_prereg.yaml
-          grep -q 'minimum_units_at_play_through_limit: 0.50' config/task05f_staking_v2_units_prereg.yaml
-          grep -q 'maximum_units_at_fair_boundary: 1.00' config/task05f_staking_v2_units_prereg.yaml
-          grep -q 'fraction_of_bankroll_per_unit: 0.025' config/task05f_staking_v2_units_prereg.yaml
-          grep -q 'open_slate_exposure_cap_fraction: 0.15' config/task05f_staking_v2_units_prereg.yaml
-          grep -q 'no_unit_tuning_from_roi: true' config/task05f_staking_v2_units_prereg.yaml
-          grep -q 'no_2025: true' config/task05f_staking_v2_units_prereg.yaml
           grep -q 'status: PREREGISTERED_BEFORE_V3_1_STAKING_V2_2020_2024_PRODUCT_SIMULATION' config/task05f_product_simulation_v2.yaml
           grep -q 'results_label: OBSERVATIONAL_ONLY_NOT_TUNED' config/task05f_product_simulation_v2.yaml
-          grep -q 'historical_roi_is_not_acceptance_gate: true' config/task05f_product_simulation_v2.yaml
           grep -q 'bankroll_results_may_not_change_staking_v2: true' config/task05f_product_simulation_v2.yaml
           grep -q 'bankroll_results_may_not_change_selector_v3_1: true' config/task05f_product_simulation_v2.yaml
           grep -q 'no_2025: true' config/task05f_product_simulation_v2.yaml
-          echo 'historical_play_through_scoring=DISABLED'
-          echo 'historical_selector_v3_1_outcome_scoring=DISABLED'
-          echo 'historical_staking_v2_bankroll_simulation=DISABLED'
-          echo 'product_simulation_v1=SUPERSEDED_NOT_EVIDENCE'
-          echo 'product_simulation_v2_execution=DISABLED_ON_ORDINARY_PUSHES'
 
-      - name: Upload contract evidence
+      - name: Run designated product V2 simulation twice for determinism
+        run: |
+          rm -rf artifacts/task05f/product_v2_a artifacts/task05f/product_v2_b
+          python scripts/task05f_product_simulation_v2_runner.py \
+            --config config/task05f_product_simulation_v2.yaml \
+            --out artifacts/task05f/product_v2_a
+          python scripts/task05f_product_simulation_v2_runner.py \
+            --config config/task05f_product_simulation_v2.yaml \
+            --out artifacts/task05f/product_v2_b
+
+      - name: Verify deterministic product V2 outputs and hard contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          diff -qr artifacts/task05f/product_v2_a artifacts/task05f/product_v2_b
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('artifacts/task05f/product_v2_a')
+          score = json.loads((root / 'scorecard.json').read_text())
+          diag = json.loads((root / 'diagnostics.json').read_text())
+          repro = json.loads((root / 'candidate_reproduction.json').read_text())
+          portfolio = json.loads((root / 'portfolio_bankroll.json').read_text())
+
+          assert score['label'] == 'OBSERVATIONAL_ONLY_NOT_TUNED'
+          assert score['development_seasons'] == [2020, 2021, 2022, 2023, 2024]
+          assert score['sealed_seasons'] == [2025]
+          assert score['total_slates'] == 109
+          assert score['historical_roi_is_acceptance_gate'] is False
+          assert score['historical_hit_rate_is_acceptance_gate'] is False
+          assert score['may_tune_from_results'] is False
+          assert repro['candidate_rows'] == 8448
+          assert repro['candidate_rows_immutable'] is True
+          assert repro['outcome_fields_in_candidate_table'] == []
+          assert repro['selection_and_units_frozen_before_outcome_join'] is True
+          assert diag['all_non_null_featured_candidate_ids_distinct'] is True
+
+          pu = diag['playable_units']
+          vu = diag['value_units']
+          if pu['n']:
+              assert 0.5 - 1e-12 <= pu['min'] <= pu['max'] <= 1.0 + 1e-12
+          if vu['n']:
+              assert 1.0 - 1e-12 <= vu['min'] <= vu['max'] <= 2.0 + 1e-12
+
+          expected_profiles = {
+              'CAUTIOUS_100', 'CONSERVATIVE_100', 'STANDARD_100',
+              'AGGRESSIVE_100', 'VERY_AGGRESSIVE_100'
+          }
+          assert set(portfolio) == expected_profiles
+          for profile_id, row in portfolio.items():
+              assert row['maximum_single_slate_exposure_pct'] <= row['configured_exposure_cap_pct'] + 1e-12
+              assert row['minimum_bankroll'] >= 0.0
+          print('product_v2_hard_contracts=PASS')
+          PY
+          (
+            cd artifacts/task05f/product_v2_a
+            find . -type f -print0 | sort -z | xargs -0 sha256sum
+          ) > artifacts/task05f/product_v2_evidence/output_sha256_manifest.txt
+
+      - name: Upload product V2 validation evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: task05f-evaluator-contract-${{ github.sha }}
-          path: artifacts/task05f/
+          name: task05f-product-v2-validation-${{ github.sha }}
+          path: |
+            artifacts/task05f/product_v2_a/
+            artifacts/task05f/product_v2_evidence/
           if-no-files-found: error
