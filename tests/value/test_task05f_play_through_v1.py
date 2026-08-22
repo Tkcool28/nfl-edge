@@ -22,6 +22,36 @@ def test_maximum_confidence_grants_exactly_one_percentage_point_break_even_conce
     assert math.isclose(q_play, 0.56, abs_tol=1e-12)
 
 
+def test_v1_1_explicit_maximum_grants_exactly_one_and_a_half_percentage_points():
+    confidence, concession, q_play, _ = play_through_limit(
+        0.55, "HIGH", 0.0, maximum_concession=0.015
+    )
+    assert math.isclose(confidence, 1.0, abs_tol=1e-12)
+    assert math.isclose(concession, 0.015, abs_tol=1e-12)
+    assert math.isclose(q_play, 0.565, abs_tol=1e-12)
+
+    inside = assess_play_through(
+        supported=True,
+        strict_expected_value=-0.005,
+        conditional_nonpush_probability=0.55,
+        current_break_even_probability=0.564,
+        reliability="HIGH",
+        uncertainty_radius=0.0,
+        maximum_concession=0.015,
+    )
+    outside = assess_play_through(
+        supported=True,
+        strict_expected_value=-0.005,
+        conditional_nonpush_probability=0.55,
+        current_break_even_probability=0.566,
+        reliability="HIGH",
+        uncertainty_radius=0.0,
+        maximum_concession=0.015,
+    )
+    assert inside.status == "PLAYABLE"
+    assert outside.status == "LEAN"
+
+
 def test_displayed_play_through_american_price_is_conservative():
     _, _, q_play, price = play_through_limit(0.55, "HIGH", 0.0)
     assert break_even_probability(price) <= q_play + 1e-12
