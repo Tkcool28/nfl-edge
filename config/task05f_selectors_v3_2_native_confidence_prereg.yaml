@@ -1,0 +1,74 @@
+version: task05f_selectors_v3_2_native_confidence_prereg
+status: PREREGISTERED_AFTER_CONFIDENCE_AXIS_AUDIT_BEFORE_V3_2_OR_2025_OUTCOME_SCORING
+scope: separate_model_native_confidence_from_evaluator_price_probability
+
+supersedes: config/task05f_selectors_v3_1_product_prereg.yaml
+v3_1_remains_audit_history: true
+
+native_signal_capabilities:
+  moneyline:
+    model: QB_ELO_XGB_EXACT_AVG
+    field: raw_football_output
+    unit: selected_side_win_probability
+    comparable_as_hit_probability: true
+  spread:
+    model: EXPECTED_MARGIN_V1_STABLE
+    field: raw_football_output
+    unit: expected_home_margin_points
+    comparable_as_hit_probability: false
+    home_direction_strength: raw_football_output + actionable_line
+    away_direction_strength: -raw_football_output + actionable_line
+  total:
+    model: RIDGE_TOTALS_R4
+    comparable_as_hit_probability: false
+    primary_selector_status: DEFERRED
+
+high_hit_rate:
+  current_markets: [moneyline]
+  primary_rank: raw_football_output_descending
+  semantic_direction_floor: selected_side_probability_greater_than_0_5
+  evaluator_supported_gate: false
+  evaluator_reliability_gate: false
+  evaluator_price_status_gate: false
+  evaluator_probability_used_in_rank: false
+  retain_evaluator_price_context: true
+  allowed_attached_status: [VALUE, PLAYABLE, LEAN, PASS]
+
+balanced:
+  current_markets: [moneyline, spread]
+  evaluator_supported_required: true
+  allowed_reliability: [HIGH, MEDIUM]
+  allowed_status: [VALUE, PLAYABLE]
+  model_direction_required: true
+  moneyline_direction: raw_football_output > 0.5
+  spread_home_direction: raw_football_output + actionable_line > 0.0
+  spread_away_direction: -raw_football_output + actionable_line > 0.0
+  native_hit_rank: within_market_competition_rank_descending
+  price_quality_rank: global_competition_rank_expected_value_descending
+  primary: minimize_max_native_hit_rank_price_quality_rank
+  secondary: minimize_rank_sum
+
+value:
+  inherit_v3_1_exactly: true
+  current_markets: [spread]
+  strict_positive_value_required: true
+
+featured_distinctness:
+  required_when_available: true
+  allocation_order: [VALUE, HIGH_HIT_RATE, BALANCED]
+  forced_action: false
+
+validation:
+  development_2020_2024_outcomes_already_observed: true
+  no_v3_2_outcome_scoring_before_independent_review: true
+  sealed_2025_is_next_clean_outcome_evidence: true
+
+integrity:
+  no_model_change: true
+  no_evaluator_change: true
+  no_play_through_change: true
+  no_staking_change: true
+  no_confidence_cutoff_from_audit: true
+  no_hit_rate_threshold_from_audit: true
+  no_roi_threshold_from_audit: true
+  no_2025: true
