@@ -112,6 +112,12 @@ def _runtime_version(cfg: dict[str, Any]) -> str:
 
 
 def run(root: Path, config_path: Path, out: Path) -> None:
+    root = root.resolve()
+    if not config_path.is_absolute():
+        config_path = (root / config_path).resolve()
+    else:
+        config_path = config_path.resolve()
+
     cfg, config_sha = _read_yaml(config_path)
     _assert_unsealed(cfg["development_seasons"])
     runtime_version = _runtime_version(cfg)
