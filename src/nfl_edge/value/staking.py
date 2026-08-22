@@ -9,7 +9,7 @@ Contract: config/task05f_staking_v1.yaml
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal, ROUND_DOWN, ROUND_HALF_UP
 import math
 from typing import Any, Mapping
 
@@ -55,10 +55,30 @@ def _finite(value: Any) -> bool:
         return False
 
 
+def _decimal(value: float) -> Decimal:
+    return Decimal(str(float(value)))
+
+
 def _round_currency(value: float) -> float:
     """Nearest cent using decimal ROUND_HALF_UP, independent of binary ties."""
-    amount = Decimal(str(float(value))).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-    return float(amount)
+    return float(_decimal(value).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+
+
+def _round_currency_with_ceiling(value: float, ceiling: float) -> tuple[float, bool]:
+    """Nearest cent unless that would violate a hard dollar ceiling.
+
+    If nearest-cent rounding would exceed the ceiling, use the greatest whole
+    cent not above the ceiling. If no positive cent fits, return zero.
+    """
+    target = _decimal(value)
+    limit = _decimal(ceiling)
+    if limit < 0:
+        raise ValueError("currency ceiling cannot be negative")
+    rounded = target.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+    if rounded <= limit:
+        return float(rounded), False
+    floored_limit = limit.quantize(Decimal("0.01"), rounding=ROUND_DOWN)
+    return float(floored_limit), True
 
 
 def full_kelly_fraction(decimal_price: float, probability: float) -> float:
@@ -82,6 +102,7 @@ def _zero(
     full_kelly: float | None = None,
     fractional_before_cap: float | None = None,
     manual_caution: str | None = None,
+    cap_applied: bool = False,
 ) -> StakeRecommendation:
     p = candidate.get("staking_probability")
     price = candidate.get("actionable_decimal_price")
@@ -93,7 +114,7 @@ def _zero(
         reason=reason,
         full_kelly_fraction=full_kelly,
         fractional_kelly_before_cap=fractional_before_cap,
-        cap_applied=False,
+        cap_applied=cap_applied,
         manual_flat_caution=manual_caution,
         staking_probability=None if not _finite(p) else float(p),
         actionable_decimal_price=None if not _finite(price) else float(price),
@@ -127,7 +148,7 @@ def recommend_stake(
         else:
             amount = bankroll * FLAT_BANKROLL_FRACTION
 
-        rounded = _round_currency(amount)
+        rounded, constrained = _round_currency_with_ceiling(amount, bankroll)
         if rounded <= 0.0:
             return _zero(
                 profile,
@@ -143,7 +164,7 @@ def recommend_stake(
             reason="STAKE_RECOMMENDED",
             full_kelly_fraction=None,
             fractional_kelly_before_cap=None,
-            cap_applied=False,
+            cap_applied=constrained,
             manual_flat_caution=caution,
             staking_probability=(
                 None
@@ -177,8 +198,9 @@ def recommend_stake(
     multiplier = KELLY_MULTIPLIER[strategy]
     fractional = multiplier * full
     capped = min(fractional, KELLY_HARD_CAP_FRACTION)
-    cap_applied = fractional > KELLY_HARD_CAP_FRACTION
-    rounded = _round_currency(bankroll * capped)
+    dollar_cap = bankroll * KELLY_HARD_CAP_FRACTION
+    rounded, rounding_constrained = _round_currency_with_ceiling(bankroll * capped, dollar_cap)
+    cap_applied = fractional > KELLY_HARD_CAP_FRACTION or rounding_constrained
     if rounded <= 0.0:
         return _zero(
             profile,
@@ -186,6 +208,7 @@ def recommend_stake(
             "ROUNDED_TO_ZERO",
             full_kelly=full,
             fractional_before_cap=fractional,
+            cap_applied=cap_applied,
         )
 
     return StakeRecommendation(
