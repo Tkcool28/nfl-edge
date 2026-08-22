@@ -1,0 +1,70 @@
+version: task05f_evaluated_wager_board_v1
+status: PREREGISTERED_BEFORE_STRUCTURAL_REPLAY_OR_2025
+scope: account_independent_evaluator_output_consumed_by_thin_selectors
+
+purpose: >-
+  Build the fully evaluated wager board before selection. Each row already owns
+  the exact actionable offer, frozen football-model confidence, fair-value/EV
+  fields, Play Through status, reliability, and evaluator-assigned units.
+  Selectors may rank these rows but may not recreate market math.
+
+upstream:
+  candidate_table: config/task05f_candidate_table_v1.yaml
+  evaluator: config/task05f_evaluator_locked_v1.yaml
+  reliability: config/task05f_reliability_uncertainty_v1_1_prereg.yaml
+  play_through: config/task05f_play_through_v1_1_prereg.yaml
+  staking_units: config/task05f_staking_v2_1_units_prereg.yaml
+
+football_confidence_adapter:
+  fitted_from_selector_results: false
+  sportsbook_price_used_in_confidence: false
+  evaluator_probability_used_in_confidence: false
+  moneyline:
+    source: raw_football_output
+    transform: normal_inverse_cdf_selected_side_probability
+  spread:
+    source: expected_margin_selected_side_edge_vs_actionable_line
+    frozen_error_scale_points: 13.814494036869487
+    source_provenance: expected_margin_v1_development_margin_rmse
+  total:
+    source: ridge_r4_selected_side_edge_vs_actionable_line
+    frozen_error_scale_points: 13.5453379336442
+    source_provenance: ridge_r4_oob_rmse
+  common_score: football_confidence_z
+  display_proxy: normal_cdf_football_confidence_z
+  display_proxy_semantics: MODEL_NATIVE_CASH_CONFIDENCE_PROXY_NOT_FAIR_PROBABILITY
+
+board_fields_added:
+  - football_confidence_z
+  - football_cash_confidence_proxy
+  - football_model_favors_selection
+  - evaluator_recommended_units
+  - evaluator_unit_reason
+  - evaluator_actionable
+
+evaluator_actionable_semantics:
+  requires_positive_units: true
+  requires_price_status: [VALUE, PLAYABLE]
+  may_include_reliability: [HIGH, MEDIUM, LOW]
+  unsupported_is_never_actionable: true
+
+integrity:
+  preserve_candidate_fields_exactly: true
+  no_model_fit: true
+  no_probability_fit: true
+  no_selector_logic: true
+  no_roi_input: true
+  no_market_bucket_input: true
+  no_outcome_fields: true
+  sealed_2025_loaded: false
+
+required_tests:
+  - all_candidate_fields_are_preserved
+  - all_three_markets_receive_common_confidence_when_inputs_exist
+  - confidence_uses_model_and_line_not_price_or_ev
+  - selected_side_direction_is_correct
+  - evaluator_units_are_attached_before_selection
+  - low_reliability_can_be_actionable_when_play_through_allows
+  - unsupported_is_not_actionable
+  - outcome_firewall
+  - sealed_2025_firewall

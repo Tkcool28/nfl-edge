@@ -1,0 +1,83 @@
+version: task05f_selectors_v3_4_thin
+status: PREREGISTERED_BEFORE_V3_4_STRUCTURAL_REPLAY_OR_2025
+scope: thin_market_agnostic_selection_from_evaluated_wager_board
+
+supersedes_for_production_selection:
+  config: config/task05f_selectors_v3_3_market_agnostic_prereg.yaml
+  reason: >-
+    V3.3 correctly sought market-agnostic comparison but incorrectly performed
+    wager/model normalization inside the selector. V3.4 consumes the completed
+    evaluated-wager board and only chooses the featured cards.
+
+input:
+  board: config/task05f_evaluated_wager_board_v1_prereg.yaml
+  selector_may_recompute_wager_math: false
+  market_type_is_metadata_only: true
+
+common:
+  require_evaluator_actionable: true
+  allowed_price_status: [VALUE, PLAYABLE]
+  distinct_featured_wagers: true
+  forced_market_diversification: false
+  user_risk_style_used_in_selection: false
+
+high_hit_rate:
+  question: "Which evaluator-approved wager has the greatest model-native chance to cash?"
+  minimum_semantic_cash_confidence_proxy: 0.5
+  primary_rank: football_confidence_z_descending
+  tiebreaks:
+    - evaluator_recommended_units_descending
+    - expected_value_descending
+    - deterministic_identity_ascending
+
+balanced:
+  question: "Which evaluator-approved wager best balances model-native cash confidence and price quality?"
+  ranking_method: slate_relative_minimax_competition_rank
+  hit_rank: football_confidence_z_descending
+  price_quality_rank: expected_value_descending
+  primary: minimize_max_hit_rank_price_quality_rank
+  secondary: minimize_hit_rank_plus_price_quality_rank
+  tiebreaks:
+    - evaluator_recommended_units_descending
+    - reliability_HIGH_before_MEDIUM_before_LOW
+    - uncertainty_ascending_null_last
+    - deterministic_identity_ascending
+
+value:
+  question: "Which evaluator-approved wager has the strongest strict positive EV?"
+  require_strict_positive_value: true
+  primary_rank: expected_value_descending
+  tiebreaks:
+    - evaluator_recommended_units_descending
+    - reliability_HIGH_before_MEDIUM_before_LOW
+    - uncertainty_ascending_null_last
+    - football_confidence_z_descending_null_last
+    - deterministic_identity_ascending
+
+featured_card_distinctness:
+  allocation_order: [VALUE, HIGH_HIT_RATE, BALANCED]
+  duplicate_wager_across_primary_cards: false
+  card_may_be_empty_if_no_unused_eligible_candidate: true
+
+integrity:
+  no_market_specific_logic: true
+  no_model_math: true
+  no_offer_selection_math: true
+  no_staking_style_math: true
+  no_roi_input: true
+  no_historical_threshold_tuning: true
+  no_outcome_fields: true
+  no_2025: true
+
+required_tests:
+  - selector_requires_precomputed_evaluator_board_fields
+  - hhr_ranks_actionable_board_by_football_confidence
+  - hhr_does_not_select_lean_pass_or_zero_unit_rows
+  - balanced_minimax_uses_confidence_and_ev_only
+  - value_requires_strict_positive_ev
+  - market_type_never_changes_rank_for_equal_inputs
+  - low_reliability_is_not_an_eligibility_veto
+  - distinct_primary_cards
+  - deterministic_ties
+  - outcome_firewall
+  - sealed_2025_firewall

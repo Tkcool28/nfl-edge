@@ -1,0 +1,49 @@
+version: task05f_staking_v2_1_units
+status: PREREGISTERED_BEFORE_V2_1_STRUCTURAL_OR_BANKROLL_REPLAY
+scope: evaluator_units_without_low_reliability_hard_veto
+
+supersedes_for_production_staking:
+  config: config/task05f_staking_v2_units_prereg.yaml
+  reason: >-
+    V2 incorrectly converted LOW evaluator reliability into an automatic zero
+    stake even when the accepted Play Through layer classified the wager VALUE
+    or PLAYABLE. V2.1 retains the same unit formulas and user risk styles but
+    removes LOW as a hard veto. UNSUPPORTED remains zero.
+
+unchanged_from_v2:
+  user_risk_styles: true
+  maximum_units_per_wager: 2.0
+  global_absolute_wager_cap_fraction: 0.05
+  playable_unit_formula: true
+  value_unit_formula: true
+  exposure_caps: true
+  kelly_internal_diagnostic_only: true
+
+reliability_semantics:
+  HIGH: SIZEABLE
+  MEDIUM: SIZEABLE
+  LOW: SIZEABLE_IF_VALUE_OR_PLAYABLE
+  UNSUPPORTED: ZERO
+  note: >-
+    Play Through already narrows the acceptable negative-EV concession using its
+    confidence multiplier. Value units already use that same confidence input.
+    V2.1 therefore does not add another historical reliability threshold.
+
+integrity:
+  no_unit_tuning_from_roi: true
+  no_new_unit_threshold: true
+  no_price_bucket_search: true
+  no_outcome_input: true
+  no_2025: true
+
+required_tests:
+  - high_and_medium_behavior_equal_v2
+  - low_playable_gets_positive_units
+  - low_value_gets_positive_units
+  - unsupported_gets_zero
+  - lean_and_pass_get_zero
+  - playable_units_remain_between_point5_and_1
+  - value_units_remain_between_1_and_2
+  - risk_style_and_exposure_caps_unchanged
+  - outcome_firewall
+  - sealed_2025_firewall

@@ -9,10 +9,12 @@ on:
       - main
     paths:
       - 'src/nfl_edge/value/**'
+      - 'src/nfl_edge/user/**'
       - 'scripts/task05f_*'
       - 'tests/value/**'
-      - 'config/task05f_evaluator_rebuild_v1.yaml'
-      - 'docs/task05f_evaluator_rebuild_v1.md'
+      - 'config/task05f_*.yaml'
+      - 'docs/task05f_*.md'
+      - 'reports/task05f_*'
       - '.github/workflows/task05f-evaluator-validation.yml'
   workflow_dispatch:
 
@@ -22,7 +24,7 @@ permissions:
 jobs:
   evaluator-contract:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - name: Checkout exact commit
         uses: actions/checkout@v4
@@ -38,7 +40,7 @@ jobs:
       - name: Install evaluator test dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e '.[model-development]' pytest scipy
+          python -m pip install -e '.[model-development]' pytest scipy pyyaml
 
       - name: Enforce evaluator-only scope
         shell: bash
@@ -48,59 +50,74 @@ jobs:
           git cat-file -e "$BASE^{commit}"
           git diff --name-only "$BASE"...HEAD | tee /tmp/task05f_changed_paths.txt
           if grep -E '^(src/nfl_edge/models/|src/nfl_edge/backtest/expected_margin|data/modeling/|data/frozen/|reports/task05d/|reports/task05e_remediated/|config/expected_margin|config/.*qb|config/.*xgb)' /tmp/task05f_changed_paths.txt; then
-            echo 'ERROR: Task05F rebuild modified frozen football-model/data scope.' >&2
+            echo 'ERROR: Task05F modified frozen football-model/data scope.' >&2
             exit 1
           fi
 
-      - name: Detect bootstrap versus full evaluator checkout
-        id: mode
+      - name: Record corrected architecture provenance
         shell: bash
         run: |
-          set -euo pipefail
-          if [[ -d tests/value && -f scripts/market_evaluator_v1_runner.py ]]; then
-            echo 'full=true' >> "$GITHUB_OUTPUT"
-          else
-            echo 'full=false' >> "$GITHUB_OUTPUT"
-            echo 'CI bootstrap checkout: evaluator branch files are intentionally not present yet.'
-          fi
-
-      - name: Record validation provenance
-        shell: bash
-        run: |
-          set -euo pipefail
           mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "evaluator_only",\n  "sealed_season": 2025,\n  "full_evaluator_checkout": "%s"\n}\n' \
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "evaluated_wager_board_v1_selector_v3_4_staking_v2_1_contract",\n  "sealed_season": 2025,\n  "designated_product_v2_evidence_run": 32560871713,\n  "designated_model_confidence_audit_run": 32573369004,\n  "historical_selector_v3_4_scoring": "DISABLED",\n  "historical_staking_v2_1_bankroll_simulation": "DISABLED",\n  "structural_replay": "NOT_RUN_ON_ORDINARY_PUSHES"\n}\n' \
             "$GITHUB_SHA" \
             '3ed8d740a88b59d46e27e206f39757307a6a13da' \
-            '${{ steps.mode.outputs.full }}' \
             > artifacts/task05f/ci_provenance.json
           cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
-
-      - name: Bootstrap workflow smoke check
-        if: steps.mode.outputs.full != 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -f .github/workflows/task05f-evaluator-validation.yml
-          test "$(wc -l < /tmp/task05f_changed_paths.txt)" -eq 1
-          grep -qx '.github/workflows/task05f-evaluator-validation.yml' /tmp/task05f_changed_paths.txt
+          sha256sum config/task05f_evaluator_locked_v1.yaml > artifacts/task05f/locked_config_sha256.txt
+          sha256sum config/task05f_play_through_v1_1_prereg.yaml > artifacts/task05f/play_through_v1_1_prereg_sha256.txt
+          sha256sum config/task05f_candidate_table_v1.yaml > artifacts/task05f/candidate_table_v1_sha256.txt
+          sha256sum config/task05f_evaluated_wager_board_v1_prereg.yaml > artifacts/task05f/evaluated_wager_board_v1_prereg_sha256.txt
+          sha256sum config/task05f_staking_v2_1_units_prereg.yaml > artifacts/task05f/staking_v2_1_prereg_sha256.txt
+          sha256sum config/task05f_selectors_v3_4_thin_prereg.yaml > artifacts/task05f/selectors_v3_4_prereg_sha256.txt
+          sha256sum config/task05f_model_confidence_audit_v1.yaml > artifacts/task05f/model_confidence_audit_v1_prereg_sha256.txt
 
       - name: Run Task05F value-layer tests
-        if: steps.mode.outputs.full == 'true'
         run: pytest -q tests/value/
 
-      - name: Verify 2025 remains sealed in evaluator runner
-        if: steps.mode.outputs.full == 'true'
+      - name: Compile corrected downstream modules
+        run: |
+          python -m py_compile scripts/task05f_candidate_table_v1_runner.py
+          python -m py_compile src/nfl_edge/value/evaluated_wager_board.py
+          python -m py_compile src/nfl_edge/value/staking_v2_1.py
+          python -m py_compile src/nfl_edge/value/selectors_v3_4.py
+          python -m py_compile src/nfl_edge/user/staking_profile_v2.py
+          python -m py_compile scripts/task05f_model_confidence_audit_v1_runner.py
+          python -m py_compile scripts/task05f_selectors_v3_4_structural_runner.py
+          python - <<'PY'
+          from nfl_edge.value.evaluated_wager_board import build_evaluated_wager_board
+          from nfl_edge.value.staking_v2_1 import evaluator_units_v2_1, recommend_stake_v2_1
+          from nfl_edge.value.selectors_v3_4 import select_primary_cards_v3_4
+          assert callable(build_evaluated_wager_board)
+          assert callable(evaluator_units_v2_1)
+          assert callable(recommend_stake_v2_1)
+          assert callable(select_primary_cards_v3_4)
+          print('evaluated_wager_board_v1_import=PASS')
+          print('staking_v2_1_import=PASS')
+          print('selector_v3_4_import=PASS')
+          print('selector_v3_4_structural_runner_compile=PASS')
+          PY
+
+      - name: Verify corrected architecture contracts
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'SEALED={2025}' scripts/market_evaluator_v1_runner.py
-          grep -q 'pl.col("season").is_in(DEV)' scripts/market_evaluator_v1_runner.py
+          grep -q 'status: PREREGISTERED_BEFORE_STRUCTURAL_REPLAY_OR_2025' config/task05f_evaluated_wager_board_v1_prereg.yaml
+          grep -q 'selector_may_recompute_wager_math: false' config/task05f_selectors_v3_4_thin_prereg.yaml
+          grep -q 'market_type_is_metadata_only: true' config/task05f_selectors_v3_4_thin_prereg.yaml
+          grep -q 'require_evaluator_actionable: true' config/task05f_selectors_v3_4_thin_prereg.yaml
+          grep -q 'status: PREREGISTERED_BEFORE_V2_1_STRUCTURAL_OR_BANKROLL_REPLAY' config/task05f_staking_v2_1_units_prereg.yaml
+          grep -q 'LOW: SIZEABLE_IF_VALUE_OR_PLAYABLE' config/task05f_staking_v2_1_units_prereg.yaml
+          grep -q 'UNSUPPORTED: ZERO' config/task05f_staking_v2_1_units_prereg.yaml
+          grep -q 'no_roi_input: true' config/task05f_evaluated_wager_board_v1_prereg.yaml
+          grep -q 'no_2025: true' config/task05f_selectors_v3_4_thin_prereg.yaml
+          echo 'historical_selector_v3_4_outcome_scoring=DISABLED'
+          echo 'historical_staking_v2_1_bankroll_simulation=DISABLED'
+          echo 'structural_replay=NOT_RUN_ON_ORDINARY_PUSHES'
 
-      - name: Upload evaluator validation evidence
+      - name: Upload contract evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: task05f-evaluator-validation-${{ github.sha }}
+          name: task05f-evaluator-contract-${{ github.sha }}
           path: artifacts/task05f/
           if-no-files-found: error

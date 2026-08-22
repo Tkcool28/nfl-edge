@@ -1,0 +1,45 @@
+{
+  "artifact": "OOS evaluator row-level artifact (orientation-fix run), not committed (oversized)",
+  "storage_path": "/tmp/orient-oos/rows.json",
+  "file_sha256": "eba0d5301163d7479948855f63ecb1ca71e0d5d8b5cbd54e9206b6ef2635de84",
+  "row_count": 34994,
+  "columns": [
+    "block",
+    "dec",
+    "ev",
+    "game_id",
+    "p",
+    "price",
+    "reason",
+    "rel",
+    "season",
+    "side",
+    "y"
+  ],
+  "min_max_season": [
+    2020,
+    2024
+  ],
+  "block_count": 109,
+  "family_row_counts": {
+    "moneyline/exact_avg": 2816,
+    "moneyline/global_shrinkage": 2816,
+    "moneyline/pinnacle": 2816,
+    "moneyline/raw_qbelo": 2816,
+    "moneyline/raw_xgb": 2816,
+    "moneyline/reliability_aware_shrinkage": 2816,
+    "moneyline/strong_logistic": 2494,
+    "spread/calibrated_normal": 2501,
+    "spread/normal_cdf": 2760,
+    "spread/strong_logistic": 2501,
+    "total/calibrated_normal": 2526,
+    "total/normal_cdf": 2790,
+    "total/strong_logistic": 2526
+  },
+  "distinct_games_by_market": {
+    "moneyline": 1408,
+    "spread": 1393,
+    "total": 1406
+  },
+  "config_sha256": "74656de2f8ef03c0f7b1446d701856ef97fbb8136da4c01234d27875a8bf75c7"
+}

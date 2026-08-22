@@ -1,0 +1,146 @@
+version: task05f_selectors_v3_1_product_prereg
+status: PREREGISTERED_BEFORE_V3_1_OR_2025_OUTCOME_SCORING
+scope: deterministic_distinct_primary_card_policy_with_balanced_as_independent_product_objective
+
+supersedes_for_production_selection:
+  config: config/task05f_selectors_v3_capability_prereg.yaml
+  reason: >-
+    Product semantics were corrected before any Selector V3 historical outcome
+    scoring. Balanced must not be a second strict-Value card, and featured cards
+    should use distinct wager identities when sufficient eligible candidates exist.
+  v3_remains_audit_history: true
+
+upstream_capability_source:
+  locked_config: config/task05f_evaluator_locked_v1.yaml
+  rule: >-
+    Market capability remains derived from evaluator evidence locked before
+    selector V1/V2 historical results. No market is promoted by selector ROI.
+
+market_capability_registry:
+  moneyline:
+    probability_capability: ACCEPTED
+    value_capability: NOT_DEMONSTRATED_FULL_BOARD
+  spread:
+    probability_capability: ACCEPTED
+    value_capability: ACCEPTED
+  total:
+    probability_capability: ACCEPTED_WEAK
+    value_capability: NOT_DEMONSTRATED
+
+common_eligibility:
+  supported_required: true
+  allowed_reliability: [HIGH, MEDIUM]
+  low_reliability: INFORMATIONAL_EXPLORER_ONLY
+  unsupported: NEVER_SELECT
+  sealed_2025_loaded: false
+
+high_hit_rate:
+  question: "What is the best available validated actionable wager to cash?"
+  capability_requirement: probability_capability_in_[ACCEPTED,ACCEPTED_WEAK]
+  eligible_markets: [moneyline, spread, total]
+  price_status: [VALUE, PLAYABLE]
+  strict_positive_ev_required: false
+  primary_rank: actionable_probability_descending
+  tiebreaks:
+    - reliability_HIGH_before_MEDIUM
+    - price_status_VALUE_before_PLAYABLE
+    - expected_value_descending
+    - uncertainty_ascending_null_last
+    - deterministic_identity_ascending
+
+balanced:
+  question: "What is the strongest compromise between chance to cash and price quality?"
+  capability_requirement: probability_capability_in_[ACCEPTED,ACCEPTED_WEAK]
+  eligible_markets: [moneyline, spread, total]
+  price_status: [VALUE, PLAYABLE]
+  strict_positive_ev_required: false
+  ranking_method: slate_relative_minimax_competition_rank
+  hit_rank: actionable_probability_descending_equal_values_share_rank
+  price_quality_rank: expected_value_descending_equal_values_share_rank
+  primary: minimize_max_hit_rank_price_quality_rank
+  secondary: minimize_hit_rank_plus_price_quality_rank
+  tiebreaks:
+    - reliability_HIGH_before_MEDIUM
+    - uncertainty_ascending_null_last
+    - actionable_probability_descending
+    - expected_value_descending
+    - deterministic_identity_ascending
+  note: >-
+    Balanced may be VALUE or PLAYABLE. It is intentionally not constrained to
+    strict Value and is therefore not a second Value selector.
+
+value:
+  question: "Which wager has the strongest credible positive expected value?"
+  capability_requirement: value_capability_ACCEPTED
+  currently_eligible_markets: [spread]
+  price_status: [VALUE]
+  strict_positive_value: true
+  primary_rank: expected_value_descending
+  tiebreaks:
+    - reliability_HIGH_before_MEDIUM
+    - evaluated_edge_probability_descending
+    - uncertainty_ascending_null_last
+    - actionable_probability_descending
+    - deterministic_identity_ascending
+
+featured_card_distinctness:
+  distinct_candidate_id_required_when_available: true
+  duplicate_resolution_allocation_order: [VALUE, HIGH_HIT_RATE, BALANCED]
+  semantics: >-
+    Each card is ranked independently. VALUE receives first claim because it is
+    the narrowest capability. HIGH_HIT_RATE then takes its highest-ranked unused
+    candidate, and BALANCED takes its highest-ranked unused candidate. A card is
+    allowed to be empty rather than duplicate an already-featured wager.
+  duplicate_wager_across_primary_cards: false
+  forced_market_diversification: false
+  forced_action: false
+
+raw_football_signal:
+  primary_card_gate: false
+  magnitude_used_in_primary_ranking: false
+  reserved_for_sleeper_watch_and_diagnostics: true
+
+validation_policy:
+  v3_2020_2024_outcome_scoring_performed: false
+  v3_1_2020_2024_outcomes_may_not_promote_or_tune_rules: true
+  structural_or_diagnostic_replay_only: true
+  independent_review_required_before_2025: true
+  sealed_2025_is_next_clean_selector_outcome_evidence: true
+
+integrity:
+  no_model_fit: true
+  no_probability_change: true
+  no_reliability_change: true
+  no_play_through_change: true
+  no_staking_change_in_this_config: true
+  no_ev_threshold_change: true
+  no_disagreement_gate: true
+  no_price_bucket_search: true
+  no_roi_bucket_search: true
+  no_selector_v1_v2_roi_input: true
+  no_2025: true
+
+required_tests:
+  - high_hit_allows_value_or_playable_across_probability_capable_markets
+  - balanced_allows_value_or_playable_across_probability_capable_markets
+  - balanced_does_not_require_positive_ev
+  - balanced_minimax_known_example
+  - value_requires_strict_positive_ev_and_accepted_value_capability
+  - value_currently_rejects_moneyline_and_total
+  - featured_cards_use_distinct_candidate_ids_when_available
+  - duplicate_resolution_order_is_value_then_high_hit_then_balanced
+  - card_may_be_empty_instead_of_duplicate
+  - low_and_unsupported_never_selected
+  - no_forced_market_diversification
+  - deterministic_ties
+  - outcome_fields_rejected
+  - sealed_2025_firewall
+
+promotion:
+  production_promotion: false
+  next_required_steps:
+    - implement_and_synthetic_test_v3_1
+    - implement_staking_v2_units
+    - run_diagnostic_2020_2024_product_simulation_without_retuning
+    - independent_review
+    - open_2025_once

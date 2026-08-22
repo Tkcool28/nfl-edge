@@ -1,0 +1,46 @@
+version: task05f_selectors_v1_implementation_lock
+status: LOCKED_BEFORE_SELECTOR_HISTORICAL_SCORING
+scope: deterministic_selector_implementation_clarifications
+
+parent_preregistration: config/task05f_selectors_v1_prereg.yaml
+parent_status_required: PREREGISTERED_BEFORE_SELECTOR_HISTORICAL_SCORING
+sealed_seasons: [2025]
+
+rank_semantics:
+  balanced_equal_value_rank: competition_min_rank
+  definition: "rank(x) = 1 + count(eligible values strictly better than x)"
+  descending_fields: [actionable_probability, expected_value]
+  historical_outcomes_used: false
+
+required_field_behavior:
+  high_hit_rate:
+    required_non_null: [actionable_probability, expected_value]
+  balanced:
+    required_non_null: [actionable_probability, expected_value]
+  value:
+    required_non_null: [actionable_probability, expected_value, evaluated_edge_probability]
+  missing_required_field: INELIGIBLE_FAIL_CLOSED
+
+null_tiebreak_behavior:
+  uncertainty: NULL_LAST
+  any_other_nullable_tiebreak: NULL_LAST
+
+candidate_aliases_for_parent_identity_tiebreak:
+  selected_side: selection
+  sportsbook: actionable_book
+  line: actionable_line
+  american_odds: actionable_price_american
+
+outcome_firewall:
+  reject_candidate_rows_containing_any_of: [settlement, realized_profit, home_score, away_score]
+  selector_receives_historical_sidecar: false
+
+integrity:
+  no_change_to_parent_eligibility: true
+  no_change_to_parent_primary_rankings: true
+  no_change_to_parent_tiebreak_order: true
+  no_new_threshold: true
+  no_roi_input: true
+  no_coverage_input: true
+  no_staking_probability_in_ranking: true
+  no_2025: true

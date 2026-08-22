@@ -1,0 +1,132 @@
+version: task05f_selectors_v3_3_market_agnostic_prereg
+status: PREREGISTERED_BEFORE_V3_3_HISTORICAL_OUTCOME_SCORING
+scope: market_agnostic_primary_cards_using_native_football_confidence
+
+supersedes_for_production_selection:
+  config: config/task05f_selectors_v3_2_model_native_prereg.yaml
+  reason: >-
+    Market type must not determine which primary card a wager may win. V3.3
+    creates one comparable football-confidence axis from each frozen model's
+    native output, then ranks all market types together.
+
+principles:
+  market_type_is_metadata_not_eligibility: true
+  no_market_specific_primary_card_assignment: true
+  no_roi_tuning: true
+  no_hit_rate_threshold_tuning: true
+  no_2025: true
+
+football_confidence_adapter:
+  purpose: >-
+    Convert frozen model-native outputs to one dimensionless confidence score.
+    This is selector normalization only; it does not alter any frozen model or
+    evaluator probability.
+  moneyline:
+    source: raw_football_output
+    source_unit: selected_side_probability
+    z_score: normal_inverse_cdf(raw_football_output)
+  spread:
+    source: raw_football_output
+    source_unit: expected_home_margin_points
+    selected_side_edge_points:
+      home: raw_football_output + actionable_line
+      away: -raw_football_output + actionable_line
+    frozen_error_scale_points: 13.8145
+    error_scale_source: expected_margin_v1_development_rmse
+    z_score: selected_side_edge_points / frozen_error_scale_points
+  total:
+    source: raw_football_output
+    source_unit: projected_total_points
+    selected_side_edge_points:
+      over: raw_football_output - actionable_line
+      under: actionable_line - raw_football_output
+    frozen_error_scale_points: 13.5453379336442
+    error_scale_source: ridge_totals_r4_oob_rmse
+    z_score: selected_side_edge_points / frozen_error_scale_points
+  display_score: normal_cdf(z_score)
+  display_score_semantics: model_native_cash_confidence_proxy_not_evaluator_fair_probability
+  sportsbook_price_not_used: true
+  evaluator_probability_not_used: true
+
+high_hit_rate:
+  question: "Which available wager has the strongest frozen football-model confidence to cash?"
+  eligible_markets: ALL_WITH_FINITE_FOOTBALL_CONFIDENCE
+  evaluator_support_required: false
+  evaluator_reliability_gate: false
+  price_status_gate: false
+  expected_value_gate: false
+  primary_rank: football_confidence_z_descending
+  tiebreaks:
+    - model_native_cash_confidence_proxy_descending
+    - deterministic_identity_ascending
+  note: >-
+    HHR may be VALUE, PLAYABLE, LEAN, or PASS at the current price. Status and
+    recommended stake remain visible; price quality does not rewrite football confidence.
+
+balanced:
+  question: "Which wager gives the best compromise between football confidence and price quality?"
+  eligible_markets: ALL_WITH_FINITE_FOOTBALL_CONFIDENCE
+  evaluator_support_required: true
+  price_status: [VALUE, PLAYABLE]
+  reliability_allowed: [HIGH, MEDIUM, LOW]
+  reliability_is_penalty_not_market_gate: true
+  ranking_method: slate_relative_minimax_competition_rank
+  hit_rank: football_confidence_z_descending_equal_values_share_rank
+  price_quality_rank: expected_value_descending_equal_values_share_rank
+  primary: minimize_max_hit_rank_price_quality_rank
+  secondary: minimize_hit_rank_plus_price_quality_rank
+  tiebreaks:
+    - reliability_HIGH_before_MEDIUM_before_LOW
+    - uncertainty_ascending_null_last
+    - football_confidence_z_descending
+    - expected_value_descending
+    - deterministic_identity_ascending
+
+value:
+  question: "Which supported wager has the strongest strict positive expected value?"
+  eligible_markets: ALL
+  evaluator_support_required: true
+  strict_positive_value_required: true
+  price_status: [VALUE]
+  reliability_allowed: [HIGH, MEDIUM, LOW]
+  primary_rank: expected_value_descending
+  tiebreaks:
+    - reliability_HIGH_before_MEDIUM_before_LOW
+    - uncertainty_ascending_null_last
+    - evaluated_edge_probability_descending
+    - football_confidence_z_descending_null_last
+    - deterministic_identity_ascending
+
+featured_card_distinctness:
+  duplicate_wager_across_primary_cards: false
+  allocation_order: [VALUE, HIGH_HIT_RATE, BALANCED]
+  card_may_be_empty_if_no_unused_candidate: true
+  forced_market_diversification: false
+
+outcome_firewall:
+  selector_inputs_forbid_outcome_fields: true
+  sealed_2025_loaded: false
+
+integrity:
+  football_models_unchanged: true
+  evaluator_unchanged: true
+  play_through_unchanged: true
+  staking_unchanged: true
+  no_model_fit: true
+  no_probability_fit: true
+  no_market_bucket_search: true
+  no_roi_bucket_search: true
+  no_threshold_search: true
+
+required_tests:
+  - all_three_markets_can_win_high_hit_rate
+  - all_three_markets_can_win_balanced
+  - all_three_markets_can_win_value
+  - hhr_ignores_evaluator_price_and_reliability_as_selection_gates
+  - balanced_uses_football_confidence_and_expected_value_not_market_type
+  - value_is_strict_positive_ev_without_market_filter
+  - low_reliability_is_penalty_not_market_exclusion_for_balanced_and_value
+  - deterministic_ties
+  - distinct_primary_cards
+  - outcome_firewall
+  - sealed_2025_firewall

@@ -1,0 +1,98 @@
+version: task05f_ml_v4_prereg
+scope: evaluator_only_moneyline
+parent_evidence: reports/task05f_rebuild_v3/validation_summary.md
+base_task05f_commit: 3ed8d740a88b59d46e27e206f39757307a6a13da
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+chronology: expanding_prior_season_week_blocks_only
+minimum_prior_games: 128
+
+integrity:
+  spread_architecture_frozen_at_v3: true
+  totals_architecture_frozen_at_v3: true
+  football_models_frozen: true
+  task05e_candidate_definitions_frozen: true
+  outcome_bucket_search: false
+  odds_bucket_search: false
+  dog_favorite_bucket_search: false
+  disagreement_bucket_search: false
+  sealed_2025_loaded: false
+  candidate_definition_may_change_after_v4_scoring: false
+
+frozen_model:
+  qbelo: data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet
+  xgb: data/modeling/development_v1/chronology_corrected/xgboost_candidate_predictions_2018_2024.parquet
+  xgb_candidate: conservative
+  model_probability: exact_avg
+
+market:
+  benchmark_book: pinnacle
+  actionable_books: [draftkings, fanduel]
+  no_vig_method: proportional
+  shopping_contract: best_price_dk_fd_with_fixed_tie_break
+
+candidate:
+  name: calibrated_pinnacle_optional_exact_avg_logit_pool
+  training_population: prior_non_tie_games_with_pinnacle_pair_and_both_frozen_model_constituents
+  stage_1_market_calibration:
+    feature: "x = logit(clip(p_pinnacle_home_no_vig, 0.01, 0.99))"
+    fit: "logistic regression of home win on x, intercept enabled, L2 C=1.0, no class weights"
+    monotonicity_gate: "fitted slope must be > 0; otherwise block unsupported"
+    prediction: "p_market_cal_home = sigmoid(intercept + slope*x_current)"
+  stage_2_optional_model_pool:
+    model_probability: "p_model_home = exact AVG(QB-Elo, XGB)"
+    formula: "logit(p_final_home) = logit(p_market_cal_home) + w * (logit(p_model_home) - logit(p_market_cal_home))"
+    weight_fit: "choose scalar w in [0,1] minimizing prior binary log loss using the already fitted stage-1 market calibration; deterministic convex bisection; no ROI objective"
+    constraints:
+      - "0 <= w <= 1"
+      - "final probability remains between calibrated market and model in logit space"
+      - "model-market disagreement direction cannot reverse or overshoot"
+    zero_weight_semantics: "w=0 is acceptable evidence that the market-calibrated fair-value layer should remain separate from the raw football signal; it does not erase raw model output from evaluator rows"
+  tie_mass: prior_only_empirical_jeffreys_same_as_v1_v2_v3
+
+forbidden_fit_inputs:
+  - draftkings_price
+  - fanduel_price
+  - historical_roi
+  - frozen_05e_bucket
+  - dog_favorite_indicator
+  - discovered_price_region
+  - sealed_2025
+
+outputs:
+  - raw_model_probability
+  - raw_pinnacle_no_vig_probability
+  - calibrated_market_probability
+  - final_actionable_probability
+  - model_market_disagreement
+  - p_win
+  - p_push
+  - p_loss
+  - fair_price_american
+  - expected_value
+  - reliability
+  - support_status
+
+value_semantics: strict_expected_value_greater_than_zero
+play_through_formula: deferred_until_ml_core_probability_acceptance
+
+acceptance_dimensions:
+  chronology_and_2025_firewall: hard_gate
+  exact_offer_and_tie_semantics: hard_gate
+  deterministic_reproduction: hard_gate
+  calibrated_market_probability_quality: required
+  full_board_wagering_discrimination: required_directional_evidence
+  frozen_ml_edge_preservation: external_validation_not_tuning_target
+  no_bucket_or_price_hunting: hard_gate
+
+selection_policy:
+  market_calibration: "Must improve or materially preserve Pinnacle proper scoring and remove the catastrophic anti-informative apparent +EV ordering seen with raw no-vig probability."
+  optional_model_pool: "A zero fitted model weight is permitted. A nonzero weight may be retained only if proper scoring chooses it from prior data. ROI cannot force a nonzero weight."
+  frozen_external_evidence: "Previously locked ML dog-zone evidence must not be silently destroyed; it is reported, never used to choose calibration parameters."
+  production_promotion: false_until_master_review
+
+new_observation_policy:
+  label: OBSERVATIONAL_ONLY_NOT_TUNED
+  may_modify_v4_candidate: false
+  may_be_saved_for_2025_hypothesis: true

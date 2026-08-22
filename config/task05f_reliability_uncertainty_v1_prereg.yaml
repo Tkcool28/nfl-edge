@@ -1,0 +1,146 @@
+version: task05f_reliability_uncertainty_v1_prereg
+status: PREREGISTERED_BEFORE_PHASE_F_HISTORICAL_SCORING
+scope: evaluator_only_post_probability
+
+base_locked_evaluator:
+  config: config/task05f_evaluator_locked_v1.yaml
+  config_sha256: cc0566a56c0a6a0bee78b9f572b0dc70d1d3be8fbd16b7c6377f1e734b337fb5
+  moneyline: ml_v4
+  spread: spread_v3
+  total: total_v3
+  consolidation_report: reports/task05f_locked_v1/consolidation_summary.md
+
+source_design_contract:
+  prereg_source: config/market_evaluator_v1.yaml
+  uncertainty_method: deterministic_season_week_block_bootstrap_calibration_gap_radius
+  bootstrap_replicates: 1000
+  bootstrap_seed: 20260820
+  interval_quantile: 0.90
+  reliability_haircut: {HIGH: 1.0, MEDIUM: 0.70, LOW: 0.35, UNSUPPORTED: 0.0}
+  uncertainty_scale_denominator: 0.10
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+chronology: expanding_prior_season_week_blocks_only
+
+integrity:
+  locked_probability_fields_immutable: true
+  immutable_fields:
+    - p_win
+    - p_push
+    - p_loss
+    - actionable_probability
+    - fair_price_american
+    - expected_value
+    - strict_positive_value
+  football_models_frozen: true
+  no_probability_refit: true
+  no_price_bucket_search: true
+  no_disagreement_bucket_search: true
+  no_roi_threshold_search: true
+  no_selector_scoring_in_this_phase: true
+  no_play_through_scoring_in_this_phase: true
+  sealed_2025_loaded: false
+
+candidate_uncertainty:
+  evidence_source: strictly_prior_locked_out_of_sample_predictions_only
+  unit: absolute_conditional_nonpush_probability
+  canonical_history_side:
+    moneyline: home
+    spread: home
+    total: over
+  history_row_requirements:
+    supported: true
+    settlement: [WIN, LOSS]
+    pushes_excluded: true
+  conditional_nonpush_probability: "q_eval = p_win / (p_win + p_loss)"
+  calibration_row: "(season_week_block, q_eval, observed_win_binary)"
+  minimum_prior_oos_rows_for_radius: 128
+  minimum_distinct_prior_blocks_for_stability: 4
+  radius: "0.90 quantile of abs(mean predicted-minus-observed calibration gap) under 1000 deterministic season-week block bootstrap replicates"
+  bootstrap_replicates: 1000
+  bootstrap_seed: 20260820
+  bootstrap_quantile: 0.90
+  stability_max_radius: 0.05
+  cold_start_behavior: "retain supported evaluator row but candidate uncertainty is null and candidate reliability tier is LOW"
+
+candidate_uncertainty_tier:
+  HIGH:
+    minimum_prior_oos_rows: 512
+    maximum_radius: 0.025
+    radius_must_be_positive: true
+  MEDIUM:
+    minimum_prior_oos_rows: 256
+    maximum_radius: 0.045
+    radius_must_be_positive: true
+  LOW:
+    fallback: true
+  UNSUPPORTED:
+    source: locked_evaluator_support_gate_only
+
+final_reliability:
+  rule: "worse(base_locked_reliability, candidate_uncertainty_tier)"
+  order_best_to_worst: [HIGH, MEDIUM, LOW, UNSUPPORTED]
+  may_upgrade_base_reliability: false
+  existing_support_ood_gate_retained: true
+
+staking_anchor_probability:
+  semantics: conditional_nonpush_market_probability
+  moneyline: "selected-side calibrated_market_probability from ML V4"
+  spread: "selected-side orientation of V3 pinnacle_anchor_probability (HOME uses p_home; AWAY uses 1-p_home)"
+  total: "selected-side orientation of V3 pinnacle_anchor_probability (OVER uses p_over; UNDER uses 1-p_over)"
+  missing_anchor: staking_probability_null
+
+staking_probability:
+  semantics: conservative_conditional_nonpush_probability_for_bankroll_sizing
+  evaluator_probability: "q_eval = p_win / (p_win + p_loss)"
+  uncertainty_factor: "u_factor = max(0, 1 - min(1, uncertainty_radius / 0.10)); if radius is null, u_factor=0"
+  reliability_haircut: {HIGH: 1.0, MEDIUM: 0.70, LOW: 0.35, UNSUPPORTED: 0.0}
+  formula: "q_stake = p_market_anchor + reliability_haircut * u_factor * (q_eval - p_market_anchor)"
+  clip: [0.01, 0.99]
+  point_market_push_semantics: "Kelly later uses q_stake conditional on non-push; push is refund/no bankroll change"
+  derived_staking_outcomes:
+    p_win: "(1-p_push) * q_stake"
+    p_push: "p_push unchanged"
+    p_loss: "(1-p_push) * (1-q_stake)"
+  staking_expected_value: "staking_p_win * (decimal_odds - 1) - staking_p_loss"
+
+required_outputs:
+  - uncertainty
+  - uncertainty_support_n
+  - uncertainty_block_count
+  - candidate_uncertainty_tier
+  - base_reliability
+  - reliability
+  - conditional_nonpush_probability
+  - staking_anchor_probability
+  - staking_probability
+  - staking_p_win
+  - staking_p_push
+  - staking_p_loss
+  - staking_expected_value
+  - break_even_probability
+  - evaluated_edge_probability
+  - staking_edge_probability
+
+historical_diagnostics:
+  outcome_use: diagnostic_only_after_preregistration
+  report:
+    - uncertainty_by_market_and_block
+    - final_reliability_distribution
+    - staking_probability_distribution
+    - staking_positive_ev_counts
+    - flat_realized_roi_by_staking_ev_sign
+    - per_season_reliability_mix
+  may_change_formula_after_results: false
+  new_observation_label: OBSERVATIONAL_ONLY_NOT_TUNED
+
+acceptance_gates:
+  locked_probability_rows_unchanged: hard_gate
+  strict_value_labels_unchanged: hard_gate
+  strictly_prior_oos_uncertainty: hard_gate
+  deterministic_double_run: hard_gate
+  sealed_2025_firewall: hard_gate
+  evaluator_only_scope_guard: hard_gate
+  no_roi_or_coverage_tuning: hard_gate
+  production_promotion: false_until_play_through_selectors_staking_and_independent_review

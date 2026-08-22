@@ -1,0 +1,149 @@
+version: task05f_product_simulation_v2
+status: PREREGISTERED_BEFORE_V3_1_STAKING_V2_2020_2024_PRODUCT_SIMULATION
+scope: diagnostic_end_to_end_selector_v3_1_and_evaluator_unit_staking_v2_behavior
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+slate_key: block
+expected_slates: 109
+results_label: OBSERVATIONAL_ONLY_NOT_TUNED
+
+supersedes_for_product_simulation:
+  config: config/task05f_product_simulation_v1.yaml
+  runner: scripts/task05f_product_simulation_v1_runner.py
+  reason: >-
+    The product staking and selector contracts changed before V1 product
+    simulation execution. V1 Kelly/Flat product simulation is therefore
+    superseded and must not be executed or cited as evidence.
+
+upstream:
+  candidate_table: config/task05f_candidate_table_v1.yaml
+  selector: config/task05f_selectors_v3_1_product_prereg.yaml
+  staking: config/task05f_staking_v2_units_prereg.yaml
+  product_interface: config/task05f_product_interface_v1.yaml
+
+methodology_warning: >-
+  Selector V3.1 was designed after Selector V1/V2 development outcomes were
+  observed. Therefore 2020-2024 V3.1 results are diagnostic product/risk evidence
+  only. They cannot promote or tune Selector V3.1, Staking V2, evaluator units,
+  risk-style bankroll fractions, Play Through, or market capability.
+
+simulated_profiles:
+  - id: CAUTIOUS_100
+    initial_bankroll: 100.0
+    risk_style: CAUTIOUS
+  - id: CONSERVATIVE_100
+    initial_bankroll: 100.0
+    risk_style: CONSERVATIVE
+  - id: STANDARD_100
+    initial_bankroll: 100.0
+    risk_style: STANDARD
+  - id: AGGRESSIVE_100
+    initial_bankroll: 100.0
+    risk_style: AGGRESSIVE
+  - id: VERY_AGGRESSIVE_100
+    initial_bankroll: 100.0
+    risk_style: VERY_AGGRESSIVE
+
+selection_timing:
+  select_cards_before_outcome_join: true
+  assign_evaluator_units_before_outcome_join: true
+  stake_from_bankroll_at_start_of_slate: true
+  all_wagers_on_same_slate_are_concurrent: true
+  settle_after_all_slate_stakes_are_frozen: true
+
+featured_cards:
+  cards: [HIGH_HIT_RATE, BALANCED, VALUE]
+  distinct_candidate_ids_expected_when_cards_non_null: true
+  duplicate_card_wager_is_contract_failure: true
+  no_forced_action: true
+
+bankroll_tracks:
+  per_card:
+    enabled: true
+    independent_bankroll_per_profile_card_pair: true
+  combined_featured_portfolio:
+    enabled: true
+    all_wagers_use_same_start_of_slate_bankroll: true
+    maximum_three_featured_wagers: 3
+    exposure_cap_must_not_be_exceeded: true
+    exposure_state_for_featured_only: >-
+      Featured cards are distinct and their maximum combined natural exposure is
+      at or below the configured style cap. Explorer wagers are not simulated.
+
+settlement:
+  unit_profit_source: historical_outcomes.realized_profit
+  bankroll_update: "ending_bankroll = starting_bankroll + sum(recommended_stake * realized_profit_per_unit)"
+  push_profit: 0.0
+  zero_stake_rows_do_not_change_bankroll: true
+  bankroll_floor: 0.0
+  if_bankroll_reaches_zero: NO_FURTHER_STAKES
+
+reporting:
+  selector:
+    - no_play_counts_by_card
+    - market_mix_by_card
+    - price_status_mix_by_card
+    - reliability_mix_by_card
+    - distinct_card_contract
+  evaluator_units:
+    - units_distribution_by_card
+    - mean_units_by_card
+    - playable_units_distribution
+    - value_units_distribution
+  per_profile_card:
+    - starting_bankroll
+    - ending_bankroll
+    - return_pct
+    - recommended_card_count
+    - positive_stake_count
+    - total_amount_staked
+    - max_drawdown_pct
+    - minimum_bankroll
+    - wins
+    - losses
+    - pushes
+  combined_featured_portfolio:
+    - starting_bankroll
+    - ending_bankroll
+    - return_pct
+    - positive_stake_wagers
+    - total_amount_staked
+    - maximum_single_slate_exposure_pct
+    - configured_exposure_cap_pct
+    - max_drawdown_pct
+    - minimum_bankroll
+
+acceptance:
+  historical_roi_is_not_acceptance_gate: true
+  historical_hit_rate_is_not_acceptance_gate: true
+  coverage_is_not_acceptance_gate: true
+  bankroll_results_may_not_change_staking_v2: true
+  bankroll_results_may_not_change_selector_v3_1: true
+  hard_gates_only:
+    - deterministic_replay
+    - exact_8448_candidate_reproduction
+    - outcome_join_after_selection_and_unit_assignment
+    - start_of_slate_stake_freeze
+    - three_featured_candidate_ids_distinct_when_non_null
+    - evaluator_units_independent_of_risk_style
+    - five_risk_styles_exact_conversion
+    - per_wager_five_percent_absolute_cap
+    - style_exposure_caps_not_exceeded
+    - sealed_2025_firewall
+
+integrity:
+  no_model_change: true
+  no_evaluator_change: true
+  no_play_through_change: true
+  no_selector_change_after_results: true
+  no_staking_change_after_results: true
+  no_roi_tuning: true
+  no_unit_tuning: true
+  no_style_tuning: true
+  no_2025: true
+
+next_after_valid_diagnostic:
+  - freeze_backend_selector_staking_interfaces
+  - independent_review
+  - open_sealed_2025_once

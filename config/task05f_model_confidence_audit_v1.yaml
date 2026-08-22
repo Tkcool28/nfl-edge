@@ -1,0 +1,75 @@
+version: task05f_model_confidence_audit_v1
+status: PREREGISTERED_BEFORE_MODEL_CONFIDENCE_AUDIT_EXECUTION
+scope: diagnostic_only_model_vs_evaluator_selector_coverage_audit
+results_label: OBSERVATIONAL_ONLY_NOT_TUNED
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+slate_key: block
+expected_slates: 109
+
+purpose: >-
+  Determine whether the current High Hit Rate and Balanced product selectors are
+  suppressing or overriding stronger frozen football-model signals. This audit
+  may diagnose architecture mismatch but may not tune thresholds from historical
+  results or change any evaluator/model output.
+
+frozen_inputs:
+  candidate_table: config/task05f_candidate_table_v1.yaml
+  selector: config/task05f_selectors_v3_1_product_prereg.yaml
+  football_models_unchanged: true
+  evaluator_unchanged: true
+  play_through_unchanged: true
+  staking_unchanged: true
+
+moneyline_model_native_audit:
+  football_signal_field: raw_football_output
+  football_signal_semantics: selected_side_exact_avg_qb_elo_xgboost_probability
+  rank_within_slate: raw_football_output_descending
+  natural_confidence_buckets_from_existing_model_reliability_reporting:
+    - [0.50, 0.60]
+    - [0.60, 0.70]
+    - [0.70, 0.80]
+    - [0.80, 0.90]
+    - [0.90, 1.01]
+  compare_universes:
+    - RAW_MODEL_AVAILABLE
+    - HIGH_MEDIUM_RELIABILITY
+    - CURRENT_PRICE_ACTIONABLE_VALUE_OR_PLAYABLE
+    - CURRENT_HIGH_HIT_RATE
+  no_play_reason_audit: true
+  current_hhr_model_direction_disagreement_count: true
+
+spread_audit:
+  football_signal_field: raw_football_output
+  football_signal_semantics: expected_home_margin_points
+  selected_side_cover_edge_points_formula:
+    home: raw_football_output + actionable_line
+    away: -raw_football_output + actionable_line
+  warning: >-
+    Expected Margin development accuracy is straight-up winner accuracy, not ATS
+    cover accuracy. Spread cover-edge diagnostics are not probability calibration.
+  current_hhr_direction_agreement_only: true
+  current_balanced_direction_agreement_only: true
+
+outcome_firewall:
+  freeze_all_model_native_and_current_selector_choices_before_outcome_join: true
+  outcome_sidecar_join_only_after_choice_freeze: true
+  no_outcome_fields_in_candidate_inputs: true
+
+required_outputs:
+  - summary.json
+  - no_play_audit.csv
+  - selected_alignment.csv
+  - provenance.json
+
+integrity:
+  no_model_change: true
+  no_evaluator_change: true
+  no_selector_change: true
+  no_staking_change: true
+  no_play_through_change: true
+  no_threshold_tuning: true
+  no_roi_tuning: true
+  no_coverage_target: true
+  no_2025: true

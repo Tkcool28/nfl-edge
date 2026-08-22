@@ -1,0 +1,119 @@
+version: task05f_evaluator_rebuild_v1
+base_commit: 3ed8d740a88b59d46e27e206f39757307a6a13da
+scope: evaluator_only
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+chronology: expanding_prior_season_week_blocks_only
+minimum_prior_games: 128
+
+actionable_books: [draftkings, fanduel]
+benchmark_book: pinnacle
+book_tie_break: [draftkings, fanduel]
+
+frozen_models:
+  moneyline:
+    qbelo: data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet
+    xgb: data/modeling/development_v1/chronology_corrected/xgboost_candidate_predictions_2018_2024.parquet
+    xgb_candidate: conservative
+  spread:
+    expected_margin: data/modeling/development_v1/expected_margin_predictions_2018_2024.parquet
+    expected_margin_candidate: stable
+  total:
+    ridge_r4: reports/task05d/task05d_ridge_predictions.parquet
+    ridge_candidate: R4
+
+candidate_probability_families:
+  moneyline:
+    - exact_avg
+  spread:
+    - empirical_residual_distribution
+  total:
+    - empirical_residual_distribution
+
+benchmark_probability_families:
+  moneyline:
+    - pinnacle_no_vig
+    - raw_qbelo
+    - raw_xgb
+  spread:
+    - incumbent_calibrated_normal
+  total:
+    - incumbent_calibrated_normal
+
+moneyline_contract:
+  tie_settlement: push
+  tie_probability_method: prior_only_empirical_jeffreys
+  preserve_model_conditional_win_ratio: true
+  formula: "p_push=(prior_ties+0.5)/(prior_games+1); p_win=(1-p_push)*p_model; p_loss=(1-p_push)*(1-p_model)"
+
+point_market_contract:
+  outcome_states: [WIN, PUSH, LOSS]
+  probability_sum_tolerance: 1.0e-9
+  ev_formula: "p_win * (decimal_odds - 1) - p_loss"
+  evaluate_each_offer_at_own_line: true
+  complement_only_exact_same_line: true
+  independently_shopped_sides_may_overlap: true
+  push_probability_method: integer_lattice_half_point_bin
+  probability_smoothing:
+    family: jeffreys
+    half_point_beta_prior: [0.5, 0.5]
+    integer_line_dirichlet_prior: [0.5, 0.5, 0.5]
+    outcome_tuned: false
+
+shopping:
+  moneyline: best_price
+  spread: best_selected_side_number_then_price
+  total_over: lowest_line_then_price
+  total_under: highest_line_then_price
+
+value_semantics:
+  positive_value: "expected_value > 0"
+  fair: "expected_value == 0"
+  negative_value: "expected_value < 0"
+  minimum_positive_ev_threshold: null
+
+play_through:
+  enabled_in_output_contract: true
+  changes_value_label: false
+  formula_status: deferred_until_core_probability_acceptance
+  permitted_inputs: [actionable_probability, p_win, p_push, p_loss, reliability, uncertainty, fair_price_american]
+  forbidden_inputs: [historical_roi_bucket, discovered_price_bucket, sealed_2025_outcome]
+  statuses: [VALUE, PLAYABLE, LEAN, PASS]
+
+frozen_edge_validation:
+  definitions: reports/task_05e_d5_candidate_lock.json
+  performance_truth_dir: reports/task05e_remediated
+  tuning_target: false
+  exact_offer_semantics_required: true
+
+new_observation_policy:
+  label: OBSERVATIONAL_ONLY_NOT_TUNED
+  may_modify_evaluator: false
+  may_be_saved_for_2025_hypothesis: true
+
+fixed_diagnostic_ev_bands:
+  - {label: "<=0%", lower: null, upper: 0.0}
+  - {label: "0-2%", lower: 0.0, upper: 0.02}
+  - {label: "2-5%", lower: 0.02, upper: 0.05}
+  - {label: "5-10%", lower: 0.05, upper: 0.10}
+  - {label: ">10%", lower: 0.10, upper: null}
+
+acceptance_dimensions:
+  - chronology_and_2025_firewall
+  - exact_offer_semantics
+  - push_economics
+  - support_and_cold_start_parity
+  - probability_quality
+  - wagering_discrimination
+  - frozen_edge_preservation
+  - deterministic_reproduction
+
+forbidden_changes:
+  - football_model_features
+  - football_model_parameters
+  - football_model_training_data
+  - task05e_frozen_candidate_definitions
+  - retrospective_roi_threshold_search
+  - retrospective_price_bucket_search
+  - sealed_2025_outcomes

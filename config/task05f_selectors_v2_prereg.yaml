@@ -1,0 +1,118 @@
+version: task05f_selectors_v2_prereg
+status: PREREGISTERED_BEFORE_V2_HISTORICAL_SCORING
+scope: deterministic_weekly_selection_policy_with_preexisting_football_direction_gate
+
+parent_selector_v1:
+  preregistration: config/task05f_selectors_v1_prereg.yaml
+  implementation_lock: config/task05f_selectors_v1_implementation_lock.yaml
+  historical_eval_lock: config/task05f_selectors_v1_historical_eval_lock.yaml
+  frozen_evidence: reports/task05f_selectors_v1/validation_summary.md
+  v1_rules_are_not_edited: true
+
+upstream:
+  locked_evaluator: config/task05f_evaluator_locked_v1.yaml
+  reliability_uncertainty: config/task05f_reliability_uncertainty_v1_1_prereg.yaml
+  play_through: config/task05f_play_through_v1_1_prereg.yaml
+  candidate_table: config/task05f_candidate_table_v1.yaml
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+
+architecture_basis: >-
+  Task05F already separated calibrated fair-value probability from raw frozen
+  football inference before selector V1 scoring. V2 implements that pre-existing
+  architecture by requiring direction-only football support before a wager can
+  enter any primary-card selector. V2 does not use the magnitude of disagreement
+  for ranking and introduces no fitted threshold or historical bucket.
+
+football_direction_gate:
+  required_for_all_primary_cards: true
+  threshold: 0.0
+  comparison: strictly_greater_than_zero
+  magnitude_used_in_ranking: false
+  market_formulas:
+    moneyline:
+      field: model_market_disagreement
+      definition: "selected-side raw QB-Elo/XGB exact-AVG probability minus selected-side calibrated fair-value probability"
+      support: "model_market_disagreement > 0"
+      unit: probability
+    spread:
+      raw_field: raw_football_output
+      raw_semantics: frozen_expected_home_margin
+      home_support_margin: "raw_football_output + actionable_line"
+      away_support_margin: "-raw_football_output + actionable_line"
+      support: "selected-side support margin > 0"
+      unit: points
+    total:
+      raw_field: raw_football_output
+      raw_semantics: frozen_R4_predicted_total
+      over_support_margin: "raw_football_output - actionable_line"
+      under_support_margin: "actionable_line - raw_football_output"
+      support: "selected-side support margin > 0"
+      unit: points
+  missing_required_signal: INELIGIBLE_FAIL_CLOSED
+  exact_zero_support: false
+
+primary_selector_rules:
+  inherit_v1_rankings_exactly: true
+  inherit_v1_tiebreaks_exactly: true
+  inherit_v1_no_play_policy_exactly: true
+  inherit_v1_duplicate_policy_exactly: true
+  inherit_v1_reliability_eligibility_exactly: true
+  high_hit_rate:
+    reliability: [HIGH, MEDIUM]
+    price_status: [VALUE, PLAYABLE]
+    primary_rank: actionable_probability_descending
+  balanced:
+    reliability: [HIGH, MEDIUM]
+    price_status: [VALUE]
+    strict_positive_value: true
+    ranking_method: slate_relative_minimax_competition_rank
+  value:
+    reliability: [HIGH, MEDIUM]
+    price_status: [VALUE]
+    strict_positive_value: true
+    primary_rank: expected_value_descending
+
+historical_evaluation:
+  slate_key: block
+  protocol: inherit_config/task05f_selectors_v1_historical_eval_lock.yaml
+  results_label: OBSERVATIONAL_ONLY_NOT_TUNED
+  run_count: one_designated_evidence_run_with_duplicate_execution_only_for_determinism
+  may_tune_from_results: false
+
+integrity:
+  no_model_fit: true
+  no_probability_change: true
+  no_reliability_change: true
+  no_play_through_change: true
+  no_staking_change: true
+  no_ev_threshold_change: true
+  no_disagreement_magnitude_threshold: true
+  no_market_specific_roi_rule: true
+  no_historical_roi_input: true
+  no_coverage_target: true
+  no_price_bucket_search: true
+  no_disagreement_bucket_search: true
+  no_staking_probability_in_ranking: true
+  no_2025: true
+
+required_tests:
+  - ml_negative_or_zero_football_disagreement_is_ineligible
+  - ml_positive_football_disagreement_is_eligible
+  - spread_home_and_away_exact_line_support_math
+  - total_over_and_under_exact_line_support_math
+  - exact_zero_support_is_ineligible
+  - missing_signal_fails_closed
+  - v1_rank_order_is_unchanged_after_gate
+  - unsupported_and_low_reliability_still_never_selected
+  - balanced_and_value_still_require_strict_value
+  - high_hit_still_allows_playable
+  - deterministic_ties
+  - outcome_firewall
+  - sealed_2025_firewall
+
+acceptance:
+  production_promotion: false
+  v2_results_cannot_change_v2_rules: true
+  independent_review_required: true

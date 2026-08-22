@@ -1,0 +1,124 @@
+version: task05f_evaluator_rebuild_v3_prereg
+scope: evaluator_only
+parent_evidence: reports/task05f_rebuild_v2/validation_summary.md
+base_task05f_commit: 3ed8d740a88b59d46e27e206f39757307a6a13da
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+chronology: expanding_prior_season_week_blocks_only
+minimum_prior_games: 128
+
+integrity:
+  football_models_frozen: true
+  task05e_candidate_definitions_frozen: true
+  outcome_bucket_search: false
+  price_bucket_search: false
+  disagreement_bucket_search: false
+  sealed_2025_loaded: false
+  candidate_definitions_may_change_after_v3_outcome_scoring: false
+  fixed_ev_bands_are_diagnostic_only: true
+
+frozen_models:
+  moneyline:
+    qbelo: data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet
+    xgb: data/modeling/development_v1/chronology_corrected/xgboost_candidate_predictions_2018_2024.parquet
+    xgb_candidate: conservative
+    raw_probability: exact_avg
+  spread:
+    expected_margin: data/modeling/development_v1/expected_margin_predictions_2018_2024.parquet
+    expected_margin_candidate: stable
+  total:
+    ridge_r4: reports/task05d/task05d_ridge_predictions.parquet
+    ridge_candidate: R4
+
+actionable_books: [draftkings, fanduel]
+benchmark_book: pinnacle
+shopping_contract: unchanged_from_v1
+point_market_push_contract: unchanged_from_v1
+value_semantics: strict_expected_value_greater_than_zero
+play_through_formula: deferred_until_core_probability_acceptance
+
+candidates:
+  moneyline:
+    name: pinnacle_exact_avg_logit_pool
+    model_probability: "p_model = exact AVG(QB-Elo, XGB)"
+    market_probability: "p_market = Pinnacle selected-side proportional no-vig moneyline probability"
+    training_population: prior_non_tie_games_with_both_constituents_and_pinnacle_pair
+    formula: "logit(p_blend) = logit(p_market) + w * (logit(p_model) - logit(p_market))"
+    weight_fit: "choose scalar w in [0,1] minimizing prior binary log loss; deterministic bounded scalar optimization; no ROI/price-region objective"
+    constraints:
+      - "0 <= w <= 1"
+      - "p_blend remains between market and model in logit space"
+      - "model-market disagreement direction cannot reverse or overshoot"
+    tie_mass: prior_only_empirical_jeffreys_same_as_v1_v2
+    forbidden_features: [historical_roi, frozen_05e_bucket, sealed_2025]
+
+  spread:
+    name: price_aware_pinnacle_anchor_expected_margin_slope
+    pinnacle_pair_requirement: "exact mirrored HOME/AWAY Pinnacle spread line with both prices"
+    no_vig_probability: "proportional no-vig from the paired Pinnacle HOME/AWAY prices"
+    robust_scale:
+      method: "sigma = 1.4826 * MAD(actual_home_margin - (-pinnacle_home_line)) on prior valid anchor games"
+      fallback: "sample standard deviation if MAD scale is nonfinite or <= 1e-9"
+      minimum: "candidate unsupported if scale remains nonfinite or <= 1e-9"
+    market_mean: "mu_market = -pinnacle_home_line + sigma * NormalQuantile(p_pin_home_no_vig)"
+    model_disagreement: "d = expected_home_margin - mu_market"
+    target: "y = actual_home_margin - mu_market"
+    model_weight: "beta_raw = sum(d*y)/sum(d*d); beta = clip(beta_raw, 0, 1)"
+    calibrated_mean: "mu = mu_market + beta*d"
+    residual_pool: "e = actual_home_margin - mu for the same prior anchor games"
+    wager_probability: "apply existing empirical integer-lattice WIN/PUSH/LOSS residual distribution to each current DK/FD wager at its own exact line"
+    forbidden_features: [actionable_sportsbook_price, historical_roi, frozen_05e_bucket, sealed_2025]
+
+  total:
+    name: price_aware_pinnacle_anchor_r4_slope
+    pinnacle_pair_requirement: "exact common Pinnacle OVER/UNDER total line with both prices"
+    no_vig_probability: "proportional no-vig from Pinnacle OVER/UNDER prices at the common line"
+    robust_scale:
+      method: "sigma = 1.4826 * MAD(actual_total - pinnacle_total_line) on prior valid anchor games"
+      fallback: "sample standard deviation if MAD scale is nonfinite or <= 1e-9"
+      minimum: "candidate unsupported if scale remains nonfinite or <= 1e-9"
+    market_mean: "mu_market = pinnacle_total_line + sigma * NormalQuantile(p_pin_over_no_vig)"
+    model_disagreement: "d = predicted_total_r4 - mu_market"
+    target: "y = actual_total - mu_market"
+    model_weight: "beta_raw = sum(d*y)/sum(d*d); beta = clip(beta_raw, 0, 1)"
+    calibrated_mean: "mu = mu_market + beta*d"
+    residual_pool: "e = actual_total - mu for the same prior anchor games"
+    wager_probability: "apply existing empirical integer-lattice WIN/PUSH/LOSS residual distribution to each current DK/FD wager at its own exact line"
+    forbidden_features: [actionable_sportsbook_price, historical_roi, discovered_ev_cutoff, sealed_2025]
+
+support:
+  cold_start: minimum_prior_games_128
+  existing_task05f_support_ood_gate_retained: true
+  missing_required_frozen_model_input: unsupported
+  missing_required_pinnacle_anchor_or_price_pair: unsupported
+  invalid_robust_scale: unsupported
+
+fixed_outputs:
+  - full_board
+  - scorecard
+  - ev_calibration_fixed_bands
+  - frozen_edge_preservation_exact_offer
+  - calibration_state_by_block
+  - provenance
+  - observations
+
+acceptance_dimensions:
+  chronology_and_2025_firewall: hard_gate
+  exact_offer_and_push_semantics: hard_gate
+  deterministic_reproduction: hard_gate
+  probability_quality: required
+  full_board_wagering_discrimination: required_directional_evidence
+  frozen_edge_preservation: external_validation_not_tuning_target
+  no_bucket_or_price_hunting: hard_gate
+
+selection_policy:
+  moneyline: "Must improve or materially preserve proper scoring versus raw exact AVG, avoid pathological full-board EV ordering, and not destroy the previously frozen dog-zone external evidence. A fitted weight collapsing to zero is allowed as evidence but is not sufficient by itself to promote a model-aware evaluator."
+  spread: "Must remain competitive with incumbent probability quality and must not systematically rank the frozen SPREAD_0_4 rejected set above the kept set."
+  total: "May return WEAK/NO_EDGE; no positive-EV cutoff may be created from the V2 diagnostic bands."
+  production_promotion: false_until_master_review
+
+new_observation_policy:
+  label: OBSERVATIONAL_ONLY_NOT_TUNED
+  may_modify_v3_candidate: false
+  may_be_saved_for_2025_hypothesis: true

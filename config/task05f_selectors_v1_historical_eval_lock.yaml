@@ -1,0 +1,78 @@
+version: task05f_selectors_v1_historical_eval_lock
+status: LOCKED_BEFORE_SELECTOR_HISTORICAL_SCORING
+scope: post_selection_diagnostic_protocol
+
+selector_preregistration: config/task05f_selectors_v1_prereg.yaml
+selector_implementation_lock: config/task05f_selectors_v1_implementation_lock.yaml
+candidate_table_contract: config/task05f_candidate_table_v1.yaml
+play_through_contract: config/task05f_play_through_v1_1_prereg.yaml
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+
+slate_definition:
+  key: block
+  meaning: one chronological NFL season-week block already present on candidate rows
+  selectors_run_independently_per_slate: true
+  all_markets_compete_together: true
+
+selection_then_outcome_order:
+  selector_input: candidate_table.parquet
+  candidate_table_contains_outcomes: false
+  persist_selections_before_outcome_join: true
+  outcome_join_source: historical_outcomes.parquet
+  outcome_join_key: candidate_id
+  outcomes_may_not_change_selection: true
+
+flat_outcome_accounting:
+  stake_per_selected_card: 1.0
+  win_profit: use_historical_realized_profit_from_exact_actionable_offer
+  loss_profit: -1.0
+  push_profit: 0.0
+  no_play_profit: null
+  selector_roi: "sum(realized_profit) / number_of_selected_plays"
+  selector_hit_rate: "wins / (wins + losses); pushes excluded from denominator"
+
+multiple_cards:
+  duplicate_wager_across_cards_allowed: true
+  duplicate_wager_counts_once_per_card_for_each_selector_metric: true
+  duplicate_card_slate_definition: "a slate where two or more non-null primary cards share candidate_id"
+  duplicate_card_rate: "duplicate_card_slates / slates_with_at_least_two_non_null_cards"
+
+required_diagnostics:
+  - total_slates
+  - weeks_with_high_hit_rate
+  - weeks_with_balanced
+  - weeks_with_value
+  - no_play_count_by_selector
+  - selected_market_mix_by_selector
+  - selected_reliability_mix_by_selector
+  - selected_price_status_mix_by_selector
+  - duplicate_card_slates
+  - duplicate_card_rate
+  - flat_realized_roi_by_selector
+  - hit_rate_by_selector
+  - win_loss_push_count_by_selector
+  - per_season_selector_coverage
+  - per_season_selector_roi
+
+interpretation:
+  results_label: OBSERVATIONAL_ONLY_NOT_TUNED
+  may_change_selector_rules_after_results: false
+  coverage_is_not_acceptance_target: true
+  roi_is_not_training_target: true
+  primary_question: >-
+    Do the already-preregistered global selectors behave sensibly as a weekly
+    product over 2020-2024 while preserving the frozen evaluator contracts?
+
+hard_gates:
+  deterministic_replay: true
+  upstream_candidate_table_immutable: true
+  outcome_firewall_before_selection: true
+  selector_eligibility_contract: true
+  strict_value_semantics: true
+  sealed_2025_firewall: true
+  no_historical_roi_in_selection: true
+  no_post_result_tuning: true
+
+production_promotion: false
