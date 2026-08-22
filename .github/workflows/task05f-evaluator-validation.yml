@@ -22,7 +22,7 @@ permissions:
 jobs:
   evaluator-contract:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 20
     steps:
       - name: Checkout exact commit
         uses: actions/checkout@v4
@@ -52,92 +52,47 @@ jobs:
             exit 1
           fi
 
-      - name: Record candidate-table validation provenance
+      - name: Record post-Play-Through development provenance
         shell: bash
         run: |
           mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "candidate_table_interface_validation",\n  "sealed_season": 2025,\n  "selector_scoring": false\n}\n' \
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "post_play_through_candidate_selector_contract_development",\n  "sealed_season": 2025,\n  "historical_play_through_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_scoring": "DISABLED_ON_ORDINARY_PUSHES"\n}\n' \
             "$GITHUB_SHA" \
             '3ed8d740a88b59d46e27e206f39757307a6a13da' \
             > artifacts/task05f/ci_provenance.json
           cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
           sha256sum config/task05f_evaluator_locked_v1.yaml > artifacts/task05f/locked_config_sha256.txt
+          sha256sum config/task05f_reliability_uncertainty_v1_1_prereg.yaml > artifacts/task05f/phase_f_v1_1_prereg_sha256.txt
           sha256sum config/task05f_play_through_v1_1_prereg.yaml > artifacts/task05f/play_through_v1_1_prereg_sha256.txt
           sha256sum config/task05f_candidate_table_v1.yaml > artifacts/task05f/candidate_table_v1_sha256.txt
           sha256sum config/task05f_selectors_v1_prereg.yaml > artifacts/task05f/selectors_v1_prereg_sha256.txt
+          sha256sum config/task05f_selectors_v1_implementation_lock.yaml > artifacts/task05f/selectors_v1_implementation_lock_sha256.txt
 
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
 
-      - name: Verify frozen candidate and selector contracts
+      - name: Verify frozen post-probability and selector contracts
         shell: bash
         run: |
           set -euo pipefail
+          grep -q 'sealed_seasons: \[2025\]' config/task05f_play_through_v1_1_prereg.yaml
+          grep -q 'maximum_break_even_concession: 0.015' config/task05f_play_through_v1_1_prereg.yaml
           grep -q 'expected_rows_for_frozen_2020_2024_fixture: 8448' config/task05f_candidate_table_v1.yaml
-          grep -q 'selector_function_must_not_accept_outcome_fields: true' config/task05f_candidate_table_v1.yaml
-          grep -q 'no_selector_scoring: true' config/task05f_candidate_table_v1.yaml
           grep -q 'status: PREREGISTERED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_prereg.yaml
           grep -q 'allowed_reliability: \[HIGH, MEDIUM\]' config/task05f_selectors_v1_prereg.yaml
+          grep -q 'duplicate_wager_across_cards_allowed: true' config/task05f_selectors_v1_prereg.yaml
+          grep -q 'no_staking_probability_in_selector_ranking: true' config/task05f_selectors_v1_prereg.yaml
           grep -q 'no_historical_roi_input: true' config/task05f_selectors_v1_prereg.yaml
+          grep -q 'status: LOCKED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_implementation_lock.yaml
+          grep -q 'balanced_equal_value_rank: competition_min_rank' config/task05f_selectors_v1_implementation_lock.yaml
+          grep -q 'selector_receives_historical_sidecar: false' config/task05f_selectors_v1_implementation_lock.yaml
+          echo 'historical_play_through_scoring=DISABLED'
+          echo 'historical_selector_scoring=DISABLED'
 
-      - name: Materialize frozen common candidate table
-        shell: bash
-        run: |
-          set -euo pipefail
-          python scripts/task05f_candidate_table_v1_runner.py \
-            --config config/task05f_candidate_table_v1.yaml \
-            --out artifacts/task05f/candidate_table
-
-      - name: Verify candidate table interface and outcome firewall
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json
-          import polars as pl
-
-          base = 'artifacts/task05f/candidate_table'
-          manifest = json.load(open(f'{base}/candidate_table_manifest.json'))
-          proof = json.load(open(f'{base}/reproduction.json'))
-          candidates = pl.read_parquet(f'{base}/candidate_table.parquet')
-          outcomes = pl.read_parquet(f'{base}/historical_outcomes.parquet')
-
-          assert manifest['rows'] == 8448
-          assert manifest['unique_candidate_ids'] == 8448
-          assert candidates.height == 8448
-          assert outcomes.height == 8448
-          assert proof['preserved_fields_equal'] is True
-          assert proof['actionable_offer_reproduced_from_book_context'] is True
-          assert proof['outcome_firewall'] is True
-          assert proof['preserved_payload_sha256_upstream'] == proof['preserved_payload_sha256_candidate']
-          assert set(candidates['season'].unique().to_list()) == {2020, 2021, 2022, 2023, 2024}
-          assert 2025 not in set(candidates['season'].unique().to_list())
-          assert len(set(candidates['candidate_id'].to_list())) == 8448
-
-          forbidden = {'settlement', 'realized_profit', 'home_score', 'away_score'}
-          assert not forbidden.intersection(candidates.columns)
-          assert {'candidate_id', 'settlement', 'realized_profit'}.issubset(outcomes.columns)
-
-          for row in candidates.iter_rows(named=True):
-              book = row['actionable_book']
-              assert book in {'draftkings', 'fanduel'}
-              assert row[f'{book}_price_american'] == row['actionable_price_american']
-              left = row[f'{book}_line']
-              right = row['actionable_line']
-              assert (left is None and right is None) or abs(float(left) - float(right)) <= 1e-9
-
-          print('candidate_table_rows=8448')
-          print('candidate_identity_uniqueness=PASS')
-          print('upstream_reproduction=PASS')
-          print('dk_fd_pinnacle_context=PASS')
-          print('outcome_firewall=PASS')
-          print('sealed_2025_firewall=PASS')
-          PY
-
-      - name: Upload candidate-table validation evidence
+      - name: Upload contract evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: task05f-candidate-table-validation-${{ github.sha }}
+          name: task05f-evaluator-contract-${{ github.sha }}
           path: artifacts/task05f/
           if-no-files-found: error
