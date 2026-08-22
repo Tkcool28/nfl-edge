@@ -1,0 +1,88 @@
+version: task05f_evaluator_locked_v1
+status: LOCKED_PENDING_SEALED_2025_AND_INDEPENDENT_REVIEW
+scope: evaluator_only
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+chronology: expanding_prior_season_week_blocks_only
+minimum_prior_games: 128
+
+market_contract:
+  benchmark_book: pinnacle
+  actionable_books: [draftkings, fanduel]
+  deterministic_book_tiebreak: [draftkings, fanduel]
+  evaluate_each_offer_at_own_line: true
+  point_market_outcomes: [WIN, PUSH, LOSS]
+  point_market_ev: "p_win * (decimal_odds - 1) - p_loss"
+  moneyline_ties: push
+  value_definition: "expected_value > 0"
+
+football_models:
+  frozen: true
+  moneyline:
+    qbelo: data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet
+    xgb: data/modeling/development_v1/chronology_corrected/xgboost_candidate_predictions_2018_2024.parquet
+    xgb_candidate: conservative
+    raw_signal: exact_avg
+  spread:
+    expected_margin: data/modeling/development_v1/expected_margin_predictions_2018_2024.parquet
+    candidate: stable
+  total:
+    ridge_r4: reports/task05d/task05d_ridge_predictions.parquet
+    candidate: R4
+
+accepted_probability_architecture:
+  moneyline:
+    version: ml_v4
+    family: calibrated_pinnacle_optional_exact_avg_logit_pool
+    market_calibration: "positive-slope logistic calibration of prior Pinnacle proportional no-vig probability, C=1.0"
+    optional_model_pool: "bounded [0,1] proper-log-loss logit pool toward frozen exact AVG"
+    raw_football_signal_preserved_separately: true
+    evidence_status: ML_FAIR_VALUE_BASE_ACCEPTED_FULL_BOARD_VALUE_EDGE_NOT_PROVEN
+    validation_report: reports/task05f_ml_v4/validation_summary.md
+  spread:
+    version: spread_v3
+    family: price_aware_pinnacle_anchor_expected_margin_slope
+    anchor: "exact mirrored Pinnacle spread line + paired proportional no-vig prices"
+    market_scale: "prior-only 1.4826*MAD score scale with std fallback"
+    model_contribution: "single prior-only beta clipped [0,1] from frozen Expected Margin toward price-aware market mean"
+    probability: "prior residual integer-lattice WIN/PUSH/LOSS at each exact actionable line"
+    evidence_status: ACCEPTED_FROZEN
+    validation_report: reports/task05f_rebuild_v3/validation_summary.md
+  total:
+    version: total_v3
+    family: price_aware_pinnacle_anchor_r4_slope
+    anchor: "exact common Pinnacle total line + paired proportional no-vig Over/Under prices"
+    market_scale: "prior-only 1.4826*MAD score scale with std fallback"
+    model_contribution: "single prior-only beta clipped [0,1] from frozen R4 toward price-aware market mean"
+    probability: "prior residual integer-lattice WIN/PUSH/LOSS at each exact actionable line"
+    evidence_status: TOTALS_VALUE_WEAK_NO_DEMONSTRATED_EDGE
+    validation_report: reports/task05f_rebuild_v3/validation_summary.md
+
+reliability:
+  retain_existing_task05f_support_ood_contract: true
+  unsupported_fail_closed: true
+  raw_model_signal_must_remain_in_output: true
+  fair_value_probability_and_football_signal_are_separate_axes: true
+
+play_through:
+  enabled_in_schema: true
+  formula_status: NOT_YET_LOCKED
+  changes_value_label: false
+
+integrity:
+  task05e_frozen_candidate_definitions_unchanged: true
+  no_retrospective_bucket_search: true
+  no_price_region_search: true
+  no_model_parameter_tuning: true
+  no_model_feature_changes: true
+  no_2025_outcomes: true
+  new_observations_label: OBSERVATIONAL_ONLY_NOT_TUNED
+
+promotion_gates:
+  reproduce_v4_ml_and_v3_point_market_evidence: true
+  deterministic_double_run: true
+  evaluator_only_scope_guard: true
+  sealed_2025_firewall: true
+  independent_second_review_required: true
+  production_promotion: false
