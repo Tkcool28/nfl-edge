@@ -1,0 +1,119 @@
+version: task05f_play_through_v1_prereg
+status: PREREGISTERED_BEFORE_PLAY_THROUGH_HISTORICAL_SCORING
+scope: evaluator_only_post_probability_product_policy
+
+base:
+  locked_evaluator: config/task05f_evaluator_locked_v1.yaml
+  reliability_uncertainty: config/task05f_reliability_uncertainty_v1_1_prereg.yaml
+  reliability_validation: reports/task05f_phase_f_v1_1/validation_summary.md
+  moneyline: ml_v4
+  spread: spread_v3
+  total: total_v3
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+
+purpose: >-
+  Give the product a small, confidence-scaled price-tolerance number beyond
+  strict fair value without changing evaluator probability, expected value,
+  strict VALUE, or football-model output. PLAYABLE is a presentation/actionability
+  state, never a synonym for positive expected value.
+
+integrity:
+  evaluator_probability_immutable: true
+  expected_value_immutable: true
+  strict_value_definition: "expected_value > 0"
+  strict_value_label_immutable: true
+  football_models_frozen: true
+  staking_probability_immutable: true
+  reliability_uncertainty_immutable: true
+  no_historical_roi_input: true
+  no_price_bucket_input: true
+  no_disagreement_bucket_input: true
+  no_market_specific_tolerance: true
+  no_selector_scoring_in_this_phase: true
+  sealed_2025_loaded: false
+
+confidence_multiplier:
+  reliability_haircut: {HIGH: 1.0, MEDIUM: 0.70, LOW: 0.35, UNSUPPORTED: 0.0}
+  uncertainty_factor: "u = max(0, 1 - min(1, uncertainty_radius / 0.10)); null radius => 0"
+  formula: "confidence = reliability_haircut * u"
+  range: [0.0, 1.0]
+
+play_through_policy:
+  unit: sportsbook_break_even_probability
+  maximum_break_even_concession: 0.01
+  interpretation: >-
+    At maximum confidence, Play Through may accept a sportsbook price whose
+    break-even probability is at most 1.0 percentage point worse than the
+    evaluator's strict conditional-nonpush fair probability. Lower reliability
+    or larger uncertainty reduces the concession continuously toward zero.
+  evaluator_fair_probability: "q_eval = p_win / (p_win + p_loss)"
+  concession: "delta_be = 0.01 * confidence"
+  maximum_acceptable_break_even: "q_play = min(0.99, q_eval + delta_be)"
+  play_through_decimal_price: "decimal_play = 1 / q_play"
+  play_through_american_price: >-
+    Convert decimal_play to the continuous American threshold and round upward
+    to the next integer American price so the displayed minimum acceptable price
+    is never worse than the mathematical q_play limit. Larger American numbers
+    are always better for the bettor.
+  current_price_test: "current_break_even_probability <= q_play"
+
+status_contract:
+  PASS:
+    rule: "locked evaluator row unsupported OR final reliability UNSUPPORTED"
+  VALUE:
+    rule: "supported AND expected_value > 0"
+    priority: 1
+  PLAYABLE:
+    rule: >-
+      supported AND expected_value <= 0 AND current_break_even_probability <= q_play
+    priority: 2
+    may_have_negative_expected_value: true
+  LEAN:
+    rule: >-
+      supported AND not VALUE AND not PLAYABLE
+    priority: 3
+  statuses: [VALUE, PLAYABLE, LEAN, PASS]
+  play_through_never_changes_value: true
+
+market_scope:
+  global_formula_same_for: [moneyline, spread, total]
+  point_market_push_handling: >-
+    q_eval is conditional on non-push, so the same break-even-price comparison
+    applies across ML/spread/total while evaluator p_push remains unchanged.
+  totals_caution: >-
+    Totals retain their accepted Phase F LOW reliability; the formula therefore
+    grants only a small uncertainty/reliability-scaled concession and does not
+    upgrade totals evidence.
+
+required_outputs:
+  - play_through_confidence_multiplier
+  - play_through_break_even_concession
+  - play_through_break_even_probability
+  - play_through_decimal_price
+  - play_through_price_american
+  - price_status
+
+historical_diagnostics:
+  outcome_use: diagnostic_only_after_preregistration
+  report:
+    - status_counts_by_market
+    - status_counts_by_reliability
+    - flat_realized_roi_by_status
+    - per_season_status_mix
+    - play_through_concession_distribution
+  may_change_formula_after_results: false
+  new_observation_label: OBSERVATIONAL_ONLY_NOT_TUNED
+
+acceptance_gates:
+  locked_probability_value_rows_unchanged: hard_gate
+  phase_f_reliability_staking_rows_unchanged: hard_gate
+  strict_value_labels_unchanged: hard_gate
+  negative_ev_never_labeled_value: hard_gate
+  playable_never_exceeds_preregistered_q_play: hard_gate
+  deterministic_double_run: hard_gate
+  sealed_2025_firewall: hard_gate
+  evaluator_only_scope_guard: hard_gate
+  no_roi_or_coverage_tuning: hard_gate
+  production_promotion: false_until_selectors_stake_policy_and_independent_review
