@@ -13,6 +13,7 @@ from nfl_edge.value.wager_economics import (
     fair_american_three_way,
     fair_decimal_three_way,
     line_allows_push,
+    moneyline_outcome_probabilities,
     moneyline_settlement,
     spread_residual_threshold,
     total_residual_threshold,
@@ -21,20 +22,17 @@ from nfl_edge.value.wager_economics import (
 
 def test_three_way_probability_contract_and_ev_push_zero():
     p = OutcomeProbabilities(p_win=0.50, p_push=0.05, p_loss=0.45)
-    # +100: +1 on win, 0 on push, -1 on loss => +0.05 EV.
     assert expected_value_three_way(p, 100) == pytest.approx(0.05)
 
 
 def test_three_way_fair_price_accounts_for_push_mass():
     p = OutcomeProbabilities(p_win=0.50, p_push=0.05, p_loss=0.45)
-    # Zero-EV decimal = 1 + p_loss/p_win = 1.90, i.e. about -111 American.
     assert fair_decimal_three_way(p) == pytest.approx(1.9)
     assert fair_american_three_way(p) == -111
     assert expected_value_three_way(p, fair_american_three_way(p)) == pytest.approx(0.0, abs=0.001)
 
 
 def test_strict_value_is_any_positive_ev_not_minimum_threshold():
-    # At -110, this is only a small positive EV; it still qualifies as VALUE.
     p = OutcomeProbabilities(p_win=0.525, p_push=0.0, p_loss=0.475)
     a = classify_price(p, -110)
     assert a.expected_value > 0.0
@@ -71,6 +69,14 @@ def test_moneyline_tie_is_push_not_loss():
     assert moneyline_settlement("away", 21, 20) is Settlement.LOSS
 
 
+def test_moneyline_tie_mass_is_prior_only_and_preserves_conditional_model_ratio():
+    p = moneyline_outcome_probabilities(0.60, prior_ties=1, prior_games=99)
+    # Jeffreys estimate: (1 + .5)/(99 + 1) = .015 tie mass.
+    assert p.p_push == pytest.approx(0.015)
+    assert p.p_win + p.p_loss == pytest.approx(0.985)
+    assert p.p_win / (p.p_win + p.p_loss) == pytest.approx(0.60)
+
+
 def test_point_line_push_eligibility_uses_integer_score_lattice():
     assert line_allows_push(-3.0)
     assert line_allows_push(45.0)
@@ -88,23 +94,17 @@ def test_spread_threshold_is_offer_specific():
 
 
 def test_asymmetric_shopped_spreads_are_evaluated_at_their_own_lines():
-    # HOME -2.5 and AWAY +3.5 are not a mirrored pair. Both wagers win if the
-    # actual home margin is exactly 3, represented here by residual 0.
     residuals = [-2.0, -1.0, 0.0, 1.0, 2.0]
     home = empirical_spread_probabilities(residuals, 3.0, "home", -2.5)
     away = empirical_spread_probabilities(residuals, 3.0, "away", +3.5)
     assert home.p_push == 0.0
     assert away.p_push == 0.0
-    # Jeffreys Beta(1/2,1/2): raw 3/5 becomes 3.5/6.
     assert home.p_win == pytest.approx(3.5 / 6.0)
     assert away.p_win == pytest.approx(3.5 / 6.0)
-    assert home.p_win + away.p_win > 1.0  # legitimate middle, not evaluator incoherence
+    assert home.p_win + away.p_win > 1.0
 
 
 def test_exact_mirrored_integer_spreads_include_push_mass():
-    # Integer line allows a push. The continuity cell around residual threshold 0
-    # represents the single integer margin equal to 3. Symmetric Jeffreys smoothing
-    # preserves 1/3 for the balanced 1/1/1 count case.
     residuals = [-1.0, 0.0, 1.0]
     home = empirical_spread_probabilities(residuals, 3.0, "home", -3.0)
     away = empirical_spread_probabilities(residuals, 3.0, "away", +3.0)
@@ -128,12 +128,11 @@ def test_asymmetric_shopped_totals_are_not_forced_complements():
     residuals = [-1.0, -0.25, 0.0, 0.25, 1.0]
     over = empirical_total_probabilities(residuals, 45.0, "over", 44.5)
     under = empirical_total_probabilities(residuals, 45.0, "under", 45.5)
-    # Raw 4/5 with fixed Jeffreys Beta smoothing -> 4.5/6.
     assert over.p_win == pytest.approx(4.5 / 6.0)
     assert under.p_win == pytest.approx(4.5 / 6.0)
     assert over.p_push == 0.0
     assert under.p_push == 0.0
-    assert over.p_win + under.p_win > 1.0  # both wagers can win when final total is 45
+    assert over.p_win + under.p_win > 1.0
 
 
 def test_integer_total_line_estimates_push_mass_from_lattice_cell():
