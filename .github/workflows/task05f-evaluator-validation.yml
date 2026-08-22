@@ -86,13 +86,15 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/task05f_play_through_v1_runner.py --out artifacts/task05f/run1
+          python scripts/task05f_play_through_diagnostics.py artifacts/task05f/run1
           python scripts/task05f_play_through_v1_runner.py --out artifacts/task05f/run2
+          python scripts/task05f_play_through_diagnostics.py artifacts/task05f/run2
 
       - name: Verify deterministic Phase G outputs and preserved upstream layers
         shell: bash
         run: |
           set -euo pipefail
-          for f in scorecard.json phase_f_reproduction.json status_diagnostics.csv per_season_status_mix.csv play_through_concession_summary.csv frozen_edge_preservation.json ev_calibration.csv observations.json uncertainty_state_by_block.ndjson per_season_reliability_mix.csv component_reproduction.json base_reproduction.json; do
+          for f in scorecard.json phase_f_reproduction.json status_diagnostics.csv status_by_reliability.csv per_season_status_mix.csv play_through_concession_summary.csv frozen_edge_preservation.json ev_calibration.csv observations.json uncertainty_state_by_block.ndjson per_season_reliability_mix.csv component_reproduction.json base_reproduction.json; do
             cmp "artifacts/task05f/run1/$f" "artifacts/task05f/run2/$f"
           done
           python - <<'PY'
@@ -121,9 +123,15 @@ jobs:
           ).height == 0
           assert supported.select(pl.col('play_through_break_even_concession').max()).item() <= 0.01 + 1e-12
 
+          cross = pl.read_csv('artifacts/task05f/run1/status_by_reliability.csv')
+          assert cross['n'].sum() == a.height
+          for market in ('moneyline', 'spread', 'total'):
+              assert cross.filter(pl.col('market_type') == market)['n'].sum() == a.filter(pl.col('market_type') == market).height
+
           print(f"deterministic_phase_g_rows={a.height}")
           print('upstream_probability_value_reliability_staking_reproduction=PASS')
           print('play_through_status_contract=PASS')
+          print('status_by_reliability_diagnostic=PASS')
           PY
           sha256sum artifacts/task05f/run1/* artifacts/task05f/run2/* > artifacts/task05f/artifact_hashes.txt
 
