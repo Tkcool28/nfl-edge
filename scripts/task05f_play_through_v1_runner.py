@@ -5,6 +5,10 @@ Phase G is a pure downstream product-policy enrichment of accepted Phase F V1.1.
 It may populate a small confidence-scaled price tolerance and presentation status,
 but it may not change evaluator probability, strict EV/Value, reliability,
 uncertainty, staking probability, or any football-model output. 2025 is sealed.
+
+The maximum Play Through concession is read from the preregistered config. This
+keeps completed V1 (1.0pp) reproducible while allowing the separately
+preregistered V1.1 product policy (1.5pp) to use the exact same implementation.
 """
 from __future__ import annotations
 
@@ -102,9 +106,19 @@ def _counts(rows: list[dict[str, Any]], key: str, values) -> dict[str, int]:
     return {str(value): sum(str(row.get(key)) == str(value) for row in rows) for value in values}
 
 
+def _runtime_version(cfg: dict[str, Any]) -> str:
+    value = str(cfg.get("version", VERSION))
+    return value[:-7] if value.endswith("_prereg") else value
+
+
 def run(root: Path, config_path: Path, out: Path) -> None:
     cfg, config_sha = _read_yaml(config_path)
     _assert_unsealed(cfg["development_seasons"])
+    runtime_version = _runtime_version(cfg)
+    maximum_concession = float(cfg["play_through_policy"]["maximum_break_even_concession"])
+    if not 0.0 <= maximum_concession <= 0.05:
+        raise RuntimeError("Play Through maximum concession is outside the bounded product-policy range")
+
     phase_f = _load_script("task05f_phase_g_phase_f_runtime", PHASE_F_RUNNER)
 
     with tempfile.TemporaryDirectory(prefix="task05f_phase_g_base_") as tmp:
@@ -127,6 +141,7 @@ def run(root: Path, config_path: Path, out: Path) -> None:
                 current_break_even_probability=row.get("break_even_probability"),
                 reliability=str(row.get("reliability")),
                 uncertainty_radius=row.get("uncertainty"),
+                maximum_concession=maximum_concession,
             )
             row.update(
                 {
@@ -151,7 +166,11 @@ def run(root: Path, config_path: Path, out: Path) -> None:
             for base, row in zip(base_rows, enriched)
         )
         negative_never_value = all(
-            not (row.get("expected_value") is not None and float(row["expected_value"]) <= 0.0 and row["price_status"] == "VALUE")
+            not (
+                row.get("expected_value") is not None
+                and float(row["expected_value"]) <= 0.0
+                and row["price_status"] == "VALUE"
+            )
             for row in enriched
         )
         playable_within_limit = all(
@@ -159,7 +178,8 @@ def run(root: Path, config_path: Path, out: Path) -> None:
             or (
                 row.get("break_even_probability") is not None
                 and row.get("play_through_break_even_probability") is not None
-                and float(row["break_even_probability"]) <= float(row["play_through_break_even_probability"]) + 1e-12
+                and float(row["break_even_probability"])
+                <= float(row["play_through_break_even_probability"]) + 1e-12
             )
             for row in enriched
         )
@@ -180,17 +200,26 @@ def run(root: Path, config_path: Path, out: Path) -> None:
             score_markets[market] = {
                 "rows": len(rr),
                 "status_counts": _counts(rr, "price_status", STATUSES),
-                "reliability_counts": _counts(rr, "reliability", ("HIGH", "MEDIUM", "LOW", "UNSUPPORTED")),
+                "reliability_counts": _counts(
+                    rr, "reliability", ("HIGH", "MEDIUM", "LOW", "UNSUPPORTED")
+                ),
             }
             for status in STATUSES:
                 xs = [row for row in rr if row["price_status"] == status]
+                ev_material = [
+                    float(row["expected_value"])
+                    for row in xs
+                    if row.get("expected_value") is not None
+                ]
                 status_rows.append(
                     {
                         "market_type": market,
                         "status": status,
                         "n": len(xs),
                         "realized_roi": _roi(xs),
-                        "mean_strict_ev": None if not xs else float(sum(float(row["expected_value"]) for row in xs if row.get("expected_value") is not None) / max(1, sum(row.get("expected_value") is not None for row in xs))),
+                        "mean_strict_ev": (
+                            None if not ev_material else float(sum(ev_material) / len(ev_material))
+                        ),
                     }
                 )
             for season in DEV:
@@ -199,26 +228,39 @@ def run(root: Path, config_path: Path, out: Path) -> None:
                     {
                         "market_type": market,
                         "season": season,
-                        **{status.lower(): sum(row["price_status"] == status for row in xs) for status in STATUSES},
+                        **{
+                            status.lower(): sum(row["price_status"] == status for row in xs)
+                            for status in STATUSES
+                        },
                     }
                 )
             supported = [row for row in rr if row.get("supported")]
-            concessions = [float(row["play_through_break_even_concession"]) for row in supported]
-            confidences = [float(row["play_through_confidence_multiplier"]) for row in supported]
+            concessions = [
+                float(row["play_through_break_even_concession"]) for row in supported
+            ]
+            confidences = [
+                float(row["play_through_confidence_multiplier"]) for row in supported
+            ]
             concession_rows.append(
                 {
                     "market_type": market,
                     "supported": len(supported),
-                    "mean_confidence": None if not confidences else float(sum(confidences) / len(confidences)),
+                    "mean_confidence": (
+                        None if not confidences else float(sum(confidences) / len(confidences))
+                    ),
                     "max_confidence": None if not confidences else max(confidences),
-                    "mean_break_even_concession": None if not concessions else float(sum(concessions) / len(concessions)),
+                    "mean_break_even_concession": (
+                        None if not concessions else float(sum(concessions) / len(concessions))
+                    ),
                     "max_break_even_concession": None if not concessions else max(concessions),
                 }
             )
 
         pl.DataFrame(status_rows, infer_schema_length=None).write_csv(out / "status_diagnostics.csv")
         pl.DataFrame(season_rows, infer_schema_length=None).write_csv(out / "per_season_status_mix.csv")
-        pl.DataFrame(concession_rows, infer_schema_length=None).write_csv(out / "play_through_concession_summary.csv")
+        pl.DataFrame(concession_rows, infer_schema_length=None).write_csv(
+            out / "play_through_concession_summary.csv"
+        )
 
         reproduction = {
             "phase_f_version": "task05f_reliability_uncertainty_v1_1",
@@ -231,6 +273,7 @@ def run(root: Path, config_path: Path, out: Path) -> None:
             "strict_value_labels_unchanged": strict_value_unchanged,
             "negative_ev_never_value": negative_never_value,
             "playable_within_preregistered_limit": playable_within_limit,
+            "maximum_break_even_concession": maximum_concession,
         }
         _json_write(out / "phase_f_reproduction.json", reproduction)
 
@@ -247,11 +290,15 @@ def run(root: Path, config_path: Path, out: Path) -> None:
         _json_write(
             out / "scorecard.json",
             {
-                "version": VERSION,
+                "version": runtime_version,
                 "prereg_config_sha256": config_sha,
                 "development_seasons": DEV,
                 "sealed_seasons": [2025],
-                "policy": "max 1.0pp break-even concession scaled by Phase F confidence",
+                "maximum_break_even_concession": maximum_concession,
+                "policy": (
+                    f"max {maximum_concession * 100:.1f}pp break-even concession "
+                    "scaled by Phase F confidence"
+                ),
                 "markets": score_markets,
                 "phase_f_reproduction": reproduction,
                 "selector_scoring": "NOT_SCORED_IN_PHASE_G",
@@ -261,12 +308,13 @@ def run(root: Path, config_path: Path, out: Path) -> None:
         _json_write(
             out / "provenance.json",
             {
-                "version": VERSION,
+                "version": runtime_version,
                 "github_sha": os.environ.get("GITHUB_SHA"),
                 "scope": "evaluator_only_play_through_product_policy",
                 "prereg_path": str(config_path.relative_to(root)),
                 "prereg_config_sha256": config_sha,
                 "phase_f_config": str(PHASE_F_CONFIG.relative_to(root)),
+                "maximum_break_even_concession": maximum_concession,
                 "development_seasons": DEV,
                 "sealed_seasons": [2025],
                 "new_observation_policy": "OBSERVATIONAL_ONLY_NOT_TUNED",
@@ -277,16 +325,31 @@ def run(root: Path, config_path: Path, out: Path) -> None:
             {
                 "label": "OBSERVATIONAL_ONLY_NOT_TUNED",
                 "items": [],
-                "note": "Play Through V1 does not alter its preregistered formula from historical status/ROI diagnostics.",
+                "note": (
+                    "Play Through does not alter its preregistered formula from "
+                    "historical status/ROI diagnostics."
+                ),
             },
         )
 
-    print(json.dumps({"version": VERSION, "rows": len(enriched), "markets": score_markets}, indent=2))
+    print(
+        json.dumps(
+            {
+                "version": runtime_version,
+                "rows": len(enriched),
+                "maximum_break_even_concession": maximum_concession,
+                "markets": score_markets,
+            },
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default=str(PREREG))
-    parser.add_argument("--out", default=str(ROOT / "artifacts" / "task05f" / "play_through_v1"))
+    parser.add_argument(
+        "--out", default=str(ROOT / "artifacts" / "task05f" / "play_through_v1")
+    )
     args = parser.parse_args()
     run(ROOT, Path(args.config), Path(args.out))
