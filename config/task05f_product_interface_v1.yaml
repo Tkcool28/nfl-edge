@@ -1,0 +1,116 @@
+version: task05f_product_interface_v1
+status: LOCKED_BEFORE_END_TO_END_PRODUCT_SIMULATION
+scope: backend_product_contract_no_visual_design
+
+primary_cards:
+  order: [HIGH_HIT_RATE, BALANCED, VALUE]
+  one_slot_each: true
+  selector: task05f_selectors_v3_capability
+  market_type_not_fixed_by_card: true
+  duplicate_wager_across_cards_allowed: true
+  duplicate_wager_stake_is_not_additive: true
+  duplicate_semantics: >-
+    If the same candidate wins multiple top-card objectives, each card may show
+    it, but the recommended stake belongs to that wager identity and must not be
+    interpreted as separate additive bets merely because it appears twice.
+  no_play_slot_preserved: true
+
+high_hit_rate:
+  label: HIGH_HIT_RATE
+  meaning: highest validated actionable cash probability
+  may_be_playable: true
+
+balanced:
+  label: BALANCED
+  meaning: strongest compromise between hit probability and demonstrated positive value
+  strict_value_required: true
+
+value:
+  label: VALUE
+  meaning: strongest credible positive expected value among value-capable markets
+  strict_value_required: true
+
+game_explorer:
+  one_game_row: true
+  market_boxes: [spread, total, moneyline]
+  retain_both_sides_in_data_contract: true
+  visible_books: [draftkings, fanduel, pinnacle]
+  pinnacle_role: benchmark
+  actionable_books: [draftkings, fanduel]
+  retain_value_playable_lean_pass: true
+  pass_rows_remain_inspectable: true
+  stable_candidate_id_across_refreshes: true
+
+clicked_wager_detail:
+  required_fields:
+    - football_model_name
+    - raw_football_output
+    - actionable_probability
+    - fair_price_american
+    - break_even_probability
+    - expected_value
+    - reliability
+    - uncertainty
+    - price_status
+    - play_through_price_american
+    - play_through_break_even_probability
+    - actionable_book
+    - actionable_line
+    - actionable_price_american
+    - draftkings_line
+    - draftkings_price_american
+    - fanduel_line
+    - fanduel_price_american
+    - pinnacle_line
+    - pinnacle_price_american
+  staking_view:
+    show_user_selected_strategy_only: true
+    show_recommended_stake: true
+    show_zero_stake_reason_when_strategy_declines_wager: true
+    do_not_hide_playable_merely_because_kelly_stake_is_zero: true
+    pass_has_no_recommended_action: true
+
+account_staking:
+  config: config/task05f_staking_v1.yaml
+  one_global_strategy_per_user: true
+  wager_identity_is_account_independent: true
+  stake_is_account_specific: true
+
+refresh_behavior:
+  target: twice_daily
+  reevaluate_current_market_prices: true
+  stable_candidate_identity_preserved: true
+  offer_id_changes_when_selected_offer_changes: true
+
+sleeper_watch:
+  primary_card: false
+  status: PRODUCT_CONCEPT_LOCKED_FORMULA_DEFERRED
+  behavior:
+    - maintain_watch_candidate_by_stable_candidate_id
+    - highlight_when_current_refresh_price_becomes_VALUE_or_PLAYABLE_under_future_sleeper_policy
+    - return_to_watch_if_acceptable_price_disappears_on_later_refresh
+  visual_treatment: frontend_design_deferred
+  exact_candidate_formula: DEFERRED_UNTIL_POST_CORE_FREEZE
+
+historical_fields:
+  prohibited_from_production_payload:
+    - settlement
+    - realized_profit
+    - home_score
+    - away_score
+
+integrity:
+  no_model_change: true
+  no_evaluator_change: true
+  no_selector_change: true
+  no_staking_change: true
+  no_outcome_input: true
+  no_2025: true
+
+next_steps:
+  - synthetic_product_view_validation
+  - structural_json_contract
+  - diagnostic_2020_2024_end_to_end_product_and_bankroll_simulation
+  - independent_review
+  - final_backend_freeze
+  - open_2025_once
