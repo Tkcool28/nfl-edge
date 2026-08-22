@@ -77,8 +77,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python scripts/task05f_evaluator_rebuild_runner.py --out artifacts/task05f/run1
-          python scripts/task05f_evaluator_rebuild_runner.py --out artifacts/task05f/run2
+          python scripts/task05f_evaluator_rebuild_ci_entry.py --out artifacts/task05f/run1
+          python scripts/task05f_evaluator_rebuild_ci_entry.py --out artifacts/task05f/run2
 
       - name: Verify deterministic evaluator outputs
         shell: bash
