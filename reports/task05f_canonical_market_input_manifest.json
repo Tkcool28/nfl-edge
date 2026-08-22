@@ -1,0 +1,24 @@
+{
+  "artifact_role": "frozen_historical_market_input",
+  "task": "Task05F evaluator rebuild",
+  "seasons": [2020, 2021, 2022, 2023, 2024],
+  "sealed_2025_used": false,
+  "regenerated_for_task05f": false,
+  "source_worktree": "/root/workspaces/nfl-edge-task-05e-market-normalization-v1",
+  "provenance_note": "Byte-identical copies also verified in the Task05E preregistration worktree and prior Task05F validation worktree.",
+  "raw_backup": {
+    "path": "/root/nfl-edge/backups/historical_market/historical_market_raw_2020_2024_05e_d1_20260819_162243Z.zip",
+    "sha256": "ba20257f1266537e9d21f3a04d2b61568319e3d1c5b4f86d0819953e700d1353"
+  },
+  "canonical_games": {
+    "path": "data/market_data/canonical/canonical_games.parquet",
+    "sha256": "1585b92d5f466ae2fdb62c9dd7e0672bf00e5da5e775dce55bd13d15ea856faf",
+    "rows": 1408
+  },
+  "canonical_book_market": {
+    "path": "data/market_data/canonical/canonical_book_market.parquet",
+    "sha256": "cf592c8a8c760316db02e7dd0e5118dac087909019824817c74f31cce6a4e4b1",
+    "rows": 80188,
+    "unique_games": 1408
+  }
+}
