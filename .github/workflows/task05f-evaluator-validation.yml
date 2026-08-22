@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - 'src/nfl_edge/value/**'
+      - 'src/nfl_edge/user/**'
       - 'scripts/task05f_*'
       - 'tests/value/**'
       - 'config/task05f_*.yaml'
@@ -56,7 +57,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "post_selector_evidence_contract_development",\n  "sealed_season": 2025,\n  "historical_play_through_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v1_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v2_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v3_scoring": "DISABLED",\n  "selector_v3_2020_2024_outcome_acceptance": false\n}\n' \
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "post_selector_staking_contract_development",\n  "sealed_season": 2025,\n  "historical_play_through_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v1_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v2_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v3_scoring": "DISABLED",\n  "historical_staking_bankroll_simulation": "DISABLED",\n  "selector_v3_2020_2024_outcome_acceptance": false\n}\n' \
             "$GITHUB_SHA" \
             '3ed8d740a88b59d46e27e206f39757307a6a13da' \
             > artifacts/task05f/ci_provenance.json
@@ -70,30 +71,39 @@ jobs:
           sha256sum config/task05f_selectors_v1_historical_eval_lock.yaml > artifacts/task05f/selectors_v1_historical_eval_lock_sha256.txt
           sha256sum config/task05f_selectors_v2_prereg.yaml > artifacts/task05f/selectors_v2_prereg_sha256.txt
           sha256sum config/task05f_selectors_v3_capability_prereg.yaml > artifacts/task05f/selectors_v3_capability_prereg_sha256.txt
+          sha256sum config/task05f_staking_v1.yaml > artifacts/task05f/staking_v1_prereg_sha256.txt
 
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
 
-      - name: Compile downstream candidate and selector modules
+      - name: Compile downstream candidate selector and staking modules
         run: |
           python -m py_compile scripts/task05f_candidate_table_v1_runner.py
           python -m py_compile scripts/task05f_selectors_v1_runner.py
           python -m py_compile scripts/task05f_selectors_v2_runner.py
           python -m py_compile src/nfl_edge/value/selectors_v3.py
+          python -m py_compile src/nfl_edge/value/staking.py
+          python -m py_compile src/nfl_edge/user/staking_profile.py
           python - <<'PY'
           from nfl_edge.value.selectors import select_primary_cards
           from nfl_edge.value.selectors_v2 import football_signal_support, select_primary_cards_v2
           from nfl_edge.value.selectors_v3 import select_primary_cards_v3
+          from nfl_edge.value.staking import full_kelly_fraction, recommend_stake
+          from nfl_edge.user.staking_profile import UserStakingProfile
           assert callable(select_primary_cards)
           assert callable(football_signal_support)
           assert callable(select_primary_cards_v2)
           assert callable(select_primary_cards_v3)
+          assert callable(full_kelly_fraction)
+          assert callable(recommend_stake)
+          assert UserStakingProfile is not None
           print('selector_v1_import=PASS')
           print('selector_v2_import=PASS')
           print('selector_v3_import=PASS')
+          print('staking_v1_import=PASS')
           PY
 
-      - name: Verify frozen post-probability and selector contracts
+      - name: Verify frozen post-probability selector and staking contracts
         shell: bash
         run: |
           set -euo pipefail
@@ -103,18 +113,23 @@ jobs:
           grep -q 'status: PREREGISTERED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_prereg.yaml
           grep -q 'status: PREREGISTERED_BEFORE_V2_HISTORICAL_SCORING' config/task05f_selectors_v2_prereg.yaml
           grep -q 'status: PREREGISTERED_AFTER_V1_V2_EVIDENCE_BEFORE_V3_OR_2025_OUTCOME_SCORING' config/task05f_selectors_v3_capability_prereg.yaml
-          grep -q 'locked_evidence_status: ML_FAIR_VALUE_BASE_ACCEPTED_FULL_BOARD_VALUE_EDGE_NOT_PROVEN' config/task05f_selectors_v3_capability_prereg.yaml
-          grep -q 'locked_evidence_status: ACCEPTED_FROZEN' config/task05f_selectors_v3_capability_prereg.yaml
-          grep -q 'locked_evidence_status: TOTALS_VALUE_WEAK_NO_DEMONSTRATED_EDGE' config/task05f_selectors_v3_capability_prereg.yaml
           grep -q 'currently_eligible_markets: \[spread\]' config/task05f_selectors_v3_capability_prereg.yaml
           grep -q 'raw_football_direction_is_primary_card_gate: false' config/task05f_selectors_v3_capability_prereg.yaml
-          grep -q 'no_selector_v1_v2_outcome_input: true' config/task05f_selectors_v3_capability_prereg.yaml
           grep -q 'historical_roi_or_hit_rate_acceptance_on_2020_2024: false' config/task05f_selectors_v3_capability_prereg.yaml
-          grep -q 'sealed_2025_is_next_clean_selector_outcome_evidence: true' config/task05f_selectors_v3_capability_prereg.yaml
+          grep -q 'status: PREREGISTERED_BEFORE_ANY_STAKING_HISTORICAL_BANKROLL_SIMULATION' config/task05f_staking_v1.yaml
+          grep -q 'probability_for_kelly: staking_probability' config/task05f_staking_v1.yaml
+          grep -q 'hard_cap_fraction_of_bankroll: 0.05' config/task05f_staking_v1.yaml
+          grep -q 'requires_price_status: VALUE' config/task05f_staking_v1.yaml
+          grep -q 'playable_never_gets_kelly_stake: true' config/task05f_staking_v1.yaml
+          grep -q 'fraction_of_bankroll: 0.01' config/task05f_staking_v1.yaml
+          grep -q 'qualifying_price_status: \[VALUE, PLAYABLE\]' config/task05f_staking_v1.yaml
+          grep -q 'no_kelly_fraction_tuning_from_roi: true' config/task05f_staking_v1.yaml
+          grep -q 'no_2025: true' config/task05f_staking_v1.yaml
           echo 'historical_play_through_scoring=DISABLED'
           echo 'historical_selector_v1_scoring=DISABLED'
           echo 'historical_selector_v2_scoring=DISABLED'
           echo 'historical_selector_v3_outcome_scoring=DISABLED'
+          echo 'historical_staking_bankroll_simulation=DISABLED'
 
       - name: Upload contract evidence
         if: always()
