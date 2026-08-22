@@ -1,0 +1,113 @@
+version: task05f_evaluator_rebuild_v2_prereg
+scope: evaluator_only
+parent_evidence: reports/task05f_rebuild_v1/validation_summary.md
+base_task05f_commit: 3ed8d740a88b59d46e27e206f39757307a6a13da
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+chronology: expanding_prior_season_week_blocks_only
+minimum_prior_games: 128
+
+integrity:
+  football_models_frozen: true
+  task05e_candidate_definitions_frozen: true
+  outcome_bucket_search: false
+  price_bucket_search: false
+  disagreement_bucket_search: false
+  sealed_2025_loaded: false
+  candidate_definitions_may_change_after_v2_outcome_scoring: false
+  v1_fixed_ev_bands_are_diagnostic_only: true
+
+frozen_models:
+  moneyline:
+    qbelo: data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet
+    xgb: data/modeling/development_v1/chronology_corrected/xgboost_candidate_predictions_2018_2024.parquet
+    xgb_candidate: conservative
+    raw_probability: exact_avg
+  spread:
+    expected_margin: data/modeling/development_v1/expected_margin_predictions_2018_2024.parquet
+    expected_margin_candidate: stable
+  total:
+    ridge_r4: reports/task05d/task05d_ridge_predictions.parquet
+    ridge_candidate: R4
+
+actionable_books: [draftkings, fanduel]
+benchmark_book: pinnacle
+shopping_contract: unchanged_from_v1
+point_market_push_contract: unchanged_from_v1
+value_semantics: strict_expected_value_greater_than_zero
+play_through_formula: deferred_until_core_probability_acceptance
+
+candidates:
+  moneyline:
+    name: exact_avg_monotone_logit_calibration
+    raw_probability: "p_raw = (p_qbelo + p_xgb) / 2"
+    training_population: prior_non_tie_games_with_both_constituents
+    feature: "x = logit(clip(p_raw, 0.01, 0.99))"
+    fit: "logistic regression of home win on x, intercept enabled, L2 C=1.0, no class weights"
+    monotonicity_gate: "fitted slope must be > 0; otherwise candidate unsupported for that block"
+    prediction: "p_nonpush_home = sigmoid(intercept + slope*x_current); selected side uses home or 1-home"
+    tie_mass: prior_only_empirical_jeffreys_same_as_v1
+    pinnacle_role: benchmark_and_support_only_not_probability_formula
+    forbidden_features: [sportsbook_price, historical_roi, frozen_05e_bucket, sealed_2025]
+
+  spread:
+    name: pinnacle_anchor_expected_margin_slope
+    benchmark_line: "current/prior Pinnacle HOME spread line; market_home_margin = -pin_home_line"
+    disagreement: "d = expected_home_margin - market_home_margin"
+    target: "y = actual_home_margin - market_home_margin"
+    fit: "beta_raw = sum(d*y)/sum(d*d) on prior games; beta = clip(beta_raw, 0.0, 1.0)"
+    calibrated_mean: "mu_home = market_home_margin + beta*d"
+    residual_pool: "e = actual_home_margin - mu_home for prior games using the same fitted beta"
+    wager_probability: "apply the V1 empirical integer-lattice WIN/PUSH/LOSS distribution of e to each actionable wager's own exact line"
+    monotonicity: "larger calibrated selected-side point advantage cannot reduce selected-side win probability"
+    price_used_in_fit: false
+    forbidden_features: [sportsbook_price, historical_roi, frozen_05e_bucket, sealed_2025]
+
+  total:
+    name: pinnacle_anchor_r4_slope
+    benchmark_line: "exact common Pinnacle OVER/UNDER total line; if no exact common line, unsupported"
+    disagreement: "d = predicted_total_r4 - pinnacle_total_line"
+    target: "y = actual_total - pinnacle_total_line"
+    fit: "beta_raw = sum(d*y)/sum(d*d) on prior games; beta = clip(beta_raw, 0.0, 1.0)"
+    calibrated_mean: "mu_total = pinnacle_total_line + beta*d"
+    residual_pool: "e = actual_total - mu_total for prior games using the same fitted beta"
+    wager_probability: "apply the V1 empirical integer-lattice WIN/PUSH/LOSS distribution of e to each actionable wager's own exact line"
+    price_used_in_fit: false
+    forbidden_features: [sportsbook_price, historical_roi, frozen_05e_bucket, sealed_2025]
+
+support:
+  cold_start: minimum_prior_games_128
+  existing_task05f_support_ood_gate_retained: true
+  missing_required_frozen_model_input: unsupported
+  missing_required_pinnacle_anchor: unsupported
+  moneyline_negative_or_zero_calibration_slope: unsupported
+
+fixed_outputs:
+  - full_board
+  - scorecard
+  - ev_calibration_fixed_bands
+  - frozen_edge_preservation_exact_offer
+  - calibration_state_by_block
+  - provenance
+  - observations
+
+acceptance_dimensions:
+  chronology_and_2025_firewall: hard_gate
+  exact_offer_and_push_semantics: hard_gate
+  deterministic_reproduction: hard_gate
+  probability_quality: required
+  full_board_wagering_discrimination: required_directional_evidence
+  frozen_edge_preservation: external_validation_not_tuning_target
+  no_bucket_or_price_hunting: hard_gate
+
+selection_policy:
+  moneyline: "V2 must improve calibration/proper scoring versus raw exact AVG without reversing model ordering; ROI alone cannot select it"
+  spread: "V2 must materially improve probability quality versus V1 empirical residual mapping and must not systematically rank the frozen SPREAD_0_4 rejected set above the kept set"
+  total: "V2 may return WEAK/NO_EDGE; do not force a value layer"
+  production_promotion: false_until_master_review
+
+new_observation_policy:
+  label: OBSERVATIONAL_ONLY_NOT_TUNED
+  may_modify_v2_candidate: false
+  may_be_saved_for_2025_hypothesis: true
