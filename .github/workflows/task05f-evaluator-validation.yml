@@ -11,11 +11,8 @@ on:
       - 'src/nfl_edge/value/**'
       - 'scripts/task05f_*'
       - 'tests/value/**'
-      - 'config/task05f_evaluator_rebuild_v1.yaml'
-      - 'config/task05f_evaluator_rebuild_v2_prereg.yaml'
-      - 'config/task05f_evaluator_rebuild_v3_prereg.yaml'
-      - 'config/task05f_ml_v4_prereg.yaml'
-      - 'docs/task05f_evaluator_rebuild_v1.md'
+      - 'config/task05f_*.yaml'
+      - 'docs/task05f_*.md'
       - '.github/workflows/task05f-evaluator-validation.yml'
   workflow_dispatch:
 
@@ -59,12 +56,14 @@ jobs:
         shell: bash
         run: |
           mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "evaluator_only_moneyline",\n  "sealed_season": 2025,\n  "candidate": "ml_v4_preregistered_calibration",\n  "spread_architecture": "frozen_at_v3",\n  "totals_architecture": "frozen_at_v3"\n}\n' \
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "evaluator_only_locked_consolidation",\n  "sealed_season": 2025,\n  "moneyline": "ml_v4",\n  "spread": "spread_v3",\n  "total": "total_v3"\n}\n' \
             "$GITHUB_SHA" \
             '3ed8d740a88b59d46e27e206f39757307a6a13da' \
             > artifacts/task05f/ci_provenance.json
           cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
+          sha256sum config/task05f_evaluator_locked_v1.yaml > artifacts/task05f/locked_config_sha256.txt
           sha256sum config/task05f_ml_v4_prereg.yaml > artifacts/task05f/ml_v4_prereg_sha256.txt
+          sha256sum config/task05f_evaluator_rebuild_v3_prereg.yaml > artifacts/task05f/v3_prereg_sha256.txt
 
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
@@ -73,30 +72,37 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'SEALED = {2025}' scripts/task05f_ml_v4_runner.py
-          grep -q 'DEV = \[2020, 2021, 2022, 2023, 2024\]' scripts/task05f_ml_v4_runner.py
-          grep -q 'sealed_seasons: \[2025\]' config/task05f_ml_v4_prereg.yaml
+          grep -q 'SEALED = {2025}' scripts/task05f_evaluator_locked_runner.py
+          grep -q 'DEV = \[2020, 2021, 2022, 2023, 2024\]' scripts/task05f_evaluator_locked_runner.py
+          grep -q 'sealed_seasons: \[2025\]' config/task05f_evaluator_locked_v1.yaml
+          grep -q 'no_2025_outcomes: true' config/task05f_evaluator_locked_v1.yaml
 
-      - name: Run chronological ML evaluator V4 twice
+      - name: Run locked chronological evaluator twice
         shell: bash
         run: |
           set -euo pipefail
-          python scripts/task05f_ml_v4_runner.py --out artifacts/task05f/run1
-          python scripts/task05f_ml_v4_runner.py --out artifacts/task05f/run2
+          python scripts/task05f_evaluator_locked_runner.py --out artifacts/task05f/run1
+          python scripts/task05f_evaluator_locked_runner.py --out artifacts/task05f/run2
 
-      - name: Verify deterministic evaluator outputs
+      - name: Verify deterministic locked outputs
         shell: bash
         run: |
           set -euo pipefail
-          for f in scorecard.json frozen_ml_edge_preservation.json ev_calibration.csv observations.json calibration_state_by_block.ndjson; do
+          for f in scorecard.json frozen_edge_preservation.json ev_calibration.csv observations.json calibration_state_by_block.ndjson component_reproduction.json; do
             cmp "artifacts/task05f/run1/$f" "artifacts/task05f/run2/$f"
           done
           python - <<'PY'
+          import json
           import polars as pl
+
           a = pl.read_parquet('artifacts/task05f/run1/full_board.parquet')
           b = pl.read_parquet('artifacts/task05f/run2/full_board.parquet')
-          assert a.equals(b), 'ML full_board.parquet logical content differs between deterministic runs'
-          print(f'deterministic_ml_rows={a.height}')
+          assert a.equals(b), 'locked full_board.parquet logical content differs between deterministic runs'
+          proof = json.load(open('artifacts/task05f/run1/component_reproduction.json'))
+          assert proof['moneyline_rows_equal_v4'] is True
+          assert proof['spread_total_rows_equal_v3'] is True
+          print(f"deterministic_locked_rows={a.height}")
+          print('component_reproduction=PASS')
           PY
           sha256sum artifacts/task05f/run1/* artifacts/task05f/run2/* > artifacts/task05f/artifact_hashes.txt
 
