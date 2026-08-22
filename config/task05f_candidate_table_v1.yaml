@@ -1,0 +1,192 @@
+version: task05f_common_candidate_table_v1
+status: LOCKED_BEFORE_CANDIDATE_TABLE_IMPLEMENTATION
+scope: downstream_product_interface_no_new_modeling
+
+upstream:
+  locked_evaluator: config/task05f_evaluator_locked_v1.yaml
+  reliability_uncertainty: config/task05f_reliability_uncertainty_v1_1_prereg.yaml
+  play_through: config/task05f_play_through_v1_1_prereg.yaml
+  selector_preregistration: config/task05f_selectors_v1_prereg.yaml
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+
+purpose: >-
+  Materialize one standardized evaluated-wager row per game / market / side for
+  the game explorer and all three primary selectors. The table is an interface
+  layer only. It may add offer context and stable identifiers but may not change
+  any upstream probability, EV, reliability, Play Through, or staking field.
+
+candidate_universe:
+  markets: [moneyline, spread, total]
+  sides:
+    moneyline: [home, away]
+    spread: [home, away]
+    total: [over, under]
+  retain_supported_and_unsupported: true
+  expected_rows_for_frozen_2020_2024_fixture: 8448
+  one_row_per_game_market_side: true
+
+identity:
+  candidate_id: "game_id|market_type|selected_side"
+  candidate_id_semantics: >-
+    Stable wager identity across refreshes. It intentionally excludes sportsbook,
+    line, price, and timestamp so the same wager can move between WATCH / LEAN /
+    PLAYABLE / VALUE as current offers change.
+  offer_id: "candidate_id|actionable_book|actionable_line|actionable_price|market_snapshot_timestamp"
+  offer_id_semantics: changes when the selected actionable offer changes
+
+standard_fields:
+  identity:
+    - candidate_id
+    - offer_id
+    - game_id
+    - season
+    - week
+    - block
+    - market_type
+    - selection
+  football:
+    - football_model_name
+    - raw_football_output
+    - raw_football_output_unit
+    - model_market_disagreement
+  benchmark:
+    - pinnacle_no_vig_probability
+    - pinnacle_anchor_probability
+    - pinnacle_anchor_threshold
+  book_context:
+    - draftkings_line
+    - draftkings_price_american
+    - fanduel_line
+    - fanduel_price_american
+    - pinnacle_line
+    - pinnacle_price_american
+  actionable_offer:
+    - actionable_book
+    - actionable_line
+    - actionable_price_american
+    - actionable_decimal_price
+    - market_snapshot_timestamp
+  evaluation:
+    - p_win
+    - p_push
+    - p_loss
+    - actionable_probability
+    - fair_price_american
+    - break_even_probability
+    - evaluated_edge_probability
+    - expected_value
+    - strict_positive_value
+    - supported
+    - support_n
+    - reason
+  reliability_risk:
+    - reliability
+    - base_reliability
+    - uncertainty
+    - uncertainty_support_n
+    - uncertainty_block_count
+    - candidate_uncertainty_tier
+    - staking_probability
+    - staking_expected_value
+  play_through:
+    - price_status
+    - play_through_confidence_multiplier
+    - play_through_break_even_concession
+    - play_through_break_even_probability
+    - play_through_price_american
+
+football_model_mapping:
+  moneyline:
+    name: QB_ELO_XGB_EXACT_AVG
+    output_unit: probability_home_or_away_orientation
+  spread:
+    name: EXPECTED_MARGIN_V1_STABLE
+    output_unit: home_margin_points
+  total:
+    name: RIDGE_TOTALS_R4
+    output_unit: total_points
+
+book_context_rules:
+  books: [draftkings, fanduel, pinnacle]
+  same_game_market_side_required: true
+  each_book_offer_selected_with_existing_upstream_market_shopping_semantics: true
+  missing_book_offer_allowed: true
+  book_context_is_display_only: true
+  may_not_change_actionable_offer: true
+  may_not_change_probability_or_status: true
+
+outcome_firewall:
+  production_candidate_table_must_exclude:
+    - settlement
+    - realized_profit
+    - home_score
+    - away_score
+  historical_outcomes_sidecar_allowed_for_diagnostics: true
+  historical_sidecar_identity_key: candidate_id
+  selector_function_must_not_accept_outcome_fields: true
+  sealed_2025_loaded: false
+
+immutability:
+  preserve_exactly_from_play_through_board:
+    - p_win
+    - p_push
+    - p_loss
+    - actionable_probability
+    - fair_price_american
+    - break_even_probability
+    - evaluated_edge_probability
+    - expected_value
+    - strict_positive_value
+    - supported
+    - support_n
+    - reason
+    - reliability
+    - base_reliability
+    - uncertainty
+    - uncertainty_support_n
+    - uncertainty_block_count
+    - candidate_uncertainty_tier
+    - staking_probability
+    - staking_expected_value
+    - price_status
+    - play_through_confidence_multiplier
+    - play_through_break_even_concession
+    - play_through_break_even_probability
+    - play_through_price_american
+
+sleeper_watch_support:
+  stable_candidate_id_required: true
+  refresh_status_transition_supported: true
+  normalized_cross_market_disagreement_field: DEFERRED
+  sleeper_formula: DEFERRED
+
+required_outputs:
+  - candidate_table.parquet
+  - candidate_table_manifest.json
+  - historical_outcomes.parquet
+  - provenance.json
+
+required_tests:
+  - stable_candidate_id_ignores_price_changes
+  - offer_id_changes_with_offer
+  - exactly_one_row_per_game_market_side
+  - all_8448_frozen_rows_preserved
+  - unsupported_rows_retained
+  - production_table_contains_no_outcome_fields
+  - historical_outcomes_are_sidecar_only
+  - actionable_offer_matches_upstream_exactly
+  - upstream_probability_value_reliability_staking_playthrough_fields_unchanged
+  - dk_fd_pinnacle_context_never_changes_actionable_offer
+  - sealed_2025_firewall
+
+integrity:
+  no_model_fit: true
+  no_probability_fit: true
+  no_selector_scoring: true
+  no_staking_policy_change: true
+  no_play_through_change: true
+  no_roi_input: true
+  no_coverage_target: true
+  no_2025: true
