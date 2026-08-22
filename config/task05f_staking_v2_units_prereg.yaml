@@ -1,0 +1,186 @@
+version: task05f_staking_v2_units_prereg
+status: PREREGISTERED_BEFORE_V2_UNIT_BANKROLL_SIMULATION
+scope: evaluator_assigned_wager_units_plus_user_selected_risk_style
+
+supersedes_for_production_staking:
+  config: config/task05f_staking_v1.yaml
+  reason: >-
+    Kelly remains useful as an internal diagnostic, but it is not the primary
+    casual-facing staking strategy because PLAYABLE wagers intentionally extend
+    beyond fair value and would frequently produce zero Kelly stakes.
+  staking_v1_remains_audit_history: true
+
+architecture:
+  evaluator_assigns_units: true
+  user_does_not_choose_wager_units: true
+  user_selects_one_global_risk_style: true
+  unit_value_is_fraction_of_current_bankroll: true
+  bankroll_recalculated_at_slate_start: true
+  maximum_units_per_wager: 2.0
+  global_absolute_wager_cap_fraction: 0.05
+  kelly_user_facing_strategy: false
+  kelly_internal_diagnostic_allowed: true
+
+risk_styles:
+  CAUTIOUS:
+    fraction_of_bankroll_per_unit: 0.005
+    natural_two_unit_max_fraction: 0.01
+    open_slate_exposure_cap_fraction: 0.03
+    warning_level: NONE
+  CONSERVATIVE:
+    fraction_of_bankroll_per_unit: 0.0075
+    natural_two_unit_max_fraction: 0.015
+    open_slate_exposure_cap_fraction: 0.05
+    warning_level: NONE
+  STANDARD:
+    fraction_of_bankroll_per_unit: 0.01
+    natural_two_unit_max_fraction: 0.02
+    open_slate_exposure_cap_fraction: 0.07
+    warning_level: NONE
+    default: true
+  AGGRESSIVE:
+    fraction_of_bankroll_per_unit: 0.015
+    natural_two_unit_max_fraction: 0.03
+    open_slate_exposure_cap_fraction: 0.10
+    warning_level: CAUTION
+  VERY_AGGRESSIVE:
+    fraction_of_bankroll_per_unit: 0.025
+    natural_two_unit_max_fraction: 0.05
+    open_slate_exposure_cap_fraction: 0.15
+    warning_level: STRONG_CAUTION
+    selection_warning: >-
+      Very Aggressive staking can place up to 5% of bankroll on one exceptional
+      wager and materially increases drawdown risk. It does not make a wager more
+      likely to win and should only be selected if the user accepts larger swings.
+
+staking_eligibility:
+  supported_required: true
+  allowed_reliability: [HIGH, MEDIUM]
+  low_reliability_units: 0.0
+  unsupported_units: 0.0
+  lean_units: 0.0
+  pass_units: 0.0
+
+unit_engine:
+  PLAYABLE:
+    purpose: conservative_nonzero_stake_inside_preregistered_play_through_corridor
+    minimum_units_at_play_through_limit: 0.50
+    maximum_units_at_fair_boundary: 1.00
+    current_break_even_field: break_even_probability
+    fair_boundary_field: actionable_probability
+    play_through_boundary_field: play_through_break_even_probability
+    corridor_position: >-
+      clip((break_even_probability - actionable_probability) /
+      (play_through_break_even_probability - actionable_probability), 0, 1)
+    units_formula: "1.0 - 0.5 * corridor_position"
+    semantics: >-
+      A PLAYABLE price barely beyond fair receives nearly 1u. A price at the
+      maximum Play Through boundary receives 0.5u. No Kelly calculation is used
+      to turn PLAYABLE into Value.
+  VALUE:
+    minimum_units: 1.00
+    maximum_units: 2.00
+    positive_edge_field: evaluated_edge_probability
+    confidence_field: play_through_confidence_multiplier
+    comparison_scale_field: play_through_break_even_concession
+    edge_share: >-
+      positive_edge / (positive_edge + play_through_break_even_concession)
+    units_formula: "1.0 + confidence * edge_share"
+    semantics: >-
+      Every supported HIGH/MEDIUM strict Value receives at least 1u. Additional
+      size is earned continuously when the positive evaluated edge is large
+      relative to the already-frozen Play Through concession and confidence is
+      stronger. No historical ROI threshold is introduced.
+  clamp_units: [0.0, 2.0]
+
+stake_conversion:
+  raw_stake_fraction: "recommended_units * risk_style.fraction_of_bankroll_per_unit"
+  final_stake_fraction: >-
+    min(raw_stake_fraction, risk_style.natural_two_unit_max_fraction,
+    global_absolute_wager_cap_fraction)
+  currency_rounding: nearest_cent_half_up
+  positive_fraction_rounding_to_zero: STAKE_ZERO
+
+exposure_control:
+  basis: user_reported_or_app_logged_open_stakes_for_current_slate
+  style_specific_caps: true
+  cap_is_hard_when_current_open_exposure_is_provided: true
+  missing_open_exposure_state: >-
+    Individual wager recommendation may still be calculated, but frontend should
+    state that slate exposure protection requires the user to keep logged bets current.
+  remaining_capacity_formula: >-
+    max(0, style_exposure_cap_fraction * bankroll - current_open_exposure_amount)
+  recommended_stake_may_be_reduced_to_remaining_capacity: true
+  no_stake_when_exposure_cap_already_reached: true
+
+output_contract:
+  - risk_style
+  - bankroll
+  - price_status
+  - recommended_units
+  - unit_fraction_of_bankroll
+  - raw_stake_fraction
+  - recommended_stake_fraction
+  - recommended_stake
+  - unit_reason
+  - exposure_cap_fraction
+  - current_open_exposure_amount
+  - exposure_capacity_remaining
+  - exposure_cap_applied
+  - style_warning
+  - internal_full_kelly_fraction
+
+reason_codes:
+  - STAKE_RECOMMENDED_VALUE
+  - STAKE_RECOMMENDED_PLAYABLE
+  - UNSUPPORTED
+  - LOW_RELIABILITY
+  - STATUS_NOT_ACTIONABLE
+  - INVALID_PLAY_THROUGH_CORRIDOR
+  - EXPOSURE_CAP_REACHED
+  - ROUNDED_TO_ZERO
+
+integrity:
+  no_model_change: true
+  no_probability_change: true
+  no_selector_change: true
+  no_play_through_change: true
+  no_historical_profit_input: true
+  no_unit_tuning_from_roi: true
+  no_style_tuning_from_roi: true
+  no_exposure_cap_tuning_from_roi: true
+  no_2025: true
+
+required_tests:
+  - playable_at_fair_boundary_is_one_unit
+  - playable_at_play_through_limit_is_half_unit
+  - playable_mid_corridor_interpolates_continuously
+  - value_is_at_least_one_unit
+  - value_never_exceeds_two_units
+  - value_units_increase_with_confidence_and_relative_edge
+  - lean_and_pass_are_zero_units
+  - low_and_unsupported_are_zero_units
+  - user_cannot_override_evaluator_units
+  - five_risk_styles_convert_same_units_to_expected_bankroll_fractions
+  - very_aggressive_never_exceeds_five_percent_per_wager
+  - exposure_cap_reduces_stake_to_remaining_capacity
+  - exposure_cap_reached_returns_zero
+  - missing_exposure_state_does_not_change_unit_rating
+  - deterministic_currency_rounding
+  - no_historical_outcome_fields_required
+
+validation_policy:
+  2020_2024_bankroll_simulation_is_diagnostic_only: true
+  staking_parameters_may_not_change_after_simulation: true
+  independent_review_required_before_2025: true
+  sealed_2025_is_clean_holdout: true
+
+promotion:
+  production_promotion: false
+  next_required_steps:
+    - implement_risk_profile_and_unit_engine
+    - synthetic_contract_tests
+    - revise_product_simulation_to_v3_1_plus_staking_v2
+    - one_diagnostic_2020_2024_product_simulation_without_retuning
+    - independent_review
+    - open_2025_once
