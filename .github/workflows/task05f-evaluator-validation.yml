@@ -48,7 +48,7 @@ jobs:
           git cat-file -e "$BASE^{commit}"
           git diff --name-only "$BASE"...HEAD | tee /tmp/task05f_changed_paths.txt
           if grep -E '^(src/nfl_edge/models/|src/nfl_edge/backtest/expected_margin|data/modeling/|data/frozen/|reports/task05d/|reports/task05e_remediated/|config/expected_margin|config/.*qb|config/.*xgb)' /tmp/task05f_changed_paths.txt; then
-            echo 'ERROR: Task05F rebuild modified frozen football-model/data scope.' >&2
+            echo 'ERROR: Task05F modified frozen football-model/data scope.' >&2
             exit 1
           fi
 
@@ -56,14 +56,13 @@ jobs:
         shell: bash
         run: |
           mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "evaluator_only_locked_consolidation",\n  "sealed_season": 2025,\n  "moneyline": "ml_v4",\n  "spread": "spread_v3",\n  "total": "total_v3"\n}\n' \
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "evaluator_only_phase_f_reliability",\n  "sealed_season": 2025,\n  "locked_evaluator": "ml_v4_spread_v3_total_v3"\n}\n' \
             "$GITHUB_SHA" \
             '3ed8d740a88b59d46e27e206f39757307a6a13da' \
             > artifacts/task05f/ci_provenance.json
           cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
           sha256sum config/task05f_evaluator_locked_v1.yaml > artifacts/task05f/locked_config_sha256.txt
-          sha256sum config/task05f_ml_v4_prereg.yaml > artifacts/task05f/ml_v4_prereg_sha256.txt
-          sha256sum config/task05f_evaluator_rebuild_v3_prereg.yaml > artifacts/task05f/v3_prereg_sha256.txt
+          sha256sum config/task05f_reliability_uncertainty_v1_prereg.yaml > artifacts/task05f/phase_f_prereg_sha256.txt
 
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
@@ -72,23 +71,23 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'SEALED = {2025}' scripts/task05f_evaluator_locked_runner.py
-          grep -q 'DEV = \[2020, 2021, 2022, 2023, 2024\]' scripts/task05f_evaluator_locked_runner.py
-          grep -q 'sealed_seasons: \[2025\]' config/task05f_evaluator_locked_v1.yaml
-          grep -q 'no_2025_outcomes: true' config/task05f_evaluator_locked_v1.yaml
+          grep -q 'SEALED = {2025}' scripts/task05f_reliability_uncertainty_v1_runner.py
+          grep -q 'DEV = \[2020, 2021, 2022, 2023, 2024\]' scripts/task05f_reliability_uncertainty_v1_runner.py
+          grep -q 'sealed_seasons: \[2025\]' config/task05f_reliability_uncertainty_v1_prereg.yaml
+          grep -q 'sealed_2025_loaded: false' config/task05f_reliability_uncertainty_v1_prereg.yaml
 
-      - name: Run locked chronological evaluator twice
+      - name: Run Phase F chronological enrichment twice
         shell: bash
         run: |
           set -euo pipefail
-          python scripts/task05f_evaluator_locked_runner.py --out artifacts/task05f/run1
-          python scripts/task05f_evaluator_locked_runner.py --out artifacts/task05f/run2
+          python scripts/task05f_reliability_uncertainty_v1_runner.py --out artifacts/task05f/run1
+          python scripts/task05f_reliability_uncertainty_v1_runner.py --out artifacts/task05f/run2
 
-      - name: Verify deterministic locked outputs
+      - name: Verify deterministic Phase F outputs and immutable evaluator base
         shell: bash
         run: |
           set -euo pipefail
-          for f in scorecard.json frozen_edge_preservation.json ev_calibration.csv observations.json calibration_state_by_block.ndjson component_reproduction.json; do
+          for f in scorecard.json base_reproduction.json frozen_edge_preservation.json ev_calibration.csv observations.json uncertainty_state_by_block.ndjson per_season_reliability_mix.csv component_reproduction.json; do
             cmp "artifacts/task05f/run1/$f" "artifacts/task05f/run2/$f"
           done
           python - <<'PY'
@@ -97,12 +96,14 @@ jobs:
 
           a = pl.read_parquet('artifacts/task05f/run1/full_board.parquet')
           b = pl.read_parquet('artifacts/task05f/run2/full_board.parquet')
-          assert a.equals(b), 'locked full_board.parquet logical content differs between deterministic runs'
-          proof = json.load(open('artifacts/task05f/run1/component_reproduction.json'))
-          assert proof['moneyline_rows_equal_v4'] is True
-          assert proof['spread_total_rows_equal_v3'] is True
-          print(f"deterministic_locked_rows={a.height}")
-          print('component_reproduction=PASS')
+          assert a.equals(b), 'Phase F full_board.parquet logical content differs between deterministic runs'
+          proof = json.load(open('artifacts/task05f/run1/base_reproduction.json'))
+          assert proof['immutable_rows_equal'] is True
+          assert proof['strict_value_labels_unchanged'] is True
+          assert proof['support_flags_unchanged'] is True
+          assert proof['immutable_payload_sha256_before'] == proof['immutable_payload_sha256_after']
+          print(f"deterministic_phase_f_rows={a.height}")
+          print('locked_probability_and_value_reproduction=PASS')
           PY
           sha256sum artifacts/task05f/run1/* artifacts/task05f/run2/* > artifacts/task05f/artifact_hashes.txt
 
