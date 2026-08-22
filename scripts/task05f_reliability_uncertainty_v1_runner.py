@@ -14,7 +14,6 @@ import argparse
 import hashlib
 import importlib.util
 import json
-import math
 import os
 from pathlib import Path
 import shutil
@@ -113,16 +112,37 @@ def _market_anchor(row: dict[str, Any]) -> float | None:
     raise ValueError(f"unknown market {market}")
 
 
+def _identity_key(row: dict[str, Any]) -> tuple:
+    return (
+        str(row.get("block")),
+        str(row.get("game_id")),
+        str(row.get("market_type")),
+        str(row.get("selected_side")),
+        str(row.get("sportsbook")),
+        -9999.0 if row.get("line") is None else float(row["line"]),
+        int(row.get("american_odds")),
+    )
+
+
 def _immutable_payload(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    out = []
-    for row in rows:
-        out.append({field: row.get(field) for field in IDENTITY_FIELDS + IMMUTABLE_FIELDS})
-    return out
+    out = [
+        {field: row.get(field) for field in IDENTITY_FIELDS + IMMUTABLE_FIELDS}
+        for row in rows
+    ]
+    return sorted(out, key=_identity_key)
 
 
 def _payload_hash(payload: list[dict[str, Any]]) -> str:
     raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
     return hashlib.sha256(raw).hexdigest()
+
+
+def _same_field_by_identity(
+    before: list[dict[str, Any]], after: list[dict[str, Any]], field: str
+) -> bool:
+    a = {_identity_key(row): row.get(field) for row in before}
+    b = {_identity_key(row): row.get(field) for row in after}
+    return a == b
 
 
 def _history_row(row: dict[str, Any]) -> tuple[str, float, int] | None:
@@ -286,6 +306,12 @@ def run(root: Path, config_path: Path, out: Path) -> None:
         after_payload = _immutable_payload(enriched)
         after_hash = _payload_hash(after_payload)
         immutable_equal = before_payload == after_payload
+        strict_labels_unchanged = _same_field_by_identity(
+            base_rows, enriched, "strict_positive_value"
+        )
+        support_flags_unchanged = _same_field_by_identity(
+            base_rows, enriched, "supported"
+        )
         if not immutable_equal or before_hash != after_hash:
             raise RuntimeError("Phase F modified locked evaluator probability/value/support fields")
 
@@ -343,14 +369,8 @@ def run(root: Path, config_path: Path, out: Path) -> None:
             "immutable_payload_sha256_before": before_hash,
             "immutable_payload_sha256_after": after_hash,
             "immutable_rows_equal": immutable_equal,
-            "strict_value_labels_unchanged": all(
-                a.get("strict_positive_value") == b.get("strict_positive_value")
-                for a, b in zip(base_rows, enriched)
-            ),
-            "support_flags_unchanged": all(
-                a.get("supported") == b.get("supported")
-                for a, b in zip(base_rows, enriched)
-            ),
+            "strict_value_labels_unchanged": strict_labels_unchanged,
+            "support_flags_unchanged": support_flags_unchanged,
         }
         _json_write(out / "base_reproduction.json", reproduction)
 
