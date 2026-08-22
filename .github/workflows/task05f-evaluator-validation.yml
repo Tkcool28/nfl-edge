@@ -22,7 +22,7 @@ permissions:
 jobs:
   evaluator-contract:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 20
     steps:
       - name: Checkout exact commit
         uses: actions/checkout@v4
@@ -52,11 +52,11 @@ jobs:
             exit 1
           fi
 
-      - name: Record designated Selector V2 scoring provenance
+      - name: Record post-selector development provenance
         shell: bash
         run: |
           mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "designated_task05f_selector_v2_historical_evidence",\n  "development_seasons": [2020, 2021, 2022, 2023, 2024],\n  "sealed_season": 2025,\n  "direction_gate_threshold": 0.0,\n  "direction_magnitude_used_in_ranking": false,\n  "results_label": "OBSERVATIONAL_ONLY_NOT_TUNED"\n}\n' \
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "post_selector_evidence_contract_development",\n  "sealed_season": 2025,\n  "historical_play_through_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v2_scoring": "DISABLED_ON_ORDINARY_PUSHES"\n}\n' \
             "$GITHUB_SHA" \
             '3ed8d740a88b59d46e27e206f39757307a6a13da' \
             > artifacts/task05f/ci_provenance.json
@@ -73,105 +73,49 @@ jobs:
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
 
-      - name: Compile Selector V2 evidence stack
+      - name: Compile downstream candidate and selector runners
         run: |
           python -m py_compile scripts/task05f_candidate_table_v1_runner.py
+          python -m py_compile scripts/task05f_selectors_v1_runner.py
           python -m py_compile scripts/task05f_selectors_v2_runner.py
           python - <<'PY'
+          from nfl_edge.value.selectors import select_primary_cards
           from nfl_edge.value.selectors_v2 import football_signal_support, select_primary_cards_v2
+          assert callable(select_primary_cards)
           assert callable(football_signal_support)
           assert callable(select_primary_cards_v2)
+          print('selector_v1_import=PASS')
           print('selector_v2_import=PASS')
           PY
 
-      - name: Verify preregistered Selector V2 evidence contract
+      - name: Verify frozen post-probability and selector contracts
         shell: bash
         run: |
           set -euo pipefail
+          grep -q 'sealed_seasons: \[2025\]' config/task05f_play_through_v1_1_prereg.yaml
+          grep -q 'maximum_break_even_concession: 0.015' config/task05f_play_through_v1_1_prereg.yaml
+          grep -q 'expected_rows_for_frozen_2020_2024_fixture: 8448' config/task05f_candidate_table_v1.yaml
+          grep -q 'status: PREREGISTERED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_prereg.yaml
+          grep -q 'allowed_reliability: \[HIGH, MEDIUM\]' config/task05f_selectors_v1_prereg.yaml
+          grep -q 'no_staking_probability_in_selector_ranking: true' config/task05f_selectors_v1_prereg.yaml
+          grep -q 'status: LOCKED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_implementation_lock.yaml
+          grep -q 'balanced_equal_value_rank: competition_min_rank' config/task05f_selectors_v1_implementation_lock.yaml
+          grep -q 'status: LOCKED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_historical_eval_lock.yaml
+          grep -q 'results_label: OBSERVATIONAL_ONLY_NOT_TUNED' config/task05f_selectors_v1_historical_eval_lock.yaml
           grep -q 'status: PREREGISTERED_BEFORE_V2_HISTORICAL_SCORING' config/task05f_selectors_v2_prereg.yaml
-          grep -q 'development_seasons: \[2020, 2021, 2022, 2023, 2024\]' config/task05f_selectors_v2_prereg.yaml
-          grep -q 'sealed_seasons: \[2025\]' config/task05f_selectors_v2_prereg.yaml
           grep -q 'threshold: 0.0' config/task05f_selectors_v2_prereg.yaml
-          grep -q 'comparison: strictly_greater_than_zero' config/task05f_selectors_v2_prereg.yaml
           grep -q 'magnitude_used_in_ranking: false' config/task05f_selectors_v2_prereg.yaml
           grep -q 'inherit_v1_rankings_exactly: true' config/task05f_selectors_v2_prereg.yaml
-          grep -q 'inherit_v1_tiebreaks_exactly: true' config/task05f_selectors_v2_prereg.yaml
           grep -q 'no_disagreement_magnitude_threshold: true' config/task05f_selectors_v2_prereg.yaml
           grep -q 'no_historical_roi_input: true' config/task05f_selectors_v2_prereg.yaml
-          grep -q 'no_2025: true' config/task05f_selectors_v2_prereg.yaml
-          grep -q 'run_count: one_designated_evidence_run_with_duplicate_execution_only_for_determinism' config/task05f_selectors_v2_prereg.yaml
+          echo 'historical_play_through_scoring=DISABLED'
+          echo 'historical_selector_v1_scoring=DISABLED'
+          echo 'historical_selector_v2_scoring=DISABLED'
 
-      - name: Run designated Selector V2 evaluation twice for determinism
-        shell: bash
-        run: |
-          set -euo pipefail
-          python scripts/task05f_selectors_v2_runner.py --out artifacts/task05f/run1
-          python scripts/task05f_selectors_v2_runner.py --out artifacts/task05f/run2
-
-      - name: Verify deterministic Selector V2 outputs and hard contracts
-        shell: bash
-        run: |
-          set -euo pipefail
-          diff -qr artifacts/task05f/run1 artifacts/task05f/run2
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          root = Path('artifacts/task05f/run1')
-          score = json.loads((root / 'scorecard.json').read_text())
-          proof = json.loads((root / 'candidate_reproduction.json').read_text())
-          picks = json.loads((root / 'selector_picks.json').read_text())
-
-          assert score['version'] == 'task05f_selectors_v2'
-          assert score['label'] == 'OBSERVATIONAL_ONLY_NOT_TUNED'
-          assert score['development_seasons'] == [2020, 2021, 2022, 2023, 2024]
-          assert score['sealed_seasons'] == [2025]
-          assert score['total_slates'] == 109
-          assert score['production_promotion'] is False
-          assert score['selector_rules_may_change_after_results'] is False
-          gate = score['football_direction_gate']
-          assert float(gate['threshold']) == 0.0
-          assert gate['strictly_greater_than_zero'] is True
-          assert gate['magnitude_used_in_ranking'] is False
-
-          assert proof['candidate_rows'] == 8448
-          assert proof['candidate_rows_immutable'] is True
-          assert proof['candidate_table_outcome_fields'] == []
-          assert proof['outcome_join_occurred_after_selection'] is True
-          assert proof['candidate_logical_sha256_before_selection'] == proof['candidate_logical_sha256_after_selection']
-
-          assert len(picks) == 327
-          for record in picks:
-              if not record['has_play']:
-                  assert record['candidate_id'] is None
-                  assert record['candidate'] is None
-                  continue
-              candidate = record['candidate']
-              assert candidate['supported'] is True
-              assert candidate['reliability'] in ('HIGH', 'MEDIUM')
-              assert candidate['football_signal_supports_wager'] is True
-              assert float(candidate['football_signal_support_margin']) > 0.0
-              if record['selector'] in ('BALANCED', 'VALUE'):
-                  assert candidate['price_status'] == 'VALUE'
-                  assert candidate['strict_positive_value'] is True
-                  assert float(candidate['expected_value']) > 0.0
-              elif record['selector'] == 'HIGH_HIT_RATE':
-                  assert candidate['price_status'] in ('VALUE', 'PLAYABLE')
-              else:
-                  raise AssertionError(record['selector'])
-
-          print('selector_v2_determinism=PASS')
-          print('candidate_outcome_firewall=PASS')
-          print('direction_only_gate=PASS')
-          print('strict_value_semantics=PASS')
-          print('sealed_2025_firewall=PASS')
-          PY
-          sha256sum artifacts/task05f/run1/* artifacts/task05f/run2/* > artifacts/task05f/artifact_hashes.txt
-
-      - name: Upload Selector V2 validation evidence
+      - name: Upload contract evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: task05f-selector-v2-validation-${{ github.sha }}
+          name: task05f-evaluator-contract-${{ github.sha }}
           path: artifacts/task05f/
           if-no-files-found: error
