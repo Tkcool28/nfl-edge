@@ -56,40 +56,43 @@ jobs:
         shell: bash
         run: |
           mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "evaluator_only_phase_f_reliability_v1_1",\n  "sealed_season": 2025,\n  "locked_evaluator": "ml_v4_spread_v3_total_v3",\n  "staking_anchor": "exact_actionable_offer"\n}\n' \
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "phase_g_play_through_product_policy",\n  "sealed_season": 2025,\n  "locked_evaluator": "ml_v4_spread_v3_total_v3",\n  "phase_f": "reliability_uncertainty_v1_1",\n  "maximum_break_even_concession": 0.01\n}\n' \
             "$GITHUB_SHA" \
             '3ed8d740a88b59d46e27e206f39757307a6a13da' \
             > artifacts/task05f/ci_provenance.json
           cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
           sha256sum config/task05f_evaluator_locked_v1.yaml > artifacts/task05f/locked_config_sha256.txt
           sha256sum config/task05f_reliability_uncertainty_v1_1_prereg.yaml > artifacts/task05f/phase_f_v1_1_prereg_sha256.txt
+          sha256sum config/task05f_play_through_v1_prereg.yaml > artifacts/task05f/play_through_v1_prereg_sha256.txt
 
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
 
-      - name: Verify 2025 remains sealed and exact-offer correction is active
+      - name: Verify 2025 remains sealed and Play Through contract is active
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'SEALED = {2025}' scripts/task05f_reliability_uncertainty_v1_1_runner.py
-          grep -q 'DEV = \[2020, 2021, 2022, 2023, 2024\]' scripts/task05f_reliability_uncertainty_v1_1_runner.py
-          grep -q 'sealed_seasons: \[2025\]' config/task05f_reliability_uncertainty_v1_1_prereg.yaml
-          grep -q 'sealed_2025_loaded: false' config/task05f_reliability_uncertainty_v1_1_prereg.yaml
-          grep -q 'exact_offer_requirement: true' config/task05f_reliability_uncertainty_v1_1_prereg.yaml
-          grep -q 'INVALIDATED_BEFORE_RESULT_INSPECTION\|invalidated_before_result_inspection: true' config/task05f_reliability_uncertainty_v1_1_prereg.yaml
+          grep -q 'SEALED = {2025}' scripts/task05f_play_through_v1_runner.py
+          grep -q 'DEV = \[2020, 2021, 2022, 2023, 2024\]' scripts/task05f_play_through_v1_runner.py
+          grep -q 'sealed_seasons: \[2025\]' config/task05f_play_through_v1_prereg.yaml
+          grep -q 'sealed_2025_loaded: false' config/task05f_play_through_v1_prereg.yaml
+          grep -q 'maximum_break_even_concession: 0.01' config/task05f_play_through_v1_prereg.yaml
+          grep -q 'strict_value_definition: "expected_value > 0"' config/task05f_play_through_v1_prereg.yaml
+          grep -q 'no_historical_roi_input: true' config/task05f_play_through_v1_prereg.yaml
+          grep -q 'no_selector_scoring_in_this_phase: true' config/task05f_play_through_v1_prereg.yaml
 
-      - name: Run corrected Phase F chronological enrichment twice
+      - name: Run preregistered Phase G Play Through twice
         shell: bash
         run: |
           set -euo pipefail
-          python scripts/task05f_reliability_uncertainty_v1_1_runner.py --out artifacts/task05f/run1
-          python scripts/task05f_reliability_uncertainty_v1_1_runner.py --out artifacts/task05f/run2
+          python scripts/task05f_play_through_v1_runner.py --out artifacts/task05f/run1
+          python scripts/task05f_play_through_v1_runner.py --out artifacts/task05f/run2
 
-      - name: Verify deterministic Phase F outputs and immutable evaluator base
+      - name: Verify deterministic Phase G outputs and preserved upstream layers
         shell: bash
         run: |
           set -euo pipefail
-          for f in scorecard.json base_reproduction.json frozen_edge_preservation.json ev_calibration.csv observations.json uncertainty_state_by_block.ndjson per_season_reliability_mix.csv component_reproduction.json; do
+          for f in scorecard.json phase_f_reproduction.json status_diagnostics.csv per_season_status_mix.csv play_through_concession_summary.csv frozen_edge_preservation.json ev_calibration.csv observations.json uncertainty_state_by_block.ndjson per_season_reliability_mix.csv component_reproduction.json base_reproduction.json; do
             cmp "artifacts/task05f/run1/$f" "artifacts/task05f/run2/$f"
           done
           python - <<'PY'
@@ -98,14 +101,29 @@ jobs:
 
           a = pl.read_parquet('artifacts/task05f/run1/full_board.parquet')
           b = pl.read_parquet('artifacts/task05f/run2/full_board.parquet')
-          assert a.equals(b), 'corrected Phase F full_board.parquet logical content differs between deterministic runs'
-          proof = json.load(open('artifacts/task05f/run1/base_reproduction.json'))
-          assert proof['immutable_rows_equal'] is True
+          assert a.equals(b), 'Phase G full_board.parquet logical content differs between deterministic runs'
+
+          proof = json.load(open('artifacts/task05f/run1/phase_f_reproduction.json'))
+          assert proof['preserved_rows_equal'] is True
           assert proof['strict_value_labels_unchanged'] is True
-          assert proof['support_flags_unchanged'] is True
-          assert proof['immutable_payload_sha256_before'] == proof['immutable_payload_sha256_after']
-          print(f"deterministic_phase_f_v1_1_rows={a.height}")
-          print('locked_probability_and_value_reproduction=PASS')
+          assert proof['negative_ev_never_value'] is True
+          assert proof['playable_within_preregistered_limit'] is True
+          assert proof['preserved_payload_sha256_before'] == proof['preserved_payload_sha256_after']
+
+          supported = a.filter(pl.col('supported') == True)
+          unsupported = a.filter(pl.col('supported') == False)
+          assert unsupported.filter(pl.col('price_status') != 'PASS').height == 0
+          assert supported.filter((pl.col('price_status') == 'VALUE') & (pl.col('expected_value') <= 0)).height == 0
+          assert supported.filter((pl.col('price_status') == 'PLAYABLE') & (pl.col('expected_value') > 0)).height == 0
+          assert supported.filter(
+              (pl.col('price_status') == 'PLAYABLE')
+              & (pl.col('break_even_probability') > pl.col('play_through_break_even_probability') + 1e-12)
+          ).height == 0
+          assert supported.select(pl.col('play_through_break_even_concession').max()).item() <= 0.01 + 1e-12
+
+          print(f"deterministic_phase_g_rows={a.height}")
+          print('upstream_probability_value_reliability_staking_reproduction=PASS')
+          print('play_through_status_contract=PASS')
           PY
           sha256sum artifacts/task05f/run1/* artifacts/task05f/run2/* > artifacts/task05f/artifact_hashes.txt
 
