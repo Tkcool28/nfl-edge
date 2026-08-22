@@ -1,0 +1,161 @@
+version: task05g_selector_unit_policy_v1
+status: PREREGISTERED_BEFORE_BROAD_RETROSPECTIVE_SELECTOR_EVALUATION
+base_main_sha: 4984ea1ee38377f7f5016d2081be8f7c43bda4cd
+working_branch: feat/task05g-selectors-units-v1
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+chronology: season_week_block
+
+frozen_upstream:
+  evaluators:
+    moneyline: ml_v4
+    spread: spread_v3
+    total: total_v3
+  evaluate_exact_offer: true
+  evaluator_changes_allowed: false
+  football_model_changes_allowed: false
+
+concept_separation:
+  football_confidence: actionable_probability
+  evaluator_reliability: reliability
+  market_quality_value: [price_status, expected_value, evaluated_edge_probability]
+  opaque_composite_score: false
+
+shopping:
+  actionable_books: [draftkings, fanduel]
+  benchmark_book: pinnacle
+  deterministic_book_tiebreak: [draftkings, fanduel]
+  moneyline: better_price
+  spread: better_selected_side_line_then_price
+  total_over: lower_line_then_price
+  total_under: higher_line_then_price
+
+selectors:
+  overlap_allowed: true
+  force_market_diversity: false
+  common:
+    supported: true
+    reliability_allowed: [HIGH, MEDIUM]
+    price_status_forbidden: [PASS, UNSUPPORTED]
+  hit_rate:
+    no_play: NO_HIT_RATE_PLAY
+    price_status_allowed: [VALUE, PLAYABLE]
+    minimum_actionable_probability: 0.55
+    minimum_american_odds: -300
+    maximum_american_odds: 200
+    ranking:
+      - actionable_probability_desc
+      - reliability_high_before_medium
+      - value_before_playable
+      - expected_value_desc
+      - american_odds_desc
+      - candidate_id_asc
+  balanced:
+    no_play: NO_BALANCED_PLAY
+    price_status_allowed: [VALUE, PLAYABLE]
+    minimum_actionable_probability: 0.50
+    minimum_american_odds: -220
+    maximum_american_odds: 200
+    minimum_expected_value: -0.03
+    ranking:
+      - value_before_playable
+      - reliability_high_before_medium
+      - expected_value_desc
+      - actionable_probability_desc
+      - evaluated_edge_probability_desc
+      - candidate_id_asc
+  value:
+    no_play: NO_VALUE_PLAY
+    price_status_allowed: [VALUE]
+    minimum_actionable_probability: 0.35
+    minimum_american_odds: -180
+    maximum_american_odds: 250
+    minimum_expected_value: 0.02
+    minimum_support_n: 256
+    maximum_support_distance: 0.05
+    maximum_uncertainty: 0.045
+    ranking:
+      - expected_value_desc
+      - evaluated_edge_probability_desc
+      - reliability_high_before_medium
+      - actionable_probability_desc
+      - candidate_id_asc
+
+longshot_guardrail:
+  applies_to: value_headline
+  minimum_actionable_probability: 0.35
+  maximum_positive_american_odds: 250
+  minimum_expected_value: 0.02
+  reliability_allowed: [HIGH, MEDIUM]
+  minimum_support_n: 256
+  maximum_support_distance: 0.05
+  maximum_uncertainty: 0.045
+  note: thresholds_are_product_safety_interpretability_fences_not_roi_optimized
+
+preregistered_threshold_families:
+  purpose: sensitivity_diagnostics_only_not_post_hoc_roi_selection
+  conservative:
+    value_min_probability: 0.40
+    value_max_odds: 200
+    value_min_ev: 0.03
+  frozen_primary:
+    value_min_probability: 0.35
+    value_max_odds: 250
+    value_min_ev: 0.02
+  permissive:
+    value_min_probability: 0.30
+    value_max_odds: 300
+    value_min_ev: 0.015
+
+play_through:
+  statuses: [VALUE, PLAYABLE, LEAN, PASS, UNSUPPORTED]
+  value_requires_strict_positive_ev: true
+  maximum_break_even_concession: 0.015
+  frozen_task05f_confidence_multiplier_applies: true
+  exact_offer_re_evaluation_required: true
+  synthetic_line_price_conversion_may_approve_offer: false
+  unsupported_never_degrades_to_pass: true
+
+units:
+  ladder: [0.0, 0.5, 0.75, 1.0, 1.25, 1.5]
+  lean_pass_unsupported_units: 0.0
+  playable:
+    default: 0.5
+    high_reliability_min_probability_0_55: 0.75
+    maximum: 0.75
+  value:
+    floor: 0.75
+    medium_or_high_ev_0_025_probability_0_50: 1.0
+    high_ev_0_04_probability_0_52: 1.25
+    high_ev_0_06_probability_0_55_uncertainty_max_0_025: 1.5
+  max_units_requires_reliability: HIGH
+  selector_role_does_not_change_units: true
+
+risk_profiles:
+  - {name: Cautious, unit_bankroll_pct: 0.005}
+  - {name: Steady, unit_bankroll_pct: 0.0075}
+  - {name: Balanced, unit_bankroll_pct: 0.0100}
+  - {name: Bold, unit_bankroll_pct: 0.0125}
+  - {name: High Gear, unit_bankroll_pct: 0.0150}
+
+staking:
+  formula: bankroll_times_profile_unit_pct_times_recommended_units
+  rounding: floor_to_nearest_0_50_dollars
+  minimum_stake: 0.50
+  below_minimum_stake: 0.0
+  per_wager_bankroll_cap_pct: 0.025
+  slate_bankroll_cap_pct: 0.10
+  slate_overlap_deduplication: same_offer_is_one_wager
+  kelly: forbidden
+
+coverage_interpretation_value:
+  strong: '9+ of 18 weeks'
+  acceptable: '6-8 weeks'
+  sparse: '3-5 weeks'
+  not_ready: '0-2 weeks'
+  training_target: false
+
+security:
+  serialize_environment_variables: false
+  secrets_in_artifacts: false
