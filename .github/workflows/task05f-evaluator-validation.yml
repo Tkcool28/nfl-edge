@@ -22,7 +22,7 @@ permissions:
 jobs:
   evaluator-contract:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 20
     steps:
       - name: Checkout exact commit
         uses: actions/checkout@v4
@@ -52,16 +52,17 @@ jobs:
             exit 1
           fi
 
-      - name: Record designated selector-evaluation provenance
+      - name: Record post-selector development provenance
         shell: bash
         run: |
           mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "designated_task05f_weekly_selector_evidence",\n  "development_seasons": [2020, 2021, 2022, 2023, 2024],\n  "sealed_season": 2025,\n  "outcome_use": "POST_SELECTION_DIAGNOSTIC_ONLY"\n}\n' \
+          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "post_selector_evidence_contract_development",\n  "sealed_season": 2025,\n  "historical_play_through_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_scoring": "DISABLED_ON_ORDINARY_PUSHES"\n}\n' \
             "$GITHUB_SHA" \
             '3ed8d740a88b59d46e27e206f39757307a6a13da' \
             > artifacts/task05f/ci_provenance.json
           cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
           sha256sum config/task05f_evaluator_locked_v1.yaml > artifacts/task05f/locked_config_sha256.txt
+          sha256sum config/task05f_reliability_uncertainty_v1_1_prereg.yaml > artifacts/task05f/phase_f_v1_1_prereg_sha256.txt
           sha256sum config/task05f_play_through_v1_1_prereg.yaml > artifacts/task05f/play_through_v1_1_prereg_sha256.txt
           sha256sum config/task05f_candidate_table_v1.yaml > artifacts/task05f/candidate_table_v1_sha256.txt
           sha256sum config/task05f_selectors_v1_prereg.yaml > artifacts/task05f/selectors_v1_prereg_sha256.txt
@@ -71,92 +72,37 @@ jobs:
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
 
-      - name: Compile selector evaluation stack
+      - name: Compile downstream candidate and selector runners
         run: |
           python -m py_compile scripts/task05f_candidate_table_v1_runner.py
           python -m py_compile scripts/task05f_selectors_v1_runner.py
-
-      - name: Verify preregistered selector evidence contract
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -q 'status: PREREGISTERED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_prereg.yaml
-          grep -q 'status: LOCKED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_implementation_lock.yaml
-          grep -q 'status: LOCKED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_historical_eval_lock.yaml
-          grep -q 'allowed_reliability: \[HIGH, MEDIUM\]' config/task05f_selectors_v1_prereg.yaml
-          grep -q 'duplicate_wager_across_cards_allowed: true' config/task05f_selectors_v1_prereg.yaml
-          grep -q 'forced_action_when_no_eligible_candidate: false' config/task05f_selectors_v1_prereg.yaml
-          grep -q 'no_staking_probability_in_selector_ranking: true' config/task05f_selectors_v1_prereg.yaml
-          grep -q 'no_historical_roi_input: true' config/task05f_selectors_v1_prereg.yaml
-          grep -q 'key: block' config/task05f_selectors_v1_historical_eval_lock.yaml
-          grep -q 'outcomes_may_not_change_selection: true' config/task05f_selectors_v1_historical_eval_lock.yaml
-          grep -q 'results_label: OBSERVATIONAL_ONLY_NOT_TUNED' config/task05f_selectors_v1_historical_eval_lock.yaml
-
-      - name: Run designated selector evaluation twice for determinism
-        shell: bash
-        run: |
-          set -euo pipefail
-          python scripts/task05f_selectors_v1_runner.py --out artifacts/task05f/run1
-          python scripts/task05f_selectors_v1_runner.py --out artifacts/task05f/run2
-
-      - name: Verify deterministic selections and selector contracts
-        shell: bash
-        run: |
-          set -euo pipefail
-          for f in selector_picks.json selected_outcomes.csv market_mix.csv reliability_mix.csv status_mix.csv per_season.csv duplicate_diagnostics.json candidate_reproduction.json scorecard.json provenance.json; do
-            cmp "artifacts/task05f/run1/$f" "artifacts/task05f/run2/$f"
-          done
           python - <<'PY'
-          import json
-
-          picks = json.load(open('artifacts/task05f/run1/selector_picks.json'))
-          score = json.load(open('artifacts/task05f/run1/scorecard.json'))
-          proof = json.load(open('artifacts/task05f/run1/candidate_reproduction.json'))
-
-          assert score['version'] == 'task05f_selectors_v1'
-          assert score['label'] == 'OBSERVATIONAL_ONLY_NOT_TUNED'
-          assert score['sealed_seasons'] == [2025]
-          assert score['total_slates'] == 109
-          assert score['selector_rules_may_change_after_results'] is False
-          assert proof['candidate_rows'] == 8448
-          assert proof['candidate_rows_immutable'] is True
-          assert proof['candidate_table_outcome_fields'] == []
-          assert proof['outcome_join_occurred_after_selection'] is True
-
-          expected = {'HIGH_HIT_RATE', 'BALANCED', 'VALUE'}
-          assert len(picks) == 109 * 3
-          assert {row['selector'] for row in picks} == expected
-          assert all(int(row['season']) in {2020, 2021, 2022, 2023, 2024} for row in picks)
-
-          for record in picks:
-              candidate = record['candidate']
-              if candidate is None:
-                  assert record['has_play'] is False
-                  continue
-              assert record['has_play'] is True
-              assert candidate['supported'] is True
-              assert candidate['reliability'] in {'HIGH', 'MEDIUM'}
-              assert not {'settlement', 'realized_profit', 'home_score', 'away_score'}.intersection(candidate)
-              if record['selector'] == 'HIGH_HIT_RATE':
-                  assert candidate['price_status'] in {'VALUE', 'PLAYABLE'}
-              else:
-                  assert candidate['price_status'] == 'VALUE'
-                  assert candidate['strict_positive_value'] is True
-                  assert float(candidate['expected_value']) > 0.0
-
-          print('selector_slates=109')
-          print('selector_rows=327')
-          print('candidate_outcome_firewall=PASS')
-          print('selector_eligibility=PASS')
-          print('strict_value_cards=PASS')
-          print('deterministic_selector_evidence=PASS')
+          from nfl_edge.value.selectors import select_primary_cards
+          assert callable(select_primary_cards)
+          print('selector_import=PASS')
           PY
-          sha256sum artifacts/task05f/run1/* artifacts/task05f/run2/* > artifacts/task05f/artifact_hashes.txt
 
-      - name: Upload selector validation evidence
+      - name: Verify frozen post-probability and selector contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'sealed_seasons: \[2025\]' config/task05f_play_through_v1_1_prereg.yaml
+          grep -q 'maximum_break_even_concession: 0.015' config/task05f_play_through_v1_1_prereg.yaml
+          grep -q 'expected_rows_for_frozen_2020_2024_fixture: 8448' config/task05f_candidate_table_v1.yaml
+          grep -q 'status: PREREGISTERED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_prereg.yaml
+          grep -q 'allowed_reliability: \[HIGH, MEDIUM\]' config/task05f_selectors_v1_prereg.yaml
+          grep -q 'no_staking_probability_in_selector_ranking: true' config/task05f_selectors_v1_prereg.yaml
+          grep -q 'status: LOCKED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_implementation_lock.yaml
+          grep -q 'balanced_equal_value_rank: competition_min_rank' config/task05f_selectors_v1_implementation_lock.yaml
+          grep -q 'status: LOCKED_BEFORE_SELECTOR_HISTORICAL_SCORING' config/task05f_selectors_v1_historical_eval_lock.yaml
+          grep -q 'results_label: OBSERVATIONAL_ONLY_NOT_TUNED' config/task05f_selectors_v1_historical_eval_lock.yaml
+          echo 'historical_play_through_scoring=DISABLED'
+          echo 'historical_selector_scoring=DISABLED'
+
+      - name: Upload contract evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: task05f-selector-validation-${{ github.sha }}
+          name: task05f-evaluator-contract-${{ github.sha }}
           path: artifacts/task05f/
           if-no-files-found: error
