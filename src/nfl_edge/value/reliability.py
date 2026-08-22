@@ -16,6 +16,9 @@ RELIABILITY_HAIRCUT = {"HIGH": 1.0, "MEDIUM": 0.70, "LOW": 0.35, "UNSUPPORTED": 
 
 @dataclass(frozen=True)
 class ReliabilityEvidence:
+    # support_n is the amount of strictly-prior accepted-evaluator OOS evidence
+    # available for reliability tiering. Structural evaluator fit support is
+    # already enforced before an accepted evaluator state can be constructed.
     support_n: int
     uncertainty: float | None
     support_distance: float
@@ -51,15 +54,17 @@ def overall_support_distance(values: dict[str, float | None], features: tuple[Su
 
 
 def reliability_tier(e: ReliabilityEvidence) -> str:
-    """Assign reliability once, using accepted-family support + accepted OOS uncertainty.
+    """Assign reliability once from accepted-family OOS evidence.
 
-    This intentionally replaces the experimental branch's two-stage pattern
-    where V4/V3 rows first inherited reliability from obsolete evaluator
-    families and Phase F then took the worse of that tier and a second tier.
+    Missing/young OOS reliability history is LOW, not structurally unsupported.
+    That distinction is required so cold-start accepted rows can enter the OOS
+    reliability history for later blocks. Structural unsupported conditions
+    (missing model/anchor, insufficient evaluator fit, sealed season) are handled
+    before this function; real OOD remains fail-closed here.
     """
-    if e.support_n < MIN_SUPPORT_LOW or e.support_distance > MAX_OUT_OF_SUPPORT_DISTANCE:
+    if e.support_distance > MAX_OUT_OF_SUPPORT_DISTANCE:
         return "UNSUPPORTED"
-    if not e.stable_blocks or e.uncertainty is None:
+    if e.support_n < MIN_SUPPORT_LOW or not e.stable_blocks or e.uncertainty is None:
         return "LOW"
     if (
         e.support_n >= MIN_SUPPORT_HIGH
@@ -77,8 +82,6 @@ def reliability_tier(e: ReliabilityEvidence) -> str:
 
 
 def unsupported_reason(e: ReliabilityEvidence) -> str | None:
-    if e.support_n < MIN_SUPPORT_LOW:
-        return "insufficient_prior_support"
     if e.support_distance > MAX_OUT_OF_SUPPORT_DISTANCE:
         return "out_of_support"
     return None
@@ -111,10 +114,9 @@ def make_evidence(
     constituent_disagreement: float,
     reliability_state: ReliabilityState,
 ) -> ReliabilityEvidence:
-    # HIGH/MEDIUM support must exist in both the accepted-family fit and the
-    # accepted evaluator's strictly-prior OOS calibration history. Using only
-    # the larger fit-training count could prematurely promote a tier before
-    # enough OOS reliability evidence existed.
+    # HIGH/MEDIUM cannot outrun either the accepted-family fit or its strictly
+    # prior OOS calibration history. During reliability cold start this effective
+    # count may be <128; such rows remain supported but LOW.
     effective_support_n = min(int(support_n), int(reliability_state.support_n))
     return ReliabilityEvidence(
         support_n=effective_support_n,
