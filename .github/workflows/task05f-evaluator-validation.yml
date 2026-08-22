@@ -1,21 +1,9 @@
 name: Task05F Evaluator Validation
 
 on:
-  push:
-    branches:
-      - feat/task05f-evaluator-rebuild-v1
   pull_request:
     branches:
       - main
-    paths:
-      - 'src/nfl_edge/value/**'
-      - 'src/nfl_edge/user/**'
-      - 'scripts/task05f_*'
-      - 'tests/value/**'
-      - 'config/task05f_*.yaml'
-      - 'docs/task05f_*.md'
-      - 'reports/task05f_*'
-      - '.github/workflows/task05f-evaluator-validation.yml'
   workflow_dispatch:
 
 permissions:
@@ -24,7 +12,7 @@ permissions:
 jobs:
   evaluator-contract:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - name: Checkout exact commit
         uses: actions/checkout@v4
@@ -54,67 +42,82 @@ jobs:
             exit 1
           fi
 
-      - name: Record post-evidence contract provenance
+      - name: Record designated confidence-audit provenance
         shell: bash
         run: |
-          mkdir -p artifacts/task05f
-          printf '{\n  "commit": "%s",\n  "base": "%s",\n  "scope": "model_confidence_audit_contract_only",\n  "sealed_season": 2025,\n  "designated_product_v2_evidence_run": 32560871713,\n  "historical_model_confidence_audit": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_selector_v3_1_scoring": "DISABLED_ON_ORDINARY_PUSHES",\n  "historical_staking_v2_bankroll_simulation": "DISABLED_ON_ORDINARY_PUSHES",\n  "selector_v3_1_2020_2024_outcome_acceptance": false\n}\n' \
+          mkdir -p artifacts/task05f/model_confidence_evidence
+          printf '{\n  "commit": "%s",\n  "pre_audit_contract_sha": "%s",\n  "scope": "DESIGNATED_MODEL_CONFIDENCE_COVERAGE_AUDIT",\n  "results_label": "OBSERVATIONAL_ONLY_NOT_TUNED",\n  "sealed_season": 2025,\n  "may_tune_from_results": false\n}\n' \
             "$GITHUB_SHA" \
-            '3ed8d740a88b59d46e27e206f39757307a6a13da' \
-            > artifacts/task05f/ci_provenance.json
-          cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
-          sha256sum config/task05f_evaluator_locked_v1.yaml > artifacts/task05f/locked_config_sha256.txt
-          sha256sum config/task05f_reliability_uncertainty_v1_1_prereg.yaml > artifacts/task05f/phase_f_v1_1_prereg_sha256.txt
-          sha256sum config/task05f_play_through_v1_1_prereg.yaml > artifacts/task05f/play_through_v1_1_prereg_sha256.txt
-          sha256sum config/task05f_candidate_table_v1.yaml > artifacts/task05f/candidate_table_v1_sha256.txt
-          sha256sum config/task05f_selectors_v3_1_product_prereg.yaml > artifacts/task05f/selectors_v3_1_product_prereg_sha256.txt
-          sha256sum config/task05f_staking_v2_units_prereg.yaml > artifacts/task05f/staking_v2_units_prereg_sha256.txt
-          sha256sum config/task05f_model_confidence_audit_v1.yaml > artifacts/task05f/model_confidence_audit_v1_prereg_sha256.txt
+            '18f456307102a74608da1ae6e65150d93e117c72' \
+            > artifacts/task05f/model_confidence_evidence/designated_run_provenance.json
+          sha256sum config/task05f_model_confidence_audit_v1.yaml > artifacts/task05f/model_confidence_evidence/audit_config_sha256.txt
+          sha256sum config/task05f_candidate_table_v1.yaml > artifacts/task05f/model_confidence_evidence/candidate_config_sha256.txt
+          sha256sum config/task05f_selectors_v3_1_product_prereg.yaml > artifacts/task05f/model_confidence_evidence/selector_config_sha256.txt
 
       - name: Run Task05F value-layer tests
         run: pytest -q tests/value/
 
-      - name: Compile downstream and audit modules
+      - name: Compile confidence-audit stack
         run: |
           python -m py_compile scripts/task05f_candidate_table_v1_runner.py
           python -m py_compile src/nfl_edge/value/selectors_v3_1.py
-          python -m py_compile src/nfl_edge/value/staking_v2.py
-          python -m py_compile src/nfl_edge/user/staking_profile_v2.py
-          python -m py_compile scripts/task05f_product_simulation_v2_runner.py
           python -m py_compile scripts/task05f_model_confidence_audit_v1_runner.py
-          python - <<'PY'
-          from nfl_edge.value.selectors_v3_1 import select_primary_cards_v3_1
-          from nfl_edge.value.staking_v2 import evaluator_units, recommend_stake_v2
-          assert callable(select_primary_cards_v3_1)
-          assert callable(evaluator_units)
-          assert callable(recommend_stake_v2)
-          print('selector_v3_1_import=PASS')
-          print('staking_v2_import=PASS')
-          print('model_confidence_audit_compile=PASS')
-          PY
 
-      - name: Verify frozen selector staking and audit contracts
+      - name: Verify preregistered audit contract
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'sealed_seasons: \[2025\]' config/task05f_play_through_v1_1_prereg.yaml
-          grep -q 'maximum_break_even_concession: 0.015' config/task05f_play_through_v1_1_prereg.yaml
-          grep -q 'expected_rows_for_frozen_2020_2024_fixture: 8448' config/task05f_candidate_table_v1.yaml
-          grep -q 'status: PREREGISTERED_BEFORE_V3_1_OR_2025_OUTCOME_SCORING' config/task05f_selectors_v3_1_product_prereg.yaml
-          grep -q 'status: PREREGISTERED_BEFORE_V2_UNIT_BANKROLL_SIMULATION' config/task05f_staking_v2_units_prereg.yaml
           grep -q 'status: PREREGISTERED_BEFORE_MODEL_CONFIDENCE_AUDIT_EXECUTION' config/task05f_model_confidence_audit_v1.yaml
           grep -q 'results_label: OBSERVATIONAL_ONLY_NOT_TUNED' config/task05f_model_confidence_audit_v1.yaml
+          grep -q 'expected_slates: 109' config/task05f_model_confidence_audit_v1.yaml
           grep -q 'freeze_all_model_native_and_current_selector_choices_before_outcome_join: true' config/task05f_model_confidence_audit_v1.yaml
           grep -q 'no_threshold_tuning: true' config/task05f_model_confidence_audit_v1.yaml
           grep -q 'no_2025: true' config/task05f_model_confidence_audit_v1.yaml
-          echo 'historical_model_confidence_audit=DISABLED_ON_ORDINARY_PUSHES'
-          echo 'historical_selector_v3_1_outcome_scoring=DISABLED'
-          echo 'historical_staking_v2_bankroll_simulation=DISABLED'
 
-      - name: Upload contract evidence
+      - name: Run designated confidence audit twice for determinism
+        run: |
+          rm -rf artifacts/task05f/model_confidence_a artifacts/task05f/model_confidence_b
+          python scripts/task05f_model_confidence_audit_v1_runner.py \
+            --config config/task05f_model_confidence_audit_v1.yaml \
+            --out artifacts/task05f/model_confidence_a
+          python scripts/task05f_model_confidence_audit_v1_runner.py \
+            --config config/task05f_model_confidence_audit_v1.yaml \
+            --out artifacts/task05f/model_confidence_b
+
+      - name: Verify deterministic audit and hard contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          diff -qr artifacts/task05f/model_confidence_a artifacts/task05f/model_confidence_b
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('artifacts/task05f/model_confidence_a')
+          s = json.loads((root/'summary.json').read_text())
+          p = json.loads((root/'provenance.json').read_text())
+          assert s['label'] == 'OBSERVATIONAL_ONLY_NOT_TUNED'
+          assert s['development_seasons'] == [2020, 2021, 2022, 2023, 2024]
+          assert s['sealed_seasons'] == [2025]
+          assert s['slates'] == 109
+          assert s['candidate_rows'] == 8448
+          assert p['selection_and_model_choices_frozen_before_outcome_join'] is True
+          assert p['outcome_fields_in_candidate_table'] == []
+          assert p['sealed_2025_loaded'] is False
+          assert s['warnings']['expected_margin_60pct_is_straight_up_not_ats'] is True
+          assert s['warnings']['historical_results_are_observational_only_not_tuned'] is True
+          print('model_confidence_audit_hard_contracts=PASS')
+          PY
+          (
+            cd artifacts/task05f/model_confidence_a
+            find . -type f -print0 | sort -z | xargs -0 sha256sum
+          ) > artifacts/task05f/model_confidence_evidence/output_sha256_manifest.txt
+
+      - name: Upload confidence-audit evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: task05f-evaluator-contract-${{ github.sha }}
-          path: artifacts/task05f/
+          name: task05f-model-confidence-audit-${{ github.sha }}
+          path: |
+            artifacts/task05f/model_confidence_a/
+            artifacts/task05f/model_confidence_evidence/
           if-no-files-found: error
