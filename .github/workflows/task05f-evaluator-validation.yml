@@ -11,6 +11,7 @@ on:
       - 'src/nfl_edge/value/**'
       - 'scripts/task05f_*'
       - 'tests/value/**'
+      - 'config/task05f_evaluator_rebuild_v1.yaml'
       - 'docs/task05f_evaluator_rebuild_v1.md'
       - '.github/workflows/task05f-evaluator-validation.yml'
   workflow_dispatch:
@@ -21,7 +22,7 @@ permissions:
 jobs:
   evaluator-contract:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Checkout exact commit
         uses: actions/checkout@v4
@@ -51,16 +52,6 @@ jobs:
             exit 1
           fi
 
-      - name: Run Task05F value-layer tests
-        run: pytest -q tests/value/
-
-      - name: Verify 2025 remains sealed in evaluator runner
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -q 'SEALED={2025}' scripts/market_evaluator_v1_runner.py
-          grep -q 'pl.col("season").is_in(DEV)' scripts/market_evaluator_v1_runner.py
-
       - name: Record validation provenance
         shell: bash
         run: |
@@ -70,6 +61,40 @@ jobs:
             '3ed8d740a88b59d46e27e206f39757307a6a13da' \
             > artifacts/task05f/ci_provenance.json
           cp /tmp/task05f_changed_paths.txt artifacts/task05f/changed_paths.txt
+
+      - name: Run Task05F value-layer tests
+        run: pytest -q tests/value/
+
+      - name: Verify 2025 remains sealed
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'SEALED = {2025}' scripts/task05f_evaluator_rebuild_runner.py
+          grep -q 'DEV = \[2020, 2021, 2022, 2023, 2024\]' scripts/task05f_evaluator_rebuild_runner.py
+          grep -q 'sealed_seasons: \[2025\]' config/task05f_evaluator_rebuild_v1.yaml
+
+      - name: Run chronological evaluator twice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/task05f_evaluator_rebuild_runner.py --out artifacts/task05f/run1
+          python scripts/task05f_evaluator_rebuild_runner.py --out artifacts/task05f/run2
+
+      - name: Verify deterministic evaluator outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in scorecard.json frozen_edge_preservation.json ev_calibration.csv observations.json; do
+            cmp "artifacts/task05f/run1/$f" "artifacts/task05f/run2/$f"
+          done
+          python - <<'PY'
+          import polars as pl
+          a = pl.read_parquet('artifacts/task05f/run1/full_board.parquet')
+          b = pl.read_parquet('artifacts/task05f/run2/full_board.parquet')
+          assert a.equals(b), 'full_board.parquet logical content differs between deterministic runs'
+          print(f'deterministic_full_board_rows={a.height}')
+          PY
+          sha256sum artifacts/task05f/run1/* artifacts/task05f/run2/* > artifacts/task05f/artifact_hashes.txt
 
       - name: Upload evaluator validation evidence
         if: always()
