@@ -1,0 +1,158 @@
+version: task05f_evaluator_final_v1
+status: PREREGISTERED_BEFORE_CORRECTED_OOS_SCORING
+scope: evaluator_playthrough_account_independent_candidate_table_only
+base_main_sha: eab5f719d8695df484f10cade39ee0322d2841fa
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_season: 2025
+chronology: expanding_prior_season_week_blocks_only
+minimum_prior_games: 128
+
+incumbent_families:
+  moneyline:
+    version: ml_v4
+    status: KEEP_UNLESS_CORRECTION_BREAKS_ACCEPTANCE_EVIDENCE
+    football_signal: exact_avg_qbelo_xgb
+    evaluator: calibrated_pinnacle_optional_exact_avg_logit_pool
+  spread:
+    version: spread_v3
+    status: KEEP_UNLESS_CORRECTION_BREAKS_ACCEPTANCE_EVIDENCE
+    football_signal: expected_margin_v1_stable
+    evaluator: price_aware_pinnacle_anchor_expected_margin_slope
+  total:
+    version: total_v3
+    status: KEEP_WEAK_UNLESS_CORRECTION_BREAKS_PROBABILITY_CONTRACT
+    football_signal: ridge_totals_r4
+    evaluator: price_aware_pinnacle_anchor_r4_slope
+
+frozen_football_models:
+  immutable: true
+  moneyline:
+    qbelo: data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet
+    xgb: data/modeling/development_v1/chronology_corrected/xgboost_candidate_predictions_2018_2024.parquet
+    xgb_candidate: conservative
+  spread:
+    expected_margin: data/modeling/development_v1/expected_margin_predictions_2018_2024.parquet
+    candidate: stable
+  total:
+    ridge: reports/task05d/task05d_ridge_predictions.parquet
+    candidate: R4
+
+market_contract:
+  benchmark_book: pinnacle
+  actionable_books: [draftkings, fanduel]
+  deterministic_book_tiebreak: [draftkings, fanduel]
+  evaluate_each_offer_at_own_line: true
+  arbitrary_manual_offer_compatible: true
+  point_outcomes: [WIN, PUSH, LOSS]
+  value_definition: expected_value_greater_than_zero
+
+corrections_locked_before_scoring:
+  integer_pinnacle_anchor:
+    problem: >-
+      Paired no-vig odds on an integer spread/total line imply side probability
+      conditional on a non-push settlement. The prior V3 implementation inserted
+      that conditional probability into a continuous Normal inverse as though it
+      were unconditional P(score > line).
+    half_point_rule: "mu = threshold + sigma * Phi^-1(q_above)"
+    integer_rule: >-
+      Solve deterministically for the unique mu such that
+      q_above = P(X >= threshold+0.5) /
+      (P(X >= threshold+0.5) + P(X < threshold-0.5)), X~Normal(mu,sigma).
+    optimizer: fixed_100_step_bisection_no_grid_no_roi
+  reliability_ownership:
+    problem: >-
+      Accepted V4/V3 probabilities inherited a first reliability tier from older
+      exact_avg/normal_cdf evaluator families and Phase F then applied a second
+      accepted-output uncertainty tier by taking the worse result.
+    replacement: >-
+      Assign reliability once using accepted-family support/OOD evidence plus the
+      accepted family's strictly-prior OOS calibration uncertainty.
+    support_floor: 128
+    medium_support: 256
+    high_support: 512
+    max_ood_distance: 0.10
+    high_uncertainty_max: 0.025
+    medium_uncertainty_max: 0.045
+    stability_max_radius: 0.05
+    ml_constituent_disagreement_high_max: 0.08
+    ml_constituent_disagreement_medium_max: 0.15
+    point_constituent_disagreement: 0.0
+  frozen_state:
+    requirement: >-
+      Production state must contain every value needed to reproduce accepted
+      evaluator inference without rebuilding historical training material.
+    point_residual_distribution_serialized: true
+    safe_fields_only: true
+  runtime_parity:
+    rule: >-
+      Historical stored offer and equivalent source=manual NormalizedOffer must
+      return identical EvaluationResult through the same evaluate_offer function.
+
+uncertainty:
+  source: strictly_prior_accepted_evaluator_oos_predictions
+  unit: conditional_nonpush_probability
+  method: season_week_block_bootstrap_absolute_calibration_gap
+  replicates: 1000
+  seed: 20260820
+  quantile: 0.90
+  minimum_rows: 128
+  minimum_blocks: 4
+
+staking_probability:
+  retained_as_evaluator_risk_axis_not_user_stake:
+    true
+  formula: >-
+    q_stake = exact_offer_market_anchor + reliability_haircut * uncertainty_factor
+    * (q_eval - exact_offer_market_anchor)
+  reliability_haircut: {HIGH: 1.0, MEDIUM: 0.70, LOW: 0.35, UNSUPPORTED: 0.0}
+  uncertainty_factor: "max(0, 1 - min(1, radius/0.10)); null => 0"
+  user_units_or_dollars_in_this_task: false
+
+play_through:
+  retained: true
+  maximum_break_even_concession: 0.015
+  formula_changes: false
+  changes_value_label: false
+  status: [VALUE, PLAYABLE, LEAN, PASS]
+  reliability_input: corrected_single_pass_reliability
+
+candidate_table:
+  account_independent: true
+  one_row_per_game_market_side: true
+  markets: [moneyline, spread, total]
+  preserve_books: [draftkings, fanduel, pinnacle]
+  historical_outcomes_forbidden: [settlement, realized_profit, home_score, away_score]
+  selectors_in_this_task: false
+  user_staking_in_this_task: false
+
+historical_evidence:
+  frozen_task05e_regions_are_external_validation_only: true
+  may_select_new_bucket: false
+  may_tune_threshold_from_roi: false
+  may_tune_playthrough_for_coverage: false
+  incumbent_selection_not_reopened_unless_correction_materially_breaks_evidence: true
+
+required_outputs:
+  - historical_evaluator_board.parquet
+  - candidate_table.parquet
+  - frozen_evaluator_state.json
+  - state_by_block.ndjson
+  - scorecard.json
+  - reliability_table.csv
+  - frozen_edge_preservation.json
+  - candidate_manifest.json
+  - provenance.json
+
+acceptance_gates:
+  no_frozen_football_model_changes: hard
+  no_2025: hard
+  chronology: hard
+  integer_anchor_roundtrip_tests: hard
+  exact_offer_push_economics: hard
+  stored_manual_parity: hard
+  frozen_state_roundtrip: hard
+  deterministic_double_run: hard
+  candidate_outcome_firewall: hard
+  no_selector_or_user_staking_code: hard
+  corrected_metrics_and_frozen_edge_evidence: review_required_not_tuning_target
