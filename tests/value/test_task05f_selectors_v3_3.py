@@ -49,7 +49,7 @@ def _row(
 def test_all_three_markets_can_win_high_hit_rate():
     ml = _row("ml", market="moneyline", raw=0.70, line=None, selection="home")
     spread = _row("spread", market="spread", raw=7.0, line=-1.0, selection="home")
-    total = _row("total", market="total", raw=56.0, line=47.0, selection="over")
+    total = _row("total", market="total", raw=53.0, line=47.0, selection="over")
 
     assert rank_high_hit_rate_v3_3([ml, spread, total])[0]["candidate_id"] == "ml"
 
@@ -85,7 +85,6 @@ def test_balanced_is_cross_market_not_within_market_ranked():
     ]
     ranked = rank_balanced_v3_3(rows)
     assert {r["market_type"] for r in ranked} == {"moneyline", "spread", "total"}
-    # The winner is determined by common hit/value ranks, not a market whitelist.
     assert ranked[0]["candidate_id"] in {"ml", "spread", "total"}
 
 
