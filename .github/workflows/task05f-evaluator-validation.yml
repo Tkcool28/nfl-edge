@@ -13,6 +13,7 @@ on:
       - 'scripts/task05f_spread_contribution_diagnostic.py'
       - 'tests/value/test_task05f_evaluator_final.py'
       - 'tests/value/test_task05f_reliability_oos_support.py'
+      - 'tests/value/test_task05f_manual_offer_ood.py'
       - 'config/task05f_evaluator_final_v1.yaml'
       - 'docs/task05f_evaluator_final_v1.md'
       - '.github/workflows/task05f-evaluator-validation.yml'
@@ -61,7 +62,8 @@ jobs:
         run: |
           pytest -q \
             tests/value/test_task05f_evaluator_final.py \
-            tests/value/test_task05f_reliability_oos_support.py
+            tests/value/test_task05f_reliability_oos_support.py \
+            tests/value/test_task05f_manual_offer_ood.py
 
       - name: Compile runtime
         run: |
