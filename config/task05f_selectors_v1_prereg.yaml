@@ -1,0 +1,183 @@
+version: task05f_selectors_v1_prereg
+status: PREREGISTERED_BEFORE_SELECTOR_HISTORICAL_SCORING
+scope: deterministic_weekly_selection_policy
+
+upstream:
+  locked_evaluator: config/task05f_evaluator_locked_v1.yaml
+  reliability_uncertainty: config/task05f_reliability_uncertainty_v1_1_prereg.yaml
+  play_through: config/task05f_play_through_v1_1_prereg.yaml
+  candidate_table: task05f_common_candidate_table_v1
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+
+product_contract:
+  primary_cards: [HIGH_HIT_RATE, BALANCED, VALUE]
+  one_slot_per_card: true
+  market_universe: [moneyline, spread, total]
+  one_best_actionable_offer_per_wager: true
+  duplicate_wager_across_cards_allowed: true
+  forced_diversification: false
+  forced_action_when_no_eligible_candidate: false
+  no_play_state_allowed: true
+  selector_is_deterministic_policy_not_model: true
+  no_llm_in_production_selection: true
+
+recommendation_eligibility:
+  supported_required: true
+  allowed_reliability: [HIGH, MEDIUM]
+  low_reliability: INFORMATIONAL_EXPLORER_ONLY
+  unsupported: NEVER_SELECT
+  sealed_2025_loaded: false
+
+price_status_order: [VALUE, PLAYABLE, LEAN, PASS]
+reliability_order: [HIGH, MEDIUM, LOW, UNSUPPORTED]
+
+deterministic_identity_tiebreak:
+  fields:
+    - game_id
+    - market_type
+    - selected_side
+    - sportsbook
+    - line
+    - american_odds
+  direction: lexical_ascending_after_numeric_rules
+
+high_hit_rate:
+  product_question: "What is the most likely validated actionable wager to cash?"
+  eligibility:
+    supported: true
+    reliability: [HIGH, MEDIUM]
+    price_status: [VALUE, PLAYABLE]
+  primary_ranking:
+    - actionable_probability: descending
+  tie_breaks:
+    - reliability: HIGH_before_MEDIUM
+    - price_status: VALUE_before_PLAYABLE
+    - expected_value: descending
+    - uncertainty: ascending_null_last
+    - deterministic_identity: ascending
+  strict_positive_ev_required: false
+  note: >-
+    PLAYABLE is permitted because High Hit Rate is a cash-probability card, not
+    the Value card. It still may not exceed the globally preregistered Play
+    Through price envelope.
+
+balanced:
+  product_question: "What is the strongest compromise between chance to win and positive value?"
+  eligibility:
+    supported: true
+    reliability: [HIGH, MEDIUM]
+    price_status: [VALUE]
+    strict_positive_value: true
+  ranking_method: slate_relative_minimax_rank_no_tuned_weights
+  rank_components:
+    hit_rank:
+      field: actionable_probability
+      direction: descending
+      equal_values_share_rank: true
+    value_rank:
+      field: expected_value
+      direction: descending
+      equal_values_share_rank: true
+  primary_ranking:
+    - balanced_worst_rank: "minimize max(hit_rank, value_rank)"
+    - balanced_rank_sum: "minimize hit_rank + value_rank"
+  tie_breaks:
+    - reliability: HIGH_before_MEDIUM
+    - uncertainty: ascending_null_last
+    - actionable_probability: descending
+    - expected_value: descending
+    - deterministic_identity: ascending
+  rationale: >-
+    Rank-space minimax creates a genuine compromise without choosing arbitrary
+    historical weights between probability and EV. Balanced must remain strict
+    positive Value; Play Through alone cannot make a wager Balanced.
+
+value:
+  product_question: "Which supported wager has the strongest credible positive expected value?"
+  eligibility:
+    supported: true
+    reliability: [HIGH, MEDIUM]
+    price_status: [VALUE]
+    strict_positive_value: true
+  primary_ranking:
+    - expected_value: descending
+  tie_breaks:
+    - reliability: HIGH_before_MEDIUM
+    - evaluated_edge_probability: descending
+    - uncertainty: ascending_null_last
+    - actionable_probability: descending
+    - deterministic_identity: ascending
+  strict_positive_ev_required: true
+  negative_ev_never_value: true
+
+no_play_policy:
+  each_primary_card_may_be_empty: true
+  ui_behavior: >-
+    Preserve the card slot and show that no qualifying play exists at the
+    current prices. The game explorer may still show LEAN/PASS rows and their
+    Play Through threshold. Never promote a lower-quality row merely to fill a
+    primary card.
+
+sleeper_watch:
+  primary_card: false
+  status: PRODUCT_CONCEPT_LOCKED_FORMULA_DEFERRED
+  behavior: >-
+    A separate optional watch item may later identify a supported longer-price
+    wager with meaningful football-market disagreement. It remains WATCH while
+    current price is below its acceptable threshold, highlights when a twice-
+    daily refresh moves it to VALUE or PLAYABLE, and returns to WATCH if that
+    price disappears on the next refresh. Exact sleeper candidate formula is
+    deferred until the common candidate table exposes one normalized raw
+    football-disagreement field across markets.
+
+historical_diagnostics:
+  outcome_use: diagnostic_only_after_preregistration
+  report:
+    - weeks_with_high_hit_rate
+    - weeks_with_balanced
+    - weeks_with_value
+    - selected_market_mix
+    - selected_reliability_mix
+    - duplicate_card_rate
+    - flat_realized_roi_by_selector
+    - hit_rate_by_selector
+    - per_season_selector_coverage
+  coverage_is_acceptance_diagnostic_not_training_target: true
+  may_change_selector_rules_after_results: false
+  new_observation_label: OBSERVATIONAL_ONLY_NOT_TUNED
+
+integrity:
+  no_staking_probability_in_selector_ranking: true
+  no_kelly_in_selector_ranking: true
+  no_historical_roi_input: true
+  no_price_bucket_search: true
+  no_disagreement_bucket_search: true
+  no_market_specific_selector_thresholds: true
+  no_forced_market_diversification: true
+  no_2025: true
+
+required_tests:
+  - identical_candidate_table_produces_identical_selections
+  - unsupported_never_selected
+  - low_reliability_never_primary_selected
+  - high_hit_rate_requires_value_or_playable
+  - balanced_requires_strict_positive_value
+  - value_requires_strict_positive_value
+  - balanced_minimax_rank_known_example
+  - deterministic_ties
+  - duplicate_selection_allowed
+  - no_play_is_valid
+  - sealed_2025_firewall
+
+acceptance_gates:
+  upstream_rows_immutable: hard_gate
+  selector_rules_preregistered_before_scoring: hard_gate
+  deterministic_weekly_selection: hard_gate
+  eligibility_contract: hard_gate
+  strict_value_semantics: hard_gate
+  sealed_2025_firewall: hard_gate
+  evaluator_only_scope: hard_gate
+  no_roi_or_coverage_tuning: hard_gate
+  production_promotion: false_until_candidate_table_staking_product_simulation_and_independent_review
