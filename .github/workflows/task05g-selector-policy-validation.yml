@@ -133,5 +133,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: task05g-selector-policy-${{ github.sha }}
-          path: artifacts/task05g/policy_a/
+          path: |
+            artifacts/task05g/policy_a/
+            artifacts/task05g/upstream/historical_evaluator_board.parquet
+            artifacts/task05g/upstream/candidate_table.parquet
+            artifacts/task05g/upstream/scorecard.json
           if-no-files-found: error
