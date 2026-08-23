@@ -1,0 +1,82 @@
+{
+  "balanced": {
+    "average_actionable_probability": 0.5544662822310602,
+    "average_american_odds": -92.65671641791045,
+    "average_expected_value": 0.04677053342039499,
+    "average_reliability_ordinal": 1.0149253731343284,
+    "hit_rate_nonpush": 0.45454545454545453,
+    "market_mix": {
+      "moneyline": 26,
+      "spread": 28,
+      "total": 13
+    },
+    "plays": 67,
+    "push_rate": 0.014925373134328358,
+    "reliability_mix": {
+      "HIGH": 1,
+      "LOW": 0,
+      "MEDIUM": 66,
+      "UNSUPPORTED": 0
+    },
+    "roi_per_unit_risked": -0.15115041711536287,
+    "weeks_no_play": 42,
+    "weeks_with_play": 67
+  },
+  "chronological_blocks": 109,
+  "development_seasons": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "hit_rate": {
+    "average_actionable_probability": 0.6753182694803957,
+    "average_american_odds": -209.45762711864407,
+    "average_expected_value": 0.021533645628605325,
+    "average_reliability_ordinal": 1.0,
+    "hit_rate_nonpush": 0.6949152542372882,
+    "market_mix": {
+      "moneyline": 54,
+      "spread": 5,
+      "total": 0
+    },
+    "plays": 59,
+    "push_rate": 0.0,
+    "reliability_mix": {
+      "HIGH": 0,
+      "LOW": 0,
+      "MEDIUM": 59,
+      "UNSUPPORTED": 0
+    },
+    "roi_per_unit_risked": 0.06299972650493511,
+    "weeks_no_play": 50,
+    "weeks_with_play": 59
+  },
+  "sealed_seasons": [
+    2025
+  ],
+  "value": {
+    "average_actionable_probability": 0.4983724399017289,
+    "average_american_odds": 11.311475409836065,
+    "average_expected_value": 0.06705758267511228,
+    "average_reliability_ordinal": 1.0,
+    "hit_rate_nonpush": 0.38333333333333336,
+    "market_mix": {
+      "moneyline": 32,
+      "spread": 17,
+      "total": 12
+    },
+    "plays": 61,
+    "push_rate": 0.01639344262295082,
+    "reliability_mix": {
+      "HIGH": 0,
+      "LOW": 0,
+      "MEDIUM": 61,
+      "UNSUPPORTED": 0
+    },
+    "roi_per_unit_risked": -0.18445555374835249,
+    "weeks_no_play": 48,
+    "weeks_with_play": 61
+  }
+}
