@@ -5,14 +5,20 @@ on:
     branches:
       - main
       - feat/task05g-remediation-preregistered-v1
+      - audit/task05g-stage-provenance-v1
     paths:
       - 'scripts/task05g_stage_provenance_audit.py'
       - 'scripts/task05g_playable_ml_suppression_audit.py'
       - 'scripts/task05g_selector_signal_trace.py'
       - 'scripts/task05g_ml_reliability_trace.py'
+      - 'scripts/task05g_model_confidence_v2_runner.py'
+      - 'scripts/task05g_model_confidence_v2_entrypoint.py'
+      - 'tests/recommendation/test_task05g_model_confidence_v2.py'
       - 'docs/task05g_stage_provenance_audit_v1.md'
+      - 'docs/task05g_model_confidence_v2_preregistration.md'
       - 'reports/task05g/stage_provenance_audit_review.md'
       - 'reports/task05g/playable_ml_suppression_audit_review.md'
+      - 'reports/task05g/selector_signal_and_reliability_trace_review.md'
       - '.github/workflows/task05g-stage-provenance-audit.yml'
       - 'src/nfl_edge/recommendation/remediation_provenance_v1.py'
       - 'src/nfl_edge/recommendation/policy.py'
@@ -24,7 +30,7 @@ permissions:
 jobs:
   stage-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
         with:
@@ -45,17 +51,29 @@ jobs:
           git cat-file -e "$BASE^{commit}"
           git diff --name-only "$BASE"...HEAD | tee /tmp/stage_audit_paths.txt
           if grep -E '^(src/nfl_edge/value/|src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/recommendation/policy.py|src/nfl_edge/recommendation/remediation_v1.py|src/nfl_edge/recommendation/remediation_provenance_v1.py|data/|reports/task05e_remediated/)' /tmp/stage_audit_paths.txt; then
-            echo 'ERROR: stage audit changed frozen policy/evaluator/model/data/evidence scope.' >&2
+            echo 'ERROR: experiment changed frozen policy/evaluator/model/data/evidence scope.' >&2
             exit 1
           fi
-      - name: Compile audit
+      - name: Prove V2 preregistration predates implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          PREREG=a6a0fb5cb4d4f742ef6d2708f17c8aac7ba5bf44
+          BLOB=d06d64c4aa94d1c4d291f585af5e42003a86a49d
+          git cat-file -e "$PREREG^{commit}"
+          test "$(git rev-parse "$PREREG:docs/task05g_model_confidence_v2_preregistration.md")" = "$BLOB"
+          git merge-base --is-ancestor "$PREREG" HEAD
+          test -z "$(git diff --name-only "$PREREG"..HEAD -- docs/task05g_model_confidence_v2_preregistration.md)"
+      - name: Compile audit and V2 experiment
         run: |
           python -m py_compile scripts/task05g_stage_provenance_audit.py
           python -m py_compile scripts/task05g_playable_ml_suppression_audit.py
           python -m py_compile scripts/task05g_selector_signal_trace.py
           python -m py_compile scripts/task05g_ml_reliability_trace.py
-      - name: Run frozen Task05F focused tests
-        run: pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_policy.py tests/recommendation/test_task05g_remediation_v1.py
+          python -m py_compile scripts/task05g_model_confidence_v2_runner.py
+          python -m py_compile scripts/task05g_model_confidence_v2_entrypoint.py
+      - name: Run frozen and V2 focused tests
+        run: pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_policy.py tests/recommendation/test_task05g_remediation_v1.py tests/recommendation/test_task05g_model_confidence_v2.py
       - name: Materialize frozen Task05F board
         run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_stage_audit/upstream
       - name: Verify 2025 firewall
@@ -78,12 +96,19 @@ jobs:
           python scripts/task05g_selector_signal_trace.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --out artifacts/task05g_stage_audit/run_b/selector_signal_trace.json
           python scripts/task05g_ml_reliability_trace.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --state-by-block artifacts/task05g_stage_audit/upstream/state_by_block.ndjson --out artifacts/task05g_stage_audit/run_a/ml_reliability_trace.json
           python scripts/task05g_ml_reliability_trace.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --state-by-block artifacts/task05g_stage_audit/upstream/state_by_block.ndjson --out artifacts/task05g_stage_audit/run_b/ml_reliability_trace.json
+      - name: Run preregistered V2 twice
+        run: |
+          python scripts/task05g_model_confidence_v2_entrypoint.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --out artifacts/task05g_v2/run_a
+          python scripts/task05g_model_confidence_v2_entrypoint.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --out artifacts/task05g_v2/run_b
       - name: Prove deterministic replay
         run: |
           cmp artifacts/task05g_stage_audit/run_a/stage_provenance_audit.json artifacts/task05g_stage_audit/run_b/stage_provenance_audit.json
           cmp artifacts/task05g_stage_audit/run_a/playable_ml_suppression_audit.json artifacts/task05g_stage_audit/run_b/playable_ml_suppression_audit.json
           cmp artifacts/task05g_stage_audit/run_a/selector_signal_trace.json artifacts/task05g_stage_audit/run_b/selector_signal_trace.json
           cmp artifacts/task05g_stage_audit/run_a/ml_reliability_trace.json artifacts/task05g_stage_audit/run_b/ml_reliability_trace.json
+          cmp artifacts/task05g_v2/run_a/scorecard.json artifacts/task05g_v2/run_b/scorecard.json
+          cmp artifacts/task05g_v2/run_a/scorecard.md artifacts/task05g_v2/run_b/scorecard.md
+          cmp artifacts/task05g_v2/run_a/model_confidence_state_by_block.ndjson artifacts/task05g_v2/run_b/model_confidence_state_by_block.ndjson
       - name: Validate architecture invariants
         run: |
           python - <<'PY'
@@ -92,6 +117,7 @@ jobs:
           p=json.load(open('artifacts/task05g_stage_audit/run_a/playable_ml_suppression_audit.json'))
           t=json.load(open('artifacts/task05g_stage_audit/run_a/selector_signal_trace.json'))
           r=json.load(open('artifacts/task05g_stage_audit/run_a/ml_reliability_trace.json'))
+          v=json.load(open('artifacts/task05g_v2/run_a/scorecard.json'))
           assert s['development_seasons'] == [2020,2021,2022,2023,2024]
           assert s['sealed_seasons'] == [2025]
           assert s['original_full_board_hit_rate_selected']['all']['overall']['n'] == 59
@@ -102,21 +128,28 @@ jobs:
           assert t['balanced']['selected_strict_value']['overall']['n'] == 64
           assert r['development_seasons'] == [2020,2021,2022,2023,2024]
           assert r['sealed_seasons'] == [2025]
-          assert r['ML_DOG_VALUE_ZONE_AVG']['all_value_rows']['n'] > 0
+          assert v['periods']['calibration_warmup'] == [2018,2019]
+          assert v['periods']['selector_development'] == [2020,2021,2022]
+          assert v['periods']['selector_confirmation'] == [2023,2024]
+          assert v['periods']['sealed'] == [2025]
+          assert v['preregistration']['commit'] == 'a6a0fb5cb4d4f742ef6d2708f17c8aac7ba5bf44'
+          assert v['preregistration']['blob'] == 'd06d64c4aa94d1c4d291f585af5e42003a86a49d'
+          assert v['totals_headline_eligible'] is False
+          assert set(v['development']['balanced_variants']) == {'B0','B1','B2'}
           PY
       - name: Security check
         shell: bash
         run: |
           set -euo pipefail
-          if grep -nE 'os\.environ|os\.getenv|API_KEY|ACCESS_TOKEN|SECRET_KEY' scripts/task05g_stage_provenance_audit.py scripts/task05g_playable_ml_suppression_audit.py scripts/task05g_selector_signal_trace.py scripts/task05g_ml_reliability_trace.py; then
-            echo 'ERROR: audit must not depend on secrets.' >&2
+          if grep -nE 'os\.environ|os\.getenv|API_KEY|ACCESS_TOKEN|SECRET_KEY' scripts/task05g_stage_provenance_audit.py scripts/task05g_playable_ml_suppression_audit.py scripts/task05g_selector_signal_trace.py scripts/task05g_ml_reliability_trace.py scripts/task05g_model_confidence_v2_runner.py scripts/task05g_model_confidence_v2_entrypoint.py; then
+            echo 'ERROR: audit/experiment must not depend on secrets.' >&2
             exit 1
           fi
-      - name: Upload stage audit evidence
+      - name: Upload stage audit and V2 evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: task05g-stage-provenance-${{ github.sha }}
+          name: task05g-v2-evidence-${{ github.sha }}
           path: |
             artifacts/task05g_stage_audit/run_a/stage_provenance_audit.json
             artifacts/task05g_stage_audit/run_a/playable_ml_suppression_audit.json
@@ -124,4 +157,9 @@ jobs:
             artifacts/task05g_stage_audit/run_a/ml_reliability_trace.json
             artifacts/task05g_stage_audit/upstream/scorecard.json
             artifacts/task05g_stage_audit/upstream/state_by_block.ndjson
+            artifacts/task05g_v2/run_a/scorecard.json
+            artifacts/task05g_v2/run_a/scorecard.md
+            artifacts/task05g_v2/run_a/manifest.json
+            artifacts/task05g_v2/run_a/model_confidence_state_by_block.ndjson
+            artifacts/task05g_v2/run_a/v2_candidate_table.parquet
           if-no-files-found: error
