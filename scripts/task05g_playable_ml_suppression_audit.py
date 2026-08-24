@@ -84,15 +84,6 @@ def _exact_shopped(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return out
 
 
-def _selected(rows: list[dict[str, Any]], selector) -> list[dict[str, Any]]:
-    out: list[dict[str, Any]] = []
-    for _, block_rows in sorted(_block_map(rows).items()):
-        choice = selector(block_rows)
-        if not isinstance(choice, str):
-            out.append(dict(choice))
-    return out
-
-
 def _bucket(rows: list[dict[str, Any]], fn) -> dict[str, Any]:
     groups: dict[str, list[dict[str, Any]]] = {}
     for row in rows:
@@ -173,7 +164,6 @@ def _coverage(rows: list[dict[str, Any]], eligible_fn, selector) -> dict[str, An
             current_blocks.add(block)
         if strict:
             strict_blocks.add(block)
-
         choice = selector(block_rows)
         if not isinstance(choice, str):
             picked = dict(choice)
@@ -198,12 +188,7 @@ def _coverage(rows: list[dict[str, Any]], eligible_fn, selector) -> dict[str, An
 
 
 def _playable_audit(shopped: list[dict[str, Any]]) -> dict[str, Any]:
-    playable = [
-        r for r in shopped
-        if bool(r.get("supported"))
-        and str(r.get("reliability")) in {"HIGH", "MEDIUM"}
-        and str(r.get("price_status")) == "PLAYABLE"
-    ]
+    playable = [r for r in shopped if bool(r.get("supported")) and str(r.get("reliability")) in {"HIGH", "MEDIUM"} and str(r.get("price_status")) == "PLAYABLE"]
     return {
         "all_high_medium_playable": _decompose(playable),
         "by_break_even_concession": _bucket(playable, _concession_bucket),
@@ -230,23 +215,16 @@ def _ml_transform(rows: list[dict[str, Any]], state: dict[str, dict[str, Any]]) 
     for source in material:
         r = dict(source)
         raw = r.get("raw_model_output")
-        market = r.get("pinnacle_anchor_probability")
+        raw_pin = r.get("pinnacle_anchor_probability")
+        calibrated_market = r.get("staking_anchor_probability")
         final_q = r.get("conditional_nonpush_probability")
         r["ml_model_weight"] = state.get(str(r.get("block")), {}).get("ml_model_weight")
-        if raw is not None and market is not None:
-            r["raw_minus_market"] = float(raw) - float(market)
-        else:
-            r["raw_minus_market"] = None
-        if final_q is not None and market is not None:
-            r["final_minus_market"] = float(final_q) - float(market)
-        else:
-            r["final_minus_market"] = None
-        if raw is not None and final_q is not None:
-            r["final_minus_raw"] = float(final_q) - float(raw)
-        else:
-            r["final_minus_raw"] = None
-        if raw is not None and market is not None and final_q is not None and abs(float(raw) - float(market)) > 1e-12:
-            r["model_signal_retained_ratio"] = abs(float(final_q) - float(market)) / abs(float(raw) - float(market))
+        r["raw_minus_calibrated_market"] = None if raw is None or calibrated_market is None else float(raw) - float(calibrated_market)
+        r["final_minus_calibrated_market"] = None if final_q is None or calibrated_market is None else float(final_q) - float(calibrated_market)
+        r["calibrated_minus_raw_pinnacle"] = None if raw_pin is None or calibrated_market is None else float(calibrated_market) - float(raw_pin)
+        r["final_minus_raw"] = None if raw is None or final_q is None else float(final_q) - float(raw)
+        if raw is not None and calibrated_market is not None and final_q is not None and abs(float(raw) - float(calibrated_market)) > 1e-12:
+            r["model_signal_retained_ratio"] = abs(float(final_q) - float(calibrated_market)) / abs(float(raw) - float(calibrated_market))
         else:
             r["model_signal_retained_ratio"] = None
         transformed.append(r)
@@ -258,20 +236,17 @@ def _ml_transform(rows: list[dict[str, Any]], state: dict[str, dict[str, Any]]) 
         base = _summary(rr)
         base.update({
             "avg_raw_model_probability": _avg(rr, "raw_model_output"),
-            "avg_pinnacle_anchor_probability": _avg(rr, "pinnacle_anchor_probability"),
+            "avg_raw_pinnacle_probability": _avg(rr, "pinnacle_anchor_probability"),
+            "avg_calibrated_market_probability": _avg(rr, "staking_anchor_probability"),
             "avg_final_conditional_probability": _avg(rr, "conditional_nonpush_probability"),
-            "avg_raw_minus_market": _avg(rr, "raw_minus_market"),
-            "avg_final_minus_market": _avg(rr, "final_minus_market"),
+            "avg_raw_minus_calibrated_market": _avg(rr, "raw_minus_calibrated_market"),
+            "avg_final_minus_calibrated_market": _avg(rr, "final_minus_calibrated_market"),
+            "avg_calibrated_minus_raw_pinnacle": _avg(rr, "calibrated_minus_raw_pinnacle"),
             "avg_final_minus_raw": _avg(rr, "final_minus_raw"),
             "avg_model_signal_retained_ratio": _avg(rr, "model_signal_retained_ratio"),
-            "positive_model_disagreement_count": sum(r.get("raw_minus_market") is not None and float(r["raw_minus_market"]) > 0 for r in rr),
-            "positive_final_disagreement_count": sum(r.get("final_minus_market") is not None and float(r["final_minus_market"]) > 0 for r in rr),
-            "final_probability_below_break_even_count": sum(
-                r.get("conditional_nonpush_probability") is not None
-                and r.get("break_even_probability") is not None
-                and float(r["conditional_nonpush_probability"]) < float(r["break_even_probability"])
-                for r in rr
-            ),
+            "positive_model_disagreement_count": sum(r.get("raw_minus_calibrated_market") is not None and float(r["raw_minus_calibrated_market"]) > 0 for r in rr),
+            "positive_final_disagreement_count": sum(r.get("final_minus_calibrated_market") is not None and float(r["final_minus_calibrated_market"]) > 0 for r in rr),
+            "final_probability_below_break_even_count": sum(r.get("conditional_nonpush_probability") is not None and r.get("break_even_probability") is not None and float(r["conditional_nonpush_probability"]) < float(r["break_even_probability"]) for r in rr),
         })
         return base
 
@@ -289,13 +264,11 @@ def run(root: Path, board_path: Path, state_path: Path, out: Path) -> None:
     seasons = {int(x) for x in board_df["season"].unique().to_list()}
     if seasons != DEV:
         raise RuntimeError(f"unexpected board seasons {sorted(seasons)}")
-
     discovery = pl.read_csv(root / "reports/task05e_remediated/market_edge_discovery_corrected_ledger_v1.csv", infer_schema_length=10000)
     confirmation = pl.read_csv(root / "reports/task05e_remediated/market_edge_confirmation_corrected_ledger_v1.csv", infer_schema_length=10000)
     ledgers = discovery.to_dicts() + confirmation.to_dicts()
     if any(int(r.get("season")) == 2025 for r in ledgers):
         raise RuntimeError("sealed 2025 entered Task05E candidate ledger")
-
     registry = build_candidate_registry(ledgers)
     enriched = enrich_board_rows(board_df.to_dicts(), registry)
     shopped = _exact_shopped(enriched)
@@ -304,7 +277,6 @@ def run(root: Path, board_path: Path, state_path: Path, out: Path) -> None:
     dog_corrob = [r for r in region if "ML_DOG_VALUE_ZONE_CORROB" in str(r.get("model_candidate_regions") or "").split(";")]
     ml_union = [r for r in region if str(r.get("market_type")) == "moneyline"]
     state = _load_state(state_path)
-
     result = {
         "purpose": "read-only PLAYABLE coverage and ML suppression audit; no policy/model/evaluator changes",
         "development_seasons": sorted(DEV),
