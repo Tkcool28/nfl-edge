@@ -110,16 +110,17 @@ def _settled(row: Mapping[str, Any]) -> bool:
 
 def _scan_model_inputs(root: Path) -> pl.DataFrame:
     """Load only 2018-2024 columns through lazy predicates; 2025 is excluded."""
+    season_allowed = pl.col("season").cast(pl.Int64).is_in(sorted(ALLOWED_SEASONS))
     qbelo = (
         pl.scan_parquet(root / "data/modeling/development_v1/qb_elo_predictions_2018_2024.parquet")
         .select(["game_id", "season", "week", "predicted_home_win_probability"])
-        .filter(pl.col("season").is_in(sorted(ALLOWED_SEASONS)))
+        .filter(season_allowed)
         .rename({"predicted_home_win_probability": "qbelo_home"})
     )
     xgb = (
         pl.scan_parquet(root / "data/modeling/development_v1/chronology_corrected/xgboost_candidate_predictions_2018_2024.parquet")
         .select(["candidate_id", "game_id", "season", "week", "warmup", "prediction_probability"])
-        .filter((pl.col("candidate_id") == "conservative") & pl.col("season").is_in(sorted(ALLOWED_SEASONS)))
+        .filter((pl.col("candidate_id") == "conservative") & season_allowed)
         .with_columns(
             pl.when(pl.col("warmup")).then(None).otherwise(pl.col("prediction_probability")).alias("xgb_home")
         )
@@ -128,13 +129,13 @@ def _scan_model_inputs(root: Path) -> pl.DataFrame:
     margin = (
         pl.scan_parquet(root / "data/modeling/development_v1/expected_margin_predictions_2018_2024.parquet")
         .select(["candidate_id", "game_id", "season", "week", "expected_home_margin"])
-        .filter((pl.col("candidate_id") == "stable") & pl.col("season").is_in(sorted(ALLOWED_SEASONS)))
+        .filter((pl.col("candidate_id") == "stable") & season_allowed)
         .select(["game_id", "expected_home_margin"])
     )
     outcomes = (
         pl.scan_parquet(root / "data/frozen/games/games_2018_2025.parquet")
         .select(["game_id", "season", "home_score", "away_score"])
-        .filter(pl.col("season").is_in(sorted(ALLOWED_SEASONS)))
+        .filter(season_allowed)
     )
     df = qbelo.join(xgb, on="game_id", how="left").join(margin, on="game_id", how="left").join(
         outcomes, on=["game_id", "season"], how="inner"
