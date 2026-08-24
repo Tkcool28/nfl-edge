@@ -5,15 +5,19 @@ The core runner's V2 summaries contain model-confidence fields. Historical V1
 baseline rows predate those fields, so this adapter makes summary aggregation
 field-optional without changing any selector/calibration/threshold semantics.
 
-It also makes only the V2 candidate-table dict-row serialization scan the
-complete row set for optional-column schema inference. That affects artifact
-serialization only and leaves the real ``polars.DataFrame`` class intact for
-scikit-learn's dataframe-type checks.
+It also:
+- treats non-finite historical model inputs as missing/fail-closed; and
+- makes only the V2 candidate-table dict-row serialization scan the complete
+  row set for optional-column schema inference.
+
+These are implementation-correctness/serialization guards only. They do not
+change preregistered selector thresholds or product rules.
 """
 from __future__ import annotations
 
 import argparse
 import importlib.util
+import math
 from pathlib import Path
 from statistics import mean
 from typing import Any
@@ -65,6 +69,28 @@ def _safe_summary_factory(core):
     return safe_summary
 
 
+def _fail_closed_on_nonfinite_history(core) -> None:
+    original_history = core._history_rows
+    numeric_model_fields = (
+        "qbelo_home",
+        "xgb_home",
+        "raw_ml_home",
+        "expected_home_margin",
+        "margin_residual",
+    )
+
+    def finite_history(root):
+        rows = original_history(root)
+        for row in rows:
+            for key in numeric_model_fields:
+                value = row.get(key)
+                if isinstance(value, (int, float)) and not math.isfinite(float(value)):
+                    row[key] = None
+        return rows
+
+    core._history_rows = finite_history
+
+
 def _scope_full_dict_schema_inference_to_candidate_write(core) -> None:
     original_dataframe = core.pl.DataFrame
     original_build = core._build_model_confidence
@@ -97,6 +123,7 @@ def main() -> None:
 
     core = _load_core()
     core._summary = _safe_summary_factory(core)
+    _fail_closed_on_nonfinite_history(core)
     _scope_full_dict_schema_inference_to_candidate_write(core)
     core.run(Path(args.root), Path(args.board), Path(args.out), Path(args.prereg))
 
