@@ -4,6 +4,9 @@
 The core runner's V2 summaries contain model-confidence fields. Historical V1
 baseline rows predate those fields, so this adapter makes summary aggregation
 field-optional without changing any selector/calibration/threshold semantics.
+
+It also makes Polars dict-row artifact serialization scan the complete V2 row
+set for optional-column schema inference. That affects serialization only.
 """
 from __future__ import annotations
 
@@ -60,6 +63,17 @@ def _safe_summary_factory(core):
     return safe_summary
 
 
+def _enable_full_dict_schema_inference(core) -> None:
+    original_dataframe = core.pl.DataFrame
+
+    def dataframe(data=None, *args, **kwargs):
+        if isinstance(data, list) and (not data or isinstance(data[0], dict)) and "infer_schema_length" not in kwargs:
+            return core.pl.from_dicts(data, infer_schema_length=None)
+        return original_dataframe(data, *args, **kwargs)
+
+    core.pl.DataFrame = dataframe
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", default=".")
@@ -70,6 +84,7 @@ def main() -> None:
 
     core = _load_core()
     core._summary = _safe_summary_factory(core)
+    _enable_full_dict_schema_inference(core)
     core.run(Path(args.root), Path(args.board), Path(args.out), Path(args.prereg))
 
 
