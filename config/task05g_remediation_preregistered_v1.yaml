@@ -1,0 +1,140 @@
+version: task05g_remediation_preregistered_v1
+status: PREREGISTERED_BEFORE_REMEDIATION_BACKTEST
+source_parent_sha: f389223b3a77cc628e07750b620e6e77cf031763
+task05f_frozen_main_sha: 4984ea1ee38377f7f5016d2081be8f7c43bda4cd
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+
+architecture:
+  candidate_discovery: football_model_derived_only
+  exact_offer_evaluation: frozen_task05f_evaluate_offer_outputs_only
+  selector_scope: surviving_model_candidates_only
+  retune_football_models: false
+  modify_task05f_evaluator: false
+  open_2025: false
+
+candidate_discovery:
+  identity_fields: [game_id, market_type, selected_side]
+  historical_provenance:
+    discovery_ledger: reports/task05e_remediated/market_edge_discovery_corrected_ledger_v1.csv
+    confirmation_ledger: reports/task05e_remediated/market_edge_confirmation_corrected_ledger_v1.csv
+    eligibility_columns_allowed: [game_id, family, model, bucket, selected_side]
+    outcome_columns_forbidden_for_eligibility: [w, p_push, profit]
+  regions:
+    moneyline:
+      - key: ML_DOG_VALUE_ZONE_AVG
+        family: ML_DOG_VALUE_ZONE
+        model: AVG
+        buckets: [ZONE]
+      - key: ML_DOG_VALUE_ZONE_CORROB
+        family: ML_DOG_VALUE_ZONE
+        model: CORROB
+        buckets: [ZONE]
+      - key: ML_AVG_DISAGREEMENT_AVG_0_2
+        family: ML_AVG_DISAGREEMENT
+        model: AVG
+        buckets: [0-2]
+    spread:
+      - key: SPREAD_DISAGREEMENT_EXPECTED_MARGIN_0_4
+        family: SPREAD_DISAGREEMENT
+        model: EXPECTED_MARGIN
+        buckets: [0-1, 1-2, 2-3, 3-4]
+    total: []
+  dedupe_same_candidate_side: true
+  historical_price_or_line_is_not_part_of_candidate_identity: true
+
+common_exact_offer_gate:
+  actionable_books: [draftkings, fanduel]
+  reliability: [HIGH, MEDIUM]
+  supported_required: true
+  reject_statuses: [PASS, UNSUPPORTED]
+  shopping:
+    moneyline: better_price
+    spread: better_selected_side_number_then_price
+    total_over: lower_line_then_price
+    total_under: higher_line_then_price
+    book_tiebreak: [draftkings, fanduel]
+  exact_offer_only: true
+  probability_or_ev_transfer_between_offers: false
+
+selectors:
+  hit_rate:
+    statuses: [VALUE, PLAYABLE]
+    min_actionable_probability: 0.55
+    american_odds_min: -300
+    american_odds_max: 200
+    ranking:
+      - actionable_probability_desc
+      - reliability_desc
+      - price_status_desc
+      - robust_expected_value_floor_desc
+      - expected_value_desc
+      - american_odds_desc
+      - candidate_id_asc
+  balanced:
+    statuses: [VALUE, PLAYABLE]
+    min_actionable_probability: 0.50
+    min_expected_value: -0.03
+    american_odds_min: -220
+    american_odds_max: 200
+    ranking:
+      - actionable_probability_desc
+      - reliability_desc
+      - price_status_desc
+      - robust_expected_value_floor_desc
+      - expected_value_desc
+      - candidate_id_asc
+  value:
+    statuses: [VALUE]
+    min_actionable_probability: 0.35
+    min_expected_value: 0.02
+    min_support_n: 256
+    max_support_distance: 0.05
+    max_uncertainty: 0.045
+    american_odds_min: -180
+    american_odds_max: 250
+    robust_expected_value_floor_must_be_positive: true
+    ranking:
+      - robust_expected_value_floor_desc
+      - reliability_desc
+      - actionable_probability_desc
+      - expected_value_desc
+      - candidate_id_asc
+
+robust_expected_value_floor:
+  purpose: penalize exact-offer EV for accepted-family probability uncertainty without changing Task05F
+  conditional_nonpush_probability_source: conditional_nonpush_probability
+  uncertainty_source: uncertainty
+  push_probability_source: p_push
+  formula:
+    q_lower: max(0, conditional_nonpush_probability - uncertainty)
+    p_win_lower: (1 - p_push) * q_lower
+    decimal_odds: american_to_decimal(american_odds)
+    ev_lower: p_win_lower * decimal_odds + p_push - 1
+  fail_closed_if_inputs_missing: true
+
+units_and_risk_profiles:
+  unchanged_from_task05g_v1: true
+
+play_through:
+  unchanged_from_task05g_v1: true
+  exact_alternate_offer_must_rerun_task05f: true
+
+validation:
+  chronological_blocks: season_week
+  compare_against:
+    - original_task05g_policy
+    - task05e_frozen_candidate_populations
+  report:
+    - plays_and_no_play
+    - aggregate_roi
+    - hit_rate
+    - market_mix
+    - per_season_roi
+    - candidate_region_mix
+    - robust_ev_distribution
+    - overlap_between_roles
+    - risk_profile_simulations
+  promotion_is_not_automatic_from_positive_aggregate_roi: true
+  no_posthoc_threshold_or_region_changes_after_results: true
