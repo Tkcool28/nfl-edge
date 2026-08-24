@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/task05g-selectors-units-v1
+      - feat/task05g-remediation-preregistered-v1
   pull_request:
     branches:
       - main
@@ -13,7 +14,9 @@ on:
       - 'scripts/task05g_*'
       - 'tests/recommendation/**'
       - 'config/task05g_selector_unit_policy_v1.yaml'
+      - 'config/task05g_remediation_preregistered_v1.yaml'
       - 'docs/task05g_selector_unit_policy_v1.md'
+      - 'docs/task05g_remediation_preregistration_v1.md'
       - '.github/workflows/task05g-selector-policy-validation.yml'
   workflow_dispatch:
 
@@ -52,6 +55,18 @@ jobs:
           fi
           git diff --quiet "$BASE"...HEAD -- src/nfl_edge/value src/nfl_edge/models src/nfl_edge/backtest data/modeling data/frozen reports/task05d reports/task05e_remediated
 
+      - name: Prove remediation preregistration is frozen before implementation
+        if: ${{ contains(github.ref, 'task05g-remediation') || contains(github.head_ref, 'task05g-remediation') }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          PREREG=4b860cd1c87d605d26b305a7d7c90c8a1f34f315
+          git cat-file -e "$PREREG^{commit}"
+          git merge-base --is-ancestor "$PREREG" HEAD
+          first=$(git log --reverse --format='%H' -- config/task05g_remediation_preregistered_v1.yaml | head -1)
+          test "$first" = "$PREREG"
+          git diff --quiet "$PREREG"..HEAD -- config/task05g_remediation_preregistered_v1.yaml
+
       - name: Compile Task05G
         run: |
           python -m py_compile src/nfl_edge/recommendation/*.py
@@ -60,10 +75,15 @@ jobs:
           python -m py_compile scripts/task05g_forensic_audit.py
           python -m py_compile scripts/task05g_model_evaluator_trace.py
           python -m py_compile scripts/task05g_market_side_mapping_audit.py
+          if test -f scripts/task05g_remediation_runner.py; then python -m py_compile scripts/task05g_remediation_runner.py; fi
 
       - name: Run frozen Task05F and focused Task05G tests
         run: |
-          pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_policy.py
+          if test -f tests/recommendation/test_task05g_remediation_v1.py; then
+            pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_policy.py tests/recommendation/test_task05g_remediation_v1.py
+          else
+            pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_policy.py
+          fi
 
       - name: Materialize frozen Task05F chronological board
         run: |
@@ -112,6 +132,21 @@ jobs:
             cmp "artifacts/task05g/policy_a/$name" "artifacts/task05g/policy_b/$name"
           done
 
+      - name: Run preregistered remediation twice
+        if: ${{ contains(github.ref, 'task05g-remediation') || contains(github.head_ref, 'task05g-remediation') }}
+        run: |
+          python scripts/task05g_remediation_runner.py --task05f-dir artifacts/task05g/upstream --out artifacts/task05g/remediation_a
+          python scripts/task05g_remediation_runner.py --task05f-dir artifacts/task05g/upstream --out artifacts/task05g/remediation_b
+
+      - name: Prove deterministic remediation replay
+        if: ${{ contains(github.ref, 'task05g-remediation') || contains(github.head_ref, 'task05g-remediation') }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in chronological_remediation_results.csv chronological_original_policy_results.csv remediation_diagnostics.json task05e_candidate_baseline.json unit_risk_profile_simulation.json guardrail_report.json artifact_hashes.json; do
+            cmp "artifacts/task05g/remediation_a/$name" "artifacts/task05g/remediation_b/$name"
+          done
+
       - name: Validate policy invariants
         run: |
           python - <<'PY'
@@ -140,6 +175,29 @@ jobs:
           assert m['no_expected_team_price_match'] == 0
           PY
 
+      - name: Validate remediation invariants and original-policy parity
+        if: ${{ contains(github.ref, 'task05g-remediation') || contains(github.head_ref, 'task05g-remediation') }}
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('artifacts/task05g/remediation_a')
+          d=json.loads((p/'remediation_diagnostics.json').read_text())
+          g=json.loads((p/'guardrail_report.json').read_text())
+          r=json.loads((p/'unit_risk_profile_simulation.json').read_text())
+          assert d['development_seasons'] == [2020,2021,2022,2023,2024]
+          assert d['sealed_seasons'] == [2025]
+          assert d['registry_candidate_sides'] > 0
+          assert g['selected_value_longshot_guardrail_violations'] == 0
+          assert g['totals_headline_selections'] == 0
+          assert g['non_model_candidate_headline_selections'] == 0
+          assert len(r['profiles']) == 5
+          old=d['original_task05g_v1_same_board']
+          assert old['hit_rate']['overall']['plays'] == 59
+          assert old['balanced']['overall']['plays'] == 67
+          assert old['value']['overall']['plays'] == 61
+          PY
+
       - name: Security checks
         shell: bash
         run: |
@@ -147,6 +205,12 @@ jobs:
           if grep -R -nE 'os\.environ|os\.getenv|API_KEY|ACCESS_TOKEN|SECRET_KEY' src/nfl_edge/recommendation scripts/task05g_selector_policy_runner.py scripts/task05g_selector_sensitivity.py scripts/task05g_forensic_audit.py scripts/task05g_model_evaluator_trace.py scripts/task05g_market_side_mapping_audit.py config/task05g_selector_unit_policy_v1.yaml; then
             echo 'ERROR: Task05G policy scope must not serialize or depend on environment secrets.' >&2
             exit 1
+          fi
+          if test -f scripts/task05g_remediation_runner.py; then
+            if grep -nE 'os\.environ|os\.getenv|API_KEY|ACCESS_TOKEN|SECRET_KEY' scripts/task05g_remediation_runner.py config/task05g_remediation_preregistered_v1.yaml; then
+              echo 'ERROR: remediation must not depend on environment secrets.' >&2
+              exit 1
+            fi
           fi
           if grep -E '(^|/)(\.env|.*\.pem|.*\.key|credentials.*|secrets.*)$' /tmp/task05g_paths.txt; then
             echo 'ERROR: secret-bearing file path in Task05G diff.' >&2
@@ -170,6 +234,7 @@ jobs:
           name: task05g-selector-policy-${{ github.sha }}
           path: |
             artifacts/task05g/policy_a/
+            artifacts/task05g/remediation_a/
             artifacts/task05g/upstream/historical_evaluator_board.parquet
             artifacts/task05g/upstream/candidate_table.parquet
             artifacts/task05g/upstream/scorecard.json
