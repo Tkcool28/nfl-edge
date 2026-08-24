@@ -97,9 +97,12 @@ jobs:
           python scripts/task05g_ml_reliability_trace.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --state-by-block artifacts/task05g_stage_audit/upstream/state_by_block.ndjson --out artifacts/task05g_stage_audit/run_a/ml_reliability_trace.json
           python scripts/task05g_ml_reliability_trace.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --state-by-block artifacts/task05g_stage_audit/upstream/state_by_block.ndjson --out artifacts/task05g_stage_audit/run_b/ml_reliability_trace.json
       - name: Run preregistered V2 twice
+        shell: bash
         run: |
-          python scripts/task05g_model_confidence_v2_entrypoint.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --out artifacts/task05g_v2/run_a
-          python scripts/task05g_model_confidence_v2_entrypoint.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --out artifacts/task05g_v2/run_b
+          set -o pipefail
+          mkdir -p artifacts/task05g_v2
+          python scripts/task05g_model_confidence_v2_entrypoint.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --out artifacts/task05g_v2/run_a 2>&1 | tee artifacts/task05g_v2/run_a_trace.log
+          python scripts/task05g_model_confidence_v2_entrypoint.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --out artifacts/task05g_v2/run_b 2>&1 | tee artifacts/task05g_v2/run_b_trace.log
       - name: Prove deterministic replay
         run: |
           cmp artifacts/task05g_stage_audit/run_a/stage_provenance_audit.json artifacts/task05g_stage_audit/run_b/stage_provenance_audit.json
@@ -162,4 +165,6 @@ jobs:
             artifacts/task05g_v2/run_a/manifest.json
             artifacts/task05g_v2/run_a/model_confidence_state_by_block.ndjson
             artifacts/task05g_v2/run_a/v2_candidate_table.parquet
+            artifacts/task05g_v2/run_a_trace.log
+            artifacts/task05g_v2/run_b_trace.log
           if-no-files-found: error
