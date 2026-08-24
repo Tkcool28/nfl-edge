@@ -5,8 +5,10 @@ The core runner's V2 summaries contain model-confidence fields. Historical V1
 baseline rows predate those fields, so this adapter makes summary aggregation
 field-optional without changing any selector/calibration/threshold semantics.
 
-It also makes Polars dict-row artifact serialization scan the complete V2 row
-set for optional-column schema inference. That affects serialization only.
+It also makes only the V2 candidate-table dict-row serialization scan the
+complete row set for optional-column schema inference. That affects artifact
+serialization only and leaves the real ``polars.DataFrame`` class intact for
+scikit-learn's dataframe-type checks.
 """
 from __future__ import annotations
 
@@ -63,15 +65,26 @@ def _safe_summary_factory(core):
     return safe_summary
 
 
-def _enable_full_dict_schema_inference(core) -> None:
+def _scope_full_dict_schema_inference_to_candidate_write(core) -> None:
     original_dataframe = core.pl.DataFrame
+    original_build = core._build_model_confidence
 
-    def dataframe(data=None, *args, **kwargs):
-        if isinstance(data, list) and (not data or isinstance(data[0], dict)) and "infer_schema_length" not in kwargs:
-            return core.pl.from_dicts(data, infer_schema_length=None)
-        return original_dataframe(data, *args, **kwargs)
+    def build_then_arm_one_shot(*args, **kwargs):
+        result = original_build(*args, **kwargs)
 
-    core.pl.DataFrame = dataframe
+        def dataframe_once(data=None, *df_args, **df_kwargs):
+            # Restore the real Polars class before returning so downstream
+            # sklearn isinstance checks continue to see a type, not a helper.
+            core.pl.DataFrame = original_dataframe
+            if isinstance(data, list) and (not data or isinstance(data[0], dict)) and "infer_schema_length" not in df_kwargs:
+                return core.pl.from_dicts(data, infer_schema_length=None)
+            return original_dataframe(data, *df_args, **df_kwargs)
+
+        # core.run's next DataFrame construction is the candidate artifact write.
+        core.pl.DataFrame = dataframe_once
+        return result
+
+    core._build_model_confidence = build_then_arm_one_shot
 
 
 def main() -> None:
@@ -84,7 +97,7 @@ def main() -> None:
 
     core = _load_core()
     core._summary = _safe_summary_factory(core)
-    _enable_full_dict_schema_inference(core)
+    _scope_full_dict_schema_inference_to_candidate_write(core)
     core.run(Path(args.root), Path(args.board), Path(args.out), Path(args.prereg))
 
 
