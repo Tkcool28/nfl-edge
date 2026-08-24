@@ -9,6 +9,8 @@ on:
       - 'scripts/task05g_stage_provenance_audit.py'
       - 'scripts/task05g_playable_ml_suppression_audit.py'
       - 'docs/task05g_stage_provenance_audit_v1.md'
+      - 'reports/task05g/stage_provenance_audit_review.md'
+      - 'reports/task05g/playable_ml_suppression_audit_review.md'
       - '.github/workflows/task05g-stage-provenance-audit.yml'
       - 'src/nfl_edge/recommendation/remediation_provenance_v1.py'
       - 'src/nfl_edge/recommendation/policy.py'
@@ -29,7 +31,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: pip
+        cache: pip
 
       - name: Install dependencies
         run: |
