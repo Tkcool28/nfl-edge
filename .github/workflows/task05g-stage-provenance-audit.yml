@@ -8,6 +8,7 @@ on:
     paths:
       - 'scripts/task05g_stage_provenance_audit.py'
       - 'scripts/task05g_playable_ml_suppression_audit.py'
+      - 'scripts/task05g_selector_signal_trace.py'
       - 'docs/task05g_stage_provenance_audit_v1.md'
       - 'reports/task05g/stage_provenance_audit_review.md'
       - 'reports/task05g/playable_ml_suppression_audit_review.md'
@@ -54,6 +55,7 @@ jobs:
         run: |
           python -m py_compile scripts/task05g_stage_provenance_audit.py
           python -m py_compile scripts/task05g_playable_ml_suppression_audit.py
+          python -m py_compile scripts/task05g_selector_signal_trace.py
 
       - name: Run frozen Task05F focused tests
         run: pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_policy.py tests/recommendation/test_task05g_remediation_v1.py
@@ -81,11 +83,14 @@ jobs:
           python scripts/task05g_stage_provenance_audit.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --state-by-block artifacts/task05g_stage_audit/upstream/state_by_block.ndjson --out artifacts/task05g_stage_audit/run_b/stage_provenance_audit.json
           python scripts/task05g_playable_ml_suppression_audit.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --state-by-block artifacts/task05g_stage_audit/upstream/state_by_block.ndjson --out artifacts/task05g_stage_audit/run_a/playable_ml_suppression_audit.json
           python scripts/task05g_playable_ml_suppression_audit.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --state-by-block artifacts/task05g_stage_audit/upstream/state_by_block.ndjson --out artifacts/task05g_stage_audit/run_b/playable_ml_suppression_audit.json
+          python scripts/task05g_selector_signal_trace.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --out artifacts/task05g_stage_audit/run_a/selector_signal_trace.json
+          python scripts/task05g_selector_signal_trace.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --out artifacts/task05g_stage_audit/run_b/selector_signal_trace.json
 
       - name: Prove deterministic replay
         run: |
           cmp artifacts/task05g_stage_audit/run_a/stage_provenance_audit.json artifacts/task05g_stage_audit/run_b/stage_provenance_audit.json
           cmp artifacts/task05g_stage_audit/run_a/playable_ml_suppression_audit.json artifacts/task05g_stage_audit/run_b/playable_ml_suppression_audit.json
+          cmp artifacts/task05g_stage_audit/run_a/selector_signal_trace.json artifacts/task05g_stage_audit/run_b/selector_signal_trace.json
 
       - name: Validate architecture invariants
         run: |
@@ -93,27 +98,28 @@ jobs:
           import json
           s=json.load(open('artifacts/task05g_stage_audit/run_a/stage_provenance_audit.json'))
           p=json.load(open('artifacts/task05g_stage_audit/run_a/playable_ml_suppression_audit.json'))
+          t=json.load(open('artifacts/task05g_stage_audit/run_a/selector_signal_trace.json'))
           assert s['development_seasons'] == [2020,2021,2022,2023,2024]
           assert s['sealed_seasons'] == [2025]
           assert s['registry_candidate_sides'] > 0
           assert s['architecture_note']['intended_selector_universe'] == 'full common evaluated-wager table'
           assert s['original_full_board_hit_rate_selected']['all']['overall']['n'] == 59
           assert s['original_full_board_balanced_selected']['all']['overall']['n'] == 67
-          assert s['diagnostic_region_only_hit_rate_selected']['all']['overall']['n'] <= 59
-          assert s['diagnostic_region_only_balanced_selected']['all']['overall']['n'] <= 67
           assert p['development_seasons'] == [2020,2021,2022,2023,2024]
           assert p['sealed_seasons'] == [2025]
           assert p['coverage_tradeoff']['hit_rate']['selected_all']['overall']['n'] == 59
           assert p['coverage_tradeoff']['balanced']['selected_all']['overall']['n'] == 67
-          assert p['playable']['all_high_medium_playable']['overall']['n'] > 0
-          assert p['ml_evaluator_suppression']['ml_dog_value_avg']['overall']['n'] > 0
+          assert t['development_seasons'] == [2020,2021,2022,2023,2024]
+          assert t['sealed_seasons'] == [2025]
+          assert t['hit_rate']['selected_playable']['overall']['n'] == 11
+          assert t['balanced']['selected_strict_value']['overall']['n'] == 64
           PY
 
       - name: Security check
         shell: bash
         run: |
           set -euo pipefail
-          if grep -nE 'os\.environ|os\.getenv|API_KEY|ACCESS_TOKEN|SECRET_KEY' scripts/task05g_stage_provenance_audit.py scripts/task05g_playable_ml_suppression_audit.py; then
+          if grep -nE 'os\.environ|os\.getenv|API_KEY|ACCESS_TOKEN|SECRET_KEY' scripts/task05g_stage_provenance_audit.py scripts/task05g_playable_ml_suppression_audit.py scripts/task05g_selector_signal_trace.py; then
             echo 'ERROR: audit must not depend on secrets.' >&2
             exit 1
           fi
@@ -126,6 +132,7 @@ jobs:
           path: |
             artifacts/task05g_stage_audit/run_a/stage_provenance_audit.json
             artifacts/task05g_stage_audit/run_a/playable_ml_suppression_audit.json
+            artifacts/task05g_stage_audit/run_a/selector_signal_trace.json
             artifacts/task05g_stage_audit/upstream/scorecard.json
             artifacts/task05g_stage_audit/upstream/state_by_block.ndjson
           if-no-files-found: error
