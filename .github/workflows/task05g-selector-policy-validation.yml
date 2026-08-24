@@ -57,6 +57,7 @@ jobs:
           python -m py_compile src/nfl_edge/recommendation/*.py
           python -m py_compile scripts/task05g_selector_policy_runner.py
           python -m py_compile scripts/task05g_selector_sensitivity.py
+          python -m py_compile scripts/task05g_forensic_audit.py
 
       - name: Run frozen Task05F and focused Task05G tests
         run: |
@@ -92,11 +93,24 @@ jobs:
             --selector-results artifacts/task05g/policy_b/chronological_selector_results.csv \
             --out artifacts/task05g/policy_b/preregistered_value_sensitivity.json
 
+      - name: Run forensic selector audit twice
+        run: |
+          python scripts/task05g_forensic_audit.py \
+            --board artifacts/task05g/upstream/historical_evaluator_board.parquet \
+            --selector-results artifacts/task05g/policy_a/chronological_selector_results.csv \
+            --games data/frozen/games/games_2018_2025.parquet \
+            --out artifacts/task05g/policy_a/forensic_audit.json
+          python scripts/task05g_forensic_audit.py \
+            --board artifacts/task05g/upstream/historical_evaluator_board.parquet \
+            --selector-results artifacts/task05g/policy_b/chronological_selector_results.csv \
+            --games data/frozen/games/games_2018_2025.parquet \
+            --out artifacts/task05g/policy_b/forensic_audit.json
+
       - name: Prove deterministic Task05G replay
         shell: bash
         run: |
           set -euo pipefail
-          for name in chronological_selector_results.csv selector_diagnostics.json coverage_report.json season_stability_report.json unit_risk_profile_simulation.json longshot_behavior.json artifact_hashes.json preregistered_value_sensitivity.json; do
+          for name in chronological_selector_results.csv selector_diagnostics.json coverage_report.json season_stability_report.json unit_risk_profile_simulation.json longshot_behavior.json artifact_hashes.json preregistered_value_sensitivity.json forensic_audit.json; do
             cmp "artifacts/task05g/policy_a/$name" "artifacts/task05g/policy_b/$name"
           done
 
@@ -110,6 +124,7 @@ jobs:
           l=json.loads((p/'longshot_behavior.json').read_text())
           r=json.loads((p/'unit_risk_profile_simulation.json').read_text())
           s=json.loads((p/'preregistered_value_sensitivity.json').read_text())
+          f=json.loads((p/'forensic_audit.json').read_text())
           assert d['development_seasons'] == [2020,2021,2022,2023,2024]
           assert d['sealed_seasons'] == [2025]
           assert l['selected_value_longshot_guardrail_violations'] == 0
@@ -118,13 +133,14 @@ jobs:
           assert r['recommended_units_shared_across_profiles'] is True
           assert s['family_selection_performed'] is False
           assert set(s['value_threshold_families']) == {'conservative','frozen_primary','permissive'}
+          assert f['development_seasons'] == [2020,2021,2022,2023,2024]
           PY
 
       - name: Security checks
         shell: bash
         run: |
           set -euo pipefail
-          if grep -R -nE 'os\.environ|os\.getenv|API_KEY|ACCESS_TOKEN|SECRET_KEY' src/nfl_edge/recommendation scripts/task05g_selector_policy_runner.py scripts/task05g_selector_sensitivity.py config/task05g_selector_unit_policy_v1.yaml; then
+          if grep -R -nE 'os\.environ|os\.getenv|API_KEY|ACCESS_TOKEN|SECRET_KEY' src/nfl_edge/recommendation scripts/task05g_selector_policy_runner.py scripts/task05g_selector_sensitivity.py scripts/task05g_forensic_audit.py config/task05g_selector_unit_policy_v1.yaml; then
             echo 'ERROR: Task05G policy scope must not serialize or depend on environment secrets.' >&2
             exit 1
           fi
