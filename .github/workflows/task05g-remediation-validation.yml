@@ -1,0 +1,179 @@
+name: Task05G Remediation Validation
+
+on:
+  push:
+    branches:
+      - feat/task05g-remediation-preregistered-v1
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'src/nfl_edge/recommendation/remediation_*.py'
+      - 'scripts/task05g_remediation_runner.py'
+      - 'tests/recommendation/test_task05g_remediation_v1.py'
+      - 'config/task05g_remediation_preregistered_v1.yaml'
+      - 'docs/task05g_remediation_preregistration_v1.md'
+      - '.github/workflows/task05g-remediation-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  remediation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+
+      - name: Prove preregistration predates remediation implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          PREREG=4b860cd1c87d605d26b305a7d7c90c8a1f34f315
+          git cat-file -e "$PREREG^{commit}"
+          git merge-base --is-ancestor "$PREREG" HEAD
+          first=$(git log --reverse --format='%H' -- config/task05g_remediation_preregistered_v1.yaml | head -1)
+          test "$first" = "$PREREG"
+          git diff --quiet "$PREREG"..HEAD -- config/task05g_remediation_preregistered_v1.yaml
+
+      - name: Enforce frozen evaluator model and data scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=4984ea1ee38377f7f5016d2081be8f7c43bda4cd
+          git cat-file -e "$BASE^{commit}"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/task05g_remediation_paths.txt
+          if grep -E '^(src/nfl_edge/value/|src/nfl_edge/models/|src/nfl_edge/backtest/|data/modeling/|data/frozen/|reports/task05d/|reports/task05e_remediated/)' /tmp/task05g_remediation_paths.txt; then
+            echo 'ERROR: remediation modified frozen evaluator/model/data or Task05E evidence.' >&2
+            exit 1
+          fi
+          git diff --quiet "$BASE"...HEAD -- src/nfl_edge/value src/nfl_edge/models src/nfl_edge/backtest data/modeling data/frozen reports/task05d reports/task05e_remediated
+
+      - name: Compile remediation
+        run: |
+          python -m py_compile src/nfl_edge/recommendation/remediation_v1.py
+          python -m py_compile src/nfl_edge/recommendation/remediation_provenance_v1.py
+          python -m py_compile scripts/task05g_remediation_runner.py
+
+      - name: Run frozen Task05F original Task05G and remediation tests
+        run: |
+          pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_policy.py tests/recommendation/test_task05g_remediation_v1.py
+
+      - name: Materialize frozen Task05F chronological board
+        run: |
+          python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_remediation/upstream
+
+      - name: Verify 2025 firewall before remediation
+        run: |
+          python - <<'PY'
+          import polars as pl
+          for path in [
+              'artifacts/task05g_remediation/upstream/historical_evaluator_board.parquet',
+              'artifacts/task05g_remediation/upstream/candidate_table.parquet',
+              'reports/task05e_remediated/market_edge_discovery_corrected_ledger_v1.csv',
+              'reports/task05e_remediated/market_edge_confirmation_corrected_ledger_v1.csv',
+          ]:
+              df = pl.read_parquet(path) if path.endswith('.parquet') else pl.read_csv(path, infer_schema_length=10000)
+              seasons = set(int(x) for x in df['season'].unique().to_list())
+              assert not seasons.intersection({2025}), (path, sorted(seasons))
+          board=pl.read_parquet('artifacts/task05g_remediation/upstream/historical_evaluator_board.parquet')
+          assert set(int(x) for x in board['season'].unique().to_list()) == {2020,2021,2022,2023,2024}
+          PY
+
+      - name: Run preregistered remediation twice
+        run: |
+          python scripts/task05g_remediation_runner.py --task05f-dir artifacts/task05g_remediation/upstream --out artifacts/task05g_remediation/run_a
+          python scripts/task05g_remediation_runner.py --task05f-dir artifacts/task05g_remediation/upstream --out artifacts/task05g_remediation/run_b
+
+      - name: Prove deterministic replay
+        shell: bash
+        run: |
+          set -euo pipefail
+          for name in chronological_remediation_results.csv chronological_original_policy_results.csv remediation_diagnostics.json task05e_candidate_baseline.json unit_risk_profile_simulation.json guardrail_report.json artifact_hashes.json; do
+            cmp "artifacts/task05g_remediation/run_a/$name" "artifacts/task05g_remediation/run_b/$name"
+          done
+
+      - name: Validate remediation invariants and original-policy parity
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('artifacts/task05g_remediation/run_a')
+          d=json.loads((p/'remediation_diagnostics.json').read_text())
+          g=json.loads((p/'guardrail_report.json').read_text())
+          r=json.loads((p/'unit_risk_profile_simulation.json').read_text())
+          assert d['development_seasons'] == [2020,2021,2022,2023,2024]
+          assert d['sealed_seasons'] == [2025]
+          assert d['registry_candidate_sides'] > 0
+          assert g['selected_value_longshot_guardrail_violations'] == 0
+          assert g['totals_headline_selections'] == 0
+          assert g['non_model_candidate_headline_selections'] == 0
+          assert len(r['profiles']) == 5
+          assert r['selector_identity_shared_across_profiles'] is True
+          assert r['recommended_units_shared_across_profiles'] is True
+          old=d['original_task05g_v1_same_board']
+          assert old['hit_rate']['overall']['plays'] == 59
+          assert old['balanced']['overall']['plays'] == 67
+          assert old['value']['overall']['plays'] == 61
+          PY
+
+      - name: Verify result rows never open sealed season
+        run: |
+          python - <<'PY'
+          import polars as pl
+          for name in ['chronological_remediation_results.csv','chronological_original_policy_results.csv']:
+              df=pl.read_csv('artifacts/task05g_remediation/run_a/'+name, infer_schema_length=10000)
+              if 'season' in df.columns:
+                  values={int(x) for x in df['season'].drop_nulls().unique().to_list()}
+                  assert 2025 not in values, (name, values)
+          PY
+
+      - name: Security checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -nE 'os\.environ|os\.getenv|API_KEY|ACCESS_TOKEN|SECRET_KEY' src/nfl_edge/recommendation/remediation_v1.py src/nfl_edge/recommendation/remediation_provenance_v1.py scripts/task05g_remediation_runner.py config/task05g_remediation_preregistered_v1.yaml; then
+            echo 'ERROR: remediation must not depend on or serialize environment secrets.' >&2
+            exit 1
+          fi
+          if grep -E '(^|/)(\.env|.*\.pem|.*\.key|credentials.*|secrets.*)$' /tmp/task05g_remediation_paths.txt; then
+            echo 'ERROR: secret-bearing file path in remediation diff.' >&2
+            exit 1
+          fi
+
+      - name: Record proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/task05g_remediation/run_a/proofs
+          cp /tmp/task05g_remediation_paths.txt artifacts/task05g_remediation/run_a/proofs/changed_paths.txt
+          printf '%s\n' '4984ea1ee38377f7f5016d2081be8f7c43bda4cd' > artifacts/task05g_remediation/run_a/proofs/task05f_main_sha.txt
+          printf '%s\n' '4b860cd1c87d605d26b305a7d7c90c8a1f34f315' > artifacts/task05g_remediation/run_a/proofs/preregistration_commit.txt
+          git diff --name-only 4984ea1ee38377f7f5016d2081be8f7c43bda4cd...HEAD -- src/nfl_edge/value src/nfl_edge/models src/nfl_edge/backtest data/modeling data/frozen reports/task05d reports/task05e_remediated > artifacts/task05g_remediation/run_a/proofs/frozen_scope_diff.txt
+          test ! -s artifacts/task05g_remediation/run_a/proofs/frozen_scope_diff.txt
+
+      - name: Upload remediation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-remediation-${{ github.sha }}
+          path: |
+            artifacts/task05g_remediation/run_a/
+            artifacts/task05g_remediation/upstream/historical_evaluator_board.parquet
+            artifacts/task05g_remediation/upstream/candidate_table.parquet
+            artifacts/task05g_remediation/upstream/scorecard.json
+            artifacts/task05g_remediation/upstream/state_by_block.ndjson
+          if-no-files-found: error
