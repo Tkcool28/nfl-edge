@@ -8,6 +8,8 @@ Validation workflow: `32710883710` — SUCCESS
 Evidence artifact: `9514056318`
 Artifact digest: `sha256:12c337a72a699a3607ccfacf4a3dfb1db97d1cf3d504b393b33775ef72f40391`
 
+> Follow-up refinement: `reports/task05g/playable_ml_suppression_audit_review.md` supersedes any broad reading that PLAYABLE alone explains original Balanced. It shows original Balanced selected only three PLAYABLE headlines; its 64 strict-VALUE headlines were still negative. It also corrects the ML signal trace to compare against Task05F's calibrated market anchor rather than raw Pinnacle probability.
+
 ## 1. Architecture correction: frozen Task05E regions are not the intended HHR universe
 
 The Task05G remediation intentionally forced all three headline lanes through four frozen Task05E model-candidate regions to test whether restoring football-model provenance corrected the prior pathology.
@@ -97,7 +99,7 @@ Stage-by-stage:
 | Balanced eligible | 125 | **-4.81%** |
 | HHR eligible | 19 | **+23.17%** |
 
-This localizes a major failure: a positive raw model-candidate population becomes negative as Task05F reliability/status gates are applied.
+This localizes a major failure: a positive raw model-candidate population becomes negative as Task05F reliability/status gates are applied when candidate families are pooled.
 
 ## 5. Spread: strict Value works; VALUE + PLAYABLE does not
 
@@ -113,54 +115,22 @@ The frozen Expected Margin 0-4 spread region behaves very differently from the g
 | Balanced eligible | 112 | **-5.14%** |
 | HHR eligible | 6 | **+55.34%** |
 
-This is important: Task05F strict VALUE actually **improves** the frozen Expected Margin spread population from +5.54% to +11.10%.
+Task05F strict VALUE improves the frozen Expected Margin spread population from +5.54% to +11.10%.
 
-The collapse occurs when `PLAYABLE` is combined with strict `VALUE` for headline eligibility.
+The 132 VALUE-or-PLAYABLE rows contain 75 strict VALUE rows at +11.10% and 57 implied PLAYABLE-only rows at approximately -22.14%. This proves PLAYABLE can contaminate the **eligible spread pool**, especially under policies that allow PLAYABLE to outrank strict VALUE. The follow-up audit clarifies that original Balanced itself selected only three PLAYABLE headlines because its old ordering prioritized VALUE first.
 
-The 132 VALUE-or-PLAYABLE spread rows consist of:
+## 6. Moneyline: candidate provenance remains essential
 
-- 75 strict VALUE rows at +11.10% ROI
-- 57 implied PLAYABLE-only rows
+The pooled frozen ML-region union is weaker and can become negative under generic Task05F filtering, but the dog-value families behave materially better when kept distinct.
 
-Because flat-unit ROI is additive, the implied 57 PLAYABLE-only rows returned approximately **-22.14% ROI**.
+The follow-up corrected ML audit shows ML V4's final probability is overwhelmingly the calibrated market probability, with almost none of the football-model probability displacement retained. However, when model-region provenance is preserved externally and Task05F is used only as an exact-price/status filter, the dog-value VALUE subsets are strongly positive:
 
-This identifies `PLAYABLE` headline admission as a major Balanced contamination path in spread.
+- ML dog-value AVG strict VALUE: +16.87% ROI
+- ML corroborated dog-value strict VALUE: +12.33% ROI
 
-The remediation selections reinforce this diagnosis: its 12 Balanced spread selections with `PLAYABLE` status returned approximately **-84.42% ROI**.
+Therefore the core failure is not that Task05F can never filter ML price. It is that generic evaluator probability/value is not a substitute for the model-derived candidate definition that created the useful ML population.
 
-`PLAYABLE` was designed as a bounded Play Through concession, especially useful for exact alternate/manual/full-board price handling. The architecture does not require it to be treated as equivalent to strict Value for top headline eligibility.
-
-## 6. Moneyline: Task05F is suppressing rather than recovering model-region edge
-
-The frozen ML region union is weaker than spread but shows a different failure mode.
-
-ML model-candidate stages:
-
-- exact shopped: 402 rows, **+1.70% ROI**
-- supported: 363, **-2.69%**
-- HIGH/MEDIUM: 230, **-9.85%**
-- strict VALUE: 76, **-13.39%**
-- VALUE or PLAYABLE: 91, **-7.46%**
-
-The individual frozen dog regions are especially revealing:
-
-### ML dog-value AVG
-
-- 232 exact shopped rows
-- realized ROI: **+5.10%**
-- evaluator average expected EV: **-3.77%**
-- evaluator average actionable probability: 38.70%
-
-### ML corroborated dog-value
-
-- 140 exact shopped rows
-- realized ROI: **+4.53%**
-- evaluator average expected EV: **-4.31%**
-- evaluator average actionable probability: 37.60%
-
-The evaluator is therefore systematically assigning negative economics to two model-defined populations that were positive over the full 2020-2024 development sample. This is consistent with the earlier forensic finding that ML V4 usually gives the football model zero incremental weight and largely follows the market anchor.
-
-In other words, for these ML candidates the evaluator is often not "cherry-picking the good model picks" because it has largely discarded the signal that made them model candidates in the first place.
+See `reports/task05g/playable_ml_suppression_audit_review.md` for the corrected calibrated-market trace.
 
 ## 7. Expected Margin model influence is not the main spread failure
 
@@ -172,9 +142,7 @@ For the 800 frozen spread candidates:
 
 The underlying Expected Margin candidate population remains positive regardless of whether Task05F fitted beta is zero or positive.
 
-Therefore the severe Balanced spread failure is not explained simply by `spread_beta == 0`.
-
-The stronger localization is the subsequent status/eligibility path, especially PLAYABLE admission.
+Therefore severe Balanced spread failure is not explained simply by `spread_beta == 0`.
 
 ## 8. Actionable-probability ranking is not universally broken for spread
 
@@ -185,16 +153,16 @@ Among all frozen Expected Margin spread candidates, rank by Task05F actionable p
 - rank 3: 85, +4.01%
 - rank 4+: 450, +5.49%
 
-Thus actionable-probability ranking itself can identify a strong top spread candidate **before** the Balanced VALUE/PLAYABLE admission path distorts the population.
+Thus actionable-probability ranking itself can identify a strong top spread candidate before admission/status policy distorts the candidate pool.
 
-For comparison, ranking the same candidates by raw model-market disagreement magnitude did not improve monotonically:
+Ranking the same candidates by raw model-market disagreement did not improve monotonically:
 
 - raw-disagreement rank 1: +3.05%
 - rank 2: +0.97%
 - rank 3: +3.44%
 - rank 4+: +7.59%
 
-This is evidence against simply replacing evaluator probability with "largest raw model disagreement." No replacement rule is adopted here.
+No replacement ranking is adopted.
 
 ## 9. What this says about HHR
 
@@ -202,70 +170,59 @@ HHR should return to its intended conceptual role:
 
 > highest-probability validated/actionable wager from the common evaluated-wager table, with sane price/reliability/product guardrails.
 
-It should **not** be permanently restricted to the frozen Task05E +ROI/model-edge regions.
+It should **not** be permanently restricted to frozen Task05E +ROI/model-edge regions.
 
-The full-board evidence already demonstrates that most successful HHR selections came from outside those regions.
-
-This does not mean HHR should ignore price completely. The product has always intended to avoid obviously overpriced favorites. It means historical +ROI-region membership is not an HHR prerequisite.
+The follow-up audit adds an important nuance: the broad HHR-eligible PLAYABLE pool is positive, but the specific PLAYABLE subset selected by pure highest-probability HHR ordering is negative and more heavily juiced. Therefore HHR needs a more precise price-sanity mechanism than simply accepting the generic PLAYABLE label.
 
 ## 10. What this says about Balanced
 
-Balanced currently combines several concepts that are not behaving compatibly:
+Balanced currently combines concepts that do not behave compatibly:
 
-- positive/high win probability;
+- win probability;
 - strict evaluated Value;
-- bounded Play Through / PLAYABLE status;
+- bounded Play Through / PLAYABLE;
 - cross-market comparability;
 - evaluator reliability;
 - one headline ranking.
 
-The audit shows at least three distinct failures:
+At least three failures are localized:
 
 1. the full Balanced eligible population is negative despite positive estimated EV;
 2. totals are strongly harmful;
-3. spread strict VALUE is good, while spread PLAYABLE is strongly bad.
+3. spread strict VALUE is good, while spread PLAYABLE is poor as an eligible population.
 
-For ML, the evaluator itself appears to be suppressing the model-defined edge before Balanced ever ranks it.
-
-Therefore "fix Balanced's sort order" is insufficient.
+But the follow-up audit proves removing PLAYABLE alone cannot fix original Balanced: 64 original selected strict-VALUE headlines were still -13.71% ROI.
 
 ## 11. Current root-cause map
 
 ### HHR
 
 - Intended full-board universe: supported by evidence.
-- Remediation frozen-region restriction: diagnostic over-constraint, not permanent architecture.
+- Remediation region restriction: diagnostic over-constraint, not permanent architecture.
 - Full eligible pool: positive.
 - Final selection: positive.
-- Primary unresolved question: whether PLAYABLE should be allowed in HHR headlines at all, since the original selected PLAYABLE ML subset was weaker than strict Value selections.
+- PLAYABLE: context-dependent; broad HHR-eligible pool positive, selected high-probability/juiced tail negative.
 
 ### Balanced
 
 - Admission pool: already negative.
 - Totals: clearly harmful.
 - Spread strict VALUE: strong positive evidence.
-- Spread PLAYABLE: severe negative contamination.
-- ML: Task05F reliability/value filtering anti-selects frozen model candidates.
-- Weekly ranking: additionally worsens ML/totals.
+- Spread PLAYABLE: negative eligible population and especially dangerous when allowed to outrank VALUE.
+- ML/totals strict-VALUE selection remains a major failure independent of PLAYABLE.
 
 ### Value
 
-- Full-board generic strict Value remains negative overall, especially ML/totals.
-- Model-provenance remediation materially improved the selected Value lane.
-- Spread frozen-region strict Value remains the cleanest evidence that Task05F can perform useful price filtering when candidate provenance is preserved.
+- Full-board generic strict Value remains negative overall, especially when candidate provenance is discarded.
+- Model-provenance remediation materially improved selected Value.
+- Spread frozen-region strict Value and ML dog-region strict Value are the cleanest evidence that Task05F can perform useful exact-price filtering when model candidate provenance is preserved.
 
 ## 12. Next diagnostic — no policy tuning yet
 
-Before changing selector rules, the next read-only work should focus on two exact mechanisms:
+The next read-only work should focus on:
 
-1. **PLAYABLE / Play Through audit**
-   - why rows inside a maximum 1.5pp break-even concession are so negative;
-   - whether the issue is probability miscalibration, price distribution, market mix, or use of PLAYABLE as headline eligibility rather than display/actionability information;
-   - HHR and Balanced separately.
+1. HHR PLAYABLE ranking: why 34 HHR-eligible PLAYABLE offers are +10.22% while 11 selected PLAYABLE headlines are -20.12%.
+2. Balanced strict-VALUE anti-selection: why 64 selected strict-VALUE headlines are still -13.71%, especially by market/provenance family.
+3. ML candidate-family provenance: identify which non-dog ML candidate populations invert pooled ML strict VALUE.
 
-2. **ML evaluator suppression audit**
-   - trace raw QB-Elo/XGB/AVG probability, Pinnacle anchor, fitted ML model weight, actionable probability, break-even, status, and realized outcome for the frozen ML dog regions;
-   - quantify exactly how often Task05F changes a historically profitable model candidate into PASS/LEAN versus VALUE/PLAYABLE;
-   - identify whether shrinkage-to-market is systematically over-aggressive in the candidate tail.
-
-No replacement threshold, selector, evaluator weight, or market-specific rule should be chosen until those mechanisms are understood.
+No replacement threshold, corridor, selector, evaluator weight, or market-specific rule is selected from these same outcomes.
