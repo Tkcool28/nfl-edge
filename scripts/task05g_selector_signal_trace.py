@@ -1,24 +1,12 @@
 #!/usr/bin/env python3
-"""Read-only selector signal trace for Task05G.
-
-This diagnostic does not change any selector/evaluator/model rule. It asks:
-
-* HHR PLAYABLE: does highest evaluator probability select market-juiced offers
-  rather than the highest raw football-model probability?
-* Balanced strict VALUE: where does the current cross-market ranking anti-select
-  an already-admitted strict-VALUE pool?
-* Generic strict VALUE: how do rows with frozen Task05E model provenance differ
-  from evaluator-created rows outside those candidate families?
-
-2025 is sealed and rejected.
-"""
+"""Read-only Task05G selector signal trace. No policy/model/evaluator changes."""
 from __future__ import annotations
 
 import argparse
 import json
 from pathlib import Path
 from statistics import mean
-from typing import Any, Callable, Iterable
+from typing import Any, Iterable
 
 import polars as pl
 
@@ -45,10 +33,7 @@ def _summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     losses = sum(str(r.get("settlement")) == "LOSS" for r in rows)
     pushes = sum(str(r.get("settlement")) == "PUSH" for r in rows)
     return {
-        "n": len(rows),
-        "wins": wins,
-        "losses": losses,
-        "pushes": pushes,
+        "n": len(rows), "wins": wins, "losses": losses, "pushes": pushes,
         "hit_rate_nonpush": None if wins + losses == 0 else wins / (wins + losses),
         "roi": _avg(rows, "realized_profit"),
         "avg_actionable_probability": _avg(rows, "actionable_probability"),
@@ -98,22 +83,24 @@ def _augment(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for source in rows:
         r = dict(source)
         market = str(r.get("market_type"))
-        q = r.get("actionable_probability")
-        raw = r.get("raw_model_output")
-        be = r.get("break_even_probability")
-        # raw_model_output is a selected-side probability only for ML. For point
-        # markets it is a football point estimate (margin / total), so probability
-        # arithmetic must not be applied there.
-        if market == "moneyline" and q is not None and raw is not None:
-            r["evaluator_minus_raw_model"] = float(q) - float(raw)
-        else:
-            r["evaluator_minus_raw_model"] = None
-        if market == "moneyline" and raw is not None and be is not None:
-            r["model_minus_break_even"] = float(raw) - float(be)
-        else:
-            r["model_minus_break_even"] = None
+        q, raw, be = r.get("actionable_probability"), r.get("raw_model_output"), r.get("break_even_probability")
+        r["evaluator_minus_raw_model"] = float(q) - float(raw) if market == "moneyline" and q is not None and raw is not None else None
+        r["model_minus_break_even"] = float(raw) - float(be) if market == "moneyline" and raw is not None and be is not None else None
         out.append(r)
     return out
+
+
+def _identity(r: dict[str, Any]) -> tuple[Any, ...]:
+    return (
+        str(r.get("block")), str(r.get("game_id")), str(r.get("market_type")),
+        str(r.get("selected_side")), str(r.get("actionable_book")),
+        r.get("actionable_line"), r.get("american_odds"),
+    )
+
+
+def _selected_vs_rest(pool: list[dict[str, Any]], selected: list[dict[str, Any]]) -> dict[str, Any]:
+    ids = {_identity(r) for r in selected}
+    return {"selected": _decompose(selected), "not_selected": _decompose([r for r in pool if _identity(r) not in ids])}
 
 
 def _rank_bands(rows: list[dict[str, Any]], key: str, descending: bool = True) -> dict[str, Any]:
@@ -122,50 +109,57 @@ def _rank_bands(rows: list[dict[str, Any]], key: str, descending: bool = True) -
         material = [r for r in block_rows if r.get(key) is not None]
         material.sort(key=lambda r: float(r[key]), reverse=descending)
         for i, row in enumerate(material, start=1):
-            band = "rank1" if i == 1 else "rank2" if i == 2 else "rank3" if i == 3 else "rank4plus"
-            bands[band].append(row)
+            bands["rank1" if i == 1 else "rank2" if i == 2 else "rank3" if i == 3 else "rank4plus"].append(row)
     return {name: _decompose(material) for name, material in bands.items()}
 
 
-def _selected_vs_rest(pool: list[dict[str, Any]], selected: list[dict[str, Any]]) -> dict[str, Any]:
-    ids = {str(r.get("candidate_id")) for r in selected}
-    rest = [r for r in pool if str(r.get("candidate_id")) not in ids]
-    return {"selected": _decompose(selected), "not_selected": _decompose(rest)}
-
-
 def _provenance_split(rows: list[dict[str, Any]]) -> dict[str, Any]:
-    inside = [r for r in rows if bool(r.get("model_candidate"))]
-    outside = [r for r in rows if not bool(r.get("model_candidate"))]
     return {
         "all": _decompose(rows),
-        "inside_frozen_model_regions": _decompose(inside),
-        "outside_frozen_model_regions": _decompose(outside),
+        "inside_frozen_model_regions": _decompose([r for r in rows if bool(r.get("model_candidate"))]),
+        "outside_frozen_model_regions": _decompose([r for r in rows if not bool(r.get("model_candidate"))]),
     }
 
 
 def _region_tag_split(rows: list[dict[str, Any]]) -> dict[str, Any]:
     tags = sorted({tag for r in rows for tag in str(r.get("model_candidate_regions") or "").split(";") if tag})
+    return {tag: _decompose([r for r in rows if tag in str(r.get("model_candidate_regions") or "").split(";")]) for tag in tags}
+
+
+def _reliability_split(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    tiers = sorted({str(r.get("reliability")) for r in rows})
+    return {tier: _decompose([r for r in rows if str(r.get("reliability")) == tier]) for tier in tiers}
+
+
+def _model_support_split(rows: list[dict[str, Any]], threshold: float) -> dict[str, Any]:
+    material = [r for r in rows if str(r.get("market_type")) == "moneyline" and r.get("raw_model_output") is not None]
     return {
-        tag: _decompose([r for r in rows if tag in str(r.get("model_candidate_regions") or "").split(";")])
-        for tag in tags
+        f"raw_model_probability_ge_{threshold:.2f}": _decompose([r for r in material if float(r["raw_model_output"]) >= threshold]),
+        f"raw_model_probability_lt_{threshold:.2f}": _decompose([r for r in material if float(r["raw_model_output"]) < threshold]),
     }
 
 
 def _hhr_trace(shopped: list[dict[str, Any]], all_rows: list[dict[str, Any]]) -> dict[str, Any]:
-    eligible = [r for r in shopped if _hit_rate_eligible(r)]
+    eligible = _augment([r for r in shopped if _hit_rate_eligible(r)])
+    eligible_ml = [r for r in eligible if str(r.get("market_type")) == "moneyline"]
     playable = [r for r in eligible if str(r.get("price_status")) == "PLAYABLE"]
     selected = _augment(_selected(all_rows, select_hit_rate))
+    selected_ml = [r for r in selected if str(r.get("market_type")) == "moneyline"]
     selected_playable = [r for r in selected if str(r.get("price_status")) == "PLAYABLE"]
-    playable = _augment(playable)
     ml_playable = [r for r in playable if str(r.get("market_type")) == "moneyline"]
-
-    # Diagnostic only: within PLAYABLE ML candidates in each block, what would
-    # rank first under distinct signals? This is not a replacement HHR policy.
     return {
-        "eligible_pool": _decompose(_augment(eligible)),
+        "eligible_pool": _decompose(eligible),
+        "eligible_ml_model_support": _model_support_split(eligible_ml, 0.55),
+        "selected_ml_model_support": _model_support_split(selected_ml, 0.55),
+        "eligible_ml_rank_by_actionable_probability": _rank_bands(eligible_ml, "actionable_probability", True),
+        "eligible_ml_rank_by_raw_model_probability": _rank_bands(eligible_ml, "raw_model_output", True),
+        "eligible_ml_rank_by_model_minus_break_even": _rank_bands(eligible_ml, "model_minus_break_even", True),
+        "eligible_ml_rank_by_better_price": _rank_bands(eligible_ml, "american_odds", True),
         "playable_pool": _decompose(playable),
         "selected_playable": _decompose(selected_playable),
         "selected_vs_unselected_playable": _selected_vs_rest(playable, selected_playable),
+        "playable_ml_model_support": _model_support_split(ml_playable, 0.55),
+        "selected_playable_ml_model_support": _model_support_split(selected_playable, 0.55),
         "playable_ml_rank_by_current_actionable_probability": _rank_bands(ml_playable, "actionable_probability", True),
         "playable_ml_rank_by_raw_model_probability": _rank_bands(ml_playable, "raw_model_output", True),
         "playable_ml_rank_by_model_minus_break_even": _rank_bands(ml_playable, "model_minus_break_even", True),
@@ -179,32 +173,29 @@ def _balanced_trace(shopped: list[dict[str, Any]], all_rows: list[dict[str, Any]
     strict_pool = [r for r in eligible if str(r.get("price_status")) == "VALUE"]
     selected = _augment(_selected(all_rows, select_balanced))
     selected_strict = [r for r in selected if str(r.get("price_status")) == "VALUE"]
-
     by_market: dict[str, Any] = {}
     for market in MARKETS:
         pool = [r for r in strict_pool if str(r.get("market_type")) == market]
         picked = [r for r in selected_strict if str(r.get("market_type")) == market]
-        market_diag: dict[str, Any] = {
-            "pool": _decompose(pool),
-            "selected": _decompose(picked),
+        diag: dict[str, Any] = {
+            "pool": _decompose(pool), "selected": _decompose(picked),
             "selected_vs_rest": _selected_vs_rest(pool, picked),
-            "provenance": _provenance_split(pool),
-            "selected_provenance": _provenance_split(picked),
+            "provenance": _provenance_split(pool), "selected_provenance": _provenance_split(picked),
             "rank_by_expected_value": _rank_bands(pool, "expected_value", True),
             "rank_by_actionable_probability": _rank_bands(pool, "actionable_probability", True),
             "rank_by_better_price": _rank_bands(pool, "american_odds", True),
         }
         if market == "moneyline":
-            market_diag["rank_by_raw_model_probability"] = _rank_bands(pool, "raw_model_output", True)
-            market_diag["rank_by_model_minus_break_even"] = _rank_bands(pool, "model_minus_break_even", True)
-            market_diag["rank_by_model_market_disagreement"] = _rank_bands(pool, "model_market_disagreement", True)
+            diag["rank_by_raw_model_probability"] = _rank_bands(pool, "raw_model_output", True)
+            diag["rank_by_model_minus_break_even"] = _rank_bands(pool, "model_minus_break_even", True)
+            diag["rank_by_model_market_disagreement"] = _rank_bands(pool, "model_market_disagreement", True)
+            diag["pool_model_support"] = _model_support_split(pool, 0.50)
+            diag["selected_model_support"] = _model_support_split(picked, 0.50)
         elif market == "spread":
-            market_diag["rank_by_model_market_disagreement"] = _rank_bands(pool, "model_market_disagreement", True)
-        by_market[market] = market_diag
-
+            diag["rank_by_model_market_disagreement"] = _rank_bands(pool, "model_market_disagreement", True)
+        by_market[market] = diag
     return {
-        "eligible_pool": _decompose(eligible),
-        "strict_value_pool": _decompose(strict_pool),
+        "eligible_pool": _decompose(eligible), "strict_value_pool": _decompose(strict_pool),
         "selected_strict_value": _decompose(selected_strict),
         "strict_value_provenance": _provenance_split(strict_pool),
         "selected_strict_value_provenance": _provenance_split(selected_strict),
@@ -214,18 +205,18 @@ def _balanced_trace(shopped: list[dict[str, Any]], all_rows: list[dict[str, Any]
 
 
 def _generic_strict_value_trace(shopped: list[dict[str, Any]]) -> dict[str, Any]:
-    strict = _augment([
-        r for r in shopped
-        if bool(r.get("supported"))
-        and str(r.get("reliability")) in {"HIGH", "MEDIUM"}
-        and str(r.get("price_status")) == "VALUE"
-    ])
+    all_value = _augment([r for r in shopped if bool(r.get("supported")) and str(r.get("price_status")) == "VALUE"])
+    hm_value = [r for r in all_value if str(r.get("reliability")) in {"HIGH", "MEDIUM"}]
+    inside_all = [r for r in all_value if bool(r.get("model_candidate"))]
     return {
-        "all": _provenance_split(strict),
-        "moneyline": _provenance_split([r for r in strict if str(r.get("market_type")) == "moneyline"]),
-        "spread": _provenance_split([r for r in strict if str(r.get("market_type")) == "spread"]),
-        "total": _provenance_split([r for r in strict if str(r.get("market_type")) == "total"]),
-        "inside_region_tags": _region_tag_split([r for r in strict if bool(r.get("model_candidate"))]),
+        "all_supported_value": _provenance_split(all_value),
+        "high_medium_value": _provenance_split(hm_value),
+        "high_medium_by_market": {
+            m: _provenance_split([r for r in hm_value if str(r.get("market_type")) == m]) for m in MARKETS
+        },
+        "inside_model_regions_by_tag_all_reliability": _region_tag_split(inside_all),
+        "inside_model_regions_by_tag_high_medium": _region_tag_split([r for r in hm_value if bool(r.get("model_candidate"))]),
+        "inside_model_regions_value_reliability": _reliability_split(inside_all),
     }
 
 
@@ -234,24 +225,21 @@ def run(root: Path, board_path: Path, out: Path) -> None:
     seasons = {int(x) for x in board_df["season"].unique().to_list()}
     if seasons != DEV:
         raise RuntimeError(f"unexpected board seasons {sorted(seasons)}")
-
     discovery = pl.read_csv(root / "reports/task05e_remediated/market_edge_discovery_corrected_ledger_v1.csv", infer_schema_length=10000)
     confirmation = pl.read_csv(root / "reports/task05e_remediated/market_edge_confirmation_corrected_ledger_v1.csv", infer_schema_length=10000)
     ledgers = discovery.to_dicts() + confirmation.to_dicts()
     if any(int(r.get("season")) == 2025 for r in ledgers):
         raise RuntimeError("sealed 2025 entered Task05E ledger")
-
     registry = build_candidate_registry(ledgers)
     enriched = enrich_board_rows(board_df.to_dicts(), registry)
     shopped = _augment(_exact_shopped(enriched))
-
     result = {
-        "purpose": "read-only HHR model-signal / Balanced strict-VALUE selection trace",
-        "development_seasons": sorted(DEV),
-        "sealed_seasons": [2025],
+        "purpose": "read-only HHR model-signal / Balanced strict-VALUE / reliability trace",
+        "development_seasons": sorted(DEV), "sealed_seasons": [2025],
         "notes": {
-            "hhr_model_probability": "raw_model_output is a selected-side probability only for moneyline; point markets are not compared as probabilities",
-            "counterfactual_rank_bands": "diagnostic only; no replacement selector adopted",
+            "moneyline_raw_model_output": "selected-side QB-Elo/XGB AVG probability",
+            "point_market_raw_model_output": "point estimate, not probability; no cross-market probability arithmetic",
+            "rank_bands": "diagnostic only; no replacement selector adopted",
         },
         "hit_rate": _hhr_trace(shopped, enriched),
         "balanced": _balanced_trace(shopped, enriched),
