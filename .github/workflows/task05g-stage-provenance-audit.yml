@@ -1,0 +1,115 @@
+name: Task05G Stage Provenance Audit
+
+on:
+  pull_request:
+    branches:
+      - main
+      - feat/task05g-remediation-preregistered-v1
+    paths:
+      - 'scripts/task05g_stage_provenance_audit.py'
+      - 'docs/task05g_stage_provenance_audit_v1.md'
+      - '.github/workflows/task05g-stage-provenance-audit.yml'
+      - 'src/nfl_edge/recommendation/remediation_provenance_v1.py'
+      - 'src/nfl_edge/recommendation/policy.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  stage-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+
+      - name: Enforce read-only frozen scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=1e221c7dc44cc18328468cc47ff3b7201fa69b83
+          git cat-file -e "$BASE^{commit}"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/stage_audit_paths.txt
+          if grep -E '^(src/nfl_edge/value/|src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/recommendation/policy.py|src/nfl_edge/recommendation/remediation_v1.py|src/nfl_edge/recommendation/remediation_provenance_v1.py|data/|reports/task05e_remediated/)' /tmp/stage_audit_paths.txt; then
+            echo 'ERROR: stage audit changed frozen policy/evaluator/model/data/evidence scope.' >&2
+            exit 1
+          fi
+
+      - name: Compile audit
+        run: python -m py_compile scripts/task05g_stage_provenance_audit.py
+
+      - name: Run frozen Task05F focused tests
+        run: pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_policy.py tests/recommendation/test_task05g_remediation_v1.py
+
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_stage_audit/upstream
+
+      - name: Verify 2025 firewall
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet')
+          assert set(int(x) for x in board['season'].unique().to_list()) == {2020,2021,2022,2023,2024}
+          for path in [
+              'reports/task05e_remediated/market_edge_discovery_corrected_ledger_v1.csv',
+              'reports/task05e_remediated/market_edge_confirmation_corrected_ledger_v1.csv',
+          ]:
+              df=pl.read_csv(path, infer_schema_length=10000)
+              assert 2025 not in set(int(x) for x in df['season'].unique().to_list())
+          PY
+
+      - name: Run stage audit twice
+        run: |
+          python scripts/task05g_stage_provenance_audit.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --state-by-block artifacts/task05g_stage_audit/upstream/state_by_block.ndjson --out artifacts/task05g_stage_audit/run_a/stage_provenance_audit.json
+          python scripts/task05g_stage_provenance_audit.py --root . --board artifacts/task05g_stage_audit/upstream/historical_evaluator_board.parquet --state-by-block artifacts/task05g_stage_audit/upstream/state_by_block.ndjson --out artifacts/task05g_stage_audit/run_b/stage_provenance_audit.json
+
+      - name: Prove deterministic replay
+        run: cmp artifacts/task05g_stage_audit/run_a/stage_provenance_audit.json artifacts/task05g_stage_audit/run_b/stage_provenance_audit.json
+
+      - name: Validate architecture invariants
+        run: |
+          python - <<'PY'
+          import json
+          p='artifacts/task05g_stage_audit/run_a/stage_provenance_audit.json'
+          d=json.load(open(p))
+          assert d['development_seasons'] == [2020,2021,2022,2023,2024]
+          assert d['sealed_seasons'] == [2025]
+          assert d['registry_candidate_sides'] > 0
+          assert d['architecture_note']['intended_selector_universe'] == 'full common evaluated-wager table'
+          assert d['original_full_board_hit_rate_selected']['all']['overall']['n'] == 59
+          assert d['original_full_board_balanced_selected']['all']['overall']['n'] == 67
+          assert d['diagnostic_region_only_hit_rate_selected']['all']['overall']['n'] <= 59
+          assert d['diagnostic_region_only_balanced_selected']['all']['overall']['n'] <= 67
+          PY
+
+      - name: Security check
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -nE 'os\.environ|os\.getenv|API_KEY|ACCESS_TOKEN|SECRET_KEY' scripts/task05g_stage_provenance_audit.py; then
+            echo 'ERROR: audit must not depend on secrets.' >&2
+            exit 1
+          fi
+
+      - name: Upload stage audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-stage-provenance-${{ github.sha }}
+          path: |
+            artifacts/task05g_stage_audit/run_a/stage_provenance_audit.json
+            artifacts/task05g_stage_audit/upstream/scorecard.json
+            artifacts/task05g_stage_audit/upstream/state_by_block.ndjson
+          if-no-files-found: error
