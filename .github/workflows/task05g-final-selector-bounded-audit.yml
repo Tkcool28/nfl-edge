@@ -70,16 +70,18 @@ jobs:
         run: |
           python - <<'PY'
           import polars as pl
-          paths=[
-            'artifacts/task05g_final_selector/upstream/historical_evaluator_board.parquet',
-            'reports/task05e_remediated/market_edge_discovery_corrected_ledger_v1.csv',
-            'reports/task05e_remediated/market_edge_confirmation_corrected_ledger_v1.csv',
-          ]
-          for path in paths:
-              df=pl.read_parquet(path) if path.endswith('.parquet') else pl.read_csv(path, infer_schema_length=10000)
-              seasons={int(x) for x in df['season'].unique().to_list()}
-              assert seasons == {2020,2021,2022,2023,2024}, (path, seasons)
-              assert 2025 not in seasons
+          board=pl.read_parquet('artifacts/task05g_final_selector/upstream/historical_evaluator_board.parquet')
+          discovery=pl.read_csv('reports/task05e_remediated/market_edge_discovery_corrected_ledger_v1.csv', infer_schema_length=10000)
+          confirmation=pl.read_csv('reports/task05e_remediated/market_edge_confirmation_corrected_ledger_v1.csv', infer_schema_length=10000)
+          board_seasons={int(x) for x in board['season'].unique().to_list()}
+          discovery_seasons={int(x) for x in discovery['season'].unique().to_list()}
+          confirmation_seasons={int(x) for x in confirmation['season'].unique().to_list()}
+          combined=discovery_seasons | confirmation_seasons
+          assert board_seasons == {2020,2021,2022,2023,2024}, board_seasons
+          assert discovery_seasons == {2020,2021,2022}, discovery_seasons
+          assert confirmation_seasons == {2023,2024}, confirmation_seasons
+          assert combined == {2020,2021,2022,2023,2024}, combined
+          assert 2025 not in board_seasons | combined
           PY
 
       - name: Reproduce frozen V2 candidate table
