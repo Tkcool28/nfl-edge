@@ -1,0 +1,104 @@
+name: Task05G Spread Confidence Regime Audit
+
+on:
+  pull_request:
+    branches:
+      - feat/task05g-model-confidence-v2-preregistered
+    paths:
+      - 'scripts/task05g_spread_confidence_regime_audit.py'
+      - '.github/workflows/task05g-spread-confidence-regime-audit.yml'
+      - 'reports/task05g/spread_confidence_regime_audit_review.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+
+      - name: Enforce diagnostic-only diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=19d7ab2d9f0270b05e44a80b1dee35cfc9436833
+          git cat-file -e "$BASE^{commit}"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/spread_audit_paths.txt
+          if grep -Ev '^(scripts/task05g_spread_confidence_regime_audit.py|\.github/workflows/task05g-spread-confidence-regime-audit.yml|reports/task05g/spread_confidence_regime_audit_review.md)$' /tmp/spread_audit_paths.txt | grep -q .; then
+            echo 'ERROR: spread regime audit changed non-audit scope.' >&2
+            exit 1
+          fi
+
+      - name: Compile audit
+        run: python -m py_compile scripts/task05g_spread_confidence_regime_audit.py
+
+      - name: Run frozen Task05F and V2 focused tests
+        run: pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_model_confidence_v2.py
+
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_spread_regime/upstream
+
+      - name: Verify 2025 firewall
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_spread_regime/upstream/historical_evaluator_board.parquet')
+          assert set(int(x) for x in board['season'].unique().to_list()) == {2020,2021,2022,2023,2024}
+          assert 2025 not in set(int(x) for x in board['season'].unique().to_list())
+          PY
+
+      - name: Run audit twice
+        run: |
+          python scripts/task05g_spread_confidence_regime_audit.py --root . --board artifacts/task05g_spread_regime/upstream/historical_evaluator_board.parquet --out artifacts/task05g_spread_regime/run_a/spread_confidence_regime_audit.json
+          python scripts/task05g_spread_confidence_regime_audit.py --root . --board artifacts/task05g_spread_regime/upstream/historical_evaluator_board.parquet --out artifacts/task05g_spread_regime/run_b/spread_confidence_regime_audit.json
+
+      - name: Prove deterministic replay
+        run: cmp artifacts/task05g_spread_regime/run_a/spread_confidence_regime_audit.json artifacts/task05g_spread_regime/run_b/spread_confidence_regime_audit.json
+
+      - name: Validate audit invariants
+        run: |
+          python - <<'PY'
+          import json
+          a=json.load(open('artifacts/task05g_spread_regime/run_a/spread_confidence_regime_audit.json'))
+          assert a['seasons'] == [2020,2021,2022,2023,2024]
+          assert a['sealed'] == [2025]
+          assert a['settlement_orientation_parity']['mismatches'] == 0
+          assert a['settlement_orientation_parity']['spread_rows_checked'] > 0
+          assert a['all_exact_shopped_supported_spreads']['n'] > 0
+          assert a['hhr_selected_spreads']['n'] == 83
+          assert a['balanced_b0_selected_spreads']['n'] == 92
+          PY
+
+      - name: Security check
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -nE 'os\.environ|os\.getenv|API_KEY|ACCESS_TOKEN|SECRET_KEY' scripts/task05g_spread_confidence_regime_audit.py; then
+            echo 'ERROR: audit must not depend on secrets.' >&2
+            exit 1
+          fi
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-spread-confidence-regime-${{ github.sha }}
+          path: |
+            artifacts/task05g_spread_regime/run_a/spread_confidence_regime_audit.json
+            artifacts/task05g_spread_regime/upstream/scorecard.json
+          if-no-files-found: error
