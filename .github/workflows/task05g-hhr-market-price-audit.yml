@@ -1,0 +1,136 @@
+name: Task05G HHR Market-Price Audit
+
+on:
+  pull_request:
+    branches:
+      - feat/task05g-ml-headline-trust-v1-preregistered
+    paths:
+      - 'docs/task05g_hhr_market_price_audit_plan.md'
+      - 'scripts/task05g_hhr_market_price_audit.py'
+      - '.github/workflows/task05g-hhr-market-price-audit.yml'
+      - 'reports/task05g/hhr_market_price_audit_review.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hhr-market-price-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+
+      - name: Enforce audit-only scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=01b1e7d6958fc2e8de12c9fcd130b5789f88f58a
+          git cat-file -e "$BASE^{commit}"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/hhr_price_paths.txt
+          if grep -Ev '^(docs/task05g_hhr_market_price_audit_plan.md|scripts/task05g_hhr_market_price_audit.py|.github/workflows/task05g-hhr-market-price-audit.yml|reports/task05g/hhr_market_price_audit_review.md)$' /tmp/hhr_price_paths.txt | grep .; then
+            echo 'ERROR: HHR market-price audit changed out-of-scope files.' >&2
+            exit 1
+          fi
+
+      - name: Compile audit
+        run: python -m py_compile scripts/task05g_hhr_market_price_audit.py
+
+      - name: Run frozen focused tests
+        run: |
+          pytest -q \
+            tests/value/test_task05f_*.py \
+            tests/recommendation/test_task05g_policy.py \
+            tests/recommendation/test_task05g_remediation_v1.py \
+            tests/recommendation/test_task05g_model_confidence_v2.py \
+            tests/recommendation/test_task05g_ml_headline_trust_v1.py
+
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_hhr_price/upstream
+
+      - name: Verify 2025 firewall upstream
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_hhr_price/upstream/historical_evaluator_board.parquet')
+          seasons=set(int(x) for x in board['season'].unique().to_list())
+          assert seasons == {2020,2021,2022,2023,2024}
+          assert 2025 not in seasons
+          PY
+
+      - name: Reproduce frozen V2 candidate table
+        run: |
+          python scripts/task05g_model_confidence_v2_entrypoint.py \
+            --root . \
+            --board artifacts/task05g_hhr_price/upstream/historical_evaluator_board.parquet \
+            --out artifacts/task05g_hhr_price/v2
+
+      - name: Reproduce Spread Confidence V3
+        run: |
+          python scripts/task05g_spread_confidence_v3_runner.py \
+            --root . \
+            --v2-candidates artifacts/task05g_hhr_price/v2/v2_candidate_table.parquet \
+            --out artifacts/task05g_hhr_price/v3
+
+      - name: Run frozen HHR market-price audit twice
+        run: |
+          python scripts/task05g_hhr_market_price_audit.py \
+            --root . \
+            --v3-candidates artifacts/task05g_hhr_price/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_hhr_price/run_a
+          python scripts/task05g_hhr_market_price_audit.py \
+            --root . \
+            --v3-candidates artifacts/task05g_hhr_price/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_hhr_price/run_b
+
+      - name: Prove deterministic replay
+        run: |
+          cmp artifacts/task05g_hhr_price/run_a/hhr_market_price_audit.json artifacts/task05g_hhr_price/run_b/hhr_market_price_audit.json
+          cmp artifacts/task05g_hhr_price/run_a/hhr_market_price_rows.parquet artifacts/task05g_hhr_price/run_b/hhr_market_price_rows.parquet
+
+      - name: Validate frozen invariants
+        run: |
+          python - <<'PY'
+          import json, polars as pl
+          s=json.load(open('artifacts/task05g_hhr_price/run_a/hhr_market_price_audit.json'))
+          assert s['periods']['development_diagnostic'] == [2020,2021,2022]
+          assert s['periods']['locked_diagnostic'] == [2023,2024]
+          assert s['periods']['sealed'] == [2025]
+          assert s['definitions']['genuine_heavy_pinnacle_no_vig_min'] == 0.65
+          assert s['definitions']['material_retail_overjuice_min'] == 0.025
+          assert s['threshold_selection_allowed'] is False
+          assert s['production_promotion_allowed'] is False
+          assert s['2025_firewall'] == 'PASS'
+          assert all(s['frozen'].values())
+          df=pl.read_parquet('artifacts/task05g_hhr_price/run_a/hhr_market_price_rows.parquet')
+          seasons=set(int(x) for x in df['season'].unique().to_list())
+          assert seasons.issubset({2020,2021,2022,2023,2024})
+          assert 2025 not in seasons
+          assert df['pinnacle_anchor_probability'].null_count() == 0
+          assert df['break_even_probability'].null_count() == 0
+          PY
+
+      - name: Upload audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-hhr-market-price-${{ github.sha }}
+          path: |
+            artifacts/task05g_hhr_price/run_a/hhr_market_price_audit.json
+            artifacts/task05g_hhr_price/run_a/hhr_market_price_rows.parquet
+            artifacts/task05g_hhr_price/v3/scorecard.json
+            artifacts/task05g_hhr_price/v2/scorecard.json
+            artifacts/task05g_hhr_price/upstream/scorecard.json
+          if-no-files-found: error
