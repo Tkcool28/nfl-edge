@@ -64,11 +64,14 @@ jobs:
           python - <<'PY'
           import json
           d=json.load(open('artifacts/task05g_ml_audit/run_a/ml_edge_decay_audit.json'))
+          c=d['candidate_provenance_counts']
           assert d['development_seasons'] == [2020,2021,2022]
           assert d['confirmation_seasons'] == [2023,2024]
           assert d['sealed_seasons'] == [2025]
-          assert d['candidate_provenance_counts']['all_ml'] > 0
-          assert d['candidate_provenance_counts']['value_eligible'] > 0
+          assert c['all_ml'] > 0
+          assert c['value_eligible_ml'] > 0
+          assert c['actual_value_selected_ml_development'] == 40
+          assert c['actual_value_selected_ml_confirmation'] == 18
           PY
       - name: Upload ML audit evidence
         if: always()
