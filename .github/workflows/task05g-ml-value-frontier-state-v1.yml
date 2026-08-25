@@ -1,0 +1,93 @@
+name: Task05G ML Value Frontier State V1
+
+on:
+  push:
+    branches:
+      - feat/task05g-ml-value-frontier-state-v1
+    paths:
+      - 'docs/task05g_ml_value_frontier_state_v1_preregistration.md'
+      - 'scripts/task05g_ml_value_frontier_state_v1.py'
+      - '.github/workflows/task05g-ml-value-frontier-state-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frontier-state:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+      - name: Prove preregistration predates implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          PREREG=73de12dd34ef97fe445cb29300c2b85a5e48c37e
+          BLOB=5844dc8d62c0e9504bf3ee2719862cdd97a3f383
+          git cat-file -e "$PREREG^{commit}"
+          test "$(git rev-parse "$PREREG:docs/task05g_ml_value_frontier_state_v1_preregistration.md")" = "$BLOB"
+          git merge-base --is-ancestor "$PREREG" HEAD
+          test -z "$(git diff --name-only "$PREREG"..HEAD -- docs/task05g_ml_value_frontier_state_v1_preregistration.md)"
+      - name: Enforce frozen-scope guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=61196de617d719626326f8b00bf62a022070e0ba
+          git diff --name-only "$BASE"...HEAD | tee /tmp/state_paths.txt
+          if grep -E '^(src/nfl_edge/value/|src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/recommendation/policy.py|src/nfl_edge/recommendation/remediation_v1.py|src/nfl_edge/recommendation/remediation_provenance_v1.py|data/|reports/task05e_remediated/)' /tmp/state_paths.txt; then
+            echo 'ERROR: frontier-state experiment changed frozen scope.' >&2
+            exit 1
+          fi
+      - name: Compile experiment
+        run: python -m py_compile scripts/task05g_ml_value_frontier_state_v1.py
+      - name: Run frozen focused tests
+        run: pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_policy.py tests/recommendation/test_task05g_remediation_v1.py tests/recommendation/test_task05g_model_confidence_v2.py
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_frontier_state/upstream
+      - name: Verify 2025 firewall
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_frontier_state/upstream/historical_evaluator_board.parquet')
+          assert set(int(x) for x in board['season'].unique().to_list()) == {2020,2021,2022,2023,2024}
+          assert 2025 not in set(int(x) for x in board['season'].unique().to_list())
+          PY
+      - name: Run frontier state replay twice
+        run: |
+          python scripts/task05g_ml_value_frontier_state_v1.py --root . --board artifacts/task05g_frontier_state/upstream/historical_evaluator_board.parquet --out artifacts/task05g_frontier_state/run_a/result.json
+          python scripts/task05g_ml_value_frontier_state_v1.py --root . --board artifacts/task05g_frontier_state/upstream/historical_evaluator_board.parquet --out artifacts/task05g_frontier_state/run_b/result.json
+      - name: Prove deterministic replay
+        run: cmp artifacts/task05g_frontier_state/run_a/result.json artifacts/task05g_frontier_state/run_b/result.json
+      - name: Validate invariants
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open('artifacts/task05g_frontier_state/run_a/result.json'))
+          assert r['preregistration']['commit'] == '73de12dd34ef97fe445cb29300c2b85a5e48c37e'
+          assert r['preregistration']['blob'] == '5844dc8d62c0e9504bf3ee2719862cdd97a3f383'
+          assert r['periods']['development'] == [2020,2021,2022]
+          assert r['periods']['stress_replay_exposed'] == [2023,2024]
+          assert r['periods']['sealed'] == [2025]
+          assert r['development']['variants']['S0']['plays'] == 50
+          assert r['stress_replay']['variants']['S0']['plays'] == 39
+          PY
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-ml-value-frontier-state-${{ github.sha }}
+          path: |
+            artifacts/task05g_frontier_state/run_a/result.json
+            artifacts/task05g_frontier_state/upstream/scorecard.json
+          if-no-files-found: error
