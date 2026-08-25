@@ -1,0 +1,145 @@
+name: Task05G Final Selector Candidate V1
+
+on:
+  pull_request:
+    branches:
+      - feat/task05g-final-selector-architecture
+    paths:
+      - 'docs/task05g_final_selector_candidate_v1_preregistration.md'
+      - 'scripts/task05g_final_selector_candidate_v1.py'
+      - '.github/workflows/task05g-final-selector-candidate-v1.yml'
+      - 'reports/task05g/final_selector_candidate_v1_review.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  final-selector-candidate-v1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+
+      - name: Prove preregistration and bounded scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=9d73539188ea36dadaf4feab6df6ba6b480fc4b1
+          PREREG=c9ac8fd4b45c4035bf1a0aed514235396edcd65b
+          git cat-file -e "$BASE^{commit}"
+          git cat-file -e "$PREREG^{commit}"
+          git merge-base --is-ancestor "$PREREG" HEAD
+          test -z "$(git diff --name-only "$PREREG"..HEAD -- docs/task05g_final_selector_candidate_v1_preregistration.md)"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/final_candidate_paths.txt
+          if grep -Ev '^(docs/task05g_final_selector_candidate_v1_preregistration.md|scripts/task05g_final_selector_candidate_v1.py|.github/workflows/task05g-final-selector-candidate-v1.yml|reports/task05g/final_selector_candidate_v1_review.md)$' /tmp/final_candidate_paths.txt | grep .; then
+            echo 'ERROR: final selector candidate changed out-of-scope files.' >&2
+            exit 1
+          fi
+
+      - name: Compile candidate
+        run: python -m py_compile scripts/task05g_final_selector_candidate_v1.py
+
+      - name: Run frozen focused tests
+        run: |
+          pytest -q \
+            tests/value/test_task05f_*.py \
+            tests/recommendation/test_task05g_policy.py \
+            tests/recommendation/test_task05g_remediation_v1.py \
+            tests/recommendation/test_task05g_model_confidence_v2.py
+
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_final_candidate/upstream
+
+      - name: Verify 2025 firewall
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_final_candidate/upstream/historical_evaluator_board.parquet')
+          discovery=pl.read_csv('reports/task05e_remediated/market_edge_discovery_corrected_ledger_v1.csv', infer_schema_length=10000)
+          confirmation=pl.read_csv('reports/task05e_remediated/market_edge_confirmation_corrected_ledger_v1.csv', infer_schema_length=10000)
+          b={int(x) for x in board['season'].unique().to_list()}
+          d={int(x) for x in discovery['season'].unique().to_list()}
+          c={int(x) for x in confirmation['season'].unique().to_list()}
+          assert b == {2020,2021,2022,2023,2024}
+          assert d == {2020,2021,2022}
+          assert c == {2023,2024}
+          assert 2025 not in b | d | c
+          PY
+
+      - name: Reproduce Model Confidence V2
+        run: |
+          python scripts/task05g_model_confidence_v2_entrypoint.py \
+            --root . \
+            --board artifacts/task05g_final_candidate/upstream/historical_evaluator_board.parquet \
+            --out artifacts/task05g_final_candidate/v2
+
+      - name: Reproduce Spread Confidence V3
+        run: |
+          python scripts/task05g_spread_confidence_v3_runner.py \
+            --root . \
+            --v2-candidates artifacts/task05g_final_candidate/v2/v2_candidate_table.parquet \
+            --out artifacts/task05g_final_candidate/v3
+
+      - name: Run final candidate twice
+        run: |
+          python scripts/task05g_final_selector_candidate_v1.py \
+            --root . \
+            --v3-candidates artifacts/task05g_final_candidate/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_final_candidate/run_a
+          python scripts/task05g_final_selector_candidate_v1.py \
+            --root . \
+            --v3-candidates artifacts/task05g_final_candidate/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_final_candidate/run_b
+
+      - name: Prove deterministic replay
+        run: |
+          cmp artifacts/task05g_final_candidate/run_a/task05g_final_selector_candidate_v1_scorecard.json artifacts/task05g_final_candidate/run_b/task05g_final_selector_candidate_v1_scorecard.json
+          cmp artifacts/task05g_final_candidate/run_a/task05g_final_selector_candidate_v1_rows.csv artifacts/task05g_final_candidate/run_b/task05g_final_selector_candidate_v1_rows.csv
+
+      - name: Validate frozen invariants
+        run: |
+          python - <<'PY'
+          import json
+          s=json.load(open('artifacts/task05g_final_candidate/run_a/task05g_final_selector_candidate_v1_scorecard.json'))
+          assert s['preregistration_commit'] == 'c9ac8fd4b45c4035bf1a0aed514235396edcd65b'
+          assert s['periods']['sealed'] == [2025]
+          assert s['constants'] == {
+            'amber_min_n':3,'amber_trust':0.5,'half':0.5,'pseudo_n':8,
+            'red_min_n':8,'red_trust':0.25,'reset_trust':0.5,
+          }
+          for phase in ('development','locked_diagnostic','overall'):
+              assert s['hhr'][phase]['primary']['market_mix']['total'] == 0
+              assert s['balanced'][phase]['primary']['market_mix']['total'] == 0
+              for comp in s['hhr'][phase]['comparators'].values():
+                  assert comp['summary']['coverage'] == s['hhr'][phase]['primary']['coverage']
+              for comp in s['balanced'][phase]['comparators'].values():
+                  assert comp['summary']['coverage'] == s['balanced'][phase]['primary']['coverage']
+              for variant in ('STATIC_FRONTIER','FRONTIER_SHRINK','FRONTIER_STATE_V3'):
+                  assert s['value']['periods'][phase][variant]['market_mix']['total'] == 0
+          assert s['production_promotion_allowed'] is False
+          PY
+
+      - name: Upload candidate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-final-selector-candidate-v1-${{ github.sha }}
+          path: |
+            artifacts/task05g_final_candidate/run_a/
+            artifacts/task05g_final_candidate/v3/scorecard.json
+            artifacts/task05g_final_candidate/v2/scorecard.json
+            artifacts/task05g_final_candidate/upstream/scorecard.json
+          if-no-files-found: error
