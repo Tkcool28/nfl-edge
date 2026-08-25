@@ -1,0 +1,139 @@
+name: Task05G HHR Model-Market Corroboration V1
+
+on:
+  pull_request:
+    branches:
+      - audit/task05g-hhr-market-price-v1
+    paths:
+      - 'docs/task05g_hhr_model_market_corroboration_v1_preregistration.md'
+      - 'scripts/task05g_hhr_model_market_corroboration_v1_runner.py'
+      - '.github/workflows/task05g-hhr-model-market-corroboration-v1.yml'
+      - 'reports/task05g/hhr_model_market_corroboration_v1_review.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hhr-model-market-corroboration-v1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+
+      - name: Enforce experiment-only scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=7f7981e646f437ac633ec25255570e1b8a82b7c5
+          git cat-file -e "$BASE^{commit}"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/hhr_corroboration_paths.txt
+          if grep -Ev '^(docs/task05g_hhr_model_market_corroboration_v1_preregistration.md|scripts/task05g_hhr_model_market_corroboration_v1_runner.py|.github/workflows/task05g-hhr-model-market-corroboration-v1.yml|reports/task05g/hhr_model_market_corroboration_v1_review.md)$' /tmp/hhr_corroboration_paths.txt | grep .; then
+            echo 'ERROR: HHR corroboration experiment changed out-of-scope files.' >&2
+            exit 1
+          fi
+
+      - name: Compile experiment
+        run: python -m py_compile scripts/task05g_hhr_model_market_corroboration_v1_runner.py
+
+      - name: Run frozen focused tests
+        run: |
+          pytest -q \
+            tests/value/test_task05f_*.py \
+            tests/recommendation/test_task05g_policy.py \
+            tests/recommendation/test_task05g_remediation_v1.py \
+            tests/recommendation/test_task05g_model_confidence_v2.py
+
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_hhr_corroboration/upstream
+
+      - name: Verify 2025 firewall upstream
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_hhr_corroboration/upstream/historical_evaluator_board.parquet')
+          seasons=set(int(x) for x in board['season'].unique().to_list())
+          assert seasons == {2020,2021,2022,2023,2024}
+          assert 2025 not in seasons
+          PY
+
+      - name: Reproduce frozen V2 candidate table
+        run: |
+          python scripts/task05g_model_confidence_v2_entrypoint.py \
+            --root . \
+            --board artifacts/task05g_hhr_corroboration/upstream/historical_evaluator_board.parquet \
+            --out artifacts/task05g_hhr_corroboration/v2
+
+      - name: Reproduce Spread Confidence V3
+        run: |
+          python scripts/task05g_spread_confidence_v3_runner.py \
+            --root . \
+            --v2-candidates artifacts/task05g_hhr_corroboration/v2/v2_candidate_table.parquet \
+            --out artifacts/task05g_hhr_corroboration/v3
+
+      - name: Run preregistered corroboration experiment twice
+        run: |
+          python scripts/task05g_hhr_model_market_corroboration_v1_runner.py \
+            --root . \
+            --v3-candidates artifacts/task05g_hhr_corroboration/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_hhr_corroboration/run_a
+          python scripts/task05g_hhr_model_market_corroboration_v1_runner.py \
+            --root . \
+            --v3-candidates artifacts/task05g_hhr_corroboration/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_hhr_corroboration/run_b
+
+      - name: Prove deterministic replay
+        run: |
+          cmp artifacts/task05g_hhr_corroboration/run_a/hhr_model_market_corroboration_v1_scorecard.json artifacts/task05g_hhr_corroboration/run_b/hhr_model_market_corroboration_v1_scorecard.json
+          cmp artifacts/task05g_hhr_corroboration/run_a/hhr_model_market_corroboration_v1_rows.parquet artifacts/task05g_hhr_corroboration/run_b/hhr_model_market_corroboration_v1_rows.parquet
+
+      - name: Validate frozen invariants
+        run: |
+          python - <<'PY'
+          import json, polars as pl
+          s=json.load(open('artifacts/task05g_hhr_corroboration/run_a/hhr_model_market_corroboration_v1_scorecard.json'))
+          assert s['periods']['development'] == [2020,2021,2022]
+          assert s['periods']['locked_diagnostic'] == [2023,2024]
+          assert s['periods']['sealed'] == [2025]
+          assert s['primary_rule']['name'] == 'HALF_SHRINK'
+          assert s['primary_rule']['coefficient'] == 0.5
+          assert s['primary_rule']['ranking_only'] is True
+          assert s['primary_rule']['eligibility_changed'] is False
+          assert s['secondary_rule']['name'] == 'MIN_CAP'
+          assert s['secondary_rule']['diagnostic_only'] is True
+          assert s['development']['coverage_parity'] is True
+          assert s['locked_diagnostic']['coverage_parity'] is True
+          assert s['development']['baseline_v3']['play_blocks'] == s['development']['primary_half_shrink']['play_blocks'] == s['development']['secondary_min_cap']['play_blocks']
+          assert s['locked_diagnostic']['baseline_v3']['play_blocks'] == s['locked_diagnostic']['primary_half_shrink']['play_blocks'] == s['locked_diagnostic']['secondary_min_cap']['play_blocks']
+          assert s['2025_firewall'] == 'PASS'
+          assert s['production_promotion_allowed'] is False
+          df=pl.read_parquet('artifacts/task05g_hhr_corroboration/run_a/hhr_model_market_corroboration_v1_rows.parquet')
+          seasons={int(str(x).split('-',1)[0]) for x in df['block'].to_list()}
+          assert seasons.issubset({2020,2021,2022,2023,2024})
+          assert 2025 not in seasons
+          PY
+
+      - name: Upload experiment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-hhr-model-market-corroboration-${{ github.sha }}
+          path: |
+            artifacts/task05g_hhr_corroboration/run_a/hhr_model_market_corroboration_v1_scorecard.json
+            artifacts/task05g_hhr_corroboration/run_a/hhr_model_market_corroboration_v1_rows.parquet
+            artifacts/task05g_hhr_corroboration/v3/scorecard.json
+            artifacts/task05g_hhr_corroboration/v2/scorecard.json
+            artifacts/task05g_hhr_corroboration/upstream/scorecard.json
+          if-no-files-found: error
