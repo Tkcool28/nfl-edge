@@ -1,0 +1,127 @@
+name: Task05G ML Confidence Tail Audit
+
+on:
+  pull_request:
+    branches:
+      - feat/task05g-spread-confidence-v3-preregistered
+    paths:
+      - 'docs/task05g_ml_confidence_tail_audit_plan.md'
+      - 'scripts/task05g_ml_confidence_tail_audit.py'
+      - '.github/workflows/task05g-ml-confidence-tail-audit.yml'
+      - 'reports/task05g/ml_confidence_tail_audit_review.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-ml-tail:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+
+      - name: Enforce audit-only scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=cc462736fba0538e3a674a2bc74658f9307df65a
+          git cat-file -e "$BASE^{commit}"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/ml_tail_paths.txt
+          if grep -Ev '^(docs/task05g_ml_confidence_tail_audit_plan.md|scripts/task05g_ml_confidence_tail_audit.py|.github/workflows/task05g-ml-confidence-tail-audit.yml|reports/task05g/ml_confidence_tail_audit_review.md)$' /tmp/ml_tail_paths.txt | grep .; then
+            echo 'ERROR: ML tail audit changed out-of-scope files.' >&2
+            exit 1
+          fi
+
+      - name: Compile audit
+        run: python -m py_compile scripts/task05g_ml_confidence_tail_audit.py
+
+      - name: Run frozen focused tests
+        run: pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_policy.py tests/recommendation/test_task05g_remediation_v1.py tests/recommendation/test_task05g_model_confidence_v2.py
+
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_ml_tail/upstream
+
+      - name: Verify 2025 firewall upstream
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_ml_tail/upstream/historical_evaluator_board.parquet')
+          seasons=set(int(x) for x in board['season'].unique().to_list())
+          assert seasons == {2020,2021,2022,2023,2024}
+          assert 2025 not in seasons
+          PY
+
+      - name: Reproduce frozen V2 candidate table
+        run: |
+          python scripts/task05g_model_confidence_v2_entrypoint.py \
+            --root . \
+            --board artifacts/task05g_ml_tail/upstream/historical_evaluator_board.parquet \
+            --out artifacts/task05g_ml_tail/v2
+
+      - name: Reproduce Spread Confidence V3
+        run: |
+          python scripts/task05g_spread_confidence_v3_runner.py \
+            --root . \
+            --v2-candidates artifacts/task05g_ml_tail/v2/v2_candidate_table.parquet \
+            --out artifacts/task05g_ml_tail/v3
+
+      - name: Run frozen ML tail audit twice
+        run: |
+          python scripts/task05g_ml_confidence_tail_audit.py \
+            --root . \
+            --v3-candidates artifacts/task05g_ml_tail/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_ml_tail/run_a
+          python scripts/task05g_ml_confidence_tail_audit.py \
+            --root . \
+            --v3-candidates artifacts/task05g_ml_tail/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_ml_tail/run_b
+
+      - name: Prove deterministic replay
+        run: |
+          cmp artifacts/task05g_ml_tail/run_a/ml_confidence_tail_audit.json artifacts/task05g_ml_tail/run_b/ml_confidence_tail_audit.json
+
+      - name: Validate audit invariants
+        run: |
+          python - <<'PY'
+          import json, polars as pl
+          s=json.load(open('artifacts/task05g_ml_tail/run_a/ml_confidence_tail_audit.json'))
+          assert s['periods']['development_diagnostic'] == [2020,2021,2022]
+          assert s['periods']['locked_diagnostic'] == [2023,2024]
+          assert s['periods']['sealed'] == [2025]
+          assert s['2025_firewall'] == 'PASS'
+          assert s['promotion_allowed'] is False
+          assert s['threshold_selection_allowed'] is False
+          assert all(s['frozen'].values())
+          df=pl.read_parquet('artifacts/task05g_ml_tail/run_a/ml_confidence_tail_rows.parquet')
+          seasons=set(int(x) for x in df['season'].unique().to_list())
+          assert seasons.issubset({2020,2021,2022,2023,2024})
+          assert 2025 not in seasons
+          assert set(s['development']['hhr']['confidence_floor_frontier_ml_only']) == {'>=55%','>=60%','>=65%','>=70%','>=75%'}
+          assert set(s['development']['balanced_b0']['confidence_floor_frontier_ml_only']) == {'>=52%','>=55%','>=60%','>=65%','>=70%','>=75%'}
+          PY
+
+      - name: Upload audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-ml-confidence-tail-${{ github.sha }}
+          path: |
+            artifacts/task05g_ml_tail/run_a/ml_confidence_tail_audit.json
+            artifacts/task05g_ml_tail/run_a/ml_confidence_tail_rows.parquet
+            artifacts/task05g_ml_tail/v3/scorecard.json
+            artifacts/task05g_ml_tail/v2/scorecard.json
+            artifacts/task05g_ml_tail/upstream/scorecard.json
+          if-no-files-found: error
