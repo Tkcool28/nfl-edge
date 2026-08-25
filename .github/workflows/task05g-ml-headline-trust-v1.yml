@@ -1,0 +1,140 @@
+name: Task05G ML Headline Trust V1
+
+on:
+  pull_request:
+    branches:
+      - audit/task05g-ml-confidence-tail-v1
+    paths:
+      - 'docs/task05g_ml_headline_trust_v1_preregistration.md'
+      - 'scripts/task05g_ml_headline_trust_v1_runner.py'
+      - 'tests/recommendation/test_task05g_ml_headline_trust_v1.py'
+      - '.github/workflows/task05g-ml-headline-trust-v1.yml'
+      - 'reports/task05g/ml_headline_trust_v1_review.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ml-headline-trust-v1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+
+      - name: Enforce experiment-only scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=10e8b49b8443ea1726bc104bdc5565b925feb1ad
+          git cat-file -e "$BASE^{commit}"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/ml_trust_paths.txt
+          if grep -Ev '^(docs/task05g_ml_headline_trust_v1_preregistration.md|scripts/task05g_ml_headline_trust_v1_runner.py|tests/recommendation/test_task05g_ml_headline_trust_v1.py|.github/workflows/task05g-ml-headline-trust-v1.yml|reports/task05g/ml_headline_trust_v1_review.md)$' /tmp/ml_trust_paths.txt | grep .; then
+            echo 'ERROR: ML headline trust experiment changed out-of-scope files.' >&2
+            exit 1
+          fi
+
+      - name: Compile experiment
+        run: python -m py_compile scripts/task05g_ml_headline_trust_v1_runner.py
+
+      - name: Run frozen focused tests
+        run: |
+          pytest -q \
+            tests/value/test_task05f_*.py \
+            tests/recommendation/test_task05g_policy.py \
+            tests/recommendation/test_task05g_remediation_v1.py \
+            tests/recommendation/test_task05g_model_confidence_v2.py \
+            tests/recommendation/test_task05g_ml_headline_trust_v1.py
+
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_ml_trust/upstream
+
+      - name: Verify 2025 firewall upstream
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_ml_trust/upstream/historical_evaluator_board.parquet')
+          seasons=set(int(x) for x in board['season'].unique().to_list())
+          assert seasons == {2020,2021,2022,2023,2024}
+          assert 2025 not in seasons
+          PY
+
+      - name: Reproduce frozen V2 candidate table
+        run: |
+          python scripts/task05g_model_confidence_v2_entrypoint.py \
+            --root . \
+            --board artifacts/task05g_ml_trust/upstream/historical_evaluator_board.parquet \
+            --out artifacts/task05g_ml_trust/v2
+
+      - name: Reproduce Spread Confidence V3
+        run: |
+          python scripts/task05g_spread_confidence_v3_runner.py \
+            --root . \
+            --v2-candidates artifacts/task05g_ml_trust/v2/v2_candidate_table.parquet \
+            --out artifacts/task05g_ml_trust/v3
+
+      - name: Run preregistered trust experiment twice
+        run: |
+          python scripts/task05g_ml_headline_trust_v1_runner.py \
+            --root . \
+            --v3-candidates artifacts/task05g_ml_trust/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_ml_trust/run_a
+          python scripts/task05g_ml_headline_trust_v1_runner.py \
+            --root . \
+            --v3-candidates artifacts/task05g_ml_trust/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_ml_trust/run_b
+
+      - name: Prove deterministic replay
+        run: |
+          cmp artifacts/task05g_ml_trust/run_a/ml_headline_trust_v1_scorecard.json artifacts/task05g_ml_trust/run_b/ml_headline_trust_v1_scorecard.json
+          cmp artifacts/task05g_ml_trust/run_a/ml_headline_trust_v1_rows.parquet artifacts/task05g_ml_trust/run_b/ml_headline_trust_v1_rows.parquet
+
+      - name: Validate frozen invariants
+        run: |
+          python - <<'PY'
+          import json, polars as pl
+          s=json.load(open('artifacts/task05g_ml_trust/run_a/ml_headline_trust_v1_scorecard.json'))
+          assert s['periods']['development'] == [2020,2021,2022]
+          assert s['periods']['locked_diagnostic'] == [2023,2024]
+          assert s['periods']['sealed'] == [2025]
+          assert s['production_promotion_allowed'] is False
+          assert s['primary_rule']['penalty'] == 0.5
+          assert s['primary_rule']['ranking_only'] is True
+          assert s['primary_rule']['eligibility_changed'] is False
+          assert s['sensitivity_rules'] == {'T025':0.25,'T100':1.0}
+          for phase in ('development','locked_diagnostic'):
+            for lane in ('hhr','balanced_b0'):
+              r=s[phase][lane]
+              assert r['coverage_parity'] is True
+              assert r['baseline_v3']['play_blocks'] == r['primary_t050']['play_blocks']
+              assert r['baseline_v3']['coverage'] == r['primary_t050']['coverage']
+          df=pl.read_parquet('artifacts/task05g_ml_trust/run_a/ml_headline_trust_v1_rows.parquet')
+          seasons={int(str(x).split('-',1)[0]) for x in df['block'].to_list()}
+          assert seasons.issubset({2020,2021,2022,2023,2024})
+          assert 2025 not in seasons
+          PY
+
+      - name: Upload experiment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-ml-headline-trust-v1-${{ github.sha }}
+          path: |
+            artifacts/task05g_ml_trust/run_a/ml_headline_trust_v1_scorecard.json
+            artifacts/task05g_ml_trust/run_a/ml_headline_trust_v1_rows.parquet
+            artifacts/task05g_ml_trust/v3/scorecard.json
+            artifacts/task05g_ml_trust/v2/scorecard.json
+            artifacts/task05g_ml_trust/upstream/scorecard.json
+          if-no-files-found: error
