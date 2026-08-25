@@ -93,7 +93,18 @@ def _outcome(row: Mapping[str, Any]) -> int | None:
 
 
 def _summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
-    material = [r for r in rows if _outcome(r) is not None and _finite(r.get("model_confidence_probability")) is not None]
+    required = (
+        "model_confidence_probability",
+        "raw_avg_probability_selected",
+        "raw_qbelo_probability_selected",
+        "raw_xgb_probability_selected",
+    )
+    material = [
+        r
+        for r in rows
+        if _outcome(r) is not None
+        and all(_finite(r.get(key)) is not None for key in required)
+    ]
     if not material:
         return {
             "n": 0,
@@ -114,12 +125,18 @@ def _summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     ys = [int(_outcome(r)) for r in material]
     ps = [float(r["model_confidence_probability"]) for r in material]
     raws = [float(r["raw_avg_probability_selected"]) for r in material]
-    shifts = [float(r["calibrated_minus_raw"]) for r in material]
+    shifts = [
+        float(r["model_confidence_probability"]) - float(r["raw_avg_probability_selected"])
+        for r in material
+    ]
     bes = [_finite(r.get("break_even_probability")) for r in material]
     bes = [x for x in bes if x is not None]
     odds = [_finite(r.get("american_odds")) for r in material]
     odds = [x for x in odds if x is not None]
-    disagreements = [float(r["qb_xgb_abs_disagreement"]) for r in material]
+    disagreements = [
+        abs(float(r["raw_qbelo_probability_selected"]) - float(r["raw_xgb_probability_selected"]))
+        for r in material
+    ]
     profits = [_finite(r.get("realized_profit")) for r in material]
     profits = [x for x in profits if x is not None]
     eps = 1e-12
