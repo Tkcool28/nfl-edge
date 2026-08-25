@@ -1,0 +1,84 @@
+name: Task05G Spread Confidence Audit
+
+on:
+  pull_request:
+    branches:
+      - audit/task05g-stage-provenance-v1
+    paths:
+      - 'scripts/task05g_spread_confidence_audit.py'
+      - 'scripts/task05g_model_confidence_v2_runner.py'
+      - 'scripts/task05g_model_confidence_v2_entrypoint.py'
+      - '.github/workflows/task05g-spread-confidence-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  spread-confidence-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+      - name: Enforce diagnostic-only frozen scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=19d7ab2d9f0270b05e44a80b1dee35cfc9436833
+          git cat-file -e "$BASE^{commit}"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/spread_audit_paths.txt
+          if grep -E '^(src/nfl_edge/value/|src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/recommendation/|data/|reports/task05e_remediated/|docs/task05g_model_confidence_v2_preregistration.md|scripts/task05g_model_confidence_v2_runner.py|scripts/task05g_model_confidence_v2_entrypoint.py)' /tmp/spread_audit_paths.txt; then
+            echo 'ERROR: spread-confidence audit changed frozen experiment/model/evaluator/data scope.' >&2
+            exit 1
+          fi
+      - name: Compile audit
+        run: python -m py_compile scripts/task05g_spread_confidence_audit.py
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_spread_audit/upstream
+      - name: Verify 2025 firewall
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_spread_audit/upstream/historical_evaluator_board.parquet')
+          assert set(int(x) for x in board['season'].unique().to_list()) == {2020,2021,2022,2023,2024}
+          PY
+      - name: Reproduce frozen failed-confirmation V2 candidate table
+        run: |
+          python scripts/task05g_model_confidence_v2_entrypoint.py --root . --board artifacts/task05g_spread_audit/upstream/historical_evaluator_board.parquet --out artifacts/task05g_spread_audit/v2
+      - name: Run spread confidence audit twice
+        run: |
+          python scripts/task05g_spread_confidence_audit.py --root . --candidates artifacts/task05g_spread_audit/v2/v2_candidate_table.parquet --out artifacts/task05g_spread_audit/run_a/spread_confidence_audit.json
+          python scripts/task05g_spread_confidence_audit.py --root . --candidates artifacts/task05g_spread_audit/v2/v2_candidate_table.parquet --out artifacts/task05g_spread_audit/run_b/spread_confidence_audit.json
+      - name: Prove deterministic replay
+        run: cmp artifacts/task05g_spread_audit/run_a/spread_confidence_audit.json artifacts/task05g_spread_audit/run_b/spread_confidence_audit.json
+      - name: Validate audit invariants
+        run: |
+          python - <<'PY'
+          import json
+          a=json.load(open('artifacts/task05g_spread_audit/run_a/spread_confidence_audit.json'))
+          assert a['sealed_season'] == 2025
+          assert a['orientation_settlement_mismatch_count'] == 0
+          assert set(a['season_residual_regime']) == {'2020','2021','2022','2023','2024'}
+          assert a['all_exact_shopped_supported_spreads']['overall']['n'] > 0
+          assert a['selected_hhr_spreads']['overall']['n'] > 0
+          assert a['selected_balanced_b0_spreads']['overall']['n'] > 0
+          PY
+      - name: Upload audit evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-spread-confidence-audit-${{ github.sha }}
+          path: |
+            artifacts/task05g_spread_audit/run_a/spread_confidence_audit.json
+            artifacts/task05g_spread_audit/v2/scorecard.json
+            artifacts/task05g_spread_audit/v2/model_confidence_state_by_block.ndjson
+          if-no-files-found: error
