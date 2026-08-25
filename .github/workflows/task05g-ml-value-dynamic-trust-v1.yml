@@ -1,0 +1,106 @@
+name: Task05G ML Value Dynamic Trust V1
+
+on:
+  push:
+    branches:
+      - feat/task05g-ml-value-dynamic-trust-v1
+    paths:
+      - 'docs/task05g_ml_value_dynamic_trust_v1_preregistration.md'
+      - 'scripts/task05g_ml_value_dynamic_trust_v1.py'
+      - '.github/workflows/task05g-ml-value-dynamic-trust-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dynamic-trust:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+
+      - name: Prove preregistration predates implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          PREREG=151d2799044b94dd1b29f0aac31bb74af81634c8
+          BLOB=6b8425daeef87dc8f7d4b9dc995cc2a19263fe1a
+          git cat-file -e "$PREREG^{commit}"
+          test "$(git rev-parse "$PREREG:docs/task05g_ml_value_dynamic_trust_v1_preregistration.md")" = "$BLOB"
+          git merge-base --is-ancestor "$PREREG" HEAD
+          test -z "$(git diff --name-only "$PREREG"..HEAD -- docs/task05g_ml_value_dynamic_trust_v1_preregistration.md)"
+
+      - name: Enforce frozen-scope guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=71cffb7625d1439449487c1c4c68559a131e4f3e
+          git diff --name-only "$BASE"...HEAD | tee /tmp/dynamic_trust_paths.txt
+          if grep -E '^(src/nfl_edge/value/|src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/recommendation/policy.py|src/nfl_edge/recommendation/remediation_v1.py|src/nfl_edge/recommendation/remediation_provenance_v1.py|data/|reports/task05e_remediated/)' /tmp/dynamic_trust_paths.txt; then
+            echo 'ERROR: dynamic-trust experiment changed frozen scope.' >&2
+            exit 1
+          fi
+
+      - name: Compile experiment
+        run: python -m py_compile scripts/task05g_ml_value_dynamic_trust_v1.py
+
+      - name: Run frozen focused tests
+        run: pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_policy.py tests/recommendation/test_task05g_remediation_v1.py tests/recommendation/test_task05g_model_confidence_v2.py
+
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_dynamic_trust/upstream
+
+      - name: Verify 2025 firewall
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_dynamic_trust/upstream/historical_evaluator_board.parquet')
+          assert set(int(x) for x in board['season'].unique().to_list()) == {2020,2021,2022,2023,2024}
+          assert 2025 not in set(int(x) for x in board['season'].unique().to_list())
+          PY
+
+      - name: Run dynamic trust replay twice
+        run: |
+          python scripts/task05g_ml_value_dynamic_trust_v1.py --root . --board artifacts/task05g_dynamic_trust/upstream/historical_evaluator_board.parquet --out artifacts/task05g_dynamic_trust/run_a/result.json
+          python scripts/task05g_ml_value_dynamic_trust_v1.py --root . --board artifacts/task05g_dynamic_trust/upstream/historical_evaluator_board.parquet --out artifacts/task05g_dynamic_trust/run_b/result.json
+
+      - name: Prove deterministic replay
+        run: cmp artifacts/task05g_dynamic_trust/run_a/result.json artifacts/task05g_dynamic_trust/run_b/result.json
+
+      - name: Validate invariants
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open('artifacts/task05g_dynamic_trust/run_a/result.json'))
+          assert r['preregistration']['commit'] == '151d2799044b94dd1b29f0aac31bb74af81634c8'
+          assert r['preregistration']['blob'] == '6b8425daeef87dc8f7d4b9dc995cc2a19263fe1a'
+          assert r['periods']['development'] == [2020,2021,2022]
+          assert r['periods']['stress_replay_exposed'] == [2023,2024]
+          assert r['periods']['sealed'] == [2025]
+          assert r['parameters'] == {'season_reset_trust':0.5,'pseudo_count':8,'red_gate':0.25,'red_min_n':8}
+          assert r['development']['variants']['D0']['plays'] == 50
+          assert r['stress_replay']['variants']['D0']['plays'] == 39
+          PY
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-ml-value-dynamic-trust-${{ github.sha }}
+          path: |
+            artifacts/task05g_dynamic_trust/run_a/result.json
+            artifacts/task05g_dynamic_trust/upstream/scorecard.json
+          if-no-files-found: error
