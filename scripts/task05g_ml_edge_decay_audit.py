@@ -156,6 +156,34 @@ def _decompose(rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _reliability_rank(value: Any) -> int:
+    return {"HIGH": 3, "MEDIUM": 2, "LOW": 1}.get(str(value or "").upper(), 0)
+
+
+def _value_eligible(r: dict[str, Any]) -> bool:
+    return (
+        bool(r.get("model_confidence_supported"))
+        and str(r.get("market_type")) in {"moneyline", "spread"}
+        and r.get("model_price_gap") is not None
+        and float(r["model_price_gap"]) > 0.0
+        and str(r.get("price_status")) == "VALUE"
+        and r.get("expected_value") is not None
+        and float(r["expected_value"]) > 0.0
+        and -180 <= int(r.get("american_odds")) <= 250
+    )
+
+
+def _value_sort_key(r: dict[str, Any]):
+    consensus = r.get("consensus_edge")
+    return (
+        -float(consensus if consensus is not None else -99.0),
+        -float(r.get("model_confidence_probability") or -99.0),
+        -_reliability_rank(r.get("reliability")),
+        -int(r.get("american_odds") or -100000),
+        str(r.get("candidate_id") or ""),
+    )
+
+
 def run(root: Path, candidate_path: Path, out: Path) -> None:
     df = pl.read_parquet(candidate_path)
     seasons = {int(x) for x in df["season"].unique().to_list()}
@@ -176,24 +204,9 @@ def run(root: Path, candidate_path: Path, out: Path) -> None:
         shopped.extend(dict(r) for r in shop_exact_offers(rr))
 
     ml = [r for r in shopped if str(r.get("market_type")) == "moneyline" and bool(r.get("model_confidence_supported"))]
-    value_eligible = [
-        r for r in ml
-        if r.get("model_price_gap") is not None
-        and float(r["model_price_gap"]) > 0
-        and str(r.get("price_status")) == "VALUE"
-        and r.get("expected_value") is not None
-        and float(r["expected_value"]) > 0
-        and -180 <= int(r.get("american_odds")) <= 250
-    ]
+    value_eligible = [r for r in ml if _value_eligible(r)]
 
-    ranked = _rank(
-        value_eligible,
-        lambda r: (
-            -min(float(r.get("model_price_gap") or -99), float(r.get("evaluated_edge_probability") or -99)),
-            -float(r.get("model_confidence_probability") or -99),
-            str(r.get("candidate_id") or ""),
-        ),
-    )
+    ranked = _rank(value_eligible, _value_sort_key)
     rank_groups = {
         "rank1": _summary([r for r in ranked if int(r["diagnostic_rank"]) == 1]),
         "rank2": _summary([r for r in ranked if int(r["diagnostic_rank"]) == 2]),
@@ -201,21 +214,13 @@ def run(root: Path, candidate_path: Path, out: Path) -> None:
         "rank4plus": _summary([r for r in ranked if int(r["diagnostic_rank"]) >= 4]),
     }
 
-    # Reproduce Value V2 ML headline choice within each block.
-    selected: list[dict[str, Any]] = []
-    for _, rr in sorted(_block_map(value_eligible).items()):
-        if not rr:
-            continue
-        choice = sorted(
-            rr,
-            key=lambda r: (
-                -min(float(r.get("model_price_gap") or -99), float(r.get("evaluated_edge_probability") or -99)),
-                -float(r.get("model_confidence_probability") or -99),
-                -int(r.get("american_odds") or -100000),
-                str(r.get("candidate_id") or ""),
-            ),
-        )[0]
-        selected.append(dict(choice))
+    # Reproduce the actual cross-market Value V2 headline stream, then isolate ML.
+    all_value_eligible = [r for r in shopped if _value_eligible(r)]
+    selected_all: list[dict[str, Any]] = []
+    for _, rr in sorted(_block_map(all_value_eligible).items()):
+        if rr:
+            selected_all.append(dict(sorted(rr, key=_value_sort_key)[0]))
+    selected = [r for r in selected_all if str(r.get("market_type")) == "moneyline"]
 
     result = {
         "purpose": "read-only ML calibration and betting-edge decay audit",
@@ -224,14 +229,16 @@ def run(root: Path, candidate_path: Path, out: Path) -> None:
         "sealed_seasons": [2025],
         "all_model_confidence_ml": _calibration(ml),
         "value_eligible_ml_pool": _decompose(value_eligible),
-        "value_selected_ml": _decompose(selected),
-        "value_eligible_rank_performance": rank_groups,
+        "actual_value_selected_ml": _decompose(selected),
+        "value_eligible_rank_performance_within_ml": rank_groups,
         "candidate_provenance_counts": {
             "all_ml": len(ml),
-            "value_eligible": len(value_eligible),
-            "value_selected": len(selected),
+            "value_eligible_ml": len(value_eligible),
+            "actual_value_selected_ml": len(selected),
+            "actual_value_selected_ml_development": sum(int(r["season"]) in {2020, 2021, 2022} for r in selected),
+            "actual_value_selected_ml_confirmation": sum(int(r["season"]) in {2023, 2024} for r in selected),
             "value_eligible_with_frozen_region": sum(bool(r.get("model_candidate")) for r in value_eligible),
-            "value_selected_with_frozen_region": sum(bool(r.get("model_candidate")) for r in selected),
+            "actual_value_selected_with_frozen_region": sum(bool(r.get("model_candidate")) for r in selected),
         },
     }
     out.parent.mkdir(parents=True, exist_ok=True)
