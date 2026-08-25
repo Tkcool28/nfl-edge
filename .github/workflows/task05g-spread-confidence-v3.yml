@@ -1,0 +1,134 @@
+name: Task05G Spread Confidence V3
+
+on:
+  pull_request:
+    branches:
+      - feat/task05g-model-confidence-v2-preregistered
+    paths:
+      - 'docs/task05g_spread_confidence_v3_preregistration.md'
+      - 'scripts/task05g_spread_confidence_v3_runner.py'
+      - '.github/workflows/task05g-spread-confidence-v3.yml'
+      - 'reports/task05g/spread_confidence_v3_validation_review.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-v3:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+
+      - name: Enforce V3 diagnostic-only scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=95d5672974dd11c33d134b33d8b5b6fa182749de
+          git cat-file -e "$BASE^{commit}"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/v3_paths.txt
+          if grep -E '^(src/nfl_edge/value/|src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/recommendation/|data/|reports/task05e_remediated/|scripts/task05g_model_confidence_v2_runner.py|scripts/task05g_model_confidence_v2_entrypoint.py)' /tmp/v3_paths.txt; then
+            echo 'ERROR: V3 changed frozen evaluator/model/selector/data/V2 implementation scope.' >&2
+            exit 1
+          fi
+
+      - name: Prove V3 preregistration predates implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          PREREG=8124494085b1098105f6c40e257bc03a27188a35
+          BLOB=128d8d676986362261bdd7d2720dc8c7eacd0cb4
+          git cat-file -e "$PREREG^{commit}"
+          test "$(git rev-parse "$PREREG:docs/task05g_spread_confidence_v3_preregistration.md")" = "$BLOB"
+          git merge-base --is-ancestor "$PREREG" HEAD
+          test -z "$(git diff --name-only "$PREREG"..HEAD -- docs/task05g_spread_confidence_v3_preregistration.md)"
+
+      - name: Compile V3
+        run: python -m py_compile scripts/task05g_spread_confidence_v3_runner.py
+
+      - name: Run frozen focused tests
+        run: pytest -q tests/value/test_task05f_*.py tests/recommendation/test_task05g_policy.py tests/recommendation/test_task05g_remediation_v1.py tests/recommendation/test_task05g_model_confidence_v2.py
+
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_v3/upstream
+
+      - name: Verify 2025 firewall
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_v3/upstream/historical_evaluator_board.parquet')
+          assert set(int(x) for x in board['season'].unique().to_list()) == {2020,2021,2022,2023,2024}
+          assert 2025 not in set(int(x) for x in board['season'].unique().to_list())
+          PY
+
+      - name: Reproduce frozen V2 candidate table
+        run: |
+          python scripts/task05g_model_confidence_v2_entrypoint.py \
+            --root . \
+            --board artifacts/task05g_v3/upstream/historical_evaluator_board.parquet \
+            --out artifacts/task05g_v3/v2
+
+      - name: Run preregistered V3 twice
+        run: |
+          python scripts/task05g_spread_confidence_v3_runner.py --root . --v2-candidates artifacts/task05g_v3/v2/v2_candidate_table.parquet --out artifacts/task05g_v3/run_a
+          python scripts/task05g_spread_confidence_v3_runner.py --root . --v2-candidates artifacts/task05g_v3/v2/v2_candidate_table.parquet --out artifacts/task05g_v3/run_b
+
+      - name: Prove deterministic replay
+        run: |
+          cmp artifacts/task05g_v3/run_a/scorecard.json artifacts/task05g_v3/run_b/scorecard.json
+          cmp artifacts/task05g_v3/run_a/spread_calibration_state_by_block.ndjson artifacts/task05g_v3/run_b/spread_calibration_state_by_block.ndjson
+
+      - name: Validate frozen experiment invariants
+        run: |
+          python - <<'PY'
+          import hashlib, json, polars as pl
+          s=json.load(open('artifacts/task05g_v3/run_a/scorecard.json'))
+          assert s['periods']['development'] == [2020,2021,2022]
+          assert s['periods']['locked_diagnostic'] == [2023,2024]
+          assert s['periods']['sealed'] == [2025]
+          assert s['promotion_allowed'] is False
+          assert s['frozen']['task05f_evaluator'] is True
+          assert s['frozen']['football_models'] is True
+          assert s['frozen']['ml_confidence'] is True
+          assert s['frozen']['hhr_selector'] is True
+          assert s['frozen']['balanced_selector'] is True
+          assert s['v1_development']['hhr_plays'] == 23
+          assert s['v1_development']['balanced_plays'] == 24
+          assert set(s['development']['balanced_variants']) == {'B0','B1','B2'}
+          assert s['calibration']['method'] == 'direct_logistic_model_cover_margin'
+          assert s['calibration']['C'] == 1.0
+          assert s['calibration']['scale'] == 7.0
+          assert s['calibration']['min_n'] == 256
+          assert s['calibration']['positive_slope_required'] is True
+          prereg=open('docs/task05g_spread_confidence_v3_preregistration.md','rb').read()
+          assert s['preregistration']['sha256'] == hashlib.sha256(prereg).hexdigest()
+          df=pl.read_parquet('artifacts/task05g_v3/run_a/v3_candidate_table.parquet')
+          assert set(int(x) for x in df['season'].unique().to_list()) == {2020,2021,2022,2023,2024}
+          assert 2025 not in set(int(x) for x in df['season'].unique().to_list())
+          PY
+
+      - name: Upload V3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-spread-confidence-v3-${{ github.sha }}
+          path: |
+            artifacts/task05g_v3/run_a/scorecard.json
+            artifacts/task05g_v3/run_a/spread_calibration_state_by_block.ndjson
+            artifacts/task05g_v3/run_a/v3_candidate_table.parquet
+            artifacts/task05g_v3/v2/scorecard.json
+            artifacts/task05g_v3/upstream/scorecard.json
+          if-no-files-found: error
