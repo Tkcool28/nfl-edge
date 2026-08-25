@@ -1,0 +1,82 @@
+name: Task05G ML Edge Decay Audit
+
+on:
+  pull_request:
+    branches:
+      - audit/task05g-stage-provenance-v1
+    paths:
+      - 'scripts/task05g_ml_edge_decay_audit.py'
+      - '.github/workflows/task05g-ml-edge-decay-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ml-edge-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+      - name: Enforce diagnostic-only frozen scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=19d7ab2d9f0270b05e44a80b1dee35cfc9436833
+          git cat-file -e "$BASE^{commit}"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/ml_audit_paths.txt
+          if grep -E '^(src/nfl_edge/value/|src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/recommendation/policy.py|data/|reports/task05e_remediated/)' /tmp/ml_audit_paths.txt; then
+            echo 'ERROR: ML audit changed frozen model/evaluator/policy/data scope.' >&2
+            exit 1
+          fi
+      - name: Compile audit
+        run: python -m py_compile scripts/task05g_ml_edge_decay_audit.py
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_ml_audit/upstream
+      - name: Verify 2025 firewall
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_ml_audit/upstream/historical_evaluator_board.parquet')
+          assert set(int(x) for x in board['season'].unique().to_list()) == {2020,2021,2022,2023,2024}
+          PY
+      - name: Reproduce frozen failed-confirmation V2 candidate table
+        run: |
+          python scripts/task05g_model_confidence_v2_entrypoint.py --root . --board artifacts/task05g_ml_audit/upstream/historical_evaluator_board.parquet --out artifacts/task05g_ml_audit/v2
+      - name: Run ML audit twice
+        run: |
+          python scripts/task05g_ml_edge_decay_audit.py --root . --candidate-table artifacts/task05g_ml_audit/v2/v2_candidate_table.parquet --out artifacts/task05g_ml_audit/run_a/ml_edge_decay_audit.json
+          python scripts/task05g_ml_edge_decay_audit.py --root . --candidate-table artifacts/task05g_ml_audit/v2/v2_candidate_table.parquet --out artifacts/task05g_ml_audit/run_b/ml_edge_decay_audit.json
+      - name: Prove deterministic replay
+        run: cmp artifacts/task05g_ml_audit/run_a/ml_edge_decay_audit.json artifacts/task05g_ml_audit/run_b/ml_edge_decay_audit.json
+      - name: Validate audit invariants
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('artifacts/task05g_ml_audit/run_a/ml_edge_decay_audit.json'))
+          assert d['development_seasons'] == [2020,2021,2022]
+          assert d['confirmation_seasons'] == [2023,2024]
+          assert d['sealed_seasons'] == [2025]
+          assert d['candidate_provenance_counts']['all_ml'] > 0
+          assert d['candidate_provenance_counts']['value_eligible'] > 0
+          PY
+      - name: Upload ML audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-ml-edge-decay-${{ github.sha }}
+          path: |
+            artifacts/task05g_ml_audit/run_a/ml_edge_decay_audit.json
+            artifacts/task05g_ml_audit/v2/scorecard.json
+            artifacts/task05g_ml_audit/v2/v2_candidate_table.parquet
+          if-no-files-found: error
