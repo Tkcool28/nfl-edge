@@ -1,5 +1,6 @@
 name: Task05G Value Spread Pareto Frontier V1
 
+# Workflow-only registration nudge; preregistration and selector logic unchanged.
 on:
   pull_request:
     branches:
