@@ -223,7 +223,8 @@ def test_ml_amber_singleton_without_spread_passes():
 
 
 def test_ml_red_is_barred_but_spread_can_remain_eligible():
-    state = ValueSelectorState(ml_observations=losing_state(8))
+    # At n=8 and data_trust=0, frozen trust is exactly .25; RED is strictly <.25.
+    state = ValueSelectorState(ml_observations=losing_state(9))
     assert family_trust(state.ml_observations).state == "RED"
     ml = row("m1|ml|away", q=0.70, break_even=0.50)
     assert select_value([ml], state) == NO_VALUE_PLAY
