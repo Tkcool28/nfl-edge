@@ -343,8 +343,8 @@ def run(root: Path, candidates_path: Path, out: Path, prereg: Path) -> None:
     v3 = _apply_v3(rows, margins, state_map)
 
     # V1 comparators use frozen original selectors on the same candidate board.
-    v1_hhr_dev = core._v1_selections(v3, DEV, core.select_hit_rate)
-    v1_bal_dev = core._v1_selections(v3, DEV, core.select_balanced)
+    v1_hhr_dev = core._v1_selections(v3, DEV, core._legacy_v1_select_hit_rate)
+    v1_bal_dev = core._v1_selections(v3, DEV, core._legacy_v1_select_balanced)
 
     hhr_dev = _select_phase(core, v3, DEV, core._select_hhr)
     hhr_dev_summary = _selector_summary(core, v3, DEV, hhr_dev, core._hhr_eligible)
