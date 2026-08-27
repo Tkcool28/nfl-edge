@@ -1,0 +1,45 @@
+version: task05g_hhr_staking_audit_v1
+status: PREREGISTERED_BEFORE_2020_2024_REPLAY
+scope: HHR_STAKING_ONLY
+selector_dependency: task05g_final_selectors_v1
+selector_changes_allowed: false
+selector_price_or_ev_objective_changes_allowed: false
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_not_run: [2025]
+
+principles:
+  - HHR selection is already frozen and is not modified here.
+  - Every selected supported HHR headline receives positive units.
+  - HHR staking does not require VALUE or positive EV.
+  - Exact price can haircut stake only after selection; it cannot change the selected HHR wager.
+  - HHR current-offer action never becomes NO, LEAN, PASS, or zero units solely because of price/EV.
+  - A heavily juiced warning is informational and does not suppress the wager.
+
+confidence_base_units:
+  model_confidence_probability_gte_0_70: 1.25
+  model_confidence_probability_gte_0_65: 1.00
+  model_confidence_probability_gte_0_60: 0.75
+  model_confidence_probability_gte_hhr_selector_floor: 0.50
+
+price_pressure:
+  definition: break_even_probability_minus_model_confidence_probability
+  units: probability_points
+  haircut:
+    pressure_lte_0_00: 0.00
+    pressure_gt_0_00_lte_0_04: 0.25
+    pressure_gt_0_04_lte_0_08: 0.50
+    pressure_gt_0_08_lte_0_10: 0.75
+    pressure_gt_0_10: force_floor
+
+minimum_hhr_units: 0.25
+heavily_juiced_warning_pressure_gte: 0.08
+warning_label: HEAVILY_JUICED
+
+prohibited:
+  - change_hhr_selector
+  - use_expected_value_to_choose_hhr
+  - use_price_status_to_choose_hhr
+  - substitute_another_hhr_candidate_because_of_price
+  - zero_unit_selected_hhr
+  - open_or_run_2025
+  - tune_thresholds_from_replay_profit
