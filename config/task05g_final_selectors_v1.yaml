@@ -9,7 +9,9 @@ totals_headline_eligible: false
 
 evidence_contract:
   actionable_books: [draftkings, fanduel]
-  reliability_allowed: [HIGH, MEDIUM]
+  task05f_supported_required: true
+  additional_reliability_eligibility_gate: false
+  reliability_usage: ranking_tiebreak_only
   minimum_model_confidence_support_n: 256
   exact_offer_required: true
   model_confidence_probability: required
