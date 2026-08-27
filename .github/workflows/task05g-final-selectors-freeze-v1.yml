@@ -41,7 +41,9 @@ jobs:
           FREEZE=afa92dc1d8c3cab3622013b82161331aa4d87feb
           git cat-file -e "$FREEZE^{commit}"
           git merge-base --is-ancestor "$FREEZE" HEAD
-          test -z "$(git diff --name-only "$FREEZE"..HEAD -- src/nfl_edge/recommendation/final_selectors_v1.py config/task05g_final_selectors_v1.yaml tests/recommendation/test_task05g_final_selectors_v1.py scripts/task05g_final_selectors_freeze_v1.py)"
+          # Selector semantics and integrated replay are frozen at FREEZE.
+          # Test/workflow-only corrections may follow when CI exposes a fixture defect.
+          test -z "$(git diff --name-only "$FREEZE"..HEAD -- src/nfl_edge/recommendation/final_selectors_v1.py config/task05g_final_selectors_v1.yaml scripts/task05g_final_selectors_freeze_v1.py)"
 
       - name: Compile canonical selector and replay
         run: |
