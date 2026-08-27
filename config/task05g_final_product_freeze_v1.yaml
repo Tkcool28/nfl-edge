@@ -66,13 +66,13 @@ headline_actionability:
     suppress_if_no_reachable_rescue: true
 
 user_facing_vocabulary:
-  primary_positive: BET
-  default_current_nonqualifying: NO
-  prohibited_primary_word: PLAY
-  hhr_secondary: Value at X or better
-  balanced_secondary: Playable through X
-  value_current_extension: Value through X
-  value_target_only: Value at X or better
+  primary_positive: "BET"
+  default_current_nonqualifying: "NO"
+  prohibited_primary_word: "PLAY"
+  hhr_secondary: "Value at X or better"
+  balanced_secondary: "Playable through X"
+  value_current_extension: "Value through X"
+  value_target_only: "Value at X or better"
 
 manual_and_default:
   default_non_headline_philosophy: BALANCED
