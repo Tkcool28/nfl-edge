@@ -133,11 +133,15 @@ units:
   selector_role_does_not_change_units: true
 
 risk_profiles:
+  naming_status: USER_APPROVED_FREEZE
+  performance_independence: risk_profile_changes_stake_size_only_and_does_not_change_pick_quality_model_confidence_or_expected_performance
   - {name: Cautious, unit_bankroll_pct: 0.005}
-  - {name: Steady, unit_bankroll_pct: 0.0075}
-  - {name: Balanced, unit_bankroll_pct: 0.0100}
-  - {name: Bold, unit_bankroll_pct: 0.0125}
-  - {name: High Gear, unit_bankroll_pct: 0.0150}
+  - {name: Conservative, unit_bankroll_pct: 0.0075}
+  - {name: Normal, unit_bankroll_pct: 0.0100}
+  - {name: Aggressive, unit_bankroll_pct: 0.0125}
+  - name: Ultra
+    unit_bankroll_pct: 0.0150
+    caution: "Ultra is the highest staking exposure setting. It does not imply higher expected performance, better picks, greater model confidence, or any increase in predictive edge."
 
 staking:
   formula: bankroll_times_profile_unit_pct_times_recommended_units
