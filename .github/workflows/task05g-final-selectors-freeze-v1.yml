@@ -38,11 +38,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          FREEZE=afa92dc1d8c3cab3622013b82161331aa4d87feb
+          FREEZE=f1611bd42475bf05c49188e07dfb494e5e1ce86e
           git cat-file -e "$FREEZE^{commit}"
           git merge-base --is-ancestor "$FREEZE" HEAD
           # Selector semantics and integrated replay are frozen at FREEZE.
-          # Test/workflow-only corrections may follow when CI exposes a fixture defect.
+          # Test/workflow/report-only corrections may follow for genuine defects.
           test -z "$(git diff --name-only "$FREEZE"..HEAD -- src/nfl_edge/recommendation/final_selectors_v1.py config/task05g_final_selectors_v1.yaml scripts/task05g_final_selectors_freeze_v1.py)"
 
       - name: Compile canonical selector and replay
