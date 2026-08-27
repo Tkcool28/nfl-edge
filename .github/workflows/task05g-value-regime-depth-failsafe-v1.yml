@@ -1,5 +1,6 @@
 name: Task05G Value Regime-Depth Fail-Safe V1
 
+# Workflow registration nudge only; preregistration and policy logic unchanged.
 on:
   pull_request:
     branches:
