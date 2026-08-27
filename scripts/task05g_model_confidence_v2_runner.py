@@ -9,6 +9,12 @@ Chronology:
 - 2020-2022: selector development
 - 2023-2024: confirmation after the Balanced variant is frozen from development
 - 2025: sealed / prohibited
+
+Historical-reproduction note:
+The original V2 experiment compared itself with a pre-final Task05G V1 selector
+baseline. Those obsolete V1 baseline semantics are retained *locally in this
+historical runner only* so the experiment remains reproducible. They are not
+exported from ``nfl_edge.recommendation.policy`` and are not a production API.
 """
 from __future__ import annotations
 
@@ -25,12 +31,7 @@ import polars as pl
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss
 
-from nfl_edge.recommendation.policy import (
-    select_balanced,
-    select_hit_rate,
-    select_value,
-    shop_exact_offers,
-)
+from nfl_edge.recommendation.policy import shop_exact_offers
 
 CALIBRATION_SEASONS = {2018, 2019}
 DEVELOPMENT_SEASONS = {2020, 2021, 2022}
@@ -106,6 +107,140 @@ def _candidate_id(row: Mapping[str, Any]) -> str:
 
 def _settled(row: Mapping[str, Any]) -> bool:
     return str(row.get("settlement")) in {"WIN", "LOSS", "PUSH"}
+
+
+# ---------------------------------------------------------------------------
+# Historical V1 baseline snapshot — runner-local, non-production.
+# These functions intentionally preserve the obsolete pre-final comparison
+# semantics used by the preregistered V2 experiment. Do not import them into
+# recommendation production code.
+# ---------------------------------------------------------------------------
+
+def _legacy_status(row: Mapping[str, Any]) -> str:
+    return str(row.get("price_status") or "UNSUPPORTED").upper()
+
+
+def _legacy_reliability(row: Mapping[str, Any]) -> str:
+    return str(row.get("reliability") or "UNSUPPORTED").upper()
+
+
+def _legacy_common_eligible(row: Mapping[str, Any]) -> bool:
+    return (
+        bool(row.get("supported"))
+        and _legacy_reliability(row) in {"HIGH", "MEDIUM"}
+        and _legacy_status(row) not in {"PASS", "UNSUPPORTED"}
+        and str(row.get("sportsbook") or row.get("actionable_book") or "").lower() in {"draftkings", "fanduel"}
+    )
+
+
+def _legacy_odds_in(row: Mapping[str, Any], minimum: int, maximum: int) -> bool:
+    odds = row.get("american_odds")
+    if odds is None:
+        odds = row.get("actionable_price_american")
+    return odds is not None and minimum <= int(odds) <= maximum
+
+
+def _legacy_float(row: Mapping[str, Any], key: str) -> float | None:
+    value = row.get(key)
+    return None if value is None else float(value)
+
+
+def _legacy_status_rank(row: Mapping[str, Any]) -> int:
+    return {"VALUE": 2, "PLAYABLE": 1}.get(_legacy_status(row), 0)
+
+
+def _legacy_rel_rank(row: Mapping[str, Any]) -> int:
+    return {"HIGH": 2, "MEDIUM": 1}.get(_legacy_reliability(row), 0)
+
+
+def _legacy_num(value: float | None) -> float:
+    return float("-inf") if value is None else float(value)
+
+
+def _legacy_select(rows: Iterable[Mapping[str, Any]], eligible, key) -> Mapping[str, Any] | str:
+    candidates = [row for row in shop_exact_offers(rows) if eligible(row)]
+    return "NO_PLAY" if not candidates else sorted(candidates, key=key)[0]
+
+
+def _legacy_v1_select_hit_rate(rows: Iterable[Mapping[str, Any]]) -> Mapping[str, Any] | str:
+    def eligible(row: Mapping[str, Any]) -> bool:
+        q = _legacy_float(row, "actionable_probability")
+        return (
+            _legacy_common_eligible(row)
+            and _legacy_status(row) in {"VALUE", "PLAYABLE"}
+            and q is not None
+            and q >= 0.55
+            and _legacy_odds_in(row, -300, 200)
+        )
+    return _legacy_select(
+        rows,
+        eligible,
+        lambda row: (
+            -_legacy_num(_legacy_float(row, "actionable_probability")),
+            -_legacy_rel_rank(row),
+            -_legacy_status_rank(row),
+            -_legacy_num(_legacy_float(row, "expected_value")),
+            -int(row.get("american_odds") or -100000),
+            _candidate_id(row),
+        ),
+    )
+
+
+def _legacy_v1_select_balanced(rows: Iterable[Mapping[str, Any]]) -> Mapping[str, Any] | str:
+    def eligible(row: Mapping[str, Any]) -> bool:
+        q = _legacy_float(row, "actionable_probability")
+        ev = _legacy_float(row, "expected_value")
+        return (
+            _legacy_common_eligible(row)
+            and _legacy_status(row) in {"VALUE", "PLAYABLE"}
+            and q is not None
+            and q >= 0.50
+            and ev is not None
+            and ev >= -0.03
+            and _legacy_odds_in(row, -220, 200)
+        )
+    return _legacy_select(
+        rows,
+        eligible,
+        lambda row: (
+            -_legacy_status_rank(row),
+            -_legacy_rel_rank(row),
+            -_legacy_num(_legacy_float(row, "expected_value")),
+            -_legacy_num(_legacy_float(row, "actionable_probability")),
+            -_legacy_num(_legacy_float(row, "evaluated_edge_probability")),
+            _candidate_id(row),
+        ),
+    )
+
+
+def _legacy_v1_select_value(rows: Iterable[Mapping[str, Any]]) -> Mapping[str, Any] | str:
+    def eligible(row: Mapping[str, Any]) -> bool:
+        q = _legacy_float(row, "actionable_probability")
+        ev = _legacy_float(row, "expected_value")
+        support_n = row.get("support_n")
+        support_distance = _legacy_float(row, "support_distance")
+        uncertainty = _legacy_float(row, "uncertainty")
+        return (
+            _legacy_common_eligible(row)
+            and _legacy_status(row) == "VALUE"
+            and q is not None and q >= 0.35
+            and ev is not None and ev >= 0.02
+            and support_n is not None and int(support_n) >= 256
+            and support_distance is not None and support_distance <= 0.05
+            and uncertainty is not None and uncertainty <= 0.045
+            and _legacy_odds_in(row, -180, 250)
+        )
+    return _legacy_select(
+        rows,
+        eligible,
+        lambda row: (
+            -_legacy_num(_legacy_float(row, "expected_value")),
+            -_legacy_num(_legacy_float(row, "evaluated_edge_probability")),
+            -_legacy_rel_rank(row),
+            -_legacy_num(_legacy_float(row, "actionable_probability")),
+            _candidate_id(row),
+        ),
+    )
 
 
 def _scan_model_inputs(root: Path) -> pl.DataFrame:
@@ -708,16 +843,15 @@ def run(root: Path, board_path: Path, out: Path, prereg_path: Path) -> None:
         for state in states:
             f.write(json.dumps(state, sort_keys=True, allow_nan=False) + "\n")
 
-    # Baseline selections are materialized phase-by-phase on the identical board.
     v1_dev = {
-        "hhr": _v1_selections(board_rows, DEVELOPMENT_SEASONS, select_hit_rate),
-        "balanced": _v1_selections(board_rows, DEVELOPMENT_SEASONS, select_balanced),
-        "value": _v1_selections(board_rows, DEVELOPMENT_SEASONS, select_value),
+        "hhr": _v1_selections(board_rows, DEVELOPMENT_SEASONS, _legacy_v1_select_hit_rate),
+        "balanced": _v1_selections(board_rows, DEVELOPMENT_SEASONS, _legacy_v1_select_balanced),
+        "value": _v1_selections(board_rows, DEVELOPMENT_SEASONS, _legacy_v1_select_value),
     }
     v1_conf = {
-        "hhr": _v1_selections(board_rows, CONFIRMATION_SEASONS, select_hit_rate),
-        "balanced": _v1_selections(board_rows, CONFIRMATION_SEASONS, select_balanced),
-        "value": _v1_selections(board_rows, CONFIRMATION_SEASONS, select_value),
+        "hhr": _v1_selections(board_rows, CONFIRMATION_SEASONS, _legacy_v1_select_hit_rate),
+        "balanced": _v1_selections(board_rows, CONFIRMATION_SEASONS, _legacy_v1_select_balanced),
+        "value": _v1_selections(board_rows, CONFIRMATION_SEASONS, _legacy_v1_select_value),
     }
 
     hhr_dev, _ = _select_phase(enriched, DEVELOPMENT_SEASONS, _select_hhr)
@@ -735,7 +869,6 @@ def run(root: Path, board_path: Path, out: Path, prereg_path: Path) -> None:
 
     balanced_decision = _pick_balanced_winner(balanced_dev_reports, len(v1_dev["balanced"]))
 
-    # Confirmation selector results are not computed until after the development decision above is frozen.
     hhr_conf, _ = _select_phase(enriched, CONFIRMATION_SEASONS, _select_hhr)
     value_conf, _ = _select_phase(enriched, CONFIRMATION_SEASONS, _select_value)
     hhr_conf_counts = _eligible_counts(enriched, CONFIRMATION_SEASONS, _hhr_eligible)
@@ -785,67 +918,25 @@ def run(root: Path, board_path: Path, out: Path, prereg_path: Path) -> None:
         confirmation["balanced_v2"] = _phase_report(enriched, CONFIRMATION_SEASONS, balanced_conf, balanced_conf_counts)
 
     verdict_parts = []
-    if hhr_guard != "PASS":
-        verdict_parts.append(hhr_guard)
-    if balanced_decision["status"] == "DEVELOPMENT_FAILURE":
-        verdict_parts.append("BALANCED_DEVELOPMENT_FAILURE")
-    if value_guard != "PASS":
-        verdict_parts.append(value_guard)
+    if hhr_guard != "PASS": verdict_parts.append(hhr_guard)
+    if balanced_decision["status"] == "DEVELOPMENT_FAILURE": verdict_parts.append("BALANCED_DEVELOPMENT_FAILURE")
+    if value_guard != "PASS": verdict_parts.append(value_guard)
     verdict = "V2_EXPERIMENT_VALIDATED" if not verdict_parts else "V2_EXPERIMENT_PARTIAL__" + "__".join(verdict_parts)
 
     score = {
         "verdict": verdict,
-        "preregistration": {
-            "commit": PREREG_COMMIT,
-            "blob": PREREG_BLOB,
-            "path": str(prereg_path),
-            "sha256": _sha256(prereg_path),
-        },
-        "periods": {
-            "calibration_warmup": sorted(CALIBRATION_SEASONS),
-            "selector_development": sorted(DEVELOPMENT_SEASONS),
-            "selector_confirmation": sorted(CONFIRMATION_SEASONS),
-            "sealed": [SEALED_SEASON],
-        },
-        "model_confidence": {
-            "ml_development_calibration": _ml_calibration_metrics(ml_calibration_rows, DEVELOPMENT_SEASONS),
-            "ml_confirmation_calibration": _ml_calibration_metrics(ml_calibration_rows, CONFIRMATION_SEASONS),
-            "states": len(states),
-        },
-        "development": {
-            "hhr_v2": dev_hhr_report,
-            "balanced_variants": balanced_dev_reports,
-            "value_v2": dev_value_report,
-            "hhr_v1": dev_v1_reports["hhr"],
-            "balanced_v1": dev_v1_reports["balanced"],
-            "value_v1": dev_v1_reports["value"],
-        },
+        "preregistration": {"commit": PREREG_COMMIT,"blob": PREREG_BLOB,"path": str(prereg_path),"sha256": _sha256(prereg_path)},
+        "periods": {"calibration_warmup": sorted(CALIBRATION_SEASONS),"selector_development": sorted(DEVELOPMENT_SEASONS),"selector_confirmation": sorted(CONFIRMATION_SEASONS),"sealed": [SEALED_SEASON]},
+        "model_confidence": {"ml_development_calibration": _ml_calibration_metrics(ml_calibration_rows, DEVELOPMENT_SEASONS),"ml_confirmation_calibration": _ml_calibration_metrics(ml_calibration_rows, CONFIRMATION_SEASONS),"states": len(states)},
+        "development": {"hhr_v2": dev_hhr_report,"balanced_variants": balanced_dev_reports,"value_v2": dev_value_report,"hhr_v1": dev_v1_reports["hhr"],"balanced_v1": dev_v1_reports["balanced"],"value_v1": dev_v1_reports["value"]},
         "balanced_decision": balanced_decision,
         "confirmation": confirmation,
-        "coverage_guardrails": {
-            "hhr": hhr_guard,
-            "hhr_floor_plays": hhr_floor,
-            "hhr_v1_development_plays": len(v1_dev["hhr"]),
-            "hhr_v2_development_plays": dev_hhr_report["play_blocks"],
-            "value": value_guard,
-            "value_v1_development_plays": len(v1_dev["value"]),
-            "value_v2_development_plays": dev_value_report["play_blocks"],
-            "value_v2_to_v1_coverage_ratio": value_ratio,
-        },
+        "coverage_guardrails": {"hhr": hhr_guard,"hhr_floor_plays": hhr_floor,"hhr_v1_development_plays": len(v1_dev["hhr"]),"hhr_v2_development_plays": dev_hhr_report["play_blocks"],"value": value_guard,"value_v1_development_plays": len(v1_dev["value"]),"value_v2_development_plays": dev_value_report["play_blocks"],"value_v2_to_v1_coverage_ratio": value_ratio},
         "totals_headline_eligible": False,
     }
     _json_write(out / "scorecard.json", score)
     (out / "scorecard.md").write_text(_markdown(score))
-    _json_write(
-        out / "manifest.json",
-        {
-            "scorecard_sha256": _sha256(out / "scorecard.json"),
-            "candidate_table_sha256": _sha256(out / "v2_candidate_table.parquet"),
-            "state_sha256": _sha256(out / "model_confidence_state_by_block.ndjson"),
-            "preregistration_sha256": _sha256(prereg_path),
-            "sealed_2025": True,
-        },
-    )
+    _json_write(out / "manifest.json", {"scorecard_sha256": _sha256(out / "scorecard.json"),"candidate_table_sha256": _sha256(out / "v2_candidate_table.parquet"),"state_sha256": _sha256(out / "model_confidence_state_by_block.ndjson"),"preregistration_sha256": _sha256(prereg_path),"sealed_2025": True})
     print(json.dumps(score, indent=2, sort_keys=True, allow_nan=False))
 
 

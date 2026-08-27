@@ -1,0 +1,161 @@
+status: TASK05G_FINAL_PRODUCT_FREEZE_2020_2024__2025_NOT_RUN
+freeze_scope: selectors_plus_headline_staking_plus_default_manual_product_contract
+semantic_changes_after_freeze_allowed: false
+
+sealed_boundary:
+  development_seasons: [2020, 2021, 2022, 2023, 2024]
+  not_opened_not_run: [2025]
+  statement: >
+    2025 was not opened, loaded, scored, replayed, or run for Task05G and remains sealed.
+
+canonical_files:
+  final_selectors_v1:
+    path: src/nfl_edge/recommendation/final_selectors_v1.py
+    git_blob_sha: 70985cef2f6d0792ef35364776528403346ec7d2
+  headline_staking_v1:
+    path: src/nfl_edge/recommendation/headline_staking_v1.py
+    git_blob_sha: 5fbc6b688fd939b751f9cefeab9538a8f1159898
+  staking_v1:
+    path: src/nfl_edge/recommendation/staking_v1.py
+    git_blob_sha: eefb5d2585b129c9679b12c5fea1a6c3bdbce88a
+  default_manual_product_policy_v1:
+    path: src/nfl_edge/recommendation/product_policy_v1.py
+    git_blob_sha: 3d0fecc78f5e4a5c8d64cbd473e3513aa18e4441
+  shared_policy_helpers_only:
+    path: src/nfl_edge/recommendation/policy.py
+    git_blob_sha: d72cea40119425ca9c877428654bb52c34799bc5
+  product_output_contract_v1:
+    path: docs/task05g_product_output_contract_v1.md
+
+legacy_policy_quarantine:
+  remediated_after_cold_review: true
+  policy_module_role: shared_exact_offer_helpers_and_compatibility_evaluator_adapter_only
+  competing_selectors_exposed: false
+  competing_staking_exposed: false
+  old_risk_profiles_exposed: false
+  evaluate_policy_offer_delegates_to_canonical_staking_v1: true
+  package_top_level_exports_canonical_v1: true
+  regression_test: tests/recommendation/test_task05g_policy_legacy_quarantine_v1.py
+  historical_v1_baselines:
+    production_api: false
+    model_confidence_v2_runner_local_snapshot: scripts/task05g_model_confidence_v2_runner.py
+    spread_confidence_v3_uses_runner_local_snapshot: true
+    purpose: historical_preregistered_reproduction_only
+
+selector_contract:
+  hhr:
+    protocol: HALF_SHRINK
+    minimum_q: 0.55
+    odds: [-300, 200]
+    selection_uses_price_economics: false
+    market_half_trust: true
+  balanced:
+    protocol: MARKET_HALF_ONLY
+    minimum_q: 0.52
+    odds: [-220, 200]
+    strict_ev_required: false
+    market_half_trust: true
+  value:
+    strict_positive_ev_required: true
+    odds: [-180, 250]
+    totals_allowed: false
+    frozen_validated_families_only: true
+
+headline_actionability:
+  hhr:
+    selected_card_always_positive_bet: true
+    minimum_units: 0.25
+    heavily_juiced_warning_price_pressure_pp: 8.0
+    price_may_change_selection: false
+    secondary_wording: VALUE_AT
+  balanced:
+    selected_card_always_positive_bet: true
+    minimum_units: 0.75
+    playable_through_units: 0.50
+    secondary_wording: PLAYABLE_THROUGH
+  value:
+    current_positive_units_preserved: true
+    zero_unit_headline_allowed: false
+    target_only_rescue_allowed: true
+    target_only_wording: VALUE_AT
+    required_break_even_improvement_pp: 1.0
+    maximum_break_even_improvement_pp: 1.5
+    rescue_units: 0.50
+    suppress_if_no_reachable_rescue: true
+
+user_facing_vocabulary:
+  primary_positive: "BET"
+  default_current_nonqualifying: "NO"
+  prohibited_primary_word: "PLAY"
+  hhr_secondary: "Value at X or better"
+  balanced_secondary: "Playable through X"
+  value_current_extension: "Value through X"
+  value_target_only: "Value at X or better"
+
+manual_and_default:
+  default_non_headline_philosophy: BALANCED
+  manual_exact_offer_methodology_same_as_sourced: true
+  preserve_manual_source_as_provenance_only: true
+  synthetic_spread_total_line_conversion_prohibited: true
+  different_line_requires_exact_reevaluation: true
+
+risk_profiles:
+  Cautious: 0.0050
+  Conservative: 0.0075
+  Normal: 0.0100
+  Aggressive: 0.0125
+  Ultra: 0.0150
+ultra_caution: >
+  Ultra is the highest staking exposure setting. It does not imply higher expected
+  performance, better picks, greater model confidence, or any increase in predictive edge.
+
+stake_controls:
+  minimum_dollar_stake: 0.50
+  rounding_quantum_dollars: 0.50
+  per_wager_bankroll_cap_pct: 0.025
+  slate_bankroll_cap_pct: 0.10
+  duplicate_exact_offer_stakes_additive: false
+  duplicate_exact_offer_resolution: max_recommended_units
+  kelly_prohibited: true
+
+canonical_validation:
+  evidence_code_head: c4533845d815d2481c305b1fdc82693bcf31662f
+  freeze_integrity_run: 33119361164
+  workflow_run: 33119361132
+  workflow_name: Task05G Canonical Product Replay V1
+  artifact_id: 9665847701
+  artifact_digest: sha256:7c14dd19e6cc98cc5559871a68c2b77d091979feaa88efe794bb78c2208a7316
+  product_regression_run: 33119361166
+  historical_reproduction:
+    model_confidence_v2: PASS
+    spread_confidence_v3: PASS
+  selector_counts:
+    hhr: 81
+    balanced: 88
+    value: 68
+  actionability:
+    hhr_current_bets: 81
+    balanced_current_bets: 88
+    value_current_bets: 40
+    value_target_only_cards: 28
+    value_suppressed_cards: 0
+    published_zero_action_cards: 0
+  follow_every_current_recommendation:
+    unique_wagers: 174
+    wins: 112
+    losses: 61
+    pushes: 1
+    nonpush_hit_rate: 0.6474
+    units_staked: 144.00
+    weighted_profit_units: 8.05
+  normal_1000_bankroll:
+    ending_bankroll: 1075.59
+    return_pct: 0.0756
+    max_drawdown_pct: 0.0869
+
+interpretation:
+  - Historical 2020-24 evidence is exposed development evidence, not promised forward performance.
+  - Do not retune selectors or staking from the final season-by-season outcomes.
+  - Balanced coverage is not forced every week; the selector may still return no card.
+  - Play Through is an execution range on a selected recommendation, not a second pool of bets.
+  - Legacy Task05G selector/risk/staking implementations are not exposed from policy.py.
