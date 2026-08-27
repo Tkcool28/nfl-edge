@@ -6,6 +6,7 @@ on:
       - 'src/nfl_edge/recommendation/final_selectors_v1.py'
       - 'config/task05g_final_selectors_v1.yaml'
       - 'tests/recommendation/test_task05g_final_selectors_v1.py'
+      - 'tests/recommendation/test_task05g_final_selector_freeze_regression.py'
       - 'scripts/task05g_final_selectors_freeze_v1.py'
       - 'docs/task05g_final_selector_freeze_v1.md'
       - 'reports/task05g/final_selector_freeze_v1_review.md'
@@ -52,7 +53,9 @@ jobs:
 
       - name: Run final-selector tests
         run: |
-          pytest -q tests/recommendation/test_task05g_final_selectors_v1.py
+          pytest -q \
+            tests/recommendation/test_task05g_final_selectors_v1.py \
+            tests/recommendation/test_task05g_final_selector_freeze_regression.py
 
       - name: Run frozen upstream focused tests
         run: |
@@ -110,7 +113,7 @@ jobs:
           cmp artifacts/task05g_final_selector_freeze/run_a/task05g_final_selectors_v1_rows.csv artifacts/task05g_final_selector_freeze/run_b/task05g_final_selectors_v1_rows.csv
           cmp artifacts/task05g_final_selector_freeze/run_a/task05g_final_selectors_v1_trust.csv artifacts/task05g_final_selector_freeze/run_b/task05g_final_selectors_v1_trust.csv
 
-      - name: Validate frozen selector invariants
+      - name: Validate frozen selector invariants and accepted replay identity
         run: |
           python - <<'PY'
           import json
@@ -121,6 +124,26 @@ jobs:
           for period in ('development','locked_diagnostic','overall'):
               for lane in ('hit_rate','balanced','value'):
                   assert s['periods'][period][lane]['market_mix']['total'] == 0
+
+          # Regression lock for the selector behavior explicitly accepted before
+          # canonical integration. These counts prevent accidental candidate-
+          # universe shrinkage from masquerading as a successful freeze.
+          overall=s['periods']['overall']
+          assert (overall['hit_rate']['plays'], overall['hit_rate']['wins'], overall['hit_rate']['losses'], overall['hit_rate']['pushes']) == (81,53,27,1)
+          assert (overall['balanced']['plays'], overall['balanced']['wins'], overall['balanced']['losses']) == (88,54,34)
+          assert (overall['value']['plays'], overall['value']['wins'], overall['value']['losses']) == (68,46,22)
+          assert overall['value']['market_mix'] == {'moneyline':31,'spread':37,'total':0}
+
+          # The contained 2023 Value season is a critical safety-regression
+          # identity: losing is allowed; returning to the catastrophic 15-play
+          # pre-safety card is not.
+          v23=s['by_season']['2023']['value']
+          assert (v23['plays'], v23['wins'], v23['losses']) == (7,3,4)
+
+          # 2020 must not silently disappear due to a redundant reliability gate.
+          assert s['by_season']['2020']['hit_rate']['plays'] == 9
+          assert s['by_season']['2020']['balanced']['plays'] == 12
+          assert s['by_season']['2020']['value']['plays'] == 10
           PY
 
       - name: Upload integrated freeze evidence
