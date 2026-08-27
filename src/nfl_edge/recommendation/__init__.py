@@ -10,11 +10,18 @@ from .policy import (
     dollar_stake,
     evaluate_policy_offer,
     recommended_units,
+    shop_exact_offers,
+)
+from .final_selectors_v1 import (
+    FamilyTrust,
+    TrustObservation,
+    ValueSelectorState,
+    advance_value_state,
+    family_trust,
     select_balanced,
     select_headlines,
     select_hit_rate,
     select_value,
-    shop_exact_offers,
 )
 
 __all__ = [
@@ -27,9 +34,14 @@ __all__ = [
     "dollar_stake",
     "evaluate_policy_offer",
     "recommended_units",
+    "shop_exact_offers",
+    "FamilyTrust",
+    "TrustObservation",
+    "ValueSelectorState",
+    "advance_value_state",
+    "family_trust",
     "select_balanced",
     "select_headlines",
     "select_hit_rate",
     "select_value",
-    "shop_exact_offers",
 ]
