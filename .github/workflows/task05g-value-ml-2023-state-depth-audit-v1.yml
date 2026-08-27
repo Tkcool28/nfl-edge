@@ -1,0 +1,138 @@
+name: Task05G Value ML 2023 State-Depth Audit V1
+
+on:
+  pull_request:
+    branches:
+      - feat/task05g-value-nongreen-singleton-failsafe-v1
+    paths:
+      - 'docs/task05g_value_ml_2023_state_depth_audit_v1_preregistration.md'
+      - 'scripts/task05g_value_ml_2023_state_depth_audit_v1.py'
+      - '.github/workflows/task05g-value-ml-2023-state-depth-audit-v1.yml'
+      - 'reports/task05g/value_ml_2023_state_depth_audit_v1_review.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ml-state-depth-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+
+      - name: Prove preregistration and bounded scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=d9cce094596374960633b336319e4278cd95669f
+          PREREG=e9257250dc937e360e60d14473b062d65cbff6d5
+          git cat-file -e "$BASE^{commit}"
+          git cat-file -e "$PREREG^{commit}"
+          git merge-base --is-ancestor "$PREREG" HEAD
+          test -z "$(git diff --name-only "$PREREG"..HEAD -- docs/task05g_value_ml_2023_state_depth_audit_v1_preregistration.md)"
+          git diff --name-only "$BASE"...HEAD | tee /tmp/ml_audit_paths.txt
+          if grep -Ev '^(docs/task05g_value_ml_2023_state_depth_audit_v1_preregistration.md|scripts/task05g_value_ml_2023_state_depth_audit_v1.py|.github/workflows/task05g-value-ml-2023-state-depth-audit-v1.yml|reports/task05g/value_ml_2023_state_depth_audit_v1_review.md)$' /tmp/ml_audit_paths.txt | grep .; then
+            echo 'ERROR: ML audit changed out-of-scope files.' >&2
+            exit 1
+          fi
+
+      - name: Compile audit
+        run: python -m py_compile scripts/task05g_value_ml_2023_state_depth_audit_v1.py
+
+      - name: Run frozen focused tests
+        run: |
+          pytest -q \
+            tests/value/test_task05f_*.py \
+            tests/recommendation/test_task05g_policy.py \
+            tests/recommendation/test_task05g_remediation_v1.py \
+            tests/recommendation/test_task05g_model_confidence_v2.py
+
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_value_ml_state_depth/upstream
+
+      - name: Verify 2025 firewall
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_value_ml_state_depth/upstream/historical_evaluator_board.parquet')
+          discovery=pl.read_csv('reports/task05e_remediated/market_edge_discovery_corrected_ledger_v1.csv', infer_schema_length=10000)
+          confirmation=pl.read_csv('reports/task05e_remediated/market_edge_confirmation_corrected_ledger_v1.csv', infer_schema_length=10000)
+          b={int(x) for x in board['season'].unique().to_list()}
+          d={int(x) for x in discovery['season'].unique().to_list()}
+          c={int(x) for x in confirmation['season'].unique().to_list()}
+          assert b == {2020,2021,2022,2023,2024}
+          assert d == {2020,2021,2022}
+          assert c == {2023,2024}
+          assert 2025 not in b | d | c
+          PY
+
+      - name: Reproduce Model Confidence V2
+        run: |
+          python scripts/task05g_model_confidence_v2_entrypoint.py \
+            --root . \
+            --board artifacts/task05g_value_ml_state_depth/upstream/historical_evaluator_board.parquet \
+            --out artifacts/task05g_value_ml_state_depth/v2
+
+      - name: Reproduce Spread Confidence V3
+        run: |
+          python scripts/task05g_spread_confidence_v3_runner.py \
+            --root . \
+            --v2-candidates artifacts/task05g_value_ml_state_depth/v2/v2_candidate_table.parquet \
+            --out artifacts/task05g_value_ml_state_depth/v3
+
+      - name: Run ML audit twice
+        run: |
+          python scripts/task05g_value_ml_2023_state_depth_audit_v1.py \
+            --root . \
+            --v3-candidates artifacts/task05g_value_ml_state_depth/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_value_ml_state_depth/run_a
+          python scripts/task05g_value_ml_2023_state_depth_audit_v1.py \
+            --root . \
+            --v3-candidates artifacts/task05g_value_ml_state_depth/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_value_ml_state_depth/run_b
+
+      - name: Prove deterministic replay
+        run: |
+          cmp artifacts/task05g_value_ml_state_depth/run_a/task05g_value_ml_2023_state_depth_audit_v1_scorecard.json artifacts/task05g_value_ml_state_depth/run_b/task05g_value_ml_2023_state_depth_audit_v1_scorecard.json
+          cmp artifacts/task05g_value_ml_state_depth/run_a/task05g_value_ml_2023_state_depth_audit_v1_frontiers.csv artifacts/task05g_value_ml_state_depth/run_b/task05g_value_ml_2023_state_depth_audit_v1_frontiers.csv
+          cmp artifacts/task05g_value_ml_state_depth/run_a/task05g_value_ml_2023_state_depth_audit_v1_selected_ml.csv artifacts/task05g_value_ml_state_depth/run_b/task05g_value_ml_2023_state_depth_audit_v1_selected_ml.csv
+          cmp artifacts/task05g_value_ml_state_depth/run_a/task05g_value_ml_2023_state_depth_audit_v1_2023.csv artifacts/task05g_value_ml_state_depth/run_b/task05g_value_ml_2023_state_depth_audit_v1_2023.csv
+
+      - name: Validate frozen invariants
+        run: |
+          python - <<'PY'
+          import json
+          s=json.load(open('artifacts/task05g_value_ml_state_depth/run_a/task05g_value_ml_2023_state_depth_audit_v1_scorecard.json'))
+          assert s['preregistration_commit'] == 'e9257250dc937e360e60d14473b062d65cbff6d5'
+          assert s['sealed'] == [2025]
+          assert s['production_promotion_allowed'] is False
+          assert s['invariants']['no_2025'] is True
+          assert s['invariants']['no_selector_change'] is True
+          assert s['invariants']['selected_ml_headlines_unchanged_by_pr47_spread_failsafe'] is True
+          assert s['invariants']['selected_2023_ml_blocks'] == ['2023-04','2023-07','2023-08','2023-12']
+          PY
+
+      - name: Upload ML audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-value-ml-state-depth-audit-${{ github.sha }}
+          path: |
+            artifacts/task05g_value_ml_state_depth/run_a/
+            artifacts/task05g_value_ml_state_depth/v3/scorecard.json
+            artifacts/task05g_value_ml_state_depth/v2/scorecard.json
+            artifacts/task05g_value_ml_state_depth/upstream/scorecard.json
+          if-no-files-found: error
