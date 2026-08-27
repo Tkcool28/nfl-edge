@@ -21,8 +21,26 @@ canonical_files:
   default_manual_product_policy_v1:
     path: src/nfl_edge/recommendation/product_policy_v1.py
     git_blob_sha: 3d0fecc78f5e4a5c8d64cbd473e3513aa18e4441
+  shared_policy_helpers_only:
+    path: src/nfl_edge/recommendation/policy.py
+    git_blob_sha: d72cea40119425ca9c877428654bb52c34799bc5
   product_output_contract_v1:
     path: docs/task05g_product_output_contract_v1.md
+
+legacy_policy_quarantine:
+  remediated_after_cold_review: true
+  policy_module_role: shared_exact_offer_helpers_and_compatibility_evaluator_adapter_only
+  competing_selectors_exposed: false
+  competing_staking_exposed: false
+  old_risk_profiles_exposed: false
+  evaluate_policy_offer_delegates_to_canonical_staking_v1: true
+  package_top_level_exports_canonical_v1: true
+  regression_test: tests/recommendation/test_task05g_policy_legacy_quarantine_v1.py
+  historical_v1_baselines:
+    production_api: false
+    model_confidence_v2_runner_local_snapshot: scripts/task05g_model_confidence_v2_runner.py
+    spread_confidence_v3_uses_runner_local_snapshot: true
+    purpose: historical_preregistered_reproduction_only
 
 selector_contract:
   hhr:
@@ -101,12 +119,16 @@ stake_controls:
   kelly_prohibited: true
 
 canonical_validation:
-  evidence_code_head: 03de639cf4c11f1db1df8e6cfef0a498746007bb
-  workflow_run: 33108088399
+  evidence_code_head: c4533845d815d2481c305b1fdc82693bcf31662f
+  freeze_integrity_run: 33119361164
+  workflow_run: 33119361132
   workflow_name: Task05G Canonical Product Replay V1
-  artifact_id: 9661355282
-  artifact_digest: sha256:e44b2c1b9ca987200958bebb27e87199dea916fe481eb0bbc8ec6eedfe8b83ef
-  legacy_product_regression_run: 33108088294
+  artifact_id: 9665847701
+  artifact_digest: sha256:7c14dd19e6cc98cc5559871a68c2b77d091979feaa88efe794bb78c2208a7316
+  product_regression_run: 33119361166
+  historical_reproduction:
+    model_confidence_v2: PASS
+    spread_confidence_v3: PASS
   selector_counts:
     hhr: 81
     balanced: 88
@@ -136,3 +158,4 @@ interpretation:
   - Do not retune selectors or staking from the final season-by-season outcomes.
   - Balanced coverage is not forced every week; the selector may still return no card.
   - Play Through is an execution range on a selected recommendation, not a second pool of bets.
+  - Legacy Task05G selector/risk/staking implementations are not exposed from policy.py.
