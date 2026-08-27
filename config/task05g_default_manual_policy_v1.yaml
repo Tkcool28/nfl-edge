@@ -5,7 +5,7 @@ development_seasons: [2020, 2021, 2022, 2023, 2024]
 sealed_not_run: [2025]
 
 default_non_headline_policy:
-  philosophy: BALANCED
+  philosophy: "BALANCED"
   scope:
     - game_detail
     - full_board_market_click
@@ -15,16 +15,16 @@ default_non_headline_policy:
   staking_engine: canonical_staking_v1
 
 primary_wording:
-  actionable_current_offer: BET
-  non_actionable_current_offer: NO
+  actionable_current_offer: "BET"
+  non_actionable_current_offer: "NO"
   no_is_current_offer_verdict_not_team_or_game_judgment: true
 
 secondary_wording:
   current_offer_actionable:
-    label: PLAYABLE_THROUGH
+    label: "PLAYABLE_THROUGH"
     display_meaning: reduced_stake_extension_for_same_selected_wager
   current_offer_not_actionable:
-    label: BET_AT
+    label: "BET_AT"
     display_meaning: first_exact_price_where_positive_recommended_stake_qualifies
     suffix: or_better
 
@@ -49,17 +49,17 @@ alternate_offer_rules:
 
 headline_price_language:
   hit_rate:
-    current_primary_word: BET
-    extension_label: VALUE_AT
+    current_primary_word: "BET"
+    extension_label: "VALUE_AT"
     extension_must_be_strict_positive_ev: true
     ordinary_playable_through_label: false
   balanced:
-    current_primary_word: BET
-    extension_label: PLAYABLE_THROUGH
+    current_primary_word: "BET"
+    extension_label: "PLAYABLE_THROUGH"
     extension_uses_reduced_stake: true
   value:
-    current_primary_word: BET
-    extension_label: VALUE_THROUGH
+    current_primary_word: "BET"
+    extension_label: "VALUE_THROUGH"
     extension_must_remain_strict_positive_ev: true
     negative_ev_playable_through: false
 
