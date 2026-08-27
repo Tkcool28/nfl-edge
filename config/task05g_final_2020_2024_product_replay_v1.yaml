@@ -1,0 +1,25 @@
+status: PREREGISTERED_BEFORE_2020_2024_REPLAY
+purpose: final exposed-development product replay after corrected HHR staking V2
+seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_not_run: [2025]
+selector_changes_allowed: false
+hhr_staking:
+  implementation: hhr_staking_audit_v2
+  confidence_input: selector_trust
+  minimum_units: 0.25
+  heavily_juiced_warning_pressure_gte: 0.08
+balanced_staking:
+  implementation: canonical_staking_v1
+value_staking:
+  implementation: canonical_staking_v1
+follow_every_recommended_headline:
+  definition: every positive-unit HHR, Balanced, and Value headline each block
+  exact_offer_deduplication: true
+  duplicate_unit_resolution: maximum_recommended_units_across_lanes
+  no_duplicate_stake_addition: true
+  slate_cap: canonical
+bankroll_starts: [100.0, 250.0, 500.0, 1000.0, 2500.0]
+risk_profiles: [Cautious, Conservative, Normal, Aggressive, Ultra]
+notes:
+  - Results are exposed 2020-24 development evidence, not forward expected performance.
+  - No thresholds or staking bands may be tuned from this replay.
