@@ -280,6 +280,7 @@ def run(v3_path: Path, discovery: Path, confirmation: Path, out: Path) -> None:
             if row is None:
                 continue
             material = dict(row)
+            material["candidate_id"] = cid(row)
             material["lane"] = lane
             material["block"] = block
             material["offer_key"] = offer_key(row)
@@ -287,6 +288,7 @@ def run(v3_path: Path, discovery: Path, confirmation: Path, out: Path) -> None:
             headline_rows.append(material)
         for row in shop_exact_offers(block_rows):
             material = dict(row)
+            material["candidate_id"] = cid(row)
             material["block"] = block
             material["offer_key"] = offer_key(row)
             shopped_rows.append(material)
