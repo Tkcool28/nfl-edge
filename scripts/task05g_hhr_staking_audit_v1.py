@@ -2,13 +2,19 @@
 from __future__ import annotations
 import argparse, json
 from collections import Counter, defaultdict
+from decimal import Decimal, ROUND_FLOOR
 from pathlib import Path
 import polars as pl
 from nfl_edge.recommendation.final_selectors_v1 import select_hit_rate
 from nfl_edge.recommendation.policy import NO_HIT_RATE_PLAY
 from nfl_edge.recommendation.remediation_provenance_v1 import build_candidate_registry, enrich_board_rows
 from nfl_edge.recommendation.hhr_staking_audit_v1 import hhr_stake
-from nfl_edge.recommendation.staking_v1 import dollar_stake
+from nfl_edge.recommendation.staking_v1 import (
+    MINIMUM_STAKE_DOLLARS,
+    PER_WAGER_BANKROLL_CAP_PCT,
+    ROUNDING_QUANTUM_DOLLARS,
+    risk_profile,
+)
 
 ALL={2020,2021,2022,2023,2024}; SEALED=2025
 
@@ -17,6 +23,18 @@ def key(block):
 
 def settle(r): return str(r.get('settlement') or '').upper()
 def ppu(r): return float(r.get('realized_profit') or 0.0)
+
+def audit_dollar_stake(bankroll, profile, units):
+    """Mirror canonical dollar conversion while permitting the HHR-audit 0.25u floor."""
+    if float(units) not in {0.25,0.5,0.75,1.0,1.25,1.5}:
+        raise ValueError('unexpected HHR audit units')
+    b=Decimal(str(bankroll)); selected=risk_profile(profile)
+    raw=b*Decimal(str(selected.unit_bankroll_pct))*Decimal(str(float(units)))
+    cap=b*Decimal(str(PER_WAGER_BANKROLL_CAP_PCT))
+    bounded=min(raw,cap); q=Decimal(str(ROUNDING_QUANTUM_DOLLARS))
+    rounded=(bounded/q).to_integral_value(rounding=ROUND_FLOOR)*q
+    if rounded < Decimal(str(MINIMUM_STAKE_DOLLARS)): return 0.0
+    return float(rounded)
 
 def run(v3, discovery, confirmation, out):
     rows=pl.read_parquet(v3).to_dicts()
@@ -46,7 +64,7 @@ def run(v3, discovery, confirmation, out):
     for profile in ['Cautious','Conservative','Normal','Aggressive','Ultra']:
         bank=1000.0; peak=bank; maxdd=0.0; staked=0.0; profit=0.0
         for r in picks:
-            stake=dollar_stake(bank,profile,float(r['hhr_units']))
+            stake=audit_dollar_stake(bank,profile,float(r['hhr_units']))
             pnl=stake*ppu(r); bank+=pnl; staked+=stake; profit+=pnl; peak=max(peak,bank); maxdd=max(maxdd,(peak-bank)/peak if peak else 0.0)
         profiles.append({'profile':profile,'ending_bankroll':bank,'profit':profit,'total_staked':staked,'max_drawdown_pct':maxdd})
     score={'version':'task05g_hhr_staking_audit_v1','seasons':sorted(ALL),'sealed_not_run':[SEALED],'hhr_selected_count':len(picks),'unit_distribution':dist,'heavily_juiced_count':len(warnings),'heavily_juiced_rate':len(warnings)/len(picks) if picks else None,'pressure_min':min(float(r['hhr_price_pressure']) for r in picks),'pressure_median':float(pl.Series([float(r['hhr_price_pressure']) for r in picks]).median()),'pressure_max':max(float(r['hhr_price_pressure']) for r in picks),'by_units':by_units,'profiles':profiles,'invariants':{'all_selected_hhr_positive_units':all(float(r['hhr_units'])>0 for r in picks),'selector_result_count_matches_frozen_hhr':len(picks)==81,'no_2025':True}}
