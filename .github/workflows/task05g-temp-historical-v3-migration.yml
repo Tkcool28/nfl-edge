@@ -1,7 +1,9 @@
 name: Task05G One-Shot Historical V3 Migration
 
 on:
-  pull_request:
+  push:
+    branches:
+      - feat/task05g-headline-staking-integration-v1
     paths:
       - '.github/workflows/task05g-temp-historical-v3-migration.yml'
 
