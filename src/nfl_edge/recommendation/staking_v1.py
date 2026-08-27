@@ -159,6 +159,27 @@ def cap_slate_stakes(bankroll: float, proposed: Sequence[tuple[str, float]]) -> 
     return output
 
 
+def _presentation_action(row: Mapping[str, Any], units: float) -> tuple[str, str]:
+    """Return an unambiguous user action plus deterministic reason code."""
+    if not bool(_field(row, "supported", default=False)) or _reliability(row) == "UNSUPPORTED":
+        return "UNSUPPORTED", "UNSUPPORTED_EVIDENCE"
+
+    reliability = _reliability(row)
+    status = _status(row)
+    if units <= 0.0:
+        if reliability not in ALLOWED_STAKING_RELIABILITY:
+            return "INFORMATIONAL_NO_STAKE", "RELIABILITY_INFORMATIONAL_ONLY"
+        if status in {"LEAN", "PASS"}:
+            return "NO_RECOMMENDED_STAKE_AT_CURRENT_PRICE", "CURRENT_PRICE_OUTSIDE_ACTIONABLE_CORRIDOR"
+        return "INFORMATIONAL_NO_STAKE", "ZERO_UNITS_BY_FROZEN_STAKING_POLICY"
+
+    if status == "VALUE":
+        return "BET_VALUE", "STRICT_POSITIVE_VALUE"
+    if status == "PLAYABLE":
+        return "BET_PLAYABLE", "PLAY_THROUGH_BOUNDED_ACTION"
+    return "INFORMATIONAL_NO_STAKE", "ZERO_UNITS_BY_FROZEN_STAKING_POLICY"
+
+
 def user_wager_view(
     row: Mapping[str, Any],
     *,
@@ -171,14 +192,7 @@ def user_wager_view(
     units = recommended_units(row)
     stake = dollar_stake(bankroll, selected_profile, units)
     status = _status(row)
-    if status == "VALUE":
-        action = "BET_VALUE"
-    elif status == "PLAYABLE":
-        action = "BET_PLAYABLE"
-    elif status in {"LEAN", "PASS"}:
-        action = "NO_RECOMMENDED_STAKE_AT_CURRENT_PRICE"
-    else:
-        action = "UNSUPPORTED"
+    action, action_reason = _presentation_action(row, units)
 
     return {
         "lane": lane,
@@ -194,6 +208,8 @@ def user_wager_view(
         "strict_value": status == "VALUE",
         "playable": status == "PLAYABLE",
         "action": action,
+        "action_reason": action_reason,
+        "model_confidence_probability": _float(row, "model_confidence_probability"),
         "actionable_probability": _float(row, "actionable_probability"),
         "break_even_probability": _float(row, "break_even_probability"),
         "expected_value": _float(row, "expected_value"),
