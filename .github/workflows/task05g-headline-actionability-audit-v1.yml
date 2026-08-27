@@ -1,0 +1,66 @@
+name: Task05G Headline Actionability Audit V1
+
+on:
+  pull_request:
+    paths:
+      - 'config/task05g_headline_actionability_audit_v1.yaml'
+      - 'scripts/task05g_headline_actionability_audit_v1.py'
+      - '.github/workflows/task05g-headline-actionability-audit-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11', cache: pip}
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml
+      - name: Verify preregistration and 2025 firewall
+        run: |
+          python - <<'PY'
+          import yaml
+          c=yaml.safe_load(open('config/task05g_headline_actionability_audit_v1.yaml'))
+          assert c['status']=='PREREGISTERED_BEFORE_2020_2024_REPLAY'
+          assert c['selector_changes_allowed'] is False
+          assert c['balanced']['minimum_headline_units']==0.75
+          assert c['value']['low_reliability_zero_unit_rescue']['required_break_even_improvement_pp']==1.0
+          assert c['value']['low_reliability_zero_unit_rescue']['maximum_break_even_improvement_pp']==1.5
+          assert c['sealed_not_run']==[2025]
+          PY
+          python -m py_compile scripts/task05g_headline_actionability_audit_v1.py
+      - name: Reproduce frozen upstream board
+        run: |
+          python scripts/task05f_evaluator_final_runner.py --out artifacts/action/upstream
+          python - <<'PY'
+          import polars as pl
+          b=pl.read_parquet('artifacts/action/upstream/historical_evaluator_board.parquet')
+          assert {int(x) for x in b['season'].unique().to_list()}=={2020,2021,2022,2023,2024}
+          assert 2025 not in {int(x) for x in b['season'].unique().to_list()}
+          PY
+          python scripts/task05g_model_confidence_v2_entrypoint.py --root . --board artifacts/action/upstream/historical_evaluator_board.parquet --out artifacts/action/v2
+          python scripts/task05g_spread_confidence_v3_runner.py --root . --v2-candidates artifacts/action/v2/v2_candidate_table.parquet --out artifacts/action/v3
+      - name: Run actionability replay twice
+        run: |
+          python scripts/task05g_headline_actionability_audit_v1.py --v3-candidates artifacts/action/v3/v3_candidate_table.parquet --out artifacts/action/run_a
+          python scripts/task05g_headline_actionability_audit_v1.py --v3-candidates artifacts/action/v3/v3_candidate_table.parquet --out artifacts/action/run_b
+          cmp artifacts/action/run_a/scorecard.json artifacts/action/run_b/scorecard.json
+          cmp artifacts/action/run_a/headline_actionability_rows.csv artifacts/action/run_b/headline_actionability_rows.csv
+          python - <<'PY'
+          import json
+          s=json.load(open('artifacts/action/run_a/scorecard.json'))
+          assert all(s['invariants'].values()),s['invariants']
+          assert s['selector_counts']=={'hit_rate':81,'balanced':88,'value':68}
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: task05g-headline-actionability-${{ github.sha }}
+          path: artifacts/action/run_a/
+          if-no-files-found: error
