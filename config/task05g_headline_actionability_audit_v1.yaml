@@ -1,0 +1,27 @@
+status: PREREGISTERED_BEFORE_2020_2024_REPLAY
+purpose: >
+  Test headline-card actionability only. Frozen HHR/Balanced/Value selectors are unchanged.
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_not_run: [2025]
+selector_changes_allowed: false
+hhr:
+  policy: corrected_hhr_staking_v2
+  selected_headline_must_have_positive_units: true
+balanced:
+  selected_headline_must_have_positive_units: true
+  minimum_headline_units: 0.75
+  preserve_larger_generic_units: true
+  playable_through_units: 0.50
+value:
+  normal_positive_unit_headlines_unchanged: true
+  low_reliability_zero_unit_rescue:
+    required_break_even_improvement_pp: 1.0
+    maximum_break_even_improvement_pp: 1.5
+    rescued_units: 0.50
+    same_market_side_and_line_only: true
+  suppress_headline_if_no_reachable_rescue: true
+prohibitions:
+  - do_not_change_selectors
+  - do_not_open_2025
+  - do_not_tune_thresholds_from_outcomes
+  - do_not_synthesize_alternate_spread_or_total_lines
