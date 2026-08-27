@@ -1,0 +1,147 @@
+version: task05g_final_selectors_v1
+status: FINAL_DEVELOPMENT_SELECTOR_FREEZE_2025_SEALED
+source_module: src/nfl_edge/recommendation/final_selectors_v1.py
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_seasons: [2025]
+headline_markets: [moneyline, spread]
+totals_headline_eligible: false
+
+evidence_contract:
+  actionable_books: [draftkings, fanduel]
+  reliability_allowed: [HIGH, MEDIUM]
+  minimum_model_confidence_support_n: 256
+  exact_offer_required: true
+  model_confidence_probability: required
+  break_even_probability: required
+
+hit_rate:
+  protocol: HALF_SHRINK
+  no_play: NO_HIT_RATE_PLAY
+  minimum_model_confidence_probability: 0.55
+  american_odds_band: [-300, 200]
+  moneyline_trust:
+    formula: model_q_minus_0_50_times_positive_excess_over_pinnacle
+    coefficient: 0.50
+  spread_trust: spread_confidence_v3_probability
+  ranking:
+    - selector_trust_desc
+    - model_confidence_probability_desc
+    - reliability_desc
+    - american_odds_desc
+    - candidate_id_asc
+  forbidden_objectives: [expected_value, price_status, model_price_gap]
+
+balanced:
+  protocol: MARKET_HALF_ONLY
+  no_play: NO_BALANCED_PLAY
+  minimum_model_confidence_probability: 0.52
+  american_odds_band: [-220, 200]
+  moneyline_trust:
+    formula: model_q_minus_0_50_times_positive_excess_over_pinnacle
+    coefficient: 0.50
+  spread_trust: spread_confidence_v3_probability
+  ranking:
+    - selector_trust_desc
+    - model_confidence_probability_desc
+    - reliability_desc
+    - american_odds_desc
+    - candidate_id_asc
+  forbidden_objectives: [expected_value, price_status, model_price_gap]
+
+value:
+  no_play: NO_VALUE_PLAY
+  strict_expected_value_gt: 0.0
+  price_status_required: VALUE
+  american_odds_band: [-180, 250]
+  exact_offer_required: true
+  totals_allowed: false
+  ml_regions:
+    - ML_DOG_VALUE_ZONE_AVG
+    - ML_DOG_VALUE_ZONE_CORROB
+    - ML_AVG_DISAGREEMENT_AVG_0_2
+  spread_regions:
+    - SPREAD_DISAGREEMENT_EXPECTED_MARGIN_0_4
+  family_candidate_requirements:
+    ml:
+      model_price_gap_gt: 0.0
+      evaluated_edge_probability_gt: 0.0
+    spread:
+      model_cover_margin_v3_gt: 0.0
+      evaluated_edge_probability_gt: 0.0
+  ml_frontier_ranking:
+    - model_price_gap_desc
+    - model_confidence_probability_desc
+    - evaluated_edge_probability_desc
+    - reliability_desc
+    - american_odds_desc
+    - candidate_id_asc
+  spread_frontier:
+    protocol: PARETO_MAXIMIN_V1
+    model_rank: model_cover_margin_v3_desc
+    economic_rank:
+      - evaluated_edge_probability_desc
+      - expected_value_desc
+    final_ranking:
+      - worst_of_model_and_economic_rank_asc
+      - rank_sum_asc
+      - model_rank_asc
+      - economic_rank_asc
+      - reliability_desc
+      - american_odds_desc
+      - candidate_id_asc
+
+causal_family_trust:
+  reset_trust: 0.50
+  pseudo_count: 8
+  amber_min_observations: 3
+  amber_trust_below: 0.50
+  red_min_observations: 8
+  red_trust_below: 0.25
+  ml_predicted_edge: model_confidence_probability_minus_break_even_probability
+  spread_predicted_edge: evaluated_edge_probability
+  realized_edge: binary_win_indicator_minus_break_even_probability
+  update_source: own_family_frontier_after_settlement
+  season_reset: true
+
+value_cross_market_policy:
+  ml_dynamic_edge: min(model_price_gap_times_ml_trust, evaluated_edge_probability)
+  spread_dynamic_edge: evaluated_edge_probability
+  green_or_cold:
+    action: compare_dynamic_edges
+  amber:
+    if_spread_frontier_exists: prefer_spread
+    otherwise: allow_ml_subject_to_ml_safety_valve
+  red:
+    ml_allowed: false
+    if_spread_frontier_exists: use_spread_subject_to_spread_safety_valve
+    otherwise: NO_VALUE_PLAY
+
+value_safety_valves:
+  spread:
+    rule: non_green_and_singleton_spread_frontier_to_pass
+    non_green_states: [AMBER, RED]
+    candidate_depth_equals: 1
+    backfill: false
+  ml:
+    rule: nonmature_singleton_ml_without_spread_to_pass
+    evidence_statuses: [COLD, AMBER]
+    candidate_depth_equals: 1
+    spread_frontier_must_be_absent: true
+    backfill: false
+  cold_definition: ml_observation_count_less_than_3
+  mature_green_definition: ml_observation_count_at_least_3_and_state_green
+
+cross_lane_invariants:
+  overlap_allowed: true
+  force_market_diversity: false
+  hit_rate_does_not_use_ev_or_status: true
+  balanced_does_not_use_ev_or_status: true
+  value_requires_strict_positive_ev: true
+  playable_never_counts_as_value: true
+  unrestricted_max_ev_forbidden: true
+  totals_forbidden: true
+
+holdout_firewall:
+  season_2025_must_not_enter_development_replay: true
+  no_further_selector_tuning_after_integrated_freeze_except_implementation_defect: true
