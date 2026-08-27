@@ -1,0 +1,111 @@
+version: task05g_staking_risk_policy_v1
+status: FINAL_DEVELOPMENT_FREEZE_2020_2024__2025_NOT_RUN
+selector_dependency: task05g_final_selectors_v1
+selector_semantics_mutable: false
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_not_run: [2025]
+
+play_through:
+  purpose: bounded_actionability_concession_not_value
+  statuses: [VALUE, PLAYABLE, LEAN, PASS, UNSUPPORTED]
+  strict_value_requires_ev_gt: 0.0
+  maximum_break_even_concession: 0.015
+  frozen_task05f_confidence_multiplier_applies: true
+  actual_concession: maximum_concession_times_reliability_uncertainty_confidence_multiplier
+  exact_offer_re_evaluation_required: true
+  stored_manual_exact_offer_parity_required: true
+  synthetic_line_price_conversion_may_approve_offer: false
+  unsupported_never_promoted: true
+  playable_never_counted_as_value: true
+
+recommended_units:
+  account_independent: true
+  selector_role_changes_units: false
+  ladder: [0.0, 0.5, 0.75, 1.0, 1.25, 1.5]
+  reliability_eligible_for_positive_units: [HIGH, MEDIUM]
+  low_reliability: informational_zero_units
+  unsupported: 0.0
+  lean: 0.0
+  pass: 0.0
+  playable:
+    default: 0.5
+    high_reliability_probability_gte_0_55: 0.75
+    maximum: 0.75
+  value:
+    floor: 0.75
+    ev_gte_0_025_and_probability_gte_0_50: 1.0
+    high_reliability_ev_gte_0_04_and_probability_gte_0_52: 1.25
+    high_reliability_ev_gte_0_06_probability_gte_0_55_uncertainty_lte_0_025: 1.5
+
+risk_profiles:
+  performance_independence: profile_changes_dollar_exposure_only_not_pick_units_confidence_or_expected_performance
+  profiles:
+    - {name: Cautious, unit_bankroll_pct: 0.0050}
+    - {name: Conservative, unit_bankroll_pct: 0.0075}
+    - {name: Normal, unit_bankroll_pct: 0.0100}
+    - {name: Aggressive, unit_bankroll_pct: 0.0125}
+    - name: Ultra
+      unit_bankroll_pct: 0.0150
+      caution: "Ultra is the highest staking exposure setting. It does not imply higher expected performance, better picks, greater model confidence, or any increase in predictive edge."
+
+staking:
+  formula: bankroll_times_profile_unit_fraction_times_recommended_units
+  rounding: floor_to_nearest_0_50_dollars
+  minimum_stake_dollars: 0.50
+  below_minimum_stake: 0.0
+  per_wager_bankroll_cap_pct: 0.025
+  slate_bankroll_cap_pct: 0.10
+  overlap_deduplication: same_exact_offer_is_one_wager
+  kelly: forbidden
+
+presentation_actions:
+  BET_VALUE:
+    requires: [strict_VALUE_status, positive_recommended_units]
+  BET_PLAYABLE:
+    requires: [PLAYABLE_status, positive_recommended_units]
+  INFORMATIONAL_NO_STAKE:
+    examples: [LOW_reliability_supported_signal, zero_units_by_frozen_policy]
+  NO_RECOMMENDED_STAKE_AT_CURRENT_PRICE:
+    examples: [LEAN, PASS]
+  UNSUPPORTED:
+    recommended_units: 0.0
+
+production_contract:
+  expose_both_model_and_evaluator_probability: true
+  required_fields:
+    - lane
+    - candidate_id
+    - game_id
+    - market_type
+    - selection
+    - sportsbook
+    - line
+    - american_odds
+    - price_status
+    - action
+    - action_reason
+    - model_confidence_probability
+    - actionable_probability
+    - break_even_probability
+    - expected_value
+    - reliability
+    - recommended_units
+    - risk_profile
+    - unit_bankroll_pct
+    - bankroll
+    - unit_dollars
+    - recommended_stake
+    - play_through_break_even_concession
+    - play_through_break_even_probability
+    - play_through_price_american
+    - risk_profile_caution
+
+prohibited:
+  - open_or_run_2025_in_task05g_completion
+  - kelly_user_staking
+  - risk_profile_changes_pick_or_units
+  - playable_relabelled_as_value
+  - unsupported_promoted_by_play_through
+  - synthetic_spread_or_total_line_conversion_used_to_approve_action
+  - selector_or_evaluator_retuning_from_product_simulation_results

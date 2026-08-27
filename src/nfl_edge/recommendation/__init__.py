@@ -4,12 +4,8 @@ from .policy import (
     NO_BALANCED_PLAY,
     NO_HIT_RATE_PLAY,
     NO_VALUE_PLAY,
-    RISK_PROFILES,
     PolicyEvaluation,
-    RiskProfile,
-    dollar_stake,
     evaluate_policy_offer,
-    recommended_units,
     shop_exact_offers,
 )
 from .final_selectors_v1 import (
@@ -23,17 +19,24 @@ from .final_selectors_v1 import (
     select_hit_rate,
     select_value,
 )
+from .staking_v1 import (
+    RISK_PROFILES,
+    ULTRA_CAUTION,
+    RiskProfile,
+    cap_slate_stakes,
+    dollar_stake,
+    recommended_units,
+    risk_profile,
+    unit_dollars,
+    user_wager_view,
+)
 
 __all__ = [
     "NO_BALANCED_PLAY",
     "NO_HIT_RATE_PLAY",
     "NO_VALUE_PLAY",
-    "RISK_PROFILES",
     "PolicyEvaluation",
-    "RiskProfile",
-    "dollar_stake",
     "evaluate_policy_offer",
-    "recommended_units",
     "shop_exact_offers",
     "FamilyTrust",
     "TrustObservation",
@@ -44,4 +47,13 @@ __all__ = [
     "select_headlines",
     "select_hit_rate",
     "select_value",
+    "RISK_PROFILES",
+    "ULTRA_CAUTION",
+    "RiskProfile",
+    "cap_slate_stakes",
+    "dollar_stake",
+    "recommended_units",
+    "risk_profile",
+    "unit_dollars",
+    "user_wager_view",
 ]
