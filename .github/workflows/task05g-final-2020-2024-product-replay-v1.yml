@@ -1,0 +1,63 @@
+name: Task05G Final 2020-24 Product Replay V1
+on:
+  pull_request:
+    paths:
+      - 'config/task05g_final_2020_2024_product_replay_v1.yaml'
+      - 'scripts/task05g_final_2020_2024_product_replay_v1.py'
+      - '.github/workflows/task05g-final-2020-2024-product-replay-v1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11', cache: pip}
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+      - name: Verify preregistration and 2025 firewall
+        run: |
+          python - <<'PY'
+          import yaml
+          c=yaml.safe_load(open('config/task05g_final_2020_2024_product_replay_v1.yaml'))
+          assert c['status']=='PREREGISTERED_BEFORE_2020_2024_REPLAY'
+          assert c['selector_changes_allowed'] is False
+          assert c['sealed_not_run']==[2025]
+          assert c['follow_every_recommended_headline']['duplicate_unit_resolution']=='maximum_recommended_units_across_lanes'
+          PY
+          python -m py_compile scripts/task05g_final_2020_2024_product_replay_v1.py src/nfl_edge/recommendation/hhr_staking_audit_v2.py
+      - name: Reproduce frozen upstream board
+        run: |
+          python scripts/task05f_evaluator_final_runner.py --out artifacts/final/upstream
+          python - <<'PY'
+          import polars as pl
+          b=pl.read_parquet('artifacts/final/upstream/historical_evaluator_board.parquet')
+          assert {int(x) for x in b['season'].unique().to_list()}=={2020,2021,2022,2023,2024}
+          assert 2025 not in {int(x) for x in b['season'].unique().to_list()}
+          PY
+          python scripts/task05g_model_confidence_v2_entrypoint.py --root . --board artifacts/final/upstream/historical_evaluator_board.parquet --out artifacts/final/v2
+          python scripts/task05g_spread_confidence_v3_runner.py --root . --v2-candidates artifacts/final/v2/v2_candidate_table.parquet --out artifacts/final/v3
+      - name: Run final product replay twice
+        run: |
+          python scripts/task05g_final_2020_2024_product_replay_v1.py --v3-candidates artifacts/final/v3/v3_candidate_table.parquet --out artifacts/final/run_a
+          python scripts/task05g_final_2020_2024_product_replay_v1.py --v3-candidates artifacts/final/v3/v3_candidate_table.parquet --out artifacts/final/run_b
+          cmp artifacts/final/run_a/scorecard.json artifacts/final/run_b/scorecard.json
+          cmp artifacts/final/run_a/season_lane_summary.csv artifacts/final/run_b/season_lane_summary.csv
+          cmp artifacts/final/run_a/season_combined_summary.csv artifacts/final/run_b/season_combined_summary.csv
+          cmp artifacts/final/run_a/all_cards_bankroll_scenarios.csv artifacts/final/run_b/all_cards_bankroll_scenarios.csv
+          python - <<'PY'
+          import json
+          s=json.load(open('artifacts/final/run_a/scorecard.json'))
+          assert all(s['invariants'].values()),s['invariants']
+          assert s['scenario_count']==25
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: task05g-final-2020-2024-product-replay-${{ github.sha }}
+          path: artifacts/final/run_a/
+          if-no-files-found: error
