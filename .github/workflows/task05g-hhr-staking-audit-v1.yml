@@ -1,11 +1,11 @@
-name: Task05G HHR Staking Audit V1
+name: Task05G HHR Staking Audit V2
 
 on:
   pull_request:
     paths:
       - 'config/task05g_hhr_staking_audit_v1.yaml'
-      - 'src/nfl_edge/recommendation/hhr_staking_audit_v1.py'
-      - 'scripts/task05g_hhr_staking_audit_v1.py'
+      - 'src/nfl_edge/recommendation/hhr_staking_audit_v2.py'
+      - 'scripts/task05g_hhr_staking_audit_v2.py'
       - '.github/workflows/task05g-hhr-staking-audit-v1.yml'
   workflow_dispatch:
 
@@ -24,7 +24,7 @@ jobs:
       - run: |
           python -m pip install --upgrade pip
           python -m pip install -e '.[model-development]' pytest pyyaml
-      - name: Verify preregistration and compile
+      - name: Verify preregistration and compile V2
         run: |
           python - <<'PY'
           import yaml
@@ -35,7 +35,7 @@ jobs:
           assert c['heavily_juiced_warning_pressure_gte']==0.08
           assert c['sealed_not_run']==[2025]
           PY
-          python -m py_compile src/nfl_edge/recommendation/hhr_staking_audit_v1.py scripts/task05g_hhr_staking_audit_v1.py
+          python -m py_compile src/nfl_edge/recommendation/hhr_staking_audit_v2.py scripts/task05g_hhr_staking_audit_v2.py
       - name: Reproduce frozen upstream board
         run: |
           python scripts/task05f_evaluator_final_runner.py --out artifacts/hhr/upstream
@@ -47,21 +47,23 @@ jobs:
           PY
           python scripts/task05g_model_confidence_v2_entrypoint.py --root . --board artifacts/hhr/upstream/historical_evaluator_board.parquet --out artifacts/hhr/v2
           python scripts/task05g_spread_confidence_v3_runner.py --root . --v2-candidates artifacts/hhr/v2/v2_candidate_table.parquet --out artifacts/hhr/v3
-      - name: Run HHR staking audit twice
+      - name: Run corrected HHR staking audit V2 twice
         run: |
-          python scripts/task05g_hhr_staking_audit_v1.py --v3-candidates artifacts/hhr/v3/v3_candidate_table.parquet --out artifacts/hhr/run_a
-          python scripts/task05g_hhr_staking_audit_v1.py --v3-candidates artifacts/hhr/v3/v3_candidate_table.parquet --out artifacts/hhr/run_b
+          python scripts/task05g_hhr_staking_audit_v2.py --v3-candidates artifacts/hhr/v3/v3_candidate_table.parquet --out artifacts/hhr/run_a
+          python scripts/task05g_hhr_staking_audit_v2.py --v3-candidates artifacts/hhr/v3/v3_candidate_table.parquet --out artifacts/hhr/run_b
           cmp artifacts/hhr/run_a/scorecard.json artifacts/hhr/run_b/scorecard.json
           cmp artifacts/hhr/run_a/hhr_rows.csv artifacts/hhr/run_b/hhr_rows.csv
           python - <<'PY'
           import json
           s=json.load(open('artifacts/hhr/run_a/scorecard.json'))
+          assert s['version']=='task05g_hhr_staking_audit_v2'
+          assert s['confidence_input']=='selector_trust'
           assert s['hhr_selected_count']==81
           assert all(s['invariants'].values()),s['invariants']
           assert min(float(k) for k in s['unit_distribution'])>=0.25
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: task05g-hhr-staking-audit-${{ github.sha }}
+          name: task05g-hhr-staking-audit-v2-${{ github.sha }}
           path: artifacts/hhr/run_a/
           if-no-files-found: error
