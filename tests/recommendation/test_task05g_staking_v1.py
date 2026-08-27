@@ -34,6 +34,7 @@ def row(
         "supported": supported,
         "reliability": reliability,
         "price_status": status,
+        "model_confidence_probability": 0.61,
         "actionable_probability": q,
         "break_even_probability": 0.5238095238,
         "expected_value": ev,
@@ -100,10 +101,18 @@ def test_user_view_preserves_value_vs_playable_and_zero_stake_states():
     value = user_wager_view(row(status="VALUE", ev=0.03, q=0.52), bankroll=250, profile="Normal", lane="value")
     playable = user_wager_view(row(status="PLAYABLE", ev=-0.005, q=0.56), bankroll=250, profile="Normal", lane="balanced")
     lean = user_wager_view(row(status="LEAN", ev=-0.03, q=0.56), bankroll=250, profile="Normal", lane="hit_rate")
+    low_value = user_wager_view(row(status="VALUE", reliability="LOW", ev=0.10, q=0.58), bankroll=250, profile="Normal", lane="value")
     assert value["strict_value"] is True and value["playable"] is False and value["action"] == "BET_VALUE"
+    assert value["action_reason"] == "STRICT_POSITIVE_VALUE"
     assert playable["strict_value"] is False and playable["playable"] is True and playable["action"] == "BET_PLAYABLE"
+    assert playable["action_reason"] == "PLAY_THROUGH_BOUNDED_ACTION"
     assert lean["recommended_units"] == 0.0 and lean["recommended_stake"] == 0.0
     assert lean["action"] == "NO_RECOMMENDED_STAKE_AT_CURRENT_PRICE"
+    assert lean["action_reason"] == "CURRENT_PRICE_OUTSIDE_ACTIONABLE_CORRIDOR"
+    assert low_value["strict_value"] is True and low_value["recommended_units"] == 0.0
+    assert low_value["action"] == "INFORMATIONAL_NO_STAKE"
+    assert low_value["action_reason"] == "RELIABILITY_INFORMATIONAL_ONLY"
+    assert low_value["model_confidence_probability"] == pytest.approx(0.61)
 
 
 def test_ultra_changes_only_dollar_exposure_not_units_or_pick_fields():
