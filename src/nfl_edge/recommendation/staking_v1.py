@@ -1,7 +1,7 @@
 """Canonical Task05G unit/risk-profile staking policy V1.
 
-This module is downstream of the frozen Task05G selector contract.  It does not
-select wagers and does not alter model/evaluator outputs.  It assigns a bounded
+This module is downstream of the frozen Task05G selector contract. It does not
+select wagers and does not alter model/evaluator outputs. It assigns a bounded
 account-independent recommended unit size to one exact evaluated offer, then
 converts those units to a user-specific dollar stake using one global risk
 profile.
@@ -12,7 +12,9 @@ from dataclasses import dataclass
 from decimal import Decimal, ROUND_FLOOR
 from typing import Any, Mapping, Sequence
 
-UNIT_LADDER = (0.0, 0.5, 0.75, 1.0, 1.25, 1.5)
+# 0.25u is reserved for the HHR headline minimum after selection. Generic
+# exact-offer recommendations remain on the pre-existing 0.50u+ ladder.
+UNIT_LADDER = (0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5)
 PER_WAGER_BANKROLL_CAP_PCT = 0.025
 SLATE_BANKROLL_CAP_PCT = 0.10
 MINIMUM_STAKE_DOLLARS = 0.50
@@ -63,11 +65,10 @@ def _reliability(row: Mapping[str, Any]) -> str:
 
 
 def recommended_units(row: Mapping[str, Any]) -> float:
-    """Return the frozen discrete unit recommendation for one exact offer.
+    """Return the generic discrete recommendation for one exact offer.
 
-    Selector role intentionally does not enter this function.  The same exact
-    offer therefore receives the same unit recommendation whether it appears in
-    Hit Rate, Balanced, Value, a game-detail card, or manual exact-offer review.
+    Headline-role overrides are intentionally handled in headline_staking_v1.
+    This function remains the default/game-detail/manual exact-offer policy.
     """
     if not bool(_field(row, "supported", default=False)):
         return 0.0
@@ -122,7 +123,7 @@ def unit_dollars(bankroll: float, profile: RiskProfile | str) -> float:
 
 
 def dollar_stake(bankroll: float, profile: RiskProfile | str, units: float) -> float:
-    """Convert frozen units to dollars without rounding above the wager cap."""
+    """Convert units to dollars without rounding above the wager cap."""
     bankroll_d = Decimal(str(bankroll))
     if bankroll_d < 0:
         raise ValueError("bankroll must be non-negative")
