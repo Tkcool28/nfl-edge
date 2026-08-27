@@ -1,0 +1,137 @@
+name: Task05G Product Simulation V1
+
+on:
+  pull_request:
+    paths:
+      - 'src/nfl_edge/recommendation/staking_v1.py'
+      - 'src/nfl_edge/recommendation/__init__.py'
+      - 'config/task05g_selector_unit_policy_v1.yaml'
+      - 'tests/recommendation/test_task05g_staking_v1.py'
+      - 'scripts/task05g_product_simulation_v1.py'
+      - 'docs/task05g_units_risk_profiles_freeze_v1.md'
+      - 'docs/task05g_product_output_contract_v1.md'
+      - 'reports/task05g/product_simulation_v1_review.md'
+      - '.github/workflows/task05g-product-simulation-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  product-simulation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pytest pyyaml
+
+      - name: Validate config and compile
+        run: |
+          python - <<'PY'
+          import yaml
+          c=yaml.safe_load(open('config/task05g_selector_unit_policy_v1.yaml'))
+          names=[p['name'] for p in c['risk_profiles']['profiles']]
+          pcts=[float(p['unit_bankroll_pct']) for p in c['risk_profiles']['profiles']]
+          assert names == ['Cautious','Conservative','Normal','Aggressive','Ultra']
+          assert pcts == sorted(pcts)
+          assert 'does not imply higher expected performance' in c['risk_profiles']['profiles'][-1]['caution']
+          assert c['play_through']['maximum_break_even_concession'] == 0.015
+          assert c['play_through']['frozen_task05f_confidence_multiplier_applies'] is True
+          assert c['staking']['kelly'] == 'forbidden'
+          PY
+          python -m py_compile src/nfl_edge/recommendation/staking_v1.py
+          python -m py_compile scripts/task05g_product_simulation_v1.py
+
+      - name: Run staking and selector tests
+        run: |
+          pytest -q \
+            tests/recommendation/test_task05g_staking_v1.py \
+            tests/recommendation/test_task05g_final_selectors_v1.py \
+            tests/recommendation/test_task05g_final_selector_freeze_regression.py
+
+      - name: Run frozen Task05F Play Through and evaluator tests
+        run: |
+          pytest -q \
+            tests/recommendation/test_task05g_policy.py \
+            tests/value/test_task05f_*.py
+
+      - name: Materialize frozen Task05F board
+        run: python scripts/task05f_evaluator_final_runner.py --out artifacts/task05g_product_sim/upstream
+
+      - name: Verify 2025 firewall before any downstream replay
+        run: |
+          python - <<'PY'
+          import polars as pl
+          board=pl.read_parquet('artifacts/task05g_product_sim/upstream/historical_evaluator_board.parquet')
+          d=pl.read_csv('reports/task05e_remediated/market_edge_discovery_corrected_ledger_v1.csv', infer_schema_length=10000)
+          c=pl.read_csv('reports/task05e_remediated/market_edge_confirmation_corrected_ledger_v1.csv', infer_schema_length=10000)
+          assert {int(x) for x in board['season'].unique().to_list()} == {2020,2021,2022,2023,2024}
+          assert {int(x) for x in d['season'].unique().to_list()} == {2020,2021,2022}
+          assert {int(x) for x in c['season'].unique().to_list()} == {2023,2024}
+          assert 2025 not in {int(x) for x in board['season'].unique().to_list()}
+          PY
+
+      - name: Reproduce Model Confidence V2
+        run: |
+          python scripts/task05g_model_confidence_v2_entrypoint.py \
+            --root . \
+            --board artifacts/task05g_product_sim/upstream/historical_evaluator_board.parquet \
+            --out artifacts/task05g_product_sim/v2
+
+      - name: Reproduce Spread Confidence V3
+        run: |
+          python scripts/task05g_spread_confidence_v3_runner.py \
+            --root . \
+            --v2-candidates artifacts/task05g_product_sim/v2/v2_candidate_table.parquet \
+            --out artifacts/task05g_product_sim/v3
+
+      - name: Run 2020-24 product simulation twice
+        run: |
+          python scripts/task05g_product_simulation_v1.py \
+            --v3-candidates artifacts/task05g_product_sim/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_product_sim/run_a
+          python scripts/task05g_product_simulation_v1.py \
+            --v3-candidates artifacts/task05g_product_sim/v3/v3_candidate_table.parquet \
+            --out artifacts/task05g_product_sim/run_b
+
+      - name: Prove deterministic product replay
+        run: |
+          for f in scorecard.json headline_rows.csv playable_headlines.csv zero_unit_headlines.csv profile_bankroll_summary.csv play_through_profile_effect.csv profile_stake_examples_250_bankroll.csv user_view_examples_normal_250.csv; do
+            cmp "artifacts/task05g_product_sim/run_a/$f" "artifacts/task05g_product_sim/run_b/$f"
+          done
+
+      - name: Validate product invariants
+        run: |
+          python - <<'PY'
+          import json
+          s=json.load(open('artifacts/task05g_product_sim/run_a/scorecard.json'))
+          assert s['seasons'] == [2020,2021,2022,2023,2024]
+          assert s['sealed'] == [2025]
+          assert all(s['invariants'].values()), s['invariants']
+          assert [p['name'] for p in s['risk_profiles']] == ['Cautious','Conservative','Normal','Aggressive','Ultra']
+          assert len(s['profile_results_with_play_through']) == 5
+          assert len(s['profile_results_strict_value_only_staking']) == 5
+          PY
+
+      - name: Upload product simulation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-product-simulation-${{ github.sha }}
+          path: |
+            artifacts/task05g_product_sim/run_a/
+            artifacts/task05g_product_sim/v3/scorecard.json
+            artifacts/task05g_product_sim/v2/scorecard.json
+            artifacts/task05g_product_sim/upstream/scorecard.json
+          if-no-files-found: error
