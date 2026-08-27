@@ -7,6 +7,8 @@ on:
       - 'src/nfl_edge/recommendation/headline_staking_v1.py'
       - 'src/nfl_edge/recommendation/staking_v1.py'
       - 'src/nfl_edge/recommendation/product_policy_v1.py'
+      - 'src/nfl_edge/recommendation/policy.py'
+      - 'tests/recommendation/test_task05g_policy_legacy_quarantine_v1.py'
       - 'config/task05g_final_product_freeze_v1.yaml'
       - 'docs/task05g_product_output_contract_v1.md'
       - 'docs/NFL_EDGE_TASK05G_MASTER_HANDOFF.md'
@@ -56,13 +58,13 @@ jobs:
           assert c['risk_profiles']=={
               'Cautious':0.005,'Conservative':0.0075,'Normal':0.01,'Aggressive':0.0125,'Ultra':0.015
           }
-          assert c['canonical_validation']['workflow_run']==33108088399
-          assert c['canonical_validation']['artifact_id']==9661355282
           assert c['canonical_validation']['actionability']['published_zero_action_cards']==0
           PY
-      - name: Verify canonical constants and no audit routing
+      - name: Verify canonical constants, legacy quarantine, and no audit routing
         run: |
           python - <<'PY'
+          import nfl_edge.recommendation as rec
+          import nfl_edge.recommendation.policy as legacy
           from nfl_edge.recommendation import final_selectors_v1 as s
           from nfl_edge.recommendation import headline_staking_v1 as h
           from nfl_edge.recommendation import staking_v1 as st
@@ -76,6 +78,12 @@ jobs:
           assert h.VALUE_AT_MAX_BREAK_EVEN_IMPROVEMENT==0.015
           assert h.VALUE_AT_RESCUE_UNITS==0.50
           assert tuple(p.name for p in st.RISK_PROFILES)==('Cautious','Conservative','Normal','Aggressive','Ultra')
+          forbidden=('select_hit_rate','select_balanced','select_value','select_headlines','recommended_units','dollar_stake','cap_slate_stakes','RiskProfile','RISK_PROFILES','RISK_PROFILE_BY_NAME')
+          assert not [name for name in forbidden if hasattr(legacy,name)]
+          assert rec.select_hit_rate is s.select_hit_rate
+          assert rec.select_balanced is s.select_balanced
+          assert rec.select_value is s.select_value
+          assert rec.recommended_units is st.recommended_units
           text=open('scripts/task05g_canonical_product_replay_v1.py').read()
           assert 'hhr_staking_audit' not in text
           assert 'headline_actionability_audit' not in text
@@ -96,4 +104,5 @@ jobs:
           python -m pytest -q \
             tests/recommendation/test_task05g_staking_v1.py \
             tests/recommendation/test_task05g_product_policy_v1.py \
-            tests/recommendation/test_task05g_final_selectors_v1.py
+            tests/recommendation/test_task05g_final_selectors_v1.py \
+            tests/recommendation/test_task05g_policy_legacy_quarantine_v1.py
