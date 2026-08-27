@@ -27,7 +27,6 @@ from nfl_edge.recommendation.policy import (
 )
 
 ACTIONABLE_BOOKS = frozenset({"draftkings", "fanduel"})
-ALLOWED_RELIABILITY = frozenset({"HIGH", "MEDIUM"})
 MIN_MODEL_CONFIDENCE_SUPPORT_N = 256
 
 HHR_MIN_Q = 0.55
@@ -128,9 +127,9 @@ def _within(row: Mapping[str, Any], bounds: tuple[int, int]) -> bool:
 
 
 def _common_model_offer(row: Mapping[str, Any]) -> bool:
+    """Frozen common support gate; reliability is a ranking signal, not an extra veto."""
     return (
         bool(row.get("supported"))
-        and _reliability(row) in ALLOWED_RELIABILITY
         and bool(row.get("model_confidence_supported"))
         and int(row.get("model_confidence_support_n") or 0) >= MIN_MODEL_CONFIDENCE_SUPPORT_N
         and str(row.get("market_type", "")).lower() in {"moneyline", "spread"}
