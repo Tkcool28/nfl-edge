@@ -1,150 +1,185 @@
 # Task05G Product Output Contract V1
 
-## Status
+## Final status
 
-`BACKEND_PRODUCT_CONTRACT_FROZEN_FOR_2020_2024__2025_NOT_RUN`
+`TASK05G_FINAL_PRODUCT_CONTRACT_FROZEN_2020_2024__2025_NOT_RUN`
 
-This contract is downstream of the frozen Task05G selector implementation. It does not change which wager is Hit Rate, Balanced, or Value. It defines how an exact evaluated offer becomes an actionable or informational user-facing backend payload.
+This contract is downstream of the frozen Task05G selectors and Task05F exact-offer evaluator. It does not change which wager is Hit Rate, Balanced, or Value. It defines how already-selected headline cards and default/game-detail/manual exact offers are presented and staked.
 
 ## Core separation
 
-The backend must preserve three separate concepts:
+Keep these concepts separate:
 
-1. **Selector/model confidence** — why a wager was featured.
-2. **Exact-offer market evaluation** — whether the user's current price is `VALUE`, `PLAYABLE`, `LEAN`, `PASS`, or `UNSUPPORTED`.
-3. **Staking/risk profile** — how many units the exact offer deserves and how those units convert to dollars for the user's bankroll.
+1. **Selector/model confidence** — why a wager is featured.
+2. **Exact-offer evaluation** — VALUE / PLAYABLE / LEAN / PASS / UNSUPPORTED for the current exact offer.
+3. **Headline actionability/staking** — how an already-selected headline is staked and worded.
+4. **Risk profile** — how units convert to dollars for the user's bankroll.
 
-Do not collapse these concepts into one opaque score.
+Do not let downstream staking re-select or re-rank HHR/Balanced/Value.
 
-## Product actions
+## Primary user-facing vocabulary
 
-### `BET_VALUE`
+The primary recommendation verb is **`BET`**.
 
-Use only when:
+For default/game-detail/manual exact offers that do not currently qualify, use **`NO`**.
 
-- exact-offer status is `VALUE`;
-- strict evaluated EV is positive;
-- frozen staking policy assigns positive recommended units.
+`NO` means the current exact offer fails. It is not a team/game judgment.
 
-The user may see the selected wager, exact book/line/price, model confidence, evaluator probability/EV, reliability, recommended units, and one dollar stake.
+Do not use `PLAY` as the main recommendation verb. Do not show a selected headline card with a dead `0u` recommendation.
 
-### `BET_PLAYABLE`
+## Headline-card invariant
 
-Use only when:
+If the app promotes a wager into one of the three weekly headline cards, the published card must contain an actionable instruction.
 
-- the exact offer is supported;
-- it is not strict positive-EV Value;
-- it remains inside the frozen Play Through corridor after the Task05F reliability/uncertainty confidence multiplier;
-- frozen staking policy assigns positive recommended units.
+- HHR selected headline: always `BET` with positive units.
+- Balanced selected headline: always `BET` with positive units.
+- Value selected headline: either a current `BET` with positive units or a nearby actionable `Value at ...` target with positive units. If neither is available inside the bounded rescue corridor, suppress the Value headline.
 
-`PLAYABLE` must never be rendered, counted, or described as `VALUE`.
+A published headline must never display `0u` / `$0` as its actionable recommendation.
 
-Recommended units are deliberately smaller:
+## Hit Rate headline
 
-- `0.5u` default;
-- `0.75u` only for HIGH reliability with actionable probability at least 0.55;
-- never above `0.75u`.
+Selector semantics remain frozen and separate from staking. HHR selection is not re-opened by this contract.
 
-### `INFORMATIONAL_NO_STAKE`
+Once selected:
 
-Use when a supported selector/evaluator signal exists but frozen staking policy assigns `0u` for a non-price reason. The important V1 example is a supported `VALUE` signal with LOW reliability.
+- every supported HHR headline is `BET`;
+- `selector_trust` sets the base stake;
+- break-even price pressure may only haircut stake after selection;
+- price can never change which HHR candidate won the selector;
+- current HHR can never become `NO`, `PASS`, or `0u` merely because the price is over-juiced;
+- minimum HHR headline stake = `0.25u`;
+- price pressure at or above `+8.0 percentage points` exposes **`HEAVILY_JUICED`**;
+- HHR has no ordinary `Playable through` label;
+- its secondary better-price language is **`Value at X or better`**, with units/stake recomputed when strict Value economics are reached.
 
-The card must **not** say `BET_VALUE` while simultaneously showing `$0` stake.
+Conceptual presentation:
 
-Suggested future UI meaning:
+```text
+HHR
+Chiefs ML -250
+BET · 0.50u · $X
+⚠ Heavily juiced   # only when +8pp pressure threshold is met
+Value at -220 or better · 1.00u · $Y
+```
 
-> Value signal — informational only. Reliability is too low for a recommended stake.
+## Balanced headline
 
-The exact frontend copy is not frozen here; the backend action and reason code are.
+Balanced remains the frozen probability-first / sensible-price lane. It is not a strict +EV selector.
 
-### `NO_RECOMMENDED_STAKE_AT_CURRENT_PRICE`
+Once selected:
 
-Use for supported `LEAN`/`PASS` states when the featured football/model candidate is still useful but the exact current offer is outside the actionable corridor.
+- every supported Balanced headline is `BET`;
+- preserve any larger canonical generic stake;
+- minimum Balanced headline stake = `0.75u`;
+- the reduced-price extension is **`Playable through ...`**;
+- Playable Through is `0.50u` in the headline contract and remains visibly smaller than the primary recommendation;
+- a different spread/total line must be an exactly reevaluated offer, never a synthetic line conversion.
 
-The app may still show:
+Conceptual presentation:
 
-- the selected candidate;
-- current exact price;
-- model confidence;
-- target/play-through information when deterministically available;
-- `0u` and `$0` recommended stake.
+```text
+BALANCED
+Bears +3 -110
+BET · 0.75u · $X
+Playable through +2.5 -115 · 0.50u · $Y
+```
 
-This avoids hiding the football recommendation while also avoiding fabricated action.
+The selector may still return no Balanced card for a week. The must-BET rule applies only after a Balanced headline has actually been selected.
 
-### `UNSUPPORTED`
+## Value headline
 
-Fail closed. Play Through cannot rescue an unsupported evaluator region.
+Value remains strict +EV only and uses the frozen validated ML/spread families and trust/safety state.
+
+### Current-price Value
+
+When canonical generic staking assigns positive units:
+
+```text
+VALUE
+Bears ML +145
+BET · 1.00u · $X
+Value through +137 · 0.75u · $Y
+```
+
+`Value through` may be exposed only while the exact price remains genuinely strict +EV.
+
+### Low-reliability target-only Value
+
+A selected strict-Value row that would otherwise receive `0u` may still publish only when a realistic same-line better price creates an actionable target:
+
+- required break-even improvement: at least `1.0pp`;
+- maximum rescue distance: `1.5pp`;
+- rescue stake: `0.50u`;
+- same market/side/line only;
+- no synthetic spread/total line conversion.
+
+Presentation:
+
+```text
+VALUE
+Bears ML +145
+Value at +152 or better · 0.50u · $X
+```
+
+Do **not** render `BET $0` or an informational 0u headline.
+
+If the first actionable better price requires more than `1.5pp` break-even improvement, suppress that Value headline. If a book later truly moves to a much better price, the next refresh evaluates that exact offer and the frozen Value selector may surface it naturally.
+
+## Default rest-of-board / game-detail policy
+
+All non-headline user-selected wager/game-detail recommendations use the **Balanced-style policy by default**.
+
+Important distinction:
+
+- the global Balanced headline selects the best Balanced play across the board;
+- default game-detail evaluation assesses the exact wager the user clicked or entered and does not replace it with another global candidate.
+
+Current exact offer qualifies:
+
+```text
+BET at -110 · 1.0u · $2.50
+Playable through -118 · 0.5u · $1.00
+```
+
+Current exact offer does not qualify:
+
+```text
+NO at -125
+BET at -110 or better · 0.5u · $1.00
+```
+
+`NO` is deliberately short and visually distinct from `BET`.
+
+## Manual exact entries
+
+Whatever exact offer the user types in is treated methodologically the same as a normal DK/FD sourced exact offer:
+
+- same Task05F `evaluate_offer` path;
+- same default Balanced policy;
+- same canonical generic units;
+- same risk-profile dollar conversion;
+- same Playable Through / `BET at` target logic;
+- exact line/side/market/price required;
+- different spread/total line requires a genuinely new exact evaluation.
+
+Preserve provenance truth (`source=manual` when applicable), but source metadata must not change probability, EV, reliability, support, units, or stake.
 
 ## Play Through V1
 
-Play Through is a bounded actionability concession, not another Value definition.
+Play Through is a bounded execution range on a selected recommendation, not a second pool of extra bets and not another definition of Value.
 
-Frozen maximum:
+Maximum headline corridor:
 
 ```text
 1.5 percentage points of break-even probability
 ```
 
-The actual concession is:
+The actual Task05F concession may be smaller because reliability/uncertainty multipliers remain authoritative.
 
-```text
-maximum_concession × frozen Task05F reliability/uncertainty confidence multiplier
-```
-
-Therefore users should conceptually be told **"up to 1.5 percentage points"**, not that every wager automatically receives the full 1.5pp corridor.
-
-The exact offer must be reevaluated through the same evaluator path. Stored-board and manual exact offers with the same line/price must classify identically.
-
-For spreads and totals, a different line must be evaluated as a genuinely different exact offer. Do not assume that one point of line movement has a fixed probability cost and do not approve an alternate line using a synthetic price conversion.
-
-`play_through_price_american` is a price boundary for the evaluated market/line context. It is not permission to synthetically convert a different spread/total line into an approved offer.
-
-## Required backend fields
-
-Each user wager view should expose at least:
-
-- `lane`
-- `candidate_id`
-- `offer_id` when production normalization supplies one
-- `game_id`
-- `market_type`
-- `selection`
-- `sportsbook`
-- `line`
-- `american_odds`
-- `price_status`
-- `strict_value`
-- `playable`
-- `action`
-- `action_reason`
-- `model_confidence_probability`
-- `actionable_probability`
-- `break_even_probability`
-- `expected_value`
-- `reliability`
-- `recommended_units`
-- `risk_profile`
-- `unit_bankroll_pct`
-- `bankroll`
-- `unit_dollars`
-- `recommended_stake`
-- `play_through_break_even_concession`
-- `play_through_break_even_probability`
-- `play_through_price_american`
-- `risk_profile_caution`
-
-### Probability labels
-
-The frontend must not present `model_confidence_probability` and `actionable_probability` as if they were the same number.
-
-- `model_confidence_probability` is selector/model evidence.
-- `actionable_probability` is the evaluator probability used in exact-offer economics/actionability.
-
-A future UI can simplify the language, but the data contract must preserve both.
+For spreads/totals, exact alternate lines must be reevaluated. Never infer that one point of line movement has a fixed probability cost.
 
 ## Risk profiles
-
-Frozen order and unit bankroll fractions:
 
 | Profile | 1u bankroll fraction |
 |---|---:|
@@ -158,16 +193,9 @@ Ultra warning:
 
 > Ultra is the highest staking exposure setting. It does not imply higher expected performance, better picks, greater model confidence, or any increase in predictive edge.
 
-A profile changes **dollar exposure only**. It cannot change:
+Risk profile changes dollars only. It cannot change selector choice, selector ranking, recommended units, probability, reliability, expected performance, or edge.
 
-- featured candidate;
-- price status;
-- model/evaluator probability;
-- expected value;
-- reliability;
-- recommended units.
-
-## Stake conversion
+## Stake conversion and caps
 
 ```text
 unit_dollars = bankroll × profile_unit_fraction
@@ -177,65 +205,62 @@ recommended_stake = unit_dollars × recommended_units
 Then apply:
 
 - floor to nearest `$0.50`;
-- minimum stake `$0.50`; below minimum becomes `$0`;
-- per-wager cap `2.5%` of bankroll;
-- slate cap `10%` of bankroll;
-- identical exact offer shown in multiple headline lanes is one wager, not multiple stakes.
+- minimum dollar stake `$0.50`; below minimum becomes `$0` at execution level;
+- per-wager cap `2.5%` bankroll;
+- slate cap `10%` bankroll;
+- identical exact offer shown in multiple headline lanes is one wager, not additive stakes;
+- when duplicate headline lanes recommend different units, use the larger recommendation for the one actual wager.
 
-Kelly staking is prohibited in final V1.
+Canonical unit conversion supports `0.25u` so the HHR floor can be represented. Generic/default/manual staking does not gain a new 0.25u recommendation tier merely from that conversion support.
 
-## Example payload behavior at $250 / Normal
+Kelly staking is prohibited in V1.
 
-### Strict Value
+## Frozen selector context retained
 
-Historical example:
+This product contract consumes the already-frozen selectors:
 
-- Hit Rate
-- New Orleans moneyline, DraftKings `-233`
-- price status `VALUE`
-- model confidence approximately `74.98%`
-- evaluator/actionable probability approximately `72.40%`
-- recommended units `1.0u`
-- Normal 1u = `$2.50`
-- recommended stake `$2.50`
-- action `BET_VALUE`
+- HHR: `HALF_SHRINK`, q floor `.55`, odds `[-300,+200]`;
+- Balanced: `MARKET_HALF_ONLY`, q floor `.52`, odds `[-220,+200]`;
+- Value: strict validated +EV ML/spread families with causal trust and fail-closed safety valves;
+- totals excluded from headline V1.
 
-### Playable
+For ML probability lanes, market-half trust shrinks model q halfway toward the Pinnacle anchor only when q exceeds the anchor. For spreads, Spread Confidence V3 q passes through as selector trust. The current staking/product layer does not change those rules.
 
-Historical example:
+## Final 2020-24 canonical validation
 
-- Hit Rate
-- Minnesota moneyline, DraftKings `-166`
-- price status `PLAYABLE`
-- model confidence approximately `72.39%`
-- evaluator/actionable probability approximately `61.61%`
-- break-even approximately `62.41%`
-- exact-offer EV approximately `-0.79%`
-- frozen realized Play Through concession approximately `0.681pp`
-- price boundary `-167`
-- recommended units `0.5u`
-- Normal recommended stake `$1.00` after floor rounding
-- action `BET_PLAYABLE`
+Canonical replay after integration preserved selector identity:
 
-This demonstrates why Play Through must be visually distinct from Value: the football signal can be strong while the exact price is slightly worse than strict fair value.
+- HHR: `81` selected;
+- Balanced: `88` selected;
+- Value: `68` selected.
 
-### Informational low-reliability Value signal
+Headline actionability:
 
-Historical example:
+- HHR current positive BET: `81 / 81`;
+- Balanced current positive BET: `88 / 88`;
+- Value current positive BET: `40 / 68`;
+- Value target-only `Value at`: `28 / 68`;
+- suppressed Value: `0` in exposed 2020-24 replay;
+- published headline cards with zero actionable units: `0`.
 
-- Hit Rate
-- Jacksonville spread `+13.5 -106`, FanDuel
-- exact-offer status `VALUE`
-- reliability `LOW`
-- recommended units `0u`
-- recommended stake `$0`
-- action `INFORMATIONAL_NO_STAKE`
-- reason `RELIABILITY_INFORMATIONAL_ONLY`
+Follow-every-current-recommended-headline, exact-offer deduped:
 
-The backend must preserve the distinction between **strict price value** and **permission to risk bankroll**.
+- `174` unique current wagers;
+- `112-61-1`;
+- `64.7%` non-push hit rate;
+- `144.00u` risked;
+- `+8.05u` weighted result on exposed development evidence.
 
-## Scope boundary
+Normal profile, continuous `$1,000` bankroll:
 
-This is a backend/data contract. Final visual design, account persistence/authentication, and polished settings UX remain later work.
+- ending bankroll `$1,075.59`;
+- return `+7.56%`;
+- maximum drawdown `8.69%`.
 
-2025 was not opened or run for this contract and remains outside this Task05G completion work by explicit project direction.
+These are exposed 2020-24 development results, not promised forward performance.
+
+## Scope / sealed boundary
+
+**2025 WAS NOT OPENED, LOADED, SCORED, REPLAYED, OR RUN FOR TASK05G.**
+
+2025 remains sealed at this freeze point. Any later 2025 acceptance/evaluation must be a separately authorized phase and must not be retroactively used to tune this frozen 2020-24 contract.
