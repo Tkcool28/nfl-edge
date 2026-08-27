@@ -1,0 +1,72 @@
+version: task05g_default_manual_policy_v1
+status: PRODUCT_CONTRACT_FREEZE_2020_2024__2025_NOT_RUN
+
+development_seasons: [2020, 2021, 2022, 2023, 2024]
+sealed_not_run: [2025]
+
+default_non_headline_policy:
+  philosophy: "BALANCED"
+  scope:
+    - game_detail
+    - full_board_market_click
+    - manual_exact_offer_entry
+  user_selected_market_is_not_replaced_by_global_selector: true
+  exact_offer_evaluator: frozen_task05f
+  staking_engine: canonical_staking_v1
+
+primary_wording:
+  actionable_current_offer: "BET"
+  non_actionable_current_offer: "NO"
+  no_is_current_offer_verdict_not_team_or_game_judgment: true
+
+secondary_wording:
+  current_offer_actionable:
+    label: "PLAYABLE_THROUGH"
+    display_meaning: reduced_stake_extension_for_same_selected_wager
+  current_offer_not_actionable:
+    label: "BET_AT"
+    display_meaning: first_exact_price_where_positive_recommended_stake_qualifies
+    suffix: or_better
+
+manual_entries:
+  methodology_identical_to_stored_offer: true
+  source_metadata_may_be_manual: true
+  source_metadata_must_not_change_evaluator_output: true
+  source_metadata_must_not_change_units: true
+  source_metadata_must_not_change_risk_profile_conversion: true
+  dk_fd_only_selection_gate_applies_to_manual_entry: false
+  exact_market_type_side_line_price_required: true
+  same_task05f_evaluate_offer_path: true
+  same_balanced_default_policy: true
+  same_playable_through_policy: true
+  same_bet_at_target_policy: true
+
+alternate_offer_rules:
+  same_line_price_boundary_may_use_frozen_play_through_threshold: true
+  threshold_must_be_rechecked_as_exact_offer_before_exposing_stake: true
+  different_spread_or_total_line_requires_new_exact_evaluation: true
+  synthetic_line_conversion_may_approve_offer: false
+
+headline_price_language:
+  hit_rate:
+    current_primary_word: "BET"
+    extension_label: "VALUE_AT"
+    extension_must_be_strict_positive_ev: true
+    ordinary_playable_through_label: false
+  balanced:
+    current_primary_word: "BET"
+    extension_label: "PLAYABLE_THROUGH"
+    extension_uses_reduced_stake: true
+  value:
+    current_primary_word: "BET"
+    extension_label: "VALUE_THROUGH"
+    extension_must_remain_strict_positive_ev: true
+    negative_ev_playable_through: false
+
+prohibited:
+  - open_or_run_2025
+  - manual_entry_receives_special_discount_or_bonus
+  - manual_entry_bypasses_support_or_reliability
+  - no_rendered_as_no_bet_phrase
+  - play_used_as_primary_recommendation_verb
+  - synthetic_spread_total_line_conversion_used_to_approve_action
