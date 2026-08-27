@@ -1,0 +1,99 @@
+name: Task05G Final Product Freeze V1
+
+on:
+  pull_request:
+    paths:
+      - 'src/nfl_edge/recommendation/final_selectors_v1.py'
+      - 'src/nfl_edge/recommendation/headline_staking_v1.py'
+      - 'src/nfl_edge/recommendation/staking_v1.py'
+      - 'src/nfl_edge/recommendation/product_policy_v1.py'
+      - 'config/task05g_final_product_freeze_v1.yaml'
+      - 'docs/task05g_product_output_contract_v1.md'
+      - 'docs/NFL_EDGE_TASK05G_MASTER_HANDOFF.md'
+      - '.github/workflows/task05g-final-product-freeze-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  freeze-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml
+      - name: Verify manifest and canonical blob identities
+        run: |
+          python - <<'PY'
+          import subprocess, yaml
+          c=yaml.safe_load(open('config/task05g_final_product_freeze_v1.yaml'))
+          assert c['status']=='TASK05G_FINAL_PRODUCT_FREEZE_2020_2024__2025_NOT_RUN'
+          assert c['semantic_changes_after_freeze_allowed'] is False
+          assert c['sealed_boundary']['development_seasons']==[2020,2021,2022,2023,2024]
+          assert c['sealed_boundary']['not_opened_not_run']==[2025]
+          for item in c['canonical_files'].values():
+              path=item.get('path')
+              expected=item.get('git_blob_sha')
+              if not expected:
+                  continue
+              actual=subprocess.check_output(['git','hash-object',path],text=True).strip()
+              assert actual==expected,(path,actual,expected)
+          assert c['headline_actionability']['hhr']['minimum_units']==0.25
+          assert c['headline_actionability']['hhr']['heavily_juiced_warning_price_pressure_pp']==8.0
+          assert c['headline_actionability']['balanced']['minimum_units']==0.75
+          assert c['headline_actionability']['balanced']['playable_through_units']==0.50
+          assert c['headline_actionability']['value']['required_break_even_improvement_pp']==1.0
+          assert c['headline_actionability']['value']['maximum_break_even_improvement_pp']==1.5
+          assert c['headline_actionability']['value']['rescue_units']==0.50
+          assert c['user_facing_vocabulary']['primary_positive']=='BET'
+          assert c['user_facing_vocabulary']['default_current_nonqualifying']=='NO'
+          assert c['risk_profiles']=={
+              'Cautious':0.005,'Conservative':0.0075,'Normal':0.01,'Aggressive':0.0125,'Ultra':0.015
+          }
+          assert c['canonical_validation']['workflow_run']==33108088399
+          assert c['canonical_validation']['artifact_id']==9661355282
+          assert c['canonical_validation']['actionability']['published_zero_action_cards']==0
+          PY
+      - name: Verify canonical constants and no audit routing
+        run: |
+          python - <<'PY'
+          from nfl_edge.recommendation import final_selectors_v1 as s
+          from nfl_edge.recommendation import headline_staking_v1 as h
+          from nfl_edge.recommendation import staking_v1 as st
+          assert s.HHR_MIN_Q==0.55 and s.HHR_ODDS==(-300,200)
+          assert s.BALANCED_MIN_Q==0.52 and s.BALANCED_ODDS==(-220,200)
+          assert h.HHR_MIN_UNITS==0.25
+          assert h.HHR_HEAVILY_JUICED_PRESSURE==0.08
+          assert h.BALANCED_MIN_HEADLINE_UNITS==0.75
+          assert h.BALANCED_PLAYABLE_THROUGH_UNITS==0.50
+          assert h.VALUE_AT_REQUIRED_BREAK_EVEN_IMPROVEMENT==0.010
+          assert h.VALUE_AT_MAX_BREAK_EVEN_IMPROVEMENT==0.015
+          assert h.VALUE_AT_RESCUE_UNITS==0.50
+          assert tuple(p.name for p in st.RISK_PROFILES)==('Cautious','Conservative','Normal','Aggressive','Ultra')
+          text=open('scripts/task05g_canonical_product_replay_v1.py').read()
+          assert 'hhr_staking_audit' not in text
+          assert 'headline_actionability_audit' not in text
+          PY
+      - name: Verify final product wording and 2025 boundary
+        run: |
+          python - <<'PY'
+          product=open('docs/task05g_product_output_contract_v1.md').read()
+          handoff=open('docs/NFL_EDGE_TASK05G_MASTER_HANDOFF.md').read()
+          for token in ['BET','NO','Playable through','Value at','Value through','HEAVILY_JUICED']:
+              assert token in product,token
+          assert '2025 WAS NOT OPENED, LOADED, SCORED, REPLAYED, OR RUN FOR TASK05G' in product
+          assert '2025 HAS NOT BEEN RUN' in handoff
+          assert 'PR #56' in handoff
+          PY
+      - name: Run focused recommendation regression tests
+        run: |
+          python -m pytest -q \
+            tests/recommendation/test_task05g_staking_v1.py \
+            tests/recommendation/test_task05g_product_policy_v1.py \
+            tests/recommendation/test_task05g_final_selectors_v1.py
