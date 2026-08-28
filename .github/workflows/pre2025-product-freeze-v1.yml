@@ -61,6 +61,38 @@ jobs:
           python scripts/pre2025_safe_development_replay_v1.py \
             --out-root artifacts/pre2025/run_b
 
+      - name: Print replay identity diagnostics
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          root=Path('artifacts/pre2025/run_a')
+          expected={
+              root/'upstream/scorecard.json':'461b931866407b17eb46120803f8fa18ae1dab7e07bc2b26b1884ba424e07022',
+              root/'v2/scorecard.json':'20ee8238e8922f6ded2ab36e867710a32343d89c612313774c48973c73b1daac',
+              root/'v3/scorecard.json':'29e604e81a29754d8aaf554827b19a0d9e4023906467e01cf81fa70f4df063de',
+          }
+          for path,want in expected.items():
+              got=hashlib.sha256(path.read_bytes()).hexdigest()
+              print(f'HASH path={path} actual={got} expected={want} match={got==want}', flush=True)
+
+          for label,path in (
+              ('task05f',root/'upstream/scorecard.json'),
+              ('v2',root/'v2/scorecard.json'),
+              ('v3',root/'v3/scorecard.json'),
+              ('product',root/'product/scorecard.json'),
+          ):
+              obj=json.loads(path.read_text())
+              summary={k:obj.get(k) for k in (
+                  'version','development_seasons','sealed_season','sealed_not_run',
+                  'headline_counts','published_headline_counts',
+                  'positive_current_bet_headline_counts','value_at_target_only_cards',
+                  'value_suppressed_cards','promotion_status','invariants'
+              ) if k in obj}
+              print(f'SEMANTIC {label} '+json.dumps(summary,sort_keys=True), flush=True)
+          PY
+
       - name: Determinism and accepted-identity gates
         run: |
           cmp artifacts/pre2025/run_a/product/scorecard.json artifacts/pre2025/run_b/product/scorecard.json
@@ -92,6 +124,7 @@ jobs:
           PY
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: pre2025-product-freeze-${{ github.sha }}
           path: artifacts/pre2025/
