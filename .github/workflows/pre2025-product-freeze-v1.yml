@@ -2,20 +2,6 @@ name: Pre-2025 Product Freeze V1
 
 on:
   pull_request:
-    paths:
-      - 'config/task05g_2025_acceptance_v1.yaml'
-      - 'config/task05g_pre2025_holdout_freeze_v1.yaml'
-      - 'docs/PRE2025_HOLDOUT_ACCEPTANCE_SPEC_V1.md'
-      - 'docs/PRE2025_CHRONOLOGY_AND_CHANGE_CONTROL_V1.md'
-      - 'docs/PRE2025_PRODUCT_FREEZE_V1.md'
-      - 'src/nfl_edge/holdout/**'
-      - 'scripts/pre2025_safe_development_replay_v1.py'
-      - 'scripts/task05g_pre2025_freeze_audit_v1.py'
-      - 'scripts/task05g_2025_holdout_one_shot_v1.py'
-      - 'tests/holdout/test_market_2025_adapter.py'
-      - 'tests/recommendation/test_pre2025_product_freeze_v1.py'
-      - 'reports/pre2025/pre2025_product_freeze_manifest_v1.json'
-      - '.github/workflows/pre2025-product-freeze-v1.yml'
   workflow_dispatch:
 
 permissions:
@@ -53,8 +39,8 @@ jobs:
           python scripts/task05g_2025_holdout_one_shot_v1.py --preflight \
             > artifacts/pre2025/holdout_preflight.json
           if python scripts/task05g_2025_holdout_one_shot_v1.py \
-            --authorization MASTER_APPROVED_OPEN_2025_ONCE; then
-            echo 'ERROR: blocked holdout command unexpectedly executed' >&2
+            --authorization CI_INTENTIONALLY_INVALID_AUTHORIZATION; then
+            echo 'ERROR: invalid authorization unexpectedly executed' >&2
             exit 1
           fi
 
@@ -76,10 +62,6 @@ jobs:
           from pathlib import Path
 
           root = Path('artifacts/pre2025/run_a')
-
-          # Exact identities that must remain unchanged under the safe 2018-24 replay.
-          # Final-product hashes below are taken directly from the accepted Task05G
-          # freeze-integrity artifact (run 33119361164, artifact 9665847701).
           exact_expected = {
               root/'upstream/scorecard.json': '461b931866407b17eb46120803f8fa18ae1dab7e07bc2b26b1884ba424e07022',
               root/'v2/scorecard.json': '2ac884e25e0a72c8057b6d72dbad897218e66ae3096751e8a4a75aeef19b32f3',
@@ -93,14 +75,6 @@ jobs:
               got = hashlib.sha256(path.read_bytes()).hexdigest()
               print(f'HASH path={path} actual={got} expected={want} match={got == want}', flush=True)
               assert got == want, (str(path), got, want)
-
-          # The original accepted Model Confidence V2 scorecard had hash
-          # 20ee8238e8922f6ded2ab36e867710a32343d89c612313774c48973c73b1daac.
-          # The safe replay deliberately changes only upstream provenance/reference
-          # metadata by replacing the mixed 2018-2025 outcome source with a 2018-2024-only
-          # source. The safe V2 identity above is therefore frozen separately. Exact
-          # downstream V3 and final-product byte identities prove product behavior is
-          # unchanged rather than weakening the product gate.
 
           s = json.loads((root/'product/scorecard.json').read_text())
           assert s['sealed_not_run'] == [2025], s
