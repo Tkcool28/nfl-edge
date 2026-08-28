@@ -74,14 +74,16 @@ jobs:
           root = Path('artifacts/pre2025/run_a')
 
           # Exact identities that must remain unchanged under the safe 2018-24 replay.
+          # Final-product hashes below are taken directly from the accepted Task05G
+          # freeze-integrity artifact (run 33119361164, artifact 9665847701).
           exact_expected = {
               root/'upstream/scorecard.json': '461b931866407b17eb46120803f8fa18ae1dab7e07bc2b26b1884ba424e07022',
-              root/'v2/scorecard.json': '2ac55ed409517641304931645e7643210c5baca4510a4233710e0a2b8cf7976d',
+              root/'v2/scorecard.json': '2ac884e25e0a72c8057b6d72dbad897218e66ae3096751e8a4a75aeef19b32f3',
               root/'v3/scorecard.json': '29e604e81a29754d8aaf554827b19a0d9e4023906467e01cf81fa70f4df063de',
-              root/'product/headline_cards.csv': '568bb131b792d26f4bdf30b48a714bf478b8eeffc5e2e2db27773b6903c17816',
-              root/'product/scorecard.json': '2cb698615d2e179671bee03c4ae24b8e1b2cbdf13cd4938816f86a163d8e102b',
-              root/'product/season_lane_summary.csv': 'f696818b1916e6c1bfd33574690f8c3c7a681621abd515637482489d794f2acd',
-              root/'product/all_cards_bankroll_scenarios.csv': '6d9e72b4908796231bbbae5236ac51418ed1c4112acc3988b1e2498a812ff339',
+              root/'product/headline_cards.csv': '9ebe2784f63757d9a7ad37855a4ad4b813dd64029a3a67a9f4429e0128fe22eb',
+              root/'product/scorecard.json': 'c78ee43d2fcb0e2f39e0d9a048db5fdfa08a3a274b3a75ea9c32325865bae7a2',
+              root/'product/season_lane_summary.csv': 'd7a1f39d1fcca97776a8273cc131d4b79c82e3bbc4fa0f16304f12ec948fa44f',
+              root/'product/all_cards_bankroll_scenarios.csv': '7eb08fefe6cfa14bd185ccffdd0c27df22200354de191e87feaef1e0406a3281',
           }
           for path, want in exact_expected.items():
               got = hashlib.sha256(path.read_bytes()).hexdigest()
