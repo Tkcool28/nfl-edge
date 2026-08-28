@@ -5,13 +5,14 @@ development_reference_seasons: [2020, 2021, 2022, 2023, 2024]
 authorization:
   required: true
   exact_phrase_sha256: 7b8fd4a076caf6d97f00435d8b87d97e7f9c71055a25d324821160826be65556
+  plaintext_stored_in_repository: false
   must_be_verified_before_any_2025_file_read: true
   one_spend_marker: artifacts/task05g_2025_holdout_v1/HOLDOUT_SPENT.json
 execution:
   ready: false
   canonical_command: >-
     python scripts/task05g_2025_holdout_one_shot_v1.py
-    --authorization MASTER_APPROVED_OPEN_2025_ONCE
+    --authorization "$NFL_EDGE_2025_AUTHORIZATION"
   tuning_flags_allowed: false
   blocked_reasons:
     - No frozen authorized 2025 football-model materialization path exists yet; accepted model runners are development-only and hard-fail at 2024.
@@ -21,7 +22,18 @@ execution:
       moneyline: [oracle_qb_elo_v1, chronology_corrected_xgboost_v1_conservative]
       spread: [expected_margin_v1_stable]
       total: [ridge_totals_v1_R4_alpha_100]
-    market_books: [draftkings, fanduel, pinnacle]
+    raw_acquisition_books:
+      - draftkings
+      - fanduel
+      - pinnacle
+      - betmgm
+      - williamhill_us
+      - caesars
+      - betrivers
+      - pointsbetus
+      - wynnbet
+      - unibet_us
+    product_preserved_books: [draftkings, fanduel, pinnacle]
     market_types: [moneyline, spread, total]
     snapshot_policy: T_minus_60_natural_kickoff_cluster
     evaluator_families: [ml_v4, spread_v3, total_v3]
