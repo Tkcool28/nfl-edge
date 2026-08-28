@@ -1,0 +1,87 @@
+{
+  "schema_version": "pre2025_product_freeze_manifest_v1",
+  "status": "PRE2025_PRODUCT_FREEZE_PARTIAL",
+  "contract_git_sha": "7e06b621901c80903363b18b36bbc97dfe7f6b8e",
+  "reference_main_sha": "65504d9d834d15d71d6fdc205a912eec455b66ab",
+  "task05g_clean_promotion_head": "4150fc411eb7450a8aeb8a13b076c278ddf3d28d",
+  "task05g_merge_commit": "a684b046980c43e200ca87ce8d9165f9890c6696",
+  "holdout_season": 2025,
+  "holdout_opened": false,
+  "authorization_ready": false,
+  "canonical_preflight_command": "python scripts/task05g_2025_holdout_one_shot_v1.py --preflight",
+  "canonical_future_holdout_command": "python scripts/task05g_2025_holdout_one_shot_v1.py --authorization MASTER_APPROVED_OPEN_2025_ONCE",
+  "contract_files": {
+    "config/task05g_2025_acceptance_v1.yaml": "2ff51beb3207ff98583ce4f115000ab8078d6ca3",
+    "config/task05g_pre2025_holdout_freeze_v1.yaml": "c1c980e731e48d93f33231cc0990075861f18678",
+    "docs/PRE2025_HOLDOUT_ACCEPTANCE_SPEC_V1.md": "5d68de6018982ba0847626060e4849393951d26c",
+    "docs/PRE2025_CHRONOLOGY_AND_CHANGE_CONTROL_V1.md": "aec114154498175f9b50b399cdf6be366a3ce3eb",
+    "docs/PRE2025_PRODUCT_FREEZE_V1.md": "ab815362bb3fac9a193ffb41789823873d69fad0",
+    "scripts/pre2025_safe_development_replay_v1.py": "9dcd311c22b1f9ad4767044598d5918b9aad3c7f",
+    "scripts/task05g_pre2025_freeze_audit_v1.py": "09dafc16c9ce794c42754b14baf25bc18f8ffc01",
+    "scripts/task05g_2025_holdout_one_shot_v1.py": "9ba7b548606a5210affee83a69ca5f1772aa1ddd",
+    "tests/recommendation/test_pre2025_product_freeze_v1.py": "8b05dd99195800822578532421e0b8ee50a4c335",
+    ".github/workflows/pre2025-product-freeze-v1.yml": "3b40383c55fe772e31ecdda7e99d3d20e5fa65c4"
+  },
+  "production_identity": {
+    "task05f_evaluator_config": "9e5da0610d8af9f2d654d5fd6a1a8ed0f34dfa4a",
+    "final_selector_config": "3f1b9c9b38f94c8fbff6694a4f6b368e352a95d3",
+    "staking_risk_config": "c660a9d71f20fb2fa182fedd9e758694ab49deaa",
+    "default_manual_policy_config": "4af9b17df9377e9dec79775c91d52f46ddebae1c",
+    "selector_unit_policy_config": "9ce9f06c1a9cb1ea046c0b38dafc46a26c0eeda2",
+    "final_product_freeze_config": "a698c399a3307f3a425b07f3cc3b2c3f32fdba72",
+    "final_selectors": "70985cef2f6d0792ef35364776528403346ec7d2",
+    "headline_staking": "5fbc6b688fd939b751f9cefeab9538a8f1159898",
+    "staking": "eefb5d2585b129c9679b12c5fea1a6c3bdbce88a",
+    "product_policy": "3d0fecc78f5e4a5c8d64cbd473e3513aa18e4441",
+    "legacy_policy_quarantine": "d72cea40119425ca9c877428654bb52c34799bc5",
+    "evaluators": "afad372b29131811c83f3ce825ce2a528ea8e788",
+    "candidate_table": "5ae5d14a347d337d3d28fe743fc8cbaadf824445",
+    "accepted_calibration": "1b8e61465a17693b14cacfe4a6809e3e4fc40c49",
+    "reliability": "d23d71d209642f384f23b532d76dfd035546ca6f",
+    "play_through": "0cb2740a4ca15f72580f086de574a6e609f8474c"
+  },
+  "historical_replay_identity": {
+    "task05f_runner": "d77768dfae1c022d050729f9b3686bf8cfd36503",
+    "model_confidence_v2_entrypoint": "6054672625a1064a891cfc8561eaa0c4e06d4a82",
+    "model_confidence_v2_core": "0cc76db7805029bfffd29524954f5e4c1460ba97",
+    "spread_confidence_v3": "5ee5742b349eeda6d7f9a0a9c7bdcaa750851191",
+    "canonical_product_replay": "d327bc0a6e42a69d206c1c31eec3227f096e9eb8",
+    "safe_2018_2024_outcome_source": "15535722169e8f71e0eba92b28b296dc40c684a8"
+  },
+  "accepted_artifact_sha256": {
+    "task05f_historical_evaluator_board": "e28f0eb43275fc97c8e36744e032ef401d7659b72854dc5a3aa25236ce1e5dad",
+    "task05f_frozen_evaluator_state": "6c6e05bd6f70bbe7ea21ff087c859096249ca23fc42a6c9fded472f45b2f7ede",
+    "task05f_scorecard": "461b931866407b17eb46120803f8fa18ae1dab7e07bc2b26b1884ba424e07022",
+    "model_confidence_v2_scorecard": "20ee8238e8922f6ded2ab36e867710a32343d89c612313774c48973c73b1daac",
+    "spread_confidence_v3_scorecard": "29e604e81a29754d8aaf554827b19a0d9e4023906467e01cf81fa70f4df063de"
+  },
+  "accepted_2020_2024_identity": {
+    "hit_rate": 81,
+    "balanced": 88,
+    "value": 68,
+    "hit_rate_current_bet": 81,
+    "balanced_current_bet": 88,
+    "value_current_bet": 40,
+    "value_target_only": 28,
+    "published_zero_actionable_unit": 0,
+    "deduped_current_wagers": 174,
+    "record": "112-61-1",
+    "risked_units": 144.0,
+    "weighted_profit_units": 8.05,
+    "normal_1000_ending_bankroll": 1075.59,
+    "normal_return_pct": 7.56,
+    "normal_max_drawdown_pct": 8.69
+  },
+  "sealed_data_policy": {
+    "git_metadata_only_during_preparation": true,
+    "mixed_2025_parquet_contents_opened": false,
+    "2025_outcomes_scored": false,
+    "safe_historical_replay_uses_2018_2024_only_outcome_source": true
+  },
+  "blockers": [
+    "No frozen authorized 2025 football-model materialization/orchestration path exists in the repository.",
+    "No frozen 2025 T-60 DK/FD/Pinnacle historical market acquisition plan/canonical artifact exists in the repository."
+  ],
+  "recommendation": "NOT_READY_TO_OPEN_2025",
+  "explicit_holdout_statement": "2025 HOLDOUT HAS NOT BEEN OPENED"
+}
