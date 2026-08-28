@@ -38,7 +38,7 @@ protected_git_blobs:
 
 sealed_data_git_metadata:
   - path: data/frozen/games/games_2018_2025.parquet
-    git_blob: 59ed652fe870f37e346ff3c8304627b2691c8488
+    git_blob: 4eec099723f20435fac05daaad18d0cb282f0e60
   - path: data/derived/features_v1/game_features_2018_2025.parquet
     git_blob: e52a72cdc32d04a8eb3ac2481f8a4bfa52137927
   - path: data/derived/features_v1/qb_pregame_features_2018_2025.parquet

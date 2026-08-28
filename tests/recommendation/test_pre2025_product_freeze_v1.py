@@ -48,7 +48,7 @@ def test_authorization_phrase_is_hash_locked():
 
 def test_prefreeze_audit_uses_git_metadata_for_sealed_files():
     text = AUDIT.read_text()
-    assert 'git", "ls-files", "-s"' in text
+    assert '_git("ls-files", "-s", "--", path)' in text
     assert "pl.read_parquet" not in text
     assert "pandas" not in text
     assert "pyarrow" not in text
