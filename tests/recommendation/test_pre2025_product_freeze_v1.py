@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import json
 import subprocess
 import sys
@@ -13,6 +12,7 @@ ACCEPT = ROOT / "config" / "task05g_2025_acceptance_v1.yaml"
 FREEZE = ROOT / "config" / "task05g_pre2025_holdout_freeze_v1.yaml"
 RUNNER = ROOT / "scripts" / "task05g_2025_holdout_one_shot_v1.py"
 AUDIT = ROOT / "scripts" / "task05g_pre2025_freeze_audit_v1.py"
+WORKFLOW = ROOT / ".github" / "workflows" / "pre2025-product-freeze-v1.yml"
 
 
 def _yaml(path: Path):
@@ -40,19 +40,65 @@ def test_acceptance_contract_has_no_tuning_surface():
     assert cfg["interpretation"]["methodology_change_from_2025_results"] == "prohibited"
 
 
-def test_authorization_phrase_is_hash_locked():
+def test_authorization_is_hash_only_and_external_to_repository():
     cfg = _yaml(ACCEPT)
-    digest = hashlib.sha256(b"MASTER_APPROVED_OPEN_2025_ONCE").hexdigest()
-    assert digest == cfg["authorization"]["exact_phrase_sha256"]
+    auth = cfg["authorization"]
+    assert len(auth["exact_phrase_sha256"]) == 64
+    assert auth["plaintext_stored_in_repository"] is False
+    assert "$NFL_EDGE_2025_AUTHORIZATION" in cfg["execution"]["canonical_command"]
+    runner_text = RUNNER.read_text()
+    assert "AUTHORIZATION_PHRASE" not in runner_text
+    assert "supplied != AUTHORIZATION_SHA256" in runner_text
 
 
-def test_prefreeze_audit_uses_git_metadata_for_sealed_files():
+def test_holdout_market_book_contract_preserves_raw_and_product_scopes():
+    cfg = _yaml(ACCEPT)["execution"]["required_future_executor_contract"]
+    assert cfg["raw_acquisition_books"] == [
+        "draftkings",
+        "fanduel",
+        "pinnacle",
+        "betmgm",
+        "williamhill_us",
+        "caesars",
+        "betrivers",
+        "pointsbetus",
+        "wynnbet",
+        "unibet_us",
+    ]
+    assert cfg["product_preserved_books"] == ["draftkings", "fanduel", "pinnacle"]
+
+
+def test_prefreeze_audit_uses_immutable_git_metadata_for_sealed_files():
     text = AUDIT.read_text()
-    assert '_git("ls-files", "-s", "--", path)' in text
+    assert "IMMUTABLE_FREEZE_ANCHOR_SHA" in text
+    assert "IMMUTABLE_REFERENCE_MAIN_SHA" in text
+    assert '"ls-files", "-s", "--", path' in text
+    assert '"ls-tree", commit, "--", path' in text
+    assert "freeze manifest drift from immutable anchor" in text
+    assert "contract file changed after contract_git_sha" in text
     assert "pl.read_parquet" not in text
     assert "pandas" not in text
     assert "pyarrow" not in text
     assert "sealed_data_bytes_read" in text
+
+
+def test_prefreeze_audit_rejects_dirty_executable_paths_without_diffing_sealed_data():
+    text = AUDIT.read_text()
+    assert "unstaged protected-file drift" in text
+    assert "staged protected-file drift" in text
+    assert "_assert_clean_executable_path(path)" in text
+    sealed_loop = text.split("sealed_metadata: dict[str, str] = {}", 1)[1].split(
+        "guards =", 1
+    )[0]
+    assert "_assert_clean_executable_path" not in sealed_loop
+
+
+def test_freeze_workflow_runs_for_every_pull_request_and_uses_invalid_auth():
+    text = WORKFLOW.read_text()
+    assert "  pull_request:\n  workflow_dispatch:" in text
+    assert "paths:" not in text.split("permissions:", 1)[0]
+    assert "CI_INTENTIONALLY_INVALID_AUTHORIZATION" in text
+    assert "$NFL_EDGE_2025_AUTHORIZATION" not in text
 
 
 def test_one_shot_runner_has_no_2025_data_reader_while_blocked():
@@ -80,25 +126,13 @@ def test_preflight_passes_without_opening_holdout(tmp_path):
 
 def test_wrong_authorization_fails_closed_before_holdout_read():
     completed = subprocess.run(
-        [sys.executable, str(RUNNER), "--authorization", "WRONG"],
+        [sys.executable, str(RUNNER), "--authorization", "CI_TEST_INVALID"],
         cwd=ROOT,
         text=True,
         capture_output=True,
     )
     assert completed.returncode == 2
     assert "authorization mismatch" in completed.stderr
-
-
-def test_correct_authorization_still_fails_while_executor_unfrozen():
-    completed = subprocess.run(
-        [sys.executable, str(RUNNER), "--authorization", "MASTER_APPROVED_OPEN_2025_ONCE"],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-    )
-    assert completed.returncode == 2
-    assert "HOLDOUT_EXECUTOR_NOT_FROZEN" in completed.stderr
-    assert "no 2025 read occurred" in completed.stderr
 
 
 def test_existing_production_freeze_remains_no_semantic_changes():
