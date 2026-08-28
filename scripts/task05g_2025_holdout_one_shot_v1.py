@@ -4,12 +4,12 @@
 Preparation behavior is intentionally fail-closed:
 - --preflight never opens any 2025 data.
 - missing/wrong authorization fails before any 2025 data access.
-- while the frozen config says execution.ready=false, even the correct
-  authorization phrase fails before any 2025 data access.
+- while the frozen config says execution.ready=false, even a value matching the
+  frozen authorization hash fails before any 2025 data access.
 
-When the missing holdout-only upstream executor is implemented and re-frozen,
-this same command surface becomes the canonical one-shot entrypoint. There are
-no tuning or threshold flags.
+The plaintext one-shot authorization is deliberately not stored in this
+repository or exercised by CI. The future operator supplies it out-of-band;
+this entrypoint verifies only its frozen SHA-256 digest.
 """
 from __future__ import annotations
 
@@ -29,7 +29,6 @@ FREEZE_PATH = ROOT / "config" / "task05g_pre2025_holdout_freeze_v1.yaml"
 AUDIT = ROOT / "scripts" / "task05g_pre2025_freeze_audit_v1.py"
 OUTPUT_DIR = ROOT / "artifacts" / "task05g_2025_holdout_v1"
 SPEND_MARKER = OUTPUT_DIR / "HOLDOUT_SPENT.json"
-AUTHORIZATION_PHRASE = "MASTER_APPROVED_OPEN_2025_ONCE"
 AUTHORIZATION_SHA256 = "7b8fd4a076caf6d97f00435d8b87d97e7f9c71055a25d324821160826be65556"
 
 
@@ -106,7 +105,7 @@ def _verify_authorization(value: str | None) -> None:
     if value is None:
         raise HoldoutGateError("authorization is required; 2025 remains sealed")
     supplied = hashlib.sha256(value.encode()).hexdigest()
-    if supplied != AUTHORIZATION_SHA256 or value != AUTHORIZATION_PHRASE:
+    if supplied != AUTHORIZATION_SHA256:
         raise HoldoutGateError("authorization mismatch; 2025 remains sealed")
 
 
