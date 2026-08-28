@@ -61,38 +61,6 @@ jobs:
           python scripts/pre2025_safe_development_replay_v1.py \
             --out-root artifacts/pre2025/run_b
 
-      - name: Print replay identity diagnostics
-        run: |
-          python - <<'PY'
-          import hashlib, json
-          from pathlib import Path
-
-          root=Path('artifacts/pre2025/run_a')
-          expected={
-              root/'upstream/scorecard.json':'461b931866407b17eb46120803f8fa18ae1dab7e07bc2b26b1884ba424e07022',
-              root/'v2/scorecard.json':'20ee8238e8922f6ded2ab36e867710a32343d89c612313774c48973c73b1daac',
-              root/'v3/scorecard.json':'29e604e81a29754d8aaf554827b19a0d9e4023906467e01cf81fa70f4df063de',
-          }
-          for path,want in expected.items():
-              got=hashlib.sha256(path.read_bytes()).hexdigest()
-              print(f'HASH path={path} actual={got} expected={want} match={got==want}', flush=True)
-
-          for label,path in (
-              ('task05f',root/'upstream/scorecard.json'),
-              ('v2',root/'v2/scorecard.json'),
-              ('v3',root/'v3/scorecard.json'),
-              ('product',root/'product/scorecard.json'),
-          ):
-              obj=json.loads(path.read_text())
-              summary={k:obj.get(k) for k in (
-                  'version','development_seasons','sealed_season','sealed_not_run',
-                  'headline_counts','published_headline_counts',
-                  'positive_current_bet_headline_counts','value_at_target_only_cards',
-                  'value_suppressed_cards','promotion_status','invariants'
-              ) if k in obj}
-              print(f'SEMANTIC {label} '+json.dumps(summary,sort_keys=True), flush=True)
-          PY
-
       - name: Determinism and accepted-identity gates
         run: |
           cmp artifacts/pre2025/run_a/product/scorecard.json artifacts/pre2025/run_b/product/scorecard.json
@@ -103,24 +71,39 @@ jobs:
           import hashlib, json
           from pathlib import Path
 
-          root=Path('artifacts/pre2025/run_a')
-          expected={
-              root/'upstream/scorecard.json':'461b931866407b17eb46120803f8fa18ae1dab7e07bc2b26b1884ba424e07022',
-              root/'v2/scorecard.json':'20ee8238e8922f6ded2ab36e867710a32343d89c612313774c48973c73b1daac',
-              root/'v3/scorecard.json':'29e604e81a29754d8aaf554827b19a0d9e4023906467e01cf81fa70f4df063de',
-          }
-          for path,want in expected.items():
-              got=hashlib.sha256(path.read_bytes()).hexdigest()
-              assert got==want,(str(path),got,want)
+          root = Path('artifacts/pre2025/run_a')
 
-          s=json.loads((root/'product/scorecard.json').read_text())
-          assert s['sealed_not_run']==[2025],s
-          assert s['headline_counts']=={'balanced':88,'hit_rate':81,'value':68},s
-          assert s['positive_current_bet_headline_counts']['hit_rate']==81,s
-          assert s['positive_current_bet_headline_counts']['balanced']==88,s
-          assert s['value_at_target_only_cards']==28,s
-          assert s['value_suppressed_cards']==0,s
-          assert all(s['invariants'].values()),s['invariants']
+          # Exact identities that must remain unchanged under the safe 2018-24 replay.
+          exact_expected = {
+              root/'upstream/scorecard.json': '461b931866407b17eb46120803f8fa18ae1dab7e07bc2b26b1884ba424e07022',
+              root/'v2/scorecard.json': '2ac55ed409517641304931645e7643210c5baca4510a4233710e0a2b8cf7976d',
+              root/'v3/scorecard.json': '29e604e81a29754d8aaf554827b19a0d9e4023906467e01cf81fa70f4df063de',
+              root/'product/headline_cards.csv': '568bb131b792d26f4bdf30b48a714bf478b8eeffc5e2e2db27773b6903c17816',
+              root/'product/scorecard.json': '2cb698615d2e179671bee03c4ae24b8e1b2cbdf13cd4938816f86a163d8e102b',
+              root/'product/season_lane_summary.csv': 'f696818b1916e6c1bfd33574690f8c3c7a681621abd515637482489d794f2acd',
+              root/'product/all_cards_bankroll_scenarios.csv': '6d9e72b4908796231bbbae5236ac51418ed1c4112acc3988b1e2498a812ff339',
+          }
+          for path, want in exact_expected.items():
+              got = hashlib.sha256(path.read_bytes()).hexdigest()
+              print(f'HASH path={path} actual={got} expected={want} match={got == want}', flush=True)
+              assert got == want, (str(path), got, want)
+
+          # The original accepted Model Confidence V2 scorecard had hash
+          # 20ee8238e8922f6ded2ab36e867710a32343d89c612313774c48973c73b1daac.
+          # The safe replay deliberately changes only upstream provenance/reference
+          # metadata by replacing the mixed 2018-2025 outcome source with a 2018-2024-only
+          # source. The safe V2 identity above is therefore frozen separately. Exact
+          # downstream V3 and final-product byte identities prove product behavior is
+          # unchanged rather than weakening the product gate.
+
+          s = json.loads((root/'product/scorecard.json').read_text())
+          assert s['sealed_not_run'] == [2025], s
+          assert s['headline_counts'] == {'balanced': 88, 'hit_rate': 81, 'value': 68}, s
+          assert s['positive_current_bet_headline_counts']['hit_rate'] == 81, s
+          assert s['positive_current_bet_headline_counts']['balanced'] == 88, s
+          assert s['value_at_target_only_cards'] == 28, s
+          assert s['value_suppressed_cards'] == 0, s
+          assert all(s['invariants'].values()), s['invariants']
           PY
 
       - uses: actions/upload-artifact@v4
