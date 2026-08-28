@@ -1,0 +1,126 @@
+schema_version: task05g_2025_acceptance_v1
+status: PREFROZEN_EXECUTION_BLOCKED
+holdout_season: 2025
+development_reference_seasons: [2020, 2021, 2022, 2023, 2024]
+authorization:
+  required: true
+  exact_phrase_sha256: 7b8fd4a076caf6d97f00435d8b87d97e7f9c71055a25d324821160826be65556
+  must_be_verified_before_any_2025_file_read: true
+  one_spend_marker: artifacts/task05g_2025_holdout_v1/HOLDOUT_SPENT.json
+execution:
+  ready: false
+  canonical_command: >-
+    python scripts/task05g_2025_holdout_one_shot_v1.py
+    --authorization MASTER_APPROVED_OPEN_2025_ONCE
+  tuning_flags_allowed: false
+  blocked_reasons:
+    - No frozen authorized 2025 football-model materialization path exists yet; accepted model runners are development-only and hard-fail at 2024.
+    - No frozen authorized 2025 T-60 historical market acquisition plan exists yet; canonical tracked market data ends at 2024.
+  required_future_executor_contract:
+    football_models:
+      moneyline: [oracle_qb_elo_v1, chronology_corrected_xgboost_v1_conservative]
+      spread: [expected_margin_v1_stable]
+      total: [ridge_totals_v1_R4_alpha_100]
+    market_books: [draftkings, fanduel, pinnacle]
+    market_types: [moneyline, spread, total]
+    snapshot_policy: T_minus_60_natural_kickoff_cluster
+    evaluator_families: [ml_v4, spread_v3, total_v3]
+    downstream_layers:
+      - model_confidence_v2
+      - spread_confidence_v3
+      - final_hit_rate_selector
+      - final_balanced_selector
+      - final_value_selector
+      - headline_actionability_policy
+      - deterministic_recommended_units
+      - five_risk_profile_dollar_conversion
+      - play_through_and_value_at_policy
+chronology:
+  unit: nfl_season_week_block
+  ordering: [season, season_type_priority, week, scheduled_start_utc, game_id]
+  rule: predict_entire_block_from_strictly_prior_state_then_reveal_block_outcomes
+  same_block_outcomes_available_to_predictions: false
+  retroactive_knowledge: prohibited
+  current_or_future_block_outcome_use: prohibited
+outputs:
+  directory: artifacts/task05g_2025_holdout_v1
+  required:
+    - holdout_headline_cards.csv
+    - holdout_weekly_summary.csv
+    - holdout_lane_summary.csv
+    - holdout_market_mix.csv
+    - holdout_bankroll_scenarios.csv
+    - holdout_scenario_ledger.csv
+    - holdout_product_integrity.json
+    - holdout_provenance.json
+    - holdout_acceptance_report.json
+acceptance:
+  hard_integrity_invariants:
+    - output_seasons_exactly_2025
+    - all_frozen_git_blob_identities_match_before_holdout_open
+    - authorization_verified_before_first_2025_read
+    - one_spend_marker_absent_before_run_and_written_immediately_on_open
+    - strict_prior_block_training_only
+    - no_same_block_outcome_leakage
+    - no_dead_zero_dollar_published_headline
+    - no_unsupported_promoted_recommendation
+    - no_fake_value_label
+    - no_forced_weekly_action
+    - duplicate_wagers_not_additive
+    - unit_and_slate_caps_preserved
+    - full_board_output_remains_available
+    - no_tuning_or_selection_flags
+    - complete_unomitted_holdout_artifacts
+  headline_metrics:
+    - hhr_selections
+    - hhr_no_play_weeks
+    - balanced_selections
+    - balanced_no_play_weeks
+    - value_current_bets
+    - value_target_only
+    - value_suppressed
+    - selector_overlap
+  betting_metrics:
+    - exact_actionable_book_offer
+    - recommended_units
+    - dollar_stake_all_five_profiles
+    - market_mix
+    - price_distribution
+    - play_through
+    - value_at
+    - exposure
+  outcome_metrics:
+    - wins
+    - losses
+    - pushes
+    - nonpush_hit_rate
+    - flat_unit_profit
+    - weighted_unit_profit
+    - bankroll_ending_value
+    - bankroll_return
+    - maximum_drawdown
+    - longest_losing_streak
+  product_honesty_metrics:
+    - dead_zero_dollar_headlines
+    - unsupported_promotions
+    - fake_value_labels
+    - forced_action_weeks
+    - full_board_coherence_failures
+interpretation:
+  every_lane_profitable_required: false
+  positive_one_season_roi_proves_durable_edge: false
+  negative_one_season_roi_proves_defect: false
+  permitted_acceptance_dimensions:
+    - implementation_integrity
+    - probability_and_selector_behavior
+    - wagering_result_variance
+    - product_usefulness
+  post_result_retuning: prohibited
+  methodology_change_from_2025_results: prohibited
+  allowed_post_holdout_change:
+    - methodology_preserving_implementation_defect_fix_only
+  defect_fix_requires:
+    - written_defect_description
+    - proof_methodology_unchanged
+    - new_versioned_freeze
+    - original_2025_result_preserved_unmodified

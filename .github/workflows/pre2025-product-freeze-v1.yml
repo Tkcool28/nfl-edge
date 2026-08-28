@@ -1,0 +1,98 @@
+name: Pre-2025 Product Freeze V1
+
+on:
+  pull_request:
+    paths:
+      - 'config/task05g_2025_acceptance_v1.yaml'
+      - 'config/task05g_pre2025_holdout_freeze_v1.yaml'
+      - 'docs/PRE2025_HOLDOUT_ACCEPTANCE_SPEC_V1.md'
+      - 'docs/PRE2025_CHRONOLOGY_AND_CHANGE_CONTROL_V1.md'
+      - 'docs/PRE2025_PRODUCT_FREEZE_V1.md'
+      - 'scripts/pre2025_safe_development_replay_v1.py'
+      - 'scripts/task05g_pre2025_freeze_audit_v1.py'
+      - 'scripts/task05g_2025_holdout_one_shot_v1.py'
+      - 'tests/recommendation/test_pre2025_product_freeze_v1.py'
+      - 'reports/pre2025/pre2025_product_freeze_manifest_v1.json'
+      - '.github/workflows/pre2025-product-freeze-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prefreeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11', cache: pip}
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+
+      - name: Compile and prove sealed preflight
+        run: |
+          python -m py_compile \
+            scripts/pre2025_safe_development_replay_v1.py \
+            scripts/task05g_pre2025_freeze_audit_v1.py \
+            scripts/task05g_2025_holdout_one_shot_v1.py
+          pytest -q \
+            tests/recommendation/test_pre2025_product_freeze_v1.py \
+            tests/recommendation/test_task05g_headline_staking_v1.py \
+            tests/recommendation/test_task05g_staking_v1.py \
+            tests/recommendation/test_task05g_product_policy_v1.py \
+            tests/recommendation/test_task05g_final_selectors_v1.py
+          python scripts/task05g_pre2025_freeze_audit_v1.py \
+            --out artifacts/pre2025/prefreeze_audit.json
+          python scripts/task05g_2025_holdout_one_shot_v1.py --preflight \
+            > artifacts/pre2025/holdout_preflight.json
+          if python scripts/task05g_2025_holdout_one_shot_v1.py \
+            --authorization MASTER_APPROVED_OPEN_2025_ONCE; then
+            echo 'ERROR: blocked holdout command unexpectedly executed' >&2
+            exit 1
+          fi
+
+      - name: Reproduce 2020-24 product twice without mixed 2025 file reads
+        run: |
+          python scripts/pre2025_safe_development_replay_v1.py \
+            --out-root artifacts/pre2025/run_a
+          python scripts/pre2025_safe_development_replay_v1.py \
+            --out-root artifacts/pre2025/run_b
+
+      - name: Determinism and accepted-identity gates
+        run: |
+          cmp artifacts/pre2025/run_a/product/scorecard.json artifacts/pre2025/run_b/product/scorecard.json
+          cmp artifacts/pre2025/run_a/product/headline_cards.csv artifacts/pre2025/run_b/product/headline_cards.csv
+          cmp artifacts/pre2025/run_a/product/season_lane_summary.csv artifacts/pre2025/run_b/product/season_lane_summary.csv
+          cmp artifacts/pre2025/run_a/product/all_cards_bankroll_scenarios.csv artifacts/pre2025/run_b/product/all_cards_bankroll_scenarios.csv
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          root=Path('artifacts/pre2025/run_a')
+          expected={
+              root/'upstream/scorecard.json':'461b931866407b17eb46120803f8fa18ae1dab7e07bc2b26b1884ba424e07022',
+              root/'v2/scorecard.json':'20ee8238e8922f6ded2ab36e867710a32343d89c612313774c48973c73b1daac',
+              root/'v3/scorecard.json':'29e604e81a29754d8aaf554827b19a0d9e4023906467e01cf81fa70f4df063de',
+          }
+          for path,want in expected.items():
+              got=hashlib.sha256(path.read_bytes()).hexdigest()
+              assert got==want,(str(path),got,want)
+
+          s=json.loads((root/'product/scorecard.json').read_text())
+          assert s['sealed_not_run']==[2025],s
+          assert s['headline_counts']=={'balanced':88,'hit_rate':81,'value':68},s
+          assert s['positive_current_bet_headline_counts']['hit_rate']==81,s
+          assert s['positive_current_bet_headline_counts']['balanced']==88,s
+          assert s['value_at_target_only_cards']==28,s
+          assert s['value_suppressed_cards']==0,s
+          assert all(s['invariants'].values()),s['invariants']
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pre2025-product-freeze-${{ github.sha }}
+          path: artifacts/pre2025/
+          if-no-files-found: error
