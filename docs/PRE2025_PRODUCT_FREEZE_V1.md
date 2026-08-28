@@ -54,12 +54,13 @@ The prefreeze CI must rebuild the 2020–24 chain and run the final product repl
 
 Preparation may inspect Git metadata for mixed 2018–2025 files, including tracked path, Git blob SHA, and size. It may not open their data contents to inspect, summarize, score, replay, or infer 2025 performance.
 
-The prefreeze audit verifies sealed-path identity with `git ls-files -s`, which reads Git index metadata rather than parquet bytes.
+The prefreeze audit verifies sealed-path identity with Git index/tree metadata rather than parquet bytes. Protected executable code/config is additionally required to be clean in both the index and worktree.
 
 The canonical one-shot gate:
 
 - performs a code/config preflight
-- requires an exact Master authorization phrase
+- requires an exact Master authorization supplied out-of-band
+- stores only the authorization SHA-256 in the repository
 - must verify authorization before any 2025 data read
 - remains hard-blocked while `execution.ready: false`
 - has no tuning flags
@@ -82,16 +83,20 @@ Before authorization, a separate holdout-only adapter must be implemented and fr
 
 Tracked canonical sportsbook inputs currently cover 2020–2024. The existing historical acquisition plan is likewise hard-frozen to 2020–2024.
 
-The future holdout requires T-60 historical snapshots for at least:
+The future holdout raw acquisition must preserve the same frozen ten-book historical source scope:
 
 - DraftKings
 - FanDuel
 - Pinnacle
-- moneyline
-- spread
-- total
+- BetMGM
+- William Hill US
+- Caesars
+- BetRivers
+- PointsBet US
+- WynnBET
+- Unibet US
 
-under the existing natural-kickoff-cluster policy.
+The downstream product-preserved books remain DraftKings, FanDuel, and Pinnacle. The market set remains moneyline/h2h, spread, and total under the existing natural-kickoff-cluster T-60 policy.
 
 A separately authorized 2025 plan/acquisition path must be frozen before the holdout is run. If equivalent 2025 artifacts exist outside the repo, they still require provenance/hash verification and explicit incorporation into the holdout contract before authorization.
 
@@ -103,11 +108,11 @@ Preflight only:
 python scripts/task05g_2025_holdout_one_shot_v1.py --preflight
 ```
 
-Future one-shot command, intentionally blocked in this freeze:
+Future one-shot command, intentionally blocked in this freeze. The authorization value is supplied out-of-band and is not committed to the repository or exercised by CI:
 
 ```bash
 python scripts/task05g_2025_holdout_one_shot_v1.py \
-  --authorization MASTER_APPROVED_OPEN_2025_ONCE
+  --authorization "$NFL_EDGE_2025_AUTHORIZATION"
 ```
 
 No tuning, selector, threshold, profile, corridor, model-family, or market-family flags are permitted.
