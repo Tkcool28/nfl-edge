@@ -1,7 +1,7 @@
 {
   "schema_version": "pre2025_product_freeze_manifest_v1",
   "status": "PRE2025_PRODUCT_FREEZE_PARTIAL",
-  "contract_git_sha": "291029a89402ccbb7a81a37d2cef59dca31aeb5d",
+  "contract_git_sha": "7d7150d66bbceab76ddc0627b719c426a0fcee53",
   "reference_main_sha": "65504d9d834d15d71d6fdc205a912eec455b66ab",
   "task05g_clean_promotion_head": "4150fc411eb7450a8aeb8a13b076c278ddf3d28d",
   "task05g_merge_commit": "a684b046980c43e200ca87ce8d9165f9890c6696",
@@ -20,7 +20,7 @@
     "scripts/task05g_pre2025_freeze_audit_v1.py": "09dafc16c9ce794c42754b14baf25bc18f8ffc01",
     "scripts/task05g_2025_holdout_one_shot_v1.py": "9ba7b548606a5210affee83a69ca5f1772aa1ddd",
     "tests/recommendation/test_pre2025_product_freeze_v1.py": "8b05dd99195800822578532421e0b8ee50a4c335",
-    ".github/workflows/pre2025-product-freeze-v1.yml": "a831c776ab9368809bcf9ac07521de49887488ed"
+    ".github/workflows/pre2025-product-freeze-v1.yml": "a8c3ef05a1c6483eac15d6a6aaea69b7c56c5ce4"
   },
   "production_identity": {
     "task05f_evaluator_config": "9e5da0610d8af9f2d654d5fd6a1a8ed0f34dfa4a",
@@ -53,12 +53,19 @@
     "task05f_frozen_evaluator_state": "6c6e05bd6f70bbe7ea21ff087c859096249ca23fc42a6c9fded472f45b2f7ede",
     "task05f_scorecard": "461b931866407b17eb46120803f8fa18ae1dab7e07bc2b26b1884ba424e07022",
     "model_confidence_v2_production_reference_scorecard": "20ee8238e8922f6ded2ab36e867710a32343d89c612313774c48973c73b1daac",
-    "model_confidence_v2_safe_pre2025_scorecard": "2ac55ed409517641304931645e7643210c5baca4510a4233710e0a2b8cf7976d",
+    "model_confidence_v2_safe_pre2025_scorecard": "2ac884e25e0a72c8057b6d72dbad897218e66ae3096751e8a4a75aeef19b32f3",
     "spread_confidence_v3_scorecard": "29e604e81a29754d8aaf554827b19a0d9e4023906467e01cf81fa70f4df063de",
-    "final_product_headline_cards": "568bb131b792d26f4bdf30b48a714bf478b8eeffc5e2e2db27773b6903c17816",
-    "final_product_scorecard": "2cb698615d2e179671bee03c4ae24b8e1b2cbdf13cd4938816f86a163d8e102b",
-    "final_product_season_lane_summary": "f696818b1916e6c1bfd33574690f8c3c7a681621abd515637482489d794f2acd",
-    "final_product_all_cards_bankroll_scenarios": "6d9e72b4908796231bbbae5236ac51418ed1c4112acc3988b1e2498a812ff339"
+    "final_product_headline_cards": "9ebe2784f63757d9a7ad37855a4ad4b813dd64029a3a67a9f4429e0128fe22eb",
+    "final_product_scorecard": "c78ee43d2fcb0e2f39e0d9a048db5fdfa08a3a274b3a75ea9c32325865bae7a2",
+    "final_product_season_lane_summary": "d7a1f39d1fcca97776a8273cc131d4b79c82e3bbc4fa0f16304f12ec948fa44f",
+    "final_product_all_cards_bankroll_scenarios": "7eb08fefe6cfa14bd185ccffdd0c27df22200354de191e87feaef1e0406a3281"
+  },
+  "accepted_product_reference_artifact": {
+    "workflow_name": "Task05G Canonical Product Replay V1",
+    "freeze_integrity_run": 33119361164,
+    "artifact_id": 9665847701,
+    "artifact_digest": "sha256:7c14dd19e6cc98cc5559871a68c2b77d091979feaa88efe794bb78c2208a7316",
+    "safe_replay_comparison": "BYTE_IDENTICAL_FOR_FOUR_GATED_FINAL_PRODUCT_FILES"
   },
   "safe_replay_identity_interpretation": {
     "model_confidence_v2_reference_hash_difference": "PROVENANCE_ONLY",
