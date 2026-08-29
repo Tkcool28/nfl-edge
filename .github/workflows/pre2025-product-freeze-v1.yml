@@ -25,12 +25,14 @@ jobs:
           python -m py_compile \
             src/nfl_edge/holdout/market_2025.py \
             src/nfl_edge/holdout/football_2025.py \
+            src/nfl_edge/holdout/expected_margin_2025.py \
             scripts/pre2025_safe_development_replay_v1.py \
             scripts/task05g_pre2025_freeze_audit_v1.py \
             scripts/task05g_2025_holdout_one_shot_v1.py
           pytest -q \
             tests/holdout/test_market_2025_adapter.py \
             tests/holdout/test_football_2025_adapter.py \
+            tests/holdout/test_expected_margin_2025_adapter.py \
             tests/recommendation/test_pre2025_product_freeze_v1.py \
             tests/recommendation/test_task05g_headline_staking_v1.py \
             tests/recommendation/test_task05g_staking_v1.py \
