@@ -1,7 +1,7 @@
 {
   "schema_version": "pre2025_product_freeze_manifest_v1",
   "status": "PRE2025_PRODUCT_FREEZE_PARTIAL",
-  "contract_git_sha": "da44741e6f6d33c70d5455e6e9bbbe37f905b5ee",
+  "contract_git_sha": "b040f92b932ef159bc56cd4c8f1d32f54fb7b825",
   "reference_main_sha": "65504d9d834d15d71d6fdc205a912eec455b66ab",
   "task05g_clean_promotion_head": "4150fc411eb7450a8aeb8a13b076c278ddf3d28d",
   "task05g_merge_commit": "a684b046980c43e200ca87ce8d9165f9890c6696",
@@ -22,9 +22,11 @@
     "scripts/task05g_2025_holdout_one_shot_v1.py": "a2f89e1f5b683820f6d2a18b6afb7eb2cd16a279",
     "src/nfl_edge/holdout/__init__.py": "af334f4898cd6315bb63a60e21850c04c7924fe0",
     "src/nfl_edge/holdout/market_2025.py": "5200c1292282d9c834268a098ca7a9ea4472bd66",
+    "src/nfl_edge/holdout/football_2025.py": "9a507526007b08797e2622b424865a1a61bc2f8f",
     "tests/holdout/test_market_2025_adapter.py": "4b4e3d85ad1ad0bb2e5c7965e59c652d657ecad0",
+    "tests/holdout/test_football_2025_adapter.py": "93163bf93b5a057088e6de85b528055c90dd0090",
     "tests/recommendation/test_pre2025_product_freeze_v1.py": "63f878cbb98649d547e66e9e7f37020cf2fad4a3",
-    ".github/workflows/pre2025-product-freeze-v1.yml": "5d21c29d7041aaab6314b46f6abf2beacc536e83"
+    ".github/workflows/pre2025-product-freeze-v1.yml": "6d51cd1ce80e94f38e82cddd6d0c812674421f6b"
   },
   "production_identity": {
     "task05f_evaluator_config": "9e5da0610d8af9f2d654d5fd6a1a8ed0f34dfa4a",
@@ -69,6 +71,13 @@
     ],
     "product_preserved_books": ["draftkings", "fanduel", "pinnacle"],
     "markets": ["h2h", "spreads", "totals"]
+  },
+  "holdout_football_contract": {
+    "oracle_qb_starter_identity_allowed": true,
+    "current_block_outcomes_must_be_unrevealed_before_prediction": true,
+    "qb_elo_predict_path": "nfl_edge.backtest.walk_forward._predict_block",
+    "qb_elo_update_path": "nfl_edge.backtest.walk_forward._update_block",
+    "development_guards_modified": false
   },
   "accepted_artifact_sha256": {
     "task05f_historical_evaluator_board": "e28f0eb43275fc97c8e36744e032ef401d7659b72854dc5a3aa25236ce1e5dad",
@@ -120,8 +129,8 @@
     "safe_historical_replay_uses_2018_2024_only_outcome_source": true
   },
   "blockers": [
-    "No frozen authorized 2025 football-model materialization/orchestration path exists in the repository.",
-    "No frozen authorized 2025 T-60 ten-book historical market acquisition plus canonical product-preserved market artifact exists in the repository."
+    "The authorized 2025 football-model materialization/orchestration path is not yet complete; Oracle QB-Elo block prediction/reveal is now bridged, while XGBoost, Expected Margin, and causal R4 totals materialization remain to be frozen.",
+    "No real 2025 T-60 historical market plan/canonical artifact has been generated; the sealed-safe ten-book acquisition adapter is frozen but remains intentionally unexecuted until authorization."
   ],
   "recommendation": "NOT_READY_TO_OPEN_2025",
   "explicit_holdout_statement": "2025 HOLDOUT HAS NOT BEEN OPENED"
