@@ -3,6 +3,11 @@ name: Task05G 2025 Historical Market Acquisition V1
 on:
   pull_request:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/acquisition_triggers/task05g_2025_market_acquisition_v1.trigger'
 
 permissions:
   contents: read
@@ -48,7 +53,9 @@ jobs:
           PY
 
   acquire:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
     needs: contract
     runs-on: ubuntu-latest
     timeout-minutes: 45
