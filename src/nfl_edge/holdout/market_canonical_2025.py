@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -56,6 +57,7 @@ EXPECTED_CREDIT_PER_REQUEST = 30
 DRY_RUN_RELATIVE_PATH = Path(
     "artifacts/task05g_2025_holdout_v1/market/market_plan_dry_run_2025_v1.json"
 )
+SCHEDULE_HASH_COLUMNS = ("game_id", "season", "gameday", "gametime")
 SCHEDULE_COLUMNS_READ = (
     "game_id",
     "season",
@@ -90,6 +92,20 @@ def _require_columns(frame: pl.DataFrame, required: set[str], label: str) -> Non
         raise HoldoutMarketCanonicalizationError(f"{label} missing columns: {missing}")
 
 
+def _reject_raw_symlinks(raw_root: Path) -> None:
+    """Keep validation and Task05E raw-file consumption on the same real paths."""
+    if raw_root.is_symlink():
+        raise HoldoutMarketCanonicalizationError(f"raw root is a symlink: {raw_root}")
+    for dirpath, dirnames, filenames in os.walk(raw_root, followlinks=False):
+        current = Path(dirpath)
+        for name in [*dirnames, *filenames]:
+            candidate = current / name
+            if candidate.is_symlink():
+                raise HoldoutMarketCanonicalizationError(
+                    f"raw evidence contains symlink: {candidate.relative_to(raw_root)}"
+                )
+
+
 def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
     """Verify the exact frozen paid bundle before derivation; no network."""
     root = Path(bundle_root)
@@ -105,6 +121,7 @@ def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
         raise HoldoutMarketCanonicalizationError(
             "acquisition bundle missing required paths: " + ", ".join(missing)
         )
+    _reject_raw_symlinks(raw_root)
 
     plan_sha = sha256_of(plan_path)
     if plan_sha != EXPECTED_PLAN_SHA256:
@@ -293,13 +310,28 @@ def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
     }
 
 
-def _validate_schedule_identity(schedule: pl.DataFrame) -> None:
+def _schedule_slice_sha256(schedule: pl.DataFrame) -> str:
+    """Recompute the exact four-column frozen schedule identity used by planning."""
+    rows: list[dict[str, Any]] = []
+    scoped = schedule.select(*SCHEDULE_HASH_COLUMNS)
+    for row in scoped.sort(["gameday", "gametime", "game_id"]).iter_rows(named=True):
+        rows.append({name: row[name] for name in SCHEDULE_HASH_COLUMNS})
+    payload = json.dumps(rows, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.sha256(payload.encode()).hexdigest()
+
+
+def _validate_schedule_identity(schedule: pl.DataFrame) -> str:
     """Fail closed if the consumed outcome-blind schedule identity drifts."""
     _require_columns(schedule, set(SCHEDULE_COLUMNS_READ), "2025 schedule")
     if schedule.get_column("game_id").n_unique() != schedule.height:
         raise HoldoutMarketCanonicalizationError("2025 schedule contains duplicate game_id")
     if set(schedule.get_column("season").unique().to_list()) != {HOLDOUT_SEASON}:
         raise HoldoutMarketCanonicalizationError("schedule contains non-2025 rows")
+    schedule_sha = _schedule_slice_sha256(schedule)
+    if schedule_sha != EXPECTED_SCHEDULE_SLICE_SHA256:
+        raise HoldoutMarketCanonicalizationError(
+            f"schedule slice sha256 {schedule_sha} != frozen {EXPECTED_SCHEDULE_SLICE_SHA256}"
+        )
     for row in schedule.select("game_id", "season", "away_team", "home_team").to_dicts():
         game_id = str(row["game_id"])
         parts = game_id.split("_")
@@ -312,6 +344,7 @@ def _validate_schedule_identity(schedule: pl.DataFrame) -> None:
                 f"schedule team identity mismatch for {game_id}: "
                 f"away={row['away_team']!r}, home={row['home_team']!r}"
             )
+    return schedule_sha
 
 
 def _book_coverage(bm: pl.DataFrame, book: str) -> dict[str, Any]:
@@ -350,7 +383,7 @@ def canonicalize_acquisition_bundle(
         schedule_path,
         columns=list(SCHEDULE_COLUMNS_READ),
     ).filter(pl.col("season") == HOLDOUT_SEASON)
-    _validate_schedule_identity(schedule)
+    schedule_sha = _validate_schedule_identity(schedule)
 
     normalized = build_normalized(raw_root, ledger_path, plan_path)
     plan = pl.read_parquet(plan_path)
@@ -415,6 +448,8 @@ def canonicalize_acquisition_bundle(
         "season": HOLDOUT_SEASON,
         "acquisition_bundle": bundle,
         "schedule_columns_read": list(SCHEDULE_COLUMNS_READ),
+        "schedule_slice_sha256": schedule_sha,
+        "schedule_slice_sha256_verified": True,
         "schedule_identity_validated_from_game_id": True,
         "score_or_outcome_columns_read": [],
         "normalized_rows": normalized.height,
