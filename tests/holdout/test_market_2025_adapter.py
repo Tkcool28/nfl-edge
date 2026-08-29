@@ -1,7 +1,7 @@
 """Sealed-safe tests for the 2025 historical-market adapter.
 
-All 2025 rows in this file are synthetic.  No repository 2025 data file is
-opened.  Exposed 2024 synthetic rows prove the new clustering implementation
+All 2025 rows in this file are synthetic. No repository 2025 data file is
+opened. Exposed 2024 synthetic rows prove the new clustering implementation
 matches the already-frozen development algorithm.
 """
 from __future__ import annotations
@@ -9,11 +9,14 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
 
 import polars as pl
 import pytest
 
 from nfl_edge.holdout.market_2025 import (
+    HOLDOUT_PRODUCT_BOOKS,
+    HOLDOUT_RAW_BOOKS,
     HoldoutMarketContractError,
     build_clusters_for_seasons,
     build_holdout_market_plan,
@@ -23,7 +26,7 @@ from nfl_edge.holdout.market_2025 import (
     write_holdout_market_plan,
 )
 from nfl_edge.market_data.kickoffs import build_clusters as build_frozen_dev_clusters
-from nfl_edge.market_data.manifest import ALLOWED_BOOKS, MARKETS
+from nfl_edge.market_data.manifest import MARKETS
 
 
 def _schedule(season: int) -> pl.DataFrame:
@@ -73,7 +76,20 @@ def test_holdout_plan_is_exact_2025_contract():
     assert plan.height == 1
     assert plan["season"].to_list() == [2025]
     assert plan["request_plan_id"].to_list() == ["md_2025_001"]
-    assert plan["requested_bookmaker_keys"].to_list() == [",".join(ALLOWED_BOOKS)]
+    assert HOLDOUT_RAW_BOOKS == (
+        "draftkings",
+        "fanduel",
+        "pinnacle",
+        "betmgm",
+        "williamhill_us",
+        "caesars",
+        "betrivers",
+        "pointsbetus",
+        "wynnbet",
+        "unibet_us",
+    )
+    assert HOLDOUT_PRODUCT_BOOKS == ("draftkings", "fanduel", "pinnacle")
+    assert plan["requested_bookmaker_keys"].to_list() == [",".join(HOLDOUT_RAW_BOOKS)]
     assert plan["requested_markets"].to_list() == [",".join(MARKETS)]
     assert plan["expected_lead_min"].to_list() == [60.0]
     assert plan["expected_lead_max"].to_list() == [80.0]
@@ -113,6 +129,7 @@ def test_persisted_plan_digest_is_frozen_and_revalidated(tmp_path: Path):
     assert digest == hashlib.sha256(plan_path.read_bytes()).hexdigest()
     payload = json.loads(manifest_path.read_text())
     assert payload["season"] == 2025
+    assert payload["books"] == list(HOLDOUT_RAW_BOOKS)
     assert payload["plan_sha256"] == digest
     assert payload["planned_credit_cap"] == 30
     validate_holdout_plan_contract(
@@ -129,6 +146,8 @@ def test_dry_run_report_never_needs_credentials():
     report = holdout_market_dry_run_report(plan)
     assert report["season"] == 2025
     assert report["target_games"] == 2
+    assert report["books"] == list(HOLDOUT_RAW_BOOKS)
+    assert report["product_books"] == list(HOLDOUT_PRODUCT_BOOKS)
     assert report["planned_credit_cap"] == 30
     assert report["network_calls"] == 0
     assert report["credential_reads"] == 0
@@ -153,7 +172,11 @@ class _FakeSession:
 
     def get(self, url, timeout, allow_redirects):
         self.calls += 1
-        assert "apiKey=TEST_KEY" in url
+        query = parse_qs(urlsplit(url).query)
+        assert query["apiKey"] == ["TEST_KEY"]
+        assert query["bookmakers"] == [",".join(HOLDOUT_RAW_BOOKS)]
+        assert query["markets"] == [",".join(MARKETS)]
+        assert query["regions"] == ["us"]
         assert allow_redirects is False
         return _FakeResponse()
 
