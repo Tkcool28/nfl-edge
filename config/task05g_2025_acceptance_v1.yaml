@@ -4,7 +4,7 @@ holdout_season: 2025
 development_reference_seasons: [2020, 2021, 2022, 2023, 2024]
 authorization:
   required: true
-  exact_phrase_sha256: 7b8fd4a076caf6d97f00435d8b87d97e7f9c71055a25d324821160826be65556
+  exact_phrase_sha256: 885502f347cfaf2194705dc0614a972148f54bd33074b977a263fc846f82d2c5
   plaintext_stored_in_repository: false
   must_be_verified_before_any_2025_file_read: true
   one_spend_marker: artifacts/task05g_2025_holdout_v1/HOLDOUT_SPENT.json
