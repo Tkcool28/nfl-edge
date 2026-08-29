@@ -1,13 +1,8 @@
 """Outcome-blind 2025 market canonicalization adapter.
 
-This module is intentionally a thin holdout-only path/evidence layer around the
-already-frozen Task05E normalization/canonicalization implementation.  It does
-not read scores or outcomes, does not change market semantics, and does not
-re-query The Odds API.
-
-The paid acquisition bundle is treated as immutable evidence.  Before any
-derived output is written, the adapter verifies its frozen plan identity, the
-complete successful ledger, and every raw payload hash against that ledger.
+Thin holdout-only evidence/path layer around the already-frozen Task05E
+normalization and canonicalization implementation. No scores/results/outcomes,
+no Odds API calls, and no market-methodology changes occur here.
 """
 from __future__ import annotations
 
@@ -47,6 +42,12 @@ EXPECTED_PLAN_SHA256 = (
 EXPECTED_SCHEDULE_SLICE_SHA256 = (
     "de36585a681bc79824b8427168ec4a74103fead35e2efc980590077d3eb20228"
 )
+EXPECTED_LEDGER_SHA256 = (
+    "f53e08bb6b84217d8ddd2e1c18f26b1ae9dfe9c7c66bcd977951eda1c0185bab"
+)
+EXPECTED_RAW_INVENTORY_SHA256 = (
+    "86edf9e2b980ed5ba1cfcead33251b34fdd158123785084514aa4ee9919ea81d"
+)
 EXPECTED_REQUEST_ROWS = 123
 EXPECTED_TARGET_GAMES = 285
 EXPECTED_CREDITS_SPENT = 3690
@@ -55,7 +56,6 @@ EXPECTED_CREDIT_PER_REQUEST = 30
 DRY_RUN_RELATIVE_PATH = Path(
     "artifacts/task05g_2025_holdout_v1/market/market_plan_dry_run_2025_v1.json"
 )
-
 SCHEDULE_COLUMNS_READ = (
     "game_id",
     "season",
@@ -67,7 +67,7 @@ SCHEDULE_COLUMNS_READ = (
 
 
 class HoldoutMarketCanonicalizationError(RuntimeError):
-    """Raised when acquired evidence cannot be canonically materialized safely."""
+    """Raised when acquired evidence cannot be materialized safely."""
 
 
 def sha256_of(path: str | Path) -> str:
@@ -77,7 +77,7 @@ def sha256_of(path: str | Path) -> str:
 def _read_json(path: Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text("utf-8"))
-    except Exception as exc:  # noqa: BLE001 - fail closed with path context
+    except Exception as exc:  # noqa: BLE001
         raise HoldoutMarketCanonicalizationError(f"invalid JSON evidence: {path}") from exc
     if not isinstance(value, dict):
         raise HoldoutMarketCanonicalizationError(f"JSON evidence is not an object: {path}")
@@ -91,11 +91,7 @@ def _require_columns(frame: pl.DataFrame, required: set[str], label: str) -> Non
 
 
 def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
-    """Verify the exact paid bundle before any normalization/canonicalization.
-
-    The caller supplies the root produced by extracting GitHub artifact
-    ``9715458059``.  No network access occurs here.
-    """
+    """Verify the exact frozen paid bundle before derivation; no network."""
     root = Path(bundle_root)
     raw_root = root / HOLDOUT_RAW_ROOT
     ledger_path = root / HOLDOUT_LEDGER_PATH
@@ -116,6 +112,12 @@ def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
             f"plan sha256 {plan_sha} != frozen {EXPECTED_PLAN_SHA256}"
         )
 
+    ledger_sha = sha256_of(ledger_path)
+    if ledger_sha != EXPECTED_LEDGER_SHA256:
+        raise HoldoutMarketCanonicalizationError(
+            f"ledger sha256 {ledger_sha} != frozen {EXPECTED_LEDGER_SHA256}"
+        )
+
     plan = pl.read_parquet(plan_path)
     validate_holdout_plan_contract(
         plan, plan_path=plan_path, expected_sha256=EXPECTED_PLAN_SHA256
@@ -124,7 +126,6 @@ def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
         raise HoldoutMarketCanonicalizationError(
             f"plan rows {plan.height} != {EXPECTED_REQUEST_ROWS}"
         )
-
     plan_games: list[str] = []
     for cell in plan.get_column("target_game_ids").to_list():
         plan_games.extend(g for g in str(cell).split(",") if g)
@@ -162,20 +163,10 @@ def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
 
     ledger = pl.read_parquet(ledger_path)
     ledger_required = {
-        "request_plan_id",
-        "season",
-        "http_status",
-        "x_requests_last",
-        "x_requests_used",
-        "x_requests_remaining",
-        "response_content_sha256",
-        "raw_payload_path",
-        "success",
-        "attempt_category",
-        "validation_status",
-        "failure_reason",
-        "error_class",
-        "error_message",
+        "request_plan_id", "season", "http_status", "x_requests_last",
+        "x_requests_used", "x_requests_remaining", "response_content_sha256",
+        "raw_payload_path", "success", "attempt_category", "validation_status",
+        "failure_reason", "error_class", "error_message",
     }
     _require_columns(ledger, ledger_required, "ledger")
     if ledger.height != EXPECTED_REQUEST_ROWS:
@@ -192,9 +183,7 @@ def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
         raise HoldoutMarketCanonicalizationError("ledger season differs from 2025")
     if set(ledger.get_column("http_status").unique().to_list()) != {200}:
         raise HoldoutMarketCanonicalizationError("ledger contains non-200 HTTP status")
-    if set(ledger.get_column("x_requests_last").unique().to_list()) != {
-        EXPECTED_CREDIT_PER_REQUEST
-    }:
+    if set(ledger.get_column("x_requests_last").unique().to_list()) != {EXPECTED_CREDIT_PER_REQUEST}:
         raise HoldoutMarketCanonicalizationError("provider per-request credit cost changed")
     if ledger.get_column("success").null_count() or not bool(ledger.get_column("success").all()):
         raise HoldoutMarketCanonicalizationError("ledger contains unsuccessful acquisition row")
@@ -202,9 +191,10 @@ def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
         raise HoldoutMarketCanonicalizationError("ledger contains non-VERIFIED_SUCCESS row")
     if set(ledger.get_column("validation_status").unique().to_list()) != {"PASS"}:
         raise HoldoutMarketCanonicalizationError("ledger contains non-PASS validation row")
-    if any(ledger.get_column(c).null_count() != EXPECTED_REQUEST_ROWS for c in (
-        "failure_reason", "error_class", "error_message"
-    )):
+    if any(
+        ledger.get_column(c).null_count() != EXPECTED_REQUEST_ROWS
+        for c in ("failure_reason", "error_class", "error_message")
+    ):
         raise HoldoutMarketCanonicalizationError("ledger contains failure/error text")
     credits_used_max = int(ledger.get_column("x_requests_used").max())
     if credits_used_max != EXPECTED_CREDITS_SPENT:
@@ -240,8 +230,7 @@ def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
         payload = _read_json(path)
         for event in payload.get("data") or []:
             for book in event.get("bookmakers") or []:
-                key = str(book.get("key"))
-                returned_books.add(key)
+                returned_books.add(str(book.get("key")))
                 for market in book.get("markets") or []:
                     returned_markets.add(str(market.get("key")))
 
@@ -265,6 +254,10 @@ def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
     ]
     inventory_text = "\n".join(inventory_lines) + "\n"
     raw_inventory_sha = hashlib.sha256(inventory_text.encode("utf-8")).hexdigest()
+    if raw_inventory_sha != EXPECTED_RAW_INVENTORY_SHA256:
+        raise HoldoutMarketCanonicalizationError(
+            f"raw inventory sha256 {raw_inventory_sha} != frozen {EXPECTED_RAW_INVENTORY_SHA256}"
+        )
 
     return {
         "schema_version": "task05g_2025_acquisition_bundle_validation_v1",
@@ -274,7 +267,7 @@ def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
         "target_games": EXPECTED_TARGET_GAMES,
         "plan_sha256": plan_sha,
         "schedule_slice_sha256": EXPECTED_SCHEDULE_SLICE_SHA256,
-        "ledger_sha256": sha256_of(ledger_path),
+        "ledger_sha256": ledger_sha,
         "raw_file_count": len(raw_files),
         "raw_total_bytes": raw_bytes,
         "raw_inventory_sha256": raw_inventory_sha,
@@ -290,6 +283,27 @@ def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
     }
 
 
+def _validate_schedule_identity(schedule: pl.DataFrame) -> None:
+    """Fail closed if the consumed outcome-blind schedule identity drifts."""
+    _require_columns(schedule, set(SCHEDULE_COLUMNS_READ), "2025 schedule")
+    if schedule.get_column("game_id").n_unique() != schedule.height:
+        raise HoldoutMarketCanonicalizationError("2025 schedule contains duplicate game_id")
+    if set(schedule.get_column("season").unique().to_list()) != {HOLDOUT_SEASON}:
+        raise HoldoutMarketCanonicalizationError("schedule contains non-2025 rows")
+    for row in schedule.select("game_id", "season", "away_team", "home_team").to_dicts():
+        game_id = str(row["game_id"])
+        parts = game_id.split("_")
+        if len(parts) != 4:
+            raise HoldoutMarketCanonicalizationError(f"unparseable game_id {game_id!r}")
+        if parts[0] != str(HOLDOUT_SEASON) or int(row["season"]) != HOLDOUT_SEASON:
+            raise HoldoutMarketCanonicalizationError(f"game_id season mismatch {game_id!r}")
+        if str(row["away_team"]) != parts[2] or str(row["home_team"]) != parts[3]:
+            raise HoldoutMarketCanonicalizationError(
+                f"schedule team identity mismatch for {game_id}: "
+                f"away={row['away_team']!r}, home={row['home_team']!r}"
+            )
+
+
 def _book_coverage(bm: pl.DataFrame, book: str) -> dict[str, Any]:
     scoped = bm.filter(pl.col("bookmaker_key") == book)
     result: dict[str, Any] = {"bookmaker": book}
@@ -301,9 +315,7 @@ def _book_coverage(bm: pl.DataFrame, book: str) -> dict[str, Any]:
     for game_id in scoped.get_column("game_id").unique().to_list():
         keys = set(
             scoped.filter(pl.col("game_id") == game_id)
-            .get_column("market_key")
-            .unique()
-            .to_list()
+            .get_column("market_key").unique().to_list()
         )
         if set(MARKETS) <= keys:
             complete += 1
@@ -317,7 +329,7 @@ def canonicalize_acquisition_bundle(
     schedule_path: str | Path,
     output_root: str | Path,
 ) -> dict[str, Any]:
-    """Validate acquired evidence, derive 2025 market layers, and report structure."""
+    """Validate evidence, derive 2025 market layers, and report structure."""
     bundle = validate_acquisition_bundle(bundle_root)
     root = Path(bundle_root)
     raw_root = root / HOLDOUT_RAW_ROOT
@@ -328,8 +340,7 @@ def canonicalize_acquisition_bundle(
         schedule_path,
         columns=list(SCHEDULE_COLUMNS_READ),
     ).filter(pl.col("season") == HOLDOUT_SEASON)
-    if schedule.get_column("game_id").n_unique() != schedule.height:
-        raise HoldoutMarketCanonicalizationError("2025 schedule contains duplicate game_id")
+    _validate_schedule_identity(schedule)
 
     normalized = build_normalized(raw_root, ledger_path, plan_path)
     plan = pl.read_parquet(plan_path)
@@ -383,9 +394,7 @@ def canonicalize_acquisition_bundle(
     for game_id in games.get_column("game_id").to_list():
         game_books = set(
             bm.filter(pl.col("game_id") == game_id)
-            .get_column("bookmaker_key")
-            .unique()
-            .to_list()
+            .get_column("bookmaker_key").unique().to_list()
         )
         if set(HOLDOUT_PRODUCT_BOOKS) <= game_books:
             complete_intersection += 1
@@ -396,6 +405,7 @@ def canonicalize_acquisition_bundle(
         "season": HOLDOUT_SEASON,
         "acquisition_bundle": bundle,
         "schedule_columns_read": list(SCHEDULE_COLUMNS_READ),
+        "schedule_identity_validated_from_game_id": True,
         "score_or_outcome_columns_read": [],
         "normalized_rows": normalized.height,
         "normalized_target_rows": normalized.filter(
@@ -404,10 +414,7 @@ def canonicalize_acquisition_bundle(
         "canonical_games": games.height,
         "canonical_book_market_rows": bm.height,
         "match_status_counts": dict(sorted(match_counts.items())),
-        "lead_minutes": {
-            "min": min(lead_values),
-            "max": max(lead_values),
-        },
+        "lead_minutes": {"min": min(lead_values), "max": max(lead_values)},
         "returned_books": returned_books,
         "returned_markets": returned_markets,
         "product_book_coverage": product_coverage,
