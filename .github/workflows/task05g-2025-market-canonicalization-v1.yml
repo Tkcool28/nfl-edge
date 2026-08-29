@@ -34,21 +34,26 @@ jobs:
           from pathlib import Path
 
           module = Path('src/nfl_edge/holdout/market_canonical_2025.py').read_text()
+          workflow = Path('.github/workflows/task05g-2025-market-canonicalization-v1.yml').read_text()
           required = [
               'EXPECTED_ACQUISITION_RUN_ID = 33254688086',
               'EXPECTED_ACQUISITION_ARTIFACT_ID = 9715458059',
               '081be41b05d246e50edf933b27b1ca75c63684d79520fdf73431c9c60009e7af',
               'd1b1eace49177bf01a22db9c2d9d991d07fe8144d165a9a8a67ba1f29f481425',
               'de36585a681bc79824b8427168ec4a74103fead35e2efc980590077d3eb20228',
+              'f53e08bb6b84217d8ddd2e1c18f26b1ae9dfe9c7c66bcd977951eda1c0185bab',
+              '86edf9e2b980ed5ba1cfcead33251b34fdd158123785084514aa4ee9919ea81d',
               'EXPECTED_REQUEST_ROWS = 123',
               'EXPECTED_TARGET_GAMES = 285',
               'EXPECTED_CREDITS_SPENT = 3690',
+              '_validate_schedule_identity(',
               'build_normalized(',
               'build_canonical(',
               'score_or_outcome_columns_read',
           ]
           for fragment in required:
               assert fragment in module, fragment
+          assert 'mkdir -p artifacts/task05g_2025_holdout_v1' in workflow
           prohibited = [
               'ODDS_API_KEY_ENV',
               'run_plan(',
@@ -117,6 +122,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
+          mkdir -p artifacts/task05g_2025_holdout_v1
           python scripts/task05g_2025_market_canonicalize_v1.py \
             --bundle-root artifacts/acquisition_source_v1/extracted \
             --output-root artifacts/task05g_2025_holdout_v1/market_canonicalization_v1 \
