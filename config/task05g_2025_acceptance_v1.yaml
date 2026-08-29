@@ -15,7 +15,7 @@ execution:
     --authorization "$NFL_EDGE_2025_AUTHORIZATION"
   tuning_flags_allowed: false
   blocked_reasons:
-    - No frozen authorized 2025 football-model materialization path exists yet; accepted model runners are development-only and hard-fail at 2024.
+    - Holdout-only block predictors now cover Oracle QB-Elo, Expected Margin stable, conservative XGBoost, and Ridge Totals R4; the causal 2025 Totals V1 exact-90 feature materialization/orchestration path is not yet frozen.
     - No frozen authorized 2025 T-60 historical market acquisition plan exists yet; canonical tracked market data ends at 2024.
   required_future_executor_contract:
     football_models:
