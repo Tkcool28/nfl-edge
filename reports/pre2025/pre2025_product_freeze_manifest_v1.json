@@ -1,7 +1,7 @@
 {
   "schema_version": "pre2025_product_freeze_manifest_v1",
   "status": "PRE2025_PRODUCT_FREEZE_PARTIAL",
-  "contract_git_sha": "fb8f7ba5ad33fd9810476c06c78eedcc1f6625e4",
+  "contract_git_sha": "f0874cbfb13eb8e2dc809154cc2cd6ed022d3e93",
   "reference_main_sha": "65504d9d834d15d71d6fdc205a912eec455b66ab",
   "task05g_clean_promotion_head": "4150fc411eb7450a8aeb8a13b076c278ddf3d28d",
   "task05g_merge_commit": "a684b046980c43e200ca87ce8d9165f9890c6696",
@@ -13,7 +13,7 @@
   "canonical_future_holdout_command": "python scripts/task05g_2025_holdout_one_shot_v1.py --authorization \"$NFL_EDGE_2025_AUTHORIZATION\"",
   "authorization_plaintext_stored_in_repository": false,
   "contract_files": {
-    "config/task05g_2025_acceptance_v1.yaml": "8b11879046734edc425424b0c5100ceda0d9d4f7",
+    "config/task05g_2025_acceptance_v1.yaml": "fb7fb1e86dd5d2da8c51069102732748addcbab4",
     "config/task05g_pre2025_holdout_freeze_v1.yaml": "c1c980e731e48d93f33231cc0990075861f18678",
     "docs/PRE2025_HOLDOUT_ACCEPTANCE_SPEC_V1.md": "5d68de6018982ba0847626060e4849393951d26c",
     "docs/PRE2025_CHRONOLOGY_AND_CHANGE_CONTROL_V1.md": "aec114154498175f9b50b399cdf6be366a3ce3eb",
@@ -21,7 +21,7 @@
     "scripts/pre2025_safe_development_replay_v1.py": "9dcd311c22b1f9ad4767044598d5918b9aad3c7f",
     "scripts/task05g_pre2025_freeze_audit_v1.py": "c4c8189aa3c1c0f33e227d376600614e82a656ed",
     "scripts/task05g_2025_holdout_one_shot_v1.py": "a2f89e1f5b683820f6d2a18b6afb7eb2cd16a279",
-    "scripts/task05g_2025_market_plan_dry_run_v1.py": "f806fb1fcfd708f5a95c783b8ffcf87e89111cda",
+    "scripts/task05g_2025_market_plan_dry_run_v1.py": "971087ccac44a71ac03c79592c75e9eb4d477140",
     "src/nfl_edge/holdout/__init__.py": "af334f4898cd6315bb63a60e21850c04c7924fe0",
     "src/nfl_edge/holdout/market_2025.py": "5200c1292282d9c834268a098ca7a9ea4472bd66",
     "src/nfl_edge/holdout/football_2025.py": "6d3408e6f8306fc66b7f097a917084821d45805a",
