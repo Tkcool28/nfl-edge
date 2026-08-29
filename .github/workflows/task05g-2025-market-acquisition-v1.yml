@@ -54,8 +54,6 @@ jobs:
     timeout-minutes: 45
     env:
       PYTHONPATH: ${{ github.workspace }}/src
-      NFL_EDGE_2025_AUTHORIZATION: ${{ secrets.NFL_EDGE_2025_AUTHORIZATION }}
-      ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -66,17 +64,11 @@ jobs:
           python-version: '3.11'
           cache: pip
 
-      - name: Require execution-time secrets by presence only
-        run: |
-          test -n "$NFL_EDGE_2025_AUTHORIZATION" || { echo 'NFL_EDGE_2025_AUTHORIZATION=ABSENT' >&2; exit 2; }
-          test -n "$ODDS_API_KEY" || { echo 'ODDS_API_KEY=ABSENT' >&2; exit 2; }
-          echo 'NFL_EDGE_2025_AUTHORIZATION=PRESENT'
-          echo 'ODDS_API_KEY=PRESENT'
-
       - name: Install frozen runtime
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e '.[model-development]' pyyaml
+          python -m pip install -r requirements/lock.txt
+          python -m pip install -e . --no-deps
 
       - name: Verify acquisition wrapper compiles
         run: |
@@ -86,11 +78,26 @@ jobs:
             src/nfl_edge/holdout/market_2025.py \
             src/nfl_edge/market_data/runner.py
 
-      - name: Execute exact frozen 2025 market acquisition
+      - name: Require execution-time secrets by presence only
+        env:
+          NFL_EDGE_2025_AUTHORIZATION: ${{ secrets.NFL_EDGE_2025_AUTHORIZATION }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
+          test -n "$NFL_EDGE_2025_AUTHORIZATION" || { echo 'NFL_EDGE_2025_AUTHORIZATION=ABSENT' >&2; exit 2; }
+          test -n "$ODDS_API_KEY" || { echo 'ODDS_API_KEY=ABSENT' >&2; exit 2; }
+          echo 'NFL_EDGE_2025_AUTHORIZATION=PRESENT'
+          echo 'ODDS_API_KEY=PRESENT'
+
+      - name: Execute exact frozen 2025 market acquisition
+        env:
+          NFL_EDGE_2025_AUTHORIZATION: ${{ secrets.NFL_EDGE_2025_AUTHORIZATION }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        shell: bash
+        run: |
+          set -o pipefail
           mkdir -p artifacts/task05g_2025_holdout_v1/market
-          python scripts/task05g_2025_market_acquire_v1.py \
-            | tee artifacts/task05g_2025_holdout_v1/market/acquisition_result_2025_v1.json
+          python scripts/task05g_2025_market_acquire_v1.py 2>&1 \
+            | tee artifacts/task05g_2025_holdout_v1/market/acquisition_evidence_2025_v1.log
 
       - name: Upload acquisition evidence
         if: always()
