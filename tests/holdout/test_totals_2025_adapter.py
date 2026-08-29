@@ -144,7 +144,7 @@ def test_r4_totals_holdout_rejects_unrevealed_prior_2025_rows():
     current = _current()
     block = build_holdout_blocks(current)[0]
 
-    with pytest.raises(HoldoutFootballContractError, match="unrevealed target"):
+    with pytest.raises(HoldoutFootballContractError, match="unrevealed outcome"):
         predict_ridge_totals_block(
             prior_history=history,
             current_games=current,
