@@ -1,7 +1,7 @@
 {
   "schema_version": "pre2025_product_freeze_manifest_v1",
   "status": "PRE2025_PRODUCT_FREEZE_PARTIAL",
-  "contract_git_sha": "59201bacede956ae556c745e3c4c13ac237318bf",
+  "contract_git_sha": "c940949b7153b5ce5ea0b7b17082453117d7defc",
   "reference_main_sha": "65504d9d834d15d71d6fdc205a912eec455b66ab",
   "task05g_clean_promotion_head": "4150fc411eb7450a8aeb8a13b076c278ddf3d28d",
   "task05g_merge_commit": "a684b046980c43e200ca87ce8d9165f9890c6696",
@@ -30,7 +30,7 @@
     "tests/holdout/test_football_2025_adapter.py": "f141d4db9e51f49e1007e04679c240c33bdaeded",
     "tests/holdout/test_expected_margin_2025_adapter.py": "c43c4e0cb75404be8401de745dae372119cd703e",
     "tests/holdout/test_xgboost_2025_adapter.py": "b9bfac3e7bebdd72b6806bae32e7ed85c1cbc4fe",
-    "tests/holdout/test_totals_2025_adapter.py": "aaa70e506cfd6ed25b3a237285193bec9317b7d6",
+    "tests/holdout/test_totals_2025_adapter.py": "a2b087ee6a17b016304e0b0dd3e70416b16f84e7",
     "tests/recommendation/test_pre2025_product_freeze_v1.py": "63f878cbb98649d547e66e9e7f37020cf2fad4a3",
     ".github/workflows/pre2025-product-freeze-v1.yml": "7acdb22ed4ce07b9437a94e5c382bf6e4f436b80"
   },
