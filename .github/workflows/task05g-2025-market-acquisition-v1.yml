@@ -1,0 +1,112 @@
+name: Task05G 2025 Historical Market Acquisition V1
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: task05g-2025-market-acquisition-v1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Prove thin-wrapper contract without secrets or network
+        run: |
+          python -m py_compile scripts/task05g_2025_market_acquire_v1.py
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('scripts/task05g_2025_market_acquire_v1.py')
+          text = path.read_text()
+          required = [
+              'd1b1eace49177bf01a22db9c2d9d991d07fe8144d165a9a8a67ba1f29f481425',
+              'de36585a681bc79824b8427168ec4a74103fead35e2efc980590077d3eb20228',
+              'EXPECTED_REQUEST_ROWS = 123',
+              'EXPECTED_TARGET_GAMES = 285',
+              'EXPECTED_CREDIT_CAP = 3690',
+              'run_holdout_market_acquisition(',
+              'ODDS_API_KEY_ENV = "ODDS_API_KEY"',
+          ]
+          for fragment in required:
+              assert fragment in text, fragment
+          prohibited = ['import requests', 'from requests', 'httpx', 'urllib.request']
+          for fragment in prohibited:
+              assert fragment not in text, fragment
+          print('THIN_WRAPPER_CONTRACT=PASS')
+          print('VALID_AUTH_IN_CI=NO')
+          print('ODDS_API_KEY_IN_CI=NO')
+          print('NETWORK_CALLS=0')
+          PY
+
+  acquire:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    needs: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      PYTHONPATH: ${{ github.workspace }}/src
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install frozen runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements/lock.txt
+          python -m pip install -e . --no-deps
+
+      - name: Verify acquisition wrapper compiles
+        run: |
+          python -m py_compile \
+            scripts/task05g_2025_market_plan_dry_run_v1.py \
+            scripts/task05g_2025_market_acquire_v1.py \
+            src/nfl_edge/holdout/market_2025.py \
+            src/nfl_edge/market_data/runner.py
+
+      - name: Require execution-time secrets by presence only
+        env:
+          NFL_EDGE_2025_AUTHORIZATION: ${{ secrets.NFL_EDGE_2025_AUTHORIZATION }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          test -n "$NFL_EDGE_2025_AUTHORIZATION" || { echo 'NFL_EDGE_2025_AUTHORIZATION=ABSENT' >&2; exit 2; }
+          test -n "$ODDS_API_KEY" || { echo 'ODDS_API_KEY=ABSENT' >&2; exit 2; }
+          echo 'NFL_EDGE_2025_AUTHORIZATION=PRESENT'
+          echo 'ODDS_API_KEY=PRESENT'
+
+      - name: Execute exact frozen 2025 market acquisition
+        env:
+          NFL_EDGE_2025_AUTHORIZATION: ${{ secrets.NFL_EDGE_2025_AUTHORIZATION }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p artifacts/task05g_2025_holdout_v1/market
+          python scripts/task05g_2025_market_acquire_v1.py 2>&1 \
+            | tee artifacts/task05g_2025_holdout_v1/market/acquisition_evidence_2025_v1.log
+
+      - name: Upload acquisition evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-2025-market-acquisition-${{ github.run_id }}
+          path: |
+            artifacts/task05g_2025_holdout_v1/market/
+            data/market_data/holdout_2025/ledger/
+            data/market_data/holdout_2025/raw/
+          if-no-files-found: warn
+          retention-days: 90
