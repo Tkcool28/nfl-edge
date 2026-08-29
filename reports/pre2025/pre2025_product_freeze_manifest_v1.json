@@ -1,7 +1,7 @@
 {
   "schema_version": "pre2025_product_freeze_manifest_v1",
   "status": "PRE2025_MARKET_PLAN_FROZEN_ACQUISITION_READY",
-  "contract_git_sha": "8832ffe991d09c870d9540cb9aae35c4b4ebbbad",
+  "contract_git_sha": "771de6d57cc2519cb31d56a84a89588ec6642542",
   "reference_main_sha": "65504d9d834d15d71d6fdc205a912eec455b66ab",
   "task05g_clean_promotion_head": "4150fc411eb7450a8aeb8a13b076c278ddf3d28d",
   "task05g_merge_commit": "a684b046980c43e200ca87ce8d9165f9890c6696",
@@ -47,7 +47,7 @@
     "tests/holdout/test_totals_features_2025_adapter.py": "54527f037ae5f5fdb5bbb5028c893ad174f7ab8e",
     "tests/recommendation/test_pre2025_product_freeze_v1.py": "63f878cbb98649d547e66e9e7f37020cf2fad4a3",
     ".github/workflows/pre2025-product-freeze-v1.yml": "fe818dd0665d1a4c65e292ed9adff15cfab19bf4",
-    ".github/workflows/task05g-2025-market-acquisition-v1.yml": "5a4390149e579fbedc094a626221d3c91f6127c4"
+    ".github/workflows/task05g-2025-market-acquisition-v1.yml": "1539c5ed7a30241be5351ffd772d9e898b3389bb"
   },
   "production_identity": {
     "task05f_evaluator_config": "9e5da0610d8af9f2d654d5fd6a1a8ed0f34dfa4a",
