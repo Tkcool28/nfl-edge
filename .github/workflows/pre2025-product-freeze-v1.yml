@@ -31,9 +31,11 @@ jobs:
             src/nfl_edge/holdout/totals_features_2025.py \
             scripts/pre2025_safe_development_replay_v1.py \
             scripts/task05g_pre2025_freeze_audit_v1.py \
-            scripts/task05g_2025_holdout_one_shot_v1.py
+            scripts/task05g_2025_holdout_one_shot_v1.py \
+            scripts/task05g_2025_market_plan_dry_run_v1.py
           pytest -q \
             tests/holdout/test_market_2025_adapter.py \
+            tests/holdout/test_market_plan_dry_run_2025.py \
             tests/holdout/test_football_2025_adapter.py \
             tests/holdout/test_expected_margin_2025_adapter.py \
             tests/holdout/test_xgboost_2025_adapter.py \
