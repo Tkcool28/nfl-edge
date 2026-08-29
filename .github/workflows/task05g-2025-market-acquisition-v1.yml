@@ -1,18 +1,55 @@
 name: Task05G 2025 Historical Market Acquisition V1
 
 on:
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: task05g-2025-market-acquisition-v1
+  group: task05g-2025-market-acquisition-v1-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Prove thin-wrapper contract without secrets or network
+        run: |
+          python -m py_compile scripts/task05g_2025_market_acquire_v1.py
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('scripts/task05g_2025_market_acquire_v1.py')
+          text = path.read_text()
+          required = [
+              'd1b1eace49177bf01a22db9c2d9d991d07fe8144d165a9a8a67ba1f29f481425',
+              'de36585a681bc79824b8427168ec4a74103fead35e2efc980590077d3eb20228',
+              'EXPECTED_REQUEST_ROWS = 123',
+              'EXPECTED_TARGET_GAMES = 285',
+              'EXPECTED_CREDIT_CAP = 3690',
+              'run_holdout_market_acquisition(',
+              'ODDS_API_KEY_ENV = "ODDS_API_KEY"',
+          ]
+          for fragment in required:
+              assert fragment in text, fragment
+          prohibited = ['import requests', 'from requests', 'httpx', 'urllib.request']
+          for fragment in prohibited:
+              assert fragment not in text, fragment
+          print('THIN_WRAPPER_CONTRACT=PASS')
+          print('VALID_AUTH_IN_CI=NO')
+          print('ODDS_API_KEY_IN_CI=NO')
+          print('NETWORK_CALLS=0')
+          PY
+
   acquire:
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    needs: contract
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -28,6 +65,13 @@ jobs:
         with:
           python-version: '3.11'
           cache: pip
+
+      - name: Require execution-time secrets by presence only
+        run: |
+          test -n "$NFL_EDGE_2025_AUTHORIZATION" || { echo 'NFL_EDGE_2025_AUTHORIZATION=ABSENT' >&2; exit 2; }
+          test -n "$ODDS_API_KEY" || { echo 'ODDS_API_KEY=ABSENT' >&2; exit 2; }
+          echo 'NFL_EDGE_2025_AUTHORIZATION=PRESENT'
+          echo 'ODDS_API_KEY=PRESENT'
 
       - name: Install frozen runtime
         run: |
