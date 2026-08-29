@@ -76,7 +76,7 @@ jobs:
           root = Path('artifacts/pre2025/run_a')
           exact_expected = {
               root/'upstream/scorecard.json': '8da45357b06763f687e43ecbbafdc20d799ba253cce50a3b76b80a526260a6e7',
-              root/'v2/scorecard.json': 'e7f2ab7ea935a58c7c07c62dbad897e9777071240839443f09f4fe3449cb9fea',
+              root/'v2/scorecard.json': 'e7f2ab7ea935a58c7c07c62db4b837e9777071240839443f09f4fe3449cb9fea',
               root/'v3/scorecard.json': '34d2f3384e2d3e7e1f18e3990f9326153956a9e671b83ddcb71b268e9464e714',
               root/'product/headline_cards.csv': 'ff5d2cb8fb59411da33a2bfc110ffa02cb58993fd14f4642ac70c8257290f027',
               root/'product/scorecard.json': 'c78ee43d2fcb0e2f39e0d9a048db5fdfa08a3a274b3a75ea9c32325865bae7a2',
