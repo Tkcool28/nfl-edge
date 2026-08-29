@@ -66,7 +66,7 @@ The canonical one-shot gate:
 - has no tuning flags
 - is designed to support a one-spend marker once the executor is implemented
 
-## Repository blocker 1 — causal 2025 football feature materialization/orchestration
+## Repository blocker 1 — authorization-only football orchestration
 
 The accepted football-model runners remain intentionally development-only and their 2024 firewalls have not been weakened. Separate no-I/O holdout block predictors now exist for all four required frozen model surfaces:
 
@@ -75,9 +75,21 @@ The accepted football-model runners remain intentionally development-only and th
 - Expected Margin V1 stable
 - Ridge Totals V1 R4, reusing the accepted `Ridge(alpha=100)` preprocessing/model pipeline
 
-The R4 holdout adapter accepts only the exact frozen 90-column predictor contract, fits only strictly-prior revealed rows with the complete 2018–2024 development history present, and rejects any current-block total/outcome before prediction.
+The R4 holdout estimator accepts only the exact frozen 90-column predictor contract, fits only strictly-prior revealed rows with the complete 2018–2024 development history present, and rejects any current-block total/outcome before prediction.
 
-The remaining football blocker is upstream of the R4 fit: the repository still needs a separately frozen, authorization-only causal 2025 Totals V1 feature/materialization path that produces the same exact 90 predictors from strictly-prior state without weakening the development builder or using same-block outcomes. The full one-shot football orchestration must then connect all four frozen prediction seams block-by-block.
+A separate holdout-only Totals feature bridge now freezes the upstream exact-90 lifecycle without weakening the development builder. It:
+
+- bootstraps `TotalsBlockState` only from complete, strictly chronological 2018–2024 observation blocks
+- snapshots entering state once before the current 2025 block
+- reuses the accepted exact-90 `_emit_feature_row` path and only the accepted Oracle-QB consumed columns
+- emits every game in the block from the same immutable snapshot without mutating running state
+- rejects a non-null current `target_total_points`
+- refuses reveal/commit if entering state changed after feature freeze
+- validates revealed `target_total_points == home_score + away_score`
+- atomically commits the complete block only after outcomes are available
+- returns the already-frozen predictors plus the revealed target for strictly-prior use by later R4 fits
+
+The remaining football blocker is orchestration/I/O, not model or feature math: the authorization-only one-shot still must rebuild the accepted 2018–2024 Totals observations/state from the frozen sources, supply the authorized 2025 schedule/context and permitted Oracle-QB identity inputs, invoke all four frozen model seams block-by-block, freeze downstream product output, and only then reveal/advance each block.
 
 ## Repository blocker 2 — 2025 historical market snapshots
 
@@ -119,11 +131,11 @@ No tuning, selector, threshold, profile, corridor, model-family, or market-famil
 
 ## Required pre-authorization correction
 
-Implement and freeze the missing holdout-only upstream executor. It must:
+Implement and freeze the missing authorization-only orchestration. It must:
 
 1. validate the prefreeze manifest and protected identities
 2. validate authorization before first 2025 read
-3. causally materialize the 2025 football predictor surfaces and invoke the four frozen holdout model seams block-by-block
+3. rebuild accepted pre-2025 football entering state and invoke the four frozen holdout model/feature seams block-by-block
 4. acquire/load and normalize authorized 2025 T-60 market snapshots
 5. run the frozen Task05F evaluator family/state logic causally
 6. run the frozen confidence/trust layers causally
