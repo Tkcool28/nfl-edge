@@ -1,7 +1,7 @@
 {
   "schema_version": "pre2025_product_freeze_manifest_v1",
   "status": "PRE2025_PRODUCT_FREEZE_PARTIAL",
-  "contract_git_sha": "ab3bd9375ec47316290684db62145753e1a97814",
+  "contract_git_sha": "a160bc578250782fb0439f48ff629fb3ad111ac2",
   "reference_main_sha": "65504d9d834d15d71d6fdc205a912eec455b66ab",
   "task05g_clean_promotion_head": "4150fc411eb7450a8aeb8a13b076c278ddf3d28d",
   "task05g_merge_commit": "a684b046980c43e200ca87ce8d9165f9890c6696",
@@ -12,11 +12,11 @@
   "canonical_future_holdout_command": "python scripts/task05g_2025_holdout_one_shot_v1.py --authorization \"$NFL_EDGE_2025_AUTHORIZATION\"",
   "authorization_plaintext_stored_in_repository": false,
   "contract_files": {
-    "config/task05g_2025_acceptance_v1.yaml": "88daebf37df14e76dd3eef906cc6227fcb128db6",
+    "config/task05g_2025_acceptance_v1.yaml": "8b11879046734edc425424b0c5100ceda0d9d4f7",
     "config/task05g_pre2025_holdout_freeze_v1.yaml": "c1c980e731e48d93f33231cc0990075861f18678",
     "docs/PRE2025_HOLDOUT_ACCEPTANCE_SPEC_V1.md": "5d68de6018982ba0847626060e4849393951d26c",
     "docs/PRE2025_CHRONOLOGY_AND_CHANGE_CONTROL_V1.md": "aec114154498175f9b50b399cdf6be366a3ce3eb",
-    "docs/PRE2025_PRODUCT_FREEZE_V1.md": "c5c7a81d0c830554cc236a1710192f01b1747376",
+    "docs/PRE2025_PRODUCT_FREEZE_V1.md": "b22e9cb5a7faf001ff332d653fa1fbcf2fed4776",
     "scripts/pre2025_safe_development_replay_v1.py": "9dcd311c22b1f9ad4767044598d5918b9aad3c7f",
     "scripts/task05g_pre2025_freeze_audit_v1.py": "c4c8189aa3c1c0f33e227d376600614e82a656ed",
     "scripts/task05g_2025_holdout_one_shot_v1.py": "a2f89e1f5b683820f6d2a18b6afb7eb2cd16a279",
@@ -26,13 +26,21 @@
     "src/nfl_edge/holdout/expected_margin_2025.py": "da61391ccf947f41882072db61b0dcb11b6037bf",
     "src/nfl_edge/holdout/xgboost_2025.py": "7ac3dc84b50446364765b4c21dfc8091bdd4bdfb",
     "src/nfl_edge/holdout/totals_2025.py": "064e276a7706f390bb51a046e4af67f137bedb78",
+    "src/nfl_edge/holdout/totals_features_2025.py": "a3f6e82cb4313e543fc8e4b99e309442e0ab13b6",
+    "src/nfl_edge/backtest/totals_bake_off.py": "ef9cb887726a5f07debc41317dcb2b6d8fd838c4",
+    "src/nfl_edge/backtest/totals_walk_forward.py": "5be1fe44c9b7b5266f092d2769403a06f0b7aea1",
+    "src/nfl_edge/features/totals_v1/block_state.py": "d50182e3ed0b2ef23f9434fac3c96e8becc65658",
+    "src/nfl_edge/features/totals_v1/context_features.py": "2cdf72e313894616a8f2fd35a4cd0bf65e75d90c",
+    "src/nfl_edge/features/totals_v1/entering_state.py": "5911be2f60b42f254c3111feb9c4315b57a04bfd",
+    "src/nfl_edge/features/totals_v1/feature_table.py": "18a5a739dfe324ac812c6f273b858d533263062b",
     "tests/holdout/test_market_2025_adapter.py": "4b4e3d85ad1ad0bb2e5c7965e59c652d657ecad0",
     "tests/holdout/test_football_2025_adapter.py": "f141d4db9e51f49e1007e04679c240c33bdaeded",
     "tests/holdout/test_expected_margin_2025_adapter.py": "c43c4e0cb75404be8401de745dae372119cd703e",
     "tests/holdout/test_xgboost_2025_adapter.py": "b9bfac3e7bebdd72b6806bae32e7ed85c1cbc4fe",
     "tests/holdout/test_totals_2025_adapter.py": "1514252eb91b89a21c08a6931bee82ef5b8c4969",
+    "tests/holdout/test_totals_features_2025_adapter.py": "54527f037ae5f5fdb5bbb5028c893ad174f7ab8e",
     "tests/recommendation/test_pre2025_product_freeze_v1.py": "63f878cbb98649d547e66e9e7f37020cf2fad4a3",
-    ".github/workflows/pre2025-product-freeze-v1.yml": "7acdb22ed4ce07b9437a94e5c382bf6e4f436b80"
+    ".github/workflows/pre2025-product-freeze-v1.yml": "1fdb05239ec90dfdb25da8699f5313d726e10fd6"
   },
   "production_identity": {
     "task05f_evaluator_config": "9e5da0610d8af9f2d654d5fd6a1a8ed0f34dfa4a",
@@ -90,7 +98,9 @@
     "ridge_totals_model_path": "nfl_edge.backtest.totals_bake_off.build_candidate_model",
     "ridge_totals_training_policy": "complete_2018_2024_plus_revealed_strictly_prior_2025_only",
     "ridge_totals_current_target_policy": "must_be_null_before_prediction",
-    "ridge_totals_2025_feature_materializer_frozen": false,
+    "ridge_totals_2025_feature_materializer_frozen": true,
+    "ridge_totals_feature_lifecycle": "snapshot_exact90_predict_then_complete_block_reveal_commit",
+    "ridge_totals_bootstrap_policy": "complete_strictly_chronological_2018_2024_observation_blocks_only",
     "development_guards_modified": false
   },
   "accepted_artifact_sha256": {
@@ -143,7 +153,7 @@
     "safe_historical_replay_uses_2018_2024_only_outcome_source": true
   },
   "blockers": [
-    "All four frozen football-model prediction seams are now present; the remaining football blocker is the causal 2025 Totals V1 exact-90 feature materialization/orchestration path.",
+    "All four frozen football-model prediction seams and the causal Totals exact-90 feature freeze/reveal lifecycle are present; the remaining football blocker is authorization-only I/O/orchestration across accepted pre-2025 state, authorized 2025 inputs, all four model seams, and downstream product freeze/reveal order.",
     "No real 2025 T-60 historical market plan/canonical artifact has been generated; the sealed-safe ten-book acquisition adapter is frozen but remains intentionally unexecuted until authorization."
   ],
   "recommendation": "NOT_READY_TO_OPEN_2025",
