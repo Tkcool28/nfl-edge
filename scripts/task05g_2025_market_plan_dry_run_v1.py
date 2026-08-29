@@ -110,6 +110,15 @@ def _schedule_slice_sha256(frame: pl.DataFrame) -> str:
     return hashlib.sha256(payload.encode()).hexdigest()
 
 
+def _reportable_path(path: Path) -> str:
+    """Prefer repo-relative paths while allowing isolated test output locations."""
+    resolved = path.resolve()
+    try:
+        return str(resolved.relative_to(ROOT))
+    except ValueError:
+        return str(resolved)
+
+
 def materialize_plan_only(
     *,
     schedule_path: Path = DEFAULT_SCHEDULE_PATH,
@@ -142,8 +151,8 @@ def materialize_plan_only(
             "score_or_outcome_columns_read": [],
             "schedule_slice_sha256": schedule_sha256,
             "plan_sha256": plan_sha256,
-            "plan_path": str(resolved_plan.relative_to(ROOT)),
-            "manifest_path": str(resolved_manifest.relative_to(ROOT)),
+            "plan_path": _reportable_path(resolved_plan),
+            "manifest_path": _reportable_path(resolved_manifest),
             "credits_spent": 0,
             "odds_api_key_read": False,
             "paid_acquisition_executed": False,
