@@ -44,6 +44,7 @@ jobs:
 
       - name: Execute exact frozen 2025 market acquisition
         run: |
+          mkdir -p artifacts/task05g_2025_holdout_v1/market
           python scripts/task05g_2025_market_acquire_v1.py \
             | tee artifacts/task05g_2025_holdout_v1/market/acquisition_result_2025_v1.json
 
@@ -57,3 +58,4 @@ jobs:
             data/market_data/holdout_2025/ledger/
             data/market_data/holdout_2025/raw/
           if-no-files-found: warn
+          retention-days: 90
