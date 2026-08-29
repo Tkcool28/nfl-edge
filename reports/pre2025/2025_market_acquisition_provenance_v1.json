@@ -120,10 +120,13 @@
     }
   ],
   "secret_safety": {
-    "authorization_plaintext_in_artifact": false,
-    "apiKey_literal_in_artifact": false,
-    "odds_api_key_value_exposed": false,
-    "github_job_log_secret_masking_verified": true
+    "archive_binary_scan_authorization_plaintext_hits": 0,
+    "archive_binary_scan_apiKey_ascii_hits": 0,
+    "archive_binary_scan_ODDS_API_KEY_ascii_hits": 0,
+    "archive_binary_scan_NFL_EDGE_2025_AUTHORIZATION_ascii_hits": 0,
+    "ledger_request_urls_use_runner_redaction_contract": true,
+    "github_job_log_secret_masking_observed": true,
+    "note": "The private Odds API secret value is not known to the auditor and therefore was not directly string-matched; evidence is limited to runner redaction behavior, GitHub masking, and the stated binary literal scans."
   },
   "next_gate": "OUTCOME_BLIND_CANONICALIZATION_AND_STRUCTURAL_VALIDATION",
   "methodology_retuned": false
