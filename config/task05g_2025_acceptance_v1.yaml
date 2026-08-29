@@ -15,7 +15,7 @@ execution:
     --authorization "$NFL_EDGE_2025_AUTHORIZATION"
   tuning_flags_allowed: false
   blocked_reasons:
-    - Holdout-only block predictors now cover Oracle QB-Elo, Expected Margin stable, conservative XGBoost, and Ridge Totals R4; the causal 2025 Totals V1 exact-90 feature materialization/orchestration path is not yet frozen.
+    - Holdout-only block predictors now cover Oracle QB-Elo, Expected Margin stable, conservative XGBoost, and Ridge Totals R4, and the exact-90 Totals feature freeze/reveal bridge is present; the full authorization-only football orchestration that bootstraps accepted 2018-2024 state, supplies authorized 2025 context/Oracle inputs, invokes all four model seams, and advances block-by-block is not yet frozen.
     - No frozen authorized 2025 T-60 historical market acquisition plan exists yet; canonical tracked market data ends at 2024.
   required_future_executor_contract:
     football_models:
