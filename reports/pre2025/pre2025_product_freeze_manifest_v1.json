@@ -1,7 +1,7 @@
 {
   "schema_version": "pre2025_product_freeze_manifest_v1",
-  "status": "PRE2025_PRODUCT_FREEZE_PARTIAL",
-  "contract_git_sha": "620ee04c2090904114a6e26cc4be4ea555810eab",
+  "status": "PRE2025_MARKET_PLAN_FROZEN_ACQUISITION_READY",
+  "contract_git_sha": "412224562202702c6e368198e0b426321de46c34",
   "reference_main_sha": "65504d9d834d15d71d6fdc205a912eec455b66ab",
   "task05g_clean_promotion_head": "4150fc411eb7450a8aeb8a13b076c278ddf3d28d",
   "task05g_merge_commit": "a684b046980c43e200ca87ce8d9165f9890c6696",
@@ -10,6 +10,7 @@
   "authorization_ready": false,
   "canonical_preflight_command": "python scripts/task05g_2025_holdout_one_shot_v1.py --preflight",
   "canonical_market_plan_command": "NFL_EDGE_2025_AUTHORIZATION=<out-of-band> python scripts/task05g_2025_market_plan_dry_run_v1.py",
+  "canonical_market_acquisition_command": "python scripts/task05g_2025_market_acquire_v1.py",
   "canonical_future_holdout_command": "python scripts/task05g_2025_holdout_one_shot_v1.py --authorization \"$NFL_EDGE_2025_AUTHORIZATION\"",
   "authorization_plaintext_stored_in_repository": false,
   "contract_files": {
@@ -22,6 +23,7 @@
     "scripts/task05g_pre2025_freeze_audit_v1.py": "c4c8189aa3c1c0f33e227d376600614e82a656ed",
     "scripts/task05g_2025_holdout_one_shot_v1.py": "7efd496f7f3e5ae484ded561afd99be3f306964a",
     "scripts/task05g_2025_market_plan_dry_run_v1.py": "971087ccac44a71ac03c79592c75e9eb4d477140",
+    "scripts/task05g_2025_market_acquire_v1.py": "efcf58cee6702896a8a2a9e97090173e936595e6",
     "src/nfl_edge/holdout/__init__.py": "af334f4898cd6315bb63a60e21850c04c7924fe0",
     "src/nfl_edge/holdout/market_2025.py": "5bfc00a54b762b98b6efeb0f9cff88dbed182550",
     "src/nfl_edge/holdout/football_2025.py": "6d3408e6f8306fc66b7f097a917084821d45805a",
@@ -44,7 +46,8 @@
     "tests/holdout/test_totals_2025_adapter.py": "1514252eb91b89a21c08a6931bee82ef5b8c4969",
     "tests/holdout/test_totals_features_2025_adapter.py": "54527f037ae5f5fdb5bbb5028c893ad174f7ab8e",
     "tests/recommendation/test_pre2025_product_freeze_v1.py": "63f878cbb98649d547e66e9e7f37020cf2fad4a3",
-    ".github/workflows/pre2025-product-freeze-v1.yml": "fe818dd0665d1a4c65e292ed9adff15cfab19bf4"
+    ".github/workflows/pre2025-product-freeze-v1.yml": "fe818dd0665d1a4c65e292ed9adff15cfab19bf4",
+    ".github/workflows/task05g-2025-market-acquisition-v1.yml": "79774d7b41e112398125d4e86c37ba5c2da768b3"
   },
   "production_identity": {
     "task05f_evaluator_config": "9e5da0610d8af9f2d654d5fd6a1a8ed0f34dfa4a",
@@ -74,16 +77,33 @@
   },
   "holdout_market_contract": {
     "provider": "the_odds_api_historical_nfl",
+    "region": "us",
     "snapshot_policy": "T_minus_60_natural_kickoff_cluster",
+    "cluster_max_span_minutes": 30,
     "raw_acquisition_books": ["draftkings", "fanduel", "pinnacle", "betmgm", "williamhill_us", "caesars", "betrivers", "pointsbetus", "wynnbet", "unibet_us"],
     "product_preserved_books": ["draftkings", "fanduel", "pinnacle"],
     "markets": ["h2h", "spreads", "totals"],
     "credits_per_successful_request": 30,
     "authorized_plan_command_frozen": true,
+    "authorized_plan_executed": true,
     "plan_command_reads_schedule_columns_only": ["game_id", "season", "gameday", "gametime"],
     "plan_command_reads_odds_api_key": false,
     "plan_command_network_calls": 0,
-    "plan_command_credits_spent": 0
+    "plan_command_credits_spent": 0,
+    "frozen_plan_sha256": "d1b1eace49177bf01a22db9c2d9d991d07fe8144d165a9a8a67ba1f29f481425",
+    "schedule_slice_sha256": "de36585a681bc79824b8427168ec4a74103fead35e2efc980590077d3eb20228",
+    "request_plan_rows": 123,
+    "target_games": 285,
+    "expected_observation_lead_minutes": {"min": 60.0, "max": 80.0},
+    "planned_credit_cap": 3690,
+    "paid_acquisition_entrypoint_frozen": true,
+    "paid_acquisition_workflow": ".github/workflows/task05g-2025-market-acquisition-v1.yml",
+    "paid_acquisition_secrets": ["NFL_EDGE_2025_AUTHORIZATION", "ODDS_API_KEY"],
+    "paid_acquisition_reads_plan_before_odds_api_key": true,
+    "paid_acquisition_raw_root": "data/market_data/holdout_2025/raw",
+    "paid_acquisition_ledger_path": "data/market_data/holdout_2025/ledger/historical_acquisition_ledger_v1.parquet",
+    "paid_requests_executed": 0,
+    "credits_spent": 0
   },
   "holdout_football_contract": {
     "oracle_qb_starter_identity_allowed": true,
@@ -157,15 +177,17 @@
     "normal_max_drawdown_pct": 8.69
   },
   "sealed_data_policy": {
-    "git_metadata_only_during_preparation": true,
-    "mixed_2025_parquet_contents_opened": false,
+    "git_metadata_only_during_preparation": false,
+    "authorized_2025_schedule_slice_opened": true,
+    "authorized_2025_schedule_columns": ["game_id", "season", "gameday", "gametime"],
+    "2025_score_or_outcome_columns_opened": false,
     "2025_outcomes_scored": false,
     "safe_historical_replay_uses_2018_2024_only_outcome_source": true
   },
   "blockers": [
     "All four frozen football-model prediction seams and the causal Totals exact-90 feature freeze/reveal lifecycle are present; the remaining football blocker is authorization-only I/O/orchestration across accepted pre-2025 state, authorized 2025 inputs, all four model seams, and downstream product freeze/reveal order.",
-    "The authorized zero-credit 2025 market-plan command is frozen but has not been executed; no real 2025 schedule slice or T-60 plan/canonical artifact has been opened/generated yet."
+    "Paid 2025 historical-market acquisition has not yet executed; ODDS_API_KEY remains an execution-time secret and credits spent remain zero."
   ],
-  "recommendation": "NOT_READY_TO_OPEN_2025",
-  "explicit_holdout_statement": "2025 HOLDOUT HAS NOT BEEN OPENED"
+  "recommendation": "MARKET_ACQUISITION_READY_PENDING_REVIEW_AND_SECRETS",
+  "explicit_holdout_statement": "2025 OUTCOMES REMAIN SEALED; ONLY THE AUTHORIZED FOUR-COLUMN SCHEDULE SLICE HAS BEEN OPENED"
 }
