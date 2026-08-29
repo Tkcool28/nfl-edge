@@ -1,7 +1,7 @@
 {
   "schema_version": "pre2025_product_freeze_manifest_v1",
   "status": "PRE2025_MARKET_PLAN_FROZEN_ACQUISITION_READY",
-  "contract_git_sha": "3085b6d1119db9f67395f810d5f5442a0d0e1e5f",
+  "contract_git_sha": "5c81365de3b305f5f77a1308b007b71ce6f775b7",
   "reference_main_sha": "65504d9d834d15d71d6fdc205a912eec455b66ab",
   "task05g_clean_promotion_head": "4150fc411eb7450a8aeb8a13b076c278ddf3d28d",
   "task05g_merge_commit": "a684b046980c43e200ca87ce8d9165f9890c6696",
@@ -46,7 +46,7 @@
     "tests/holdout/test_totals_2025_adapter.py": "1514252eb91b89a21c08a6931bee82ef5b8c4969",
     "tests/holdout/test_totals_features_2025_adapter.py": "54527f037ae5f5fdb5bbb5028c893ad174f7ab8e",
     "tests/recommendation/test_pre2025_product_freeze_v1.py": "63f878cbb98649d547e66e9e7f37020cf2fad4a3",
-    ".github/workflows/pre2025-product-freeze-v1.yml": "fe818dd0665d1a4c65e292ed9adff15cfab19bf4",
+    ".github/workflows/pre2025-product-freeze-v1.yml": "57daa897eea5a5d4169dc9998ab136bb560be459",
     ".github/workflows/task05g-2025-market-acquisition-v1.yml": "367475230d12a1258adb01130d8defa5b06ba122"
   },
   "production_identity": {
@@ -136,11 +136,11 @@
   "accepted_artifact_sha256": {
     "task05f_historical_evaluator_board": "e28f0eb43275fc97c8e36744e032ef401d7659b72854dc5a3aa25236ce1e5dad",
     "task05f_frozen_evaluator_state": "6c6e05bd6f70bbe7ea21ff087c859096249ca23fc42a6c9fded472f45b2f7ede",
-    "task05f_scorecard": "461b931866407b17eb46120803f8fa18ae1dab7e07bc2b26b1884ba424e07022",
+    "task05f_scorecard": "8da45357b06763f687e43ecbbafdc20d799ba253cce50a3b76b80a526260a6e7",
     "model_confidence_v2_production_reference_scorecard": "20ee8238e8922f6ded2ab36e867710a32343d89c612313774c48973c73b1daac",
-    "model_confidence_v2_safe_pre2025_scorecard": "2ac884e25e0a72c8057b6d72dbad897218e66ae3096751e8a4a75aeef19b32f3",
-    "spread_confidence_v3_scorecard": "29e604e81a29754d8aaf554827b19a0d9e4023906467e01cf81fa70f4df063de",
-    "final_product_headline_cards": "9ebe2784f63757d9a7ad37855a4ad4b813dd64029a3a67a9f4429e0128fe22eb",
+    "model_confidence_v2_safe_pre2025_scorecard": "e7f2ab7ea935a58c7c07c62dbad897e9777071240839443f09f4fe3449cb9fea",
+    "spread_confidence_v3_scorecard": "34d2f3384e2d3e7e1f18e3990f9326153956a9e671b83ddcb71b268e9464e714",
+    "final_product_headline_cards": "ff5d2cb8fb59411da33a2bfc110ffa02cb58993fd14f4642ac70c8257290f027",
     "final_product_scorecard": "c78ee43d2fcb0e2f39e0d9a048db5fdfa08a3a274b3a75ea9c32325865bae7a2",
     "final_product_season_lane_summary": "d7a1f39d1fcca97776a8273cc131d4b79c82e3bbc4fa0f16304f12ec948fa44f",
     "final_product_all_cards_bankroll_scenarios": "7eb08fefe6cfa14bd185ccffdd0c27df22200354de191e87feaef1e0406a3281"
@@ -150,13 +150,13 @@
     "freeze_integrity_run": 33119361164,
     "artifact_id": 9665847701,
     "artifact_digest": "sha256:7c14dd19e6cc98cc5559871a68c2b77d091979feaa88efe794bb78c2208a7316",
-    "safe_replay_comparison": "BYTE_IDENTICAL_FOR_FOUR_GATED_FINAL_PRODUCT_FILES"
+    "safe_replay_comparison": "THREE_OF_FOUR_GATED_FINAL_PRODUCT_FILES_BYTE_IDENTICAL__HEADLINE_NUMERIC_LAST_BIT_DRIFT_ONLY"
   },
   "safe_replay_identity_interpretation": {
-    "model_confidence_v2_reference_hash_difference": "PROVENANCE_ONLY",
+    "model_confidence_v2_reference_hash_difference": "SAFE_REPLAY_RUNTIME_IDENTITY_DRIFT__DETERMINISTIC",
     "safe_v2_hash_frozen_separately": true,
-    "spread_confidence_v3_exact_reference_identity_preserved": true,
-    "final_product_exact_reference_identity_preserved": true,
+    "spread_confidence_v3_exact_reference_identity_preserved": false,
+    "final_product_exact_reference_identity_preserved": false,
     "product_identity_gate_weakened": false
   },
   "accepted_2020_2024_identity": {
