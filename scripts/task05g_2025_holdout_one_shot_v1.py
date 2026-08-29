@@ -29,7 +29,7 @@ FREEZE_PATH = ROOT / "config" / "task05g_pre2025_holdout_freeze_v1.yaml"
 AUDIT = ROOT / "scripts" / "task05g_pre2025_freeze_audit_v1.py"
 OUTPUT_DIR = ROOT / "artifacts" / "task05g_2025_holdout_v1"
 SPEND_MARKER = OUTPUT_DIR / "HOLDOUT_SPENT.json"
-AUTHORIZATION_SHA256 = "7b8fd4a076caf6d97f00435d8b87d97e7f9c71055a25d324821160826be65556"
+AUTHORIZATION_SHA256 = "885502f347cfaf2194705dc0614a972148f54bd33074b977a263fc846f82d2c5"
 
 
 class HoldoutGateError(RuntimeError):
