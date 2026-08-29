@@ -98,7 +98,7 @@ def test_r4_totals_holdout_rejects_revealed_current_outcome():
     sealed = _current()
     block = build_holdout_blocks(sealed)[0]
 
-    with pytest.raises(HoldoutFootballContractError, match="post-kickoff field"):
+    with pytest.raises(HoldoutFootballContractError, match="outcome already marked available"):
         predict_ridge_totals_block(
             prior_history=history,
             current_games=_current(home_score=24),
