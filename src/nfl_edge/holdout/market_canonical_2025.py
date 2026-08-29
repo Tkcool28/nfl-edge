@@ -207,6 +207,16 @@ def validate_acquisition_bundle(bundle_root: str | Path) -> dict[str, Any]:
         raise HoldoutMarketCanonicalizationError(
             f"raw files {len(raw_files)} != {EXPECTED_REQUEST_ROWS}"
         )
+    consumed_raw_files = sorted(raw_root.rglob("*.json"))
+    if consumed_raw_files != raw_files:
+        frozen = set(raw_files)
+        consumed = set(consumed_raw_files)
+        unexpected = sorted(str(p.relative_to(raw_root)) for p in consumed - frozen)
+        missing_expected = sorted(str(p.relative_to(raw_root)) for p in frozen - consumed)
+        raise HoldoutMarketCanonicalizationError(
+            "raw JSON consumer universe differs from frozen inventory: "
+            f"unexpected={unexpected}, missing={missing_expected}"
+        )
     raw_ids = {p.stem for p in raw_files}
     if raw_ids != set(plan.get_column("request_plan_id").to_list()):
         raise HoldoutMarketCanonicalizationError("raw request ids != frozen plan request ids")
