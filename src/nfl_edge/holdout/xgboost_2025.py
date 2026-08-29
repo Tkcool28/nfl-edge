@@ -1,14 +1,14 @@
 """Holdout-only adapter for the frozen chronology-corrected XGBoost V1.
 
-The accepted development engine stays hard-sealed at 2024.  This adapter
+The accepted development engine stays hard-sealed at 2024. This adapter
 reuses its frozen candidate, split, early-stop, refit, DMatrix and fingerprint
 implementation while allowing an already-authorized caller to predict one
 2025 block.
 
-Categorical encoding is intentionally frozen from the accepted 2018-2024
-development reference.  Previously revealed 2025 rows may become training
-rows, but neither they nor the current/future holdout may expand or reorder the
-categorical vocabulary.  An unseen 2025 category fails closed.
+Categorical encoding is frozen from the accepted 2018-2024 development
+reference. Previously revealed 2025 rows may become training rows, but neither
+they nor the current/future holdout may expand or reorder the vocabulary. An
+unseen 2025 category fails closed.
 """
 from __future__ import annotations
 
@@ -25,6 +25,7 @@ from nfl_edge.backtest.xgboost_walk_forward import (
     construct_split,
     evaluate_warmup_reason,
     feature_order_hash,
+    parameter_hash,
     reject_market_columns,
     shared_settings_hash,
 )
@@ -76,7 +77,19 @@ def _assert_feature_contract(feature_cols: list[str]) -> None:
         )
     if shared_settings_hash() != FROZEN_SHARED_SETTINGS_HASH:
         raise HoldoutFootballContractError("XGBoost shared settings drift")
-    if CANDIDATES[FROZEN_CANDIDATE_ID].parameter_hash != FROZEN_SELECTED_PARAM_HASH:
+    candidate = CANDIDATES[FROZEN_CANDIDATE_ID]
+    authority_payload = {
+        "colsample_bytree": candidate.colsample_bytree,
+        "gamma": candidate.gamma,
+        "learning_rate": candidate.learning_rate,
+        "max_delta_step": candidate.max_delta_step,
+        "max_depth": candidate.max_depth,
+        "min_child_weight": candidate.min_child_weight,
+        "reg_alpha": candidate.reg_alpha,
+        "reg_lambda": candidate.reg_lambda,
+        "subsample": candidate.subsample,
+    }
+    if parameter_hash(authority_payload) != FROZEN_SELECTED_PARAM_HASH:
         raise HoldoutFootballContractError("XGBoost conservative candidate parameter drift")
 
 
@@ -98,7 +111,7 @@ def _assert_development_reference(frame: pl.DataFrame) -> None:
 
 
 def _assert_frozen_categories(engine: WalkForwardEngine, frame: pl.DataFrame, *, where: str) -> None:
-    for col, vocab in engine._categorical_vocab.items():  # noqa: SLF001 -- frozen canonical seam
+    for col, vocab in engine._categorical_vocab.items():  # noqa: SLF001
         observed = set(frame[col].drop_nulls().unique().to_list())
         unseen = sorted(observed - set(vocab))
         if unseen:
@@ -142,8 +155,6 @@ def predict_xgboost_block(
     if current["target_home_win"].null_count() != current.height:
         raise HoldoutFootballContractError("XGBoost current target_home_win must be null")
 
-    # Construction on development-only rows preserves the accepted 2024 hard
-    # season guard and freezes categorical vocabulary from development only.
     encoder = WalkForwardEngine(
         development_reference,
         feature_cols,
