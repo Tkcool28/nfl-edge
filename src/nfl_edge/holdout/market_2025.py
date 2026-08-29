@@ -1,13 +1,13 @@
 """Authorization-only 2025 historical-market plan and acquisition adapter.
 
 This module does not read the sealed schedule and does not read credentials on
-import.  It is a pure plan/validation layer until an already-authorized caller
+import. It is a pure plan/validation layer until an already-authorized caller
 passes a schedule frame and, separately, an API key.
 
 The adapter intentionally does not change the frozen 2020-2024 acquisition
-modules.  It reuses their exact market constants, T-60 clock derivation,
-plan-row encoding, paid-response preservation, ledger/no-retry behavior, and
-exclusive acquisition lock while applying a separate 2025-only plan contract.
+contract. It reuses the same T-60 clock derivation, plan schema, paid-response
+preservation, ledger/no-retry behavior, and exclusive acquisition lock while
+applying the separately frozen 2025-only raw-book contract.
 """
 from __future__ import annotations
 
@@ -22,7 +22,6 @@ import polars as pl
 from nfl_edge.market_data.kickoffs import Cluster, gameday_gametime_to_utc
 from nfl_edge.market_data.locking import acquisition_lock
 from nfl_edge.market_data.manifest import (
-    ALLOWED_BOOKS,
     ANCHOR_LEAD_MINUTES,
     CLUSTER_MAX_SPAN_MINUTES,
     EXPECTED_COST_PER_SUCCESSFUL_REQUEST,
@@ -33,6 +32,19 @@ from nfl_edge.market_data.plan import PLAN_SCHEMA, plan_frame
 from nfl_edge.market_data.runner import run_plan
 
 HOLDOUT_SEASON = 2025
+HOLDOUT_RAW_BOOKS: tuple[str, ...] = (
+    "draftkings",
+    "fanduel",
+    "pinnacle",
+    "betmgm",
+    "williamhill_us",
+    "caesars",
+    "betrivers",
+    "pointsbetus",
+    "wynnbet",
+    "unibet_us",
+)
+HOLDOUT_PRODUCT_BOOKS: tuple[str, ...] = ("draftkings", "fanduel", "pinnacle")
 HOLDOUT_RAW_ROOT = Path("data/market_data/holdout_2025/raw")
 HOLDOUT_LEDGER_PATH = Path(
     "data/market_data/holdout_2025/ledger/historical_acquisition_ledger_v1.parquet"
@@ -102,7 +114,7 @@ def build_clusters_for_seasons(
 ) -> list[Cluster]:
     """Apply the frozen natural-kickoff clustering to an explicit season set.
 
-    The function is deliberately I/O-free.  Tests can therefore prove its
+    The function is deliberately I/O-free. Tests can therefore prove its
     behavior against exposed 2020-2024 data without opening the real holdout.
     The authorized executor is responsible for supplying a real 2025 frame
     only after the Master authorization gate has passed.
@@ -172,7 +184,9 @@ def build_clusters_for_seasons(
 def build_holdout_market_plan(schedule_2025: pl.DataFrame) -> pl.DataFrame:
     """Build the deterministic 2025 T-60 plan from an authorized schedule frame."""
     clusters = build_clusters_for_seasons(schedule_2025, seasons=(HOLDOUT_SEASON,))
-    plan = plan_frame(clusters)
+    plan = plan_frame(clusters).with_columns(
+        pl.lit(",".join(HOLDOUT_RAW_BOOKS)).alias("requested_bookmaker_keys")
+    )
     validate_holdout_plan_contract(plan)
     return plan
 
@@ -241,8 +255,8 @@ def validate_holdout_plan_contract(
 
     if "requested_bookmaker_keys" in plan.columns:
         books = plan["requested_bookmaker_keys"].unique().to_list()
-        if books != [",".join(ALLOWED_BOOKS)]:
-            errors.append("bookmaker allowlist differs from frozen 10-book acquisition set")
+        if books != [",".join(HOLDOUT_RAW_BOOKS)]:
+            errors.append("bookmaker allowlist differs from frozen 2025 10-book acquisition set")
     if "requested_markets" in plan.columns:
         markets = plan["requested_markets"].unique().to_list()
         if markets != [",".join(MARKETS)]:
@@ -335,7 +349,7 @@ def write_holdout_market_plan(
         "snapshot_policy": "T-60_NATURAL_KICKOFF_CLUSTER_SNAPSHOT",
         "cluster_max_span_minutes": CLUSTER_MAX_SPAN_MINUTES,
         "anchor_lead_minutes": ANCHOR_LEAD_MINUTES,
-        "books": list(ALLOWED_BOOKS),
+        "books": list(HOLDOUT_RAW_BOOKS),
         "markets": list(MARKETS),
         "request_rows": plan.height,
         "target_games": len(_plan_games(plan)),
@@ -358,8 +372,8 @@ def holdout_market_dry_run_report(plan: pl.DataFrame) -> dict[str, object]:
         "season": HOLDOUT_SEASON,
         "request_plan_rows": plan.height,
         "target_games": len(games),
-        "books": list(ALLOWED_BOOKS),
-        "product_books": ["draftkings", "fanduel", "pinnacle"],
+        "books": list(HOLDOUT_RAW_BOOKS),
+        "product_books": list(HOLDOUT_PRODUCT_BOOKS),
         "markets": list(MARKETS),
         "snapshot_policy": "T-60_NATURAL_KICKOFF_CLUSTER_SNAPSHOT",
         "expected_observation_lead_minutes": {
@@ -386,10 +400,10 @@ def run_holdout_market_acquisition(
 ) -> dict[str, object]:
     """Execute a verified 2025 plan using the frozen safe acquisition core.
 
-    The caller must already have passed the Master authorization gate.  This
+    The caller must already have passed the Master authorization gate. This
     function validates the persisted 2025 plan before acquiring the same
     fail-fast lock used by development acquisition, then delegates individual
-    paid requests to the existing runner.  The dynamic 2025 planned cap is
+    paid requests to the existing runner. The dynamic 2025 planned cap is
     always <= the pre-existing global 17,250-credit safety ceiling.
     """
     if not api_key:
