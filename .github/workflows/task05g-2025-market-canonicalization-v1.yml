@@ -46,6 +46,8 @@ jobs:
               'EXPECTED_REQUEST_ROWS = 123',
               'EXPECTED_TARGET_GAMES = 285',
               'EXPECTED_CREDITS_SPENT = 3690',
+              '_reject_raw_symlinks(',
+              '_schedule_slice_sha256(',
               '_validate_schedule_identity(',
               'build_normalized(',
               'build_canonical(',
