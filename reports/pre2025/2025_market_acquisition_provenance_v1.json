@@ -1,0 +1,133 @@
+{
+  "schema_version": "task05g_2025_market_acquisition_provenance_v1",
+  "status": "2025_HISTORICAL_MARKET_ACQUISITION_VERIFIED_COMPLETE",
+  "holdout_season": 2025,
+  "outcomes_opened": false,
+  "workflow": {
+    "name": "Task05G 2025 Historical Market Acquisition V1",
+    "run_number": 6,
+    "run_id": 33254688086,
+    "event": "push",
+    "branch": "main",
+    "head_sha": "a80452c6049b26be0631135b28b360ea219180c9",
+    "conclusion": "success"
+  },
+  "frozen_contract": {
+    "plan_sha256": "d1b1eace49177bf01a22db9c2d9d991d07fe8144d165a9a8a67ba1f29f481425",
+    "schedule_slice_sha256": "de36585a681bc79824b8427168ec4a74103fead35e2efc980590077d3eb20228",
+    "request_rows": 123,
+    "target_games": 285,
+    "credits_per_request": 30,
+    "planned_credit_cap": 3690,
+    "global_safety_cap": 17250,
+    "region": "us",
+    "markets": ["h2h", "spreads", "totals"],
+    "raw_books": [
+      "draftkings",
+      "fanduel",
+      "pinnacle",
+      "betmgm",
+      "williamhill_us",
+      "caesars",
+      "betrivers",
+      "pointsbetus",
+      "wynnbet",
+      "unibet_us"
+    ],
+    "product_books": ["draftkings", "fanduel", "pinnacle"]
+  },
+  "provider_accounting": {
+    "verified_successful_requests": 123,
+    "http_200_rows": 123,
+    "validation_pass_rows": 123,
+    "request_failed_rows": 0,
+    "paid_rejected_rows": 0,
+    "x_requests_last_min": 30,
+    "x_requests_last_max": 30,
+    "x_requests_used_final": 3690,
+    "x_requests_remaining_after_final_request": 16310,
+    "verified_credits_spent": 3690
+  },
+  "artifact": {
+    "artifact_id": 9715458059,
+    "name": "task05g-2025-market-acquisition-33254688086",
+    "size_bytes": 635746,
+    "digest": "sha256:081be41b05d246e50edf933b27b1ca75c63684d79520fdf73431c9c60009e7af",
+    "retention_days": 90,
+    "files": 128
+  },
+  "evidence_hashes": {
+    "ledger_sha256": "f53e08bb6b84217d8ddd2e1c18f26b1ae9dfe9c7c66bcd977951eda1c0185bab",
+    "acquisition_evidence_log_sha256": "5e8c12f5bc9b205cfca3ddfe12033372944735cc9a367daf7c3c7e3684d48c24",
+    "raw_file_count": 123,
+    "raw_total_bytes": 7926192,
+    "raw_unique_sha256_count": 123,
+    "raw_inventory_sha256_spec": "sha256 of UTF-8 lines sorted by raw filename, each line = filename<TAB>byte_count<TAB>sha256<LF>",
+    "raw_inventory_sha256": "86edf9e2b980ed5ba1cfcead33251b34fdd158123785084514aa4ee9919ea81d"
+  },
+  "raw_structural_audit": {
+    "valid_json_files": 123,
+    "nonempty_data_files": 123,
+    "unique_snapshot_timestamps": 123,
+    "unique_target_game_ids": 285,
+    "target_games_captured": 285,
+    "target_games_missing": 0,
+    "max_observed_target_cluster_span_minutes": 21,
+    "returned_book_union": [
+      "betmgm",
+      "betrivers",
+      "draftkings",
+      "fanduel",
+      "pinnacle",
+      "williamhill_us"
+    ],
+    "returned_market_union": ["h2h", "spreads", "totals"]
+  },
+  "product_book_target_game_coverage": {
+    "draftkings": {
+      "h2h": 285,
+      "spreads": 285,
+      "totals": 285,
+      "complete_three_market_games": 285
+    },
+    "fanduel": {
+      "h2h": 284,
+      "spreads": 284,
+      "totals": 284,
+      "complete_three_market_games": 284
+    },
+    "pinnacle": {
+      "h2h": 285,
+      "spreads": 285,
+      "totals": 285,
+      "complete_three_market_games": 285
+    }
+  },
+  "explicit_missingness": [
+    {
+      "bookmaker": "fanduel",
+      "game": "Tampa Bay Buccaneers @ Detroit Lions",
+      "provider_commence_time_utc": "2025-10-20T23:00:00Z",
+      "raw_request_file": "md_2025_043.json",
+      "other_books_present": [
+        "betmgm",
+        "betrivers",
+        "draftkings",
+        "pinnacle",
+        "williamhill_us"
+      ],
+      "interpretation": "preserve provider missingness; do not fabricate and do not re-query a VERIFIED_SUCCESS response"
+    }
+  ],
+  "secret_safety": {
+    "archive_binary_scan_authorization_plaintext_hits": 0,
+    "archive_binary_scan_apiKey_ascii_hits": 0,
+    "archive_binary_scan_ODDS_API_KEY_ascii_hits": 0,
+    "archive_binary_scan_NFL_EDGE_2025_AUTHORIZATION_ascii_hits": 0,
+    "ledger_request_urls_use_runner_redaction_contract": true,
+    "github_job_log_secret_masking_observed": true,
+    "note": "The private Odds API secret value is not known to the auditor and therefore was not directly string-matched; evidence is limited to runner redaction behavior, GitHub masking, and the stated binary literal scans."
+  },
+  "next_gate": "OUTCOME_BLIND_CANONICALIZATION_AND_STRUCTURAL_VALIDATION",
+  "methodology_retuned": false
+}
