@@ -27,7 +27,7 @@ def _development_history() -> pl.DataFrame:
     rows: list[dict[str, object]] = []
     ordinal = 0
     for season in range(2018, 2025):
-        for game in range(10):
+        for game in range(11):
             week = game + 1
             row = _feature_values(ordinal)
             row.update(
@@ -86,7 +86,7 @@ def test_r4_totals_holdout_predicts_current_block_without_current_target():
 
     assert result["candidate_id"] == "R4"
     assert result["alpha"] == 100
-    assert result["fit_rows"] == 70
+    assert result["fit_rows"] == 77
     assert result["game_ids"] == ["2025_01_AAA_BBB"]
     assert len(result["predicted_totals"]) == 1
     assert isinstance(result["predicted_totals"][0], float)
@@ -135,7 +135,7 @@ def test_r4_totals_holdout_requires_complete_frozen_development_seasons():
 def test_r4_totals_holdout_rejects_unrevealed_prior_2025_rows():
     history = _development_history()
     prior = _current().with_columns(
-        pl.lit(0).alias("week"),
+        pl.lit(0, dtype=pl.Int64).alias("week"),
         pl.lit("2025_REG_W00").alias("block_id"),
         pl.lit(45.0).alias("target_total_points"),
         pl.lit(False).alias("target_available"),
