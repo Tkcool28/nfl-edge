@@ -288,7 +288,13 @@ def _execute_one(
     earliest_kickoff = _parse_strict_utc(earliest_raw)
     if earliest_kickoff is None:
         raise AcquisitionStop(f"request {plan_id}: invalid earliest kickoff {earliest_raw!r}")
-    url = build_request_url(target_utc, api_key)
+    bookmakers = tuple(
+        key for key in str(row["requested_bookmaker_keys"]).split(",") if key
+    )
+    markets = tuple(key for key in str(row["requested_markets"]).split(",") if key)
+    url = build_request_url(
+        target_utc, api_key, bookmakers=bookmakers, markets=markets
+    )
     url_redacted = redact_url(url)
     ensure_secret_safe_text(url_redacted, secrets=(api_key,))
 

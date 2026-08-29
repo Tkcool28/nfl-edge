@@ -1,0 +1,137 @@
+schema_version: task05g_pre2025_holdout_freeze_v1
+status: PRE2025_PRODUCT_FREEZE_PARTIAL
+reference_main_commit: 65504d9d834d15d71d6fdc205a912eec455b66ab
+task05g_clean_promotion_head: 4150fc411eb7450a8aeb8a13b076c278ddf3d28d
+task05g_merge_commit: a684b046980c43e200ca87ce8d9165f9890c6696
+sealed_holdout_season: 2025
+authorization_ready: false
+roadmap_contract: FINAL_PRE_2025_PRODUCT_FREEZE_AUDIT_PLUS_ONE_SHOT_HOLDOUT_RUN_PREPARATION
+
+protected_git_blobs:
+  config/qb_elo_v1.yaml: 62677996c7179ac15a6c64128ec10af86e94e43f
+  config/xgboost_v1.yaml: aefded330dc173fe1b6047a8678b5b23830c7c69
+  config/expected_margin_v1.yaml: 2fda1209ab7ee6f157958c1ddf65e22888279f03
+  config/task05f_evaluator_final_v1.yaml: 9e5da0610d8af9f2d654d5fd6a1a8ed0f34dfa4a
+  config/task05g_final_selectors_v1.yaml: 3f1b9c9b38f94c8fbff6694a4f6b368e352a95d3
+  config/task05g_staking_risk_policy_v1.yaml: c660a9d71f20fb2fa182fedd9e758694ab49deaa
+  config/task05g_default_manual_policy_v1.yaml: 4af9b17df9377e9dec79775c91d52f46ddebae1c
+  config/task05g_selector_unit_policy_v1.yaml: 9ce9f06c1a9cb1ea046c0b38dafc46a26c0eeda2
+  config/task05g_final_product_freeze_v1.yaml: a698c399a3307f3a425b07f3cc3b2c3f32fdba72
+  src/nfl_edge/recommendation/__init__.py: 5996af79ea1b0391cba8da610c40ac0133c32bcc
+  src/nfl_edge/recommendation/final_selectors_v1.py: 70985cef2f6d0792ef35364776528403346ec7d2
+  src/nfl_edge/recommendation/headline_staking_v1.py: 5fbc6b688fd939b751f9cefeab9538a8f1159898
+  src/nfl_edge/recommendation/staking_v1.py: eefb5d2585b129c9679b12c5fea1a6c3bdbce88a
+  src/nfl_edge/recommendation/product_policy_v1.py: 3d0fecc78f5e4a5c8d64cbd473e3513aa18e4441
+  src/nfl_edge/recommendation/policy.py: d72cea40119425ca9c877428654bb52c34799bc5
+  src/nfl_edge/value/accepted_calibration.py: 1b8e61465a17693b14cacfe4a6809e3e4fc40c49
+  src/nfl_edge/value/candidate_table.py: 5ae5d14a347d337d3d28fe743fc8cbaadf824445
+  src/nfl_edge/value/contracts.py: 64848d5f6797916764e96586f8946136d9373ab8
+  src/nfl_edge/value/evaluators.py: afad372b29131811c83f3ce825ce2a528ea8e788
+  src/nfl_edge/value/play_through.py: 0cb2740a4ca15f72580f086de574a6e609f8474c
+  src/nfl_edge/value/reliability.py: d23d71d209642f384f23b532d76dfd035546ca6f
+  scripts/task05f_evaluator_final_runner.py: d77768dfae1c022d050729f9b3686bf8cfd36503
+  scripts/task05g_model_confidence_v2_entrypoint.py: 6054672625a1064a891cfc8561eaa0c4e06d4a82
+  scripts/task05g_model_confidence_v2_runner.py: 0cc76db7805029bfffd29524954f5e4c1460ba97
+  scripts/task05g_spread_confidence_v3_runner.py: 5ee5742b349eeda6d7f9a0a9c7bdcaa750851191
+  scripts/task05g_canonical_product_replay_v1.py: d327bc0a6e42a69d206c1c31eec3227f096e9eb8
+  .github/workflows/task05g-canonical-product-replay-v1.yml: 85621446e160234d5173910c025a5c858161a539
+
+sealed_data_git_metadata:
+  - path: data/frozen/games/games_2018_2025.parquet
+    git_blob: 4eec099723f20435fac05daaad18d0cb282f0e60
+  - path: data/derived/features_v1/game_features_2018_2025.parquet
+    git_blob: e52a72cdc32d04a8eb3ac2481f8a4bfa52137927
+  - path: data/derived/features_v1/qb_pregame_features_2018_2025.parquet
+    git_blob: 551d60f275cf9eda9805bb33e7b5f25fb70fe7d6
+  - path: data/derived/features_v1/starter_certainty_2018_2025.parquet
+    git_blob: d8aab4b7e93dab284c79770b5edd98e397a7645b
+  - path: data/derived/features_v1/team_pregame_features_2018_2025.parquet
+    git_blob: 7fecf823a4c28fa0d9490bfa3712f18f1f4ff80d
+  - path: data/raw/source_snapshots/v1/schedules_2018_2025_frozen-baseline-v1.parquet
+    git_blob: 054776f980140c3f3620a89b7e507729677754bf
+
+safe_development_inputs:
+  data/derived/totals_v1_modeling_table_2018_2024.parquet: 15535722169e8f71e0eba92b28b296dc40c684a8
+  data/derived/features_v1/totals_v1_features_2018_2024.parquet: 0245c9f7418b681f84ec248fbb02a22c47807f67
+  data/derived/features_v1/totals_v1_feature_identity_2018_2024.parquet: 64bab4060bc795e237e5b2d2d05fe00a2ba83f14
+
+accepted_historical_evidence:
+  task05f_historical_evaluator_board_sha256: e28f0eb43275fc97c8e36744e032ef401d7659b72854dc5a3aa25236ce1e5dad
+  task05f_frozen_evaluator_state_sha256: 6c6e05bd6f70bbe7ea21ff087c859096249ca23fc42a6c9fded472f45b2f7ede
+  task05f_scorecard_sha256: 461b931866407b17eb46120803f8fa18ae1dab7e07bc2b26b1884ba424e07022
+  model_confidence_v2_scorecard_sha256: 20ee8238e8922f6ded2ab36e867710a32343d89c612313774c48973c73b1daac
+  spread_confidence_v3_scorecard_sha256: 29e604e81a29754d8aaf554827b19a0d9e4023906467e01cf81fa70f4df063de
+  selector_identity:
+    hit_rate: 81
+    balanced: 88
+    value: 68
+  headline_actionability:
+    hit_rate_current_bet: 81
+    balanced_current_bet: 88
+    value_current_bet: 40
+    value_target_only: 28
+    published_zero_actionable_unit: 0
+  deduped_positive_current_portfolio:
+    unique_wagers: 174
+    wins: 112
+    losses: 61
+    pushes: 1
+    risked_units: 144.0
+    weighted_profit_units: 8.05
+  normal_1000_bankroll:
+    ending_bankroll: 1075.59
+    return_pct: 7.56
+    max_drawdown_pct: 8.69
+
+firewall_source_guards:
+  src/nfl_edge/backtest/blocks.py:
+    - DEVELOPMENT_SEASON_MAX = 2024
+    - SEALED_HOLDOUT_SEASON = 2025
+  src/nfl_edge/backtest/xgboost_walk_forward.py:
+    - MAX_SEASON = 2024
+    - reject 2025+ at construction
+  src/nfl_edge/features/totals_v1/season.py:
+    - DEVELOPMENT_SEASON_MAX = 2024
+    - SEALED_HOLDOUT_SEASON = 2025
+  scripts/task05f_evaluator_final_runner.py:
+    - SEALED = {2025}
+    - sealed 2025 entered evaluator inputs
+  scripts/task05g_model_confidence_v2_runner.py:
+    - SEALED_SEASON = 2025
+    - sealed 2025 entered candidate board
+  scripts/task05g_spread_confidence_v3_runner.py:
+    - SEALED = 2025
+    - 2025 is prohibited
+
+historical_determinism_contract:
+  upstream_evaluator_seasons: [2020, 2021, 2022, 2023, 2024]
+  replay_twice: true
+  byte_compare:
+    - scorecard.json
+    - headline_cards.csv
+    - season_lane_summary.csv
+    - all_cards_bankroll_scenarios.csv
+  required_invariants:
+    sealed_not_run: [2025]
+    headline_counts: {hit_rate: 81, balanced: 88, value: 68}
+    positive_current_bet_hit_rate: 81
+    positive_current_bet_balanced: 88
+    value_target_only_cards: 28
+    value_suppressed_cards: 0
+
+blockers:
+  - The repository does not contain a frozen authorized 2025 football-model materialization/orchestration path; accepted model runners are intentionally development-only.
+  - The repository does not contain a frozen 2025 T-60 DK/FD/Pinnacle historical market acquisition plan or canonical market artifacts.
+
+prohibited_until_blockers_resolved_and_refrozen:
+  - read_or_score_2025_outcomes
+  - open_mixed_2018_2025_parquet_contents_for_holdout_analysis
+  - change_evaluator_semantics
+  - change_selector_semantics
+  - change_confidence_or_trust_semantics
+  - change_staking_units_or_profiles
+  - change_play_through_or_value_at_semantics
+  - change_market_or_model_families
+  - use_2025_to_tune_any_methodology
+
+next_allowed_verdict: NOT_READY_TO_OPEN_2025
