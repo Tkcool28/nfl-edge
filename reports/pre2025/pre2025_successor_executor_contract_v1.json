@@ -3,7 +3,7 @@
   "status": "SUCCESSOR_EXECUTOR_PREFROZEN_EXECUTION_BLOCKED",
   "historical_record_path": "reports/pre2025/pre2025_product_freeze_manifest_v1.json",
   "historical_contract_git_sha": "7df52a1869af427b173d22c74441dd9fabc20096",
-  "successor_contract_git_sha": "fd52f7c8f1a110d0ba7ccf91d9c8c25e3bfcebf2",
+  "successor_contract_git_sha": "1b833cfb01d09894adbabcd6604cae90ebc368e9",
   "superseded_historical_contract_paths": [
     "scripts/task05g_2025_holdout_one_shot_v1.py",
     ".github/workflows/pre2025-product-freeze-v1.yml",
@@ -16,7 +16,7 @@
     "src/nfl_edge/holdout/oracle_qb_game_resolver_2025.py": "c243c46af85185fac39c663f84f90b0a76f36dbd",
     "tests/holdout/test_executor_runtime_2025_gate.py": "050f307df2db9af95069cdbee4f88f8943ac2169",
     ".github/workflows/pre2025-product-freeze-v1.yml": "b360cfe5fb72173230ae1bd336ebe7351a279430",
-    ".github/workflows/task05g-2025-executor-freeze-v1.yml": "01e7109e14c4431ce55b8c24e87b8498647a9681",
+    ".github/workflows/task05g-2025-executor-freeze-v1.yml": "c8015f28d3dbdf78b8b4ac458b6bea9e5b77acc8",
     "src/nfl_edge/holdout/product_2025.py": "d94fa614afa5319ee70b0b74e98d1029e9c3d017",
     "tests/recommendation/test_pre2025_product_freeze_v1.py": "287dddd48c7dc99a24c501a7cf440bf4e9081cda"
   },
