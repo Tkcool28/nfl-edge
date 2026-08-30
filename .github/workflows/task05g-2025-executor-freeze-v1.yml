@@ -95,7 +95,11 @@ jobs:
             .github/workflows/task05g-2025-executor-freeze-v1.yml >/dev/null; then
             echo 'authorization digest is allowed; plaintext remains absent'
           fi
-          ! grep -R --line-number 'NFL_EDGE_2025_AUTHORIZATION=' .github/workflows/task05g-2025-executor-freeze-v1.yml
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('.github/workflows/task05g-2025-executor-freeze-v1.yml').read_text()
+          assert 'NFL_EDGE' + '_2025_AUTHORIZATION=' not in text
+          PY
 
       - name: Reproduce frozen 2020-24 product twice
         run: |
