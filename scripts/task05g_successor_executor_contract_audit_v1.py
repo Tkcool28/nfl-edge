@@ -24,7 +24,10 @@ FINAL_PRODUCT_FREEZE_REL = "config/task05g_final_product_freeze_v1.yaml"
 FINAL_PROMOTION_RECORD = "reports/pre2025/pre2025_successor_executor_final_freeze_v1.json"
 ACCEPTANCE_CONFIG_REL = "config/task05g_2025_acceptance_v1.yaml"
 CERTIFICATION_REL = "data/manifests/2025_all_model_input_certification_v1.json"
-FINAL_PROMOTION_SUPERSEDED_SUCCESSOR_PATHS = {"scripts/task05g_successor_executor_contract_audit_v1.py"}
+FINAL_PROMOTION_SUPERSEDED_SUCCESSOR_PATHS = {
+    "scripts/task05g_successor_executor_contract_audit_v1.py",
+    "tests/recommendation/test_pre2025_product_freeze_v1.py",
+}
 IMMUTABLE_FREEZE_ANCHOR_SHA = "e6316216d79fd9191be3d4095b0bca8af5bd30b7"
 IMMUTABLE_REFERENCE_MAIN_SHA = "65504d9d834d15d71d6fdc205a912eec455b66ab"
 
