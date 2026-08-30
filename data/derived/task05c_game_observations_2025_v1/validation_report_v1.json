@@ -1,0 +1,444 @@
+{
+  "accepted_game_observation_builder_reused": true,
+  "accepted_offense_defense_inversion_reused": true,
+  "accepted_pbp_semantics_reused": true,
+  "blocks": 22,
+  "chronology": {
+    "blocks": [
+      {
+        "atomic_commit_observation_count": 16,
+        "block_id": "2025_REG_W01",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 16,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 16,
+        "visible_prior_2025_game_count_before_prediction": 0
+      },
+      {
+        "atomic_commit_observation_count": 16,
+        "block_id": "2025_REG_W02",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 32,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 16,
+        "visible_prior_2025_game_count_before_prediction": 16
+      },
+      {
+        "atomic_commit_observation_count": 16,
+        "block_id": "2025_REG_W03",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 48,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 16,
+        "visible_prior_2025_game_count_before_prediction": 32
+      },
+      {
+        "atomic_commit_observation_count": 16,
+        "block_id": "2025_REG_W04",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 64,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 16,
+        "visible_prior_2025_game_count_before_prediction": 48
+      },
+      {
+        "atomic_commit_observation_count": 14,
+        "block_id": "2025_REG_W05",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 78,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 14,
+        "visible_prior_2025_game_count_before_prediction": 64
+      },
+      {
+        "atomic_commit_observation_count": 15,
+        "block_id": "2025_REG_W06",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 93,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 15,
+        "visible_prior_2025_game_count_before_prediction": 78
+      },
+      {
+        "atomic_commit_observation_count": 15,
+        "block_id": "2025_REG_W07",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 108,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 15,
+        "visible_prior_2025_game_count_before_prediction": 93
+      },
+      {
+        "atomic_commit_observation_count": 13,
+        "block_id": "2025_REG_W08",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 121,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 13,
+        "visible_prior_2025_game_count_before_prediction": 108
+      },
+      {
+        "atomic_commit_observation_count": 14,
+        "block_id": "2025_REG_W09",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 135,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 14,
+        "visible_prior_2025_game_count_before_prediction": 121
+      },
+      {
+        "atomic_commit_observation_count": 14,
+        "block_id": "2025_REG_W10",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 149,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 14,
+        "visible_prior_2025_game_count_before_prediction": 135
+      },
+      {
+        "atomic_commit_observation_count": 15,
+        "block_id": "2025_REG_W11",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 164,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 15,
+        "visible_prior_2025_game_count_before_prediction": 149
+      },
+      {
+        "atomic_commit_observation_count": 14,
+        "block_id": "2025_REG_W12",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 178,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 14,
+        "visible_prior_2025_game_count_before_prediction": 164
+      },
+      {
+        "atomic_commit_observation_count": 16,
+        "block_id": "2025_REG_W13",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 194,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 16,
+        "visible_prior_2025_game_count_before_prediction": 178
+      },
+      {
+        "atomic_commit_observation_count": 14,
+        "block_id": "2025_REG_W14",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 208,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 14,
+        "visible_prior_2025_game_count_before_prediction": 194
+      },
+      {
+        "atomic_commit_observation_count": 16,
+        "block_id": "2025_REG_W15",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 224,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 16,
+        "visible_prior_2025_game_count_before_prediction": 208
+      },
+      {
+        "atomic_commit_observation_count": 16,
+        "block_id": "2025_REG_W16",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 240,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 16,
+        "visible_prior_2025_game_count_before_prediction": 224
+      },
+      {
+        "atomic_commit_observation_count": 16,
+        "block_id": "2025_REG_W17",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 256,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 16,
+        "visible_prior_2025_game_count_before_prediction": 240
+      },
+      {
+        "atomic_commit_observation_count": 16,
+        "block_id": "2025_REG_W18",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 272,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 16,
+        "visible_prior_2025_game_count_before_prediction": 256
+      },
+      {
+        "atomic_commit_observation_count": 6,
+        "block_id": "2025_WC_W19",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 278,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 6,
+        "visible_prior_2025_game_count_before_prediction": 272
+      },
+      {
+        "atomic_commit_observation_count": 4,
+        "block_id": "2025_DIV_W20",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 282,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 4,
+        "visible_prior_2025_game_count_before_prediction": 278
+      },
+      {
+        "atomic_commit_observation_count": 2,
+        "block_id": "2025_CON_W21",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 284,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 2,
+        "visible_prior_2025_game_count_before_prediction": 282
+      },
+      {
+        "atomic_commit_observation_count": 1,
+        "block_id": "2025_SB_W22",
+        "current_block_observations_visible_before_freeze": 0,
+        "eligible_after_reveal_count": 285,
+        "exact_complete_block_became_eligible_after_reveal": true,
+        "future_block_observations_visible_before_freeze": 0,
+        "game_count": 1,
+        "visible_prior_2025_game_count_before_prediction": 284
+      }
+    ],
+    "chronology_mode": "BLOCK_SEQUENTIAL_SEALED_LEDGER_ELIGIBILITY",
+    "current_block_observations_visible_before_freeze": 0,
+    "future_block_observations_visible_before_freeze": 0,
+    "provenance": [
+      {
+        "block_id": "2025_REG_W01",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W02",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W03",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W04",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W05",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W06",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W07",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W08",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W09",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W10",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W11",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W12",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W13",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W14",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W15",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W16",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W17",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_REG_W18",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_WC_W19",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_DIV_W20",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_CON_W21",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      },
+      {
+        "block_id": "2025_SB_W22",
+        "canonical_mapping_failures": 0,
+        "dropback_fallback_rows": 0,
+        "future_block_source_rows": 0,
+        "same_block_source_rows": 0,
+        "same_game_source_rows": 0,
+        "season_2025_source_rows": 0
+      }
+    ],
+    "week1_2025_observations_visible": 0
+  },
+  "game_observation_artifact": "data/derived/task05c_game_observations_2025_v1/game_observations_2025_v1.jsonl",
+  "game_observation_sha256": "5a78b506a1d2dc14f4948cd316346d09d863e603c61144716a242252df8f84e3",
+  "games": 285,
+  "holdout_predictions_executed": 0,
+  "no_silent_zero_imputation": true,
+  "pbp_artifact": "data/frozen/task05c_pbp_2025_v1/play_by_play_2025.parquet",
+  "pbp_sha256": "c6ecedd6d678cc37ed316b23ef84ee1ec6abb69c514bb11868a7ebd5a367df29",
+  "schema_version": "task05h_2025_game_observation_validation_v1",
+  "team_game_summary_substitute_used": false,
+  "unique_game_ids": 285
+}

@@ -1,0 +1,16 @@
+{
+  "artifact_path": "data/frozen/task05c_pbp_2025_v1/play_by_play_2025.parquet",
+  "asset_id": 512957613,
+  "byte_size": 20337029,
+  "canonical_games": 285,
+  "filename": "play_by_play_2025.parquet",
+  "historical_2018_2024_rewritten": false,
+  "raw_pbp_rows": 48771,
+  "release_id": 58152862,
+  "release_updated_at": "2026-08-26T07:33:12Z",
+  "schema_version": "task05h_2025_pbp_source_v1",
+  "season": 2025,
+  "sha256": "c6ecedd6d678cc37ed316b23ef84ee1ec6abb69c514bb11868a7ebd5a367df29",
+  "source_semantics": "nflverse promoted PBP; same upstream release family used by accepted Task05C",
+  "source_url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.parquet"
+}
