@@ -22,7 +22,7 @@ from nfl_edge.recommendation.policy import NO_BALANCED_PLAY, NO_HIT_RATE_PLAY, N
 from nfl_edge.recommendation.staking_v1 import cap_slate_stakes, dollar_stake
 from nfl_edge.value.candidate_table import build_candidate_table, make_candidate_id
 from nfl_edge.value.contracts import GameState, NormalizedOffer
-from nfl_edge.value.reliability import fit_reliability_state
+from nfl_edge.value.uncertainty import fit_reliability_state
 from nfl_edge.value.wager_economics import Settlement
 
 from .evaluator_2025 import evaluate_authorized_holdout_offer
