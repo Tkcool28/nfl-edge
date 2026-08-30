@@ -29,7 +29,7 @@ Outcome-blind canonicalization also completed:
 - structural validation SHA-256: `ed5dd6dd08acc47f0042827a5020856cce7f59bc96cecba65ea076c28bb1b98a`
 - score/outcome columns read during canonicalization: 0
 
-The four frozen holdout prediction seams also exist:
+The four frozen holdout prediction seams exist:
 
 - Oracle QB-Elo: `src/nfl_edge/holdout/football_2025.py`
 - conservative chronology-corrected XGBoost: `src/nfl_edge/holdout/xgboost_2025.py`
@@ -46,53 +46,72 @@ This branch additionally implements and tests:
 
 Executor-freeze run `33290870919` passed the immutable prefreeze anchor, compilation, synthetic/development-only holdout tests, invalid-authorization fail-closed proof, double 2020-2024 canonical product reproduction, and exact frozen development-product hashes.
 
-## Definitive remaining blocker — no frozen 2025 Oracle-QB input surface
+### 2025 Oracle-QB input blocker is resolved
 
-The frozen 2025 Oracle QB-Elo predictor requires a resolver whose identity is `ORACLE` and whose `assert_coverage` covers every current-block `game_id`. The frozen Totals exact-90 feature materializer also consumes a current-block Oracle-QB surface. Those are input requirements shared by two frozen model paths; they cannot be replaced by zero adjustment, projected starter identity, or a different QB source without changing methodology.
+The separately reviewed 2025 Oracle-QB materialization task was completed and merged in PR #70. The tracked 2025 Oracle surface now includes:
 
-The repository does **not** contain a frozen 2025 artifact or generic accepted materializer capable of satisfying this requirement.
+- `data/derived/oracle_qb_entering_state_2025_v1/oracle_qb_entering_state_game_sides_2025_v1.parquet`
+- `data/derived/oracle_qb_entering_state_2025_v1/oracle_qb_pregame_adjustments_by_game_2025_v1.parquet`
+- `data/derived/oracle_qb_entering_state_2025_v1/oracle_qb_entering_state_validation_report_2025_v1.json`
+- frozen 2025 actual-starter and identity-crosswalk inputs under `data/derived/stathead_actual_starters_2025_v1/`
 
-### Evidence 1 — accepted Oracle entering-state builder is explicitly 2018-2024
+The merged validation report records:
 
-`scripts/build_oracle_qb_entering_state_v2.py` hardcodes:
+- 285 unique 2025 games
+- 570 game sides
+- zero unmatched starter identities
+- adjustment schema matching the historical contract
+- zero current-block QB-stat game IDs visible
+- zero future-2025 QB-stat game IDs visible
+- zero market-data reads
+- zero selected outcome columns from the games source
+- zero holdout executions
 
-- starter input: `actual_starting_qb_game_sides_2018_2024_v1.csv`
-- output prefixes containing `2018_2024`
-- authoritative adjustment artifact scoped to 2018-2024
+The old Oracle-only blocker described by the original version of this report is therefore closed.
 
-It further fails if the produced game-side frame contains `season >= 2025`:
+## Definitive remaining blocker — no frozen 2025 PBP/GameObservation surface for Ridge Totals exact-90 state advancement
 
-`if result.height != starters.height or result.filter(pl.col("season") >= 2025).height: raise ValueError("unexpected v2 starter coverage")`
+A second dependency became visible when the exact-90 Totals state transition was traced end to end.
 
-Therefore this accepted builder is not a season-generic 2025 materializer.
+`src/nfl_edge/features/totals_v1/game_observations.py` constructs the `GameObservation` updates consumed by the Totals block state from play-by-play semantics. The accepted primitive state includes PBP-derived EPA/play, success, pass/rush/dropback/sack/turnover rates, drive scoring and turnover rates, pace, neutral situation rates, red-zone and goal-to-go rates, air-yards/YAC rates, and explosive play rates. These are not score-only state updates.
 
-### Evidence 2 — final Oracle starter builder is explicitly frozen to the 2018-2024 universe
+The exact-90 holdout bridge therefore needs, after each completed 2025 block is revealed, an accepted 2025 PBP-derived observation surface with which to advance the state before the next block is frozen.
 
-`scripts/stathead_actual_starters/build_final_oracle_starters.py` pins:
+### Evidence 1 — accepted Task05C PBP inventory stops at 2024
 
-- `EXPECT_SEASON_COUNTS = {2018: 267, 2019: 267, 2020: 269, 2021: 285, 2022: 284, 2023: 285, 2024: 285}`
-- exact Stage01 rows: 3884 game sides
-- exact final games: 1942
-- exact manual/web exception ledger SHA and row count: 99
-- exact crosswalk SHA and row count: 138
-- exact primary ledger hash
+`data/manifests/task05c_source_inventory_v1.json` is the accepted source inventory for the Totals feature system. Its `pbp_manifest` contains exactly:
 
-It explicitly asserts:
+- `play_by_play_2018.parquet`
+- `play_by_play_2019.parquet`
+- `play_by_play_2020.parquet`
+- `play_by_play_2021.parquet`
+- `play_by_play_2022.parquet`
+- `play_by_play_2023.parquet`
+- `play_by_play_2024.parquet`
 
-- Stage01 seasons equal exactly 2018-2024
-- `2025 not in seasons`
+There is no 2025 entry. Each of those artifacts is described as `nflverse promoted PBP; canonical source for Totals V1 PBP-derived features`.
 
-The final ledger is therefore a frozen historical reconstruction, not a generic mechanism that can be pointed at season 2025.
+### Evidence 2 — the tracked frozen 2018-2025 summary tables are not an accepted substitute
 
-### Evidence 3 — existing tracked Oracle artifacts stop at 2024
+The same Task05C inventory describes `data/frozen/team_game_stats/team_game_stats_2018_2025.parquet` as:
 
-Tracked Oracle QB entering-state and adjustment artifact names are 2018-2024 scoped. The final Stathead starter artifacts are likewise `actual_starting_qb_*_2018_2024_v1`.
+`Frozen team game stats: passing_epa/rushing_epa (audit cross-check only per contract)`
 
-No separate 2025 actual-starter/Oracle-QB artifact or builder was found in the current branch.
+The frozen repository tree also contains 2018-2025 games, QB game stats, rosters, team game stats, venues, schedules, weekly team stats, and related inputs, but no tracked 2025 promoted-PBP artifact and no separately frozen 2025 `GameObservation` ledger.
+
+Using those summary tables to synthesize the missing PBP primitives would change the accepted Totals feature/state methodology and is outside this executor task.
+
+### Evidence 3 — the observation builder materially requires PBP semantics
+
+`src/nfl_edge/features/totals_v1/game_observations.py` imports and applies the accepted PBP semantic extractors and drive/pace observation builders. Its contract explicitly mirrors offense observations to defense-allowed state and forbids silent zero-imputation.
+
+Consequently, advancing 2025 Totals state with empty observations, score-only observations, zero-filled primitives, or team-game summary proxies would not be equivalent to the frozen exact-90 methodology.
 
 ## Why the executor cannot be marked ready
 
-Finishing the top-level authorization runner would require choosing or constructing the missing 2025 Oracle-QB identity surface. That would cross from orchestration into a new data/source methodology decision. The executor task explicitly prohibits inventing replacement model seams or changing the frozen model/input contract.
+The Oracle input is now available, but the full one-shot path still cannot truthfully reproduce the frozen Ridge Totals exact-90 state across 2025 blocks without an accepted 2025 PBP/GameObservation source.
+
+Finishing the top-level authorization runner by inventing such a source inside PR #69 would cross from orchestration into a new data/input materialization decision and could alter model semantics. That is explicitly outside this task.
 
 Accordingly:
 
@@ -101,23 +120,30 @@ Accordingly:
 - `scripts/task05g_2025_holdout_one_shot_v1.py` remains fail-closed rather than pretending to be complete.
 - the valid authorization command must **not** be run yet.
 - `HOLDOUT_SPENT.json` has not been created.
+- the 2025 holdout has not been executed.
 
 ## Required next task
 
-Create a separately reviewed and frozen **2025 Oracle-QB input materialization task** that preserves the already-accepted historical Oracle semantics while supplying, for all 285 2025 games:
+Create a separately reviewed and frozen **2025 Totals PBP/GameObservation input materialization task** that preserves the accepted Task05C/Phase 3 semantics while supplying the post-game state updates required by `totals_features_2025.py`.
 
-1. actual historical starting-QB identity for each home/away side under the same `ORACLE_STARTER_IDENTITY_ONLY` interpretation;
-2. deterministic player identity resolution compatible with the accepted QB feature inputs;
-3. point-in-time entering QB form derived only from strictly prior eligible rows;
-4. authoritative home/away QB-Elo adjustments using the already-frozen QB-Elo formula/config;
-5. the exact Oracle-QB consumed columns required by the Totals exact-90 materializer;
-6. complete `game_id` coverage and frozen artifact hashes;
-7. tests proving no same-game/future outcome or QB-stat leakage into entering state.
+At minimum, that task must:
 
-Only after that artifact/materializer is independently frozen should the one-shot executor branch be resumed, the top-level authorization path wired, the acceptance contract superseded/refrozen, and `execution.ready` considered for `true`.
+1. acquire/freeze the 2025 promoted PBP source under the same accepted source semantics as 2018-2024, or materialize a byte-frozen `GameObservation` ledger proven exactly equivalent to that source path;
+2. freeze artifact identity, row/game coverage, and SHA-256 hashes;
+3. preserve the existing `pbp_semantics`, drive, pace, offense/defense inversion, and no-zero-imputation rules;
+4. prove complete block coverage for all 285 2025 games;
+5. prove current/future block PBP rows are physically unavailable before reveal and become available only after the applicable block result boundary;
+6. make no model refit, selector, evaluator, staking, Play Through, or market-policy changes;
+7. execute no 2025 holdout predictions while materializing or validating the source.
+
+Only after that input is independently frozen should PR #69 resume final one-shot composition, refreeze the superseding acceptance identity, and consider `execution.ready: true`.
 
 ## Final blocker verdict
 
 `NOT_READY_FOR_SINGLE_AUTHORIZED_2025_HOLDOUT_EXECUTION`
+
+Resolved blocker: **2025 Oracle-QB input — CLOSED by PR #70.**
+
+Remaining blocker: **2025 Ridge Totals exact-90 PBP/GameObservation input — OPEN.**
 
 **2025 HOLDOUT HAS NOT BEEN EXECUTED.**
