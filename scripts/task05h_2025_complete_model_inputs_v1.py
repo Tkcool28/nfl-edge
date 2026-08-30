@@ -36,8 +36,8 @@ from nfl_edge.features.totals_v1.feature_table import (
     _ORACLE_QB_CONSUMED_COLUMNS,
     _normalize_pbp_teams_to_canonical,
 )
-from nfl_edge.features.totals_v1.game_observations import (
-    build_game_observations_with_provenance,
+from nfl_edge.holdout.totals_observations_2025 import (
+    build_2025_game_observations_with_provenance,
 )
 from nfl_edge.holdout.football_2025 import HoldoutBlock
 from nfl_edge.holdout.totals_2025 import FROZEN_ALPHA, FROZEN_CANDIDATE_ID
@@ -262,7 +262,7 @@ def build_observations(mapped: pl.DataFrame, canonical_2025: pl.DataFrame, block
         visible_future_before = len(before & future)
         if visible_current_before or visible_future_before:
             raise AssertionError("chronology gate exposed current/future observations")
-        obs, counters = build_game_observations_with_provenance(
+        obs, counters = build_2025_game_observations_with_provenance(
             block_id=block.block_id,
             pbp_frames={gid: per_game[gid] for gid in block.game_ids},
             game_to_teams=game_to_teams,
