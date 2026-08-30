@@ -8,9 +8,7 @@ settlement fields are never persisted on the pre-result surface.
 from __future__ import annotations
 
 import importlib.util
-import math
 from pathlib import Path
-from statistics import mean
 from typing import Any, Mapping
 
 from nfl_edge.recommendation.final_selectors_v1 import (
@@ -23,11 +21,11 @@ from nfl_edge.recommendation.headline_staking_v1 import headline_actionability
 from nfl_edge.recommendation.policy import NO_BALANCED_PLAY, NO_HIT_RATE_PLAY, NO_VALUE_PLAY
 from nfl_edge.recommendation.staking_v1 import cap_slate_stakes, dollar_stake
 from nfl_edge.value.candidate_table import build_candidate_table, make_candidate_id
-from nfl_edge.value.contracts import GameState
-from nfl_edge.value.evaluators import evaluate_offer
+from nfl_edge.value.contracts import GameState, NormalizedOffer
 from nfl_edge.value.reliability import fit_reliability_state
 from nfl_edge.value.wager_economics import Settlement
 
+from .evaluator_2025 import evaluate_authorized_holdout_offer
 from .one_shot_2025 import HoldoutOneShotError, assert_pre_result_surface
 
 PROFILES = ("Cautious", "Conservative", "Normal", "Aggressive", "Ultra")
@@ -144,11 +142,26 @@ def _task05f_pre_result(
                         gid, game, block, offer, market, "missing_pinnacle_anchor", Settlement.PUSH
                     )
                 else:
-                    result = evaluate_offer(game_state, offer, state, anchor, rel_states[market])
-                    task05f._manual_parity(game_state, offer, state, anchor, rel_states[market], result)
+                    result = evaluate_authorized_holdout_offer(
+                        game_state, offer, state, anchor, rel_states[market]
+                    )
+                    manual = NormalizedOffer(
+                        market_type=offer.market_type,
+                        side=offer.side,
+                        book="manual",
+                        price_american=offer.price_american,
+                        line=offer.line,
+                        snapshot_utc=offer.snapshot_utc,
+                        source="manual",
+                    )
+                    parity = evaluate_authorized_holdout_offer(
+                        game_state, manual, state, anchor, rel_states[market]
+                    )
+                    if parity != result:
+                        raise HoldoutOneShotError(
+                            f"authorized stored/manual evaluator parity failed: {gid} {market} {side}"
+                        )
                     material = task05f._result_row(gid, game, block, offer, anchor, result, Settlement.PUSH)
-                # Settlement is reporting-only in the historical runner. The holdout
-                # pre-result surface strips it before candidate materialization.
                 material.pop("settlement", None)
                 material.pop("realized_profit", None)
                 rows.append(material)
@@ -172,12 +185,9 @@ def _apply_v2(
     history = _history_rows(prior_games)
     ml_state = core._fit_ml_state(history)
     residuals = [float(r["margin_residual"]) for r in history if r.get("margin_residual") is not None]
-    by_game = {str(gid): dict(row) for gid, row in {**prior_games}.items()}
     out: list[dict[str, Any]] = []
     for src in candidates:
         row = dict(src)
-        game = dict(by_game.get(str(row["game_id"]), {}))
-        # Current model outputs are carried by the Task05F candidate row.
         row["model_confidence_probability"] = None
         row["model_confidence_support_n"] = 0
         row["model_confidence_supported"] = False
@@ -193,16 +203,14 @@ def _apply_v2(
         q: float | None = None
         support_n = 0
         if market == "moneyline":
-            # Task05F exposes the exact QB/XGB average as raw_model_output. V2's
-            # frozen transform consumes that same raw average.
-            raw = row.get("raw_model_output")
-            if raw is not None:
-                home_raw = float(raw) if side == "home" else 1.0 - float(raw)
+            raw_selected = row.get("raw_model_output")
+            if raw_selected is not None:
+                home_raw = float(raw_selected) if side == "home" else 1.0 - float(raw_selected)
                 home_q = core._ml_probability(home_raw, ml_state)
                 support_n = int(ml_state["n"])
                 if home_q is not None:
                     q = float(home_q if side == "home" else 1.0 - home_q)
-                    row["raw_avg_probability_selected"] = float(raw)
+                    row["raw_avg_probability_selected"] = float(raw_selected)
                     row["model_confidence_source"] = "ML_PLATT_QBELO_XGB_AVG"
         elif market == "spread" and row.get("line") is not None and row.get("raw_model_output") is not None:
             support_n = len(residuals)
@@ -267,7 +275,9 @@ def _apply_v3(
             r["model_price_gap"] = None
             r["consensus_edge"] = None
             if r.get("line") is not None and r.get("raw_model_output") is not None:
-                margin = v3._cover_margin(float(r["raw_model_output"]), str(r.get("selected_side")), float(r["line"]))
+                margin = v3._cover_margin(
+                    float(r["raw_model_output"]), str(r.get("selected_side")), float(r["line"])
+                )
                 q = v3._probability(margin, state)
                 r["model_cover_margin_v3"] = float(margin)
                 r["spread_calibration_intercept_v3"] = state.get("intercept")
@@ -279,23 +289,34 @@ def _apply_v3(
                     if r.get("break_even_probability") is not None:
                         r["model_price_gap"] = float(q) - float(r["break_even_probability"])
                     if r["model_price_gap"] is not None and r.get("evaluated_edge_probability") is not None:
-                        r["consensus_edge"] = min(float(r["model_price_gap"]), float(r["evaluated_edge_probability"]))
+                        r["consensus_edge"] = min(
+                            float(r["model_price_gap"]), float(r["evaluated_edge_probability"])
+                        )
         out.append(r)
     assert_pre_result_surface(out)
     return out
 
 
 def _candidate_id(row: Mapping[str, Any]) -> str:
-    return str(row.get("candidate_id") or "|".join((str(row.get("game_id")), str(row.get("market_type")), str(row.get("selected_side")))))
+    return str(
+        row.get("candidate_id")
+        or "|".join((str(row.get("game_id")), str(row.get("market_type")), str(row.get("selected_side"))))
+    )
 
 
 def _offer_key(row: Mapping[str, Any]) -> str:
-    return "|".join((
-        _candidate_id(row),
-        str(row.get("sportsbook") or row.get("actionable_book") or ""),
-        str(row.get("line") if row.get("line") is not None else row.get("actionable_line")),
-        str(row.get("american_odds") if row.get("american_odds") is not None else row.get("actionable_price_american")),
-    ))
+    return "|".join(
+        (
+            _candidate_id(row),
+            str(row.get("sportsbook") or row.get("actionable_book") or ""),
+            str(row.get("line") if row.get("line") is not None else row.get("actionable_line")),
+            str(
+                row.get("american_odds")
+                if row.get("american_odds") is not None
+                else row.get("actionable_price_american")
+            ),
+        )
+    )
 
 
 def build_pre_result_product_block(
@@ -319,7 +340,12 @@ def build_pre_result_product_block(
         prior_board_rows=prior_board_rows,
     )
     v2 = _apply_v2(root=root, candidates=candidates, prior_games=prior_games)
-    board = _apply_v3(root=root, rows=v2, prior_board_rows=prior_board_rows, prior_games=prior_games)
+    board = _apply_v3(
+        root=root,
+        rows=v2,
+        prior_board_rows=prior_board_rows,
+        prior_games=prior_games,
+    )
 
     hit = select_hit_rate(board)
     balanced = select_balanced(board)
@@ -335,7 +361,9 @@ def build_pre_result_product_block(
     for lane in ("hit_rate", "balanced", "value"):
         row = selected[lane]
         if row is None:
-            headlines.append({"lane": lane, "headline_action": "NO_PLAY", "published": False, "current_units": 0.0})
+            headlines.append(
+                {"lane": lane, "headline_action": "NO_PLAY", "published": False, "current_units": 0.0}
+            )
             continue
         action = headline_actionability(lane, row)
         material = dict(row)
@@ -361,7 +389,10 @@ def build_pre_result_product_block(
     exposure_rows = list(unique.values())
     profile_stakes: dict[str, dict[str, float]] = {}
     for profile in PROFILES:
-        proposed = [(r["offer_key"], dollar_stake(REFERENCE_BANKROLL, profile, float(r["current_units"]))) for r in exposure_rows]
+        proposed = [
+            (r["offer_key"], dollar_stake(REFERENCE_BANKROLL, profile, float(r["current_units"])))
+            for r in exposure_rows
+        ]
         profile_stakes[profile] = cap_slate_stakes(REFERENCE_BANKROLL, proposed)
 
     for row in headlines:
@@ -380,5 +411,7 @@ def build_pre_result_product_block(
         "unique_exposure": exposure_rows,
         "reference_bankroll": REFERENCE_BANKROLL,
         "profile_stakes": profile_stakes,
-        "profile_total_risk": {profile: float(sum(stakes.values())) for profile, stakes in profile_stakes.items()},
+        "profile_total_risk": {
+            profile: float(sum(stakes.values())) for profile, stakes in profile_stakes.items()
+        },
     }
