@@ -56,6 +56,7 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
+          import hashlib
           import pandas as pd
 
           files = [
@@ -73,6 +74,34 @@ jobs:
           print('RAW_ROWS=570')
           print('RAW_RANK_CONTINUITY=PASS')
           print('RESULT_COLUMN_STORED=0')
+          for path in files:
+              digest = hashlib.sha256(path.read_bytes()).hexdigest()
+              print(f'RAW_SOURCE_SHA256 {path} {digest}')
+          PY
+
+      - name: Normalize Stathead location header synonym in runner only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          files = [
+              Path('data/raw/stathead_actual_starters_2025_v1/chat_pastes/ranks_0001_0200.tsv'),
+              Path('data/raw/stathead_actual_starters_2025_v1/chat_pastes/ranks_0201_0400.tsv'),
+              Path('data/raw/stathead_actual_starters_2025_v1/chat_pastes/ranks_0401_0570.tsv'),
+          ]
+          for path in files:
+              lines = path.read_text(encoding='utf-8').splitlines()
+              header = lines[0].split('\t')
+              if 'Loc' in header and 'Location' not in header:
+                  header[header.index('Loc')] = 'Location'
+                  lines[0] = '\t'.join(header)
+                  path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+              elif 'Location' not in header:
+                  raise AssertionError(f'no supported location header in {path}: {header}')
+          print('LOCATION_HEADER_NORMALIZATION=PASS')
+          print('RAW_ROW_VALUES_CHANGED=0')
           PY
 
       - name: Verify historical frozen artifacts before build
