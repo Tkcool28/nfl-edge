@@ -1,0 +1,72 @@
+{
+  "historical_crosswalk_path": "data/derived/stathead_actual_starters_v1/identity_crosswalk/task04a_player_crosswalk_v1.csv",
+  "historical_crosswalk_sha256": "d554c7c2ab5114bc70d0f04a46feba0ef46ab53c717769f8c04f88b98e976742",
+  "mapping_rules": [
+    "reuse frozen Task04A exact display-name identity when present",
+    "reuse explicit reviewed Task04A spelling aliases only",
+    "otherwise require one exact nflverse display_name or football_name QB identity",
+    "no fuzzy matching"
+  ],
+  "new_2025_identities": [
+    {
+      "gsis_id": "00-0040398",
+      "pfr_id": "CookBr03",
+      "raw_player_name": "Brady Cook"
+    },
+    {
+      "gsis_id": "00-0040676",
+      "pfr_id": "WardCa00",
+      "raw_player_name": "Cam Ward"
+    },
+    {
+      "gsis_id": "00-0037324",
+      "pfr_id": "OladCh00",
+      "raw_player_name": "Chris Oladokun"
+    },
+    {
+      "gsis_id": "00-0040704",
+      "pfr_id": "GabrDi00",
+      "raw_player_name": "Dillon Gabriel"
+    },
+    {
+      "gsis_id": "00-0039923",
+      "pfr_id": "McCaJJ00",
+      "raw_player_name": "J.J. McCarthy"
+    },
+    {
+      "gsis_id": "00-0040691",
+      "pfr_id": "DartJa00",
+      "raw_player_name": "Jaxson Dart"
+    },
+    {
+      "gsis_id": "00-0040494",
+      "pfr_id": "BrosMa00",
+      "raw_player_name": "Max Brosmer"
+    },
+    {
+      "gsis_id": "00-0040234",
+      "pfr_id": "EwerQu00",
+      "raw_player_name": "Quinn Ewers"
+    },
+    {
+      "gsis_id": "00-0040206",
+      "pfr_id": "LeonRi02",
+      "raw_player_name": "Riley Leonard"
+    },
+    {
+      "gsis_id": "00-0040668",
+      "pfr_id": "SandSh00",
+      "raw_player_name": "Shedeur Sanders"
+    },
+    {
+      "gsis_id": "00-0040743",
+      "pfr_id": "ShouTy00",
+      "raw_player_name": "Tyler Shough"
+    }
+  ],
+  "new_2025_identity_count": 11,
+  "nflverse_players_asset_id": 535256661,
+  "nflverse_players_release_updated_at": "2026-08-29T13:33:30Z",
+  "nflverse_players_sha256": "bf53b18808097984bfac89ab80fd28ae2416944741230ab0a54277458c704943",
+  "nflverse_players_url": "https://github.com/nflverse/nflverse-data/releases/download/players/players.csv"
+}
