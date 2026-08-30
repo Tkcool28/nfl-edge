@@ -1,7 +1,8 @@
 schema_version: task05g_2025_acceptance_v1
-status: PREFROZEN_EXECUTION_BLOCKED
+status: READY_FOR_SINGLE_AUTHORIZED_2025_HOLDOUT_EXECUTION
 holdout_season: 2025
 development_reference_seasons: [2020, 2021, 2022, 2023, 2024]
+remaining_missing_2025_input_surfaces: []
 authorization:
   required: true
   exact_phrase_sha256: 885502f347cfaf2194705dc0614a972148f54bd33074b977a263fc846f82d2c5
@@ -9,14 +10,11 @@ authorization:
   must_be_verified_before_any_2025_file_read: true
   one_spend_marker: artifacts/task05g_2025_holdout_v1/HOLDOUT_SPENT.json
 execution:
-  ready: false
+  ready: true
   canonical_command: >-
     python scripts/task05g_2025_holdout_one_shot_v1.py
     --authorization "$NFL_EDGE_2025_AUTHORIZATION"
   tuning_flags_allowed: false
-  blocked_reasons:
-    - Holdout-only block predictors now cover Oracle QB-Elo, Expected Margin stable, conservative XGBoost, and Ridge Totals R4, and the exact-90 Totals feature freeze/reveal bridge is present; the full authorization-only football orchestration that bootstraps accepted 2018-2024 state, supplies authorized 2025 context/Oracle inputs, invokes all four model seams, and advances block-by-block is not yet frozen.
-    - No frozen authorized 2025 T-60 historical market acquisition plan exists yet; canonical tracked market data ends at 2024.
   required_future_executor_contract:
     football_models:
       moneyline: [oracle_qb_elo_v1, chronology_corrected_xgboost_v1_conservative]
