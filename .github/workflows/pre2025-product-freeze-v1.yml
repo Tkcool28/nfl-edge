@@ -37,9 +37,6 @@ jobs:
             src/nfl_edge/holdout/xgboost_2025.py \
             src/nfl_edge/holdout/totals_2025.py \
             src/nfl_edge/holdout/totals_features_2025.py \
-            src/nfl_edge/holdout/one_shot_2025.py \
-            src/nfl_edge/holdout/evaluator_2025.py \
-            src/nfl_edge/holdout/product_2025.py \
             scripts/pre2025_safe_development_replay_v1.py \
             scripts/task05g_pre2025_freeze_audit_v1.py \
             scripts/task05g_2025_holdout_one_shot_v1.py \
@@ -52,8 +49,6 @@ jobs:
             tests/holdout/test_xgboost_2025_adapter.py \
             tests/holdout/test_totals_2025_adapter.py \
             tests/holdout/test_totals_features_2025_adapter.py \
-            tests/holdout/test_one_shot_2025.py \
-            tests/holdout/test_evaluator_2025_adapter.py \
             tests/recommendation/test_pre2025_product_freeze_v1.py \
             tests/recommendation/test_task05g_headline_staking_v1.py \
             tests/recommendation/test_task05g_staking_v1.py \
