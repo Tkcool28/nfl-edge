@@ -1,0 +1,258 @@
+name: Task05H 2025 Complete Model Inputs V1
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - scripts/task05h_2025_complete_model_inputs_v1.py
+      - tests/task05h/test_2025_complete_model_inputs_v1.py
+      - .github/workflows/task05h-2025-complete-model-inputs-v1.yml
+      - data/frozen/task05c_pbp_2025_v1/**
+      - data/derived/task05c_game_observations_2025_v1/**
+      - data/manifests/task05h_2025_pbp_source_v1.json
+      - data/manifests/2025_all_model_input_certification_v1.json
+      - reports/development/2025_all_model_input_certification_v1.md
+  push:
+    branches:
+      - feat/2025-complete-model-inputs-v1
+    paths:
+      - scripts/task05h_2025_complete_model_inputs_v1.py
+      - tests/task05h/test_2025_complete_model_inputs_v1.py
+      - .github/workflows/task05h-2025-complete-model-inputs-v1.yml
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: task05h-2025-complete-model-inputs-v1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  materialize-and-certify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      PYTHONHASHSEED: "0"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OPENBLAS_CORETYPE: "HASWELL"
+      MKL_NUM_THREADS: "1"
+      MKL_CBWR: "COMPATIBLE"
+      NUMEXPR_NUM_THREADS: "1"
+      GH_TOKEN: ${{ github.token }}
+      PBP_SHA256: c6ecedd6d678cc37ed316b23ef84ee1ec6abb69c514bb11868a7ebd5a367df29
+      PBP_BYTES: "20337029"
+      PBP_ASSET_ID: "512957613"
+      MARKET_ARTIFACT_ID: "9725230097"
+      MARKET_ARTIFACT_DIGEST: sha256:47382881862b4bdd4a1f175d4f342e8c99ac51cb37e8f92383a82708cbb61369
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install frozen development runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+
+      - name: Verify branch ancestry and PR69 isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor d38c6544cdda687e14e58e3986f81e47a91a781d HEAD
+          changed="$(git diff --name-only d38c6544cdda687e14e58e3986f81e47a91a781d...HEAD)"
+          if printf '%s\n' "$changed" | grep -Eq '^(src/nfl_edge/holdout/(evaluator_2025|one_shot_2025|product_2025)\.py|tests/holdout/test_(evaluator_2025_adapter|one_shot_2025)\.py|docs/task05g_2025_executor_blocker_report_v1\.md|\.github/workflows/task05g-2025-executor-freeze-v1\.yml)$'; then
+            echo 'PR69-owned file changed on Task05H branch' >&2
+            exit 1
+          fi
+          echo 'STARTING_MAIN_ANCESTOR=PASS'
+          echo 'PR69_FILES_TOUCHED=0'
+
+      - name: Resolve and verify pinned nflverse 2025 PBP asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/task05h_source_a /tmp/task05h_source_b
+          mkdir -p /tmp/task05h_source_a /tmp/task05h_source_b
+          curl --fail --silent --show-error --location \
+            "https://api.github.com/repos/nflverse/nflverse-data/releases/assets/${PBP_ASSET_ID}" \
+            -o /tmp/task05h_asset.json
+          python - <<'PY'
+          import json, os
+          p=json.load(open('/tmp/task05h_asset.json'))
+          assert p['name']=='play_by_play_2025.parquet', p['name']
+          assert p['id']==int(os.environ['PBP_ASSET_ID'])
+          assert p['size']==int(os.environ['PBP_BYTES'])
+          assert p['digest']==f"sha256:{os.environ['PBP_SHA256']}"
+          assert p['browser_download_url']=='https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.parquet'
+          print('NFLVERSE_ASSET_METADATA=PASS')
+          print('NFLVERSE_ASSET_UPDATED_AT='+str(p['updated_at']))
+          PY
+          for dir in /tmp/task05h_source_a /tmp/task05h_source_b; do
+            curl --fail --silent --show-error --location \
+              https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.parquet \
+              -o "$dir/play_by_play_2025.parquet"
+            test "$(stat -c %s "$dir/play_by_play_2025.parquet")" = "$PBP_BYTES"
+            echo "$PBP_SHA256  $dir/play_by_play_2025.parquet" | sha256sum --check --strict
+          done
+          cmp /tmp/task05h_source_a/play_by_play_2025.parquet /tmp/task05h_source_b/play_by_play_2025.parquet
+          echo 'INDEPENDENT_PBP_DOWNLOAD_BYTES=IDENTICAL'
+
+      - name: Retrieve already-paid frozen 2025 canonical market artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/task05h_market /tmp/task05h_market.zip
+          mkdir -p /tmp/task05h_market
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${MARKET_ARTIFACT_ID}" > /tmp/task05h_market_meta.json
+          python - <<'PY'
+          import json, os
+          p=json.load(open('/tmp/task05h_market_meta.json'))
+          assert p['id']==int(os.environ['MARKET_ARTIFACT_ID'])
+          assert p['expired'] is False
+          assert p['digest']==os.environ['MARKET_ARTIFACT_DIGEST']
+          print('MARKET_ARTIFACT_METADATA=PASS')
+          PY
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${MARKET_ARTIFACT_ID}/zip" > /tmp/task05h_market.zip
+          unzip -q /tmp/task05h_market.zip -d /tmp/task05h_market
+          echo 'ODDS_API_CALLS=0'
+
+      - name: Compile and run focused unit tests
+        run: |
+          python -m py_compile scripts/task05h_2025_complete_model_inputs_v1.py
+          pytest -q tests/task05h/test_2025_complete_model_inputs_v1.py
+
+      - name: Materialize and certify independent run A
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/task05h_run_a
+          python scripts/task05h_2025_complete_model_inputs_v1.py \
+            --pbp-source /tmp/task05h_source_a/play_by_play_2025.parquet \
+            --market-root /tmp/task05h_market \
+            --output-root /tmp/task05h_run_a \
+            | tee /tmp/task05h_run_a_stdout.json
+
+      - name: Materialize and certify independent run B
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/task05h_run_b
+          python scripts/task05h_2025_complete_model_inputs_v1.py \
+            --pbp-source /tmp/task05h_source_b/play_by_play_2025.parquet \
+            --market-root /tmp/task05h_market \
+            --output-root /tmp/task05h_run_b \
+            | tee /tmp/task05h_run_b_stdout.json
+
+      - name: Prove deterministic generated bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          diff -qr /tmp/task05h_run_a /tmp/task05h_run_b
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          a=Path('/tmp/task05h_run_a'); b=Path('/tmp/task05h_run_b')
+          af=sorted(p.relative_to(a) for p in a.rglob('*') if p.is_file())
+          bf=sorted(p.relative_to(b) for p in b.rglob('*') if p.is_file())
+          assert af==bf
+          for rel in af:
+              da=hashlib.sha256((a/rel).read_bytes()).hexdigest()
+              db=hashlib.sha256((b/rel).read_bytes()).hexdigest()
+              assert da==db, (rel, da, db)
+              print(f'DETERMINISTIC_SHA256 {rel} {da}')
+          print(f'DETERMINISTIC_FILES={len(af)}')
+          print('DETERMINISTIC_BYTES=PASS')
+          PY
+
+      - name: Validate success contract and historical protection
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cert=json.loads(Path('/tmp/task05h_run_a/data/manifests/2025_all_model_input_certification_v1.json').read_text())
+          assert cert['verdict']=='ALL_2025_MODEL_INPUTS_FROZEN_AND_CERTIFIED'
+          assert cert['remaining_missing_2025_input_surfaces']==[]
+          assert cert['holdout_predictions_executed']==0
+          assert cert['odds_api_calls']==0
+          assert cert['historical_2018_2024_identity_preservation']['all_byte_identical'] is True
+          assert len(cert['certification_matrix'])==10
+          assert all(row['missing_dependencies']==[] for row in cert['certification_matrix'])
+          assert cert['2025_HOLDOUT_HAS_NOT_BEEN_EXECUTED'] is True
+          print('ALL_MODEL_CERTIFICATION=PASS')
+          print('remaining_missing_2025_input_surfaces=[]')
+          print('2025_HOLDOUT_HAS_NOT_BEEN_EXECUTED=TRUE')
+          PY
+
+      - name: Compare rebuilt bytes with tracked frozen outputs when present
+        shell: bash
+        run: |
+          set -euo pipefail
+          for rel in \
+            data/frozen/task05c_pbp_2025_v1/play_by_play_2025.parquet \
+            data/derived/task05c_game_observations_2025_v1/game_observations_2025_v1.jsonl \
+            data/derived/task05c_game_observations_2025_v1/validation_report_v1.json \
+            data/manifests/task05h_2025_pbp_source_v1.json \
+            data/manifests/2025_all_model_input_certification_v1.json \
+            reports/development/2025_all_model_input_certification_v1.md; do
+            if test -f "$rel"; then
+              cmp "$rel" "/tmp/task05h_run_a/$rel"
+              echo "TRACKED_REBUILD_MATCH $rel"
+            fi
+          done
+
+      - name: Stage frozen artifacts
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feat/2025-complete-model-inputs-v1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf data/frozen/task05c_pbp_2025_v1 data/derived/task05c_game_observations_2025_v1
+          mkdir -p data/frozen data/derived data/manifests reports/development
+          cp -a /tmp/task05h_run_a/data/frozen/task05c_pbp_2025_v1 data/frozen/
+          cp -a /tmp/task05h_run_a/data/derived/task05c_game_observations_2025_v1 data/derived/
+          cp /tmp/task05h_run_a/data/manifests/task05h_2025_pbp_source_v1.json data/manifests/
+          cp /tmp/task05h_run_a/data/manifests/2025_all_model_input_certification_v1.json data/manifests/
+          cp /tmp/task05h_run_a/reports/development/2025_all_model_input_certification_v1.md reports/development/
+          git status --short
+
+      - name: Commit frozen artifacts
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feat/2025-complete-model-inputs-v1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            data/frozen/task05c_pbp_2025_v1 \
+            data/derived/task05c_game_observations_2025_v1 \
+            data/manifests/task05h_2025_pbp_source_v1.json \
+            data/manifests/2025_all_model_input_certification_v1.json \
+            reports/development/2025_all_model_input_certification_v1.md
+          if git diff --cached --quiet; then
+            echo 'No generated artifact changes to commit.'
+          else
+            git commit -m 'data: freeze 2025 PBP observations and all-model certification'
+            git push origin HEAD:feat/2025-complete-model-inputs-v1
+          fi
+
+      - name: Upload certification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05h-2025-complete-model-inputs-${{ github.run_id }}
+          path: |
+            /tmp/task05h_run_a/
+            /tmp/task05h_run_b/
+            /tmp/task05h_run_a_stdout.json
+            /tmp/task05h_run_b_stdout.json
+            /tmp/task05h_asset.json
+            /tmp/task05h_market_meta.json
+          if-no-files-found: warn
