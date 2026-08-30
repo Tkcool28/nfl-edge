@@ -1,8 +1,8 @@
 """Deterministic freeze-before-reveal engine for the sealed 2025 walkthrough.
 
-This module is intentionally I/O-light and outcome-agnostic.  The authorized
+This module is intentionally I/O-light and outcome-agnostic. The authorized
 entrypoint owns sealed-file access; model/evaluator/product adapters are passed
-in as callbacks.  The engine enforces the chronology contract shared by every
+in as callbacks. The engine enforces the chronology contract shared by every
 adapter: produce and persist the entire pre-result block first, then and only
 then reveal the block and advance state.
 """
@@ -26,10 +26,24 @@ PROFILES: tuple[tuple[str, float], ...] = (
     ("Aggressive", 0.0125),
     ("Ultra", 0.0150),
 )
+PROHIBITED_PRE_RESULT_FIELDS = {
+    "home_score",
+    "away_score",
+    "target_margin",
+    "target_home_win",
+    "target_tie",
+    "target_total_points",
+    "settlement",
+    "realized_profit",
+    "result",
+}
 
 
 class OneShotContractError(RuntimeError):
     """Raised when freeze/reveal chronology or deterministic state is violated."""
+
+
+HoldoutOneShotError = OneShotContractError
 
 
 def canonical_json_bytes(value: Any) -> bytes:
@@ -58,6 +72,21 @@ def atomic_json(path: Path, value: Any) -> str:
     payload = canonical_json_bytes(value)
     atomic_write(path, payload)
     return hashlib.sha256(payload).hexdigest()
+
+
+def assert_pre_result_surface(value: Any, *, path: str = "") -> None:
+    """Recursively reject any populated result/outcome field before reveal."""
+    if isinstance(value, Mapping):
+        for key, child in value.items():
+            key_s = str(key)
+            if key_s in PROHIBITED_PRE_RESULT_FIELDS and child is not None:
+                raise OneShotContractError(
+                    f"pre-result outcome field populated at {path}{key_s}"
+                )
+            assert_pre_result_surface(child, path=path + key_s + ".")
+    elif isinstance(value, (list, tuple)):
+        for idx, child in enumerate(value):
+            assert_pre_result_surface(child, path=f"{path}{idx}.")
 
 
 @dataclass(frozen=True)
@@ -134,34 +163,13 @@ def _validate_pre_result(bundle: PreResultBundle, state: ReplayState, block: Hol
         raise OneShotContractError("pre-result entering state hash drift")
     if block.block_id in state.completed_blocks:
         raise OneShotContractError("attempt to predict an already-completed block")
-    # Explicit poison fields are prohibited from all frozen recommendation surfaces.
-    prohibited = {
-        "home_score",
-        "away_score",
-        "target_margin",
-        "target_home_win",
-        "target_tie",
-        "settlement",
-        "realized_profit",
-        "result",
-    }
-    surfaces: list[Any] = [bundle.model_output, bundle.candidate_rows, bundle.headline_card, bundle.user_view]
-
-    def walk(value: Any, path: str = "") -> None:
-        if isinstance(value, Mapping):
-            for key, child in value.items():
-                key_s = str(key)
-                if key_s in prohibited and child is not None:
-                    raise OneShotContractError(
-                        f"pre-result outcome field populated at {path}{key_s}"
-                    )
-                walk(child, path + key_s + ".")
-        elif isinstance(value, (list, tuple)):
-            for idx, child in enumerate(value):
-                walk(child, f"{path}{idx}.")
-
-    for surface in surfaces:
-        walk(surface)
+    for surface in (
+        bundle.model_output,
+        bundle.candidate_rows,
+        bundle.headline_card,
+        bundle.user_view,
+    ):
+        assert_pre_result_surface(surface)
 
 
 def freeze_pre_result(output_root: Path, block: HoldoutBlock, bundle: PreResultBundle) -> dict[str, Any]:
@@ -191,8 +199,6 @@ def freeze_pre_result(output_root: Path, block: HoldoutBlock, bundle: PreResultB
         "outcomes_revealed": False,
     }
     manifest_sha = atomic_json(block_dir / "pre_result_manifest.json", manifest)
-    # Content hash over the immutable recommendation manifest is the weekly
-    # pre-result artifact identity used by the season proof ledger.
     manifest["pre_result_artifact_sha256"] = manifest_sha
     return manifest
 
@@ -259,8 +265,6 @@ def run_one_shot(
         _validate_pre_result(bundle, state, block)
         pre_manifest = freeze_pre_result(output_root, block, bundle)
 
-        # The reveal callback is intentionally unreachable until every Phase A
-        # surface above is fsync'd and hashed.
         revealed = dict(reveal(block, state, bundle))
         next_state = advance(block, state, bundle, revealed)
         if next_state.completed_blocks != state.completed_blocks + (block.block_id,):
