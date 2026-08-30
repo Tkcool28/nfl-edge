@@ -1,7 +1,7 @@
 {
   "schema_version": "pre2025_successor_executor_final_freeze_v1",
   "status": "READY_FOR_SINGLE_AUTHORIZED_2025_HOLDOUT_EXECUTION",
-  "frozen_from_head": "ca73adbc570edfe6323bcafb47998d75f15412c7",
+  "frozen_from_head": "1304aaf02548273a7f5dcf4e4d7df484b7b52c7b",
   "historical_product_freeze_invariants_preserved": true,
   "methodology_changed": false,
   "tuning_performed": false,
@@ -32,7 +32,7 @@
     ".github/workflows/task05g-2025-executor-freeze-v1.yml": "c8015f28d3dbdf78b8b4ac458b6bea9e5b77acc8",
     "config/task05g_2025_acceptance_v1.yaml": "09ac0251239652ced7b9829165321da2032cc3a6",
     "scripts/task05g_2025_holdout_one_shot_v1.py": "12ba9d5c51834c19cb26dd47ba898565bcf05a6d",
-    "scripts/task05g_successor_executor_contract_audit_v1.py": "5040a66bc5d2faf003b5a2b026cf6cef4ba48a33",
+    "scripts/task05g_successor_executor_contract_audit_v1.py": "1023a03dc718eae9bfe8dfca4440e7722c3a84b1",
     "src/nfl_edge/holdout/evaluator_2025.py": "8173bb46eb2d752c9ec3992c19406147c50e16b8",
     "src/nfl_edge/holdout/executor_runtime_2025.py": "8d6bb1e9a18eac1d531a6775ddace72f8afb5465",
     "src/nfl_edge/holdout/expected_margin_2025.py": "da61391ccf947f41882072db61b0dcb11b6037bf",
