@@ -29,10 +29,12 @@ def test_prefreeze_contract_is_blocked_and_sealed():
     assert len(freeze["blockers"]) >= 2
 
 
-def test_acceptance_contract_has_no_tuning_surface():
+def test_final_acceptance_contract_is_authorized_ready_without_tuning_surface():
     cfg = _yaml(ACCEPT)
     assert cfg["holdout_season"] == 2025
-    assert cfg["execution"]["ready"] is False
+    assert cfg["status"] == "READY_FOR_SINGLE_AUTHORIZED_2025_HOLDOUT_EXECUTION"
+    assert cfg["remaining_missing_2025_input_surfaces"] == []
+    assert cfg["execution"]["ready"] is True
     assert cfg["execution"]["tuning_flags_allowed"] is False
     assert cfg["chronology"]["same_block_outcomes_available_to_predictions"] is False
     assert cfg["chronology"]["retroactive_knowledge"] == "prohibited"
@@ -48,7 +50,7 @@ def test_authorization_is_hash_only_and_external_to_repository():
     assert "$NFL_EDGE_2025_AUTHORIZATION" in cfg["execution"]["canonical_command"]
     runner_text = RUNNER.read_text()
     assert "AUTHORIZATION_PHRASE" not in runner_text
-    assert "supplied != AUTHORIZATION_SHA256" in runner_text
+    assert "hashlib.sha256(value.encode()).hexdigest() != AUTHORIZATION_SHA256" in runner_text
 
 
 def test_holdout_market_book_contract_preserves_raw_and_product_scopes():
@@ -101,12 +103,11 @@ def test_freeze_workflow_runs_for_every_pull_request_and_uses_invalid_auth():
     assert "$NFL_EDGE_2025_AUTHORIZATION" not in text
 
 
-def test_one_shot_runner_has_no_2025_data_reader_while_blocked():
+def test_one_shot_runner_retains_fail_closed_authorization_gate():
     text = RUNNER.read_text()
-    for forbidden in ("read_parquet", "scan_parquet", "read_csv", "open_dataset", "pyarrow"):
-        assert forbidden not in text
     assert "HOLDOUT_EXECUTOR_NOT_FROZEN" in text
-    assert "execution.ready=true without a frozen executor implementation" in text
+    assert "authorization mismatch; 2025 remains sealed" in text
+    assert "IRREVERSIBLE_BEFORE_FIRST_2025_INPUT_READ" in text
 
 
 def test_preflight_passes_without_opening_holdout(tmp_path):
@@ -121,7 +122,7 @@ def test_preflight_passes_without_opening_holdout(tmp_path):
     assert payload["status"] == "SEALED_PREFLIGHT_PASS"
     assert payload["holdout_season"] == 2025
     assert payload["2025_data_read"] is False
-    assert payload["execution_ready"] is False
+    assert payload["execution_ready"] is True
 
 
 def test_wrong_authorization_fails_closed_before_holdout_read():
