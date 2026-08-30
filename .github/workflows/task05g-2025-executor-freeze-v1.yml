@@ -1,0 +1,122 @@
+name: Task05G 2025 Executor Freeze V1
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  executor-freeze:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      PYTHONHASHSEED: "0"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OPENBLAS_CORETYPE: "HASWELL"
+      MKL_NUM_THREADS: "1"
+      MKL_CBWR: "COMPATIBLE"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11', cache: pip}
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+
+      - name: Preserve immutable pre-2025 anchor
+        run: |
+          python scripts/task05g_pre2025_freeze_audit_v1.py \
+            --out artifacts/executor_freeze/immutable_prefreeze_audit.json
+
+      - name: Compile executor and holdout-only adapters
+        run: |
+          python -m py_compile \
+            src/nfl_edge/holdout/market_2025.py \
+            src/nfl_edge/holdout/market_canonical_2025.py \
+            src/nfl_edge/holdout/football_2025.py \
+            src/nfl_edge/holdout/expected_margin_2025.py \
+            src/nfl_edge/holdout/xgboost_2025.py \
+            src/nfl_edge/holdout/totals_2025.py \
+            src/nfl_edge/holdout/totals_features_2025.py \
+            src/nfl_edge/holdout/one_shot_2025.py \
+            src/nfl_edge/holdout/evaluator_2025.py \
+            src/nfl_edge/holdout/product_2025.py \
+            scripts/task05g_2025_holdout_one_shot_v1.py
+
+      - name: Synthetic and development-only holdout contract tests
+        run: |
+          pytest -q \
+            tests/holdout/test_market_2025_adapter.py \
+            tests/holdout/test_market_plan_dry_run_2025.py \
+            tests/holdout/test_football_2025_adapter.py \
+            tests/holdout/test_expected_margin_2025_adapter.py \
+            tests/holdout/test_xgboost_2025_adapter.py \
+            tests/holdout/test_totals_2025_adapter.py \
+            tests/holdout/test_totals_features_2025_adapter.py \
+            tests/holdout/test_one_shot_2025.py \
+            tests/holdout/test_evaluator_2025_adapter.py \
+            tests/recommendation/test_task05g_headline_staking_v1.py \
+            tests/recommendation/test_task05g_staking_v1.py \
+            tests/recommendation/test_task05g_product_policy_v1.py \
+            tests/recommendation/test_task05g_final_selectors_v1.py
+
+      - name: Prove sealed preflight and invalid auth fail closed
+        run: |
+          python scripts/task05g_2025_holdout_one_shot_v1.py --preflight \
+            > artifacts/executor_freeze/holdout_preflight.json
+          if python scripts/task05g_2025_holdout_one_shot_v1.py \
+            --authorization CI_INTENTIONALLY_INVALID_AUTHORIZATION; then
+            echo 'ERROR: invalid authorization unexpectedly executed' >&2
+            exit 1
+          fi
+
+      - name: Reproduce frozen 2020-24 product twice
+        run: |
+          python scripts/pre2025_safe_development_replay_v1.py \
+            --out-root artifacts/executor_freeze/run_a
+          python scripts/pre2025_safe_development_replay_v1.py \
+            --out-root artifacts/executor_freeze/run_b
+          cmp artifacts/executor_freeze/run_a/product/scorecard.json artifacts/executor_freeze/run_b/product/scorecard.json
+          cmp artifacts/executor_freeze/run_a/product/headline_cards.csv artifacts/executor_freeze/run_b/product/headline_cards.csv
+          cmp artifacts/executor_freeze/run_a/product/season_lane_summary.csv artifacts/executor_freeze/run_b/product/season_lane_summary.csv
+          cmp artifacts/executor_freeze/run_a/product/all_cards_bankroll_scenarios.csv artifacts/executor_freeze/run_b/product/all_cards_bankroll_scenarios.csv
+
+      - name: Verify frozen development identities
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          root = Path('artifacts/executor_freeze/run_a')
+          expected = {
+              root/'upstream/scorecard.json': '461b931866407b17eb46120803f8fa18ae1dab7e07bc2b26b1884ba424e07022',
+              root/'v2/scorecard.json': '2ac884e25e0a72c8057b6d72dbad897218e66ae3096751e8a4a75aeef19b32f3',
+              root/'v3/scorecard.json': '29e604e81a29754d8aaf554827b19a0d9e4023906467e01cf81fa70f4df063de',
+              root/'product/headline_cards.csv': '9ebe2784f63757d9a7ad37855a4ad4b813dd64029a3a67a9f4429e0128fe22eb',
+              root/'product/scorecard.json': 'c78ee43d2fcb0e2f39e0d9a048db5fdfa08a3a274b3a75ea9c32325865bae7a2',
+              root/'product/season_lane_summary.csv': 'd7a1f39d1fcca97776a8273cc131d4b79c82e3bbc4fa0f16304f12ec948fa44f',
+              root/'product/all_cards_bankroll_scenarios.csv': '7eb08fefe6cfa14bd185ccffdd0c27df22200354de191e87feaef1e0406a3281',
+          }
+          for path, want in expected.items():
+              got = hashlib.sha256(path.read_bytes()).hexdigest()
+              assert got == want, (str(path), got, want)
+          s = json.loads((root/'product/scorecard.json').read_text())
+          assert s['sealed_not_run'] == [2025]
+          assert s['headline_counts'] == {'balanced': 88, 'hit_rate': 81, 'value': 68}
+          assert s['value_at_target_only_cards'] == 28
+          assert s['value_suppressed_cards'] == 0
+          assert all(s['invariants'].values())
+          print('DEVELOPMENT_PRODUCT_IDENTITY=PASS')
+          print('REAL_2025_OUTCOME_BYTES_READ=0')
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: task05g-2025-executor-freeze-${{ github.sha }}
+          path: artifacts/executor_freeze/
+          if-no-files-found: warn
