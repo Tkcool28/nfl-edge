@@ -101,6 +101,7 @@ def audit() -> dict[str, Any]:
         "scripts/task05g_2025_holdout_one_shot_v1.py",
         ".github/workflows/pre2025-product-freeze-v1.yml",
         "tests/recommendation/test_pre2025_product_freeze_v1.py",
+        "config/task05g_2025_acceptance_v1.yaml",
     ]:
         raise AuditFailure("successor must list exactly the executor, audit call site, and compatibility test")
 
