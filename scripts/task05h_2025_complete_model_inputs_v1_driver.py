@@ -179,6 +179,8 @@ def _build_schedule_certifier(task):
         )
         if schedule["gameday"].null_count() or schedule["gametime"].null_count():
             raise AssertionError("2025 frozen schedule has missing gameday/gametime kickoff identity")
+        if schedule["home_team"].null_count() or schedule["away_team"].null_count():
+            raise AssertionError("2025 frozen schedule has missing source team identity")
         if features_2025["prediction_as_of_utc"].null_count():
             raise AssertionError("2025 point-in-time prediction cutoff is incomplete")
 
@@ -197,14 +199,40 @@ def _build_schedule_certifier(task):
         identity_bad = joined.filter(
             (pl.col("season") != pl.col("canonical_season"))
             | (pl.col("week") != pl.col("canonical_week"))
-            | (pl.col("away_team") != pl.col("canonical_away_team"))
-            | (pl.col("home_team") != pl.col("canonical_home_team"))
             | (pl.col("game_type").cast(pl.Utf8).str.to_uppercase()
                != pl.col("canonical_season_type").cast(pl.Utf8).str.to_uppercase())
         )
         if identity_bad.height:
             bad_ids = identity_bad["game_id"].head(12).to_list()
-            raise AssertionError(f"2025 frozen schedule/canonical game identity drift: {bad_ids}")
+            raise AssertionError(f"2025 frozen schedule/canonical block identity drift: {bad_ids}")
+
+        # Follow the accepted Totals source->canonical rule: team abbreviations
+        # are normalized per game and per side, never through a global alias
+        # dictionary.  This safely accommodates nflverse source identities such
+        # as LAR while the canonical NFL Edge identity is LA.
+        collapsed = joined.filter(
+            (pl.col("home_team") == pl.col("away_team"))
+            | (pl.col("canonical_home_team") == pl.col("canonical_away_team"))
+        )
+        if collapsed.height:
+            raise AssertionError(
+                f"2025 schedule contains collapsed two-team identity: {collapsed['game_id'].head(12).to_list()}"
+            )
+        swapped = joined.filter(
+            (pl.col("home_team") == pl.col("canonical_away_team"))
+            & (pl.col("away_team") == pl.col("canonical_home_team"))
+        )
+        if swapped.height:
+            raise AssertionError(
+                f"2025 schedule source teams are side-swapped vs canonical identity: {swapped['game_id'].head(12).to_list()}"
+            )
+        aliases = joined.filter(
+            (pl.col("home_team") != pl.col("canonical_home_team"))
+            | (pl.col("away_team") != pl.col("canonical_away_team"))
+        )
+        alias_examples = aliases.select(
+            "game_id", "away_team", "canonical_away_team", "home_team", "canonical_home_team"
+        ).head(12).to_dicts()
 
         kickoff_rows = []
         for row in schedule.select("game_id", "gameday", "gametime").to_dicts():
@@ -242,6 +270,9 @@ def _build_schedule_certifier(task):
             "prediction_cutoff_source": "game_features prediction_as_of_utc",
             "scheduled_start_utc_feature_field_required": False,
             "all_prediction_cutoffs_strictly_before_kickoff": True,
+            "schedule_team_identity_mapping": "PER_GAME_PER_SIDE_SOURCE_TO_CANONICAL_NO_GLOBAL_ALIAS_DICTIONARY",
+            "schedule_team_alias_game_count": aliases.height,
+            "schedule_team_alias_examples": alias_examples,
             "rest_source": "frozen schedule away_rest/home_rest",
             "surface_source": "frozen schedule surface",
             "roof_source": "canonical games roof_type",
