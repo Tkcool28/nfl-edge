@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""Task05H driver that fixes the XGBoost input certification source join.
+"""Task05H corrected all-model input certification driver.
 
 The underlying Task05H materializer remains unchanged.  This driver replaces
-only its XGBoost certification hook so the check uses the exact accepted
-Task03C source assembly: game features + candidate-rank-1 QB pregame features.
+only certification hooks whose authoritative input is split across accepted
+source tables:
+
+* XGBoost uses the exact Task03C game-features + candidate-rank-1 QB join.
+* Kickoff/context uses frozen-schedule ``gameday``/``gametime`` for kickoff
+  identity and game features for the point-in-time prediction cutoff.
+
 No prediction function is called.
 """
 from __future__ import annotations
@@ -20,6 +25,7 @@ from nfl_edge.holdout.xgboost_inputs_2025 import (
     assemble_candidate1_xgboost_surface,
     assert_development_assembly_parity,
 )
+from nfl_edge.market_data.kickoffs import gameday_gametime_to_utc
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE_SCRIPT = ROOT / "scripts" / "task05h_2025_complete_model_inputs_v1.py"
@@ -145,9 +151,112 @@ def _build_xgboost_certifier(task):
     return xgboost_cert
 
 
+def _build_schedule_certifier(task):
+    def schedule_cert(
+        features_2025: pl.DataFrame,
+        games_2025: pl.DataFrame,
+        canonical_ids: set[str],
+    ) -> dict[str, Any]:
+        schedule = pl.read_parquet(task.SCHEDULE).filter(pl.col("season") == task.HOLDOUT_SEASON)
+        task.require_exact_game_ids(schedule.select("game_id"), canonical_ids, "2025 schedule")
+        task.require_columns(
+            schedule,
+            [
+                "game_id", "season", "game_type", "week", "gameday", "gametime",
+                "away_team", "home_team", "away_rest", "home_rest", "surface",
+            ],
+            "2025 schedule",
+        )
+        task.require_columns(
+            games_2025,
+            ["game_id", "season", "season_type", "week", "away_team", "home_team", "roof_type"],
+            "2025 canonical games",
+        )
+        task.require_columns(
+            features_2025,
+            ["game_id", "prediction_as_of_utc", "neutral_site"],
+            "2025 point-in-time metadata",
+        )
+        if schedule["gameday"].null_count() or schedule["gametime"].null_count():
+            raise AssertionError("2025 frozen schedule has missing gameday/gametime kickoff identity")
+        if features_2025["prediction_as_of_utc"].null_count():
+            raise AssertionError("2025 point-in-time prediction cutoff is incomplete")
+
+        canonical = games_2025.select(
+            "game_id", "season", "season_type", "week", "away_team", "home_team"
+        ).rename(
+            {
+                "season": "canonical_season",
+                "season_type": "canonical_season_type",
+                "week": "canonical_week",
+                "away_team": "canonical_away_team",
+                "home_team": "canonical_home_team",
+            }
+        )
+        joined = schedule.join(canonical, on="game_id", how="left", validate="1:1")
+        identity_bad = joined.filter(
+            (pl.col("season") != pl.col("canonical_season"))
+            | (pl.col("week") != pl.col("canonical_week"))
+            | (pl.col("away_team") != pl.col("canonical_away_team"))
+            | (pl.col("home_team") != pl.col("canonical_home_team"))
+            | (pl.col("game_type").cast(pl.Utf8).str.to_uppercase()
+               != pl.col("canonical_season_type").cast(pl.Utf8).str.to_uppercase())
+        )
+        if identity_bad.height:
+            bad_ids = identity_bad["game_id"].head(12).to_list()
+            raise AssertionError(f"2025 frozen schedule/canonical game identity drift: {bad_ids}")
+
+        kickoff_rows = []
+        for row in schedule.select("game_id", "gameday", "gametime").to_dicts():
+            kickoff_rows.append(
+                {
+                    "game_id": str(row["game_id"]),
+                    "kickoff_time_utc": gameday_gametime_to_utc(
+                        str(row["gameday"]), str(row["gametime"])
+                    ),
+                }
+            )
+        kickoff = pl.DataFrame(kickoff_rows).with_columns(
+            pl.col("kickoff_time_utc").cast(pl.Datetime("us", "UTC"))
+        )
+        task.require_exact_game_ids(kickoff.select("game_id"), canonical_ids, "derived 2025 kickoff clock")
+        timing = features_2025.select("game_id", "prediction_as_of_utc").join(
+            kickoff,
+            on="game_id",
+            how="left",
+            validate="1:1",
+        )
+        if timing["kickoff_time_utc"].null_count():
+            raise AssertionError("derived 2025 kickoff clock is incomplete")
+        late = timing.filter(pl.col("prediction_as_of_utc") >= pl.col("kickoff_time_utc"))
+        if late.height:
+            raise AssertionError(
+                f"2025 prediction cutoff is not strictly pre-kickoff for games={late['game_id'].head(12).to_list()}"
+            )
+
+        return {
+            "coverage": "285/285",
+            "schema_status": "PASS_AUTHORITATIVE_SOURCE_SPLIT",
+            "chronology_status": "PASS_SCHEDULE_KICKOFF_PLUS_POINT_IN_TIME_CUTOFF",
+            "kickoff_source": "frozen schedule gameday/gametime via accepted DST-aware derivation",
+            "prediction_cutoff_source": "game_features prediction_as_of_utc",
+            "scheduled_start_utc_feature_field_required": False,
+            "all_prediction_cutoffs_strictly_before_kickoff": True,
+            "rest_source": "frozen schedule away_rest/home_rest",
+            "surface_source": "frozen schedule surface",
+            "roof_source": "canonical games roof_type",
+            "neutral_site_source": "frozen point-in-time game feature surface",
+            "artifacts": [task.artifact(task.SCHEDULE), task.artifact(task.GAMES), task.artifact(task.FEATURES)],
+            "missing_dependencies": [],
+        }
+
+    return schedule_cert
+
+
 def main() -> int:
     task = _load_base()
     task.xgboost_cert = _build_xgboost_certifier(task)
+    task.schedule_cert = _build_schedule_certifier(task)
     original_matrix_row = task.matrix_row
 
     def matrix_row(name, required, paths, detail):
