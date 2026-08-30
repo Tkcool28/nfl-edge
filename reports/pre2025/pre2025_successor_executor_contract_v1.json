@@ -7,7 +7,8 @@
   "superseded_historical_contract_paths": [
     "scripts/task05g_2025_holdout_one_shot_v1.py",
     ".github/workflows/pre2025-product-freeze-v1.yml",
-    "tests/recommendation/test_pre2025_product_freeze_v1.py"
+    "tests/recommendation/test_pre2025_product_freeze_v1.py",
+    "config/task05g_2025_acceptance_v1.yaml"
   ],
   "successor_contract_files": {
     "scripts/task05g_2025_holdout_one_shot_v1.py": "12ba9d5c51834c19cb26dd47ba898565bcf05a6d",
@@ -33,7 +34,7 @@
     "outcomes_opened": false,
     "holdout_executed": false
   },
-  "purpose": "Versioned executor-contract supersession required to integrate certified 2025 Oracle-QB and GameObservation inputs without modifying the historical pre-2025 product freeze.",
+  "purpose": "Versioned executor-contract supersession and final authorized-ready acceptance promotion required to integrate certified 2025 inputs without modifying the historical pre-2025 product freeze.",
   "prohibited_until_exact_head_ci_green": [
     "set execution.ready true",
     "provide real authorization",
