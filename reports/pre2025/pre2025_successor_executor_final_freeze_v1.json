@@ -1,0 +1,51 @@
+{
+  "schema_version": "pre2025_successor_executor_final_freeze_v1",
+  "status": "READY_FOR_SINGLE_AUTHORIZED_2025_HOLDOUT_EXECUTION",
+  "frozen_from_head": "d057232252152f0967bf98c6fec1becd2f035ec1",
+  "historical_product_freeze_invariants_preserved": true,
+  "methodology_changed": false,
+  "tuning_performed": false,
+  "execution_ready": true,
+  "holdout_opened": false,
+  "holdout_data_bytes_read": 0,
+  "holdout_predictions_executed": 0,
+  "remaining_missing_2025_input_surfaces": [],
+  "authorization": {
+    "required": true,
+    "exact_phrase_sha256": "885502f347cfaf2194705dc0614a972148f54bd33074b977a263fc846f82d2c5",
+    "must_be_verified_before_any_2025_file_read": true,
+    "one_spend_marker": "artifacts/task05g_2025_holdout_v1/HOLDOUT_SPENT.json"
+  },
+  "certification_evidence": {
+    "all_model_certification_blob": "46ee2d9c0bd8814f04c893bd75217d211e6ea926",
+    "totals_pbp_sha256": "c6ecedd6d678cc37ed316b23ef84ee1ec6abb69c514bb11868a7ebd5a367df29",
+    "totals_game_observation_sha256": "5a78b506a1d2dc14f4948cd316346d09d863e603c61144716a242252df8f84e3",
+    "oracle_adjustments_sha256": "8e73dfab9ffd84bf4a926f55dd757de2c59ca81d0462a0ed422ac6c53e58d84d",
+    "oracle_game_sides_sha256": "1bfab82d95e5d44a27096ea743d20925639445398745a4996596d7cf3a7f451e",
+    "xgboost_game_features_sha256": "346f8aec6246edc049591abd22a8f6a4664a18de219205d8cb1ac395c42c9403",
+    "xgboost_qb_features_sha256": "ab43a422a98f8275d1f25fa6128a2277755ed400d428a1273c3393463e4e6ecb",
+    "frozen_games_sha256": "90783bfe6a1a014d9a61d24dce94d6da91cffafc684ee4fa1437eb3e8327a908",
+    "canonical_market_book_sha256": "c8499262388fca13d6dfd0a7da2f891c1989ed601c75b6987067013ce8092a62",
+    "canonical_market_games_sha256": "e9d4b9a5302a72d32f767a87b52f86e32044118bfb27900fb4c4217d6edd74ef"
+  },
+  "frozen_source_blobs": {
+    ".github/workflows/task05g-2025-executor-freeze-v1.yml": "c8015f28d3dbdf78b8b4ac458b6bea9e5b77acc8",
+    "config/task05g_2025_acceptance_v1.yaml": "09ac0251239652ced7b9829165321da2032cc3a6",
+    "scripts/task05g_2025_holdout_one_shot_v1.py": "12ba9d5c51834c19cb26dd47ba898565bcf05a6d",
+    "scripts/task05g_successor_executor_contract_audit_v1.py": "8c1b9f302ec23fe32cf53eda7527451da1b7867f",
+    "src/nfl_edge/holdout/evaluator_2025.py": "8173bb46eb2d752c9ec3992c19406147c50e16b8",
+    "src/nfl_edge/holdout/executor_runtime_2025.py": "8d6bb1e9a18eac1d531a6775ddace72f8afb5465",
+    "src/nfl_edge/holdout/expected_margin_2025.py": "da61391ccf947f41882072db61b0dcb11b6037bf",
+    "src/nfl_edge/holdout/football_2025.py": "6d3408e6f8306fc66b7f097a917084821d45805a",
+    "src/nfl_edge/holdout/market_2025.py": "5bfc00a54b762b98b6efeb0f9cff88dbed182550",
+    "src/nfl_edge/holdout/market_canonical_2025.py": "e47c5698bf798e638cd9c64b600973f870ae57a1",
+    "src/nfl_edge/holdout/one_shot_2025.py": "2be15fd707214fcc68356442d2dc443bf269795f",
+    "src/nfl_edge/holdout/oracle_qb_game_resolver_2025.py": "c243c46af85185fac39c663f84f90b0a76f36dbd",
+    "src/nfl_edge/holdout/product_2025.py": "d94fa614afa5319ee70b0b74e98d1029e9c3d017",
+    "src/nfl_edge/holdout/totals_2025.py": "064e276a7706f390bb51a046e4af67f137bedb78",
+    "src/nfl_edge/holdout/totals_features_2025.py": "a3f6e82cb4313e543fc8e4b99e309442e0ab13b6",
+    "src/nfl_edge/holdout/xgboost_2025.py": "7ac3dc84b50446364765b4c21dfc8091bdd4bdfb",
+    "tests/holdout/test_executor_runtime_2025_gate.py": "050f307df2db9af95069cdbee4f88f8943ac2169",
+    "tests/recommendation/test_pre2025_product_freeze_v1.py": "f4b72b0effae82f5579c8f628257575132fc1b94"
+  }
+}
