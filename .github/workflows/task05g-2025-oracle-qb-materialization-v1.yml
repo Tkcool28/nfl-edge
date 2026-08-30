@@ -1,0 +1,247 @@
+name: Task05G 2025 Oracle QB Materialization V1
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - data/raw/stathead_actual_starters_2025_v1/**
+      - scripts/task05g_2025_oracle_qb_materialize_v1.py
+      - tests/task05g/test_2025_oracle_qb_materializer_v1.py
+      - .github/workflows/task05g-2025-oracle-qb-materialization-v1.yml
+  push:
+    branches:
+      - feat/2025-oracle-qb-input-v1
+    paths:
+      - data/raw/stathead_actual_starters_2025_v1/**
+      - scripts/task05g_2025_oracle_qb_materialize_v1.py
+      - tests/task05g/test_2025_oracle_qb_materializer_v1.py
+      - .github/workflows/task05g-2025-oracle-qb-materialization-v1.yml
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: task05g-2025-oracle-qb-materialization-v1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  materialize-and-freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONPATH: ${{ github.workspace }}/src
+      NFLVERSE_PLAYERS_SHA256: bf53b18808097984bfac89ab80fd28ae2416944741230ab0a54277458c704943
+      HISTORICAL_STARTER_SHA256: 38732823861bb1def3c216ce9189b651a2dc4d0737d2f65f88f17e97f40b2a1a
+      HISTORICAL_ORACLE_SHA256: 268368c81913e183d7e9ea5050c0da0a01be619790b75c5bab9362c97349e886
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install frozen runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements/lock.txt
+          python -m pip install -e . --no-deps
+
+      - name: Verify raw source is outcome-stripped and continuous
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import pandas as pd
+
+          files = [
+              Path('data/raw/stathead_actual_starters_2025_v1/chat_pastes/ranks_0001_0200.tsv'),
+              Path('data/raw/stathead_actual_starters_2025_v1/chat_pastes/ranks_0201_0400.tsv'),
+              Path('data/raw/stathead_actual_starters_2025_v1/chat_pastes/ranks_0401_0570.tsv'),
+          ]
+          frames = [pd.read_csv(p, sep='\t', dtype=str, keep_default_na=False) for p in files]
+          frame = pd.concat(frames, ignore_index=True)
+          assert 'Result' not in frame.columns
+          assert tuple(frame['Rk'].astype(int)) == tuple(range(1, 571))
+          assert len(frame) == 570
+          assert frame['Rk'].nunique() == 570
+          assert set(frame['Pos.']) == {'QB'}
+          print('RAW_ROWS=570')
+          print('RAW_RANK_CONTINUITY=PASS')
+          print('RESULT_COLUMN_STORED=0')
+          PY
+
+      - name: Verify historical frozen artifacts before build
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$HISTORICAL_STARTER_SHA256  data/derived/stathead_actual_starters_v1/final_oracle_starters/actual_starting_qb_game_sides_2018_2024_v1.csv" | sha256sum --check --strict
+          echo "$HISTORICAL_ORACLE_SHA256  data/derived/oracle_qb_entering_state_v2/oracle_qb_pregame_adjustments_by_game_2018_2024_v2.parquet" | sha256sum --check --strict
+
+      - name: Download exact nflverse identity source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/task05g_identity
+          curl --fail --silent --show-error --location \
+            https://github.com/nflverse/nflverse-data/releases/download/players/players.csv \
+            -o /tmp/task05g_identity/players.csv
+          echo "$NFLVERSE_PLAYERS_SHA256  /tmp/task05g_identity/players.csv" | sha256sum --check --strict
+
+      - name: Compile materializer
+        run: python -m py_compile scripts/task05g_2025_oracle_qb_materialize_v1.py
+
+      - name: Run focused tests
+        if: ${{ hashFiles('tests/task05g/test_2025_oracle_qb_materializer_v1.py') != '' }}
+        run: pytest -q tests/task05g/test_2025_oracle_qb_materializer_v1.py
+
+      - name: Materialize independent run A
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/task05g_oracle_a
+          mkdir -p /tmp/task05g_oracle_a
+          python scripts/task05g_2025_oracle_qb_materialize_v1.py \
+            --players-source /tmp/task05g_identity/players.csv \
+            --output-root /tmp/task05g_oracle_a \
+            | tee /tmp/task05g_oracle_a/materialization_stdout.json
+
+      - name: Materialize independent run B
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/task05g_oracle_b
+          mkdir -p /tmp/task05g_oracle_b
+          python scripts/task05g_2025_oracle_qb_materialize_v1.py \
+            --players-source /tmp/task05g_identity/players.csv \
+            --output-root /tmp/task05g_oracle_b \
+            | tee /tmp/task05g_oracle_b/materialization_stdout.json
+
+      - name: Prove deterministic bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+
+          a = Path('/tmp/task05g_oracle_a')
+          b = Path('/tmp/task05g_oracle_b')
+          a_files = sorted(p.relative_to(a) for p in a.rglob('*') if p.is_file() and p.name != 'materialization_stdout.json')
+          b_files = sorted(p.relative_to(b) for p in b.rglob('*') if p.is_file() and p.name != 'materialization_stdout.json')
+          assert a_files == b_files, (a_files, b_files)
+          for rel in a_files:
+              da = hashlib.sha256((a / rel).read_bytes()).hexdigest()
+              db = hashlib.sha256((b / rel).read_bytes()).hexdigest()
+              assert da == db, f'nondeterministic output {rel}: {da} != {db}'
+          print(f'DETERMINISTIC_FILES={len(a_files)}')
+          print('DETERMINISTIC_BYTES=PASS')
+          PY
+
+      - name: Validate coverage chronology identity and schema
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          import pandas as pd
+
+          root = Path('/tmp/task05g_oracle_a')
+          starter_report = json.loads((root / 'stathead_actual_starters_2025_v1/validation_report_v1.json').read_text())
+          oracle_report = json.loads((root / 'oracle_qb_entering_state_2025_v1/oracle_qb_entering_state_validation_report_2025_v1.json').read_text())
+          stdout = json.loads((root / 'materialization_stdout.json').read_text())
+
+          assert stdout['verdict'] == '2025_ORACLE_QB_INPUT_FROZEN_READY_FOR_EXECUTOR_INTEGRATION'
+          assert starter_report['raw_rows'] == 570
+          assert starter_report['canonical_games'] == 285
+          assert starter_report['canonical_game_sides'] == 570
+          assert starter_report['unresolved_game_sides'] == 0
+          assert starter_report['manual_starter_resolutions'] == 0
+          assert starter_report['source_result_column_stored'] is False
+
+          assert oracle_report['side_rows'] == 570
+          assert oracle_report['game_rows'] == 285
+          assert oracle_report['unique_game_ids'] == 285
+          assert oracle_report['starter_identities_unmatched'] == 0
+          assert oracle_report['adjustment_schema_matches_historical_contract'] is True
+          assert oracle_report['outcome_columns_selected_from_games'] == 0
+          assert oracle_report['market_data_reads'] == 0
+          assert oracle_report['holdout_executions'] == 0
+
+          chronology = oracle_report['chronology']
+          assert chronology['week1_2025_qb_stat_games_visible'] == 0
+          assert chronology['current_block_2025_qb_stat_games_visible'] == 0
+          assert chronology['future_2025_qb_stat_games_visible'] == 0
+          assert chronology['blocks'][0]['visible_prior_2025_game_count'] == 0
+          assert all(b['current_block_qb_stat_game_ids_visible'] == 0 for b in chronology['blocks'])
+          assert all(b['future_2025_qb_stat_game_ids_visible'] == 0 for b in chronology['blocks'])
+
+          sides = pd.read_csv(root / 'stathead_actual_starters_2025_v1/final_oracle_starters/actual_starting_qb_game_sides_2025_v1.csv')
+          assert len(sides) == 570
+          assert sides[['game_id', 'team_side']].drop_duplicates().shape[0] == 570
+          counts = sides.groupby('game_id')['team_side'].agg(lambda x: set(x))
+          assert len(counts) == 285 and all(v == {'away', 'home'} for v in counts)
+          assert sides['actual_starting_qb_pfr_id'].notna().all()
+          assert sides['actual_starting_qb_gsis_id'].notna().all()
+
+          print('CANONICAL_GAMES=285')
+          print('CANONICAL_SIDES=570')
+          print('UNRESOLVED=0')
+          print('MANUAL_STARTER_RESOLUTIONS=0')
+          print(f"NEW_2025_IDENTITIES={starter_report['new_2025_identity_count']}")
+          print('WEEK1_2025_SOURCE_GAMES_VISIBLE=0')
+          print('CURRENT_BLOCK_2025_SOURCE_GAMES_VISIBLE=0')
+          print('FUTURE_2025_SOURCE_GAMES_VISIBLE=0')
+          print('ADJUSTMENT_SCHEMA_COMPATIBLE=PASS')
+          print('OUTCOME_COLUMNS_SELECTED_FROM_GAMES=0')
+          print('HOLDOUT_EXECUTIONS=0')
+          PY
+
+      - name: Verify historical frozen artifacts after build
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "$HISTORICAL_STARTER_SHA256  data/derived/stathead_actual_starters_v1/final_oracle_starters/actual_starting_qb_game_sides_2018_2024_v1.csv" | sha256sum --check --strict
+          echo "$HISTORICAL_ORACLE_SHA256  data/derived/oracle_qb_entering_state_v2/oracle_qb_pregame_adjustments_by_game_2018_2024_v2.parquet" | sha256sum --check --strict
+          echo 'HISTORICAL_ARTIFACTS_UNCHANGED=PASS'
+
+      - name: Stage frozen 2025 artifacts
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feat/2025-oracle-qb-input-v1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf data/derived/stathead_actual_starters_2025_v1 data/derived/oracle_qb_entering_state_2025_v1
+          cp -a /tmp/task05g_oracle_a/stathead_actual_starters_2025_v1 data/derived/
+          cp -a /tmp/task05g_oracle_a/oracle_qb_entering_state_2025_v1 data/derived/
+          git status --short
+
+      - name: Commit frozen 2025 artifacts
+        if: github.event_name == 'push' && github.ref == 'refs/heads/feat/2025-oracle-qb-input-v1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/derived/stathead_actual_starters_2025_v1 data/derived/oracle_qb_entering_state_2025_v1
+          if git diff --cached --quiet; then
+            echo 'No generated artifact changes to commit.'
+          else
+            git commit -m 'data: freeze 2025 Oracle-QB input artifacts'
+            git push origin HEAD:feat/2025-oracle-qb-input-v1
+          fi
+
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-2025-oracle-qb-materialization-${{ github.run_id }}
+          path: |
+            /tmp/task05g_oracle_a/
+            /tmp/task05g_oracle_b/
+          if-no-files-found: warn
+          retention-days: 90
