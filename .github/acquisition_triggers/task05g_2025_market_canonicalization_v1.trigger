@@ -1,0 +1,7 @@
+schema_version=task05g_2025_market_canonicalization_trigger_v1
+status=READY_NOT_EXECUTED
+capability_pr=66
+capability_merge_sha=c0297dacf830d7463aa48f025aaf2462aeeffe0f
+acquisition_run_id=33254688086
+acquisition_artifact_id=9715458059
+instruction=Merge this sentinel-only PR into main to trigger the outcome-blind 2025 market canonicalization workflow.
