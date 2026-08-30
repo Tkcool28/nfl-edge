@@ -28,10 +28,10 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e '.[model-development]' pyyaml pytest
 
-      - name: Preserve immutable pre-2025 anchor
+      - name: Verify successor executor contract and historical freeze
         run: |
-          python scripts/task05g_pre2025_freeze_audit_v1.py \
-            --out artifacts/executor_freeze/immutable_prefreeze_audit.json
+          python scripts/task05g_successor_executor_contract_audit_v1.py \
+            --out artifacts/executor_freeze/successor_executor_contract_audit.json
 
       - name: Compile executor and holdout-only adapters
         run: |
@@ -48,6 +48,7 @@ jobs:
             src/nfl_edge/holdout/product_2025.py \
             src/nfl_edge/holdout/oracle_qb_game_resolver_2025.py \
             src/nfl_edge/holdout/executor_runtime_2025.py \
+            scripts/task05g_successor_executor_contract_audit_v1.py \
             scripts/task05g_2025_holdout_one_shot_v1.py
 
       - name: Synthetic and development-only holdout contract tests
