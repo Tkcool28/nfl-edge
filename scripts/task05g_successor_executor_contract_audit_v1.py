@@ -97,8 +97,9 @@ def audit() -> dict[str, Any]:
     if superseded != [
         "scripts/task05g_2025_holdout_one_shot_v1.py",
         ".github/workflows/pre2025-product-freeze-v1.yml",
+        "tests/recommendation/test_pre2025_product_freeze_v1.py",
     ]:
-        raise AuditFailure("successor must list exactly the executor and historical audit call site")
+        raise AuditFailure("successor must list exactly the executor, audit call site, and compatibility test")
 
     historical_files = dict(historical.get("contract_files") or {})
     if set(superseded) - set(historical_files):
