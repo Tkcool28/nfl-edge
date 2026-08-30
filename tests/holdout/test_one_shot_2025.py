@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -136,3 +137,23 @@ def test_five_frozen_bankroll_profiles_start_at_reference_1000():
     assert set(state.bankroll.values) == {"Cautious", "Conservative", "Normal", "Aggressive", "Ultra"}
     assert all(value == 1000.0 for value in state.bankroll.values.values())
     assert isinstance(state.bankroll, BankrollState)
+
+
+def test_2025_ridge_totals_pbp_input_remains_unmaterialized():
+    """Keep executor readiness fail-closed until an accepted 2025 PBP source exists."""
+    repo_root = Path(__file__).resolve().parents[2]
+    inventory_path = repo_root / "data/manifests/task05c_source_inventory_v1.json"
+    inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
+
+    pbp_manifest = inventory["pbp_manifest"]
+    assert sorted(int(season) for season in pbp_manifest) == list(range(2018, 2025))
+    assert "2025" not in pbp_manifest
+
+    team_game_stats = next(
+        row
+        for row in inventory["sources"]
+        if row["artifact_path"].endswith("data/frozen/team_game_stats/team_game_stats_2018_2025.parquet")
+    )
+    assert team_game_stats["relevance"] == (
+        "Frozen team game stats: passing_epa/rushing_epa (audit cross-check only per contract)"
+    )
