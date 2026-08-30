@@ -3,14 +3,15 @@
   "status": "SUCCESSOR_EXECUTOR_PREFROZEN_EXECUTION_BLOCKED",
   "historical_record_path": "reports/pre2025/pre2025_product_freeze_manifest_v1.json",
   "historical_contract_git_sha": "7df52a1869af427b173d22c74441dd9fabc20096",
-  "successor_contract_git_sha": "c92ea29cd48c7e2eeee5805fd9101c260c99a2fd",
+  "successor_contract_git_sha": "fd52f7c8f1a110d0ba7ccf91d9c8c25e3bfcebf2",
   "superseded_historical_contract_paths": [
     "scripts/task05g_2025_holdout_one_shot_v1.py",
-    ".github/workflows/pre2025-product-freeze-v1.yml"
+    ".github/workflows/pre2025-product-freeze-v1.yml",
+    "tests/recommendation/test_pre2025_product_freeze_v1.py"
   ],
   "successor_contract_files": {
     "scripts/task05g_2025_holdout_one_shot_v1.py": "12ba9d5c51834c19cb26dd47ba898565bcf05a6d",
-    "scripts/task05g_successor_executor_contract_audit_v1.py": "b776c78d763bad5b02f3a38b25bf7413cb4629d9",
+    "scripts/task05g_successor_executor_contract_audit_v1.py": "a6b1a5d4402571468dbc7c97cd1f02191d659e54",
     "src/nfl_edge/holdout/executor_runtime_2025.py": "8d6bb1e9a18eac1d531a6775ddace72f8afb5465",
     "src/nfl_edge/holdout/oracle_qb_game_resolver_2025.py": "c243c46af85185fac39c663f84f90b0a76f36dbd",
     "tests/holdout/test_executor_runtime_2025_gate.py": "050f307df2db9af95069cdbee4f88f8943ac2169",
