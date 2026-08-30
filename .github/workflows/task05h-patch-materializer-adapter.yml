@@ -1,0 +1,105 @@
+name: Task05H Wire Observation Adapter
+
+on:
+  push:
+    branches: [feat/2025-complete-model-inputs-v1]
+    paths:
+      - .github/workflows/task05h-patch-materializer-adapter.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Wire narrow 2025 adapter and parity tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          script = Path('scripts/task05h_2025_complete_model_inputs_v1.py')
+          text = script.read_text()
+          old = '''from nfl_edge.features.totals_v1.game_observations import (\n    build_game_observations_with_provenance,\n)\n'''
+          new = '''from nfl_edge.holdout.totals_observations_2025 import (\n    build_2025_game_observations_with_provenance,\n)\n'''
+          assert text.count(old) == 1, text.count(old)
+          text = text.replace(old, new)
+          assert text.count('build_game_observations_with_provenance(') == 1
+          text = text.replace(
+              'build_game_observations_with_provenance(',
+              'build_2025_game_observations_with_provenance(',
+          )
+          assert 'build_game_observations_with_provenance' not in text
+          assert text.count('build_2025_game_observations_with_provenance(') == 1
+          script.write_text(text)
+
+          tests = Path('tests/task05h/test_2025_complete_model_inputs_v1.py')
+          t = tests.read_text()
+          marker = '# --- holdout observation bridge parity evidence ---'
+          assert marker not in t
+          t += r'''
+
+# --- holdout observation bridge parity evidence ---
+import pytest
+
+from nfl_edge.features.totals_v1.game_observations import build_game_observations_with_provenance
+from nfl_edge.holdout.totals_observations_2025 import (
+    HoldoutTotalsObservationError,
+    build_2025_game_observations_with_provenance,
+    prove_development_shadow_parity,
+)
+
+
+def _minimal_observation_pbp(season: int) -> pl.DataFrame:
+    return pl.DataFrame({
+        "game_id": ["g1"], "season": [season],
+        "posteam": [None], "defteam": [None],
+        "play_type": [None], "play_deleted": [0.0], "aborted_play": [0.0],
+        "pass_attempt": [None], "rush_attempt": [None],
+        "complete_pass": [None], "qb_dropback": [None],
+        "qb_kneel": [0.0], "qb_spike": [0.0],
+        "sack": [None], "epa": [None], "success": [None],
+        "interception": [None], "fumble_lost": [None],
+        "fixed_drive": [1.0], "fixed_drive_result": [None], "play_id": [1.0],
+        "qtr": [None], "score_differential": [None],
+        "game_seconds_remaining": [None], "yardline_100": [None],
+        "goal_to_go": [None], "yards_gained": [None],
+        "air_yards": [None], "yards_after_catch": [None],
+    })
+
+
+def test_holdout_observation_bridge_changes_only_season_gate():
+    dev = _minimal_observation_pbp(2024)
+    accepted, accepted_prov = build_game_observations_with_provenance(
+        block_id="blk", pbp_frames={"g1": dev}
+    )
+    holdout, holdout_prov = build_2025_game_observations_with_provenance(
+        block_id="blk", pbp_frames={"g1": _minimal_observation_pbp(2025)}
+    )
+    assert holdout == accepted
+    assert holdout_prov == accepted_prov
+    prove_development_shadow_parity(block_id="blk", pbp_frames={"g1": dev})
+
+
+def test_holdout_observation_bridge_rejects_non_2025_input():
+    with pytest.raises(HoldoutTotalsObservationError):
+        build_2025_game_observations_with_provenance(
+            block_id="blk", pbp_frames={"g1": _minimal_observation_pbp(2024)}
+        )
+'''
+          tests.write_text(t)
+          PY
+          git diff --check
+          python -m py_compile \
+            src/nfl_edge/holdout/totals_observations_2025.py \
+            scripts/task05h_2025_complete_model_inputs_v1.py \
+            tests/task05h/test_2025_complete_model_inputs_v1.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add scripts/task05h_2025_complete_model_inputs_v1.py tests/task05h/test_2025_complete_model_inputs_v1.py
+          git commit -m 'fix: route 2025 PBP through sealed holdout observation bridge'
+          git push origin HEAD:feat/2025-complete-model-inputs-v1
