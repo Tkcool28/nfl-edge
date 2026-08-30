@@ -139,21 +139,18 @@ def test_five_frozen_bankroll_profiles_start_at_reference_1000():
     assert isinstance(state.bankroll, BankrollState)
 
 
-def test_2025_ridge_totals_pbp_input_remains_unmaterialized():
-    """Keep executor readiness fail-closed until an accepted 2025 PBP source exists."""
+def test_2025_totals_postgame_input_is_frozen_but_holdout_unexecuted():
+    """Task05H superseded the old missing-PBP blocker without opening the holdout."""
     repo_root = Path(__file__).resolve().parents[2]
-    inventory_path = repo_root / "data/manifests/task05c_source_inventory_v1.json"
-    inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
-
-    pbp_manifest = inventory["pbp_manifest"]
-    assert sorted(int(season) for season in pbp_manifest) == list(range(2018, 2025))
-    assert "2025" not in pbp_manifest
-
-    team_game_stats = next(
-        row
-        for row in inventory["sources"]
-        if row["artifact_path"].endswith("data/frozen/team_game_stats/team_game_stats_2018_2025.parquet")
+    certification = json.loads(
+        (repo_root / "data/manifests/2025_all_model_input_certification_v1.json").read_text(
+            encoding="utf-8"
+        )
     )
-    assert team_game_stats["relevance"] == (
-        "Frozen team game stats: passing_epa/rushing_epa (audit cross-check only per contract)"
-    )
+    assert certification["verdict"] == "ALL_2025_MODEL_INPUTS_FROZEN_AND_CERTIFIED"
+    assert certification["remaining_missing_2025_input_surfaces"] == []
+    assert certification["holdout_predictions_executed"] == 0
+    assert certification["2025_HOLDOUT_HAS_NOT_BEEN_EXECUTED"] is True
+    totals = certification["new_2025_totals_inputs"]
+    assert totals["pbp_game_coverage"] == "285/285"
+    assert totals["game_observation_coverage"] == "285/285"
