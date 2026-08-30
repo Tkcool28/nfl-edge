@@ -94,8 +94,12 @@ def audit() -> dict[str, Any]:
         raise AuditFailure("successor contract permits methodology or tuning drift")
 
     superseded = list(successor.get("superseded_historical_contract_paths") or [])
-    if superseded != ["scripts/task05g_2025_holdout_one_shot_v1.py"]:
-        raise AuditFailure("only the top-level executor may supersede the historical contract")
+    if superseded != [
+        "scripts/task05g_2025_holdout_one_shot_v1.py",
+        ".github/workflows/pre2025-product-freeze-v1.yml",
+        ".github/workflows/task05g-2025-executor-freeze-v1.yml",
+    ]:
+        raise AuditFailure("successor must list exactly the executor and its two audit call sites")
 
     historical_files = dict(historical.get("contract_files") or {})
     if set(superseded) - set(historical_files):
