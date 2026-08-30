@@ -46,6 +46,8 @@ jobs:
             src/nfl_edge/holdout/one_shot_2025.py \
             src/nfl_edge/holdout/evaluator_2025.py \
             src/nfl_edge/holdout/product_2025.py \
+            src/nfl_edge/holdout/oracle_qb_game_resolver_2025.py \
+            src/nfl_edge/holdout/executor_runtime_2025.py \
             scripts/task05g_2025_holdout_one_shot_v1.py
 
       - name: Synthetic and development-only holdout contract tests
@@ -59,6 +61,7 @@ jobs:
             tests/holdout/test_totals_2025_adapter.py \
             tests/holdout/test_totals_features_2025_adapter.py \
             tests/holdout/test_one_shot_2025.py \
+            tests/holdout/test_executor_runtime_2025_gate.py \
             tests/holdout/test_evaluator_2025_adapter.py \
             tests/recommendation/test_task05g_headline_staking_v1.py \
             tests/recommendation/test_task05g_staking_v1.py \
@@ -69,11 +72,29 @@ jobs:
         run: |
           python scripts/task05g_2025_holdout_one_shot_v1.py --preflight \
             > artifacts/executor_freeze/holdout_preflight.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('artifacts/executor_freeze/holdout_preflight.json').read_text())
+          assert result['status'] == 'SEALED_PREFLIGHT_PASS'
+          assert result['2025_data_read'] is False
+          print('SEALED_PREFLIGHT_2025_READ=FALSE')
+          PY
           if python scripts/task05g_2025_holdout_one_shot_v1.py \
             --authorization CI_INTENTIONALLY_INVALID_AUTHORIZATION; then
             echo 'ERROR: invalid authorization unexpectedly executed' >&2
             exit 1
           fi
+          test ! -e artifacts/task05g_2025_holdout_v1/HOLDOUT_SPENT.json
+
+      - name: Prove CI cannot contain real authorization
+        run: |
+          if grep -R --line-number --fixed-string \
+            '885502f347cfaf2194705dc0614a972148f54bd33074b977a263fc846f82d2c5' \
+            .github/workflows/task05g-2025-executor-freeze-v1.yml >/dev/null; then
+            echo 'authorization digest is allowed; plaintext remains absent'
+          fi
+          ! grep -R --line-number 'NFL_EDGE_2025_AUTHORIZATION=' .github/workflows/task05g-2025-executor-freeze-v1.yml
 
       - name: Reproduce frozen 2020-24 product twice
         run: |
