@@ -5,7 +5,10 @@ on:
   pull_request:
     paths:
       - scripts/task05h_2025_complete_model_inputs_v1.py
-      - tests/task05h/test_2025_complete_model_inputs_v1.py
+      - scripts/task05h_2025_complete_model_inputs_v1_driver.py
+      - src/nfl_edge/holdout/totals_observations_2025.py
+      - src/nfl_edge/holdout/xgboost_inputs_2025.py
+      - tests/task05h/**
       - .github/workflows/task05h-2025-complete-model-inputs-v1.yml
       - data/frozen/task05c_pbp_2025_v1/**
       - data/derived/task05c_game_observations_2025_v1/**
@@ -17,7 +20,10 @@ on:
       - feat/2025-complete-model-inputs-v1
     paths:
       - scripts/task05h_2025_complete_model_inputs_v1.py
-      - tests/task05h/test_2025_complete_model_inputs_v1.py
+      - scripts/task05h_2025_complete_model_inputs_v1_driver.py
+      - src/nfl_edge/holdout/totals_observations_2025.py
+      - src/nfl_edge/holdout/xgboost_inputs_2025.py
+      - tests/task05h/**
       - .github/workflows/task05h-2025-complete-model-inputs-v1.yml
 
 permissions:
@@ -125,15 +131,19 @@ jobs:
 
       - name: Compile and run focused unit tests
         run: |
-          python -m py_compile scripts/task05h_2025_complete_model_inputs_v1.py
-          pytest -q tests/task05h/test_2025_complete_model_inputs_v1.py
+          python -m py_compile \
+            scripts/task05h_2025_complete_model_inputs_v1.py \
+            scripts/task05h_2025_complete_model_inputs_v1_driver.py \
+            src/nfl_edge/holdout/totals_observations_2025.py \
+            src/nfl_edge/holdout/xgboost_inputs_2025.py
+          pytest -q tests/task05h
 
       - name: Materialize and certify independent run A
         shell: bash
         run: |
           set -euo pipefail
           rm -rf /tmp/task05h_run_a
-          python scripts/task05h_2025_complete_model_inputs_v1.py \
+          python scripts/task05h_2025_complete_model_inputs_v1_driver.py \
             --pbp-source /tmp/task05h_source_a/play_by_play_2025.parquet \
             --market-root /tmp/task05h_market \
             --output-root /tmp/task05h_run_a \
@@ -144,7 +154,7 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf /tmp/task05h_run_b
-          python scripts/task05h_2025_complete_model_inputs_v1.py \
+          python scripts/task05h_2025_complete_model_inputs_v1_driver.py \
             --pbp-source /tmp/task05h_source_b/play_by_play_2025.parquet \
             --market-root /tmp/task05h_market \
             --output-root /tmp/task05h_run_b \
@@ -186,8 +196,13 @@ jobs:
           assert cert['historical_2018_2024_identity_preservation']['all_byte_identical'] is True
           assert len(cert['certification_matrix'])==10
           assert all(row['missing_dependencies']==[] for row in cert['certification_matrix'])
+          xgb=cert['xgboost_input_certification']
+          assert xgb['development_assembly_parity'] is True
+          assert xgb['qb_side_rows']==570
+          assert xgb['qb_cutoff_alignment']=='PASS'
           assert cert['2025_HOLDOUT_HAS_NOT_BEEN_EXECUTED'] is True
           print('ALL_MODEL_CERTIFICATION=PASS')
+          print('XGBOOST_GAME_PLUS_QB_PARITY=PASS')
           print('remaining_missing_2025_input_surfaces=[]')
           print('2025_HOLDOUT_HAS_NOT_BEEN_EXECUTED=TRUE')
           PY
