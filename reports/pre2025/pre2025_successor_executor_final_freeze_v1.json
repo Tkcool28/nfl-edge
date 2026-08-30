@@ -1,7 +1,7 @@
 {
   "schema_version": "pre2025_successor_executor_final_freeze_v1",
   "status": "READY_FOR_SINGLE_AUTHORIZED_2025_HOLDOUT_EXECUTION",
-  "frozen_from_head": "d057232252152f0967bf98c6fec1becd2f035ec1",
+  "frozen_from_head": "c33501ef6d95a4a19e2ba00c4140125dbef6449e",
   "historical_product_freeze_invariants_preserved": true,
   "methodology_changed": false,
   "tuning_performed": false,
@@ -32,7 +32,7 @@
     ".github/workflows/task05g-2025-executor-freeze-v1.yml": "c8015f28d3dbdf78b8b4ac458b6bea9e5b77acc8",
     "config/task05g_2025_acceptance_v1.yaml": "09ac0251239652ced7b9829165321da2032cc3a6",
     "scripts/task05g_2025_holdout_one_shot_v1.py": "12ba9d5c51834c19cb26dd47ba898565bcf05a6d",
-    "scripts/task05g_successor_executor_contract_audit_v1.py": "8c1b9f302ec23fe32cf53eda7527451da1b7867f",
+    "scripts/task05g_successor_executor_contract_audit_v1.py": "005e72c881d8ef1d705955ee1e93fd37dcb1857f",
     "src/nfl_edge/holdout/evaluator_2025.py": "8173bb46eb2d752c9ec3992c19406147c50e16b8",
     "src/nfl_edge/holdout/executor_runtime_2025.py": "8d6bb1e9a18eac1d531a6775ddace72f8afb5465",
     "src/nfl_edge/holdout/expected_margin_2025.py": "da61391ccf947f41882072db61b0dcb11b6037bf",
@@ -46,6 +46,7 @@
     "src/nfl_edge/holdout/totals_features_2025.py": "a3f6e82cb4313e543fc8e4b99e309442e0ab13b6",
     "src/nfl_edge/holdout/xgboost_2025.py": "7ac3dc84b50446364765b4c21dfc8091bdd4bdfb",
     "tests/holdout/test_executor_runtime_2025_gate.py": "050f307df2db9af95069cdbee4f88f8943ac2169",
-    "tests/recommendation/test_pre2025_product_freeze_v1.py": "f4b72b0effae82f5579c8f628257575132fc1b94"
+    "tests/recommendation/test_pre2025_product_freeze_v1.py": "f4b72b0effae82f5579c8f628257575132fc1b94",
+    "reports/pre2025/pre2025_successor_executor_contract_v1.json": "5fafa31a2b679d8e04899652a1f4cbc3bbb4bd0f"
   }
 }
