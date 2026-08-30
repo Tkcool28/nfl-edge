@@ -48,7 +48,7 @@ def test_authorization_is_hash_only_and_external_to_repository():
     assert "$NFL_EDGE_2025_AUTHORIZATION" in cfg["execution"]["canonical_command"]
     runner_text = RUNNER.read_text()
     assert "AUTHORIZATION_PHRASE" not in runner_text
-    assert "supplied != AUTHORIZATION_SHA256" in runner_text
+    assert "hashlib.sha256(value.encode()).hexdigest() != AUTHORIZATION_SHA256" in runner_text
 
 
 def test_holdout_market_book_contract_preserves_raw_and_product_scopes():
@@ -106,7 +106,7 @@ def test_one_shot_runner_has_no_2025_data_reader_while_blocked():
     for forbidden in ("read_parquet", "scan_parquet", "read_csv", "open_dataset", "pyarrow"):
         assert forbidden not in text
     assert "HOLDOUT_EXECUTOR_NOT_FROZEN" in text
-    assert "execution.ready=true without a frozen executor implementation" in text
+    assert "no 2025 read occurred" in text
 
 
 def test_preflight_passes_without_opening_holdout(tmp_path):
