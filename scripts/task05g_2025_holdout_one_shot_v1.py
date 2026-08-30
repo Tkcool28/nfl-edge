@@ -33,7 +33,7 @@ AUDIT = ROOT / "scripts/task05g_successor_executor_contract_audit_v1.py"
 OUTPUT_DIR = ROOT / "artifacts/task05g_2025_holdout_v1"
 SPEND_MARKER = OUTPUT_DIR / "HOLDOUT_SPENT.json"
 DEFAULT_HISTORICAL_BOARD = ROOT / "artifacts/task05f/evaluator_final_v1/historical_evaluator_board.parquet"
-AUTHORIZATION_SHA256 = "885502f347cfaf2194705dc0614a972148f54bd33074b977a263fc846f82d2c5"
+AUTHORIZATION_SHA256 = "f32f7b3a4316dc2f1154bb531b1c496b9958b33291e9e95a95b99767a1190f0a"
 
 
 class HoldoutGateError(RuntimeError):

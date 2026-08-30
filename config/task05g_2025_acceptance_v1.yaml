@@ -5,7 +5,7 @@ development_reference_seasons: [2020, 2021, 2022, 2023, 2024]
 remaining_missing_2025_input_surfaces: []
 authorization:
   required: true
-  exact_phrase_sha256: 885502f347cfaf2194705dc0614a972148f54bd33074b977a263fc846f82d2c5
+  exact_phrase_sha256: f32f7b3a4316dc2f1154bb531b1c496b9958b33291e9e95a95b99767a1190f0a
   plaintext_stored_in_repository: false
   must_be_verified_before_any_2025_file_read: true
   one_spend_marker: artifacts/task05g_2025_holdout_v1/HOLDOUT_SPENT.json
