@@ -29,7 +29,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "config/task05g_2025_acceptance_v1.yaml"
 FREEZE_PATH = ROOT / "config/task05g_pre2025_holdout_freeze_v1.yaml"
-AUDIT = ROOT / "scripts/task05g_pre2025_freeze_audit_v1.py"
+AUDIT = ROOT / "scripts/task05g_successor_executor_contract_audit_v1.py"
 OUTPUT_DIR = ROOT / "artifacts/task05g_2025_holdout_v1"
 SPEND_MARKER = OUTPUT_DIR / "HOLDOUT_SPENT.json"
 DEFAULT_HISTORICAL_BOARD = ROOT / "artifacts/task05f/evaluator_final_v1/historical_evaluator_board.parquet"
@@ -93,7 +93,7 @@ def _run_prefreeze_audit() -> None:
     )
     if completed.returncode != 0:
         detail = completed.stderr.strip() or completed.stdout.strip()
-        raise HoldoutGateError(f"prefreeze audit failed: {detail}")
+        raise HoldoutGateError(f"successor executor contract audit failed: {detail}")
 
 
 def preflight() -> dict[str, Any]:
