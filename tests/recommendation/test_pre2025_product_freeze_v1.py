@@ -45,11 +45,13 @@ def test_final_acceptance_contract_is_authorized_ready_without_tuning_surface():
 def test_authorization_is_hash_only_and_external_to_repository():
     cfg = _yaml(ACCEPT)
     auth = cfg["authorization"]
-    assert len(auth["exact_phrase_sha256"]) == 64
+    expected_sha256 = "f32f7b3a4316dc2f1154bb531b1c496b9958b33291e9e95a95b99767a1190f0a"
+    assert auth["exact_phrase_sha256"] == expected_sha256
     assert auth["plaintext_stored_in_repository"] is False
     assert "$NFL_EDGE_2025_AUTHORIZATION" in cfg["execution"]["canonical_command"]
     runner_text = RUNNER.read_text()
     assert "AUTHORIZATION_PHRASE" not in runner_text
+    assert expected_sha256 in runner_text
     assert "hashlib.sha256(value.encode()).hexdigest() != AUTHORIZATION_SHA256" in runner_text
 
 

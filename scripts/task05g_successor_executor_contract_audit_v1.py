@@ -21,10 +21,12 @@ HISTORICAL_RECORD = "reports/pre2025/pre2025_product_freeze_manifest_v1.json"
 SUCCESSOR_RECORD = "reports/pre2025/pre2025_successor_executor_contract_v1.json"
 FREEZE_REL = "config/task05g_pre2025_holdout_freeze_v1.yaml"
 FINAL_PRODUCT_FREEZE_REL = "config/task05g_final_product_freeze_v1.yaml"
-FINAL_PROMOTION_RECORD = "reports/pre2025/pre2025_successor_executor_final_freeze_v1.json"
+FINAL_PROMOTION_RECORD = "reports/pre2025/pre2025_successor_executor_final_freeze_v2.json"
 ACCEPTANCE_CONFIG_REL = "config/task05g_2025_acceptance_v1.yaml"
 CERTIFICATION_REL = "data/manifests/2025_all_model_input_certification_v1.json"
 FINAL_PROMOTION_SUPERSEDED_SUCCESSOR_PATHS = {
+    "config/task05g_2025_acceptance_v1.yaml",
+    "scripts/task05g_2025_holdout_one_shot_v1.py",
     "scripts/task05g_successor_executor_contract_audit_v1.py",
     "tests/recommendation/test_pre2025_product_freeze_v1.py",
 }
@@ -175,12 +177,28 @@ def audit() -> dict[str, Any]:
         raise AuditFailure("certification no longer proves unopened holdout")
 
     promotion = _json(FINAL_PROMOTION_RECORD)
-    if promotion.get("schema_version") != "pre2025_successor_executor_final_freeze_v1":
+    if promotion.get("schema_version") != "pre2025_successor_executor_final_freeze_v2":
         raise AuditFailure("final promotion freeze schema drift")
     if promotion.get("status") != "READY_FOR_SINGLE_AUTHORIZED_2025_HOLDOUT_EXECUTION":
         raise AuditFailure("final promotion freeze status drift")
     if promotion.get("execution_ready") is not True or promotion.get("holdout_opened") is not False:
         raise AuditFailure("final promotion freeze readiness/seal drift")
+    if (
+        promotion.get("methodology_changed") is not False
+        or promotion.get("tuning_performed") is not False
+        or promotion.get("holdout_data_bytes_read") != 0
+        or promotion.get("holdout_predictions_executed") != 0
+    ):
+        raise AuditFailure("final promotion freeze non-execution invariants drift")
+    promotion_authorization = dict(promotion.get("authorization") or {})
+    acceptance_authorization = dict(acceptance.get("authorization") or {})
+    if promotion_authorization != {
+        "required": True,
+        "exact_phrase_sha256": acceptance_authorization.get("exact_phrase_sha256"),
+        "must_be_verified_before_any_2025_file_read": True,
+        "one_spend_marker": "artifacts/task05g_2025_holdout_v1/HOLDOUT_SPENT.json",
+    }:
+        raise AuditFailure("final promotion authorization identity drift")
     source_blobs = dict(promotion.get("frozen_source_blobs") or {})
     if not source_blobs:
         raise AuditFailure("final promotion freeze source inventory is empty")
