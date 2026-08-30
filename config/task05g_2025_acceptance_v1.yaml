@@ -14,9 +14,13 @@ execution:
     python scripts/task05g_2025_holdout_one_shot_v1.py
     --authorization "$NFL_EDGE_2025_AUTHORIZATION"
   tuning_flags_allowed: false
+  resolved_preconditions:
+    - Frozen 2025 historical T-60 market acquisition completed in workflow 33254688086 with 123/123 successful requests, 285/285 target games, 3690 credits spent, and acquisition artifact SHA-256 081be41b05d246e50edf933b27b1ca75c63684d79520fdf73431c9c60009e7af.
+    - Outcome-blind 2025 market canonicalization completed in workflow 33288564115; canonical_book_market_2025.parquet SHA-256 c8499262388fca13d6dfd0a7da2f891c1989ed601c75b6987067013ce8092a62 and canonical_games_2025.parquet SHA-256 e9d4b9a5302a72d32f767a87b52f86e32044118bfb27900fb4c4217d6edd74ef are structurally valid with score/outcome columns read = 0.
+    - Holdout-only block predictors exist for Oracle QB-Elo, chronology-corrected conservative XGBoost, Expected Margin stable, and Ridge Totals R4; exact-90 Totals feature freeze/reveal and pre-result Task05F/Task05G orchestration mechanics are covered by synthetic/development-only executor-freeze CI.
   blocked_reasons:
-    - Holdout-only block predictors now cover Oracle QB-Elo, Expected Margin stable, conservative XGBoost, and Ridge Totals R4, and the exact-90 Totals feature freeze/reveal bridge is present; the full authorization-only football orchestration that bootstraps accepted 2018-2024 state, supplies authorized 2025 context/Oracle inputs, invokes all four model seams, and advances block-by-block is not yet frozen.
-    - No frozen authorized 2025 T-60 historical market acquisition plan exists yet; canonical tracked market data ends at 2024.
+    - No frozen 2025 Oracle-QB input materializer/artifact exists. The accepted OracleQBAdjustments source and oracle_qb_entering_state_v2 adjustment artifacts cover exactly 2018-2024, and the final Stathead actual-starter artifacts also cover exactly 2018-2024. predict_oracle_qb_elo_block requires an ORACLE resolver with exact current-block game_id coverage, and materialize_totals_feature_block requires the corresponding current-block Oracle-QB consumed surface. Inventing or zero-filling a 2025 replacement is prohibited.
+    - Because the required 2025 Oracle-QB input surface is absent, the authorization-only top-level executor cannot yet lawfully bootstrap all required current-block inputs, invoke all four frozen model seams, freeze the complete Task05F/Task05G user product, then reveal and advance outcomes for every block. execution.ready must remain false.
   required_future_executor_contract:
     football_models:
       moneyline: [oracle_qb_elo_v1, chronology_corrected_xgboost_v1_conservative]
