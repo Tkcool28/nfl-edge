@@ -41,6 +41,21 @@ from .wager_economics import (
     moneyline_outcome_probabilities,
 )
 
+AUTHORIZED_HOLDOUT_SEASON = 2025
+
+
+def _assert_season_allowed(
+    game: GameState,
+    *,
+    allow_authorized_holdout_2025: bool = False,
+) -> None:
+    season = int(game.season)
+    if season not in SEALED_SEASONS:
+        return
+    if allow_authorized_holdout_2025 and season == AUTHORIZED_HOLDOUT_SEASON:
+        return
+    raise RuntimeError(f"sealed season {game.season}")
+
 
 def _side_probability(home_probability: float, side: str) -> float:
     return float(home_probability) if side.lower() == "home" else 1.0 - float(home_probability)
@@ -157,9 +172,13 @@ def evaluate_moneyline_v4(
     state: MoneylineV4State,
     anchor: MarketAnchor,
     reliability_state: ReliabilityState,
+    *,
+    allow_authorized_holdout_2025: bool = False,
 ) -> EvaluationResult:
-    if game.season in SEALED_SEASONS:
-        raise RuntimeError(f"sealed season {game.season}")
+    _assert_season_allowed(
+        game,
+        allow_authorized_holdout_2025=allow_authorized_holdout_2025,
+    )
     if offer.market_type != "moneyline" or anchor.market_type != "moneyline":
         raise ValueError("moneyline V4 requires moneyline offer and anchor")
     if anchor.home_no_vig_probability is None:
@@ -253,9 +272,13 @@ def evaluate_point_v3(
     state: PointV3State,
     anchor: MarketAnchor,
     reliability_state: ReliabilityState,
+    *,
+    allow_authorized_holdout_2025: bool = False,
 ) -> EvaluationResult:
-    if game.season in SEALED_SEASONS:
-        raise RuntimeError(f"sealed season {game.season}")
+    _assert_season_allowed(
+        game,
+        allow_authorized_holdout_2025=allow_authorized_holdout_2025,
+    )
     if offer.market_type != state.market_type or anchor.market_type != state.market_type:
         raise ValueError("point V3 state/offer/anchor market mismatch")
     if offer.line is None:
@@ -339,6 +362,8 @@ def evaluate_offer(
     evaluator_state: MoneylineV4State | PointV3State,
     market_anchor: MarketAnchor,
     reliability_state: ReliabilityState,
+    *,
+    allow_authorized_holdout_2025: bool = False,
 ) -> EvaluationResult:
     """Evaluate any stored or manual exact offer with the frozen accepted family."""
     if isinstance(evaluator_state, MoneylineV4State):
@@ -348,6 +373,7 @@ def evaluate_offer(
             evaluator_state,
             market_anchor,
             reliability_state,
+            allow_authorized_holdout_2025=allow_authorized_holdout_2025,
         )
     return evaluate_point_v3(
         game_state,
@@ -355,4 +381,5 @@ def evaluate_offer(
         evaluator_state,
         market_anchor,
         reliability_state,
+        allow_authorized_holdout_2025=allow_authorized_holdout_2025,
     )
