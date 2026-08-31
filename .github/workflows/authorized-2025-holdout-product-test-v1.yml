@@ -1,0 +1,163 @@
+name: Authorized 2025 Holdout Product Test V1
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  execute-holdout:
+    if: >-
+      github.event.pull_request.head.ref == 'run/2025-holdout-product-test-v1' &&
+      github.event.pull_request.base.ref == 'main' &&
+      github.event.pull_request.user.login == 'Tkcool28'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      PYTHONHASHSEED: "0"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OPENBLAS_CORETYPE: "HASWELL"
+      MKL_NUM_THREADS: "1"
+      MKL_CBWR: "COMPATIBLE"
+      NUMEXPR_NUM_THREADS: "1"
+      NFL_EDGE_2025_AUTHORIZATION: ${{ github.event.pull_request.body }}
+      EXECUTION_HEAD: 2a8f0a048377932aa5c0c2703e08d254b6c75540
+      CARRIER_BRANCH: run/2025-holdout-product-test-v1
+      OUTPUT_REL: artifacts/task05g_2025_holdout_v1
+
+    steps:
+      - name: Checkout exact frozen execution head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_HEAD }}
+          fetch-depth: 0
+          path: source
+
+      - name: Checkout persistent carrier branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CARRIER_BRANCH }}
+          fetch-depth: 0
+          path: carrier
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: source/pyproject.toml
+
+      - name: Install frozen runtime dependencies
+        run: |
+          cd source
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+
+      - name: Verify one-shot carrier is unspent
+        run: |
+          set -euo pipefail
+          test ! -e "carrier/${OUTPUT_REL}/HOLDOUT_SPENT.json"
+          git -C carrier fetch origin "$CARRIER_BRANCH"
+          if git -C carrier cat-file -e "origin/${CARRIER_BRANCH}:${OUTPUT_REL}/HOLDOUT_SPENT.json" 2>/dev/null; then
+            echo 'HOLDOUT_ALREADY_SPENT_ON_CARRIER' >&2
+            exit 2
+          fi
+          python - <<'PY'
+          import hashlib, os
+          expected = 'f32f7b3a4316dc2f1154bb531b1c496b9958b33291e9e95a95b99767a1190f0a'
+          got = hashlib.sha256(os.environ['NFL_EDGE_2025_AUTHORIZATION'].encode()).hexdigest()
+          if got != expected:
+              raise SystemExit('authorization mismatch; holdout remains sealed')
+          print('OUT_OF_BAND_AUTHORIZATION_HASH=PASS')
+          PY
+
+      - name: Materialize frozen development Task05F board
+        run: |
+          set -euo pipefail
+          cd source
+          python scripts/task05f_evaluator_final_runner.py \
+            --out artifacts/task05f/evaluator_final_v1 \
+            > ../task05f_materialization.log
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          p = Path('artifacts/task05f/evaluator_final_v1/historical_evaluator_board.parquet')
+          got = hashlib.sha256(p.read_bytes()).hexdigest()
+          want = 'e28f0eb43275fc97c8e36744e032ef401d7659b72854dc5a3aa25236ce1e5dad'
+          assert got == want, (got, want)
+          print('TASK05F_HISTORICAL_BOARD_SHA=PASS')
+          PY
+
+      - name: Download already-certified 2025 market artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: task05g-2025-market-canonicalization-33288564115
+          path: /tmp/nfl-edge-2025-market
+          github-token: ${{ github.token }}
+          repository: Tkcool28/nfl-edge
+          run-id: 33288564115
+
+      - name: Execute once and persist marker plus reports
+        id: execute
+        shell: bash
+        run: |
+          set -uo pipefail
+          rm -f holdout_execution.log
+          set +e
+          (
+            cd source
+            python scripts/task05g_2025_holdout_one_shot_v1.py \
+              --authorization "$NFL_EDGE_2025_AUTHORIZATION" \
+              --market-root /tmp/nfl-edge-2025-market \
+              2>&1 | tee ../holdout_execution.log
+            exit ${PIPESTATUS[0]}
+          )
+          rc=$?
+          set -e
+
+          mkdir -p "carrier/${OUTPUT_REL}"
+          if [[ -d "source/${OUTPUT_REL}" ]]; then
+            cp -a "source/${OUTPUT_REL}/." "carrier/${OUTPUT_REL}/"
+          fi
+          cp holdout_execution.log "carrier/${OUTPUT_REL}/execution.log"
+          cp task05f_materialization.log "carrier/${OUTPUT_REL}/task05f_materialization.log"
+
+          EXECUTION_RC="$rc" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          out = Path('carrier') / os.environ['OUTPUT_REL'] / 'execution_metadata.json'
+          payload = {
+              'schema_version': 'authorized_2025_holdout_execution_carrier_v1',
+              'execution_git_head': os.environ['EXECUTION_HEAD'],
+              'carrier_branch': os.environ['CARRIER_BRANCH'],
+              'market_artifact_run_id': 33288564115,
+              'market_artifact_id': 9725230097,
+              'exit_code': int(os.environ['EXECUTION_RC']),
+              'holdout_spent_marker_present': (out.parent / 'HOLDOUT_SPENT.json').exists(),
+          }
+          out.write_text(json.dumps(payload, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          PY
+
+          cd carrier
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$OUTPUT_REL"
+          if ! git diff --cached --quiet; then
+            git commit -m 'data: persist authorized 2025 holdout product test'
+            git push origin "HEAD:${CARRIER_BRANCH}"
+          fi
+          cd ..
+
+          exit "$rc"
+
+      - name: Upload immutable execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: authorized-2025-holdout-product-test-${{ github.run_id }}
+          path: carrier/artifacts/task05g_2025_holdout_v1/
+          if-no-files-found: error
