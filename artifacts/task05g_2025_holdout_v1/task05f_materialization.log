@@ -1,0 +1,306 @@
+{
+  "accepted_families": {
+    "moneyline": "ml_v4",
+    "spread": "spread_v3",
+    "total": "total_v3"
+  },
+  "arbitrary_offer_interface": "evaluate_offer",
+  "candidate_rows": 8448,
+  "chronology": "expanding prior season-week blocks only",
+  "development_seasons": [
+    2020,
+    2021,
+    2022,
+    2023,
+    2024
+  ],
+  "final_state": {
+    "moneyline_model_weight": 0.0,
+    "reliability": {
+      "moneyline": {
+        "block_count": 80,
+        "radius": 0.03714097351370167,
+        "stable": true,
+        "support_n": 1099
+      },
+      "spread": {
+        "block_count": 100,
+        "radius": 0.030783078704395533,
+        "stable": true,
+        "support_n": 1249
+      },
+      "total": {
+        "block_count": 100,
+        "radius": 0.027941306978409793,
+        "stable": true,
+        "support_n": 1260
+      }
+    },
+    "spread_beta": 0.0,
+    "spread_sigma": 11.8608,
+    "total_beta": 0.15961116051190788,
+    "total_sigma": 12.6021
+  },
+  "frozen_edge_preservation": {
+    "ML_AVG_0_2": {
+      "baseline": {
+        "n": 216,
+        "profit": -8.023725000000006,
+        "pushes": 0,
+        "roi": -0.037146874999999996,
+        "wins": 102
+      },
+      "exact_offer_joined_n": 216,
+      "missing_exact_offer_n": 0,
+      "nonpositive_ev_rejected": {
+        "n": 126,
+        "profit": 0.24865200000000343,
+        "pushes": 0,
+        "roi": 0.00197342857142859,
+        "wins": 65
+      },
+      "positive_ev_kept": {
+        "n": 72,
+        "profit": -15.362428999999997,
+        "pushes": 0,
+        "roi": -0.21336706944444445,
+        "wins": 26
+      },
+      "supported": {
+        "n": 198,
+        "profit": -15.113777000000006,
+        "pushes": 0,
+        "roi": -0.07633220707070706,
+        "wins": 91
+      }
+    },
+    "ML_CORROBORATED_DOG_VALUE_ZONE": {
+      "baseline": {
+        "n": 140,
+        "profit": 6.340000000000003,
+        "pushes": 0,
+        "roi": 0.04528571428571427,
+        "wins": 57
+      },
+      "exact_offer_joined_n": 140,
+      "missing_exact_offer_n": 0,
+      "nonpositive_ev_rejected": {
+        "n": 77,
+        "profit": -9.5,
+        "pushes": 0,
+        "roi": -0.12337662337662338,
+        "wins": 26
+      },
+      "positive_ev_kept": {
+        "n": 45,
+        "profit": 5.550000000000001,
+        "pushes": 0,
+        "roi": 0.12333333333333335,
+        "wins": 20
+      },
+      "supported": {
+        "n": 122,
+        "profit": -3.9499999999999975,
+        "pushes": 0,
+        "roi": -0.03237704918032787,
+        "wins": 46
+      }
+    },
+    "ML_DOG_VALUE_ZONE_AVG": {
+      "baseline": {
+        "n": 232,
+        "profit": 11.839999999999982,
+        "pushes": 0,
+        "roi": 0.051034482758620686,
+        "wins": 98
+      },
+      "exact_offer_joined_n": 232,
+      "missing_exact_offer_n": 0,
+      "nonpositive_ev_rejected": {
+        "n": 131,
+        "profit": -13.070000000000002,
+        "pushes": 0,
+        "roi": -0.0997709923664122,
+        "wins": 47
+      },
+      "positive_ev_kept": {
+        "n": 76,
+        "profit": 12.820000000000007,
+        "pushes": 0,
+        "roi": 0.1686842105263158,
+        "wins": 36
+      },
+      "supported": {
+        "n": 207,
+        "profit": -0.24999999999998956,
+        "pushes": 0,
+        "roi": -0.0012077294685990509,
+        "wins": 83
+      }
+    },
+    "SPREAD_0_4_DISCOVERY_UNION": {
+      "baseline": {
+        "n": 800,
+        "profit": 44.306131999999984,
+        "pushes": 16,
+        "roi": 0.05538266500000002,
+        "wins": 434
+      },
+      "exact_offer_joined_n": 799,
+      "missing_exact_offer_n": 1,
+      "nonpositive_ev_rejected": {
+        "n": 579,
+        "profit": 25.943010999999984,
+        "pushes": 14,
+        "roi": 0.044806582037996555,
+        "wins": 310
+      },
+      "positive_ev_kept": {
+        "n": 143,
+        "profit": 15.957915,
+        "pushes": 2,
+        "roi": 0.11159381118881122,
+        "wins": 82
+      },
+      "supported": {
+        "n": 722,
+        "profit": 41.90092599999999,
+        "pushes": 16,
+        "roi": 0.05803452354570638,
+        "wins": 392
+      }
+    }
+  },
+  "integer_pinnacle_anchor_semantics": "conditional_nonpush_push_cell_corrected",
+  "manual_offer_parity_checks": 7594,
+  "markets": {
+    "moneyline": {
+      "market_anchor_metrics": {
+        "auc": 0.7429195703596867,
+        "brier": 0.2065022148598509,
+        "calibration_intercept": -2.0837068161224568e-19,
+        "calibration_slope": 1.0596229788782539,
+        "log_loss": 0.6017591700861096,
+        "n": 2198
+      },
+      "nonpositive_ev_n": 1448,
+      "nonpositive_ev_realized_roi": -0.04784370098641359,
+      "positive_ev_n": 754,
+      "positive_ev_realized_roi": -0.04596199634447057,
+      "price_status": {
+        "LEAN": 1323,
+        "PASS": 322,
+        "PLAYABLE": 125,
+        "VALUE": 754
+      },
+      "probability_metrics": {
+        "auc": 0.7429353014279672,
+        "brier": 0.20649816373800792,
+        "calibration_intercept": -9.92795468347888e-18,
+        "calibration_slope": 1.0609660472045757,
+        "log_loss": 0.6017235414086184,
+        "n": 2198
+      },
+      "reliability": {
+        "HIGH": 0,
+        "LOW": 888,
+        "MEDIUM": 1314,
+        "UNSUPPORTED": 614
+      },
+      "rows": 2816,
+      "supported": 2202,
+      "unsupported": 614,
+      "unsupported_reasons": {
+        "accepted_family_cold_start": 322,
+        "exact_avg_requires_both_models": 286,
+        "out_of_support": 6
+      }
+    },
+    "spread": {
+      "market_anchor_metrics": {
+        "auc": 0.5108851476954337,
+        "brier": 0.2498201404848713,
+        "calibration_intercept": 0.005246857012802078,
+        "calibration_slope": 0.8629761000895637,
+        "log_loss": 0.692783903842347,
+        "n": 2499
+      },
+      "nonpositive_ev_n": 2162,
+      "nonpositive_ev_realized_roi": -0.04118636303665386,
+      "positive_ev_n": 386,
+      "positive_ev_realized_roi": -0.018025799937677642,
+      "price_status": {
+        "LEAN": 1970,
+        "PASS": 266,
+        "PLAYABLE": 192,
+        "VALUE": 386
+      },
+      "probability_metrics": {
+        "auc": 0.496108558097466,
+        "brier": 0.2505467020344869,
+        "calibration_intercept": 0.019541095473171503,
+        "calibration_slope": -0.058972423512916206,
+        "log_loss": 0.6942425908426079,
+        "n": 2499
+      },
+      "reliability": {
+        "HIGH": 32,
+        "LOW": 898,
+        "MEDIUM": 1618,
+        "UNSUPPORTED": 268
+      },
+      "rows": 2816,
+      "supported": 2548,
+      "unsupported": 268,
+      "unsupported_reasons": {
+        "accepted_family_cold_start": 266,
+        "out_of_support": 2
+      }
+    },
+    "total": {
+      "market_anchor_metrics": {
+        "auc": 0.4915933567075536,
+        "brier": 0.25036427704750236,
+        "calibration_intercept": 0.03918815721413659,
+        "calibration_slope": -1.221601876371061,
+        "log_loss": 0.6938770589972705,
+        "n": 2518
+      },
+      "nonpositive_ev_n": 1996,
+      "nonpositive_ev_realized_roi": -0.04540243818961926,
+      "positive_ev_n": 546,
+      "positive_ev_realized_roi": -0.007034185373191383,
+      "price_status": {
+        "LEAN": 1929,
+        "PASS": 266,
+        "PLAYABLE": 67,
+        "VALUE": 546
+      },
+      "probability_metrics": {
+        "auc": 0.5103448906801974,
+        "brier": 0.25045531670524196,
+        "calibration_intercept": 0.01635760558783652,
+        "calibration_slope": 0.16330677920102804,
+        "log_loss": 0.6940689081921013,
+        "n": 2518
+      },
+      "reliability": {
+        "HIGH": 0,
+        "LOW": 2156,
+        "MEDIUM": 386,
+        "UNSUPPORTED": 274
+      },
+      "rows": 2816,
+      "supported": 2542,
+      "unsupported": 274,
+      "unsupported_reasons": {
+        "accepted_family_cold_start": 266,
+        "out_of_support": 8
+      }
+    }
+  },
+  "promotion_status": "EVIDENCE_PENDING_REVIEW",
+  "reliability_semantics": "single accepted-family support plus accepted-family strictly-prior OOS uncertainty",
+  "sealed_season": 2025,
+  "version": "task05f_evaluator_final_v1"
+}

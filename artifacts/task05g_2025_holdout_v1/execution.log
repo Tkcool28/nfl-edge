@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/home/runner/work/nfl-edge/nfl-edge/source/scripts/task05g_2025_holdout_one_shot_v1.py", line 273, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/runner/work/nfl-edge/nfl-edge/source/scripts/task05g_2025_holdout_one_shot_v1.py", line 261, in main
+    execute(
+  File "/home/runner/work/nfl-edge/nfl-edge/source/scripts/task05g_2025_holdout_one_shot_v1.py", line 221, in execute
+    development = prepare_development_state(historical_board_path=history)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/nfl-edge/nfl-edge/source/src/nfl_edge/holdout/executor_runtime_2025.py", line 261, in prepare_development_state
+    totals_state, pbp_root = _development_totals_state()
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/nfl-edge/nfl-edge/source/src/nfl_edge/holdout/executor_runtime_2025.py", line 189, in _development_totals_state
+    pbp_root = resolve_artifact_root()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/nfl-edge/nfl-edge/source/src/nfl_edge/features/totals_v1/manifest.py", line 127, in resolve_artifact_root
+    raise PbpArtifactError(
+nfl_edge.features.totals_v1.manifest.PbpArtifactError: no PBP artifact root found among: /artifacts/raw/task05c_pbp_v1, /var/lib/chatgpt-vps-mcp/artifacts/nfl-edge/raw/task05c_pbp_v1
