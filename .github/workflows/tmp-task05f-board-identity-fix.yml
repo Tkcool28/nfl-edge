@@ -1,0 +1,147 @@
+name: Temporary Task05F Board Identity Fix
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.pull_request.head.ref == 'fix/task05f-board-identity-v1'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/task05f-board-identity-v1
+          fetch-depth: 0
+      - name: Apply narrow pre-open identity reconciliation
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+          import json
+          import subprocess
+          from pathlib import Path
+
+          OLD = 'e28f0eb43275fc97c8e36744e032ef401d7659b72854dc5a3aa25236ce1e5dad'
+          NEW = '58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8'
+          BASE = '2a8f0a048377932aa5c0c2703e08d254b6c75540'
+          V3_PATH = Path('reports/pre2025/pre2025_successor_executor_final_freeze_v3.json')
+          V4_PATH = Path('reports/pre2025/pre2025_successor_executor_final_freeze_v4.json')
+
+          runtime_path = Path('src/nfl_edge/holdout/executor_runtime_2025.py')
+          runtime = runtime_path.read_text(encoding='utf-8')
+          old_line = f'HISTORICAL_BOARD_SHA256 = "{OLD}"'
+          new_line = f'HISTORICAL_BOARD_SHA256 = "{NEW}"'
+          if runtime.count(old_line) != 1:
+              raise SystemExit('unexpected historical-board constant state')
+          runtime = runtime.replace(old_line, new_line)
+          runtime_path.write_text(runtime, encoding='utf-8')
+
+          audit_path = Path('scripts/task05g_successor_executor_contract_audit_v1.py')
+          audit = audit_path.read_text(encoding='utf-8')
+          audit = audit.replace(
+              'FINAL_PROMOTION_RECORD = "reports/pre2025/pre2025_successor_executor_final_freeze_v3.json"',
+              'FINAL_PROMOTION_RECORD = "reports/pre2025/pre2025_successor_executor_final_freeze_v4.json"',
+          )
+          audit = audit.replace(
+              'promotion.get("schema_version") != "pre2025_successor_executor_final_freeze_v3"',
+              'promotion.get("schema_version") != "pre2025_successor_executor_final_freeze_v4"',
+          )
+          needle = '    promotion_authorization = dict(promotion.get("authorization") or {})\n'
+          if needle not in audit:
+              raise SystemExit('audit insertion point missing')
+          board_check = '''    board_identity = dict(promotion.get("task05f_historical_board_identity") or {})
+    if board_identity != {
+        "accepted_sha256": "58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8",
+        "stale_executor_sha256": "e28f0eb43275fc97c8e36744e032ef401d7659b72854dc5a3aa25236ce1e5dad",
+        "final_task05f_head": "9e1b0aa6bd902e3e5f09d8578d152d9519e2144b",
+        "final_validation_run_id": 32593593889,
+        "final_validation_artifact_id": 9480985688,
+        "revalidation_run_id": 33446927583,
+        "revalidation_artifact_id": 9778405026,
+        "failed_preopen_carrier_run_id": 33448022082,
+        "failed_before_2025_market_download": True,
+        "holdout_spent_marker_created": False,
+        "holdout_data_bytes_read": 0,
+        "correction_type": "IDENTITY_RECONCILIATION_ONLY",
+    }:
+        raise AuditFailure("Task05F historical-board identity reconciliation drift")
+'''
+          audit = audit.replace(needle, board_check + needle)
+          audit_path.write_text(audit, encoding='utf-8')
+
+          test_path = Path('tests/holdout/test_executor_runtime_2025_gate.py')
+          test = test_path.read_text(encoding='utf-8')
+          test_fn = '''\n\ndef test_runtime_task05f_board_identity_matches_final_accepted_freeze():
+    repo_root = Path(__file__).resolve().parents[2]
+    promotion = json.loads(
+        (
+            repo_root
+            / "reports/pre2025/pre2025_successor_executor_final_freeze_v4.json"
+        ).read_text(encoding="utf-8")
+    )
+    import nfl_edge.holdout.executor_runtime_2025 as runtime
+
+    identity = promotion["task05f_historical_board_identity"]
+    expected = "58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8"
+    assert identity["accepted_sha256"] == expected
+    assert identity["correction_type"] == "IDENTITY_RECONCILIATION_ONLY"
+    assert identity["holdout_spent_marker_created"] is False
+    assert identity["holdout_data_bytes_read"] == 0
+    assert runtime.HISTORICAL_BOARD_SHA256 == expected
+'''
+          if 'test_runtime_task05f_board_identity_matches_final_accepted_freeze' in test:
+              raise SystemExit('board identity regression already exists')
+          test_path.write_text(test.rstrip() + test_fn + '\n', encoding='utf-8')
+
+          def blob(path: str) -> str:
+              return subprocess.check_output(['git', 'hash-object', path], text=True).strip()
+
+          v3 = json.loads(V3_PATH.read_text(encoding='utf-8'))
+          v4 = dict(v3)
+          v4['schema_version'] = 'pre2025_successor_executor_final_freeze_v4'
+          v4['frozen_from_head'] = BASE
+          v4['supersedes_final_freeze'] = {
+              'path': str(V3_PATH),
+              'git_blob': subprocess.check_output(['git', 'rev-parse', f'{BASE}:{V3_PATH}'], text=True).strip(),
+              'reason': 'task05f_final_board_identity_reconciliation',
+          }
+          v4['task05f_historical_board_identity'] = {
+              'accepted_sha256': NEW,
+              'stale_executor_sha256': OLD,
+              'final_task05f_head': '9e1b0aa6bd902e3e5f09d8578d152d9519e2144b',
+              'final_validation_run_id': 32593593889,
+              'final_validation_artifact_id': 9480985688,
+              'revalidation_run_id': 33446927583,
+              'revalidation_artifact_id': 9778405026,
+              'failed_preopen_carrier_run_id': 33448022082,
+              'failed_before_2025_market_download': True,
+              'holdout_spent_marker_created': False,
+              'holdout_data_bytes_read': 0,
+              'correction_type': 'IDENTITY_RECONCILIATION_ONLY',
+          }
+          v4['holdout_opened'] = False
+          v4['holdout_data_bytes_read'] = 0
+          v4['holdout_predictions_executed'] = 0
+          v4['methodology_changed'] = False
+          v4['tuning_performed'] = False
+          blobs = dict(v4['frozen_source_blobs'])
+          blobs[str(runtime_path)] = blob(str(runtime_path))
+          blobs[str(audit_path)] = blob(str(audit_path))
+          blobs[str(test_path)] = blob(str(test_path))
+          v4['frozen_source_blobs'] = blobs
+          V4_PATH.write_text(json.dumps(v4, indent=2) + '\n', encoding='utf-8')
+
+          # The temporary builder is not part of the frozen implementation surface.
+          Path('.github/workflows/tmp-task05f-board-identity-fix.yml').unlink()
+          PY
+
+          git diff --check
+          git status --short
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'fix: reconcile frozen Task05F board identity'
+          git push origin HEAD:fix/task05f-board-identity-v1
