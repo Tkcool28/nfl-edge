@@ -25,6 +25,7 @@ FINAL_PROMOTION_RECORD = "reports/pre2025/pre2025_successor_executor_final_freez
 ACCEPTANCE_CONFIG_REL = "config/task05g_2025_acceptance_v1.yaml"
 CERTIFICATION_REL = "data/manifests/2025_all_model_input_certification_v1.json"
 FINAL_PROMOTION_SUPERSEDED_SUCCESSOR_PATHS = {
+    ".github/workflows/task05g-2025-executor-freeze-v1.yml",
     "config/task05g_2025_acceptance_v1.yaml",
     "scripts/task05g_2025_holdout_one_shot_v1.py",
     "scripts/task05g_successor_executor_contract_audit_v1.py",
