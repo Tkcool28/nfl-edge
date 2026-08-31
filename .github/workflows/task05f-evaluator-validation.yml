@@ -43,9 +43,16 @@ jobs:
 
       - name: Enforce Task05F scope
         shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
-          BASE=eab5f719d8695df484f10cade39ee0322d2841fa
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            BASE="$PR_BASE_SHA"
+          else
+            BASE=eab5f719d8695df484f10cade39ee0322d2841fa
+          fi
           git diff --name-only "$BASE"...HEAD | tee /tmp/task05f_paths.txt
           if grep -E '^(src/nfl_edge/models/|src/nfl_edge/backtest/|data/modeling/|data/frozen/|reports/task05d/|reports/task05e_remediated/)' /tmp/task05f_paths.txt; then
             echo 'ERROR: frozen model/data/evidence scope modified' >&2
