@@ -21,14 +21,16 @@ HISTORICAL_RECORD = "reports/pre2025/pre2025_product_freeze_manifest_v1.json"
 SUCCESSOR_RECORD = "reports/pre2025/pre2025_successor_executor_contract_v1.json"
 FREEZE_REL = "config/task05g_pre2025_holdout_freeze_v1.yaml"
 FINAL_PRODUCT_FREEZE_REL = "config/task05g_final_product_freeze_v1.yaml"
-FINAL_PROMOTION_RECORD = "reports/pre2025/pre2025_successor_executor_final_freeze_v2.json"
+FINAL_PROMOTION_RECORD = "reports/pre2025/pre2025_successor_executor_final_freeze_v3.json"
 ACCEPTANCE_CONFIG_REL = "config/task05g_2025_acceptance_v1.yaml"
 CERTIFICATION_REL = "data/manifests/2025_all_model_input_certification_v1.json"
 FINAL_PROMOTION_SUPERSEDED_SUCCESSOR_PATHS = {
+    ".github/workflows/task05g-2025-executor-freeze-v1.yml",
     "config/task05g_2025_acceptance_v1.yaml",
     "scripts/task05g_2025_holdout_one_shot_v1.py",
     "scripts/task05g_successor_executor_contract_audit_v1.py",
     "src/nfl_edge/holdout/executor_runtime_2025.py",
+    "src/nfl_edge/holdout/product_2025.py",
     "tests/holdout/test_executor_runtime_2025_gate.py",
     "tests/recommendation/test_pre2025_product_freeze_v1.py",
 }
@@ -179,7 +181,7 @@ def audit() -> dict[str, Any]:
         raise AuditFailure("certification no longer proves unopened holdout")
 
     promotion = _json(FINAL_PROMOTION_RECORD)
-    if promotion.get("schema_version") != "pre2025_successor_executor_final_freeze_v2":
+    if promotion.get("schema_version") != "pre2025_successor_executor_final_freeze_v3":
         raise AuditFailure("final promotion freeze schema drift")
     if promotion.get("status") != "READY_FOR_SINGLE_AUTHORIZED_2025_HOLDOUT_EXECUTION":
         raise AuditFailure("final promotion freeze status drift")

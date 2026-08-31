@@ -64,6 +64,7 @@ jobs:
             tests/holdout/test_one_shot_2025.py \
             tests/holdout/test_executor_runtime_2025_gate.py \
             tests/holdout/test_evaluator_2025_adapter.py \
+            tests/holdout/test_authorized_2025_candidate_seam.py \
             tests/recommendation/test_task05g_headline_staking_v1.py \
             tests/recommendation/test_task05g_staking_v1.py \
             tests/recommendation/test_task05g_product_policy_v1.py \

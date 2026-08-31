@@ -7,6 +7,7 @@ import json
 from typing import Any, Iterable, Mapping
 
 SEALED_SEASONS = {2025}
+AUTHORIZED_HOLDOUT_SEASON = 2025
 OUTCOME_FIELDS = frozenset({"settlement", "realized_profit", "home_score", "away_score"})
 
 
@@ -51,10 +52,29 @@ def _book_fields(prefix: str, offer: BookOfferContext | None) -> dict[str, Any]:
     }
 
 
-def build_candidate_row(upstream: Mapping[str, Any], context: CandidateOfferContext) -> dict[str, Any]:
+def _assert_season_allowed(
+    season: int,
+    *,
+    allow_authorized_holdout_2025: bool = False,
+) -> None:
+    if season not in SEALED_SEASONS:
+        return
+    if allow_authorized_holdout_2025 and season == AUTHORIZED_HOLDOUT_SEASON:
+        return
+    raise RuntimeError(f"sealed season {season} cannot enter candidate table")
+
+
+def build_candidate_row(
+    upstream: Mapping[str, Any],
+    context: CandidateOfferContext,
+    *,
+    allow_authorized_holdout_2025: bool = False,
+) -> dict[str, Any]:
     season = int(upstream["season"])
-    if season in SEALED_SEASONS:
-        raise RuntimeError(f"sealed season {season} cannot enter candidate table")
+    _assert_season_allowed(
+        season,
+        allow_authorized_holdout_2025=allow_authorized_holdout_2025,
+    )
     candidate_id = make_candidate_id(upstream["game_id"], upstream["market_type"], upstream["selected_side"])
     snapshot = str(upstream.get("market_snapshot_timestamp") or "")
     line = upstream.get("line")
@@ -119,6 +139,8 @@ def build_candidate_row(upstream: Mapping[str, Any], context: CandidateOfferCont
 def build_candidate_table(
     upstream_rows: Iterable[Mapping[str, Any]],
     contexts: Mapping[str, CandidateOfferContext],
+    *,
+    allow_authorized_holdout_2025: bool = False,
 ) -> list[dict[str, Any]]:
     output: list[dict[str, Any]] = []
     seen: set[str] = set()
@@ -127,6 +149,12 @@ def build_candidate_table(
         if cid in seen:
             raise RuntimeError(f"duplicate candidate identity {cid}")
         seen.add(cid)
-        output.append(build_candidate_row(upstream, contexts.get(cid, CandidateOfferContext())))
+        output.append(
+            build_candidate_row(
+                upstream,
+                contexts.get(cid, CandidateOfferContext()),
+                allow_authorized_holdout_2025=allow_authorized_holdout_2025,
+            )
+        )
     output.sort(key=lambda row: row["candidate_id"])
     return output
