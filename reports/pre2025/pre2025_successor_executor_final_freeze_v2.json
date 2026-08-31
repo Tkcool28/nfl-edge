@@ -37,9 +37,9 @@
     ".github/workflows/task05g-2025-executor-freeze-v1.yml": "c8015f28d3dbdf78b8b4ac458b6bea9e5b77acc8",
     "config/task05g_2025_acceptance_v1.yaml": "6714268c36b85a3605dc79295b84ab89c13f2590",
     "scripts/task05g_2025_holdout_one_shot_v1.py": "7a4ee2333ad020e248dab2888feefbde5ace74cc",
-    "scripts/task05g_successor_executor_contract_audit_v1.py": "d89377bf70d737f9d61712746d8095228d49bcfe",
+    "scripts/task05g_successor_executor_contract_audit_v1.py": "0f6687591e4adc24ac075ea68b58eb32377b07f1",
     "src/nfl_edge/holdout/evaluator_2025.py": "8173bb46eb2d752c9ec3992c19406147c50e16b8",
-    "src/nfl_edge/holdout/executor_runtime_2025.py": "8d6bb1e9a18eac1d531a6775ddace72f8afb5465",
+    "src/nfl_edge/holdout/executor_runtime_2025.py": "138ac4cb9949ea2dab07bbef1ffe65981c45519c",
     "src/nfl_edge/holdout/expected_margin_2025.py": "da61391ccf947f41882072db61b0dcb11b6037bf",
     "src/nfl_edge/holdout/football_2025.py": "6d3408e6f8306fc66b7f097a917084821d45805a",
     "src/nfl_edge/holdout/market_2025.py": "5bfc00a54b762b98b6efeb0f9cff88dbed182550",
@@ -50,7 +50,7 @@
     "src/nfl_edge/holdout/totals_2025.py": "064e276a7706f390bb51a046e4af67f137bedb78",
     "src/nfl_edge/holdout/totals_features_2025.py": "a3f6e82cb4313e543fc8e4b99e309442e0ab13b6",
     "src/nfl_edge/holdout/xgboost_2025.py": "7ac3dc84b50446364765b4c21dfc8091bdd4bdfb",
-    "tests/holdout/test_executor_runtime_2025_gate.py": "050f307df2db9af95069cdbee4f88f8943ac2169",
+    "tests/holdout/test_executor_runtime_2025_gate.py": "7a174ea593457254ccd363acf5bf474313550bf6",
     "tests/recommendation/test_pre2025_product_freeze_v1.py": "69e5b4358abbfbb9fed35e4ceab0c2ce035c9cd9",
     "reports/pre2025/pre2025_successor_executor_contract_v1.json": "5fafa31a2b679d8e04899652a1f4cbc3bbb4bd0f"
   }

@@ -114,6 +114,43 @@ def test_observation_cursor_consumes_exactly_current_block(tmp_path: Path):
     cursor.assert_exhausted()
 
 
+def test_runtime_market_hashes_match_certified_freeze_evidence():
+    """Runtime market identities must remain equal to certified metadata only."""
+    repo_root = Path(__file__).resolve().parents[2]
+    certification = json.loads(
+        (repo_root / "data/manifests/2025_all_model_input_certification_v1.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    promotion = json.loads(
+        (
+            repo_root
+            / "reports/pre2025/pre2025_successor_executor_final_freeze_v2.json"
+        ).read_text(encoding="utf-8")
+    )
+    import nfl_edge.holdout.executor_runtime_2025 as runtime
+
+    expected = {
+        "canonical_book_market_sha256": "c8499262388fca13d6dfd0a7da2f891c1989ed601c75b6987067013ce8092a62",
+        "canonical_games_sha256": "e9d4b9a5302a72d32f767a87b52f86e32044118bfb27900fb4c4217d6edd74ef",
+    }
+    certified = certification["market_evaluator_certification"]
+    assert {
+        "canonical_book_market_sha256": certified["canonical_book_market_sha256"],
+        "canonical_games_sha256": certified["canonical_games_sha256"],
+    } == expected
+    assert {
+        "canonical_book_market_sha256": promotion["certification_evidence"][
+            "canonical_market_book_sha256"
+        ],
+        "canonical_games_sha256": promotion["certification_evidence"][
+            "canonical_market_games_sha256"
+        ],
+    } == expected
+    assert runtime.MARKET_CANONICAL_SHA256 == expected["canonical_book_market_sha256"]
+    assert runtime.MARKET_GAMES_SHA256 == expected["canonical_games_sha256"]
+
+
 def test_runtime_import_is_side_effect_free_for_holdout_outputs(tmp_path: Path):
     # Importing the runtime exposes composition only; it cannot create a spend
     # marker or a weekly holdout artifact by itself.

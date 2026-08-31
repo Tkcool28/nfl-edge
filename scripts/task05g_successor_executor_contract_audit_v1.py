@@ -28,6 +28,8 @@ FINAL_PROMOTION_SUPERSEDED_SUCCESSOR_PATHS = {
     "config/task05g_2025_acceptance_v1.yaml",
     "scripts/task05g_2025_holdout_one_shot_v1.py",
     "scripts/task05g_successor_executor_contract_audit_v1.py",
+    "src/nfl_edge/holdout/executor_runtime_2025.py",
+    "tests/holdout/test_executor_runtime_2025_gate.py",
     "tests/recommendation/test_pre2025_product_freeze_v1.py",
 }
 IMMUTABLE_FREEZE_ANCHOR_SHA = "e6316216d79fd9191be3d4095b0bca8af5bd30b7"
