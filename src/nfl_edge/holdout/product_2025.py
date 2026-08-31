@@ -173,7 +173,11 @@ def _task05f_pre_result(
         contexts[cid] = task05f._book_context(
             market_index, row["game_id"], row["market_type"], row["selected_side"]
         )
-    candidates = build_candidate_table(rows, contexts)
+    candidates = build_candidate_table(
+        rows,
+        contexts,
+        allow_authorized_holdout_2025=True,
+    )
     assert_pre_result_surface(candidates)
     return [dict(r) for r in candidates]
 
