@@ -159,3 +159,22 @@ def test_runtime_import_is_side_effect_free_for_holdout_outputs(tmp_path: Path):
     assert callable(runtime.prepare_development_state)
     assert callable(runtime.run_authorized_holdout)
     assert not (tmp_path / "HOLDOUT_SPENT.json").exists()
+
+
+def test_runtime_task05f_board_identity_matches_final_accepted_freeze():
+    repo_root = Path(__file__).resolve().parents[2]
+    promotion = json.loads(
+        (
+            repo_root
+            / "reports/pre2025/pre2025_successor_executor_final_freeze_v4.json"
+        ).read_text(encoding="utf-8")
+    )
+    import nfl_edge.holdout.executor_runtime_2025 as runtime
+
+    identity = promotion["task05f_historical_board_identity"]
+    expected = "58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8"
+    assert identity["accepted_sha256"] == expected
+    assert identity["correction_type"] == "IDENTITY_RECONCILIATION_ONLY"
+    assert identity["holdout_spent_marker_created"] is False
+    assert identity["holdout_data_bytes_read"] == 0
+    assert runtime.HISTORICAL_BOARD_SHA256 == expected

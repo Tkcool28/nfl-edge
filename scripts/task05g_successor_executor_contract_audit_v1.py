@@ -21,7 +21,7 @@ HISTORICAL_RECORD = "reports/pre2025/pre2025_product_freeze_manifest_v1.json"
 SUCCESSOR_RECORD = "reports/pre2025/pre2025_successor_executor_contract_v1.json"
 FREEZE_REL = "config/task05g_pre2025_holdout_freeze_v1.yaml"
 FINAL_PRODUCT_FREEZE_REL = "config/task05g_final_product_freeze_v1.yaml"
-FINAL_PROMOTION_RECORD = "reports/pre2025/pre2025_successor_executor_final_freeze_v3.json"
+FINAL_PROMOTION_RECORD = "reports/pre2025/pre2025_successor_executor_final_freeze_v4.json"
 ACCEPTANCE_CONFIG_REL = "config/task05g_2025_acceptance_v1.yaml"
 CERTIFICATION_REL = "data/manifests/2025_all_model_input_certification_v1.json"
 FINAL_PROMOTION_SUPERSEDED_SUCCESSOR_PATHS = {
@@ -181,7 +181,7 @@ def audit() -> dict[str, Any]:
         raise AuditFailure("certification no longer proves unopened holdout")
 
     promotion = _json(FINAL_PROMOTION_RECORD)
-    if promotion.get("schema_version") != "pre2025_successor_executor_final_freeze_v3":
+    if promotion.get("schema_version") != "pre2025_successor_executor_final_freeze_v4":
         raise AuditFailure("final promotion freeze schema drift")
     if promotion.get("status") != "READY_FOR_SINGLE_AUTHORIZED_2025_HOLDOUT_EXECUTION":
         raise AuditFailure("final promotion freeze status drift")
@@ -194,6 +194,22 @@ def audit() -> dict[str, Any]:
         or promotion.get("holdout_predictions_executed") != 0
     ):
         raise AuditFailure("final promotion freeze non-execution invariants drift")
+    board_identity = dict(promotion.get("task05f_historical_board_identity") or {})
+    if board_identity != {
+        "accepted_sha256": "58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8",
+        "stale_executor_sha256": "e28f0eb43275fc97c8e36744e032ef401d7659b72854dc5a3aa25236ce1e5dad",
+        "final_task05f_head": "9e1b0aa6bd902e3e5f09d8578d152d9519e2144b",
+        "final_validation_run_id": 32593593889,
+        "final_validation_artifact_id": 9480985688,
+        "revalidation_run_id": 33446927583,
+        "revalidation_artifact_id": 9778405026,
+        "failed_preopen_carrier_run_id": 33448022082,
+        "failed_before_2025_market_download": True,
+        "holdout_spent_marker_created": False,
+        "holdout_data_bytes_read": 0,
+        "correction_type": "IDENTITY_RECONCILIATION_ONLY",
+    }:
+        raise AuditFailure("Task05F historical-board identity reconciliation drift")
     promotion_authorization = dict(promotion.get("authorization") or {})
     acceptance_authorization = dict(acceptance.get("authorization") or {})
     if promotion_authorization != {
