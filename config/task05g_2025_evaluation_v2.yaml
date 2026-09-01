@@ -1,0 +1,25 @@
+schema_version: task05g_2025_run_scoped_evaluation_v2
+status: READY_FOR_RUN_SCOPED_AUTHORIZED_2025_EVALUATION
+holdout_season: 2025
+execution:
+  canonical_command: >-
+    python scripts/task05g_2025_evaluation_v2.py --run-id <safe-run-id>
+    --authorization "$NFL_EDGE_2025_AUTHORIZATION"
+  output_base: artifacts/task05g_2025_holdout_v2
+  run_id_pattern: '^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$'
+  tuning_flags_allowed: false
+authorization:
+  required: true
+  exact_phrase_sha256: f32f7b3a4316dc2f1154bb531b1c496b9958b33291e9e95a95b99767a1190f0a
+  must_be_verified_before_any_2025_file_read: true
+legacy_v1:
+  spend_marker: artifacts/task05g_2025_holdout_v1/HOLDOUT_SPENT.json
+  semantics: historical_presence_only_not_a_v2_gate
+chronology:
+  rule: predict_entire_block_from_strictly_prior_state_then_reveal_block_outcomes
+  same_block_outcomes_available_to_predictions: false
+  retroactive_knowledge: prohibited
+frozen_composition:
+  runtime: src/nfl_edge/holdout/executor_runtime_2025.py
+  acceptance_config_v1: config/task05g_2025_acceptance_v1.yaml
+  prefreeze_contract: config/task05g_pre2025_holdout_freeze_v1.yaml
