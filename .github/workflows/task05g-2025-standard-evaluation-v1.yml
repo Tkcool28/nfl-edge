@@ -1,0 +1,244 @@
+name: Task05G 2025 Standard Evaluation V1
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/task05g_2025_standard_evaluation_v1.py'
+      - '.github/workflows/task05g-2025-standard-evaluation-v1.yml'
+      - 'data/frozen/task05c_pbp_v1/**'
+      - 'data/frozen/task05c_pbp_2025_v1/**'
+      - 'data/derived/task05c_game_observations_2025_v1/**'
+      - 'data/manifests/2025_all_model_input_certification_v1.json'
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'Unique immutable 2025 evaluation run ID'
+        required: true
+        default: '2025-standard-eval-v1'
+        type: string
+      execute:
+        description: 'Actually execute 2025 (false = preflight only)'
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: task05g-2025-standard-evaluation-v1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      PYTHONHASHSEED: '0'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OPENBLAS_CORETYPE: 'HASWELL'
+      MKL_NUM_THREADS: '1'
+      MKL_CBWR: 'COMPATIBLE'
+      NUMEXPR_NUM_THREADS: '1'
+      GH_TOKEN: ${{ github.token }}
+      MARKET_ARTIFACT_ID: '9725230097'
+      MARKET_ARTIFACT_DIGEST: 'sha256:47382881862b4bdd4a1f175d4f342e8c99ac51cb37e8f92383a82708cbb61369'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install frozen development runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+
+      - name: Compile standard entry point
+        run: |
+          python -m py_compile scripts/task05g_2025_standard_evaluation_v1.py
+
+      - name: Verify exact tracked 2018-2024 PBP family
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from nfl_edge.features.totals_v1.manifest import verify_pbp_artifacts
+          root=Path('data/frozen/task05c_pbp_v1')
+          verified=verify_pbp_artifacts(root)
+          assert [x.season for x in verified] == [2018,2019,2020,2021,2022,2023,2024]
+          print('TRACKED_2018_2024_PBP_FAMILY=PASS')
+          PY
+
+      - name: Stage exact PBP family at existing canonical resolver root
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo rm -rf /artifacts/raw/task05c_pbp_v1
+          sudo mkdir -p /artifacts/raw/task05c_pbp_v1
+          sudo cp data/frozen/task05c_pbp_v1/play_by_play_*.parquet /artifacts/raw/task05c_pbp_v1/
+          sudo chmod -R a-w /artifacts/raw/task05c_pbp_v1
+          python - <<'PY'
+          from nfl_edge.features.totals_v1.manifest import resolve_artifact_root, verify_pbp_artifacts
+          root=resolve_artifact_root()
+          assert str(root) == '/artifacts/raw/task05c_pbp_v1', root
+          verify_pbp_artifacts(root)
+          print('CANONICAL_PBP_RESOLVER_ROOT=PASS')
+          PY
+
+      - name: Retrieve already-paid certified 2025 market artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf artifacts/task05g_2025_market_input /tmp/task05g_2025_market.zip
+          mkdir -p artifacts/task05g_2025_market_input
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${MARKET_ARTIFACT_ID}" > /tmp/task05g_2025_market_meta.json
+          python - <<'PY'
+          import json, os
+          p=json.load(open('/tmp/task05g_2025_market_meta.json'))
+          assert p['id']==int(os.environ['MARKET_ARTIFACT_ID'])
+          assert p['expired'] is False
+          assert p['digest']==os.environ['MARKET_ARTIFACT_DIGEST']
+          print('MARKET_ARTIFACT_METADATA=PASS')
+          PY
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${MARKET_ARTIFACT_ID}/zip" > /tmp/task05g_2025_market.zip
+          unzip -q /tmp/task05g_2025_market.zip -d artifacts/task05g_2025_market_input
+          echo 'ODDS_API_CALLS=0'
+
+      - name: Materialize unchanged frozen Task05F historical board
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf artifacts/task05g_2025_standard/upstream
+          python scripts/task05f_evaluator_final_runner.py \
+            --out artifacts/task05g_2025_standard/upstream
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          p=Path('artifacts/task05g_2025_standard/upstream/historical_evaluator_board.parquet')
+          got=hashlib.sha256(p.read_bytes()).hexdigest()
+          expected='58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8'
+          assert got==expected, (got, expected)
+          print('FROZEN_TASK05F_BOARD=PASS')
+          PY
+
+      - name: Run full no-2025-execution preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/task05g_2025_standard_evaluation_v1.py \
+            --pbp-root data/frozen/task05c_pbp_v1 \
+            --market-root artifacts/task05g_2025_market_input \
+            --historical-board artifacts/task05g_2025_standard/upstream/historical_evaluator_board.parquet \
+            | tee /tmp/task05g_2025_standard_preflight.json
+          grep -q 'STANDARD_2025_PREFLIGHT_PASS' /tmp/task05g_2025_standard_preflight.json
+          echo 'REAL_2025_EVALUATION_EXECUTED=0'
+
+      - name: Upload preflight evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-2025-standard-preflight-${{ github.run_id }}
+          path: |
+            /tmp/task05g_2025_standard_preflight.json
+            /tmp/task05g_2025_market_meta.json
+            artifacts/task05g_2025_standard/upstream/scorecard.json
+          if-no-files-found: warn
+
+  execute-2025:
+    if: github.event_name == 'workflow_dispatch' && inputs.execute == true
+    needs: preflight
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      PYTHONHASHSEED: '0'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OPENBLAS_CORETYPE: 'HASWELL'
+      MKL_NUM_THREADS: '1'
+      MKL_CBWR: 'COMPATIBLE'
+      NUMEXPR_NUM_THREADS: '1'
+      GH_TOKEN: ${{ github.token }}
+      MARKET_ARTIFACT_ID: '9725230097'
+      MARKET_ARTIFACT_DIGEST: 'sha256:47382881862b4bdd4a1f175d4f342e8c99ac51cb37e8f92383a82708cbb61369'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install frozen development runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+
+      - name: Stage exact historical PBP family
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo rm -rf /artifacts/raw/task05c_pbp_v1
+          sudo mkdir -p /artifacts/raw/task05c_pbp_v1
+          sudo cp data/frozen/task05c_pbp_v1/play_by_play_*.parquet /artifacts/raw/task05c_pbp_v1/
+          sudo chmod -R a-w /artifacts/raw/task05c_pbp_v1
+          python - <<'PY'
+          from nfl_edge.features.totals_v1.manifest import verify_pbp_artifacts
+          verify_pbp_artifacts('/artifacts/raw/task05c_pbp_v1')
+          print('HISTORICAL_PBP=PASS')
+          PY
+
+      - name: Retrieve certified 2025 market artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf artifacts/task05g_2025_market_input /tmp/task05g_2025_market.zip
+          mkdir -p artifacts/task05g_2025_market_input
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${MARKET_ARTIFACT_ID}" > /tmp/task05g_2025_market_meta.json
+          python - <<'PY'
+          import json, os
+          p=json.load(open('/tmp/task05g_2025_market_meta.json'))
+          assert p['id']==int(os.environ['MARKET_ARTIFACT_ID'])
+          assert p['expired'] is False
+          assert p['digest']==os.environ['MARKET_ARTIFACT_DIGEST']
+          PY
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${MARKET_ARTIFACT_ID}/zip" > /tmp/task05g_2025_market.zip
+          unzip -q /tmp/task05g_2025_market.zip -d artifacts/task05g_2025_market_input
+
+      - name: Materialize unchanged frozen Task05F historical board
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/task05f_evaluator_final_runner.py \
+            --out artifacts/task05g_2025_standard/upstream
+          echo '58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8  artifacts/task05g_2025_standard/upstream/historical_evaluator_board.parquet' | sha256sum --check --strict
+
+      - name: Execute standard frozen 2025 evaluation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/task05g_2025_standard_evaluation_v1.py \
+            --run-id '${{ inputs.run_id }}' \
+            --pbp-root data/frozen/task05c_pbp_v1 \
+            --market-root artifacts/task05g_2025_market_input \
+            --historical-board artifacts/task05g_2025_standard/upstream/historical_evaluator_board.parquet \
+            --execute
+
+      - name: Upload complete 2025 evaluation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: task05g-2025-standard-evaluation-${{ inputs.run_id }}-${{ github.run_id }}
+          path: |
+            artifacts/task05g_2025_standard/runs/${{ inputs.run_id }}/
+            /tmp/task05g_2025_market_meta.json
+          if-no-files-found: warn
