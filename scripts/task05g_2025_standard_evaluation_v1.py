@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Standard frozen 2025 NFL EDGE evaluation entry point.
 
-2025 is treated as an additional evaluation season.  This wrapper changes no
+2025 is treated as an additional evaluation season. This wrapper changes no
 football-model, evaluator, selector, staking, Play Through, candidate, or
-product-policy semantics.  It reuses the already-built chronological 2025
+product-policy semantics. It reuses the already-built chronological 2025
 orchestration and removes only the legacy one-shot authorization/marker layer.
 
-The default mode is preflight-only.  A real evaluation occurs only when
+The default mode is preflight-only. A real evaluation occurs only when
 ``--execute`` is supplied explicitly.
 """
 from __future__ import annotations
@@ -97,11 +97,64 @@ def _certification_summary() -> dict[str, Any]:
     }
 
 
+def _canonical_settlement_smoke() -> None:
+    """Prove the runtime accepts the canonical Task05G wager row contract.
+
+    This is synthetic only. It deliberately exercises the exact downstream
+    schema boundary that stopped the preserved Week-1 run, without reading any
+    2025 result.
+    """
+    rows = [
+        {
+            "game_id": "SYNTHETIC",
+            "market_type": "moneyline",
+            "selection": "home",
+            "actionable_book": "draftkings",
+            "actionable_line": None,
+            "actionable_price_american": -110,
+        },
+        {
+            "game_id": "SYNTHETIC",
+            "market_type": "spread",
+            "selection": "home",
+            "actionable_book": "draftkings",
+            "actionable_line": -3.0,
+            "actionable_price_american": -110,
+        },
+        {
+            "game_id": "SYNTHETIC",
+            "market_type": "total",
+            "selection": "over",
+            "actionable_book": "draftkings",
+            "actionable_line": 40.5,
+            "actionable_price_american": -110,
+        },
+    ]
+    revealed = pl.DataFrame(
+        {"game_id": ["SYNTHETIC"], "home_score": [24], "away_score": [17]}
+    )
+    try:
+        settled = runtime._settle_rows(rows, revealed)
+    except (KeyError, TypeError, ValueError) as exc:
+        raise StandardEvaluationError(
+            "runtime canonical settlement contract is not ready: "
+            f"{type(exc).__name__}: {exc}"
+        ) from exc
+    if len(settled) != 3:
+        raise StandardEvaluationError("synthetic settlement smoke returned wrong row count")
+    if any(row.get("settlement") not in {"WIN", "LOSS", "PUSH"} for row in settled):
+        raise StandardEvaluationError("synthetic settlement smoke produced invalid settlement")
+    legacy = {"selected_side", "sportsbook", "line", "american_odds"}
+    if any(legacy.intersection(row) for row in settled):
+        raise StandardEvaluationError("runtime settlement reintroduced legacy wager keys")
+
+
 def preflight(*, pbp_root: Path, market_root: Path, historical_board: Path) -> dict[str, Any]:
     """Verify every execution dependency without predicting or revealing 2025."""
     verified = verify_pbp_artifacts(pbp_root)
     _require_sha(PBP_2025, EXPECTED_2025_PBP_SHA256, "tracked 2025 PBP")
     _require_sha(OBSERVATIONS_2025, EXPECTED_OBSERVATIONS_SHA256, "2025 GameObservation ledger")
+    _canonical_settlement_smoke()
 
     games = pl.read_parquet(runtime.GAMES)
     season_2025 = games.filter(pl.col("season") == 2025)
@@ -117,7 +170,7 @@ def preflight(*, pbp_root: Path, market_root: Path, historical_board: Path) -> d
         raise StandardEvaluationError(f"missing materialized frozen Task05F board: {historical_board}")
 
     # This is intentionally the same frozen development bootstrap used by the
-    # existing 2025 runtime.  No 2025 prediction or outcome is opened here.
+    # existing 2025 runtime. No 2025 prediction or outcome is opened here.
     development_state = runtime.prepare_development_state(
         historical_board_path=historical_board
     )
@@ -133,6 +186,7 @@ def preflight(*, pbp_root: Path, market_root: Path, historical_board: Path) -> d
         "market_path": str(market_path),
         "market_games_path": str(market_games_path),
         "historical_board_sha256": runtime.HISTORICAL_BOARD_SHA256,
+        "canonical_settlement_contract": "PASS",
         "certification": _certification_summary(),
         "development_state": {
             "historical_product_games": len(development_state["product_games"]),
@@ -165,7 +219,7 @@ def execute(
         raise StandardEvaluationError(f"run output already exists: {output_root}")
 
     # ``prepare_development_state`` resolves the promoted PBP family from its
-    # existing canonical artifact roots.  The GitHub workflow stages the exact
+    # existing canonical artifact roots. The GitHub workflow stages the exact
     # tracked family at /artifacts/raw/task05c_pbp_v1 before invoking this file.
     summary = preflight(
         pbp_root=pbp_root,
