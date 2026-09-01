@@ -1,0 +1,100 @@
+name: Task05G 2025 Standard Evaluation Request Bridge V1
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  actions: write
+  contents: read
+  issues: write
+
+concurrency:
+  group: task05g-2025-standard-evaluation-request-bridge
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: >-
+      github.event.issue.user.login == github.repository_owner &&
+      github.event.issue.title == 'NFL EDGE: RUN STANDARD 2025 EVALUATION'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ISSUE_BODY: ${{ github.event.issue.body }}
+      ISSUE_NUMBER: ${{ github.event.issue.number }}
+    steps:
+      - name: Validate owner-authorized request
+        id: request
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import os
+          import re
+
+          body = os.environ.get("ISSUE_BODY", "")
+          values = {}
+          for raw in body.splitlines():
+              if ":" not in raw:
+                  continue
+              key, value = raw.split(":", 1)
+              key = key.strip().lower()
+              value = value.strip()
+              if key in {"run_id", "execute", "authorization"}:
+                  if key in values:
+                      raise SystemExit(f"duplicate request field: {key}")
+                  values[key] = value
+
+          required = {"run_id", "execute", "authorization"}
+          missing = sorted(required - values.keys())
+          if missing:
+              raise SystemExit(f"missing request fields: {missing}")
+
+          run_id = values["run_id"]
+          if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,79}", run_id):
+              raise SystemExit(f"invalid run_id: {run_id!r}")
+          if run_id in {".", ".."}:
+              raise SystemExit("invalid run_id")
+          if values["execute"].lower() != "true":
+              raise SystemExit("execute must be exactly true")
+          if values["authorization"] != "EXECUTE_STANDARD_2025_EVALUATION":
+              raise SystemExit("authorization phrase mismatch")
+
+          print(f"run_id={run_id}")
+          PY
+
+      - name: Dispatch frozen standard 2025 evaluation
+        shell: bash
+        env:
+          RUN_ID: ${{ steps.request.outputs.run_id }}
+        run: |
+          set -euo pipefail
+          python - <<'PY' > /tmp/dispatch.json
+          import json
+          import os
+
+          print(json.dumps({
+              "ref": "main",
+              "inputs": {
+                  "run_id": os.environ["RUN_ID"],
+                  "execute": "true",
+              },
+          }))
+          PY
+          gh api \
+            --method POST \
+            "repos/${GITHUB_REPOSITORY}/actions/workflows/task05g-2025-standard-evaluation-v1.yml/dispatches" \
+            --input /tmp/dispatch.json
+          echo "STANDARD_2025_WORKFLOW_DISPATCHED=1"
+          echo "RUN_ID=${RUN_ID}"
+
+      - name: Record accepted request
+        shell: bash
+        env:
+          RUN_ID: ${{ steps.request.outputs.run_id }}
+        run: |
+          set -euo pipefail
+          gh issue comment "$ISSUE_NUMBER" --body "Accepted owner-authorized standard 2025 evaluation request. Dispatched \`task05g-2025-standard-evaluation-v1.yml\` on \`main\` with \`run_id=${RUN_ID}\` and \`execute=true\`."
+          gh issue close "$ISSUE_NUMBER" --reason completed
