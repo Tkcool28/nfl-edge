@@ -120,19 +120,10 @@ def _check_legacy_v1_provenance_only(successor_commit: str, successor_files: Map
                 f"v1 successor_contract_files references path absent at "
                 f"successor_contract_git_sha {successor_commit}: {path}"
             ) from exc
-    # The v1 record's tracked blob must equal itself. Any silent in-place
-    # rewrite would defeat provenance; this catches unexpected edits.
-    v1_path = Path(__file__).resolve().parent / "pre2025_successor_executor_contract_v1.json"
-    if v1_path.is_file():
-        v1_blob = _git("hash-object", "--", str(v1_path)).stdout.strip()
-        recorded = _git(
-            "ls-files", "-s", "--",
-            "reports/pre2025/pre2025_successor_executor_contract_v1.json",
-        ).stdout.strip().split()
-        if len(recorded) >= 2 and recorded[1] != v1_blob:
-            raise AuditFailure(
-                "v1 successor contract record has been silently rewritten in the working tree"
-            )
+    # The historical record itself remains protected from working-tree or
+    # index rewrites, without treating its historical per-file pins as
+    # present-day blob requirements.
+    _clean(SUCCESSOR_RECORD)
 
 
 def audit() -> dict[str, Any]:

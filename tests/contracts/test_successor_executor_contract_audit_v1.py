@@ -27,6 +27,7 @@ import importlib.util
 import json
 import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -140,15 +141,37 @@ def test_provenance_helper_accepts_stale_real_pins(audit_module):
     )
 
 
-def test_audit_source_has_silent_rewrite_guard(audit_module):
-    """A silent in-place rewrite of the v1 record (working tree != tracked)
-    must still be detected. Provenance tampering is the one v1 surface we
-    refuse to relax.
-    """
-    source = AUDIT_SCRIPT.read_text()
-    assert "v1 successor contract record has been silently rewritten" in source, (
-        "in-place v1 rewrite detection was removed"
+def test_provenance_helper_protects_actual_successor_record(audit_module, monkeypatch):
+    """v1 provenance protects its actual record against both Git drift forms."""
+    assert audit_module.SUCCESSOR_RECORD == (
+        "reports/pre2025/pre2025_successor_executor_contract_v1.json"
     )
+    successor_files = {"scripts/existed-at-historic-commit.py": "stale-pin-is-allowed"}
+    monkeypatch.setattr(audit_module, "_tree_blob", lambda *_args: "historic-blob")
+
+    clean_calls: list[tuple[str, ...]] = []
+
+    def clean_git(*args: str, check: bool = True):
+        clean_calls.append(args)
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(audit_module, "_git", clean_git)
+    audit_module._check_legacy_v1_provenance_only("historic-commit", successor_files)
+    assert clean_calls == [
+        ("diff", "--quiet", "--", audit_module.SUCCESSOR_RECORD),
+        ("diff", "--cached", "--quiet", "--", audit_module.SUCCESSOR_RECORD),
+    ]
+
+    for dirty_command, error in [
+        (("diff", "--quiet", "--", audit_module.SUCCESSOR_RECORD), "unstaged protected-file drift"),
+        (("diff", "--cached", "--quiet", "--", audit_module.SUCCESSOR_RECORD), "staged protected-file drift"),
+    ]:
+        def dirty_git(*args: str, check: bool = True):
+            return SimpleNamespace(returncode=int(args == dirty_command))
+
+        monkeypatch.setattr(audit_module, "_git", dirty_git)
+        with pytest.raises(audit_module.AuditFailure, match=error):
+            audit_module._check_legacy_v1_provenance_only("historic-commit", successor_files)
 
 
 # ---------------------------------------------------------------------------
