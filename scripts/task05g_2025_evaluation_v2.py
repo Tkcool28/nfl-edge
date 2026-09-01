@@ -35,6 +35,7 @@ from nfl_edge.holdout.executor_runtime_2025 import (
     MARKET_CANONICAL_SHA256,
     MARKET_GAMES_SHA256,
     MARKET_RUN_ID,
+    OBSERVATIONS_2025,
     prepare_development_state,
     run_authorized_holdout,
 )
@@ -108,6 +109,20 @@ def _exclusive_json(path: Path, value: Mapping[str, Any]) -> None:
         handle.write(payload)
         handle.flush()
         os.fsync(handle.fileno())
+
+
+def verify_observation_ledger() -> dict[str, Any]:
+    """Hash the exact ledger path the runtime cursor will consume."""
+    path = Path(OBSERVATIONS_2025)
+    if not path.is_file():
+        raise RunScopedHoldoutError(f"GAME_OBSERVATION_LEDGER_MISSING: {path}")
+    observed = _sha256(path)
+    return {
+        "path": str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path),
+        "expected_sha256": OBSERVATIONS_EXPECTED_SHA256,
+        "observed_sha256": observed,
+        "matches_expected_sha256": observed == OBSERVATIONS_EXPECTED_SHA256,
+    }
 
 
 def validate_run_id(run_id: str) -> str:
@@ -306,16 +321,31 @@ def execute(
     market = Path(market_value)
     development = prepare_development_state(historical_board_path=history)
     started = create_run_started(run_id, authorization_mode="sha256_phrase_verified")
+    output_root = OUTPUT_BASE / run_id
     try:
+        observation = verify_observation_ledger()
+        verification = {
+            "schema_version": RUN_SCHEMA_VERSION,
+            "input": "game_observation_ledger_2025",
+            **observation,
+        }
+        _exclusive_json(output_root / "RUN_INPUT_VERIFICATION.json", verification)
+        if not bool(observation["matches_expected_sha256"]):
+            raise RunScopedHoldoutError(
+                "GAME_OBSERVATION_LEDGER_INTEGRITY_MISMATCH: "
+                f"expected={observation['expected_sha256']} observed={observation['observed_sha256']}"
+            )
         state = run_authorized_holdout(
-            output_root=OUTPUT_BASE / run_id,
+            output_root=output_root,
             market_root=market,
             development_state=development,
             opened_marker_identity={
                 "schema_version": RUN_SCHEMA_VERSION,
                 "run_id": run_id,
                 "semantics": "RUN_SCOPED_BEFORE_FIRST_2025_INPUT_READ",
-                "run_started_sha256": _sha256(OUTPUT_BASE / run_id / "RUN_STARTED.json"),
+                "run_started_sha256": _sha256(output_root / "RUN_STARTED.json"),
+                "game_observation_ledger": observation,
+                "input_verification_sha256": _sha256(output_root / "RUN_INPUT_VERIFICATION.json"),
             },
         )
     except Exception as exc:

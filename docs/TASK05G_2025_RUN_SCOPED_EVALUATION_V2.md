@@ -39,6 +39,11 @@ Oracle identity, Task05C PBP and observation identities from frozen metadata,
 and canonical 2025 market identities. It records the legacy v1 spend marker only
 as a presence boolean. It is never read as a blocking gate and is never changed.
 
+Before the runtime can construct its `GameObservation` cursor, v2 hashes the
+exact `OBSERVATIONS_2025` path consumed by that cursor and writes immutable
+`RUN_INPUT_VERIFICATION.json` with separate expected and observed SHA-256
+fields. A mismatch creates `RUN_FAILED.json` and prevents runtime consumption.
+
 The composed runtime retains its existing freeze-before-reveal, model,
 evaluator, selector, staking, product, and sealed-development behavior. This
 wrapper adds no model-methodology or acquisition behavior.
