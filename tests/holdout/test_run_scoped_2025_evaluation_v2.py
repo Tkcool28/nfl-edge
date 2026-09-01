@@ -19,6 +19,14 @@ def _load_v2(repo_root: Path):
     return module
 
 
+def _set_matching_observation_ledger(gate, tmp_path: Path, monkeypatch, payload: bytes = b"synthetic-ledger") -> Path:
+    ledger = tmp_path / "game_observations_2025_v1.jsonl"
+    ledger.write_bytes(payload)
+    monkeypatch.setattr(gate, "OBSERVATIONS_2025", ledger)
+    monkeypatch.setattr(gate, "OBSERVATIONS_EXPECTED_SHA256", hashlib.sha256(payload).hexdigest())
+    return ledger
+
+
 def test_v2_run_directory_isolated_and_collision_fails_closed(tmp_path: Path, monkeypatch):
     gate = _load_v2(Path(__file__).resolve().parents[2])
     monkeypatch.setattr(gate, "OUTPUT_BASE", tmp_path / "runs")
@@ -64,6 +72,7 @@ def test_v2_execute_legacy_marker_does_not_block_or_modify_it(tmp_path: Path, mo
     legacy.write_bytes(b'{"historical":true}\n')
     before = legacy.read_bytes()
     monkeypatch.setattr(gate, "OUTPUT_BASE", tmp_path / "runs")
+    _set_matching_observation_ledger(gate, tmp_path, monkeypatch)
     monkeypatch.setattr(gate, "LEGACY_SPEND_MARKER", legacy)
     monkeypatch.setattr(gate, "preflight", lambda: {"status": "SEALED_PREFLIGHT_PASS"})
     monkeypatch.setattr(gate, "_verify_authorization", lambda value: None)
@@ -80,6 +89,57 @@ def test_v2_execute_legacy_marker_does_not_block_or_modify_it(tmp_path: Path, mo
     assert calls[0]["output_root"] == tmp_path / "runs/safe-run"
     assert calls[0]["opened_marker_identity"]["run_id"] == "safe-run"
     assert json.loads((tmp_path / "runs/safe-run/RUN_COMPLETED.json").read_text())["completed_blocks"] == 1
+
+
+def test_v2_verifies_matching_observation_ledger_before_runtime(tmp_path: Path, monkeypatch):
+    gate = _load_v2(Path(__file__).resolve().parents[2])
+    monkeypatch.setattr(gate, "OUTPUT_BASE", tmp_path / "runs")
+    ledger = _set_matching_observation_ledger(gate, tmp_path, monkeypatch, b"verified-ledger")
+    monkeypatch.setattr(gate, "preflight", lambda: {"status": "SEALED_PREFLIGHT_PASS"})
+    monkeypatch.setattr(gate, "_verify_authorization", lambda value: None)
+    monkeypatch.setattr(gate, "prepare_development_state", lambda **_: {"development": "only"})
+    consumed: list[dict] = []
+
+    def fake_runtime(**kwargs):
+        consumed.append(kwargs)
+        return ReplayState(completed_blocks=("synthetic",))
+
+    monkeypatch.setattr(gate, "run_authorized_holdout", fake_runtime)
+    gate.execute(
+        "matching-ledger", "authorization", market_root=tmp_path / "market", historical_board=tmp_path / "board"
+    )
+    root = tmp_path / "runs/matching-ledger"
+    verification = json.loads((root / "RUN_INPUT_VERIFICATION.json").read_text())
+    observed = hashlib.sha256(ledger.read_bytes()).hexdigest()
+    assert verification["expected_sha256"] == observed
+    assert verification["observed_sha256"] == observed
+    assert verification["matches_expected_sha256"] is True
+    assert consumed[0]["opened_marker_identity"]["game_observation_ledger"]["observed_sha256"] == observed
+
+
+def test_v2_rejects_modified_observation_ledger_before_runtime(tmp_path: Path, monkeypatch):
+    gate = _load_v2(Path(__file__).resolve().parents[2])
+    monkeypatch.setattr(gate, "OUTPUT_BASE", tmp_path / "runs")
+    ledger = _set_matching_observation_ledger(gate, tmp_path, monkeypatch, b"certified-ledger")
+    ledger.write_bytes(b"modified-ledger")
+    monkeypatch.setattr(gate, "preflight", lambda: {"status": "SEALED_PREFLIGHT_PASS"})
+    monkeypatch.setattr(gate, "_verify_authorization", lambda value: None)
+    monkeypatch.setattr(gate, "prepare_development_state", lambda **_: {"development": "only"})
+    consumed: list[dict] = []
+    monkeypatch.setattr(gate, "run_authorized_holdout", lambda **kwargs: consumed.append(kwargs))
+
+    with pytest.raises(gate.RunScopedHoldoutError, match="GAME_OBSERVATION_LEDGER_INTEGRITY_MISMATCH"):
+        gate.execute(
+            "mismatched-ledger", "authorization", market_root=tmp_path / "market", historical_board=tmp_path / "board"
+        )
+    root = tmp_path / "runs/mismatched-ledger"
+    verification = json.loads((root / "RUN_INPUT_VERIFICATION.json").read_text())
+    assert verification["expected_sha256"] == hashlib.sha256(b"certified-ledger").hexdigest()
+    assert verification["observed_sha256"] == hashlib.sha256(b"modified-ledger").hexdigest()
+    assert verification["matches_expected_sha256"] is False
+    assert consumed == []
+    assert (root / "RUN_FAILED.json").is_file()
+    assert not (root / "RUN_COMPLETED.json").exists()
 
 
 def test_v2_started_provenance_has_exact_frozen_identities(tmp_path: Path, monkeypatch):
@@ -117,6 +177,7 @@ def test_v2_preflight_requires_frozen_integrity_audit(monkeypatch):
 def test_v2_execute_failure_preserves_partial_run_with_failed_marker(tmp_path: Path, monkeypatch):
     gate = _load_v2(Path(__file__).resolve().parents[2])
     monkeypatch.setattr(gate, "OUTPUT_BASE", tmp_path / "runs")
+    _set_matching_observation_ledger(gate, tmp_path, monkeypatch)
     monkeypatch.setattr(gate, "preflight", lambda: {"status": "SEALED_PREFLIGHT_PASS"})
     monkeypatch.setattr(gate, "_verify_authorization", lambda value: None)
     monkeypatch.setattr(gate, "prepare_development_state", lambda **_: {"development": "only"})
