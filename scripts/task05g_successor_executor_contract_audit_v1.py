@@ -125,7 +125,10 @@ def _check_legacy_v1_provenance_only(successor_commit: str, successor_files: Map
     v1_path = Path(__file__).resolve().parent / "pre2025_successor_executor_contract_v1.json"
     if v1_path.is_file():
         v1_blob = _git("hash-object", "--", str(v1_path)).stdout.strip()
-        recorded = _git("ls-files", "-s", "--", "reports/pre2025/pre2025_successor_executor_contract_v1.json").stdout.strip().split()
+        recorded = _git(
+            "ls-files", "-s", "--",
+            "reports/pre2025/pre2025_successor_executor_contract_v1.json",
+        ).stdout.strip().split()
         if len(recorded) >= 2 and recorded[1] != v1_blob:
             raise AuditFailure(
                 "v1 successor contract record has been silently rewritten in the working tree"
