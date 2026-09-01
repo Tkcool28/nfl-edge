@@ -476,13 +476,16 @@ def _market_digest(book_market: pl.DataFrame, block: HoldoutBlock) -> str:
 
 
 def _settlement(row: Mapping[str, Any], home: int, away: int) -> Settlement:
-    market, side = str(row["market_type"]), str(row["selected_side"])
+    # Task05G canonical candidate surface (see nfl_edge.value.candidate_table.build_candidate_row):
+    # the wager side lives at "selection", the line at "actionable_line", and the price at
+    # "actionable_price_american". Earlier Task05F-era names no longer exist on these rows.
+    market, side = str(row["market_type"]), str(row["selection"])
     if market == "moneyline":
         return moneyline_settlement(side, home, away)
     if market == "spread":
-        return spread_settlement(side, float(row["line"]), home, away)
+        return spread_settlement(side, float(row["actionable_line"]), home, away)
     if market == "total":
-        return total_settlement(side, float(row["line"]), home, away)
+        return total_settlement(side, float(row["actionable_line"]), home, away)
     raise AuthorizedHoldoutRuntimeError(f"unknown market {market!r}")
 
 
@@ -502,7 +505,7 @@ def _settle_rows(rows: list[dict[str, Any]], revealed: pl.DataFrame) -> list[dic
         home, away = outcomes[str(row["game_id"])]
         settled = _settlement(row, home, away)
         row["settlement"] = settled.value
-        row["realized_profit"] = float(_unit_profit(settled, int(row["american_odds"])))
+        row["realized_profit"] = float(_unit_profit(settled, int(row["actionable_price_american"])))
         out.append(row)
     return out
 
@@ -554,12 +557,13 @@ def _advance_bankroll(bankroll: BankrollState, exposure: list[dict[str, Any]], r
         pnl = 0.0
         for key, stake in sorted(stakes.items()):
             row, settled = by_key[key], settlements[key]
-            profit = float(stake) * _unit_profit(settled, int(row["american_odds"]))
+            profit = float(stake) * _unit_profit(settled, int(row["actionable_price_american"]))
             pnl += profit
             scenario_rows.append({
                 "profile": profile, "offer_key": key, "game_id": str(row["game_id"]),
-                "market_type": str(row["market_type"]), "selected_side": str(row["selected_side"]),
-                "american_odds": int(row["american_odds"]), "line": row.get("line"),
+                "market_type": str(row["market_type"]), "selection": str(row["selection"]),
+                "actionable_price_american": int(row["actionable_price_american"]),
+                "actionable_line": row.get("actionable_line"),
                 "stake_dollars": float(stake), "settlement": settled.value,
                 "profit_dollars": float(profit), "starting_bankroll": start,
             })
@@ -575,7 +579,7 @@ def _advance_bankroll(bankroll: BankrollState, exposure: list[dict[str, Any]], r
     for row in sorted(exposure, key=lambda x: (str(x["game_id"]), str(x["offer_key"]))):
         settled = settlements[str(row["offer_key"])]
         record[labels[settled]] += 1
-        weighted += float(row["current_units"]) * _unit_profit(settled, int(row["american_odds"]))
+        weighted += float(row["current_units"]) * _unit_profit(settled, int(row["actionable_price_american"]))
         if settled is Settlement.LOSS:
             streak += 1
             longest = max(longest, streak)
@@ -594,7 +598,7 @@ def _csv(path: Path, rows: list[dict[str, Any]], columns: list[str]) -> None:
 
 def _final_outputs(output: Path, blocks: list[HoldoutBlock], raw: dict[str, Any], state: ReplayState, proof: list[dict[str, Any]], provenance: dict[str, Any]) -> None:
     headlines, weekly, scenarios = raw["headline_rows"], raw["weekly_rows"], raw["scenario_rows"]
-    _csv(output / "holdout_headline_cards.csv", headlines, ["block_id", "season_type", "week", "lane", "headline_action", "published", "current_units", "game_id", "market_type", "selected_side", "sportsbook", "line", "american_odds", "value_at_price_american", "offer_key"])
+    _csv(output / "holdout_headline_cards.csv", headlines, ["block_id", "season_type", "week", "lane", "headline_action", "published", "current_units", "game_id", "market_type", "selection", "actionable_book", "actionable_line", "actionable_price_american", "value_at_price_american", "offer_key"])
     _csv(output / "holdout_weekly_summary.csv", weekly, ["block_id", "season_type", "week", "game_count", "unique_wagers", "wins", "losses", "pushes", "weighted_unit_profit"])
     lanes = []
     for lane in ("hit_rate", "balanced", "value"):
@@ -608,7 +612,7 @@ def _final_outputs(output: Path, blocks: list[HoldoutBlock], raw: dict[str, Any]
     _csv(output / "holdout_market_mix.csv", market_mix, ["market_type", "wagers", "wins", "losses", "pushes"])
     bankroll = [{"profile": p, "starting_bankroll": 1000.0, "ending_bankroll": float(state.bankroll.values[p]), "return_pct": (float(state.bankroll.values[p]) / 1000.0 - 1.0) * 100.0, "maximum_drawdown_pct": float(state.bankroll.max_drawdowns[p]) * 100.0} for p in PROFILES]
     _csv(output / "holdout_bankroll_scenarios.csv", bankroll, ["profile", "starting_bankroll", "ending_bankroll", "return_pct", "maximum_drawdown_pct"])
-    _csv(output / "holdout_scenario_ledger.csv", scenarios, ["block_id", "week", "profile", "offer_key", "game_id", "market_type", "selected_side", "american_odds", "line", "stake_dollars", "settlement", "profit_dollars", "starting_bankroll"])
+    _csv(output / "holdout_scenario_ledger.csv", scenarios, ["block_id", "week", "profile", "offer_key", "game_id", "market_type", "selection", "actionable_price_american", "actionable_line", "stake_dollars", "settlement", "profit_dollars", "starting_bankroll"])
     integrity = {
         "schema_version": "task05g_2025_product_integrity_v1", "blocks": len(blocks), "games": EXPECTED_GAMES,
         "dead_zero_dollar_headlines": sum(bool(r.get("published")) and float(r.get("current_units") or 0.0) <= 0.0 for r in headlines),
