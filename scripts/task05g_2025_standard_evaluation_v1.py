@@ -13,10 +13,11 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import re
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import polars as pl
 
@@ -35,6 +36,17 @@ OBSERVATIONS_2025 = ROOT / "data/derived/task05c_game_observations_2025_v1/game_
 EXPECTED_2025_PBP_SHA256 = "c6ecedd6d678cc37ed316b23ef84ee1ec6abb69c514bb11868a7ebd5a367df29"
 EXPECTED_OBSERVATIONS_SHA256 = "5a78b506a1d2dc14f4948cd316346d09d863e603c61144716a242252df8f84e3"
 RUN_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$")
+
+# The standard 2025 candidate/settlement surface is canonical. The already-
+# frozen Task05F/V3 historical consumers predate that canonicalization and
+# still read these legacy aliases. This mapping is an interface adapter only:
+# stored 2025 rows remain canonical and the frozen product code is unchanged.
+_HISTORY_ALIASES = (
+    ("selected_side", "selection"),
+    ("line", "actionable_line"),
+    ("american_odds", "actionable_price_american"),
+    ("sportsbook", "actionable_book"),
+)
 
 
 class StandardEvaluationError(RuntimeError):
@@ -64,6 +76,110 @@ def _validate_run_id(run_id: str) -> str:
     if not RUN_ID_RE.fullmatch(value) or value in {".", ".."}:
         raise StandardEvaluationError(f"invalid run id: {value!r}")
     return value
+
+
+def _legacy_prior_board_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Return legacy-key copies for frozen historical consumers.
+
+    The standard 2025 state remains canonical. Only the temporary objects
+    passed into the frozen product builder receive legacy aliases.
+    """
+    out: list[dict[str, Any]] = []
+    for source in rows:
+        row = dict(source)
+        for legacy, canonical in _HISTORY_ALIASES:
+            has_legacy = legacy in row
+            has_canonical = canonical in row
+            legacy_value = row.get(legacy)
+            canonical_value = row.get(canonical)
+            if not has_legacy and has_canonical:
+                row[legacy] = canonical_value
+            elif (
+                has_legacy
+                and has_canonical
+                and legacy_value is not None
+                and canonical_value is not None
+                and legacy_value != canonical_value
+            ):
+                raise StandardEvaluationError(
+                    "historical row alias conflict: "
+                    f"game_id={row.get('game_id')} {legacy}={legacy_value!r} "
+                    f"{canonical}={canonical_value!r}"
+                )
+        if row.get("selected_side") is None:
+            raise StandardEvaluationError(
+                f"historical row lacks wager side: game_id={row.get('game_id')}"
+            )
+        out.append(row)
+    return out
+
+
+def _standard_product_builder(
+    frozen_builder: Callable[..., dict[str, Any]], **kwargs: Any
+) -> dict[str, Any]:
+    """Call the frozen product builder through the standard history adapter."""
+    material = dict(kwargs)
+    material["prior_board_rows"] = _legacy_prior_board_rows(
+        [dict(row) for row in material["prior_board_rows"]]
+    )
+    return frozen_builder(**material)
+
+
+def _load_frozen_task05f():
+    path = ROOT / "scripts/task05f_evaluator_final_runner.py"
+    spec = importlib.util.spec_from_file_location("standard_preflight_task05f", path)
+    if spec is None or spec.loader is None:
+        raise StandardEvaluationError(f"unable to load frozen Task05F runner: {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _canonical_history_handoff_smoke() -> None:
+    """Exercise the post-block canonical -> frozen-history interface.
+
+    This uses synthetic data only. It reproduces the exact schema transition
+    encountered after Week 1 without reading any 2025 outcome.
+    """
+    canonical = {
+        "game_id": "SYNTHETIC_HISTORY",
+        "block": "2024-18",
+        "market_type": "spread",
+        "selection": "home",
+        "actionable_book": "draftkings",
+        "actionable_line": -3.0,
+        "actionable_price_american": -110,
+        "supported": True,
+        "settlement": "WIN",
+        "conditional_nonpush_probability": 0.57,
+    }
+    adapted = _legacy_prior_board_rows([canonical])
+    if any(key in canonical for key, _ in _HISTORY_ALIASES):
+        raise StandardEvaluationError("history adapter mutated canonical source row")
+    row = adapted[0]
+    expected = {
+        "selected_side": "home",
+        "sportsbook": "draftkings",
+        "line": -3.0,
+        "american_odds": -110,
+    }
+    for key, value in expected.items():
+        if row.get(key) != value:
+            raise StandardEvaluationError(
+                f"history adapter failed: {key}={row.get(key)!r} expected={value!r}"
+            )
+
+    task05f = _load_frozen_task05f()
+    histories: dict[str, list[tuple[str, float, int]]] = {
+        "moneyline": [],
+        "spread": [],
+        "total": [],
+    }
+    task05f._history_append(histories, adapted)
+    if histories["spread"] != [("2024-18", 0.57, 1)]:
+        raise StandardEvaluationError(
+            f"frozen Task05F history handoff failed: {histories['spread']!r}"
+        )
 
 
 def _certification_summary() -> dict[str, Any]:
@@ -155,6 +271,7 @@ def preflight(*, pbp_root: Path, market_root: Path, historical_board: Path) -> d
     _require_sha(PBP_2025, EXPECTED_2025_PBP_SHA256, "tracked 2025 PBP")
     _require_sha(OBSERVATIONS_2025, EXPECTED_OBSERVATIONS_SHA256, "2025 GameObservation ledger")
     _canonical_settlement_smoke()
+    _canonical_history_handoff_smoke()
 
     games = pl.read_parquet(runtime.GAMES)
     season_2025 = games.filter(pl.col("season") == 2025)
@@ -185,6 +302,7 @@ def preflight(*, pbp_root: Path, market_root: Path, historical_board: Path) -> d
         "market_games_path": str(market_games_path),
         "historical_board_sha256": runtime.HISTORICAL_BOARD_SHA256,
         "canonical_settlement_contract": "PASS",
+        "canonical_history_handoff": "PASS",
         "certification": _certification_summary(),
         "development_state": {
             "historical_product_games": len(development_state["product_games"]),
@@ -226,17 +344,30 @@ def execute(
     )
     output_root.parent.mkdir(parents=True, exist_ok=True)
 
-    runtime.run_authorized_holdout(
-        output_root=output_root,
-        market_root=market_root,
-        development_state=development_state,
-        opened_marker_identity={
-            "mode": "STANDARD_2025_EVALUATION",
-            "run_id": run_id,
-            "legacy_one_shot_authorization_used": False,
-            "legacy_spend_marker_used": False,
-        },
-    )
+    # Keep every frozen product/evaluator implementation byte-identical. The
+    # standard runner supplies a temporary legacy-key view only at the already-
+    # frozen product call boundary. Canonical 2025 state is never rewritten.
+    frozen_builder = runtime.build_pre_result_product_block
+
+    def adapted_builder(**kwargs: Any) -> dict[str, Any]:
+        return _standard_product_builder(frozen_builder, **kwargs)
+
+    runtime.build_pre_result_product_block = adapted_builder
+    try:
+        runtime.run_authorized_holdout(
+            output_root=output_root,
+            market_root=market_root,
+            development_state=development_state,
+            opened_marker_identity={
+                "mode": "STANDARD_2025_EVALUATION",
+                "run_id": run_id,
+                "legacy_one_shot_authorization_used": False,
+                "legacy_spend_marker_used": False,
+            },
+        )
+    finally:
+        runtime.build_pre_result_product_block = frozen_builder
+
     (output_root / "STANDARD_EVALUATION_PREFLIGHT.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
