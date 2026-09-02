@@ -1,0 +1,85 @@
+version: task05g_final_selectors_v2
+status: POST_V5_PRELAUNCH_SUCCESSOR__V5_EVIDENCE_IMMUTABLE
+source_module: src/nfl_edge/recommendation/final_selectors_v2.py
+
+provenance:
+  predecessor: task05g_final_selectors_v1
+  frozen_v1_module_unchanged: true
+  v5_run_id: 2025-standard-eval-v5
+  v5_not_rerun_for_v2_selection: true
+  rationale: architecture correction after holdout diagnosis, not 2025 outcome optimization
+
+headline_markets: [moneyline, spread]
+totals_headline_eligible: false
+
+evidence_contract:
+  actionable_books: [draftkings, fanduel]
+  task05f_supported_required: true
+  reliability_hard_veto: false
+  minimum_model_confidence_support_n: 256
+  exact_offer_required: true
+  model_confidence_probability_required: true
+  break_even_probability_required: true
+
+hit_rate:
+  inherited_exactly_from: task05g_final_selectors_v1
+  protocol: HALF_SHRINK
+  changed: false
+
+balanced:
+  protocol: BALANCED_PRICE_BOUNDED_V2
+  objective: trustworthy_probability_at_genuinely_bounded_price
+  no_play: NO_BALANCED_PLAY
+  strict_positive_ev_required: false
+  value_or_playable_status_required: false
+  positive_model_price_gap_required: false
+  expected_value_used_for_eligibility_or_ranking: false
+  price_status_used_for_eligibility_or_ranking: false
+
+  moneyline:
+    role: short_favorites_only
+    minimum_model_confidence_probability: 0.52
+    american_odds_band: [-130, -100]
+    plus_money_moneylines_allowed: false
+    trust:
+      formula: model_q_minus_0_50_times_positive_excess_over_pinnacle
+      coefficient: 0.50
+
+  spread:
+    role: validated_expected_margin_candidate
+    required_model_candidate_region: SPREAD_DISAGREEMENT_EXPECTED_MARGIN_0_4
+    minimum_model_confidence_probability: 0.50
+    positive_model_cover_margin_v3_required: true
+    american_odds_band: [-130, 200]
+    strict_positive_ev_required: false
+    spread_confidence_v3_usage: supported_probability_and_ranking_not_52pct_eligibility_guillotine
+    raw_expected_margin_magnitude_maximization_forbidden: true
+
+  cross_market_ranking:
+    balanced_utility: selector_trust_minus_max_break_even_probability_minus_0_50_comma_0
+    interpretation: probability_first_with_only_positive_juice_above_coinflip_penalized
+    negative_utility_still_eligible: true
+    ranking:
+      - balanced_utility_desc
+      - selector_trust_desc
+      - model_confidence_probability_desc
+      - reliability_desc
+      - american_odds_desc
+      - candidate_id_asc
+
+value:
+  inherited_exactly_from: task05g_final_selectors_v1
+  changed: false
+
+cross_lane_invariants:
+  hhr_can_accept_heavier_juice_than_balanced: true
+  balanced_ml_is_short_favorite_only: true
+  balanced_is_not_value_lite: true
+  balanced_spread_preserves_expected_margin_0_4_provenance: true
+  value_remains_strict_positive_ev: true
+  totals_forbidden: true
+
+holdout_change_control:
+  2025_v5_is_exposed_diagnostic_evidence: true
+  no_threshold_selected_by_optimizing_2025_results: true
+  next_pristine_forward_acceptance_requires_future_unseen_data: true
