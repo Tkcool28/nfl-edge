@@ -11,7 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import timezone
 from pathlib import Path
 from typing import Any
 
@@ -190,6 +190,8 @@ def bootstrap_entering_2026_state(
             "entering-state bootstrap must run from the active repository checkout"
         )
     blocks = build_holdout_blocks(context)
+    if not blocks:
+        raise Entering2026StateError("2025 football block inventory is empty")
     resolver = FrozenOracleQBGameResolver2025(
         _repo_file(root, runtime.ORACLE_GAME), repo_root=root
     )
@@ -293,18 +295,14 @@ def bootstrap_entering_2026_state(
     if qb_state.current_season != 2025:
         raise Entering2026StateError(f"QB-Elo terminal season drift: {qb_state.current_season}")
 
-    latest = context["scheduled_start_utc"].max()
-    if isinstance(latest, datetime):
-        latest_dt = latest
-    else:
-        try:
-            latest_dt = datetime.fromisoformat(str(latest).replace("Z", "+00:00"))
-        except ValueError as exc:
-            raise Entering2026StateError(
-                f"cannot parse 2025 scheduled_start_utc terminal value: {latest!r}"
-            ) from exc
+    # The sealed 2025 pre-result surface intentionally does not expose a usable
+    # scheduled_start_utc for this purpose.  The terminal accepted block cutoff
+    # is the frozen chronology marker guaranteed by the holdout architecture.
+    # It identifies the final block represented by this fully-settled state; it
+    # is not presented as a postgame acquisition timestamp.
+    latest_dt = max(block.as_of_utc for block in blocks)
     if latest_dt.tzinfo is None or latest_dt.utcoffset() is None:
-        latest_dt = latest_dt.replace(tzinfo=timezone.utc)
+        raise Entering2026StateError("terminal 2025 block cutoff is not timezone-aware")
     history_complete = latest_dt.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
     identity = {
         "completed_2025_blocks": completed,
