@@ -37,9 +37,12 @@ balanced:
   price_status_used_for_eligibility_or_ranking: false
 
   moneyline:
-    role: short_favorites_only
+    role: short_true_favorites_only
     minimum_model_confidence_probability: 0.52
     american_odds_band: [-130, -100]
+    minimum_pinnacle_anchor_probability: 0.50
+    true_market_favorite_required: true
+    negative_retail_odds_alone_do_not_establish_favorite_status: true
     plus_money_moneylines_allowed: false
     trust:
       formula: model_q_minus_0_50_times_positive_excess_over_pinnacle
@@ -73,7 +76,7 @@ value:
 
 cross_lane_invariants:
   hhr_can_accept_heavier_juice_than_balanced: true
-  balanced_ml_is_short_favorite_only: true
+  balanced_ml_is_short_true_favorite_only: true
   balanced_is_not_value_lite: true
   balanced_spread_preserves_expected_margin_0_4_provenance: true
   value_remains_strict_positive_ev: true
