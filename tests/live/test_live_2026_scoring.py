@@ -6,6 +6,7 @@ import polars as pl
 import pytest
 
 from nfl_edge.live.qb_inputs import adjustment_from_passing_epa
+from nfl_edge.live.roof import RoofResolver
 from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, score_week1
 from nfl_edge.live.sleeper_qb import SleeperExpectedQBResolver, SleeperQBSource
 from nfl_edge.live.state_2026 import bootstrap_entering_2026_state
@@ -105,6 +106,18 @@ def test_entering_2026_state_contains_complete_settled_2025_history(entering_sta
     assert state.history_complete_through_utc.endswith("Z")
 
 
+def _roof_resolver(status: str) -> RoofResolver:
+    statuses = {
+        game_id: {
+            "status": status,
+            "source": "CI official roof evidence",
+            "source_at_utc": AS_OF,
+        }
+        for game_id in EXPECTED_MISSING_ROOF_GAME_IDS
+    }
+    return RoofResolver(statuses)
+
+
 def test_real_week1_schedule_scores_available_models_deterministically(entering_state):
     resolver = SleeperExpectedQBResolver(_synthetic_source())
     first = score_week1(
@@ -139,12 +152,26 @@ def test_real_week1_schedule_scores_available_models_deterministically(entering_
         assert game["football_outputs"]["ridge_totals_r4"]["prediction"] is not None
         xgb = game["football_outputs"]["xgboost_v2"]
         if game["game_id"] in EXPECTED_MISSING_ROOF_GAME_IDS:
+            assert game["roof"]["roof_structure"] == "RETRACTABLE"
+            assert game["roof"]["roof_resolution_status"] == "PENDING"
             assert xgb["status"] == "UNAVAILABLE"
+            assert xgb["support"] == "PARTIAL"
             assert xgb["prediction"] is None
-            assert any("roof_category" in warning for warning in xgb["warnings"])
+            assert xgb["roof_selected_scenario"] is None
+            assert xgb["xgboost_open_probability"] is not None
+            assert xgb["xgboost_closed_probability"] is not None
+            assert any("scenarios" in warning for warning in xgb["warnings"])
         else:
             assert xgb["status"] == "AVAILABLE"
             assert xgb["prediction"] is not None
+
+    assert first["xgboost_scenario_coverage"] == {
+        "normal_games": 14,
+        "retractable_games": 2,
+        "scenario_covered_games": 16,
+        "pending_game_ids": sorted(EXPECTED_MISSING_ROOF_GAME_IDS),
+    }
+    assert first["football_context_missing_roof_game_ids"] == []
 
     assert first["guardrails"] == {
         "market_data_read": False,
@@ -157,6 +184,31 @@ def test_real_week1_schedule_scores_available_models_deterministically(entering_
         "expected_margin_chronological_refit_preserved": True,
         "ridge_r4_chronological_refit_preserved": True,
     }
+
+
+
+@pytest.mark.parametrize(("status", "selected"), (("OPEN", "open"), ("CLOSED", "closed")))
+def test_resolved_retractable_roof_selects_frozen_scenario(
+    entering_state, status, selected
+):
+    snapshot = score_week1(
+        repository_root=ROOT,
+        prediction_as_of_utc=AS_OF,
+        resolver=SleeperExpectedQBResolver(_synthetic_source()),
+        entering_state=entering_state,
+        roof_resolver=_roof_resolver(status),
+    )
+    assert snapshot["model_scoring_counts"]["xgboost_v2"] == {"AVAILABLE": 16}
+    for game in snapshot["games"]:
+        if game["game_id"] not in EXPECTED_MISSING_ROOF_GAME_IDS:
+            continue
+        xgb = game["football_outputs"]["xgboost_v2"]
+        assert xgb["status"] == "AVAILABLE"
+        assert xgb["roof_resolution_status"] == status
+        assert xgb["roof_selected_scenario"] == selected
+        assert xgb["prediction"] == xgb[f"xgboost_{selected}_probability"]
+        assert game["roof"]["roof_source"] == "CI official roof evidence"
+        assert game["roof"]["roof_source_at_utc"] == AS_OF
 
 
 def test_stale_sleeper_suppresses_only_qb_dependent_models(entering_state):
