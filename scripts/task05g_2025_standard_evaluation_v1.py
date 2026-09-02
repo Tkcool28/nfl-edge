@@ -23,6 +23,7 @@ import polars as pl
 
 from nfl_edge.features.totals_v1.manifest import verify_pbp_artifacts
 from nfl_edge.holdout import executor_runtime_2025 as runtime
+from nfl_edge.holdout import standard_product_compat_2025 as product_compat
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PBP_ROOT = ROOT / "data/frozen/task05c_pbp_v1"
@@ -37,10 +38,10 @@ EXPECTED_2025_PBP_SHA256 = "c6ecedd6d678cc37ed316b23ef84ee1ec6abb69c514bb11868a7
 EXPECTED_OBSERVATIONS_SHA256 = "5a78b506a1d2dc14f4948cd316346d09d863e603c61144716a242252df8f84e3"
 RUN_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$")
 
-# The standard 2025 candidate/settlement surface is canonical. The already-
-# frozen Task05F/V3 historical consumers predate that canonicalization and
-# still read these legacy aliases. This mapping is an interface adapter only:
-# stored 2025 rows remain canonical and the frozen product code is unchanged.
+# Historical settled 2025 rows are canonical. The already-frozen Task05F/V3
+# historical consumers predate that canonicalization and still read these
+# legacy aliases. This mapping is an interface adapter only: stored rows remain
+# canonical and the frozen product code is unchanged.
 _HISTORY_ALIASES = (
     ("selected_side", "selection"),
     ("line", "actionable_line"),
@@ -117,12 +118,15 @@ def _legacy_prior_board_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]
 def _standard_product_builder(
     frozen_builder: Callable[..., dict[str, Any]], **kwargs: Any
 ) -> dict[str, Any]:
-    """Call the frozen product builder through the standard history adapter."""
-    material = dict(kwargs)
-    material["prior_board_rows"] = _legacy_prior_board_rows(
-        [dict(row) for row in material["prior_board_rows"]]
-    )
-    return frozen_builder(**material)
+    """Call the frozen product builder through standard-only compatibility views."""
+    try:
+        return product_compat.build_product_with_compat(
+            frozen_builder,
+            prior_board_rows_adapter=_legacy_prior_board_rows,
+            **kwargs,
+        )
+    except product_compat.StandardProductCompatibilityError as exc:
+        raise StandardEvaluationError(f"standard product compatibility failed: {exc}") from exc
 
 
 def _load_frozen_task05f():
@@ -139,7 +143,7 @@ def _canonical_history_handoff_smoke() -> None:
     """Exercise the post-block canonical -> frozen-history interface.
 
     This uses synthetic data only. It reproduces the exact schema transition
-    encountered after Week 1 without reading any 2025 outcome.
+    encountered after Week 1 without reading any 2025 result.
     """
     canonical = {
         "game_id": "SYNTHETIC_HISTORY",
@@ -180,6 +184,17 @@ def _canonical_history_handoff_smoke() -> None:
         raise StandardEvaluationError(
             f"frozen Task05F history handoff failed: {histories['spread']!r}"
         )
+
+
+def _canonical_current_product_handoff_smoke() -> None:
+    """Prove current aliases + frozen Task05E tags using synthetic pre-result data."""
+    task05f = _load_frozen_task05f()
+    try:
+        product_compat.synthetic_current_contract_smoke(task05f)
+    except product_compat.StandardProductCompatibilityError as exc:
+        raise StandardEvaluationError(
+            f"current product compatibility smoke failed: {exc}"
+        ) from exc
 
 
 def _certification_summary() -> dict[str, Any]:
@@ -272,6 +287,7 @@ def preflight(*, pbp_root: Path, market_root: Path, historical_board: Path) -> d
     _require_sha(OBSERVATIONS_2025, EXPECTED_OBSERVATIONS_SHA256, "2025 GameObservation ledger")
     _canonical_settlement_smoke()
     _canonical_history_handoff_smoke()
+    _canonical_current_product_handoff_smoke()
 
     games = pl.read_parquet(runtime.GAMES)
     season_2025 = games.filter(pl.col("season") == 2025)
@@ -303,6 +319,8 @@ def preflight(*, pbp_root: Path, market_root: Path, historical_board: Path) -> d
         "historical_board_sha256": runtime.HISTORICAL_BOARD_SHA256,
         "canonical_settlement_contract": "PASS",
         "canonical_history_handoff": "PASS",
+        "canonical_current_product_handoff": "PASS",
+        "frozen_task05e_candidate_provenance": "PASS",
         "certification": _certification_summary(),
         "development_state": {
             "historical_product_games": len(development_state["product_games"]),
@@ -344,15 +362,27 @@ def execute(
     )
     output_root.parent.mkdir(parents=True, exist_ok=True)
 
-    # Keep every frozen product/evaluator implementation byte-identical. The
-    # standard runner supplies a temporary legacy-key view only at the already-
-    # frozen product call boundary. Canonical 2025 state is never rewritten.
+    # Keep every frozen product/evaluator/selector implementation byte-identical.
+    # The standard runner supplies temporary compatibility views at the frozen
+    # call boundaries and restores the original functions after execution.
     frozen_builder = runtime.build_pre_result_product_block
+    frozen_advance_value_state = runtime.advance_value_state
 
     def adapted_builder(**kwargs: Any) -> dict[str, Any]:
         return _standard_product_builder(frozen_builder, **kwargs)
 
+    def adapted_advance_value_state(state: Any, settled_block_rows: Any) -> Any:
+        try:
+            return product_compat.advance_value_state_with_compat(
+                frozen_advance_value_state, state, settled_block_rows
+            )
+        except product_compat.StandardProductCompatibilityError as exc:
+            raise StandardEvaluationError(
+                f"standard Value-state compatibility failed: {exc}"
+            ) from exc
+
     runtime.build_pre_result_product_block = adapted_builder
+    runtime.advance_value_state = adapted_advance_value_state
     try:
         runtime.run_authorized_holdout(
             output_root=output_root,
@@ -367,6 +397,7 @@ def execute(
         )
     finally:
         runtime.build_pre_result_product_block = frozen_builder
+        runtime.advance_value_state = frozen_advance_value_state
 
     (output_root / "STANDARD_EVALUATION_PREFLIGHT.json").write_text(
         json.dumps(summary, indent=2, sort_keys=True) + "\n",
