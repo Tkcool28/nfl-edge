@@ -9,7 +9,11 @@ from nfl_edge.live.qb_inputs import adjustment_from_passing_epa
 from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, score_week1
 from nfl_edge.live.sleeper_qb import SleeperExpectedQBResolver, SleeperQBSource
 from nfl_edge.live.state_2026 import bootstrap_entering_2026_state
-from nfl_edge.live.week1_2026 import EXPECTED_TEAMS, load_week1_schedule
+from nfl_edge.live.week1_2026 import (
+    EXPECTED_MISSING_ROOF_GAME_IDS,
+    EXPECTED_TEAMS,
+    load_week1_schedule,
+)
 from nfl_edge.models.qb_elo_config import load_qb_elo_canonical_config
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -85,7 +89,9 @@ def test_live_qb_adjustment_formula_matches_frozen_pr70_contract():
     )
     max_abs = float(raw["qb_adjustment_max_abs_elo"])
     expected = max(-max_abs, min(max_abs, expected))
-    assert adjustment_from_passing_epa(value, config_path=ROOT / "config/qb_elo_v1.yaml") == expected
+    assert adjustment_from_passing_epa(
+        value, config_path=ROOT / "config/qb_elo_v1.yaml"
+    ) == expected
 
 
 def test_entering_2026_state_contains_complete_settled_2025_history(entering_state):
@@ -99,7 +105,7 @@ def test_entering_2026_state_contains_complete_settled_2025_history(entering_sta
     assert state.history_complete_through_utc.endswith("Z")
 
 
-def test_real_week1_schedule_scores_all_four_models_deterministically(entering_state):
+def test_real_week1_schedule_scores_available_models_deterministically(entering_state):
     resolver = SleeperExpectedQBResolver(_synthetic_source())
     first = score_week1(
         repository_root=ROOT,
@@ -121,16 +127,25 @@ def test_real_week1_schedule_scores_all_four_models_deterministically(entering_s
         "expected_margin": {"AVAILABLE": 16},
         "qb_elo": {"AVAILABLE": 16},
         "ridge_totals_r4": {"AVAILABLE": 16},
-        "xgboost_v2": {"AVAILABLE": 16},
+        "xgboost_v2": {"AVAILABLE": 14, "UNAVAILABLE": 2},
     }
+
     for game in first["games"]:
         assert set(game["football_outputs"]) == {
             "qb_elo", "xgboost_v2", "expected_margin", "ridge_totals_r4"
         }
         assert game["football_outputs"]["qb_elo"]["prediction"] is not None
-        assert game["football_outputs"]["xgboost_v2"]["prediction"] is not None
         assert game["football_outputs"]["expected_margin"]["prediction"] is not None
         assert game["football_outputs"]["ridge_totals_r4"]["prediction"] is not None
+        xgb = game["football_outputs"]["xgboost_v2"]
+        if game["game_id"] in EXPECTED_MISSING_ROOF_GAME_IDS:
+            assert xgb["status"] == "UNAVAILABLE"
+            assert xgb["prediction"] is None
+            assert any("roof_category" in warning for warning in xgb["warnings"])
+        else:
+            assert xgb["status"] == "AVAILABLE"
+            assert xgb["prediction"] is not None
+
     assert first["guardrails"] == {
         "market_data_read": False,
         "odds_api_called": False,
@@ -138,6 +153,7 @@ def test_real_week1_schedule_scores_all_four_models_deterministically(entering_s
         "tuning_performed": False,
         "current_outcomes_read": False,
         "xgboost_chronological_refit_preserved": True,
+        "xgboost_frozen_category_guard_preserved": True,
         "expected_margin_chronological_refit_preserved": True,
         "ridge_r4_chronological_refit_preserved": True,
     }
@@ -185,6 +201,13 @@ def test_week1_schedule_fixture_remains_real_16_game_surface():
     assert schedule["season"] == 2026
     assert schedule["week"] == 1
     assert len(schedule["games"]) == 16
+    assert schedule["market_fields_consumed"] == []
     assert {game["away_team"] for game in schedule["games"]} | {
         game["home_team"] for game in schedule["games"]
     } == EXPECTED_TEAMS
+    assert all(game["venue"] and game["venue_id"] for game in schedule["games"])
+    assert all(game["away_rest"] == 7 and game["home_rest"] == 7 for game in schedule["games"])
+    assert all(game["surface"] for game in schedule["games"])
+    assert {
+        game["game_id"] for game in schedule["games"] if game["roof_type"] is None
+    } == EXPECTED_MISSING_ROOF_GAME_IDS
