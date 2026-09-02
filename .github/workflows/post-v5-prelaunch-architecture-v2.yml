@@ -1,0 +1,75 @@
+name: Post-V5 Prelaunch Architecture V2
+
+on:
+  pull_request:
+    paths:
+      - 'src/nfl_edge/recommendation/final_selectors_v2.py'
+      - 'config/task05g_final_selectors_v2.yaml'
+      - 'tests/recommendation/test_task05g_final_selectors_v2.py'
+      - 'src/nfl_edge/backtest/xgboost_walk_forward_v2.py'
+      - 'src/nfl_edge/holdout/xgboost_2025_v2.py'
+      - 'config/xgboost_validation_tail_v2.yaml'
+      - 'tests/holdout/test_xgboost_2025_v2_adapter.py'
+      - 'docs/post_v5_prelaunch_architecture_v2.md'
+      - '.github/workflows/post-v5-prelaunch-architecture-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  successor-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      PYTHONHASHSEED: '0'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OPENBLAS_CORETYPE: 'HASWELL'
+      MKL_NUM_THREADS: '1'
+      MKL_CBWR: 'COMPATIBLE'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install model-development runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+      - name: Compile successor surfaces
+        run: |
+          python -m py_compile \
+            src/nfl_edge/recommendation/final_selectors_v2.py \
+            src/nfl_edge/backtest/xgboost_walk_forward_v2.py \
+            src/nfl_edge/holdout/xgboost_2025_v2.py \
+            tests/recommendation/test_task05g_final_selectors_v2.py \
+            tests/holdout/test_xgboost_2025_v2_adapter.py
+      - name: Run focused successor regressions
+        run: |
+          pytest -q \
+            tests/recommendation/test_task05g_final_selectors_v2.py \
+            tests/holdout/test_xgboost_2025_v2_adapter.py
+      - name: Prove frozen V1 selector and XGBoost adapters remain valid
+        run: |
+          pytest -q \
+            tests/recommendation/test_task05g_final_selectors_v1.py \
+            tests/holdout/test_xgboost_2025_adapter.py
+      - name: Verify no 2025 execution/acquisition wiring was added
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          forbidden = ('ODDS_API_KEY', 'requests.', 'httpx.', 'urllib.request', 'workflow_dispatch: true')
+          paths = [
+              Path('src/nfl_edge/recommendation/final_selectors_v2.py'),
+              Path('src/nfl_edge/backtest/xgboost_walk_forward_v2.py'),
+              Path('src/nfl_edge/holdout/xgboost_2025_v2.py'),
+          ]
+          text = '\n'.join(path.read_text() for path in paths)
+          hits = [token for token in forbidden if token in text]
+          if hits:
+              raise SystemExit(f'forbidden network/execution surface found: {hits}')
+          print('NO_NEW_2025_EXECUTION_OR_ACQUISITION_SURFACE=PASS')
+          PY
