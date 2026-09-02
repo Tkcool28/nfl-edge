@@ -11,17 +11,17 @@ from nfl_edge.contracts.common_v1 import (
     USER_STATE_SCHEMA_VERSION,
     ContractValidationError,
 )
+from nfl_edge.contracts.market_qb_v1 import (
+    validate_freshness,
+    validate_market_offer,
+    validate_qb_context,
+)
 from nfl_edge.contracts.product_api_v1 import (
     validate_exact_offer_request,
     validate_exact_offer_response,
     validate_game,
     validate_headline,
     validate_product_snapshot,
-)
-from nfl_edge.contracts.market_qb_v1 import (
-    validate_freshness,
-    validate_market_offer,
-    validate_qb_context,
 )
 from nfl_edge.contracts.runtime_interfaces_v1 import (
     ExpectedQBResolution,
