@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - 'scripts/task05g_2025_standard_evaluation_v1.py'
+      - 'src/nfl_edge/holdout/standard_product_compat_2025.py'
+      - 'tests/holdout/test_standard_2025_history_adapter.py'
+      - 'tests/holdout/test_standard_product_compat_2025.py'
       - '.github/workflows/task05g-2025-standard-evaluation-v1.yml'
       - 'data/frozen/task05c_pbp_v1/**'
       - 'data/frozen/task05c_pbp_2025_v1/**'
@@ -60,9 +63,17 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e '.[model-development]' pyyaml pytest
 
-      - name: Compile standard entry point
+      - name: Compile standard compatibility entry points
         run: |
-          python -m py_compile scripts/task05g_2025_standard_evaluation_v1.py
+          python -m py_compile \
+            scripts/task05g_2025_standard_evaluation_v1.py \
+            src/nfl_edge/holdout/standard_product_compat_2025.py
+
+      - name: Run standard compatibility regressions
+        run: |
+          pytest -q \
+            tests/holdout/test_standard_2025_history_adapter.py \
+            tests/holdout/test_standard_product_compat_2025.py
 
       - name: Verify exact tracked 2018-2024 PBP family
         shell: bash
@@ -139,6 +150,8 @@ jobs:
             --historical-board artifacts/task05g_2025_standard/upstream/historical_evaluator_board.parquet \
             | tee /tmp/task05g_2025_standard_preflight.json
           grep -q 'STANDARD_2025_PREFLIGHT_PASS' /tmp/task05g_2025_standard_preflight.json
+          grep -q 'canonical_current_product_handoff' /tmp/task05g_2025_standard_preflight.json
+          grep -q 'frozen_task05e_candidate_provenance' /tmp/task05g_2025_standard_preflight.json
           echo 'REAL_2025_EVALUATION_EXECUTED=0'
 
       - name: Upload preflight evidence
