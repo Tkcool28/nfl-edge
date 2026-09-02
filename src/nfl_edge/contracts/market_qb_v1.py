@@ -56,9 +56,13 @@ def validate_qb_context(value: Any, path: str) -> None:
         if obj[field] is not None:
             require_string(obj[field], f"{path}.{field}")
     if resolution in {"RESOLVED", "OVERRIDDEN"} and (
-        obj["expected_starter"] is None or obj["canonical_qb_id"] is None
+        obj["expected_starter"] is None
+        or obj["canonical_qb_id"] is None
+        or obj["source_snapshot_at_utc"] is None
     ):
-        raise ContractValidationError(f"{path} resolved QB requires expected_starter and canonical_qb_id")
+        raise ContractValidationError(
+            f"{path} resolved QB requires expected_starter, canonical_qb_id, and source snapshot"
+        )
 
 
 def validate_market_offer(value: Any, path: str = "offer") -> None:
@@ -93,12 +97,22 @@ def validate_market_board(value: Any, game_id: str, path: str) -> None:
         for book, offers in books.items():
             if not isinstance(offers, list):
                 raise ContractValidationError(f"{path}.{market_key}.{book} must be an array")
-            seen: set[str] = set()
+            seen_ids: set[str] = set()
+            seen_exact: set[tuple[object, ...]] = set()
             for index, offer in enumerate(offers):
                 offer_path = f"{path}.{market_key}.{book}[{index}]"
                 validate_market_offer(offer, offer_path)
                 if offer["game_id"] != game_id or offer["market_type"] != market_type or offer["sportsbook"] != book:
                     raise ContractValidationError(f"{offer_path} identity does not match its game/market/book bucket")
-                if offer["offer_id"] in seen:
+                if offer["offer_id"] in seen_ids:
                     raise ContractValidationError(f"{offer_path}.offer_id duplicates an exact offer")
-                seen.add(str(offer["offer_id"]))
+                signature = (
+                    offer["normalized_selection"],
+                    offer["line"],
+                    offer["price"],
+                    offer["snapshot_at_utc"],
+                )
+                if signature in seen_exact:
+                    raise ContractValidationError(f"{offer_path} duplicates an exact offer observation")
+                seen_ids.add(str(offer["offer_id"]))
+                seen_exact.add(signature)
