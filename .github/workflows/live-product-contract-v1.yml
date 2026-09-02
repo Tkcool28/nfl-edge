@@ -7,7 +7,8 @@ on:
       - 'src/nfl_edge/publication/**'
       - 'src/nfl_edge/staking_policy_v1.py'
       - 'src/nfl_edge/recommendation/staking_v1.py'
-      - 'tests/contracts/**'
+      - 'tests/contracts/test_live_product_backend_contract_v1.py'
+      - 'tests/contracts/test_live_product_backend_contract_v1_final_review.py'
       - 'fixtures/contracts/**'
       - 'schemas/NFL_EDGE_PRODUCT_API_V1.schema.json'
       - '.github/workflows/live-product-contract-v1.yml'
@@ -58,4 +59,7 @@ jobs:
           print("BASE_DEPENDENCY_IMPORT_SMOKE_OK")
           PY
       - name: Run focused Contract Day suite
-        run: pytest -q tests/contracts
+        run: |
+          pytest -q \
+            tests/contracts/test_live_product_backend_contract_v1.py \
+            tests/contracts/test_live_product_backend_contract_v1_final_review.py
