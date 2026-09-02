@@ -11,7 +11,7 @@ from nfl_edge.contracts.common_v1 import (
     validate_units,
     validate_utc_timestamp,
 )
-from nfl_edge.recommendation.staking_v1 import RISK_PROFILE_BY_NAME, dollar_stake
+from nfl_edge.staking_policy_v1 import RISK_PROFILE_BY_NAME, dollar_stake
 
 RISK_PROFILES = tuple(RISK_PROFILE_BY_NAME)
 
