@@ -1,4 +1,9 @@
-"""Task05G recommendation-policy layer built on frozen Task05F evaluators."""
+"""Task05G recommendation-policy layer built on frozen Task05F evaluators.
+
+The package-level recommendation surface is the forward/live product contract.
+Historical and V5 reproduction code imports ``final_selectors_v1`` explicitly;
+new application callers receive the post-V5 V2 headline selector surface.
+"""
 
 from .policy import (
     NO_BALANCED_PLAY,
@@ -8,7 +13,7 @@ from .policy import (
     evaluate_policy_offer,
     shop_exact_offers,
 )
-from .final_selectors_v1 import (
+from .final_selectors_v2 import (
     FamilyTrust,
     TrustObservation,
     ValueSelectorState,
