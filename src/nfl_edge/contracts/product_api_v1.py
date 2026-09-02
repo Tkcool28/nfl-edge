@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from datetime import datetime
 from typing import Any
 
 from nfl_edge.contracts.common_v1 import (
@@ -78,6 +79,8 @@ def validate_headline(value: Any, path: str = "headline") -> None:
         require_keys(matchup, {"away_team", "home_team"}, f"{path}.matchup")
         require_string(matchup["away_team"], f"{path}.matchup.away_team")
         require_string(matchup["home_team"], f"{path}.matchup.home_team")
+    if state != "BET" and units > 0:
+        raise ContractValidationError(f"{path}.recommended_units must be zero unless state=BET")
     if state == "BET":
         for field in ("game_id", "matchup", "market", "selection", "book", "american_odds"):
             if obj[field] is None:
@@ -161,6 +164,10 @@ def validate_product_snapshot(payload: Any) -> dict[str, Any]:
     require_string(obj["product_version"], "product.product_version")
     validate_utc_timestamp(obj["generated_at_utc"], "product.generated_at_utc")
     validate_utc_timestamp(obj["prediction_as_of_utc"], "product.prediction_as_of_utc")
+    generated = datetime.fromisoformat(obj["generated_at_utc"][:-1] + "+00:00")
+    prediction = datetime.fromisoformat(obj["prediction_as_of_utc"][:-1] + "+00:00")
+    if generated < prediction:
+        raise ContractValidationError("product.generated_at_utc cannot precede prediction_as_of_utc")
     if not isinstance(obj["season"], int) or isinstance(obj["season"], bool):
         raise ContractValidationError("product.season must be an integer")
     if not isinstance(obj["week"], int) or isinstance(obj["week"], bool) or obj["week"] < 1:
