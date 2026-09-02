@@ -20,6 +20,7 @@ from nfl_edge.live.model_adapters import (
     predict_xgboost_v2_block,
 )
 from nfl_edge.live.qb_inputs import build_qb_adjustment_resolver, build_totals_qb_surface
+from nfl_edge.live.roof import DEFAULT_ROOF_STATUS_PATH, RoofResolver
 from nfl_edge.live.sleeper_qb import SleeperExpectedQBResolver
 from nfl_edge.live.state_2026 import Entering2026FootballState, bootstrap_entering_2026_state
 from nfl_edge.live.totals_features import materialize_live_totals_feature_block
@@ -33,7 +34,6 @@ MODEL_VERSIONS = {
     "ridge_totals_r4": "ridge-totals-r4-alpha100",
 }
 QB_FRESHNESS_USABLE = frozenset({"FRESH", "AGING"})
-XGB_REQUIRED_CONTEXT_FIELDS = ("roof_type",)
 
 
 class LiveScoringError(RuntimeError):
@@ -99,20 +99,6 @@ def _qb_usable_game_ids(features: LiveWeek1Features) -> tuple[str, ...]:
     return tuple(usable)
 
 
-def _xgb_context_usable_game_ids(
-    schedule: Mapping[str, Any], *, qb_usable_ids: tuple[str, ...]
-) -> tuple[str, ...]:
-    qb_usable = set(qb_usable_ids)
-    usable: list[str] = []
-    for game in schedule["games"]:
-        gid = str(game["game_id"])
-        if gid not in qb_usable:
-            continue
-        if all(game.get(field) is not None for field in XGB_REQUIRED_CONTEXT_FIELDS):
-            usable.append(gid)
-    return tuple(sorted(usable))
-
-
 def _unavailable_reason(
     features: LiveWeek1Features, game: dict[str, Any]
 ) -> tuple[str, list[str]]:
@@ -159,6 +145,7 @@ def score_week1(
     prediction_as_of_utc: str,
     resolver: SleeperExpectedQBResolver,
     entering_state: Entering2026FootballState | None = None,
+    roof_resolver: RoofResolver | None = None,
 ) -> dict[str, Any]:
     """Score the real 16-game Week 1 schedule without reading any market data."""
     root = Path(repository_root).resolve()
@@ -169,6 +156,13 @@ def score_week1(
         resolver=resolver,
     )
     schedule = load_week1_schedule(root / "data/live/2026/week1_schedule_v1.json")
+    active_roof_resolver = roof_resolver or RoofResolver.from_file(
+        root / DEFAULT_ROOF_STATUS_PATH
+    )
+    roof_by = {
+        str(game["game_id"]): active_roof_resolver.resolve(game)
+        for game in schedule["games"]
+    }
     if len(schedule["games"]) != 16 or features.current_games.height != 16:
         raise LiveScoringError("Week 1 schedule coverage drift")
 
@@ -209,11 +203,19 @@ def score_week1(
     }
 
     qb_usable_ids = _qb_usable_game_ids(features)
-    xgb_usable_ids = _xgb_context_usable_game_ids(
-        schedule, qb_usable_ids=qb_usable_ids
-    )
+    qb_usable_set = set(qb_usable_ids)
+    fixed_xgb_ids = tuple(sorted(
+        game_id for game_id, resolution in roof_by.items()
+        if game_id in qb_usable_set and resolution.structure != "RETRACTABLE"
+    ))
+    retractable_xgb_ids = tuple(sorted(
+        game_id for game_id, resolution in roof_by.items()
+        if game_id in qb_usable_set and resolution.structure == "RETRACTABLE"
+    ))
     qb_by: dict[str, float] = {}
     xgb_by: dict[str, float] = {}
+    xgb_open_by: dict[str, float] = {}
+    xgb_closed_by: dict[str, float] = {}
     totals_by: dict[str, float] = {}
     xgb_warmup = False
     xgb_warmup_reason: str | None = None
@@ -267,10 +269,25 @@ def score_week1(
             )
         }
 
-    if xgb_usable_ids:
+    def score_xgb_surface(
+        game_ids: tuple[str, ...], *, scenario_category: str | None = None
+    ) -> dict[str, float]:
+        nonlocal xgb_warmup, xgb_warmup_reason
+        if not game_ids:
+            return {}
         current_xgb = features.xgboost_surface.filter(
-            pl.col("game_id").is_in(list(xgb_usable_ids))
+            pl.col("game_id").is_in(list(game_ids))
         )
+        if scenario_category is not None:
+            current_xgb = current_xgb.with_columns(
+                pl.lit(scenario_category).alias("roof_category"),
+                pl.lit(False).alias("roof_missing"),
+            )
+        categories = set(
+            str(value) for value in current_xgb["roof_category"].drop_nulls().to_list()
+        )
+        if "unknown" in categories:
+            raise LiveScoringError("unknown roof_category cannot reach frozen XGBoost")
         xgb_block = build_live_block(current_xgb)
         xgb_result = predict_xgboost_v2_block(
             development_reference=state.xgb_development,
@@ -279,19 +296,27 @@ def score_week1(
             block=xgb_block,
             feature_cols=list(state.xgb_feature_cols),
         )
-        xgb_warmup = bool(xgb_result.get("warmup"))
-        xgb_warmup_reason = xgb_result.get("warmup_reason")
-        if not xgb_warmup:
-            xgb_by = {
-                str(gid): float(probability)
-                for gid, probability in zip(
-                    xgb_result["game_ids"], xgb_result["probabilities"], strict=True
-                )
-            }
+        if bool(xgb_result.get("warmup")):
+            xgb_warmup = True
+            xgb_warmup_reason = xgb_result.get("warmup_reason")
+            return {}
+        return {
+            str(gid): float(probability)
+            for gid, probability in zip(
+                xgb_result["game_ids"], xgb_result["probabilities"], strict=True
+            )
+        }
+
+    xgb_by = score_xgb_surface(fixed_xgb_ids)
+    xgb_open_by = score_xgb_surface(
+        retractable_xgb_ids, scenario_category="open"
+    )
+    xgb_closed_by = score_xgb_surface(
+        retractable_xgb_ids, scenario_category="closed"
+    )
 
     schedule_by = {str(row["game_id"]): row for row in schedule["games"]}
     qb_usable_set = set(qb_usable_ids)
-    xgb_usable_set = set(xgb_usable_ids)
     game_rows: list[dict[str, Any]] = []
     for game in features.current_games.sort("scheduled_start_utc", "game_id").to_dicts():
         gid = str(game["game_id"])
@@ -308,6 +333,11 @@ def score_week1(
             "home_rest": schedule_row["home_rest"],
             "surface": schedule_row["surface"],
             "roof_type": schedule_row["roof_type"],
+            "roof_structure": roof_by[gid].structure,
+            "roof_resolution_status": roof_by[gid].status,
+            "roof_source": roof_by[gid].source,
+            "roof_source_at_utc": roof_by[gid].source_at_utc,
+            "roof_model_category": roof_by[gid].model_category,
         }
         base_identity = {
             model: _prediction_identity(
@@ -335,18 +365,8 @@ def score_week1(
                 input_identity=base_identity["ridge_totals_r4"],
                 artifact_version=MODEL_VERSIONS["ridge_totals_r4"],
             )
-            if gid not in xgb_usable_set:
-                xgb_output = _model_output(
-                    status="UNAVAILABLE",
-                    prediction=None,
-                    support="UNSUPPORTED",
-                    input_identity=base_identity["xgboost_v2"],
-                    artifact_version=MODEL_VERSIONS["xgboost_v2"],
-                    warnings=[
-                        "Frozen XGBoost V2 requires known roof_category; current live football context is missing."
-                    ],
-                )
-            elif xgb_warmup:
+            roof = roof_by[gid]
+            if xgb_warmup:
                 xgb_output = _model_output(
                     status="UNSUPPORTED",
                     prediction=None,
@@ -355,6 +375,38 @@ def score_week1(
                     artifact_version=MODEL_VERSIONS["xgboost_v2"],
                     warnings=[f"Frozen XGBoost V2 warmup: {xgb_warmup_reason}"],
                 )
+            elif roof.structure == "RETRACTABLE":
+                scenarios = {
+                    "open": xgb_open_by[gid],
+                    "closed": xgb_closed_by[gid],
+                }
+                if roof.status == "PENDING":
+                    xgb_output = _model_output(
+                        status="UNAVAILABLE",
+                        prediction=None,
+                        support="PARTIAL",
+                        input_identity=base_identity["xgboost_v2"],
+                        artifact_version=MODEL_VERSIONS["xgboost_v2"],
+                        warnings=[
+                            "Retractable roof status is pending; open and closed scenarios are preserved without selection."
+                        ],
+                    )
+                    selected_scenario = None
+                else:
+                    selected_scenario = roof.model_category
+                    xgb_output = _model_output(
+                        status="AVAILABLE",
+                        prediction=scenarios[selected_scenario],
+                        support="SUPPORTED",
+                        input_identity=base_identity["xgboost_v2"],
+                        artifact_version=MODEL_VERSIONS["xgboost_v2"],
+                    )
+                xgb_output.update({
+                    "roof_resolution_status": roof.status,
+                    "roof_selected_scenario": selected_scenario,
+                    "xgboost_open_probability": scenarios["open"],
+                    "xgboost_closed_probability": scenarios["closed"],
+                })
             else:
                 xgb_output = _model_output(
                     status="AVAILABLE",
@@ -408,6 +460,7 @@ def score_week1(
                 "kickoff_at_utc": str(schedule_row["scheduled_start_utc"]),
                 "neutral_site": bool(schedule_row["neutral_site"]),
                 "venue": schedule_row["venue"],
+                "roof": roof_by[gid].provenance(),
                 "quarterbacks": {"home": home_qb, "away": away_qb},
                 "football_outputs": {
                     "qb_elo": qb_output,
@@ -436,9 +489,15 @@ def score_week1(
         "schedule_version": request.schedule_version,
         "football_context_version": schedule["context_version"],
         "football_context_source": schedule["context_source"],
-        "football_context_missing_roof_game_ids": sorted(
-            set(qb_usable_ids) - set(xgb_usable_ids)
-        ),
+        "football_context_missing_roof_game_ids": [],
+        "xgboost_scenario_coverage": {
+            "normal_games": len(fixed_xgb_ids),
+            "retractable_games": len(retractable_xgb_ids),
+            "scenario_covered_games": len(fixed_xgb_ids) + len(retractable_xgb_ids),
+            "pending_game_ids": sorted(
+                gid for gid in retractable_xgb_ids if roof_by[gid].status == "PENDING"
+            ),
+        },
         "completed_football_state_version": request.completed_football_state_version,
         "history_complete_through_utc": request.history_complete_through_utc,
         "qb_snapshot_version": request.qb_snapshot_version,
