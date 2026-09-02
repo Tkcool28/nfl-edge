@@ -6,12 +6,14 @@ from pathlib import Path
 
 import pytest
 
+from nfl_edge.contracts.common_v1 import require_number
 from nfl_edge.contracts.live_product_v1 import (
     ContractValidationError,
     PRODUCT_SCHEMA_VERSION,
     UserProfileState,
     profile_update_preserves_recommendation,
     validate_exact_offer_request,
+    validate_freshness,
     validate_product_snapshot,
 )
 from nfl_edge.publication.live_product_v1 import promote_validated_snapshot
@@ -35,6 +37,7 @@ def test_valid_full_product_parses() -> None:
     parsed = validate_product_snapshot(_fixture())
     assert parsed["schema_version"] == PRODUCT_SCHEMA_VERSION
     assert parsed["games"][0]["game_id"] == "mock-2026-w01-AAA-BBB"
+    assert "PINNACLE" in parsed["games"][0]["market_board"]["moneyline"]
 
 
 def test_honest_no_play_parses() -> None:
@@ -160,6 +163,20 @@ def test_clicked_and_manual_exact_offer_shape_uses_same_contract() -> None:
         "price": -110,
     }
     assert validate_exact_offer_request(offer) == offer
+
+
+def test_pinnacle_is_not_an_actionable_exact_offer_book() -> None:
+    with pytest.raises(ContractValidationError, match="request.book"):
+        validate_exact_offer_request(
+            {
+                "game_id": "mock-2026-w01-AAA-BBB",
+                "market_type": "SPREAD",
+                "selection": "AAA",
+                "book": "PINNACLE",
+                "line": 2.5,
+                "price": -105,
+            }
+        )
 
 
 def test_duplicate_exact_offer_fails() -> None:
@@ -290,6 +307,87 @@ def test_nonfinite_bankroll_fails() -> None:
             created_at="2026-09-02T14:00:00Z",
             updated_at="2026-09-02T14:00:00Z",
         ).validate()
+
+
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), float("-inf")])
+def test_require_number_rejects_nonfinite_values(value: float) -> None:
+    with pytest.raises(ContractValidationError, match="finite"):
+        require_number(value, "number")
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        lambda p: p["headlines"]["balanced"].__setitem__("ev", float("nan")),
+        lambda p: p["games"][0]["market_board"]["spread"]["DRAFTKINGS"][0].__setitem__(
+            "line", float("inf")
+        ),
+        lambda p: p["games"][0]["football_outputs"]["expected_margin"].__setitem__(
+            "prediction", float("-inf")
+        ),
+    ],
+)
+def test_product_numeric_fields_reject_nonfinite_values(mutation) -> None:
+    payload = _fixture()
+    mutation(payload)
+    with pytest.raises(ContractValidationError, match="finite"):
+        validate_product_snapshot(payload)
+
+
+def test_nonfinite_json_cannot_replace_latest_even_in_unknown_field(tmp_path: Path) -> None:
+    valid = _fixture()
+    promote_validated_snapshot(valid, tmp_path)
+    old_latest = (tmp_path / "latest.json").read_text()
+
+    candidate = _fixture()
+    candidate["generated_at_utc"] = "2026-09-02T14:01:00Z"
+    candidate["unknown_future_numeric"] = float("nan")
+    with pytest.raises(ValueError, match="JSON compliant"):
+        promote_validated_snapshot(candidate, tmp_path)
+
+    assert (tmp_path / "latest.json").read_text() == old_latest
+
+
+@pytest.mark.parametrize(
+    "state,age,threshold,observed",
+    [
+        ("FRESH", 0.0, 300.0, "2026-09-02T14:00:00Z"),
+        ("FRESH", 149.999, 300.0, "2026-09-02T14:00:00Z"),
+        ("AGING", 150.0, 300.0, "2026-09-02T14:00:00Z"),
+        ("AGING", 300.0, 300.0, "2026-09-02T14:00:00Z"),
+        ("STALE", 300.001, 300.0, "2026-09-02T14:00:00Z"),
+        ("UNAVAILABLE", None, 300.0, None),
+    ],
+)
+def test_freshness_boundary_rules(state, age, threshold, observed) -> None:
+    validate_freshness(
+        {
+            "state": state,
+            "observed_at_utc": observed,
+            "age_seconds": age,
+            "threshold_seconds": threshold,
+        }
+    )
+
+
+@pytest.mark.parametrize(
+    "state,age",
+    [
+        ("FRESH", 151.0),
+        ("AGING", 301.0),
+        ("STALE", 300.0),
+    ],
+)
+def test_freshness_rejects_state_age_contradictions(state: str, age: float) -> None:
+    with pytest.raises(ContractValidationError, match="contradicts"):
+        validate_freshness(
+            {
+                "state": state,
+                "observed_at_utc": "2026-09-02T14:00:00Z",
+                "age_seconds": age,
+                "threshold_seconds": 300.0,
+            }
+        )
 
 
 def test_qb_override_requires_rescore() -> None:
