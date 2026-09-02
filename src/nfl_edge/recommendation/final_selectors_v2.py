@@ -4,7 +4,8 @@ V5 remains immutable evidence for the frozen V1 product.  This module keeps
 HHR and Value exactly on their V1 implementations and replaces only Balanced
 with a market-specific protocol:
 
-- Moneyline: short favorites only, -130 through -100, q >= .52.
+- Moneyline: short true favorites only, -130 through -100, q >= .52, with
+  Pinnacle/no-vig anchor >= .50.
 - Spread: validated Expected-Margin 0-4 candidate provenance, positive model
   cover margin, supported Spread Confidence V3, q >= .50, price >= -130.
 - No strict +EV, VALUE/PLAYABLE, or positive model-price-gap eligibility.
@@ -22,9 +23,9 @@ from typing import Any, Iterable, Mapping
 
 from nfl_edge.recommendation.final_selectors_v1 import (
     FamilyTrust,
+    SPREAD_VALUE_REGION,
     TrustObservation,
     ValueSelectorState,
-    SPREAD_VALUE_REGION,
     _candidate_id,
     _common_model_offer,
     _finite,
@@ -42,6 +43,7 @@ from nfl_edge.recommendation.policy import NO_BALANCED_PLAY, shop_exact_offers
 
 BALANCED_ML_MIN_Q = 0.52
 BALANCED_ML_ODDS = (-130, -100)
+BALANCED_ML_MIN_PINNACLE = 0.50
 BALANCED_SPREAD_MIN_Q = 0.50
 BALANCED_SPREAD_ODDS = (-130, 200)
 BALANCED_SPREAD_REGION = SPREAD_VALUE_REGION
@@ -62,8 +64,15 @@ def _balanced_eligible(row: Mapping[str, Any]) -> bool:
     market = str(row.get("market_type", "")).lower()
     if market == "moneyline":
         # Bread-and-butter Balanced ML is intentionally short-favorite only.
-        # Plus-money ML belongs to Value; heavier juice belongs to HHR.
-        return q >= BALANCED_ML_MIN_Q and _within(row, BALANCED_ML_ODDS)
+        # Negative retail odds are not sufficient by themselves because both
+        # sides can be juiced. The no-vig sharp anchor must also favor the side.
+        pinnacle = _finite(row.get("pinnacle_anchor_probability"))
+        return (
+            q >= BALANCED_ML_MIN_Q
+            and _within(row, BALANCED_ML_ODDS)
+            and pinnacle is not None
+            and pinnacle >= BALANCED_ML_MIN_PINNACLE
+        )
 
     if market == "spread":
         cover_margin = _finite(row.get("model_cover_margin_v3"))
@@ -146,6 +155,7 @@ def select_headlines(
 __all__ = [
     "BALANCED_ML_MIN_Q",
     "BALANCED_ML_ODDS",
+    "BALANCED_ML_MIN_PINNACLE",
     "BALANCED_SPREAD_MIN_Q",
     "BALANCED_SPREAD_ODDS",
     "BALANCED_SPREAD_REGION",
