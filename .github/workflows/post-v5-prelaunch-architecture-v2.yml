@@ -10,6 +10,7 @@ on:
       - 'src/nfl_edge/holdout/xgboost_2025_v2.py'
       - 'config/xgboost_validation_tail_v2.yaml'
       - 'tests/holdout/test_xgboost_2025_v2_adapter.py'
+      - 'scripts/post_v5_balanced_v2_diagnostic.py'
       - 'docs/post_v5_prelaunch_architecture_v2.md'
       - '.github/workflows/post-v5-prelaunch-architecture-v2.yml'
   workflow_dispatch:
@@ -20,7 +21,7 @@ permissions:
 jobs:
   successor-contract:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 45
     env:
       PYTHONHASHSEED: '0'
       OMP_NUM_THREADS: '1'
@@ -45,6 +46,7 @@ jobs:
             src/nfl_edge/recommendation/final_selectors_v2.py \
             src/nfl_edge/backtest/xgboost_walk_forward_v2.py \
             src/nfl_edge/holdout/xgboost_2025_v2.py \
+            scripts/post_v5_balanced_v2_diagnostic.py \
             tests/recommendation/test_task05g_final_selectors_v2.py \
             tests/holdout/test_xgboost_2025_v2_adapter.py
       - name: Run focused successor regressions
@@ -66,6 +68,7 @@ jobs:
               Path('src/nfl_edge/recommendation/final_selectors_v2.py'),
               Path('src/nfl_edge/backtest/xgboost_walk_forward_v2.py'),
               Path('src/nfl_edge/holdout/xgboost_2025_v2.py'),
+              Path('scripts/post_v5_balanced_v2_diagnostic.py'),
           ]
           text = '\n'.join(path.read_text() for path in paths)
           hits = [token for token in forbidden if token in text]
@@ -73,3 +76,44 @@ jobs:
               raise SystemExit(f'forbidden network/execution surface found: {hits}')
           print('NO_NEW_2025_EXECUTION_OR_ACQUISITION_SURFACE=PASS')
           PY
+      - name: Rebuild frozen 2020-24 evidence table for descriptive V2 replay
+        run: |
+          python scripts/task05f_evaluator_final_runner.py --out artifacts/post_v5_v2/upstream
+          python scripts/task05g_model_confidence_v2_entrypoint.py \
+            --root . \
+            --board artifacts/post_v5_v2/upstream/historical_evaluator_board.parquet \
+            --out artifacts/post_v5_v2/v2
+          python scripts/task05g_spread_confidence_v3_runner.py \
+            --root . \
+            --v2-candidates artifacts/post_v5_v2/v2/v2_candidate_table.parquet \
+            --out artifacts/post_v5_v2/v3
+          python - <<'PY'
+          import polars as pl
+          board = pl.read_parquet('artifacts/post_v5_v2/v3/v3_candidate_table.parquet')
+          seasons = {int(x) for x in board['season'].unique().to_list()}
+          assert seasons == {2020, 2021, 2022, 2023, 2024}, seasons
+          assert 2025 not in seasons
+          print('BALANCED_V2_DIAGNOSTIC_2025_FIREWALL=PASS')
+          PY
+      - name: Run descriptive Balanced V2 replay without retuning
+        run: |
+          python scripts/post_v5_balanced_v2_diagnostic.py \
+            --v3-candidates artifacts/post_v5_v2/v3/v3_candidate_table.parquet \
+            --out artifacts/post_v5_v2/balanced
+          python - <<'PY'
+          import json
+          s = json.load(open('artifacts/post_v5_v2/balanced/balanced_v2_scorecard.json'))
+          assert s['status'] == 'DESCRIPTIVE_EXPOSED_2020_2024__NO_RETUNING_AUTHORIZED', s
+          assert s['sealed_not_read'] == [2025], s
+          assert all(s['invariants'].values()), s['invariants']
+          # Mechanical viability only: this is deliberately not a hit-rate/ROI gate.
+          assert s['overall']['plays'] > 0, s
+          assert s['overall']['plus_money_ml_count'] == 0, s
+          assert s['overall']['ml_sharp_market_dog_count'] == 0, s
+          print(json.dumps(s, indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: post-v5-prelaunch-architecture-v2-${{ github.sha }}
+          path: artifacts/post_v5_v2/balanced/
+          if-no-files-found: error
