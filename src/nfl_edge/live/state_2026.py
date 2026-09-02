@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -154,10 +155,7 @@ def bootstrap_entering_2026_state(
     xgb_history = xgb_dev.clone()
 
     expected_history = runtime._development_expected_margin()
-    # The helper above uses runtime.ROOT; enforce that this checkout is the same
-    # source tree when using the connector/Actions production path.
     if root != runtime.ROOT.resolve():
-        # Re-load the same development frame from the requested checkout.
         features_path = _repo_file(root, runtime.FEATURES)
         games_path = _repo_file(root, runtime.GAMES)
         predictors = (
@@ -187,8 +185,6 @@ def bootstrap_entering_2026_state(
     totals_training = pl.read_parquet(_repo_file(root, runtime.TOTALS_DEV_MODELING))
 
     context, xgb_all = runtime._pre_result_frames(feature_cols, base_features)
-    # If a non-default checkout is ever used, the runtime helper is deliberately
-    # not allowed to silently mix trees.
     if root != runtime.ROOT.resolve():
         raise Entering2026StateError(
             "entering-state bootstrap must run from the active repository checkout"
@@ -298,7 +294,11 @@ def bootstrap_entering_2026_state(
         raise Entering2026StateError(f"QB-Elo terminal season drift: {qb_state.current_season}")
 
     latest = context["scheduled_start_utc"].max()
-    history_complete = str(latest).replace("+00:00", "Z")
+    if not isinstance(latest, datetime):
+        raise Entering2026StateError("2025 scheduled_start_utc terminal value is not datetime")
+    if latest.tzinfo is None or latest.utcoffset() is None:
+        latest = latest.replace(tzinfo=timezone.utc)
+    history_complete = latest.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
     identity = {
         "completed_2025_blocks": completed,
         "history_complete_through_utc": history_complete,
