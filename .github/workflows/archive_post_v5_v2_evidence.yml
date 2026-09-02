@@ -1,0 +1,118 @@
+name: Archive Post-V5 V2 Evidence
+
+on:
+  push:
+    branches:
+      - archive/post-v5-v2-architecture-evidence
+    paths:
+      - .github/workflows/archive_post_v5_v2_evidence.yml
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: archive/post-v5-v2-architecture-evidence
+          fetch-depth: 0
+
+      - name: Download authoritative diagnostic artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          out="reports/architecture_verification/post_v5_v2_2020_2025"
+          mkdir -p "$out"
+          curl --fail --location \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/9832972284/zip" \
+            -o "$out/post-v5-v2-historical-e2e.zip"
+          curl --fail --location \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/9833013220/zip" \
+            -o "$out/post-v5-v2-all-years-diagnostic.zip"
+
+      - name: Write immutable provenance manifest
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+
+          out = Path('reports/architecture_verification/post_v5_v2_2020_2025')
+          records = [
+              {
+                  'file': 'post-v5-v2-historical-e2e.zip',
+                  'source_workflow_run_id': 33594524312,
+                  'source_artifact_id': 9832972284,
+                  'source_artifact_name': 'post-v5-v2-historical-e2e-cfa31ec782f71063072feae6d232ddabd2a31a14',
+                  'source_head_sha': 'eb8c60e1dbe03528298e079f29e1ee1c2e3fbecf',
+                  'role': 'true historical 2018-2024 XGBoost V1 control plus V2 adaptive regeneration propagated through Task05F/confidence/selectors',
+              },
+              {
+                  'file': 'post-v5-v2-all-years-diagnostic.zip',
+                  'source_workflow_run_id': 33594524214,
+                  'source_artifact_id': 9833013220,
+                  'source_artifact_name': 'post-v5-v2-all-years-diagnostic-cfa31ec782f71063072feae6d232ddabd2a31a14',
+                  'source_head_sha': 'eb8c60e1dbe03528298e079f29e1ee1c2e3fbecf',
+                  'role': '2020-2024 architecture replay plus XGBoost V2 availability audit and true 2025 V2 diagnostic chronology',
+              },
+          ]
+          for rec in records:
+              p = out / rec['file']
+              data = p.read_bytes()
+              rec['sha256'] = hashlib.sha256(data).hexdigest()
+              rec['size_bytes'] = len(data)
+
+          manifest = {
+              'schema': 'NFL_EDGE_POST_V5_V2_ARCHITECTURE_EVIDENCE_V1',
+              'purpose': 'Permanent repository evidence for post-V5 V2 architecture verification. This is diagnostic evidence, not tuning evidence.',
+              'production_merge_commit_verified': '91e7362aca589179ab4c8f92009315a26bb45faf',
+              'diagnostic_pr': 94,
+              'diagnostic_pr_disposition': 'closed_unmerged',
+              'no_new_odds_api_calls': True,
+              'no_threshold_or_model_retuning': True,
+              'holdout_semantics': '2025 is exposed diagnostic replay only; never a new holdout or tuning source.',
+              'artifacts': records,
+          }
+          (out / 'MANIFEST.json').write_text(json.dumps(manifest, indent=2, sort_keys=True) + '\n')
+          PY
+
+          cat > reports/architecture_verification/post_v5_v2_2020_2025/README.md <<'EOF'
+          # Post-V5 V2 Architecture Verification Evidence
+
+          This directory permanently preserves the two diagnostic ZIP artifacts used to verify the merged post-V5 V2 architecture across historical seasons and exposed 2025.
+
+          ## Authority
+
+          - Production architecture merge commit: `91e7362aca589179ab4c8f92009315a26bb45faf`
+          - Diagnostic harness PR: `#94` — closed unmerged after verification
+          - No new Odds API calls were made for this verification.
+          - No thresholds, model parameters, selector bounds, or staking rules were retuned from these results.
+          - 2025 is exposed diagnostic evidence only and must never be treated as a fresh holdout.
+
+          ## Artifacts
+
+          - `post-v5-v2-historical-e2e.zip` — canonical historical XGBoost V1 reproduction control, V2 adaptive regeneration, and downstream Task05F/confidence/selector propagation.
+          - `post-v5-v2-all-years-diagnostic.zip` — all-years architecture diagnostic including 2020-2024 replay, XGBoost V2 availability evidence, and true 2025 V2 chronology.
+
+          `MANIFEST.json` records GitHub workflow run IDs, artifact IDs, source head SHA, exact repository ZIP SHA-256 values, and byte sizes.
+
+          These files are the evidence of record. Future architecture discussions should inspect these artifacts and manifest rather than rely on conversational memory.
+          EOF
+
+      - name: Commit evidence to archive branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/architecture_verification/post_v5_v2_2020_2025
+          git commit -m "Archive post-V5 V2 architecture verification evidence"
+          git push origin HEAD:archive/post-v5-v2-architecture-evidence
