@@ -52,7 +52,9 @@ def require_exact_keys(obj: Mapping[str, Any], keys: set[str] | frozenset[str], 
     require_keys(obj, expected, path)
     unknown = sorted(set(obj) - expected)
     if unknown:
-        raise ContractValidationError(f"{path} has unknown field(s): {unknown}")
+        raise ContractValidationError(
+            f"{path} has unknown field(s): {unknown}; payload is not JSON compliant with the frozen V1 schema"
+        )
 
 
 def require_string(value: Any, path: str) -> str:
