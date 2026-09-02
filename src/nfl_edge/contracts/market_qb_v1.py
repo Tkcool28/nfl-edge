@@ -18,19 +18,41 @@ from nfl_edge.contracts.common_v1 import (
     validate_utc_timestamp,
 )
 
+FRESHNESS_AGING_FRACTION = 0.5
+
+
+def _expected_freshness_state(age_seconds: float, threshold_seconds: float) -> str:
+    aging_boundary = threshold_seconds * FRESHNESS_AGING_FRACTION
+    if age_seconds < aging_boundary:
+        return "FRESH"
+    if age_seconds <= threshold_seconds:
+        return "AGING"
+    return "STALE"
+
 
 def validate_freshness(value: Any, path: str = "freshness") -> None:
     obj = require_map(value, path)
     require_keys(obj, {"state", "observed_at_utc", "age_seconds", "threshold_seconds"}, path)
     state = require_enum(obj["state"], FRESHNESS_STATES, f"{path}.state")
+    threshold = require_number(obj["threshold_seconds"], f"{path}.threshold_seconds", 0.0)
+    if threshold <= 0.0:
+        raise ContractValidationError(f"{path}.threshold_seconds must be > 0")
+
     if state == "UNAVAILABLE":
-        validate_utc_timestamp(obj["observed_at_utc"], f"{path}.observed_at_utc", nullable=True)
-        if obj["age_seconds"] is not None:
-            require_number(obj["age_seconds"], f"{path}.age_seconds", 0.0)
-    else:
-        validate_utc_timestamp(obj["observed_at_utc"], f"{path}.observed_at_utc")
-        require_number(obj["age_seconds"], f"{path}.age_seconds", 0.0)
-    require_number(obj["threshold_seconds"], f"{path}.threshold_seconds", 0.0)
+        if obj["observed_at_utc"] is not None or obj["age_seconds"] is not None:
+            raise ContractValidationError(
+                f"{path} UNAVAILABLE requires observed_at_utc=null and age_seconds=null"
+            )
+        return
+
+    validate_utc_timestamp(obj["observed_at_utc"], f"{path}.observed_at_utc")
+    age = require_number(obj["age_seconds"], f"{path}.age_seconds", 0.0)
+    expected = _expected_freshness_state(age, threshold)
+    if state != expected:
+        raise ContractValidationError(
+            f"{path}.state={state} contradicts age_seconds={age} and "
+            f"threshold_seconds={threshold}; expected {expected}"
+        )
 
 
 def validate_qb_context(value: Any, path: str) -> None:
