@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import nfl_edge.recommendation as recommendation
-import nfl_edge.recommendation.final_selectors_v2 as selectors
+import nfl_edge.recommendation.final_selectors_v1 as selectors
 import nfl_edge.recommendation.policy as legacy_policy
 import nfl_edge.recommendation.staking_v1 as staking
 
