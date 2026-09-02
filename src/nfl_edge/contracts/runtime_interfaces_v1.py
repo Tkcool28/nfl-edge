@@ -135,6 +135,7 @@ class QBOverrideAudit:
     changed_at_utc: str
     previous_provenance_id: str
     new_provenance_id: str
+    rescore_required: bool = True
 
     def validate(self) -> "QBOverrideAudit":
         for name, value in (
@@ -151,4 +152,6 @@ class QBOverrideAudit:
         validate_utc_timestamp(self.changed_at_utc, "qb_override.changed_at_utc")
         if self.previous_provenance_id == self.new_provenance_id:
             raise ContractValidationError("override must create new provenance; silent edit is forbidden")
+        if not self.rescore_required:
+            raise ContractValidationError("QB override must mark the affected game for rescore")
         return self
