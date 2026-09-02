@@ -5,7 +5,7 @@ This wrapper does not alter the frozen V1/V5 implementation. It loads the
 standard 2025 evaluation entry point and swaps only the two successor seams
 approved in PR #93:
 
-- XGBoost block prediction -> xgboost_2025_v2.predict_xgboost_block
+- XGBoost block prediction -> xgboost_2025_v2.predict_xgboost_block_v2
 - Balanced selector -> final_selectors_v2.select_balanced
 
 HHR, Value, Task05F, QB-Elo, Expected Margin, totals, staking, Play Through,
@@ -21,7 +21,7 @@ from pathlib import Path
 
 from nfl_edge.holdout import executor_runtime_2025 as runtime
 from nfl_edge.holdout import product_2025
-from nfl_edge.holdout.xgboost_2025_v2 import predict_xgboost_block as predict_xgboost_block_v2
+from nfl_edge.holdout.xgboost_2025_v2 import predict_xgboost_block_v2
 from nfl_edge.recommendation.final_selectors_v2 import select_balanced as select_balanced_v2
 
 ROOT = Path(__file__).resolve().parents[1]
