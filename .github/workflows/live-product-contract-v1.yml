@@ -1,0 +1,61 @@
+name: Live Product Contract V1
+
+on:
+  pull_request:
+    paths:
+      - 'src/nfl_edge/contracts/**'
+      - 'src/nfl_edge/publication/**'
+      - 'src/nfl_edge/staking_policy_v1.py'
+      - 'src/nfl_edge/recommendation/staking_v1.py'
+      - 'tests/contracts/**'
+      - 'fixtures/contracts/**'
+      - 'schemas/NFL_EDGE_PRODUCT_API_V1.schema.json'
+      - '.github/workflows/live-product-contract-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  base-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install base production dependencies only
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e . pytest
+      - name: Prove model-development extras are absent
+        run: |
+          python - <<'PY'
+          import importlib.util
+          optional = ("xgboost", "sklearn", "pandas", "pyarrow")
+          present = [name for name in optional if importlib.util.find_spec(name) is not None]
+          if present:
+              raise SystemExit(f"model-development extras unexpectedly present: {present}")
+          print("MODEL_DEVELOPMENT_EXTRAS_ABSENT")
+          PY
+      - name: Base dependency import smoke
+        run: |
+          python - <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          from nfl_edge.contracts.live_product_v1 import validate_product_snapshot
+          from nfl_edge.publication.live_product_v1 import promote_validated_snapshot
+
+          assert "nfl_edge.recommendation" not in sys.modules
+          fixture = json.loads(pathlib.Path(
+              "fixtures/contracts/nfl_edge_product_api_v1_week1_mock.json"
+          ).read_text())
+          validate_product_snapshot(fixture)
+          assert callable(promote_validated_snapshot)
+          print("BASE_DEPENDENCY_IMPORT_SMOKE_OK")
+          PY
+      - name: Run focused Contract Day suite
+        run: pytest -q tests/contracts
