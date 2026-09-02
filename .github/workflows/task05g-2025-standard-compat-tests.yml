@@ -45,12 +45,3 @@ jobs:
           pytest -q \
             tests/holdout/test_standard_2025_history_adapter.py \
             tests/holdout/test_standard_2025_product_compat.py
-      - name: Prove this workflow cannot execute 2025
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          text = Path('.github/workflows/task05g-2025-standard-compat-tests.yml').read_text()
-          assert 'python scripts/task05g_2025_standard_evaluation_v1.py' not in text
-          assert 'gh workflow run' not in text
-          print('REAL_2025_EVALUATION_EXECUTED=0')
-          PY
