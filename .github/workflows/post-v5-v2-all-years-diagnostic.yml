@@ -1,0 +1,198 @@
+name: Post-V5 V2 All-Years Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/post_v5_v2_2025_diagnostic_rerun.py'
+      - '.github/workflows/post-v5-v2-all-years-diagnostic.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify-architecture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    env:
+      PYTHONHASHSEED: '0'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OPENBLAS_CORETYPE: 'HASWELL'
+      MKL_NUM_THREADS: '1'
+      MKL_CBWR: 'COMPATIBLE'
+      NUMEXPR_NUM_THREADS: '1'
+      GH_TOKEN: ${{ github.token }}
+      MARKET_ARTIFACT_ID: '9725230097'
+      MARKET_ARTIFACT_DIGEST: 'sha256:47382881862b4bdd4a1f175d4f342e8c99ac51cb37e8f92383a82708cbb61369'
+      DIAG_RUN_ID: '2025-post-v5-v2-diagnostic'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install model-development runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+
+      - name: Compile diagnostic-only wrapper and prove merged V2 imports
+        run: |
+          python -m py_compile scripts/post_v5_v2_2025_diagnostic_rerun.py
+          python - <<'PY'
+          from nfl_edge.recommendation.final_selectors_v2 import BALANCED_ML_ODDS, BALANCED_SPREAD_MIN_Q
+          from nfl_edge.holdout.xgboost_2025_v2 import predict_xgboost_block
+          assert BALANCED_ML_ODDS == (-130, -100)
+          assert BALANCED_SPREAD_MIN_Q == 0.50
+          assert callable(predict_xgboost_block)
+          print('MERGED_V2_IMPORTS=PASS')
+          PY
+
+      - name: Stage exact historical PBP family
+        run: |
+          sudo rm -rf /artifacts/raw/task05c_pbp_v1
+          sudo mkdir -p /artifacts/raw/task05c_pbp_v1
+          sudo cp data/frozen/task05c_pbp_v1/play_by_play_*.parquet /artifacts/raw/task05c_pbp_v1/
+          sudo chmod -R a-w /artifacts/raw/task05c_pbp_v1
+
+      - name: Retrieve already-paid certified 2025 market artifact
+        run: |
+          set -euo pipefail
+          rm -rf artifacts/post_v5_v2_all_years/market /tmp/post_v5_market.zip
+          mkdir -p artifacts/post_v5_v2_all_years/market
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${MARKET_ARTIFACT_ID}" > /tmp/post_v5_market_meta.json
+          python - <<'PY'
+          import json, os
+          p=json.load(open('/tmp/post_v5_market_meta.json'))
+          assert p['id']==int(os.environ['MARKET_ARTIFACT_ID'])
+          assert p['expired'] is False
+          assert p['digest']==os.environ['MARKET_ARTIFACT_DIGEST'], (p['digest'], os.environ['MARKET_ARTIFACT_DIGEST'])
+          print('CERTIFIED_MARKET_ARTIFACT=PASS')
+          PY
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${MARKET_ARTIFACT_ID}/zip" > /tmp/post_v5_market.zip
+          unzip -q /tmp/post_v5_market.zip -d artifacts/post_v5_v2_all_years/market
+          echo 'ODDS_API_CALLS=0'
+
+      - name: Rebuild frozen 2020-24 evaluator/confidence evidence
+        run: |
+          mkdir -p artifacts/post_v5_v2_all_years
+          python scripts/task05f_evaluator_final_runner.py --out artifacts/post_v5_v2_all_years/upstream
+          python scripts/task05g_model_confidence_v2_entrypoint.py \
+            --root . \
+            --board artifacts/post_v5_v2_all_years/upstream/historical_evaluator_board.parquet \
+            --out artifacts/post_v5_v2_all_years/v2
+          python scripts/task05g_spread_confidence_v3_runner.py \
+            --root . \
+            --v2-candidates artifacts/post_v5_v2_all_years/v2/v2_candidate_table.parquet \
+            --out artifacts/post_v5_v2_all_years/v3
+
+      - name: Replay 2020-24 V2 Balanced and unchanged V1 HHR/Value
+        run: |
+          python scripts/post_v5_balanced_v2_diagnostic.py \
+            --v3-candidates artifacts/post_v5_v2_all_years/v3/v3_candidate_table.parquet \
+            --out artifacts/post_v5_v2_all_years/historical_balanced_v2
+          python scripts/task05g_canonical_product_replay_v1.py \
+            --v3-candidates artifacts/post_v5_v2_all_years/v3/v3_candidate_table.parquet \
+            --out artifacts/post_v5_v2_all_years/historical_v1_hhr_value
+
+      - name: Audit XGBoost V2 availability across 2018-2024
+        run: |
+          python - <<'PY'
+          import csv, json
+          import polars as pl
+          from nfl_edge.backtest.xgboost_walk_forward import SHARED_SETTINGS, WalkForwardEngine, compute_block_keys, evaluate_warmup_reason
+          from nfl_edge.backtest.xgboost_walk_forward_v2 import construct_adaptive_split
+
+          frame=pl.read_parquet('data/derived/features_v1/xgboost_development_2018_2024.parquet')
+          keys=compute_block_keys(frame)
+          rows=[]
+          for key in keys:
+              split=construct_adaptive_split(frame,key)
+              fit=WalkForwardEngine._filter_by_keys(frame,[(k.season,k.season_type,k.week) for k in split.fit_blocks])
+              val=WalkForwardEngine._filter_by_keys(frame,[(k.season,k.season_type,k.week) for k in split.validation_blocks])
+              reason=evaluate_warmup_reason(split,fit,val,SHARED_SETTINGS)
+              rows.append({
+                  'season':key.season,'season_type':key.season_type,'week':key.week,
+                  'warmup':reason is not None,'warmup_reason':reason or '',
+                  'fit_rows':fit.height,'fit_blocks':len(split.fit_blocks),
+                  'validation_rows':val.height,'validation_blocks':len(split.validation_blocks),
+              })
+          out='artifacts/post_v5_v2_all_years/xgb_v2_availability_2018_2024.csv'
+          with open(out,'w',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=rows[0].keys()); w.writeheader(); w.writerows(rows)
+          reg_w1=[r for r in rows if r['season_type']=='REG' and r['week']==1]
+          mature=[r for r in reg_w1 if r['season']>=2019]
+          assert mature and all(not r['warmup'] for r in mature), mature
+          summary={
+              'blocks':len(rows),
+              'warmup_blocks':sum(r['warmup'] for r in rows),
+              'regular_week1':reg_w1,
+              'mature_week1_all_live':all(not r['warmup'] for r in mature),
+          }
+          open('artifacts/post_v5_v2_all_years/xgb_v2_availability_summary.json','w').write(json.dumps(summary,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(summary,indent=2,sort_keys=True))
+          PY
+
+      - name: Execute true 2025 V2 diagnostic rerun
+        run: |
+          python scripts/post_v5_v2_2025_diagnostic_rerun.py \
+            --run-id "${DIAG_RUN_ID}" \
+            --pbp-root data/frozen/task05c_pbp_v1 \
+            --market-root artifacts/post_v5_v2_all_years/market \
+            --historical-board artifacts/post_v5_v2_all_years/upstream/historical_evaluator_board.parquet \
+            --output-base artifacts/post_v5_v2_all_years/runs
+
+      - name: Build combined architecture summary
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          root=Path('artifacts/post_v5_v2_all_years')
+          hist=json.load(open(root/'historical_balanced_v2/balanced_v2_scorecard.json'))
+          xgb=json.load(open(root/'xgb_v2_availability_summary.json'))
+          run=root/'runs/2025-post-v5-v2-diagnostic'
+          lane=[]
+          with open(run/'holdout_lane_summary.csv',newline='') as f:
+              lane=list(csv.DictReader(f))
+          mix=[]
+          with open(run/'holdout_market_mix.csv',newline='') as f:
+              mix=list(csv.DictReader(f))
+          weekly=[]
+          with open(run/'holdout_weekly_summary.csv',newline='') as f:
+              weekly=list(csv.DictReader(f))
+          out={
+              'status':'POST_V5_V2_ALL_YEARS_DIAGNOSTIC_COMPLETE__NO_RETUNING_AUTHORIZED',
+              'merged_architecture_base':'91e7362aca589179ab4c8f92009315a26bb45faf',
+              'historical_2020_2024_balanced_v2':hist,
+              'xgb_v2_availability_2018_2024':xgb,
+              'diagnostic_2025_lane_summary':lane,
+              'diagnostic_2025_market_mix':mix,
+              'diagnostic_2025_weekly_summary':weekly,
+              'thresholds_retuned':False,
+              'models_retuned':False,
+              'odds_api_calls':0,
+              'new_market_acquisition':False,
+          }
+          (root/'all_years_architecture_summary.json').write_text(json.dumps(out,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(out,indent=2,sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: post-v5-v2-all-years-diagnostic-${{ github.sha }}
+          path: |
+            artifacts/post_v5_v2_all_years/historical_balanced_v2/
+            artifacts/post_v5_v2_all_years/historical_v1_hhr_value/
+            artifacts/post_v5_v2_all_years/xgb_v2_availability_2018_2024.csv
+            artifacts/post_v5_v2_all_years/xgb_v2_availability_summary.json
+            artifacts/post_v5_v2_all_years/runs/${{ env.DIAG_RUN_ID }}/
+            artifacts/post_v5_v2_all_years/all_years_architecture_summary.json
+            /tmp/post_v5_market_meta.json
+          if-no-files-found: warn
