@@ -43,7 +43,9 @@ def promote_validated_snapshot(candidate: Any, output_dir: str | Path) -> Path:
     if immutable.exists():
         raise FileExistsError(f"immutable snapshot already exists: {immutable}")
 
-    payload = (json.dumps(validated, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    payload = (
+        json.dumps(validated, indent=2, sort_keys=True, allow_nan=False) + "\n"
+    ).encode("utf-8")
     fd = os.open(immutable, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o640)
     try:
         with os.fdopen(fd, "wb", closefd=True) as handle:
