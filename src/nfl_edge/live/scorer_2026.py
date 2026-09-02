@@ -5,7 +5,7 @@ import hashlib
 import json
 from collections import Counter
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import polars as pl
 
@@ -33,6 +33,7 @@ MODEL_VERSIONS = {
     "ridge_totals_r4": "ridge-totals-r4-alpha100",
 }
 QB_FRESHNESS_USABLE = frozenset({"FRESH", "AGING"})
+XGB_REQUIRED_CONTEXT_FIELDS = ("roof_type",)
 
 
 class LiveScoringError(RuntimeError):
@@ -40,7 +41,9 @@ class LiveScoringError(RuntimeError):
 
 
 def _sha(value: Any) -> str:
-    raw = json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False, default=str).encode("utf-8")
+    raw = json.dumps(
+        value, sort_keys=True, separators=(",", ":"), allow_nan=False, default=str
+    ).encode("utf-8")
     return hashlib.sha256(raw).hexdigest()
 
 
@@ -96,29 +99,55 @@ def _qb_usable_game_ids(features: LiveWeek1Features) -> tuple[str, ...]:
     return tuple(usable)
 
 
-def _unavailable_reason(features: LiveWeek1Features, game: dict[str, Any]) -> tuple[str, list[str]]:
+def _xgb_context_usable_game_ids(
+    schedule: Mapping[str, Any], *, qb_usable_ids: tuple[str, ...]
+) -> tuple[str, ...]:
+    qb_usable = set(qb_usable_ids)
+    usable: list[str] = []
+    for game in schedule["games"]:
+        gid = str(game["game_id"])
+        if gid not in qb_usable:
+            continue
+        if all(game.get(field) is not None for field in XGB_REQUIRED_CONTEXT_FIELDS):
+            usable.append(gid)
+    return tuple(sorted(usable))
+
+
+def _unavailable_reason(
+    features: LiveWeek1Features, game: dict[str, Any]
+) -> tuple[str, list[str]]:
     gid = str(game["game_id"])
     sides = (
         features.resolutions[(gid, str(game["home_team"]))],
         features.resolutions[(gid, str(game["away_team"]))],
     )
     if any(side.freshness_state in {"STALE", "UNAVAILABLE"} for side in sides):
-        return "STALE_INPUT", ["Expected-QB source is stale or unavailable; QB-dependent scoring suppressed."]
+        return "STALE_INPUT", [
+            "Expected-QB source is stale or unavailable; QB-dependent scoring suppressed."
+        ]
     labels = [
         f"{side.team}:{side.resolution_status}"
         for side in sides
         if side.resolution_status not in QB_SCOREABLE_STATES
     ]
-    return "UNAVAILABLE", ["Expected-QB identity is not scoreable: " + ", ".join(labels)]
+    return "UNAVAILABLE", [
+        "Expected-QB identity is not scoreable: " + ", ".join(labels)
+    ]
 
 
 def _prediction_identity(
-    *, state_version: str, game_id: str, model: str, qb_provenance: list[str] | None = None
+    *,
+    state_version: str,
+    game_id: str,
+    model: str,
+    football_context: Mapping[str, Any],
+    qb_provenance: list[str] | None = None,
 ) -> str:
     payload = {
         "state_version": state_version,
         "game_id": game_id,
         "model": model,
+        "football_context": dict(football_context),
         "qb_provenance": sorted(qb_provenance or []),
     }
     return f"football-input:{_sha(payload)[:24]}"
@@ -158,6 +187,7 @@ def score_week1(
         frozen_model_artifact_versions=MODEL_VERSIONS,
         feature_state_versions={
             "live_football_features": "features-v1+live-2026-week1-v1",
+            "live_football_context": str(schedule["context_version"]),
             "totals": "totals-v1-exact90",
         },
     ).validate()
@@ -178,41 +208,75 @@ def score_week1(
         for row in expected_result["predictions"]
     }
 
-    usable_ids = _qb_usable_game_ids(features)
+    qb_usable_ids = _qb_usable_game_ids(features)
+    xgb_usable_ids = _xgb_context_usable_game_ids(
+        schedule, qb_usable_ids=qb_usable_ids
+    )
     qb_by: dict[str, float] = {}
     xgb_by: dict[str, float] = {}
     totals_by: dict[str, float] = {}
     xgb_warmup = False
     xgb_warmup_reason: str | None = None
-    if usable_ids:
-        current_usable = current_expected.filter(pl.col("game_id").is_in(list(usable_ids)))
-        usable_block = build_live_block(current_usable)
+
+    if qb_usable_ids:
+        current_qb_usable = current_expected.filter(
+            pl.col("game_id").is_in(list(qb_usable_ids))
+        )
+        qb_usable_block = build_live_block(current_qb_usable)
         qb_resolver = build_qb_adjustment_resolver(
             features.qb_features,
-            game_ids=usable_ids,
+            game_ids=qb_usable_ids,
             config_path=root / "config/qb_elo_v1.yaml",
         )
         qb_result = predict_qb_elo_block(
             history_games=state.expected_history,
-            current_games=current_usable,
-            block=usable_block,
+            current_games=current_qb_usable,
+            block=qb_usable_block,
             state=state.qb_state,
             config=state.qb_config,
             qb_adjustment_resolver=qb_resolver,
             run_id="live_2026_week1_v1",
-            created_at=usable_block.as_of_utc,
+            created_at=qb_usable_block.as_of_utc,
         )
         qb_by = {
             str(row["game_id"]): float(row["predicted_home_win_probability"])
             for row in qb_result["predictions"]
         }
 
-        current_xgb = features.xgboost_surface.filter(pl.col("game_id").is_in(list(usable_ids)))
+        totals_qb = build_totals_qb_surface(
+            features.qb_features, game_ids=qb_usable_ids
+        )
+        totals_current = features.game_features.filter(
+            pl.col("game_id").is_in(list(qb_usable_ids))
+        )
+        totals_frozen = materialize_live_totals_feature_block(
+            state=state.totals_state,
+            current_games=totals_current,
+            qb_surface=totals_qb,
+            block=qb_usable_block,
+        )
+        totals_result = predict_ridge_totals_r4_block(
+            prior_history=state.totals_training,
+            current_games=totals_frozen.model_frame,
+            block=qb_usable_block,
+        )
+        totals_by = {
+            str(gid): float(value)
+            for gid, value in zip(
+                totals_result["game_ids"], totals_result["predicted_totals"], strict=True
+            )
+        }
+
+    if xgb_usable_ids:
+        current_xgb = features.xgboost_surface.filter(
+            pl.col("game_id").is_in(list(xgb_usable_ids))
+        )
+        xgb_block = build_live_block(current_xgb)
         xgb_result = predict_xgboost_v2_block(
             development_reference=state.xgb_development,
             prior_history=state.xgb_history,
             current_games=current_xgb,
-            block=usable_block,
+            block=xgb_block,
             feature_cols=list(state.xgb_feature_cols),
         )
         xgb_warmup = bool(xgb_result.get("warmup"))
@@ -225,27 +289,9 @@ def score_week1(
                 )
             }
 
-        totals_qb = build_totals_qb_surface(features.qb_features, game_ids=usable_ids)
-        totals_current = features.game_features.filter(pl.col("game_id").is_in(list(usable_ids)))
-        totals_frozen = materialize_live_totals_feature_block(
-            state=state.totals_state,
-            current_games=totals_current,
-            qb_surface=totals_qb,
-            block=usable_block,
-        )
-        totals_result = predict_ridge_totals_r4_block(
-            prior_history=state.totals_training,
-            current_games=totals_frozen.model_frame,
-            block=usable_block,
-        )
-        totals_by = {
-            str(gid): float(value)
-            for gid, value in zip(
-                totals_result["game_ids"], totals_result["predicted_totals"], strict=True
-            )
-        }
-
     schedule_by = {str(row["game_id"]): row for row in schedule["games"]}
+    qb_usable_set = set(qb_usable_ids)
+    xgb_usable_set = set(xgb_usable_ids)
     game_rows: list[dict[str, Any]] = []
     for game in features.current_games.sort("scheduled_start_utc", "game_id").to_dicts():
         gid = str(game["game_id"])
@@ -253,55 +299,105 @@ def score_week1(
         home_qb = features.qb_contexts[(gid, home_team)]
         away_qb = features.qb_contexts[(gid, away_team)]
         qb_provenance = [home_qb["provenance_id"], away_qb["provenance_id"]]
+        schedule_row = schedule_by[gid]
+        football_context = {
+            "context_version": schedule["context_version"],
+            "neutral_site": bool(schedule_row["neutral_site"]),
+            "venue_id": schedule_row["venue_id"],
+            "away_rest": schedule_row["away_rest"],
+            "home_rest": schedule_row["home_rest"],
+            "surface": schedule_row["surface"],
+            "roof_type": schedule_row["roof_type"],
+        }
         base_identity = {
             model: _prediction_identity(
                 state_version=state.state_version,
                 game_id=gid,
                 model=model,
+                football_context=football_context,
                 qb_provenance=qb_provenance if model != "expected_margin" else None,
             )
             for model in MODEL_VERSIONS
         }
-        if gid in usable_ids:
+
+        if gid in qb_usable_set:
             qb_output = _model_output(
-                status="AVAILABLE", prediction=qb_by[gid], support="SUPPORTED",
-                input_identity=base_identity["qb_elo"], artifact_version=MODEL_VERSIONS["qb_elo"],
+                status="AVAILABLE",
+                prediction=qb_by[gid],
+                support="SUPPORTED",
+                input_identity=base_identity["qb_elo"],
+                artifact_version=MODEL_VERSIONS["qb_elo"],
             )
-            if xgb_warmup:
+            totals_output = _model_output(
+                status="AVAILABLE",
+                prediction=totals_by[gid],
+                support="SUPPORTED",
+                input_identity=base_identity["ridge_totals_r4"],
+                artifact_version=MODEL_VERSIONS["ridge_totals_r4"],
+            )
+            if gid not in xgb_usable_set:
                 xgb_output = _model_output(
-                    status="UNSUPPORTED", prediction=None, support="UNSUPPORTED",
-                    input_identity=base_identity["xgboost_v2"], artifact_version=MODEL_VERSIONS["xgboost_v2"],
+                    status="UNAVAILABLE",
+                    prediction=None,
+                    support="UNSUPPORTED",
+                    input_identity=base_identity["xgboost_v2"],
+                    artifact_version=MODEL_VERSIONS["xgboost_v2"],
+                    warnings=[
+                        "Frozen XGBoost V2 requires known roof_category; current live football context is missing."
+                    ],
+                )
+            elif xgb_warmup:
+                xgb_output = _model_output(
+                    status="UNSUPPORTED",
+                    prediction=None,
+                    support="UNSUPPORTED",
+                    input_identity=base_identity["xgboost_v2"],
+                    artifact_version=MODEL_VERSIONS["xgboost_v2"],
                     warnings=[f"Frozen XGBoost V2 warmup: {xgb_warmup_reason}"],
                 )
             else:
                 xgb_output = _model_output(
-                    status="AVAILABLE", prediction=xgb_by[gid], support="SUPPORTED",
-                    input_identity=base_identity["xgboost_v2"], artifact_version=MODEL_VERSIONS["xgboost_v2"],
+                    status="AVAILABLE",
+                    prediction=xgb_by[gid],
+                    support="SUPPORTED",
+                    input_identity=base_identity["xgboost_v2"],
+                    artifact_version=MODEL_VERSIONS["xgboost_v2"],
                 )
-            totals_output = _model_output(
-                status="AVAILABLE", prediction=totals_by[gid], support="SUPPORTED",
-                input_identity=base_identity["ridge_totals_r4"], artifact_version=MODEL_VERSIONS["ridge_totals_r4"],
-            )
         else:
             status, warnings = _unavailable_reason(features, game)
             support = "UNSUPPORTED" if status in {"UNAVAILABLE", "STALE_INPUT"} else "PARTIAL"
             qb_output = _model_output(
-                status=status, prediction=None, support=support,
-                input_identity=base_identity["qb_elo"], artifact_version=MODEL_VERSIONS["qb_elo"], warnings=warnings,
+                status=status,
+                prediction=None,
+                support=support,
+                input_identity=base_identity["qb_elo"],
+                artifact_version=MODEL_VERSIONS["qb_elo"],
+                warnings=warnings,
             )
             xgb_output = _model_output(
-                status=status, prediction=None, support=support,
-                input_identity=base_identity["xgboost_v2"], artifact_version=MODEL_VERSIONS["xgboost_v2"], warnings=warnings,
+                status=status,
+                prediction=None,
+                support=support,
+                input_identity=base_identity["xgboost_v2"],
+                artifact_version=MODEL_VERSIONS["xgboost_v2"],
+                warnings=warnings,
             )
             totals_output = _model_output(
-                status=status, prediction=None, support=support,
-                input_identity=base_identity["ridge_totals_r4"], artifact_version=MODEL_VERSIONS["ridge_totals_r4"], warnings=warnings,
+                status=status,
+                prediction=None,
+                support=support,
+                input_identity=base_identity["ridge_totals_r4"],
+                artifact_version=MODEL_VERSIONS["ridge_totals_r4"],
+                warnings=warnings,
             )
+
         expected_output = _model_output(
-            status="AVAILABLE", prediction=expected_by[gid], support="SUPPORTED",
-            input_identity=base_identity["expected_margin"], artifact_version=MODEL_VERSIONS["expected_margin"],
+            status="AVAILABLE",
+            prediction=expected_by[gid],
+            support="SUPPORTED",
+            input_identity=base_identity["expected_margin"],
+            artifact_version=MODEL_VERSIONS["expected_margin"],
         )
-        schedule_row = schedule_by[gid]
         game_rows.append(
             {
                 "game_id": gid,
@@ -326,7 +422,9 @@ def score_week1(
         resolution.resolution_status for resolution in features.resolutions.values()
     )
     model_counts = {
-        model: dict(Counter(game["football_outputs"][model]["status"] for game in game_rows))
+        model: dict(
+            Counter(game["football_outputs"][model]["status"] for game in game_rows)
+        )
         for model in MODEL_VERSIONS
     }
     snapshot = {
@@ -336,6 +434,11 @@ def score_week1(
         "season": 2026,
         "week": 1,
         "schedule_version": request.schedule_version,
+        "football_context_version": schedule["context_version"],
+        "football_context_source": schedule["context_source"],
+        "football_context_missing_roof_game_ids": sorted(
+            set(qb_usable_ids) - set(xgb_usable_ids)
+        ),
         "completed_football_state_version": request.completed_football_state_version,
         "history_complete_through_utc": request.history_complete_through_utc,
         "qb_snapshot_version": request.qb_snapshot_version,
@@ -350,7 +453,8 @@ def score_week1(
         },
         "qb_resolution_counts": dict(sorted(resolution_counts.items())),
         "model_scoring_counts": {
-            model: dict(sorted(counts.items())) for model, counts in sorted(model_counts.items())
+            model: dict(sorted(counts.items()))
+            for model, counts in sorted(model_counts.items())
         },
         "override_audit_count": len(features.override_audits),
         "games": game_rows,
@@ -361,6 +465,7 @@ def score_week1(
             "tuning_performed": False,
             "current_outcomes_read": False,
             "xgboost_chronological_refit_preserved": True,
+            "xgboost_frozen_category_guard_preserved": True,
             "expected_margin_chronological_refit_preserved": True,
             "ridge_r4_chronological_refit_preserved": True,
         },
@@ -372,4 +477,6 @@ def score_week1(
 
 
 def canonical_snapshot_bytes(snapshot: dict[str, Any]) -> bytes:
-    return (json.dumps(snapshot, sort_keys=True, indent=2, allow_nan=False) + "\n").encode("utf-8")
+    return (
+        json.dumps(snapshot, sort_keys=True, indent=2, allow_nan=False) + "\n"
+    ).encode("utf-8")
