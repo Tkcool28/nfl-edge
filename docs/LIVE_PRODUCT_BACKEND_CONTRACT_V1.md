@@ -23,6 +23,8 @@ A browser/API request never trains or directly rescales/rescores football models
 
 Breaking field removal/renaming, enum narrowing, or semantic reinterpretation requires a new schema identity (`..._V2`). V1 producers may add a new producer/product version while remaining schema-compatible. Timestamps are RFC3339 UTC strings ending in `Z`.
 
+All numeric contract values must be finite. `NaN`, positive infinity, and negative infinity are invalid contract values even if a language runtime can represent them. Published JSON is serialized with non-finite values forbidden.
+
 Canonical implementation files:
 
 - `schemas/NFL_EDGE_PRODUCT_API_V1.schema.json`
@@ -97,9 +99,11 @@ Unresolved/ambiguous/missing evidence is legal product state and must remain exp
 
 ### Market board
 
-Each game contains separate `moneyline`, `spread`, and `total` maps. Within each map, only observed books are present. Allowed books are:
+Each game contains separate `moneyline`, `spread`, and `total` maps. Within each map, only observed books are present. Allowed observed books are:
 
 `DRAFTKINGS | FANDUEL | PINNACLE`
+
+`BOOKS` therefore means the observed market-board set. The actionable retail subset is separately frozen as `RETAIL_BOOKS = {DRAFTKINGS, FANDUEL}`.
 
 A missing book key means **no usable observation from that book**. It must not be filled from another book or synthesized.
 
@@ -117,6 +121,12 @@ Required:
 - `book`
 - `line` (`null` only for moneyline)
 - `price`
+
+For the public/actionable V1 request, `book` must be one of:
+
+`DRAFTKINGS | FANDUEL`
+
+Pinnacle observations remain legal on the market board as sharp benchmark evidence, but `POST /api/v1/evaluate-offer` does **not** accept `PINNACLE` as a user/actionable exact-offer book. V1 defines no separate diagnostic-only Pinnacle request path.
 
 ### Response
 
@@ -229,7 +239,7 @@ An override produces `OVERRIDDEN`, a new immutable provenance record, and a resc
 
 ## 8. Live market — `NFL_EDGE_LIVE_MARKET_V1`
 
-Supported V1 books: DraftKings, FanDuel, Pinnacle. Supported markets: Moneyline, Spread, Total.
+Observed V1 books: DraftKings, FanDuel, Pinnacle. Actionable retail V1 books: DraftKings and FanDuel only. Supported markets: Moneyline, Spread, Total.
 
 Each offer is an exact tuple of canonical game, sportsbook, market, selection, line, price, snapshot time, provider, and normalized identity. `offer_id` is stable within a snapshot and must not duplicate another exact offer in the same book/market bucket.
 
@@ -243,7 +253,7 @@ Each offer is an exact tuple of canonical game, sportsbook, market, selection, l
 ### Retail and Pinnacle semantics
 
 - **Best retail offer** means the best currently usable exact offer among observed DraftKings and FanDuel offers for the exact market/selection/line context being compared. It does not fabricate an absent book or convert a line.
-- **Pinnacle** is the sharp benchmark/anchor when available under the frozen evaluator/selector architecture. It is not a football-model input and it is not a retail fallback.
+- **Pinnacle** is the sharp benchmark/anchor when available under the frozen evaluator/selector architecture. It is not a football-model input, it is not a retail fallback, and it is not an actionable user exact-offer book in V1.
 
 No Odds API acquisition is part of this contract freeze.
 
@@ -296,7 +306,7 @@ Returns one game from that snapshot; unknown canonical ID is `404`.
 
 ### `POST /api/v1/evaluate-offer`
 
-Accepts the exact-offer request above. Evaluation uses already-generated football/model state plus the frozen evaluator/product-policy path. The request does not train a model and does not directly trigger scheduled football rescoring.
+Accepts the exact-offer request above for DraftKings or FanDuel retail offers only. Evaluation uses already-generated football/model state plus the frozen evaluator/product-policy path. The request does not train a model and does not directly trigger scheduled football rescoring.
 
 ### `GET /api/v1/profile`
 
@@ -327,14 +337,21 @@ Expected classes include `INVALID_REQUEST` (400), `NOT_FOUND` (404), `UNSUPPORTE
 
 All client-relevant evidence uses the explicit normalized state:
 
-- `FRESH` — usable within the producer's current operational freshness policy.
-- `AGING` — still usable under policy but nearing its stale boundary; warnings may apply.
-- `STALE` — beyond the producer's usable/current boundary.
-- `UNAVAILABLE` — no usable observation exists.
+- `FRESH`
+- `AGING`
+- `STALE`
+- `UNAVAILABLE`
 
-Each freshness object carries `observed_at_utc`, `age_seconds`, and `threshold_seconds`. `observed_at_utc`/age may be null only for unavailable evidence. The **durations themselves are operational policy, not model tuning, and are not frozen by this contract-day change**; the producer must classify the state and publish the threshold it applied. Frontends must use `state`, not reverse-engineer policy from timestamps.
+Each freshness object carries `observed_at_utc`, `age_seconds`, and `threshold_seconds`. `threshold_seconds` is the positive stale boundary chosen by the producer's operational policy. V1 derives the state deterministically from those fields:
 
-The mock fixture's threshold numbers are illustrative fixture values, not live production timer configuration.
+- **FRESH:** `0 <= age_seconds < 0.5 * threshold_seconds`
+- **AGING:** `0.5 * threshold_seconds <= age_seconds <= threshold_seconds`
+- **STALE:** `age_seconds > threshold_seconds`
+- **UNAVAILABLE:** no usable observation exists, so `observed_at_utc = null` and `age_seconds = null`
+
+For `FRESH`, `AGING`, and `STALE`, `observed_at_utc` must be present and `age_seconds` must be finite and non-negative. `threshold_seconds` must always be finite and greater than zero. A payload whose declared state contradicts its age/threshold values is invalid. Therefore the browser uses the published state directly and never has to infer freshness semantics itself.
+
+The actual threshold durations remain operational policy rather than model tuning and are not chosen from football outcomes by this contract. The mock fixture's threshold numbers are illustrative fixture values, not live production timer configuration.
 
 ## 12. Atomic publication and failure behavior
 
@@ -342,13 +359,14 @@ The mock fixture's threshold numbers are illustrative fixture values, not live p
 
 1. build the complete candidate in memory/work space
 2. validate the entire `NFL_EDGE_PRODUCT_API_V1` contract
-3. write a uniquely named immutable timestamped snapshot
-4. flush and `fsync` the file and directory
-5. write/flush/fsync a temporary latest file
-6. atomically `os.replace` it as `latest.json`
-7. fsync the containing directory
+3. serialize JSON with `allow_nan=False`
+4. write a uniquely named immutable timestamped snapshot
+5. flush and `fsync` the file and directory
+6. write/flush/fsync a temporary latest file
+7. atomically `os.replace` it as `latest.json`
+8. fsync the containing directory
 
-If candidate validation or persistence fails, the prior valid `latest.json` remains untouched. Refresh failure belongs in health/diagnostic metadata; a partial snapshot must never become current. Immutable snapshots and diagnostics preserve forensic evidence.
+If candidate validation, JSON serialization, or persistence fails, the prior valid `latest.json` remains untouched. Non-finite numeric values cannot be published. Refresh failure belongs in health/diagnostic metadata; a partial snapshot must never become current. Immutable snapshots and diagnostics preserve forensic evidence.
 
 ## 13. Security boundary
 
