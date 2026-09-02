@@ -106,6 +106,7 @@ def validate_week1_schedule(payload: dict[str, Any]) -> dict[str, Any]:
     _utc(str(payload.get("context_verified_at_utc")), field="context_verified_at_utc")
     if not payload.get("schedule_version") or not payload.get("source_url"):
         raise LiveScheduleError("schedule provenance is incomplete")
+    _required_text(payload.get("context_version"), field="context_version")
     if not payload.get("context_source") or not payload.get("context_source_url"):
         raise LiveScheduleError("football-context provenance is incomplete")
     if tuple(payload.get("context_fields") or ()) != EXPECTED_CONTEXT_FIELDS:
