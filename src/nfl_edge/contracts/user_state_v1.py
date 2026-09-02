@@ -30,6 +30,8 @@ class UserProfileState:
         if self.schema_version != USER_STATE_SCHEMA_VERSION:
             raise ContractValidationError(f"profile.schema_version must equal {USER_STATE_SCHEMA_VERSION}")
         amount = Decimal(str(self.bankroll))
+        if not amount.is_finite():
+            raise ContractValidationError("profile.bankroll must be finite")
         if amount < 0 or amount > Decimal("1000000000"):
             raise ContractValidationError("profile.bankroll must be between 0 and 1,000,000,000 inclusive")
         if amount.as_tuple().exponent < -2:
