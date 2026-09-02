@@ -3,6 +3,7 @@ from __future__ import annotations
 from nfl_edge.recommendation.final_selectors_v1 import select_hit_rate as select_hit_rate_v1
 from nfl_edge.recommendation.final_selectors_v1 import select_value as select_value_v1
 from nfl_edge.recommendation.final_selectors_v2 import (
+    BALANCED_ML_MIN_PINNACLE,
     BALANCED_ML_ODDS,
     BALANCED_SPREAD_MIN_Q,
     ValueSelectorState,
@@ -79,13 +80,16 @@ def spread(
     )
 
 
-def test_balanced_ml_is_short_favorite_only_and_caps_juice_at_minus_130():
+def test_balanced_ml_is_short_true_favorite_only_and_caps_juice_at_minus_130():
     assert BALANCED_ML_ODDS == (-130, -100)
-    good = row("good|ml|home", odds=-130, q=0.58, break_even=0.56522)
-    too_juiced = row("juiced|ml|home", odds=-131, q=0.80, break_even=0.56710)
-    plus_money = row("dog|ml|away", odds=105, q=0.60, break_even=0.48780)
-    assert select_balanced([good, too_juiced, plus_money])["candidate_id"] == good["candidate_id"]
-    assert select_balanced([too_juiced, plus_money]) == NO_BALANCED_PLAY
+    assert BALANCED_ML_MIN_PINNACLE == 0.50
+    good = row("good|ml|home", odds=-130, q=0.58, pinnacle=0.54, break_even=0.56522)
+    too_juiced = row("juiced|ml|home", odds=-131, q=0.80, pinnacle=0.75, break_even=0.56710)
+    plus_money = row("dog|ml|away", odds=105, q=0.60, pinnacle=0.52, break_even=0.48780)
+    false_favorite = row("fake|ml|away", odds=-105, q=0.58, pinnacle=0.49, break_even=0.51220)
+    selected = select_balanced([good, too_juiced, plus_money, false_favorite])
+    assert selected["candidate_id"] == good["candidate_id"]
+    assert select_balanced([too_juiced, plus_money, false_favorite]) == NO_BALANCED_PLAY
 
 
 def test_balanced_ml_does_not_require_positive_ev_or_value_status():
@@ -93,6 +97,7 @@ def test_balanced_ml_does_not_require_positive_ev_or_value_status():
         "lean|ml|home",
         odds=-120,
         q=0.55,
+        pinnacle=0.53,
         break_even=0.54545,
         ev=-0.25,
         status="PASS",
