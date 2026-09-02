@@ -1,0 +1,41 @@
+version: xgboost_validation_tail_v2
+status: POST_V5_PRELAUNCH_SUCCESSOR
+
+provenance:
+  predecessor_engine: src/nfl_edge/backtest/xgboost_walk_forward.py
+  predecessor_holdout_adapter: src/nfl_edge/holdout/xgboost_2025.py
+  frozen_v1_files_unchanged: true
+  v5_run_id: 2025-standard-eval-v5
+  v5_not_rerun_for_v2_selection: true
+
+unchanged_model_contract:
+  candidate_id: conservative
+  candidate_parameters: inherited_exactly_from_xgboost_v1
+  feature_count: 132
+  feature_order: inherited_exactly_from_xgboost_v1
+  objective: binary:logistic
+  eval_metric: logloss
+  early_stopping_rounds: 50
+  minimum_training_rows: 32
+  minimum_training_blocks: 2
+  minimum_validation_rows: 21
+  minimum_validation_blocks: 2
+  current_block_training_allowed: false
+  future_block_training_allowed: false
+  market_data_allowed: false
+
+validation_tail_v2:
+  policy: ADAPTIVE_STRICT_PRIOR_VALIDATION_TAIL_V2
+  rule: expand_backward_through_most_recent_prior_blocks_until_existing_validation_gates_are_met
+  contiguous_recent_tail_required: true
+  stop_as_soon_as_gates_met: true
+  preserve_minimum_fit_rows_and_blocks: true
+  fixed_two_block_reservation_removed: true
+  annual_week1_warmup_allowed_when_abundant_prior_history_exists: false
+  genuine_early_history_warmup_remains_fail_closed: true
+
+change_control:
+  purpose: eliminate artificial season-boundary/postseason-size cold starts
+  no_model_parameter_tuning: true
+  no_2025_outcome_optimization: true
+  next_pristine_forward_acceptance_requires_future_unseen_data: true
