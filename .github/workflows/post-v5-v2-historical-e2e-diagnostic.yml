@@ -1,0 +1,149 @@
+name: Post-V5 V2 Historical E2E Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/post_v5_xgb_historical_v2_regenerate.py'
+      - '.github/workflows/post-v5-v2-historical-e2e-diagnostic.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  historical-v2-e2e:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    env:
+      PYTHONHASHSEED: '0'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      OPENBLAS_CORETYPE: 'HASWELL'
+      MKL_NUM_THREADS: '1'
+      MKL_CBWR: 'COMPATIBLE'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11', cache: pip}
+
+      - name: Install model-development runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+
+      - name: Compile and run canonical XGB V1 control then V2 split regeneration
+        run: |
+          python -m py_compile scripts/post_v5_xgb_historical_v2_regenerate.py
+          python scripts/post_v5_xgb_historical_v2_regenerate.py \
+            --out artifacts/post_v5_v2_historical_e2e/xgb
+
+      - name: Stage V2 XGB predictions into isolated CI working tree
+        run: |
+          set -euo pipefail
+          TARGET=data/modeling/development_v1/chronology_corrected/xgboost_candidate_predictions_2018_2024.parquet
+          cp "$TARGET" artifacts/post_v5_v2_historical_e2e/original_xgb_candidate_predictions.parquet
+          cp artifacts/post_v5_v2_historical_e2e/xgb/v2_adaptive/xgboost_v1_predictions.parquet "$TARGET"
+          python - <<'PY'
+          import polars as pl
+          p='data/modeling/development_v1/chronology_corrected/xgboost_candidate_predictions_2018_2024.parquet'
+          d=pl.read_parquet(p)
+          assert d.height==1942,d.height
+          assert set(d['candidate_id'].unique().to_list())=={'conservative'}
+          assert 2025 not in set(d['season'].unique().to_list())
+          print('ISOLATED_V2_XGB_STAGE=PASS')
+          PY
+
+      - name: Rebuild Task05F through Spread Confidence V3 with historical XGB V2
+        run: |
+          python scripts/task05f_evaluator_final_runner.py \
+            --out artifacts/post_v5_v2_historical_e2e/upstream
+          python scripts/task05g_model_confidence_v2_entrypoint.py \
+            --root . \
+            --board artifacts/post_v5_v2_historical_e2e/upstream/historical_evaluator_board.parquet \
+            --out artifacts/post_v5_v2_historical_e2e/confidence_v2
+          python scripts/task05g_spread_confidence_v3_runner.py \
+            --root . \
+            --v2-candidates artifacts/post_v5_v2_historical_e2e/confidence_v2/v2_candidate_table.parquet \
+            --out artifacts/post_v5_v2_historical_e2e/spread_v3
+
+      - name: Replay all three 2020-24 lanes with merged V2 architecture
+        run: |
+          python scripts/post_v5_balanced_v2_diagnostic.py \
+            --v3-candidates artifacts/post_v5_v2_historical_e2e/spread_v3/v3_candidate_table.parquet \
+            --out artifacts/post_v5_v2_historical_e2e/balanced_v2
+          python - <<'PY'
+          import csv, json
+          from collections import Counter, defaultdict
+          from pathlib import Path
+          import polars as pl
+          from nfl_edge.recommendation.final_selectors_v2 import ValueSelectorState, advance_value_state, select_balanced, select_hit_rate, select_value
+          from nfl_edge.recommendation.policy import NO_BALANCED_PLAY, NO_HIT_RATE_PLAY, NO_VALUE_PLAY
+          from nfl_edge.recommendation.remediation_provenance_v1 import build_candidate_registry, enrich_board_rows
+
+          root=Path('artifacts/post_v5_v2_historical_e2e')
+          board=pl.read_parquet(root/'spread_v3/v3_candidate_table.parquet').to_dicts()
+          provenance=pl.concat([
+            pl.read_csv('reports/task05e_remediated/market_edge_discovery_corrected_ledger_v1.csv',infer_schema_length=10000),
+            pl.read_csv('reports/task05e_remediated/market_edge_confirmation_corrected_ledger_v1.csv',infer_schema_length=10000),
+          ],how='vertical_relaxed').to_dicts()
+          board=enrich_board_rows(board,build_candidate_registry(provenance))
+          blocks=defaultdict(list)
+          for r in board: blocks[str(r['block'])].append(r)
+          def bk(x):
+            a,b=x.split('-',1); return int(a),int(b)
+          state=ValueSelectorState(); season=None; rows=[]
+          for block in sorted(blocks,key=bk):
+            s,_=bk(block)
+            if s!=season: state=ValueSelectorState(); season=s
+            br=blocks[block]
+            sels={'hit_rate':select_hit_rate(br),'balanced':select_balanced(br),'value':select_value(br,state)}
+            sent={'hit_rate':NO_HIT_RATE_PLAY,'balanced':NO_BALANCED_PLAY,'value':NO_VALUE_PLAY}
+            for lane,pick in sels.items():
+              if pick==sent[lane]: continue
+              x=dict(pick); x.update({'season':s,'block':block,'lane':lane}); rows.append(x)
+            state=advance_value_state(state,br)
+          pl.DataFrame(rows).write_csv(root/'all_lanes_v2_selections.csv')
+          summary={}
+          for season in range(2020,2025):
+            summary[str(season)]={}
+            for lane in ('hit_rate','balanced','value'):
+              rr=[r for r in rows if int(r['season'])==season and r['lane']==lane]
+              summary[str(season)][lane]={
+                'plays':len(rr),
+                'ml':sum(str(r.get('market_type','')).lower()=='moneyline' for r in rr),
+                'spread':sum(str(r.get('market_type','')).lower()=='spread' for r in rr),
+              }
+          overlaps={}
+          for a,b in [('hit_rate','balanced'),('balanced','value'),('hit_rate','value')]:
+            n=0; same=0
+            for block in sorted(blocks,key=bk):
+              aa=[r for r in rows if r['block']==block and r['lane']==a]
+              bb=[r for r in rows if r['block']==block and r['lane']==b]
+              if aa and bb:
+                n+=1
+                ka=(aa[0].get('candidate_id'),aa[0].get('sportsbook'),aa[0].get('line'),aa[0].get('american_odds'))
+                kb=(bb[0].get('candidate_id'),bb[0].get('sportsbook'),bb[0].get('line'),bb[0].get('american_odds'))
+                same+=ka==kb
+            overlaps[f'{a}_vs_{b}']={'comparable_blocks':n,'exact_offer_overlap':same}
+          out={'status':'TRUE_HISTORICAL_V2_E2E_COMPLETE__NO_RETUNING_AUTHORIZED','season_lane_shape':summary,'overlap':overlaps}
+          (root/'historical_v2_e2e_architecture_summary.json').write_text(json.dumps(out,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(out,indent=2,sort_keys=True))
+          PY
+
+      - name: Restore frozen XGB artifact and prove repo diff is diagnostic-only
+        if: always()
+        run: |
+          TARGET=data/modeling/development_v1/chronology_corrected/xgboost_candidate_predictions_2018_2024.parquet
+          if [ -f artifacts/post_v5_v2_historical_e2e/original_xgb_candidate_predictions.parquet ]; then
+            cp artifacts/post_v5_v2_historical_e2e/original_xgb_candidate_predictions.parquet "$TARGET"
+          fi
+          git diff --exit-code -- "$TARGET"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: post-v5-v2-historical-e2e-${{ github.sha }}
+          path: artifacts/post_v5_v2_historical_e2e/
+          if-no-files-found: warn
