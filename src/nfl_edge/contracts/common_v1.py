@@ -1,6 +1,7 @@
 """Shared primitives for NFL EDGE live backend contracts V1."""
 from __future__ import annotations
 
+import math
 from datetime import datetime, timezone
 from typing import Any, Mapping
 
@@ -17,6 +18,7 @@ LANES = frozenset({"HIT_RATE", "BALANCED", "VALUE"})
 HEADLINE_STATES = frozenset({"BET", "NO_PLAY", "TARGET_ONLY", "SUPPRESSED", "UNSUPPORTED"})
 MARKET_TYPES = frozenset({"MONEYLINE", "SPREAD", "TOTAL"})
 BOOKS = frozenset({"DRAFTKINGS", "FANDUEL", "PINNACLE"})
+RETAIL_BOOKS = frozenset({"DRAFTKINGS", "FANDUEL"})
 FRESHNESS_STATES = frozenset({"FRESH", "AGING", "STALE", "UNAVAILABLE"})
 GAME_STATUSES = frozenset({"SCHEDULED", "PREGAME", "IN_PROGRESS", "FINAL", "POSTPONED", "CANCELLED"})
 SLATE_STATUSES = frozenset({"UPCOMING", "ACTIVE", "COMPLETE", "OFFSEASON"})
@@ -60,7 +62,12 @@ def require_enum(value: Any, allowed: frozenset[str], path: str) -> str:
 def require_number(value: Any, path: str, minimum: float | None = None, maximum: float | None = None) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ContractValidationError(f"{path} must be numeric")
-    number = float(value)
+    try:
+        number = float(value)
+    except OverflowError as exc:
+        raise ContractValidationError(f"{path} must be finite") from exc
+    if not math.isfinite(number):
+        raise ContractValidationError(f"{path} must be finite")
     if minimum is not None and number < minimum:
         raise ContractValidationError(f"{path} must be >= {minimum}")
     if maximum is not None and number > maximum:
