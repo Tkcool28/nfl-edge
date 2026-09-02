@@ -263,6 +263,54 @@ def test_qb_override_forbids_silent_provenance_reuse() -> None:
         ).validate()
 
 
+def test_non_bet_headline_cannot_carry_positive_units() -> None:
+    payload = _fixture()
+    payload["headlines"]["value"]["state"] = "TARGET_ONLY"
+    payload["headlines"]["value"]["recommended_units"] = 0.75
+    with pytest.raises(ContractValidationError, match="recommended_units"):
+        validate_product_snapshot(payload)
+
+
+def test_duplicate_exact_observation_with_new_id_fails() -> None:
+    payload = _fixture()
+    offers = payload["games"][0]["market_board"]["moneyline"]["DRAFTKINGS"]
+    duplicate = deepcopy(offers[0])
+    duplicate["offer_id"] = "different-id-same-observation"
+    offers.append(duplicate)
+    with pytest.raises(ContractValidationError, match="duplicates an exact offer observation"):
+        validate_product_snapshot(payload)
+
+
+def test_nonfinite_bankroll_fails() -> None:
+    with pytest.raises(ContractValidationError, match="finite"):
+        UserProfileState(
+            user_id="local-v1",
+            bankroll=float("nan"),
+            risk_profile="Normal",
+            created_at="2026-09-02T14:00:00Z",
+            updated_at="2026-09-02T14:00:00Z",
+        ).validate()
+
+
+def test_qb_override_requires_rescore() -> None:
+    from nfl_edge.contracts.live_product_v1 import QBOverrideAudit
+
+    with pytest.raises(ContractValidationError, match="rescore"):
+        QBOverrideAudit(
+            game_id="mock-2026-w01-AAA-BBB",
+            team="AAA",
+            previous_canonical_qb_id="qb-1",
+            new_canonical_qb_id="qb-2",
+            reason="official starter correction",
+            evidence_source="official-team-release",
+            operator="operator-1",
+            changed_at_utc="2026-09-02T14:00:00Z",
+            previous_provenance_id="prov-1",
+            new_provenance_id="prov-2",
+            rescore_required=False,
+        ).validate()
+
+
 def test_contract_doc_contains_security_and_request_training_boundaries() -> None:
     doc = (ROOT / "docs/LIVE_PRODUCT_BACKEND_CONTRACT_V1.md").read_text()
     assert "The frontend consumes the product/API contract. It does not consume internal model files directly." in doc
