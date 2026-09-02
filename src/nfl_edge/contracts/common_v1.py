@@ -5,7 +5,7 @@ import math
 from datetime import datetime, timezone
 from typing import Any, Mapping
 
-from nfl_edge.recommendation.staking_v1 import UNIT_LADDER
+from nfl_edge.staking_policy_v1 import UNIT_LADDER
 
 PRODUCT_SCHEMA_VERSION = "NFL_EDGE_PRODUCT_API_V1"
 USER_STATE_SCHEMA_VERSION = "NFL_EDGE_USER_STATE_V1"
@@ -44,6 +44,15 @@ def require_keys(obj: Mapping[str, Any], keys: set[str] | frozenset[str], path: 
     missing = sorted(set(keys) - set(obj))
     if missing:
         raise ContractValidationError(f"{path} missing required field(s): {missing}")
+
+
+def require_exact_keys(obj: Mapping[str, Any], keys: set[str] | frozenset[str], path: str) -> None:
+    """Require exactly the declared keys for a fixed ``additionalProperties: false`` object."""
+    expected = set(keys)
+    require_keys(obj, expected, path)
+    unknown = sorted(set(obj) - expected)
+    if unknown:
+        raise ContractValidationError(f"{path} has unknown field(s): {unknown}")
 
 
 def require_string(value: Any, path: str) -> str:
