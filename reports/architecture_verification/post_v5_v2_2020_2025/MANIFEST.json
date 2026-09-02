@@ -1,0 +1,32 @@
+{
+  "artifacts": [
+    {
+      "file": "post-v5-v2-historical-e2e.zip",
+      "role": "canonical historical XGBoost V1 control, V2 adaptive regeneration, and downstream Task05F/confidence/selector propagation",
+      "sha256": "056d349381cf3cf2e2fbe8929c3c5d435d43e0a30be44b8b7febb5f82b9208e0",
+      "size_bytes": 3898464,
+      "source_artifact_id": 9832972284,
+      "source_artifact_name": "post-v5-v2-historical-e2e-cfa31ec782f71063072feae6d232ddabd2a31a14",
+      "source_head_sha": "eb8c60e1dbe03528298e079f29e1ee1c2e3fbecf",
+      "source_workflow_run_id": 33594524312
+    },
+    {
+      "file": "post-v5-v2-all-years-diagnostic.zip",
+      "role": "all-years architecture diagnostic including 2020-2024 replay, XGBoost V2 availability, and true 2025 V2 chronology",
+      "sha256": "b38eae4df11dc52fe4fc5aeb87a402abcc8ffb9b60e3f252d56f56c9aef78b41",
+      "size_bytes": 1251396,
+      "source_artifact_id": 9833013220,
+      "source_artifact_name": "post-v5-v2-all-years-diagnostic-cfa31ec782f71063072feae6d232ddabd2a31a14",
+      "source_head_sha": "eb8c60e1dbe03528298e079f29e1ee1c2e3fbecf",
+      "source_workflow_run_id": 33594524214
+    }
+  ],
+  "diagnostic_pr": 94,
+  "diagnostic_pr_disposition": "closed_unmerged",
+  "holdout_semantics": "2025 is exposed diagnostic replay only; never a new holdout or tuning source.",
+  "no_new_odds_api_calls": true,
+  "no_threshold_or_model_retuning": true,
+  "production_merge_commit_verified": "91e7362aca589179ab4c8f92009315a26bb45faf",
+  "purpose": "Permanent repository evidence for post-V5 V2 architecture verification; diagnostic evidence only, never tuning evidence.",
+  "schema": "NFL_EDGE_POST_V5_V2_ARCHITECTURE_EVIDENCE_V1"
+}
