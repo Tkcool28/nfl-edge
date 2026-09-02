@@ -3,9 +3,11 @@ name: Post-V5 Prelaunch Architecture V2
 on:
   pull_request:
     paths:
+      - 'src/nfl_edge/recommendation/__init__.py'
       - 'src/nfl_edge/recommendation/final_selectors_v2.py'
       - 'config/task05g_final_selectors_v2.yaml'
       - 'tests/recommendation/test_task05g_final_selectors_v2.py'
+      - 'tests/recommendation/test_task05g_policy_legacy_quarantine_v1.py'
       - 'src/nfl_edge/backtest/xgboost_walk_forward_v2.py'
       - 'src/nfl_edge/holdout/xgboost_2025_v2.py'
       - 'src/nfl_edge/models/xgboost_live_v2.py'
@@ -45,18 +47,21 @@ jobs:
       - name: Compile successor surfaces
         run: |
           python -m py_compile \
+            src/nfl_edge/recommendation/__init__.py \
             src/nfl_edge/recommendation/final_selectors_v2.py \
             src/nfl_edge/backtest/xgboost_walk_forward_v2.py \
             src/nfl_edge/holdout/xgboost_2025_v2.py \
             src/nfl_edge/models/xgboost_live_v2.py \
             scripts/post_v5_balanced_v2_diagnostic.py \
             tests/recommendation/test_task05g_final_selectors_v2.py \
+            tests/recommendation/test_task05g_policy_legacy_quarantine_v1.py \
             tests/holdout/test_xgboost_2025_v2_adapter.py \
             tests/models/test_xgboost_live_v2.py
       - name: Run focused successor regressions
         run: |
           pytest -q \
             tests/recommendation/test_task05g_final_selectors_v2.py \
+            tests/recommendation/test_task05g_policy_legacy_quarantine_v1.py \
             tests/holdout/test_xgboost_2025_v2_adapter.py \
             tests/models/test_xgboost_live_v2.py
       - name: Prove frozen V1 selector and XGBoost adapters remain valid
@@ -70,6 +75,7 @@ jobs:
           from pathlib import Path
           forbidden = ('ODDS_API_KEY', 'requests.', 'httpx.', 'urllib.request', 'workflow_dispatch: true')
           paths = [
+              Path('src/nfl_edge/recommendation/__init__.py'),
               Path('src/nfl_edge/recommendation/final_selectors_v2.py'),
               Path('src/nfl_edge/backtest/xgboost_walk_forward_v2.py'),
               Path('src/nfl_edge/holdout/xgboost_2025_v2.py'),
