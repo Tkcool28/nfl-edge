@@ -47,10 +47,10 @@ jobs:
           python -m py_compile scripts/post_v5_v2_2025_diagnostic_rerun.py
           python - <<'PY'
           from nfl_edge.recommendation.final_selectors_v2 import BALANCED_ML_ODDS, BALANCED_SPREAD_MIN_Q
-          from nfl_edge.holdout.xgboost_2025_v2 import predict_xgboost_block
+          from nfl_edge.holdout.xgboost_2025_v2 import predict_xgboost_block_v2
           assert BALANCED_ML_ODDS == (-130, -100)
           assert BALANCED_SPREAD_MIN_Q == 0.50
-          assert callable(predict_xgboost_block)
+          assert callable(predict_xgboost_block_v2)
           print('MERGED_V2_IMPORTS=PASS')
           PY
 
