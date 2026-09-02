@@ -33,6 +33,23 @@ def _canonical_current_row() -> dict[str, object]:
     }
 
 
+def _current_game(*, xgb_home: float | None = 0.55) -> dict[str, object]:
+    return {
+        "game_id": "synthetic",
+        "season": 2025,
+        "week": 3,
+        "qbelo_home": 0.55,
+        "xgb_home": xgb_home,
+        "expected_home_margin": 2.5,
+        "home_score": None,
+        "away_score": None,
+        "target_margin": None,
+        "target_home_win": None,
+        "target_total_points": None,
+        "target_available": False,
+    }
+
+
 def test_current_aliases_are_added_without_mutating_canonical_source():
     source = _canonical_current_row()
     before = deepcopy(source)
@@ -92,11 +109,68 @@ def test_strip_product_aliases_removes_only_temporary_legacy_keys():
         assert "raw_football_output" in out
 
 
-def test_confidence_guard_rejects_supported_market_with_zero_confidence_support():
-    row = _canonical_current_row()
-    row["model_confidence_supported"] = False
-    with pytest.raises(compat.StandardProductCompatibilityError, match="zero supported current rows"):
-        compat._assert_confidence_live([row])
+def test_confidence_contract_allows_frozen_spread_unsupported_state():
+    row = {
+        "game_id": "synthetic",
+        "market_type": "spread",
+        "selection": "home",
+        "actionable_line": -1.0,
+        "supported": True,
+        "model_confidence_supported": False,
+        "model_confidence_source": "EXPECTED_MARGIN_DIRECT_LOGISTIC_V3",
+        "model_cover_margin_v3": 1.5,
+        "spread_calibration_intercept_v3": 0.02,
+        "spread_calibration_slope_v3": -0.001,
+    }
+    compat._assert_confidence_contract([row], {"synthetic": _current_game()})
+
+
+def test_confidence_contract_allows_ml_unavailable_during_xgb_warmup():
+    row = {
+        "game_id": "synthetic",
+        "market_type": "moneyline",
+        "selection": "away",
+        "supported": True,
+        "model_confidence_supported": False,
+    }
+    compat._assert_confidence_contract(
+        [row], {"synthetic": _current_game(xgb_home=None)}
+    )
+
+
+def test_confidence_contract_rejects_live_ml_inputs_with_zero_support():
+    row = {
+        "game_id": "synthetic",
+        "market_type": "moneyline",
+        "selection": "away",
+        "supported": True,
+        "model_confidence_supported": False,
+    }
+    with pytest.raises(
+        compat.StandardProductCompatibilityError,
+        match="moneyline confidence inputs are live",
+    ):
+        compat._assert_confidence_contract(
+            [row], {"synthetic": _current_game(xgb_home=0.55)}
+        )
+
+
+def test_confidence_contract_rejects_missing_spread_v3_wiring():
+    row = {
+        "game_id": "synthetic",
+        "market_type": "spread",
+        "selection": "home",
+        "actionable_line": -1.0,
+        "supported": True,
+        "model_confidence_supported": False,
+        "model_confidence_source": None,
+        "model_cover_margin_v3": None,
+    }
+    with pytest.raises(
+        compat.StandardProductCompatibilityError,
+        match="spread confidence wiring incomplete",
+    ):
+        compat._assert_confidence_contract([row], {"synthetic": _current_game()})
 
 
 def test_value_state_adapter_supplies_legacy_settled_view_without_mutating_source():
