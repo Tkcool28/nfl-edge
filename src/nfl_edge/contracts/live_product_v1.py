@@ -8,6 +8,7 @@ from nfl_edge.contracts.common_v1 import (
     MARKET_SCHEMA_VERSION,
     PRODUCT_SCHEMA_VERSION,
     QB_RESOLVER_SCHEMA_VERSION,
+    RETAIL_BOOKS,
     USER_STATE_SCHEMA_VERSION,
     ContractValidationError,
 )
@@ -43,7 +44,7 @@ API_ENDPOINTS = {
     "GET /api/v1/product/latest": "latest complete validated NFL_EDGE_PRODUCT_API_V1 snapshot",
     "GET /api/v1/games": "game board from latest complete product snapshot",
     "GET /api/v1/games/{game_id}": "one game from latest complete product snapshot or 404",
-    "POST /api/v1/evaluate-offer": "one exact offer through the existing frozen evaluator/product-policy path",
+    "POST /api/v1/evaluate-offer": "one exact retail offer through the existing frozen evaluator/product-policy path",
     "GET /api/v1/profile": "persistent NFL_EDGE_USER_STATE_V1",
     "PUT /api/v1/profile": (
         "validated bankroll/risk-profile replacement; units and model/evaluator outputs stay unchanged"
@@ -65,6 +66,7 @@ __all__ = [
     "QBOverrideAudit",
     "QBStarterChangeEvent",
     "QB_RESOLVER_SCHEMA_VERSION",
+    "RETAIL_BOOKS",
     "RISK_PROFILES",
     "USER_STATE_SCHEMA_VERSION",
     "UserProfileState",
