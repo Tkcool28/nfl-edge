@@ -31,15 +31,19 @@ but at a genuinely bounded price rather than HHR-style heavy juice.
 
 - Task05F supported + model-confidence supported;
 - model-confidence `q >= 0.52`;
-- **short favorites only: -130 through -100**;
+- **short true favorites only: -130 through -100**;
+- Pinnacle/no-vig anchor probability must be `>= 0.50` for the selected side;
+- negative retail odds alone do not establish favorite status because both sides
+  can be juiced around pick'em;
 - plus-money ML is excluded from Balanced;
 - no strict +EV requirement;
 - no VALUE/PLAYABLE requirement;
 - no positive model-price-gap requirement;
 - existing market-half trust is retained.
 
-This places heavier favorites in HHR and leaves plus-money ML primarily to
-Value rather than allowing either to dominate the Balanced card.
+This places heavier favorites in HHR, rejects retail-juiced sides that remain
+sharp-market underdogs, and leaves plus-money ML primarily to Value rather than
+allowing either to dominate the Balanced card.
 
 ### Spread
 
