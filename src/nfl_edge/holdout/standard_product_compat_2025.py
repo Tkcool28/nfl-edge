@@ -5,6 +5,11 @@ The merged compatibility implementation is preserved byte-for-byte in
 Model Confidence V2 / Spread Confidence V3 current inputs are materialized:
 those historical runners sourced game-level model predictions, not Task05F's
 candidate ``raw_model_output`` field.
+
+The standard-only contract check validates that those inputs reached the frozen
+confidence code. It must not promote a legitimate frozen ``supported=False``
+state into a fatal error: Spread Confidence V3 intentionally fails closed when
+its causal logistic state is unsupported (including a non-positive slope).
 """
 from __future__ import annotations
 
@@ -18,6 +23,8 @@ StandardProductCompatibilityError = _base.StandardProductCompatibilityError
 build_current_candidate_registry = _base.build_current_candidate_registry
 attach_current_candidate_regions = _base.attach_current_candidate_regions
 strip_product_aliases = _base.strip_product_aliases
+# Retained as the old PR #87 diagnostic helper for historical tests only.  The
+# standard execution path no longer treats zero support as proof of bad wiring.
 _assert_confidence_live = _base._assert_confidence_live
 
 
@@ -114,6 +121,70 @@ def confidence_current_rows(
     return out
 
 
+def _assert_confidence_contract(
+    board_rows: Iterable[Mapping[str, Any]],
+    current_games: Mapping[str, Mapping[str, Any]],
+) -> None:
+    """Validate confidence wiring without overriding frozen support semantics.
+
+    The former standard-only liveness check required every material market to
+    produce at least one supported confidence row. That was too strong: frozen
+    Spread Confidence V3 deliberately returns ``supported=False`` when its
+    causal logistic calibration is not usable (for example, non-positive
+    slope). Such a state is a valid model decision and must flow to selectors as
+    no confidence, not abort the season.
+
+    Structural checks remain fail-closed:
+    * when both frozen ML constituents are live, at least one supported Task05F
+      moneyline row must receive supported ML confidence;
+    * every supported spread row with an Expected Margin input and actionable
+      line must show that it actually traversed the frozen V3 conversion, even
+      when V3 itself returns unsupported.
+    """
+    rows = [dict(row) for row in board_rows]
+
+    live_ml_rows: list[dict[str, Any]] = []
+    spread_wiring_failures: list[str] = []
+    for row in rows:
+        gid = str(row.get("game_id") or "")
+        game = current_games.get(gid)
+        if game is None:
+            raise StandardProductCompatibilityError(
+                f"persisted confidence row has no current game: {gid}"
+            )
+        market = str(row.get("market_type") or "").lower()
+        if not bool(row.get("supported")):
+            continue
+
+        if market == "moneyline":
+            if game.get("qbelo_home") is not None and game.get("xgb_home") is not None:
+                live_ml_rows.append(row)
+            continue
+
+        if market != "spread":
+            continue
+        line = row.get("actionable_line")
+        if line is None:
+            line = row.get("line")
+        if game.get("expected_home_margin") is None or line is None:
+            continue
+        if str(row.get("model_confidence_source") or "") != "EXPECTED_MARGIN_DIRECT_LOGISTIC_V3":
+            spread_wiring_failures.append(f"{gid}:source")
+            continue
+        if row.get("model_cover_margin_v3") is None:
+            spread_wiring_failures.append(f"{gid}:cover_margin")
+
+    if live_ml_rows and not any(bool(row.get("model_confidence_supported")) for row in live_ml_rows):
+        raise StandardProductCompatibilityError(
+            "frozen moneyline confidence inputs are live but produced zero supported current rows"
+        )
+    if spread_wiring_failures:
+        raise StandardProductCompatibilityError(
+            "frozen spread confidence wiring incomplete: "
+            + ", ".join(spread_wiring_failures[:8])
+        )
+
+
 def build_product_with_compat(
     frozen_builder: Callable[..., dict[str, Any]],
     *,
@@ -170,7 +241,7 @@ def build_product_with_compat(
 
     clean = strip_product_aliases(product)
     board = list(clean.get("board_rows") or [])
-    _assert_confidence_live(board)
+    _assert_confidence_contract(board, current_games)
     for key in ("board_rows", "headlines", "unique_exposure"):
         for row in clean.get(key, []):
             leaked = TEMPORARY_LEGACY_KEYS.intersection(row)
@@ -191,7 +262,7 @@ def advance_value_state_with_compat(
 
 
 def synthetic_current_contract_smoke(task05f: Any) -> None:
-    """Retain PR #87 smoke and cover the exact v3 null-candidate failure."""
+    """Retain prior smokes and cover legitimate frozen unsupported confidence."""
     _base.synthetic_current_contract_smoke(task05f)
 
     gid = "SYNTHETIC_CONFIDENCE_SOURCE"
@@ -244,6 +315,55 @@ def synthetic_current_contract_smoke(task05f: Any) -> None:
     if abs(float(confidence_spread["raw_model_output"]) - 2.5) > 1e-12:
         raise StandardProductCompatibilityError(
             "spread confidence source did not reproduce Expected Margin"
+        )
+
+    # Frozen Spread V3 may intentionally be unsupported.  The compatibility
+    # layer must accept that model decision as long as the V3 path was actually
+    # traversed and the current model-cover margin was materialized.
+    unsupported_spread = {
+        **canonical_spread,
+        "supported": True,
+        "model_confidence_supported": False,
+        "model_confidence_source": "EXPECTED_MARGIN_DIRECT_LOGISTIC_V3",
+        "model_cover_margin_v3": 1.5,
+    }
+    _assert_confidence_contract([unsupported_spread], current)
+
+    # XGBoost warmup likewise makes ML confidence legitimately unavailable.
+    cold_current = {gid: {**current[gid], "xgb_home": None}}
+    cold_ml = {
+        **canonical_ml,
+        "supported": True,
+        "model_confidence_supported": False,
+        "model_confidence_source": None,
+    }
+    _assert_confidence_contract([cold_ml], cold_current)
+
+    # Once both ML constituents are live, silent all-unsupported confidence is
+    # still a real integration failure and remains fail-closed.
+    try:
+        _assert_confidence_contract([cold_ml], current)
+    except StandardProductCompatibilityError:
+        pass
+    else:
+        raise StandardProductCompatibilityError(
+            "live ML confidence wiring smoke did not fail closed"
+        )
+
+    # A spread row with a current Expected Margin input must show evidence that
+    # it traversed V3 even if V3 itself declines support.
+    broken_spread = {
+        **unsupported_spread,
+        "model_confidence_source": None,
+        "model_cover_margin_v3": None,
+    }
+    try:
+        _assert_confidence_contract([broken_spread], current)
+    except StandardProductCompatibilityError:
+        pass
+    else:
+        raise StandardProductCompatibilityError(
+            "spread confidence wiring smoke did not fail closed"
         )
 
     for source in (canonical_ml, canonical_spread):
