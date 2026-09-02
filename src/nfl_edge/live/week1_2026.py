@@ -14,6 +14,10 @@ EXPECTED_TEAMS = frozenset({
     "LAC", "LAR", "LV", "MIA", "MIN", "NE", "NO", "NYG",
     "NYJ", "PHI", "PIT", "SEA", "SF", "TB", "TEN", "WAS",
 })
+EXPECTED_CONTEXT_FIELDS = (
+    "away_rest", "home_rest", "roof", "surface", "stadium_id", "stadium",
+)
+EXPECTED_MISSING_ROOF_GAME_IDS = frozenset({"2026_01_BAL_IND", "2026_01_BUF_HOU"})
 
 
 class LiveScheduleError(RuntimeError):
@@ -29,6 +33,13 @@ def _utc(value: str, *, field: str) -> datetime:
         raise LiveScheduleError(f"invalid {field}: {value!r}") from exc
 
 
+def _required_text(value: Any, *, field: str) -> str:
+    text = str(value or "").strip()
+    if not text:
+        raise LiveScheduleError(f"{field} must be a non-empty string")
+    return text
+
+
 def validate_week1_schedule(payload: dict[str, Any]) -> dict[str, Any]:
     if payload.get("schema_version") != SCHEDULE_SCHEMA_VERSION:
         raise LiveScheduleError("2026 Week 1 schedule schema drift")
@@ -39,10 +50,11 @@ def validate_week1_schedule(payload: dict[str, Any]) -> dict[str, Any]:
         raise LiveScheduleError(f"expected exactly {EXPECTED_GAMES} Week 1 games")
     required = {
         "game_id", "away_team", "home_team", "scheduled_start_utc", "neutral_site",
-        "venue", "away_rest", "home_rest", "surface", "roof_type",
+        "venue", "venue_id", "away_rest", "home_rest", "surface", "roof_type",
     }
     seen_games: set[str] = set()
     seen_teams: set[str] = set()
+    missing_roof_games: set[str] = set()
     prior_key: tuple[datetime, str] | None = None
     for index, game in enumerate(games):
         if not isinstance(game, dict) or set(game) != required:
@@ -66,13 +78,40 @@ def validate_week1_schedule(payload: dict[str, Any]) -> dict[str, Any]:
         if prior_key is not None and key < prior_key:
             raise LiveScheduleError("Week 1 schedule must be chronological then game_id")
         prior_key = key
+
+        _required_text(game["venue"], field=f"game[{index}].venue")
+        _required_text(game["venue_id"], field=f"game[{index}].venue_id")
+        _required_text(game["surface"], field=f"game[{index}].surface")
+        for rest_field in ("away_rest", "home_rest"):
+            value = game[rest_field]
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                raise LiveScheduleError(f"game[{index}].{rest_field} must be a non-negative integer")
+        roof = game["roof_type"]
+        if roof is None:
+            missing_roof_games.add(gid)
+        else:
+            _required_text(roof, field=f"game[{index}].roof_type")
+
         seen_games.add(gid)
         seen_teams.update((away, home))
     if seen_teams != EXPECTED_TEAMS:
         raise LiveScheduleError(f"Week 1 team coverage drift: missing={sorted(EXPECTED_TEAMS - seen_teams)}")
+    if missing_roof_games != EXPECTED_MISSING_ROOF_GAME_IDS:
+        raise LiveScheduleError(
+            "Week 1 roof-context missingness drift: "
+            f"observed={sorted(missing_roof_games)} expected={sorted(EXPECTED_MISSING_ROOF_GAME_IDS)}"
+        )
+
     _utc(str(payload.get("verified_at_utc")), field="verified_at_utc")
+    _utc(str(payload.get("context_verified_at_utc")), field="context_verified_at_utc")
     if not payload.get("schedule_version") or not payload.get("source_url"):
         raise LiveScheduleError("schedule provenance is incomplete")
+    if not payload.get("context_source") or not payload.get("context_source_url"):
+        raise LiveScheduleError("football-context provenance is incomplete")
+    if tuple(payload.get("context_fields") or ()) != EXPECTED_CONTEXT_FIELDS:
+        raise LiveScheduleError("football-context field allowlist drift")
+    if payload.get("market_fields_consumed") != []:
+        raise LiveScheduleError("Week 1 football fixture must not consume market fields")
     return payload
 
 
@@ -102,7 +141,7 @@ def schedule_to_frame(payload: dict[str, Any], *, prediction_as_of_utc: str):
             "target_available": False,
             "neutral_site": bool(game["neutral_site"]),
             "neutral_site_source": "neutral" if game["neutral_site"] else "home",
-            "venue_id": None,
+            "venue_id": game["venue_id"],
             "roof_type": game["roof_type"],
             "surface": game["surface"],
             "away_rest": game["away_rest"],
