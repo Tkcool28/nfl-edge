@@ -1,0 +1,196 @@
+{
+  "$defs": {
+    "freshness": {
+      "additionalProperties": false,
+      "properties": {
+        "age_seconds": {"minimum": 0, "type": ["number", "null"]},
+        "observed_at_utc": {"format": "date-time", "type": ["string", "null"]},
+        "state": {"enum": ["FRESH", "AGING", "STALE", "UNAVAILABLE"]},
+        "threshold_seconds": {"minimum": 0, "type": "number"}
+      },
+      "required": ["state", "observed_at_utc", "age_seconds", "threshold_seconds"],
+      "type": "object"
+    },
+    "game": {
+      "additionalProperties": false,
+      "properties": {
+        "away_team": {"minLength": 1, "type": "string"},
+        "football_outputs": {
+          "additionalProperties": false,
+          "properties": {
+            "expected_margin": {"$ref": "#/$defs/model_output"},
+            "prediction_as_of_utc": {"format": "date-time", "pattern": "Z$", "type": "string"},
+            "provenance_id": {"minLength": 1, "type": "string"},
+            "qb_elo": {"$ref": "#/$defs/model_output"},
+            "ridge_totals_r4": {"$ref": "#/$defs/model_output"},
+            "xgboost_v2": {"$ref": "#/$defs/model_output"}
+          },
+          "required": ["prediction_as_of_utc", "provenance_id", "qb_elo", "xgboost_v2", "expected_margin", "ridge_totals_r4"],
+          "type": "object"
+        },
+        "game_id": {"minLength": 1, "type": "string"},
+        "game_status": {"enum": ["SCHEDULED", "PREGAME", "IN_PROGRESS", "FINAL", "POSTPONED", "CANCELLED"]},
+        "home_team": {"minLength": 1, "type": "string"},
+        "kickoff_at_utc": {"format": "date-time", "pattern": "Z$", "type": "string"},
+        "market_board": {
+          "additionalProperties": false,
+          "properties": {
+            "moneyline": {"$ref": "#/$defs/market_bucket"},
+            "spread": {"$ref": "#/$defs/market_bucket"},
+            "total": {"$ref": "#/$defs/market_bucket"}
+          },
+          "required": ["moneyline", "spread", "total"],
+          "type": "object"
+        },
+        "neutral_site": {"type": "boolean"},
+        "quarterbacks": {
+          "additionalProperties": false,
+          "properties": {"away": {"$ref": "#/$defs/qb_context"}, "home": {"$ref": "#/$defs/qb_context"}},
+          "required": ["home", "away"],
+          "type": "object"
+        },
+        "season": {"type": "integer"},
+        "updated_at_utc": {"format": "date-time", "pattern": "Z$", "type": "string"},
+        "venue": {"type": ["string", "null"]},
+        "warnings": {"items": {"type": "string"}, "type": "array"},
+        "week": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["game_id", "season", "week", "home_team", "away_team", "kickoff_at_utc", "game_status", "venue", "neutral_site", "updated_at_utc", "quarterbacks", "market_board", "football_outputs", "warnings"],
+      "type": "object"
+    },
+    "headline": {
+      "additionalProperties": false,
+      "properties": {
+        "american_odds": {"type": ["integer", "null"]},
+        "book": {"enum": ["DRAFTKINGS", "FANDUEL", "PINNACLE", null], "type": ["string", "null"]},
+        "ev": {"type": ["number", "null"]},
+        "game_id": {"type": ["string", "null"]},
+        "lane": {"enum": ["HIT_RATE", "BALANCED", "VALUE"]},
+        "line": {"type": ["number", "null"]},
+        "market": {"enum": ["MONEYLINE", "SPREAD", "TOTAL", null], "type": ["string", "null"]},
+        "market_probability": {"maximum": 1, "minimum": 0, "type": ["number", "null"]},
+        "matchup": {
+          "additionalProperties": false,
+          "properties": {"away_team": {"minLength": 1, "type": "string"}, "home_team": {"minLength": 1, "type": "string"}},
+          "required": ["away_team", "home_team"],
+          "type": ["object", "null"]
+        },
+        "model_probability": {"maximum": 1, "minimum": 0, "type": ["number", "null"]},
+        "play_through": {
+          "additionalProperties": false,
+          "properties": {"line": {"type": ["number", "null"]}, "price_american": {"type": ["integer", "null"]}},
+          "required": ["line", "price_american"],
+          "type": ["object", "null"]
+        },
+        "recommended_units": {"enum": [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5]},
+        "reliability": {"type": ["string", "null"]},
+        "selection": {"type": ["string", "null"]},
+        "state": {"enum": ["BET", "NO_PLAY", "TARGET_ONLY", "SUPPRESSED", "UNSUPPORTED"]},
+        "support": {"enum": ["SUPPORTED", "PARTIAL", "UNSUPPORTED"]},
+        "trust_probability": {"maximum": 1, "minimum": 0, "type": ["number", "null"]},
+        "value_at": {
+          "additionalProperties": false,
+          "properties": {"line": {"type": ["number", "null"]}, "price_american": {"type": ["integer", "null"]}},
+          "required": ["line", "price_american"],
+          "type": ["object", "null"]
+        },
+        "warnings": {"items": {"minLength": 1, "type": "string"}, "type": "array"}
+      },
+      "required": ["lane", "state", "game_id", "matchup", "market", "selection", "book", "line", "american_odds", "model_probability", "trust_probability", "market_probability", "ev", "support", "reliability", "recommended_units", "play_through", "value_at", "warnings"],
+      "type": "object"
+    },
+    "market_bucket": {
+      "additionalProperties": false,
+      "properties": {
+        "DRAFTKINGS": {"items": {"$ref": "#/$defs/market_offer"}, "type": "array"},
+        "FANDUEL": {"items": {"$ref": "#/$defs/market_offer"}, "type": "array"},
+        "PINNACLE": {"items": {"$ref": "#/$defs/market_offer"}, "type": "array"}
+      },
+      "type": "object"
+    },
+    "market_offer": {
+      "additionalProperties": false,
+      "properties": {
+        "freshness": {"$ref": "#/$defs/freshness"},
+        "game_id": {"minLength": 1, "type": "string"},
+        "line": {"type": ["number", "null"]},
+        "market_type": {"enum": ["MONEYLINE", "SPREAD", "TOTAL"]},
+        "normalized_selection": {"minLength": 1, "type": "string"},
+        "offer_id": {"minLength": 1, "type": "string"},
+        "price": {"type": "integer"},
+        "provider": {"minLength": 1, "type": "string"},
+        "selection": {"minLength": 1, "type": "string"},
+        "snapshot_at_utc": {"format": "date-time", "pattern": "Z$", "type": "string"},
+        "sportsbook": {"enum": ["DRAFTKINGS", "FANDUEL", "PINNACLE"]}
+      },
+      "required": ["offer_id", "provider", "game_id", "sportsbook", "market_type", "selection", "line", "price", "snapshot_at_utc", "normalized_selection", "freshness"],
+      "type": "object"
+    },
+    "model_output": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_version": {"minLength": 1, "type": "string"},
+        "input_identity": {"minLength": 1, "type": "string"},
+        "prediction": {"type": ["number", "null"]},
+        "status": {"enum": ["AVAILABLE", "UNAVAILABLE", "UNSUPPORTED", "FAILED", "STALE_INPUT"]},
+        "support": {"enum": ["SUPPORTED", "PARTIAL", "UNSUPPORTED"]},
+        "warnings": {"items": {"type": "string"}, "type": "array"}
+      },
+      "required": ["status", "prediction", "support", "input_identity", "artifact_version", "warnings"],
+      "type": "object"
+    },
+    "qb_context": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_qb_id": {"type": ["string", "null"]},
+        "depth_designation": {"type": ["string", "null"]},
+        "expected_starter": {"type": ["string", "null"]},
+        "freshness": {"$ref": "#/$defs/freshness"},
+        "game_id": {"minLength": 1, "type": "string"},
+        "gsis_id": {"type": ["string", "null"]},
+        "injury_status": {"type": ["string", "null"]},
+        "last_changed_at_utc": {"format": "date-time", "type": ["string", "null"]},
+        "provenance_id": {"minLength": 1, "type": "string"},
+        "resolution_status": {"enum": ["RESOLVED", "NEW_PLAYER", "UNRESOLVED", "AMBIGUOUS", "MISSING_EVIDENCE", "OVERRIDDEN"]},
+        "sleeper_player_id": {"type": ["string", "null"]},
+        "source": {"minLength": 1, "type": "string"},
+        "source_snapshot_at_utc": {"format": "date-time", "type": ["string", "null"]},
+        "team": {"minLength": 1, "type": "string"},
+        "warning_state": {"type": ["string", "null"]}
+      },
+      "required": ["team", "game_id", "expected_starter", "sleeper_player_id", "canonical_qb_id", "gsis_id", "depth_designation", "injury_status", "source", "source_snapshot_at_utc", "provenance_id", "resolution_status", "freshness", "warning_state", "last_changed_at_utc"],
+      "type": "object"
+    }
+  },
+  "$id": "NFL_EDGE_PRODUCT_API_V1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "evaluator_versions": {"additionalProperties": {"minLength": 1, "type": "string"}, "minProperties": 1, "type": "object"},
+    "football_data_version": {"minLength": 1, "type": "string"},
+    "freshness": {"$ref": "#/$defs/freshness"},
+    "games": {"items": {"$ref": "#/$defs/game"}, "type": "array"},
+    "generated_at_utc": {"format": "date-time", "pattern": "Z$", "type": "string"},
+    "headlines": {
+      "additionalProperties": false,
+      "properties": {"balanced": {"$ref": "#/$defs/headline"}, "hit_rate": {"$ref": "#/$defs/headline"}, "value": {"$ref": "#/$defs/headline"}},
+      "required": ["hit_rate", "balanced", "value"],
+      "type": "object"
+    },
+    "market_snapshot_version": {"minLength": 1, "type": "string"},
+    "model_versions": {"additionalProperties": {"minLength": 1, "type": "string"}, "minProperties": 1, "type": "object"},
+    "prediction_as_of_utc": {"format": "date-time", "pattern": "Z$", "type": "string"},
+    "product_version": {"minLength": 1, "type": "string"},
+    "qb_snapshot_version": {"minLength": 1, "type": "string"},
+    "schema_version": {"const": "NFL_EDGE_PRODUCT_API_V1"},
+    "season": {"type": "integer"},
+    "selector_versions": {"additionalProperties": {"minLength": 1, "type": "string"}, "minProperties": 1, "type": "object"},
+    "slate_status": {"enum": ["UPCOMING", "ACTIVE", "COMPLETE", "OFFSEASON"]},
+    "stale": {"type": "boolean"},
+    "warnings": {"items": {"minLength": 1, "type": "string"}, "type": "array"},
+    "week": {"minimum": 1, "type": "integer"}
+  },
+  "required": ["schema_version", "product_version", "generated_at_utc", "prediction_as_of_utc", "season", "week", "slate_status", "football_data_version", "qb_snapshot_version", "market_snapshot_version", "model_versions", "evaluator_versions", "selector_versions", "freshness", "stale", "warnings", "headlines", "games"],
+  "title": "NFL EDGE Product API V1",
+  "type": "object"
+}

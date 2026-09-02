@@ -1,0 +1,141 @@
+"""Freshness, Sleeper/QB and live market contract validation V1."""
+from __future__ import annotations
+
+from typing import Any
+
+from nfl_edge.contracts.common_v1 import (
+    BOOKS,
+    FRESHNESS_STATES,
+    MARKET_TYPES,
+    QB_RESOLUTION_STATUSES,
+    ContractValidationError,
+    require_enum,
+    require_exact_keys,
+    require_map,
+    require_number,
+    require_string,
+    validate_american_odds,
+    validate_utc_timestamp,
+)
+
+FRESHNESS_AGING_FRACTION = 0.5
+
+
+def _expected_freshness_state(age_seconds: float, threshold_seconds: float) -> str:
+    aging_boundary = threshold_seconds * FRESHNESS_AGING_FRACTION
+    if age_seconds < aging_boundary:
+        return "FRESH"
+    if age_seconds <= threshold_seconds:
+        return "AGING"
+    return "STALE"
+
+
+def validate_freshness(value: Any, path: str = "freshness") -> None:
+    obj = require_map(value, path)
+    fields = {"state", "observed_at_utc", "age_seconds", "threshold_seconds"}
+    require_exact_keys(obj, fields, path)
+    state = require_enum(obj["state"], FRESHNESS_STATES, f"{path}.state")
+    threshold = require_number(obj["threshold_seconds"], f"{path}.threshold_seconds", 0.0)
+    if threshold <= 0.0:
+        raise ContractValidationError(f"{path}.threshold_seconds must be > 0")
+
+    if state == "UNAVAILABLE":
+        if obj["observed_at_utc"] is not None or obj["age_seconds"] is not None:
+            raise ContractValidationError(
+                f"{path} UNAVAILABLE requires observed_at_utc=null and age_seconds=null"
+            )
+        return
+
+    validate_utc_timestamp(obj["observed_at_utc"], f"{path}.observed_at_utc")
+    age = require_number(obj["age_seconds"], f"{path}.age_seconds", 0.0)
+    expected = _expected_freshness_state(age, threshold)
+    if state != expected:
+        raise ContractValidationError(
+            f"{path}.state={state} contradicts age_seconds={age} and "
+            f"threshold_seconds={threshold}; expected {expected}"
+        )
+
+
+def validate_qb_context(value: Any, path: str) -> None:
+    obj = require_map(value, path)
+    required = {
+        "team", "game_id", "expected_starter", "sleeper_player_id", "canonical_qb_id", "gsis_id",
+        "depth_designation", "injury_status", "source", "source_snapshot_at_utc", "provenance_id",
+        "resolution_status", "freshness", "warning_state", "last_changed_at_utc",
+    }
+    require_exact_keys(obj, required, path)
+    require_string(obj["team"], f"{path}.team")
+    require_string(obj["game_id"], f"{path}.game_id")
+    resolution = require_enum(obj["resolution_status"], QB_RESOLUTION_STATUSES, f"{path}.resolution_status")
+    require_string(obj["source"], f"{path}.source")
+    require_string(obj["provenance_id"], f"{path}.provenance_id")
+    validate_freshness(obj["freshness"], f"{path}.freshness")
+    validate_utc_timestamp(obj["source_snapshot_at_utc"], f"{path}.source_snapshot_at_utc", nullable=True)
+    validate_utc_timestamp(obj["last_changed_at_utc"], f"{path}.last_changed_at_utc", nullable=True)
+    for field in (
+        "expected_starter", "sleeper_player_id", "canonical_qb_id", "gsis_id",
+        "depth_designation", "injury_status", "warning_state",
+    ):
+        if obj[field] is not None:
+            require_string(obj[field], f"{path}.{field}")
+    if resolution in {"RESOLVED", "OVERRIDDEN"} and (
+        obj["expected_starter"] is None
+        or obj["canonical_qb_id"] is None
+        or obj["source_snapshot_at_utc"] is None
+    ):
+        raise ContractValidationError(
+            f"{path} resolved QB requires expected_starter, canonical_qb_id, and source snapshot"
+        )
+
+
+def validate_market_offer(value: Any, path: str = "offer") -> None:
+    obj = require_map(value, path)
+    required = {
+        "offer_id", "provider", "game_id", "sportsbook", "market_type", "selection", "line", "price",
+        "snapshot_at_utc", "normalized_selection", "freshness",
+    }
+    require_exact_keys(obj, required, path)
+    for field in ("offer_id", "provider", "game_id", "selection", "normalized_selection"):
+        require_string(obj[field], f"{path}.{field}")
+    require_enum(obj["sportsbook"], BOOKS, f"{path}.sportsbook")
+    market = require_enum(obj["market_type"], MARKET_TYPES, f"{path}.market_type")
+    if market == "MONEYLINE":
+        if obj["line"] is not None:
+            raise ContractValidationError(f"{path}.line must be null for MONEYLINE")
+    else:
+        require_number(obj["line"], f"{path}.line")
+    validate_american_odds(obj["price"], f"{path}.price")
+    validate_utc_timestamp(obj["snapshot_at_utc"], f"{path}.snapshot_at_utc")
+    validate_freshness(obj["freshness"], f"{path}.freshness")
+
+
+def validate_market_board(value: Any, game_id: str, path: str) -> None:
+    board = require_map(value, path)
+    require_exact_keys(board, {"moneyline", "spread", "total"}, path)
+    for market_key, market_type in (("moneyline", "MONEYLINE"), ("spread", "SPREAD"), ("total", "TOTAL")):
+        books = require_map(board[market_key], f"{path}.{market_key}")
+        unknown = set(books) - BOOKS
+        if unknown:
+            raise ContractValidationError(f"{path}.{market_key} has unknown book(s): {sorted(unknown)}")
+        for book, offers in books.items():
+            if not isinstance(offers, list):
+                raise ContractValidationError(f"{path}.{market_key}.{book} must be an array")
+            seen_ids: set[str] = set()
+            seen_exact: set[tuple[object, ...]] = set()
+            for index, offer in enumerate(offers):
+                offer_path = f"{path}.{market_key}.{book}[{index}]"
+                validate_market_offer(offer, offer_path)
+                if offer["game_id"] != game_id or offer["market_type"] != market_type or offer["sportsbook"] != book:
+                    raise ContractValidationError(f"{offer_path} identity does not match its game/market/book bucket")
+                if offer["offer_id"] in seen_ids:
+                    raise ContractValidationError(f"{offer_path}.offer_id duplicates an exact offer")
+                signature = (
+                    offer["normalized_selection"],
+                    offer["line"],
+                    offer["price"],
+                    offer["snapshot_at_utc"],
+                )
+                if signature in seen_exact:
+                    raise ContractValidationError(f"{offer_path} duplicates an exact offer observation")
+                seen_ids.add(str(offer["offer_id"]))
+                seen_exact.add(signature)
