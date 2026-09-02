@@ -10,7 +10,7 @@ from nfl_edge.contracts.common_v1 import (
     QB_RESOLUTION_STATUSES,
     ContractValidationError,
     require_enum,
-    require_keys,
+    require_exact_keys,
     require_map,
     require_number,
     require_string,
@@ -32,7 +32,8 @@ def _expected_freshness_state(age_seconds: float, threshold_seconds: float) -> s
 
 def validate_freshness(value: Any, path: str = "freshness") -> None:
     obj = require_map(value, path)
-    require_keys(obj, {"state", "observed_at_utc", "age_seconds", "threshold_seconds"}, path)
+    fields = {"state", "observed_at_utc", "age_seconds", "threshold_seconds"}
+    require_exact_keys(obj, fields, path)
     state = require_enum(obj["state"], FRESHNESS_STATES, f"{path}.state")
     threshold = require_number(obj["threshold_seconds"], f"{path}.threshold_seconds", 0.0)
     if threshold <= 0.0:
@@ -62,7 +63,7 @@ def validate_qb_context(value: Any, path: str) -> None:
         "depth_designation", "injury_status", "source", "source_snapshot_at_utc", "provenance_id",
         "resolution_status", "freshness", "warning_state", "last_changed_at_utc",
     }
-    require_keys(obj, required, path)
+    require_exact_keys(obj, required, path)
     require_string(obj["team"], f"{path}.team")
     require_string(obj["game_id"], f"{path}.game_id")
     resolution = require_enum(obj["resolution_status"], QB_RESOLUTION_STATUSES, f"{path}.resolution_status")
@@ -93,7 +94,7 @@ def validate_market_offer(value: Any, path: str = "offer") -> None:
         "offer_id", "provider", "game_id", "sportsbook", "market_type", "selection", "line", "price",
         "snapshot_at_utc", "normalized_selection", "freshness",
     }
-    require_keys(obj, required, path)
+    require_exact_keys(obj, required, path)
     for field in ("offer_id", "provider", "game_id", "selection", "normalized_selection"):
         require_string(obj[field], f"{path}.{field}")
     require_enum(obj["sportsbook"], BOOKS, f"{path}.sportsbook")
@@ -110,7 +111,7 @@ def validate_market_offer(value: Any, path: str = "offer") -> None:
 
 def validate_market_board(value: Any, game_id: str, path: str) -> None:
     board = require_map(value, path)
-    require_keys(board, {"moneyline", "spread", "total"}, path)
+    require_exact_keys(board, {"moneyline", "spread", "total"}, path)
     for market_key, market_type in (("moneyline", "MONEYLINE"), ("spread", "SPREAD"), ("total", "TOTAL")):
         books = require_map(board[market_key], f"{path}.{market_key}")
         unknown = set(books) - BOOKS
