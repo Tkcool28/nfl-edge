@@ -4,13 +4,13 @@ from pathlib import Path
 
 import polars as pl
 import pytest
-import yaml
 
 from nfl_edge.live.qb_inputs import adjustment_from_passing_epa
 from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, score_week1
 from nfl_edge.live.sleeper_qb import SleeperExpectedQBResolver, SleeperQBSource
 from nfl_edge.live.state_2026 import bootstrap_entering_2026_state
 from nfl_edge.live.week1_2026 import EXPECTED_TEAMS, load_week1_schedule
+from nfl_edge.models.qb_elo_config import load_qb_elo_canonical_config
 
 ROOT = Path(__file__).resolve().parents[2]
 AS_OF = "2026-09-02T13:00:00Z"
@@ -78,7 +78,7 @@ def entering_state():
 
 
 def test_live_qb_adjustment_formula_matches_frozen_pr70_contract():
-    raw = yaml.safe_load((ROOT / "config/qb_elo_v1.yaml").read_text(encoding="utf-8"))
+    raw = load_qb_elo_canonical_config(ROOT / "config/qb_elo_v1.yaml")
     value = 0.123
     expected = (value - float(raw["qb_adjustment_replacement_passing_epa"])) * float(
         raw["qb_adjustment_scale_elo_per_shrunk_epa"]
