@@ -294,11 +294,18 @@ def bootstrap_entering_2026_state(
         raise Entering2026StateError(f"QB-Elo terminal season drift: {qb_state.current_season}")
 
     latest = context["scheduled_start_utc"].max()
-    if not isinstance(latest, datetime):
-        raise Entering2026StateError("2025 scheduled_start_utc terminal value is not datetime")
-    if latest.tzinfo is None or latest.utcoffset() is None:
-        latest = latest.replace(tzinfo=timezone.utc)
-    history_complete = latest.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+    if isinstance(latest, datetime):
+        latest_dt = latest
+    else:
+        try:
+            latest_dt = datetime.fromisoformat(str(latest).replace("Z", "+00:00"))
+        except ValueError as exc:
+            raise Entering2026StateError(
+                f"cannot parse 2025 scheduled_start_utc terminal value: {latest!r}"
+            ) from exc
+    if latest_dt.tzinfo is None or latest_dt.utcoffset() is None:
+        latest_dt = latest_dt.replace(tzinfo=timezone.utc)
+    history_complete = latest_dt.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
     identity = {
         "completed_2025_blocks": completed,
         "history_complete_through_utc": history_complete,
