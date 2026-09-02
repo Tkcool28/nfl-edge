@@ -13,7 +13,8 @@ reinterpret V5 as a new untouched holdout.
 V5 exposed architecture/product behavior. The successor therefore:
 
 - preserves all V5 artifacts;
-- preserves `final_selectors_v1.py` and the frozen XGBoost V1 engine/adapter;
+- preserves `final_selectors_v1.py`, the package-root V1 recommendation route,
+  and the frozen XGBoost V1 engine/adapter;
 - does not acquire new market data;
 - does not call the Odds API;
 - does not rerun 2025 to choose thresholds;
@@ -87,6 +88,17 @@ invariants. Its hit rate/ROI are descriptive only and **cannot** be used to
 retune the -130 cap, 50% sharp-favorite gate, spread floor, or ranking formula.
 2025 is hard-forbidden from this diagnostic.
 
+### Forward application API
+
+The frozen package root `nfl_edge.recommendation` remains V1 because existing
+freeze/replay contracts assert that historical routing. New application code
+must import `nfl_edge.recommendation.live_v2`, which exposes Balanced V2 while
+delegating HHR and Value to the unchanged V1 selector implementations and
+reusing the unchanged staking/risk-profile surface.
+
+This explicit version boundary prevents a launch correction from silently
+rewriting the V1/V5 replay API.
+
 ## 2. XGBoost validation-tail V2
 
 The frozen V1 model parameters and feature contract remain unchanged.
@@ -137,6 +149,7 @@ path 2025-specific.
 - Spread Confidence V3 calibrator: unchanged for launch.
 - Expected Margin model and 0-4 candidate definition: unchanged.
 - staking/risk profiles/Play Through: unchanged.
+- `nfl_edge.recommendation` package-root V1 route: unchanged.
 - V5 artifacts and run identity: unchanged.
 
 ## 4. Launch integration surface
@@ -144,6 +157,7 @@ path 2025-specific.
 Successor implementations:
 
 - `src/nfl_edge/recommendation/final_selectors_v2.py`
+- `src/nfl_edge/recommendation/live_v2.py`
 - `config/task05g_final_selectors_v2.yaml`
 - `src/nfl_edge/backtest/xgboost_walk_forward_v2.py`
 - `src/nfl_edge/models/xgboost_live_v2.py`
@@ -151,4 +165,4 @@ Successor implementations:
 - `config/xgboost_validation_tail_v2.yaml`
 
 The V1 modules remain historical replay authorities. New launch/live wiring
-should explicitly consume V2 rather than silently mutating V1 imports.
+must explicitly consume the V2 surfaces rather than silently mutating V1 imports.
