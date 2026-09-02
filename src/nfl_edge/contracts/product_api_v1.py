@@ -13,6 +13,7 @@ from nfl_edge.contracts.common_v1 import (
     MARKET_TYPES,
     MODEL_OUTPUT_STATUSES,
     PRODUCT_SCHEMA_VERSION,
+    RETAIL_BOOKS,
     SLATE_STATUSES,
     SUPPORT_STATES,
     VERDICTS,
@@ -212,7 +213,7 @@ def validate_exact_offer_request(payload: Any) -> dict[str, Any]:
     require_string(obj["game_id"], "request.game_id")
     market = require_enum(obj["market_type"], MARKET_TYPES, "request.market_type")
     require_string(obj["selection"], "request.selection")
-    require_enum(obj["book"], BOOKS, "request.book")
+    require_enum(obj["book"], RETAIL_BOOKS, "request.book")
     if market == "MONEYLINE":
         if obj["line"] is not None:
             raise ContractValidationError("request.line must be null for MONEYLINE")
