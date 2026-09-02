@@ -1,39 +1,34 @@
-"""Standard-evaluation compatibility layer for the frozen 2025 product path.
+"""Standard-only 2025 compatibility wrapper around the merged PR #87 base.
 
-This module changes no model, evaluator, confidence, selector, staking, Play
-Through, or Task05E candidate-region methodology. It exists only because the
-standard 2025 runtime persists the newer canonical Task05G row names while
-several already-frozen downstream consumers still read their historical aliases.
-
-All legacy aliases created here are temporary. Persisted 2025 product rows stay
-canonical.
+The merged compatibility implementation is preserved byte-for-byte in
+``standard_product_compat_2025_base``. This wrapper changes only how the frozen
+Model Confidence V2 / Spread Confidence V3 current inputs are materialized:
+those historical runners sourced game-level model predictions, not Task05F's
+candidate ``raw_model_output`` field.
 """
 from __future__ import annotations
 
-from collections import defaultdict
 from typing import Any, Callable, Iterable, Mapping
 
-from nfl_edge.market_edge import candidates as task05e_candidates
-from nfl_edge.recommendation.remediation_provenance_v1 import REGION_SPECS
-from nfl_edge.value.contracts import NormalizedOffer
+from . import standard_product_compat_2025_base as _base
 
-
-CURRENT_ALIASES: tuple[tuple[str, str], ...] = (
-    ("selected_side", "selection"),
-    ("line", "actionable_line"),
-    ("american_odds", "actionable_price_american"),
-    ("sportsbook", "actionable_book"),
-    ("raw_model_output", "raw_football_output"),
-)
-TEMPORARY_LEGACY_KEYS = frozenset(legacy for legacy, _ in CURRENT_ALIASES)
-
-
-class StandardProductCompatibilityError(RuntimeError):
-    """Raised when the canonical/frozen product interface cannot be reconciled."""
+CURRENT_ALIASES = _base.CURRENT_ALIASES
+TEMPORARY_LEGACY_KEYS = _base.TEMPORARY_LEGACY_KEYS
+StandardProductCompatibilityError = _base.StandardProductCompatibilityError
+build_current_candidate_registry = _base.build_current_candidate_registry
+attach_current_candidate_regions = _base.attach_current_candidate_regions
+strip_product_aliases = _base.strip_product_aliases
+_assert_confidence_live = _base._assert_confidence_live
 
 
 def legacy_current_rows(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
-    """Return temporary legacy-key copies of canonical current/settled rows."""
+    """Return temporary legacy-key copies without requiring candidate raw output.
+
+    ``raw_model_output`` is still copied from canonical ``raw_football_output``
+    when present, preserving the PR #87 behavior. Unlike the PR #87 base, a null
+    candidate-level raw output is not treated as a contract failure because the
+    finalized V2/V3 confidence runners did not source their current inputs there.
+    """
     out: list[dict[str, Any]] = []
     for source in rows:
         row = dict(source)
@@ -69,180 +64,54 @@ def legacy_current_rows(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any
             raise StandardProductCompatibilityError(
                 f"current row lacks actionable price: game_id={row.get('game_id')}"
             )
-        market = str(row.get("market_type") or "").lower()
-        if market in {"moneyline", "spread"} and row.get("raw_model_output") is None:
-            raise StandardProductCompatibilityError(
-                f"current {market} row lacks frozen model output: game_id={row.get('game_id')}"
-            )
         out.append(row)
     return out
 
 
-def _region_name(family: str, model: str, bucket: str) -> str | None:
-    for name, expected_family, expected_model, buckets in REGION_SPECS:
-        if family == expected_family and model == expected_model and bucket in buckets:
-            return name
-    return None
-
-
-def _positive_edge_side(model_home: float, benchmark_home: float) -> tuple[str, float, float] | None:
-    delta = float(model_home) - float(benchmark_home)
-    if abs(delta) <= 1e-12:
-        return None
-    if delta > 0.0:
-        return "home", float(model_home), abs(delta) * 100.0
-    return "away", 1.0 - float(model_home), abs(delta) * 100.0
-
-
-def build_current_candidate_registry(
-    *,
-    task05f: Any,
-    current_games: Mapping[str, Mapping[str, Any]],
-    market_index: Mapping[Any, Any],
-) -> dict[tuple[str, str, str], tuple[str, ...]]:
-    """Recreate the frozen Task05E candidate identities outcome-blind for 2025.
-
-    This is the direct 2025 continuation of the locked Task05E census/ledger
-    predicates. It uses only current pre-result model outputs and the current
-    frozen market snapshot. No score, settlement, profit, or realized edge is
-    consulted.
-    """
-    tags: dict[tuple[str, str, str], set[str]] = defaultdict(set)
-
-    for gid, source in sorted(current_games.items()):
-        game = dict(source)
-        if int(game.get("season", -1)) != 2025:
-            raise StandardProductCompatibilityError(
-                f"candidate-registry current game is not 2025: {gid}"
-            )
-        for outcome_key in (
-            "home_score",
-            "away_score",
-            "target_margin",
-            "target_home_win",
-            "target_total_points",
-        ):
-            if game.get(outcome_key) is not None:
-                raise StandardProductCompatibilityError(
-                    f"candidate-registry outcome leakage: {gid}:{outcome_key}"
-                )
-        if bool(game.get("target_available", False)):
-            raise StandardProductCompatibilityError(
-                f"candidate-registry target available before freeze: {gid}"
-            )
-
-        # Moneyline candidate regions. Task05E AVG and corroborated definitions
-        # require both frozen constituent probabilities.
-        qh = game.get("qbelo_home")
-        xh = game.get("xgb_home")
-        ml_anchor = task05f._moneyline_anchor(market_index, str(gid))
-        if qh is not None and xh is not None and ml_anchor is not None:
-            qh = float(qh)
-            xh = float(xh)
-            ah = (qh + xh) / 2.0
-            benchmark_home = float(ml_anchor.home_no_vig_probability)
-            q_side = _positive_edge_side(qh, benchmark_home)
-            x_side = _positive_edge_side(xh, benchmark_home)
-            avg_side = _positive_edge_side(ah, benchmark_home)
-
-            if avg_side is not None:
-                side, p_selected, edge_pp = avg_side
-                offer = task05f._best(market_index, str(gid), "moneyline", side)
-                if offer is not None:
-                    bucket = task05e_candidates._ml_bucket(float(edge_pp))
-                    if bucket is not None:
-                        name = _region_name("ML_AVG_DISAGREEMENT", "AVG", bucket)
-                        if name is not None:
-                            tags[(str(gid), "moneyline", side)].add(name)
-                    if task05e_candidates._in_dog_zone(
-                        float(p_selected), int(offer.price_american)
-                    ):
-                        name = _region_name("ML_DOG_VALUE_ZONE", "AVG", "ZONE")
-                        if name is not None:
-                            tags[(str(gid), "moneyline", side)].add(name)
-                        if (
-                            q_side is not None
-                            and x_side is not None
-                            and q_side[0] == x_side[0] == side
-                        ):
-                            name = _region_name("ML_DOG_VALUE_ZONE", "CORROB", "ZONE")
-                            if name is not None:
-                                tags[(str(gid), "moneyline", side)].add(name)
-
-        # Spread candidate region. The frozen Task05E definition compares the
-        # Expected Margin model to the Pinnacle threshold, then fails closed
-        # unless both DK and FD selected-side offers are reconstructable.
-        expected_margin = game.get("expected_home_margin")
-        spread_anchor = task05f._spread_anchor(market_index, str(gid))
-        if expected_margin is not None and spread_anchor is not None:
-            signed = float(expected_margin) - float(spread_anchor.threshold)
-            if abs(signed) > 1e-9:
-                side = "home" if signed > 0.0 else "away"
-                disagreement = abs(signed)
-                dk = list(market_index.get((str(gid), "spread", side, "draftkings"), []))
-                fd = list(market_index.get((str(gid), "spread", side, "fanduel"), []))
-                if dk and fd:
-                    bucket = task05e_candidates._st_bucket(float(disagreement))
-                    if bucket is not None:
-                        name = _region_name(
-                            "SPREAD_DISAGREEMENT", "EXPECTED_MARGIN", bucket
-                        )
-                        if name is not None:
-                            tags[(str(gid), "spread", side)].add(name)
-
-    return {key: tuple(sorted(value)) for key, value in sorted(tags.items())}
-
-
-def attach_current_candidate_regions(
+def confidence_current_rows(
     rows: Iterable[Mapping[str, Any]],
-    registry: Mapping[tuple[str, str, str], tuple[str, ...]],
+    current_games: Mapping[str, Mapping[str, Any]],
 ) -> list[dict[str, Any]]:
-    """Attach frozen Task05E identity tags to current temporary board rows."""
-    out: list[dict[str, Any]] = []
-    for source in rows:
-        row = dict(source)
-        key = (
-            str(row.get("game_id") or ""),
-            str(row.get("market_type") or "").lower(),
-            str(row.get("selected_side") or row.get("selection") or "").lower(),
-        )
-        regions = tuple(registry.get(key, ()))
-        row["model_candidate"] = bool(regions)
-        row["model_candidate_regions"] = ";".join(regions)
-        out.append(row)
-    return out
+    """Restore the exact frozen game-level current-input contract for V2/V3.
 
-
-def _strip_row(row: Mapping[str, Any]) -> dict[str, Any]:
-    clean = dict(row)
-    for legacy in TEMPORARY_LEGACY_KEYS:
-        clean.pop(legacy, None)
-    return clean
-
-
-def strip_product_aliases(product: Mapping[str, Any]) -> dict[str, Any]:
-    """Remove temporary legacy aliases from every persisted current-row surface."""
-    out = dict(product)
-    for key in ("board_rows", "headlines", "unique_exposure"):
-        if key in out:
-            out[key] = [_strip_row(row) for row in out[key]]
-    return out
-
-
-def _assert_confidence_live(board_rows: Iterable[Mapping[str, Any]]) -> None:
-    rows = list(board_rows)
-    for market in ("moneyline", "spread"):
-        material = [
-            row
-            for row in rows
-            if str(row.get("market_type") or "").lower() == market
-            and bool(row.get("supported"))
-        ]
-        if material and not any(bool(row.get("model_confidence_supported")) for row in material):
+    Moneyline V2 used the 50/50 QB-Elo/XGBoost home probability average and
+    flipped it to the selected side. Spread V2/V3 used stable Expected Margin's
+    home prediction. The values below come only from already-frozen current-game
+    predictions; no 2025 result fields are consulted.
+    """
+    out = legacy_current_rows(rows)
+    for row in out:
+        gid = str(row.get("game_id") or "")
+        game = current_games.get(gid)
+        if game is None:
             raise StandardProductCompatibilityError(
-                f"frozen {market} confidence produced zero supported current rows; "
-                "canonical/frozen input contract is not live"
+                f"current confidence row has no game-level model inputs: {gid}"
             )
+        market = str(row.get("market_type") or "").lower()
+        side = str(row.get("selected_side") or "").lower()
+
+        expected: float | None = None
+        if market == "moneyline":
+            qbelo_home = game.get("qbelo_home")
+            xgb_home = game.get("xgb_home")
+            if qbelo_home is not None and xgb_home is not None:
+                avg_home = (float(qbelo_home) + float(xgb_home)) / 2.0
+                if side == "home":
+                    expected = avg_home
+                elif side == "away":
+                    expected = 1.0 - avg_home
+                else:
+                    raise StandardProductCompatibilityError(
+                        f"unexpected moneyline side for confidence input: {gid}:{side}"
+                    )
+        elif market == "spread":
+            margin = game.get("expected_home_margin")
+            if margin is not None:
+                expected = float(margin)
+
+        if market in {"moneyline", "spread"}:
+            row["raw_model_output"] = expected
+    return out
 
 
 def build_product_with_compat(
@@ -251,25 +120,24 @@ def build_product_with_compat(
     prior_board_rows_adapter: Callable[[list[dict[str, Any]]], list[dict[str, Any]]],
     **kwargs: Any,
 ) -> dict[str, Any]:
-    """Call the frozen product builder through temporary standard-only views."""
+    """Call the frozen product through PR #87 compatibility + exact V2/V3 inputs."""
     material = dict(kwargs)
     material["prior_board_rows"] = prior_board_rows_adapter(
         [dict(row) for row in material["prior_board_rows"]]
     )
 
-    # Unit tests may supply a tiny stand-in builder. Production's frozen builder
-    # has these internal globals; bypass current-row wrapping for simple stubs.
     namespace = getattr(frozen_builder, "__globals__", {})
     if "_apply_v2" not in namespace or "_apply_v3" not in namespace:
         return frozen_builder(**material)
 
+    current_games = kwargs["current_games"]
     task05f = namespace["_load"](
         "standard_2025_candidate_regions_task05f",
         kwargs["root"] / "scripts/task05f_evaluator_final_runner.py",
     )
     registry = build_current_candidate_registry(
         task05f=task05f,
-        current_games=kwargs["current_games"],
+        current_games=current_games,
         market_index=kwargs["market_index"],
     )
 
@@ -279,14 +147,14 @@ def build_product_with_compat(
     def adapted_v2(*, root, candidates, prior_games):
         return frozen_v2(
             root=root,
-            candidates=legacy_current_rows(candidates),
+            candidates=confidence_current_rows(candidates, current_games),
             prior_games=prior_games,
         )
 
     def adapted_v3(*, root, rows, prior_board_rows, prior_games):
         board = frozen_v3(
             root=root,
-            rows=legacy_current_rows(rows),
+            rows=confidence_current_rows(rows, current_games),
             prior_board_rows=prior_board_rows,
             prior_games=prior_games,
         )
@@ -314,47 +182,19 @@ def build_product_with_compat(
 
 
 def advance_value_state_with_compat(
-    frozen_advance: Callable[..., Any], state: Any, settled_block_rows: Iterable[Mapping[str, Any]]
+    frozen_advance: Callable[..., Any],
+    state: Any,
+    settled_block_rows: Iterable[Mapping[str, Any]],
 ) -> Any:
-    """Advance frozen causal Value trust through a temporary legacy settled view."""
+    """Advance frozen Value trust through the same temporary legacy settled view."""
     return frozen_advance(state, legacy_current_rows(settled_block_rows))
 
 
 def synthetic_current_contract_smoke(task05f: Any) -> None:
-    """Prove aliases and frozen Task05E region predicates without 2025 results."""
-    gid = "SYNTHETIC_CURRENT"
-    idx: dict[tuple[str, str, str, str], list[NormalizedOffer]] = {}
+    """Retain PR #87 smoke and cover the exact v3 null-candidate failure."""
+    _base.synthetic_current_contract_smoke(task05f)
 
-    def add(market: str, side: str, book: str, price: int, line: float | None = None):
-        idx.setdefault((gid, market, side, book), []).append(
-            NormalizedOffer(
-                market_type=market,
-                side=side,
-                book=book,
-                price_american=price,
-                line=line,
-                snapshot_utc="2025-09-01T00:00:00Z",
-            )
-        )
-
-    # Symmetric Pinnacle ML around ~55.95/44.05; AVG=.55 selects away with
-    # <2pp positive edge. +150 actionable away is inside the frozen dog zone.
-    add("moneyline", "home", "pinnacle", -127)
-    add("moneyline", "away", "pinnacle", 127)
-    add("moneyline", "home", "draftkings", -145)
-    add("moneyline", "home", "fanduel", -140)
-    add("moneyline", "away", "draftkings", 150)
-    add("moneyline", "away", "fanduel", 145)
-
-    # Mirrored Pinnacle spread; Expected Margin 2.5 vs threshold 1.0 gives a
-    # 1.5-point home disagreement. Both frozen actionable books are present.
-    add("spread", "home", "pinnacle", -110, -1.0)
-    add("spread", "away", "pinnacle", -110, 1.0)
-    add("spread", "home", "draftkings", -110, -1.0)
-    add("spread", "home", "fanduel", -108, -0.5)
-    add("spread", "away", "draftkings", -110, 1.0)
-    add("spread", "away", "fanduel", -112, 0.5)
-
+    gid = "SYNTHETIC_CONFIDENCE_SOURCE"
     current = {
         gid: {
             "game_id": gid,
@@ -363,7 +203,6 @@ def synthetic_current_contract_smoke(task05f: Any) -> None:
             "qbelo_home": 0.55,
             "xgb_home": 0.55,
             "expected_home_margin": 2.5,
-            "predicted_total": 44.0,
             "home_score": None,
             "away_score": None,
             "target_margin": None,
@@ -372,46 +211,43 @@ def synthetic_current_contract_smoke(task05f: Any) -> None:
             "target_available": False,
         }
     }
-    registry = build_current_candidate_registry(
-        task05f=task05f, current_games=current, market_index=idx
-    )
-    ml_tags = set(registry.get((gid, "moneyline", "away"), ()))
-    expected_ml = {
-        "ML_DOG_VALUE_ZONE_AVG",
-        "ML_DOG_VALUE_ZONE_CORROB",
-        "ML_AVG_DISAGREEMENT_AVG_0_2",
-    }
-    if ml_tags != expected_ml:
-        raise StandardProductCompatibilityError(
-            f"synthetic Task05E ML provenance mismatch: {sorted(ml_tags)}"
-        )
-    spread_tags = set(registry.get((gid, "spread", "home"), ()))
-    if spread_tags != {"SPREAD_DISAGREEMENT_EXPECTED_MARGIN_0_4"}:
-        raise StandardProductCompatibilityError(
-            f"synthetic Task05E spread provenance mismatch: {sorted(spread_tags)}"
-        )
-
-    canonical = {
+    canonical_ml = {
         "game_id": gid,
         "market_type": "moneyline",
         "selection": "away",
         "actionable_book": "draftkings",
         "actionable_line": None,
         "actionable_price_american": 150,
-        "raw_football_output": 0.45,
+        "raw_football_output": None,
     }
-    adapted = legacy_current_rows([canonical])[0]
-    expected_aliases = {
-        "selected_side": "away",
-        "sportsbook": "draftkings",
-        "line": None,
-        "american_odds": 150,
-        "raw_model_output": 0.45,
+    legacy_ml = legacy_current_rows([canonical_ml])[0]
+    if legacy_ml.get("raw_model_output") is not None:
+        raise StandardProductCompatibilityError(
+            "legacy alias invented a model-confidence input"
+        )
+    confidence_ml = confidence_current_rows([canonical_ml], current)[0]
+    if abs(float(confidence_ml["raw_model_output"]) - 0.45) > 1e-12:
+        raise StandardProductCompatibilityError(
+            "ML confidence source did not reproduce selected-side QB-Elo/XGB AVG"
+        )
+
+    canonical_spread = {
+        "game_id": gid,
+        "market_type": "spread",
+        "selection": "home",
+        "actionable_book": "draftkings",
+        "actionable_line": -1.0,
+        "actionable_price_american": -110,
+        "raw_football_output": None,
     }
-    for key, value in expected_aliases.items():
-        if adapted.get(key) != value:
+    confidence_spread = confidence_current_rows([canonical_spread], current)[0]
+    if abs(float(confidence_spread["raw_model_output"]) - 2.5) > 1e-12:
+        raise StandardProductCompatibilityError(
+            "spread confidence source did not reproduce Expected Margin"
+        )
+
+    for source in (canonical_ml, canonical_spread):
+        if TEMPORARY_LEGACY_KEYS.intersection(source):
             raise StandardProductCompatibilityError(
-                f"synthetic current alias mismatch: {key}={adapted.get(key)!r} expected={value!r}"
+                "confidence adapter mutated canonical source"
             )
-    if TEMPORARY_LEGACY_KEYS.intersection(canonical):
-        raise StandardProductCompatibilityError("synthetic current adapter mutated canonical source")
