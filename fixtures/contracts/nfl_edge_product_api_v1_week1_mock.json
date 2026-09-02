@@ -1,0 +1,298 @@
+{
+  "schema_version": "NFL_EDGE_PRODUCT_API_V1",
+  "product_version": "mock-week1-contract-v1",
+  "generated_at_utc": "2026-09-02T14:00:00Z",
+  "prediction_as_of_utc": "2026-09-02T13:55:00Z",
+  "season": 2026,
+  "week": 1,
+  "slate_status": "UPCOMING",
+  "football_data_version": "mock-football-state-v1",
+  "qb_snapshot_version": "mock-sleeper-qb-snapshot-v1",
+  "market_snapshot_version": "mock-market-snapshot-v1",
+  "model_versions": {
+    "qb_elo": "frozen-production",
+    "xgboost_v2": "post-v5-v2",
+    "expected_margin": "v1",
+    "ridge_totals_r4": "r4"
+  },
+  "evaluator_versions": {
+    "moneyline": "task05f",
+    "spread": "spread-confidence-v3",
+    "total": "task05f-total"
+  },
+  "selector_versions": {
+    "hit_rate": "v1",
+    "balanced": "balanced-price-bounded-v2",
+    "value": "v1"
+  },
+  "freshness": {
+    "state": "FRESH",
+    "observed_at_utc": "2026-09-02T14:00:00Z",
+    "age_seconds": 0,
+    "threshold_seconds": 900
+  },
+  "stale": false,
+  "warnings": [],
+  "headlines": {
+    "hit_rate": {
+      "lane": "HIT_RATE",
+      "state": "NO_PLAY",
+      "game_id": null,
+      "matchup": null,
+      "market": null,
+      "selection": null,
+      "book": null,
+      "line": null,
+      "american_odds": null,
+      "model_probability": null,
+      "trust_probability": null,
+      "market_probability": null,
+      "ev": null,
+      "support": "SUPPORTED",
+      "reliability": "HIGH",
+      "recommended_units": 0,
+      "play_through": null,
+      "value_at": null,
+      "warnings": ["No offer currently satisfies the frozen Hit Rate lane contract."]
+    },
+    "balanced": {
+      "lane": "BALANCED",
+      "state": "BET",
+      "game_id": "mock-2026-w01-AAA-BBB",
+      "matchup": {"away_team": "AAA", "home_team": "BBB"},
+      "market": "MONEYLINE",
+      "selection": "BBB",
+      "book": "DRAFTKINGS",
+      "line": null,
+      "american_odds": -115,
+      "model_probability": 0.54,
+      "trust_probability": 0.53,
+      "market_probability": 0.525,
+      "ev": 0.0096,
+      "support": "SUPPORTED",
+      "reliability": "HIGH",
+      "recommended_units": 0.75,
+      "play_through": {"line": null, "price_american": -120},
+      "value_at": null,
+      "warnings": []
+    },
+    "value": {
+      "lane": "VALUE",
+      "state": "TARGET_ONLY",
+      "game_id": "mock-2026-w01-AAA-BBB",
+      "matchup": {"away_team": "AAA", "home_team": "BBB"},
+      "market": "SPREAD",
+      "selection": "AAA",
+      "book": "FANDUEL",
+      "line": 2.5,
+      "american_odds": -110,
+      "model_probability": 0.525,
+      "trust_probability": 0.515,
+      "market_probability": 0.511,
+      "ev": 0.002,
+      "support": "SUPPORTED",
+      "reliability": "MEDIUM",
+      "recommended_units": 0,
+      "play_through": null,
+      "value_at": {"line": 2.5, "price_american": 105},
+      "warnings": ["Target only: current exact offer is not strict positive value."]
+    }
+  },
+  "games": [
+    {
+      "game_id": "mock-2026-w01-AAA-BBB",
+      "season": 2026,
+      "week": 1,
+      "home_team": "BBB",
+      "away_team": "AAA",
+      "kickoff_at_utc": "2026-09-06T17:00:00Z",
+      "game_status": "PREGAME",
+      "venue": "Mock Stadium",
+      "neutral_site": false,
+      "updated_at_utc": "2026-09-02T14:00:00Z",
+      "quarterbacks": {
+        "home": {
+          "team": "BBB",
+          "game_id": "mock-2026-w01-AAA-BBB",
+          "expected_starter": "Mock Home QB",
+          "sleeper_player_id": "sleeper-home-1",
+          "canonical_qb_id": "nflverse-home-1",
+          "gsis_id": "gsis-home-1",
+          "depth_designation": "DEPTH_CHART_EXPECTED_HEALTHY",
+          "injury_status": null,
+          "source": "sleeper_qb_v1",
+          "source_snapshot_at_utc": "2026-09-02T13:50:00Z",
+          "provenance_id": "mock-qb-prov-home-1",
+          "resolution_status": "RESOLVED",
+          "freshness": {
+            "state": "FRESH",
+            "observed_at_utc": "2026-09-02T13:50:00Z",
+            "age_seconds": 600,
+            "threshold_seconds": 21600
+          },
+          "warning_state": null,
+          "last_changed_at_utc": "2026-09-02T13:50:00Z"
+        },
+        "away": {
+          "team": "AAA",
+          "game_id": "mock-2026-w01-AAA-BBB",
+          "expected_starter": "Mock Away QB",
+          "sleeper_player_id": "sleeper-away-1",
+          "canonical_qb_id": "nflverse-away-1",
+          "gsis_id": "gsis-away-1",
+          "depth_designation": "DEPTH_CHART_EXPECTED_HEALTHY",
+          "injury_status": null,
+          "source": "sleeper_qb_v1",
+          "source_snapshot_at_utc": "2026-09-02T13:50:00Z",
+          "provenance_id": "mock-qb-prov-away-1",
+          "resolution_status": "RESOLVED",
+          "freshness": {
+            "state": "FRESH",
+            "observed_at_utc": "2026-09-02T13:50:00Z",
+            "age_seconds": 600,
+            "threshold_seconds": 21600
+          },
+          "warning_state": null,
+          "last_changed_at_utc": "2026-09-02T13:50:00Z"
+        }
+      },
+      "market_board": {
+        "moneyline": {
+          "DRAFTKINGS": [
+            {
+              "offer_id": "mock-dk-ml-bbb",
+              "provider": "mock-fixture",
+              "game_id": "mock-2026-w01-AAA-BBB",
+              "sportsbook": "DRAFTKINGS",
+              "market_type": "MONEYLINE",
+              "selection": "BBB",
+              "line": null,
+              "price": -115,
+              "snapshot_at_utc": "2026-09-02T13:58:00Z",
+              "normalized_selection": "BBB",
+              "freshness": {"state": "FRESH", "observed_at_utc": "2026-09-02T13:58:00Z", "age_seconds": 120, "threshold_seconds": 300}
+            }
+          ],
+          "FANDUEL": [
+            {
+              "offer_id": "mock-fd-ml-bbb",
+              "provider": "mock-fixture",
+              "game_id": "mock-2026-w01-AAA-BBB",
+              "sportsbook": "FANDUEL",
+              "market_type": "MONEYLINE",
+              "selection": "BBB",
+              "line": null,
+              "price": -112,
+              "snapshot_at_utc": "2026-09-02T13:58:00Z",
+              "normalized_selection": "BBB",
+              "freshness": {"state": "FRESH", "observed_at_utc": "2026-09-02T13:58:00Z", "age_seconds": 120, "threshold_seconds": 300}
+            }
+          ],
+          "PINNACLE": [
+            {
+              "offer_id": "mock-pin-ml-bbb",
+              "provider": "mock-fixture",
+              "game_id": "mock-2026-w01-AAA-BBB",
+              "sportsbook": "PINNACLE",
+              "market_type": "MONEYLINE",
+              "selection": "BBB",
+              "line": null,
+              "price": -108,
+              "snapshot_at_utc": "2026-09-02T13:58:00Z",
+              "normalized_selection": "BBB",
+              "freshness": {"state": "FRESH", "observed_at_utc": "2026-09-02T13:58:00Z", "age_seconds": 120, "threshold_seconds": 300}
+            }
+          ]
+        },
+        "spread": {
+          "DRAFTKINGS": [
+            {
+              "offer_id": "mock-dk-spread-aaa",
+              "provider": "mock-fixture",
+              "game_id": "mock-2026-w01-AAA-BBB",
+              "sportsbook": "DRAFTKINGS",
+              "market_type": "SPREAD",
+              "selection": "AAA",
+              "line": 2.5,
+              "price": -108,
+              "snapshot_at_utc": "2026-09-02T13:58:00Z",
+              "normalized_selection": "AAA",
+              "freshness": {"state": "FRESH", "observed_at_utc": "2026-09-02T13:58:00Z", "age_seconds": 120, "threshold_seconds": 300}
+            }
+          ],
+          "FANDUEL": [
+            {
+              "offer_id": "mock-fd-spread-aaa",
+              "provider": "mock-fixture",
+              "game_id": "mock-2026-w01-AAA-BBB",
+              "sportsbook": "FANDUEL",
+              "market_type": "SPREAD",
+              "selection": "AAA",
+              "line": 2.5,
+              "price": -110,
+              "snapshot_at_utc": "2026-09-02T13:58:00Z",
+              "normalized_selection": "AAA",
+              "freshness": {"state": "FRESH", "observed_at_utc": "2026-09-02T13:58:00Z", "age_seconds": 120, "threshold_seconds": 300}
+            }
+          ],
+          "PINNACLE": [
+            {
+              "offer_id": "mock-pin-spread-aaa",
+              "provider": "mock-fixture",
+              "game_id": "mock-2026-w01-AAA-BBB",
+              "sportsbook": "PINNACLE",
+              "market_type": "SPREAD",
+              "selection": "AAA",
+              "line": 2.5,
+              "price": -104,
+              "snapshot_at_utc": "2026-09-02T13:58:00Z",
+              "normalized_selection": "AAA",
+              "freshness": {"state": "FRESH", "observed_at_utc": "2026-09-02T13:58:00Z", "age_seconds": 120, "threshold_seconds": 300}
+            }
+          ]
+        },
+        "total": {
+          "DRAFTKINGS": [
+            {
+              "offer_id": "mock-dk-total-over",
+              "provider": "mock-fixture",
+              "game_id": "mock-2026-w01-AAA-BBB",
+              "sportsbook": "DRAFTKINGS",
+              "market_type": "TOTAL",
+              "selection": "OVER",
+              "line": 44.5,
+              "price": -110,
+              "snapshot_at_utc": "2026-09-02T13:58:00Z",
+              "normalized_selection": "OVER",
+              "freshness": {"state": "FRESH", "observed_at_utc": "2026-09-02T13:58:00Z", "age_seconds": 120, "threshold_seconds": 300}
+            }
+          ],
+          "PINNACLE": [
+            {
+              "offer_id": "mock-pin-total-over",
+              "provider": "mock-fixture",
+              "game_id": "mock-2026-w01-AAA-BBB",
+              "sportsbook": "PINNACLE",
+              "market_type": "TOTAL",
+              "selection": "OVER",
+              "line": 44.5,
+              "price": -105,
+              "snapshot_at_utc": "2026-09-02T13:58:00Z",
+              "normalized_selection": "OVER",
+              "freshness": {"state": "FRESH", "observed_at_utc": "2026-09-02T13:58:00Z", "age_seconds": 120, "threshold_seconds": 300}
+            }
+          ]
+        }
+      },
+      "football_outputs": {
+        "prediction_as_of_utc": "2026-09-02T13:55:00Z",
+        "provenance_id": "mock-football-inference-1",
+        "qb_elo": {"status": "AVAILABLE", "prediction": 0.535, "support": "SUPPORTED", "input_identity": "mock-football-state-v1+mock-qb-state-v1", "artifact_version": "frozen-production", "warnings": []},
+        "xgboost_v2": {"status": "AVAILABLE", "prediction": 0.54, "support": "SUPPORTED", "input_identity": "mock-features-v2", "artifact_version": "post-v5-v2", "warnings": []},
+        "expected_margin": {"status": "AVAILABLE", "prediction": 1.2, "support": "SUPPORTED", "input_identity": "mock-football-state-v1", "artifact_version": "v1", "warnings": []},
+        "ridge_totals_r4": {"status": "AVAILABLE", "prediction": 45.1, "support": "SUPPORTED", "input_identity": "mock-football-state-v1", "artifact_version": "r4", "warnings": []}
+      },
+      "warnings": []
+    }
+  ]
+}
