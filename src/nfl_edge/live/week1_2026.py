@@ -51,6 +51,7 @@ def validate_week1_schedule(payload: dict[str, Any]) -> dict[str, Any]:
     required = {
         "game_id", "away_team", "home_team", "scheduled_start_utc", "neutral_site",
         "venue", "venue_id", "away_rest", "home_rest", "surface", "roof_type",
+        "roof_structure", "context_source_at_utc",
     }
     seen_games: set[str] = set()
     seen_teams: set[str] = set()
@@ -87,10 +88,19 @@ def validate_week1_schedule(payload: dict[str, Any]) -> dict[str, Any]:
             if isinstance(value, bool) or not isinstance(value, int) or value < 0:
                 raise LiveScheduleError(f"game[{index}].{rest_field} must be a non-negative integer")
         roof = game["roof_type"]
-        if roof is None:
+        structure = str(game["roof_structure"]).upper()
+        if structure not in {"FIXED", "OUTDOOR", "RETRACTABLE"}:
+            raise LiveScheduleError(f"game[{index}].roof_structure is unsupported")
+        _utc(str(game["context_source_at_utc"]), field=f"game[{index}].context_source_at_utc")
+        if structure == "RETRACTABLE":
+            if roof is not None:
+                raise LiveScheduleError(f"game[{index}] retractable roof must be resolved separately")
             missing_roof_games.add(gid)
-        else:
-            _required_text(roof, field=f"game[{index}].roof_type")
+        elif structure == "FIXED":
+            if roof != "dome":
+                raise LiveScheduleError(f"game[{index}] fixed roof must use dome")
+        elif roof != "outdoors":
+            raise LiveScheduleError(f"game[{index}] outdoor venue must use outdoors")
 
         seen_games.add(gid)
         seen_teams.update((away, home))
@@ -144,6 +154,8 @@ def schedule_to_frame(payload: dict[str, Any], *, prediction_as_of_utc: str):
             "neutral_site_source": "neutral" if game["neutral_site"] else "home",
             "venue_id": game["venue_id"],
             "roof_type": game["roof_type"],
+            "roof_structure": game["roof_structure"],
+            "context_source_at_utc": game["context_source_at_utc"],
             "surface": game["surface"],
             "away_rest": game["away_rest"],
             "home_rest": game["home_rest"],
