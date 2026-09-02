@@ -49,10 +49,15 @@ def validate_qb_context(value: Any, path: str) -> None:
     validate_freshness(obj["freshness"], f"{path}.freshness")
     validate_utc_timestamp(obj["source_snapshot_at_utc"], f"{path}.source_snapshot_at_utc", nullable=True)
     validate_utc_timestamp(obj["last_changed_at_utc"], f"{path}.last_changed_at_utc", nullable=True)
-    for field in ("expected_starter", "sleeper_player_id", "canonical_qb_id", "gsis_id", "depth_designation", "injury_status", "warning_state"):
+    for field in (
+        "expected_starter", "sleeper_player_id", "canonical_qb_id", "gsis_id",
+        "depth_designation", "injury_status", "warning_state",
+    ):
         if obj[field] is not None:
             require_string(obj[field], f"{path}.{field}")
-    if resolution in {"RESOLVED", "OVERRIDDEN"} and (obj["expected_starter"] is None or obj["canonical_qb_id"] is None):
+    if resolution in {"RESOLVED", "OVERRIDDEN"} and (
+        obj["expected_starter"] is None or obj["canonical_qb_id"] is None
+    ):
         raise ContractValidationError(f"{path} resolved QB requires expected_starter and canonical_qb_id")
 
 
