@@ -78,6 +78,15 @@ EV, price status, and model-price-gap are not ranking objectives. The rule lets
 a properly calibrated ~50-51% spread compete with a short ML favorite without
 requiring the spread calibrator to manufacture 55%+ confidence.
 
+### Descriptive replay only
+
+`scripts/post_v5_balanced_v2_diagnostic.py` replays the already-exposed
+2020-2024 V3 evidence table after the V2 contract is fixed. Its purpose is to
+prove mechanical viability, market mix, coverage, price bounds, and product
+invariants. Its hit rate/ROI are descriptive only and **cannot** be used to
+retune the -130 cap, 50% sharp-favorite gate, spread floor, or ranking formula.
+2025 is hard-forbidden from this diagnostic.
+
 ## 2. XGBoost validation-tail V2
 
 The frozen V1 model parameters and feature contract remain unchanged.
@@ -103,6 +112,23 @@ V2 changes only split construction:
 This removes the artificial annual Week 1 cold start without changing model
 parameters, using current-season outcomes, or weakening chronology.
 
+### Launch-facing live path
+
+The adaptive split is not limited to the old 2025 holdout harness.
+`src/nfl_edge/models/xgboost_live_v2.py` is season-agnostic and explicitly
+supports live 2026+ blocks. It keeps the accepted 2018-2024 feature/categorical
+contract while allowing already-settled later seasons to enter strictly-prior
+training history. It rejects current/future history and any current-block
+revealed outcome.
+
+The focused regression suite explicitly constructs a 2026 Week 1 block with a
+small 2025 Conference/Super Bowl tail and proves V2 produces a prediction rather
+than an artificial warm-up.
+
+`src/nfl_edge/holdout/xgboost_2025_v2.py` remains a separate 2025-specific proof
+adapter so V5-era chronology can be regression-tested without making the launch
+path 2025-specific.
+
 ## 3. Explicitly unchanged
 
 - HHR selector: V1 HALF_SHRINK unchanged.
@@ -120,6 +146,7 @@ Successor implementations:
 - `src/nfl_edge/recommendation/final_selectors_v2.py`
 - `config/task05g_final_selectors_v2.yaml`
 - `src/nfl_edge/backtest/xgboost_walk_forward_v2.py`
+- `src/nfl_edge/models/xgboost_live_v2.py`
 - `src/nfl_edge/holdout/xgboost_2025_v2.py`
 - `config/xgboost_validation_tail_v2.yaml`
 
