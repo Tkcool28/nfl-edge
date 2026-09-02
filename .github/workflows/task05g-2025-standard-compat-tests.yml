@@ -50,7 +50,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           text = Path('.github/workflows/task05g-2025-standard-compat-tests.yml').read_text()
-          assert '--execute' not in text
-          assert 'execute-2025' not in text
+          assert 'python scripts/task05g_2025_standard_evaluation_v1.py' not in text
+          assert 'gh workflow run' not in text
           print('REAL_2025_EVALUATION_EXECUTED=0')
           PY
