@@ -4,7 +4,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from decimal import Decimal
 
-from nfl_edge.contracts.common_v1 import ContractValidationError, USER_STATE_SCHEMA_VERSION, validate_units, validate_utc_timestamp, require_string
+from nfl_edge.contracts.common_v1 import (
+    USER_STATE_SCHEMA_VERSION,
+    ContractValidationError,
+    require_string,
+    validate_units,
+    validate_utc_timestamp,
+)
 from nfl_edge.recommendation.staking_v1 import RISK_PROFILE_BY_NAME, dollar_stake
 
 RISK_PROFILES = tuple(RISK_PROFILE_BY_NAME)
@@ -41,7 +47,12 @@ def user_specific_stake(profile: UserProfileState, recommended_units: float) -> 
     return dollar_stake(profile.bankroll, profile.risk_profile, units)
 
 
-def profile_update_preserves_recommendation(before: UserProfileState, after: UserProfileState, *, recommended_units: float) -> tuple[float, float, float]:
+def profile_update_preserves_recommendation(
+    before: UserProfileState,
+    after: UserProfileState,
+    *,
+    recommended_units: float,
+) -> tuple[float, float, float]:
     """Units stay frozen; only the derived dollar stake may change."""
     before.validate()
     after.validate()
