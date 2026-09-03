@@ -1,0 +1,231 @@
+name: One-Shot 2026 Live Product Proof
+
+on:
+  push:
+    branches:
+      - feat/2026-live-market-product-snapshot-v1
+
+permissions:
+  contents: read
+
+jobs:
+  one-shot-live-proof:
+    if: github.event.head_commit.message == 'Run one-shot 2026 live product proof'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      PYTHONHASHSEED: "0"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OPENBLAS_CORETYPE: "HASWELL"
+      MKL_NUM_THREADS: "1"
+      MKL_CBWR: "COMPATIBLE"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install accepted runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest 'jsonschema>=4.23,<5' \
+            'numpy==2.4.2' 'scipy==1.17.1' 'scikit-learn==1.8.0'
+
+      - name: Fail closed before network unless frozen gates and secret are present
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$ODDS_API_KEY" || { echo 'ODDS_API_KEY=ABSENT_NO_MARKET_CALL' >&2; exit 2; }
+          echo 'cf5f1a0f255befae56d7ac91d97af8641500a466c1d84097fe401e950020158b  data/live/2026/entering_product_state_v1.json' | sha256sum --check --strict
+          python - <<'PY'
+          from pathlib import Path
+          from nfl_edge.live.markets_2026 import build_request_plan
+          from nfl_edge.live.week1_2026 import load_week1_schedule
+          root=Path.cwd()
+          schedule=load_week1_schedule(root/'data/live/2026/week1_schedule_v1.json')
+          plan=build_request_plan(schedule)
+          assert plan['bookmakers'] == ['draftkings','fanduel','pinnacle']
+          assert plan['markets'] == ['h2h','spreads','totals']
+          assert plan['expected_credit_cost'] == 3
+          print('ONE_SHOT_REQUEST_PLAN=PASS_EXPECTED_CREDITS_3')
+          PY
+
+      - name: Collect one fresh Sleeper QB snapshot
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/live_2026_product/football
+          python scripts/collect_sleeper_qbs.py --kind scheduled \
+            > artifacts/live_2026_product/football/sleeper_collection.json
+
+      - name: Score Week 1 twice from the exact same fresh Sleeper snapshot
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          import polars as pl
+          from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, score_week1
+          from nfl_edge.live.sleeper_qb import SleeperExpectedQBResolver, SleeperQBSource, load_overrides
+          from nfl_edge.live.state_2026 import bootstrap_entering_2026_state
+
+          root=Path.cwd()
+          pointer=json.loads((root/'data/source_audits/sleeper_qb_v1/latest_snapshot.json').read_text())
+          snapshot_id=pointer['snapshot_id']
+          rows=pl.read_parquet(root/'data/source_audits/sleeper_qb_v1/normalized/qb_snapshots.parquet').filter(
+              pl.col('snapshot_id').cast(pl.Utf8) == snapshot_id
+          )
+          observed=sorted(str(x) for x in rows['fetched_at_utc'].drop_nulls().unique().to_list())
+          assert len(observed) == 1
+          as_of=observed[0]
+          source=SleeperQBSource.load(root, prediction_as_of_utc=as_of)
+          resolver=SleeperExpectedQBResolver(source, overrides=load_overrides(root/'config/live_qb_overrides_v1.json'))
+          state=bootstrap_entering_2026_state(root)
+          first=score_week1(repository_root=root,prediction_as_of_utc=as_of,resolver=resolver,entering_state=state)
+          second=score_week1(repository_root=root,prediction_as_of_utc=as_of,resolver=resolver,entering_state=state)
+          a=canonical_snapshot_bytes(first); b=canonical_snapshot_bytes(second)
+          assert a == b
+          assert len(first['games']) == 16
+          out=root/'artifacts/live_2026_product/football'
+          (out/'week1_football_snapshot.json').write_bytes(a)
+          (out/'week1_football_snapshot_repeat.json').write_bytes(b)
+          proof={
+              'prediction_as_of_utc': as_of,
+              'sleeper_snapshot_id': snapshot_id,
+              'football_snapshot_sha256': hashlib.sha256(a).hexdigest(),
+              'embedded_snapshot_sha256': first['snapshot_sha256'],
+              'week1_game_count': len(first['games']),
+              'qb_resolution_counts': first['qb_resolution_counts'],
+              'model_scoring_counts': first['model_scoring_counts'],
+              'deterministic_repeat_bytes': True,
+          }
+          (out/'proof.json').write_text(json.dumps(proof,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(proof,sort_keys=True))
+          PY
+          cmp artifacts/live_2026_product/football/week1_football_snapshot.json \
+              artifacts/live_2026_product/football/week1_football_snapshot_repeat.json
+
+      - name: Execute exactly one live Odds API request and product build
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$ODDS_API_KEY"
+          mkdir -p artifacts/live_2026_product/live
+          python scripts/run_2026_live_market_product_snapshot_v1.py \
+            --football-snapshot artifacts/live_2026_product/football/week1_football_snapshot.json \
+            --decision-state data/live/2026/entering_product_state_v1.json \
+            --output-dir artifacts/live_2026_product/live \
+            --live \
+            | tee artifacts/live_2026_product/live/run.log
+
+      - name: Verify actual quota charge and capture identity without a second request
+        run: |
+          set -euo pipefail
+          RAW="$(find artifacts/live_2026_product/live/raw -maxdepth 1 -type f -name 'odds-api-nfl-week1-*.json' ! -name '*.meta.json' -print -quit)"
+          test -n "$RAW"
+          META="${RAW%.json}.meta.json"
+          test -f "$META"
+          python - "$RAW" "$META" <<'PY'
+          import hashlib,json,sys
+          from pathlib import Path
+          raw=Path(sys.argv[1]); meta=Path(sys.argv[2])
+          payload=json.loads(meta.read_text())
+          assert payload['response_status'] == 200
+          assert payload['automatic_retries'] == 0
+          assert payload['expected_credit_cost'] == 3
+          assert payload['credits_consumed'] == 3, payload
+          assert payload['response_sha256'] == hashlib.sha256(raw.read_bytes()).hexdigest()
+          assert payload['bookmakers'] == ['draftkings','fanduel','pinnacle']
+          assert payload['markets'] == ['h2h','spreads','totals']
+          print(json.dumps({
+              'LIVE_REQUEST_COUNT':1,
+              'CREDITS_CONSUMED':payload['credits_consumed'],
+              'CREDITS_USED_TOTAL':payload.get('credits_used_total'),
+              'CREDITS_REMAINING':payload.get('credits_remaining'),
+              'RESPONSE_SHA256':payload['response_sha256'],
+              'AUTOMATIC_RETRIES':payload['automatic_retries'],
+          },sort_keys=True))
+          PY
+          printf '%s\n' "$RAW" > artifacts/live_2026_product/raw_response_path.txt
+          printf '%s\n' "$META" > artifacts/live_2026_product/raw_metadata_path.txt
+
+      - name: Replay the exact saved market response twice with no API credential
+        env:
+          ODDS_API_KEY: ""
+        run: |
+          set -euo pipefail
+          RAW="$(cat artifacts/live_2026_product/raw_response_path.txt)"
+          META="$(cat artifacts/live_2026_product/raw_metadata_path.txt)"
+          for n in 1 2; do
+            python scripts/run_2026_live_market_product_snapshot_v1.py \
+              --football-snapshot artifacts/live_2026_product/football/week1_football_snapshot.json \
+              --decision-state data/live/2026/entering_product_state_v1.json \
+              --output-dir "artifacts/live_2026_product/replay${n}" \
+              --market-response "$RAW" \
+              --market-metadata "$META" \
+              | tee "artifacts/live_2026_product/replay${n}/run.log"
+          done
+          cmp artifacts/live_2026_product/live/NFL_EDGE_LIVE_MARKET_V1.json artifacts/live_2026_product/replay1/NFL_EDGE_LIVE_MARKET_V1.json
+          cmp artifacts/live_2026_product/replay1/NFL_EDGE_LIVE_MARKET_V1.json artifacts/live_2026_product/replay2/NFL_EDGE_LIVE_MARKET_V1.json
+          cmp artifacts/live_2026_product/live/NFL_EDGE_PRODUCT_API_V1.json artifacts/live_2026_product/replay1/NFL_EDGE_PRODUCT_API_V1.json
+          cmp artifacts/live_2026_product/replay1/NFL_EDGE_PRODUCT_API_V1.json artifacts/live_2026_product/replay2/NFL_EDGE_PRODUCT_API_V1.json
+          echo 'ZERO_CREDIT_REPLAY_TWICE=PASS'
+
+      - name: Validate final live Product API schema and emit bounded summary
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+          from nfl_edge.contracts.product_api_v1 import validate_product_snapshot
+          root=Path.cwd(); base=root/'artifacts/live_2026_product'
+          product=json.loads((base/'live/NFL_EDGE_PRODUCT_API_V1.json').read_text())
+          market=json.loads((base/'live/NFL_EDGE_LIVE_MARKET_V1.json').read_text())
+          proof=json.loads((base/'live/proof.json').read_text())
+          meta_path=Path((base/'raw_metadata_path.txt').read_text().strip())
+          meta=json.loads(meta_path.read_text())
+          validate_product_snapshot(product)
+          schema=json.loads((root/'schemas/NFL_EDGE_PRODUCT_API_V1.schema.json').read_text())
+          Draft202012Validator(schema).validate(product)
+          summary={
+              'verdict':'ONE_SHOT_LIVE_PROOF_COMPLETE',
+              'live_billable_requests':proof['live_billable_request_count'],
+              'credits_consumed':meta.get('credits_consumed'),
+              'credits_remaining':meta.get('credits_remaining'),
+              'credits_used_total':meta.get('credits_used_total'),
+              'provider_events':proof['provider_events'],
+              'canonical_game_matches':proof['canonical_game_matches'],
+              'coverage_by_book':proof['coverage_by_book'],
+              'coverage_by_market':proof['coverage_by_market'],
+              'unmatched_provider_events':proof['unmatched_provider_events'],
+              'unmatched_canonical_games':proof['unmatched_canonical_games'],
+              'ambiguous_provider_events':proof['ambiguous_provider_events'],
+              'duplicate_mappings':proof['duplicate_mappings'],
+              'exact_duplicates':proof['exact_duplicates'],
+              'headline_states':proof['headline_states'],
+              'roof_scenarios':proof.get('roof_scenarios'),
+              'product_sha256':hashlib.sha256((base/'live/NFL_EDGE_PRODUCT_API_V1.json').read_bytes()).hexdigest(),
+              'market_sha256':hashlib.sha256((base/'live/NFL_EDGE_LIVE_MARKET_V1.json').read_bytes()).hexdigest(),
+              'football_sha256':hashlib.sha256((base/'football/week1_football_snapshot.json').read_bytes()).hexdigest(),
+              'market_response_sha256':meta['response_sha256'],
+              'deterministic_replay':'PASS',
+              'replay_additional_market_api_calls':0,
+              'methodology_changed':False,
+          }
+          (base/'one_shot_summary.json').write_text(json.dumps(summary,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(summary,sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-2026-product-one-shot-${{ github.sha }}
+          path: artifacts/live_2026_product/
+          if-no-files-found: warn
+          retention-days: 90
