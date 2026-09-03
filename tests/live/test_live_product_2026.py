@@ -161,6 +161,12 @@ def test_entering_2026_state_reconstructs_accepted_2024_parity_and_resets_value(
     assert payload["source_evidence"]["accepted_2025_advancement"] == "CAUSAL_PROSPECTIVE"
     assert payload["source_evidence"]["accepted_2025_games"] == 285
     assert payload["source_evidence"]["accepted_2025_blocks"] == 22
+    regenerated = (json.dumps(payload, sort_keys=True, indent=2, allow_nan=False) + "\n").encode("utf-8")
+    committed = ROOT / "data/live/2026/entering_product_state_v1.json"
+    assert hashlib.sha256(committed.read_bytes()).hexdigest() == (
+        "cf5f1a0f255befae56d7ac91d97af8641500a466c1d84097fe401e950020158b"
+    )
+    assert committed.read_bytes() == regenerated
     assert payload["value_selector_state"] == {
         "reset_for_new_season": True,
         "ml_observations": 0,
