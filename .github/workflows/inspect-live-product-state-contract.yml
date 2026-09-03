@@ -1,4 +1,4 @@
-name: Inspect Live Product State Contract
+name: Apply Accepted Task05F Seed Fix
 
 on:
   push:
@@ -6,62 +6,95 @@ on:
       - feat/2026-live-market-product-snapshot-v1
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  inspect:
+  apply-fix:
+    if: github.event.head_commit.message == 'Apply accepted Task05F seed fix'
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
-    env:
-      PYTHONHASHSEED: "0"
-      OMP_NUM_THREADS: "1"
-      OPENBLAS_NUM_THREADS: "1"
-      OPENBLAS_CORETYPE: "HASWELL"
-      MKL_NUM_THREADS: "1"
-      MKL_CBWR: "COMPATIBLE"
-      NUMEXPR_NUM_THREADS: "1"
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          cache: pip
-      - name: Install accepted numerical runtime
+          fetch-depth: 0
+      - name: Apply bounded materializer and test patch
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install -e '.[model-development]' pyyaml \
-            'numpy==2.4.2' 'scipy==1.17.1' 'scikit-learn==1.8.0'
-      - name: Materialize and fingerprint accepted Task05F starting state
-        run: |
-          set -euo pipefail
-          rm -rf /tmp/task05f-start
-          python scripts/task05f_evaluator_final_runner.py --out /tmp/task05f-start >/tmp/task05f-scorecard.txt
           python - <<'PY'
-          import hashlib, json
           from pathlib import Path
-          out=Path('/tmp/task05f-start')
-          board=out/'historical_evaluator_board.parquet'
-          state=out/'frozen_evaluator_state.json'
-          board_sha=hashlib.sha256(board.read_bytes()).hexdigest()
-          state_sha=hashlib.sha256(state.read_bytes()).hexdigest()
-          payload=json.loads(state.read_text())
-          print('TASK05F_HISTORICAL_BOARD_SHA256='+board_sha)
-          print('TASK05F_FROZEN_STATE_SHA256='+state_sha)
-          print('TASK05F_ML_INTERCEPT='+repr(payload['evaluators']['moneyline']['market_intercept']))
-          assert board_sha == '58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8'
-          assert state_sha == '34ac985835ce4ceb65c6135b07851cd4f7e3ab2cc311315ae11efc773d1aa8c9'
+
+          p=Path('src/nfl_edge/live/product_state_2026.py')
+          s=p.read_text()
+          s=s.replace(
+              'The one-time materializer consumes only accepted 2020-2024 evaluator evidence,\n'
+              'the frozen canonical historical market files already used by Task05F, and the\n'
+              'already-published 2025 post-V5 V2 diagnostic artifact. Ordinary live refreshes\n'
+              'load the resulting JSON and perform no evaluator/confidence fitting.\n',
+              'The one-time materializer reproduces the accepted Task05F historical starting\n'
+              'state and board fingerprints used by the standard 2025 evaluation, then carries\n'
+              'forward the already-published prospective V2 2025 evidence into an entering-2026\n'
+              'state. Ordinary live refreshes load the resulting JSON and perform no\n'
+              'evaluator/confidence fitting.\n',
+          )
+          s=s.replace(
+              'import hashlib\nimport importlib.util\nimport io\nimport json\nimport zipfile\n',
+              'import contextlib\nimport hashlib\nimport importlib.util\nimport io\nimport json\nimport tempfile\nimport zipfile\n',
+          )
+          s=s.replace(
+              'ARCH_ROOT = Path("reports/architecture_verification/post_v5_v2_2020_2025")\n'
+              'HISTORICAL_ZIP = ARCH_ROOT / "post-v5-v2-historical-e2e.zip"\n'
+              'DIAGNOSTIC_ZIP = ARCH_ROOT / "post-v5-v2-all-years-diagnostic.zip"\n'
+              'EXPECTED_HISTORICAL_SHA256 = "056d349381cf3cf2e2fbe8929c3c5d435d43e0a30be44b8b7febb5f82b9208e0"\n'
+              'EXPECTED_DIAGNOSTIC_SHA256 = "b38eae4df11dc52fe4fc5aeb87a402abcc8ffb9b60e3f252d56f56c9aef78b41"\n',
+              'ARCH_ROOT = Path("reports/architecture_verification/post_v5_v2_2020_2025")\n'
+              'DIAGNOSTIC_ZIP = ARCH_ROOT / "post-v5-v2-all-years-diagnostic.zip"\n'
+              'EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256 = "58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8"\n'
+              'EXPECTED_TASK05F_FROZEN_STATE_SHA256 = "34ac985835ce4ceb65c6135b07851cd4f7e3ab2cc311315ae11efc773d1aa8c9"\n'
+              'EXPECTED_DIAGNOSTIC_SHA256 = "b38eae4df11dc52fe4fc5aeb87a402abcc8ffb9b60e3f252d56f56c9aef78b41"\n',
+          )
+          old='''def _read_historical_evidence(root: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:\n    path = root / HISTORICAL_ZIP\n    got = _sha256(path)\n    if got != EXPECTED_HISTORICAL_SHA256:\n        raise Entering2026ProductStateError(f"historical evidence SHA drift: {got}")\n    with zipfile.ZipFile(path) as zf:\n        board = pl.read_parquet(io.BytesIO(zf.read("upstream/historical_evaluator_board.parquet"))).to_dicts()\n        frozen = json.loads(zf.read("upstream/frozen_evaluator_state.json"))\n    return [dict(row) for row in board], frozen\n\n\n'''
+          new='''def _materialize_task05f_starting_evidence(\n    root: Path, task05f: Any\n) -> tuple[list[dict[str, Any]], dict[str, Any]]:\n    """Reproduce the exact Task05F state/board used to open standard 2025."""\n    with tempfile.TemporaryDirectory(prefix="nfl-edge-task05f-start-") as tmp:\n        out = Path(tmp)\n        # The accepted standard 2025 workflow performs this same materialization\n        # before execution. Suppress the runner scorecard here so this one-time\n        # state materializer emits only its own bounded status output.\n        with contextlib.redirect_stdout(io.StringIO()):\n            task05f.run(\n                root,\n                root / "config/task05f_evaluator_final_v1.yaml",\n                out,\n            )\n        board_path = out / "historical_evaluator_board.parquet"\n        state_path = out / "frozen_evaluator_state.json"\n        board_sha = _sha256(board_path)\n        state_sha = _sha256(state_path)\n        if board_sha != EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256:\n            raise Entering2026ProductStateError(\n                "accepted Task05F historical board SHA drift: "\n                f"{board_sha} != {EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256}"\n            )\n        if state_sha != EXPECTED_TASK05F_FROZEN_STATE_SHA256:\n            raise Entering2026ProductStateError(\n                "accepted Task05F frozen state SHA drift: "\n                f"{state_sha} != {EXPECTED_TASK05F_FROZEN_STATE_SHA256}"\n            )\n        board = pl.read_parquet(board_path).to_dicts()\n        frozen = json.loads(state_path.read_text(encoding="utf-8"))\n    return [dict(row) for row in board], frozen\n\n\n'''
+          assert old in s, 'historical reader seam drifted'
+          s=s.replace(old,new)
+          assert 'historical_board, frozen_2024 = _read_historical_evidence(root)' in s
+          s=s.replace(
+              'historical_board, frozen_2024 = _read_historical_evidence(root)',
+              'historical_board, frozen_2024 = _materialize_task05f_starting_evidence(root, task05f)',
+          )
+          s=s.replace(
+              '            "historical_zip": str(HISTORICAL_ZIP),\n'
+              '            "historical_zip_sha256": EXPECTED_HISTORICAL_SHA256,\n',
+              '            "task05f_historical_board_sha256": EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256,\n'
+              '            "task05f_frozen_state_sha256": EXPECTED_TASK05F_FROZEN_STATE_SHA256,\n',
+          )
+          s=s.replace(
+              '            "reconstructed_2024_state_parity": "PASS",\n'
+              '            "historical_market_source": "canonical Task05F repository market files",\n'
+              '            "accepted_2025_training_source": "post-V5 V2 settled evaluator rows",\n',
+              '            "reconstructed_2024_state_parity": "PASS",\n'
+              '            "task05f_starting_state_parity": "PASS",\n'
+              '            "historical_market_source": "accepted Task05F canonical repository market files",\n'
+              '            "accepted_2025_training_source": "post-V5 V2 settled evaluator rows",\n'
+              '            "accepted_2025_advancement": "CAUSAL_PROSPECTIVE",\n',
+          )
+          assert 'HISTORICAL_ZIP' not in s
+          assert 'EXPECTED_HISTORICAL_SHA256' not in s
+          p.write_text(s)
+
+          t=Path('tests/live/test_live_product_2026.py')
+          ts=t.read_text()
+          old_test='''    assert payload["source_evidence"]["reconstructed_2024_state_parity"] == "PASS"\n    assert payload["source_evidence"]["accepted_2025_games"] == 285\n'''
+          new_test='''    assert payload["source_evidence"]["reconstructed_2024_state_parity"] == "PASS"\n    assert payload["source_evidence"]["task05f_starting_state_parity"] == "PASS"\n    assert payload["source_evidence"]["task05f_historical_board_sha256"] == (\n        "58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8"\n    )\n    assert payload["source_evidence"]["task05f_frozen_state_sha256"] == (\n        "34ac985835ce4ceb65c6135b07851cd4f7e3ab2cc311315ae11efc773d1aa8c9"\n    )\n    assert payload["source_evidence"]["accepted_2025_advancement"] == "CAUSAL_PROSPECTIVE"\n    assert payload["source_evidence"]["accepted_2025_games"] == 285\n'''
+          assert old_test in ts, 'live product state test seam drifted'
+          t.write_text(ts.replace(old_test,new_test))
           PY
-      - name: Confirm 2025 standard workflow pins same board
+          python -m py_compile src/nfl_edge/live/product_state_2026.py tests/live/test_live_product_2026.py
+          rm .github/workflows/inspect-live-product-state-contract.yml
+          git diff --check
+          git diff -- src/nfl_edge/live/product_state_2026.py tests/live/test_live_product_2026.py
+      - name: Commit bounded fix and remove diagnostic workflow
         run: |
-          grep -n '58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8' \
-            .github/workflows/task05g-2025-standard-evaluation-v1.yml
-      - name: Stage bounded source capture
-        run: |
-          mkdir -p /tmp/live-state-source/src/nfl_edge/live /tmp/live-state-source/tests/live
-          cp src/nfl_edge/live/product_state_2026.py /tmp/live-state-source/src/nfl_edge/live/
-          cp tests/live/test_live_product_2026.py /tmp/live-state-source/tests/live/
-      - uses: actions/upload-artifact@v4
-        with:
-          name: live-product-state-source-${{ github.sha }}
-          path: /tmp/live-state-source/
-          if-no-files-found: error
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/nfl_edge/live/product_state_2026.py tests/live/test_live_product_2026.py .github/workflows/inspect-live-product-state-contract.yml
+          git commit -m 'Fix entering-2026 Task05F seed identity'
+          git push origin HEAD:feat/2026-live-market-product-snapshot-v1
