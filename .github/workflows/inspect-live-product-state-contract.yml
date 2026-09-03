@@ -11,12 +11,52 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 20
+    env:
+      PYTHONHASHSEED: "0"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OPENBLAS_CORETYPE: "HASWELL"
+      MKL_NUM_THREADS: "1"
+      MKL_CBWR: "COMPATIBLE"
+      NUMEXPR_NUM_THREADS: "1"
     steps:
       - uses: actions/checkout@v4
-      - name: Print materializer prefix and confidence consumers
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install accepted numerical runtime
         run: |
-          echo '=== PRODUCT_STATE_PREFIX ==='
-          sed -n '1,299p' src/nfl_edge/live/product_state_2026.py
-          echo '=== PRODUCT_CONFIDENCE_CONSUMERS ==='
-          grep -n -B 18 -A 35 -E 'ml_confidence|spread_residuals|spread_v3' src/nfl_edge/live/product_2026.py
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml \
+            'numpy==2.4.2' 'scipy==1.17.1' 'scikit-learn==1.8.0'
+      - name: Materialize and fingerprint accepted Task05F starting state
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/task05f-start
+          python scripts/task05f_evaluator_final_runner.py --out /tmp/task05f-start >/tmp/task05f-scorecard.txt
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          out=Path('/tmp/task05f-start')
+          board=out/'historical_evaluator_board.parquet'
+          state=out/'frozen_evaluator_state.json'
+          board_sha=hashlib.sha256(board.read_bytes()).hexdigest()
+          state_sha=hashlib.sha256(state.read_bytes()).hexdigest()
+          payload=json.loads(state.read_text())
+          print('TASK05F_HISTORICAL_BOARD_SHA256='+board_sha)
+          print('TASK05F_FROZEN_STATE_SHA256='+state_sha)
+          print('TASK05F_ML_INTERCEPT='+repr(payload['evaluators']['moneyline']['market_intercept']))
+          print('TASK05F_ML_TRAINING_N='+str(payload['evaluators']['moneyline']['training_n']))
+          print('TASK05F_SPREAD_TRAINING_N='+str(payload['evaluators']['spread']['training_n']))
+          print('TASK05F_TOTAL_TRAINING_N='+str(payload['evaluators']['total']['training_n']))
+          print('TASK05F_ML_RELIABILITY_N='+str(payload['reliability']['moneyline']['support_n']))
+          print('TASK05F_SPREAD_RELIABILITY_N='+str(payload['reliability']['spread']['support_n']))
+          print('TASK05F_TOTAL_RELIABILITY_N='+str(payload['reliability']['total']['support_n']))
+          assert board_sha == '58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8'
+          PY
+      - name: Confirm 2025 standard workflow pins same board
+        run: |
+          grep -n '58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8' \
+            .github/workflows/task05g-2025-standard-evaluation-v1.yml
