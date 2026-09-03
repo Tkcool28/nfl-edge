@@ -48,15 +48,20 @@ jobs:
           print('TASK05F_HISTORICAL_BOARD_SHA256='+board_sha)
           print('TASK05F_FROZEN_STATE_SHA256='+state_sha)
           print('TASK05F_ML_INTERCEPT='+repr(payload['evaluators']['moneyline']['market_intercept']))
-          print('TASK05F_ML_TRAINING_N='+str(payload['evaluators']['moneyline']['training_n']))
-          print('TASK05F_SPREAD_TRAINING_N='+str(payload['evaluators']['spread']['training_n']))
-          print('TASK05F_TOTAL_TRAINING_N='+str(payload['evaluators']['total']['training_n']))
-          print('TASK05F_ML_RELIABILITY_N='+str(payload['reliability']['moneyline']['support_n']))
-          print('TASK05F_SPREAD_RELIABILITY_N='+str(payload['reliability']['spread']['support_n']))
-          print('TASK05F_TOTAL_RELIABILITY_N='+str(payload['reliability']['total']['support_n']))
           assert board_sha == '58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8'
+          assert state_sha == '34ac985835ce4ceb65c6135b07851cd4f7e3ab2cc311315ae11efc773d1aa8c9'
           PY
       - name: Confirm 2025 standard workflow pins same board
         run: |
           grep -n '58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8' \
             .github/workflows/task05g-2025-standard-evaluation-v1.yml
+      - name: Stage bounded source capture
+        run: |
+          mkdir -p /tmp/live-state-source/src/nfl_edge/live /tmp/live-state-source/tests/live
+          cp src/nfl_edge/live/product_state_2026.py /tmp/live-state-source/src/nfl_edge/live/
+          cp tests/live/test_live_product_2026.py /tmp/live-state-source/tests/live/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: live-product-state-source-${{ github.sha }}
+          path: /tmp/live-state-source/
+          if-no-files-found: error
