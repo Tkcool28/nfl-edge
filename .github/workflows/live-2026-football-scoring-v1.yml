@@ -1,0 +1,157 @@
+name: Live 2026 Football Scoring V1
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-football-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      PYTHONHASHSEED: "0"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OPENBLAS_CORETYPE: "HASWELL"
+      MKL_NUM_THREADS: "1"
+      MKL_CBWR: "COMPATIBLE"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11', cache: pip}
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+
+      - name: Prove frozen methodology surfaces are untouched
+        run: |
+          git fetch origin main
+          changed="$(git diff --name-only origin/main...HEAD)"
+          echo "$changed"
+          if echo "$changed" | grep -E '^(src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/holdout/|config/expected_margin_v1.yaml$|config/qb_elo_v1.yaml$|config/totals_)'; then
+            echo 'ERROR: frozen model/methodology surface changed' >&2
+            exit 1
+          fi
+
+      - name: Compile live scorer surfaces
+        run: |
+          python -m py_compile \
+            src/nfl_edge/live/week1_2026.py \
+            src/nfl_edge/live/roof.py \
+            src/nfl_edge/live/roof_scenarios.py \
+            src/nfl_edge/live/sleeper_qb.py \
+            src/nfl_edge/live/features_2026.py \
+            src/nfl_edge/live/model_adapters.py \
+            src/nfl_edge/live/qb_inputs.py \
+            src/nfl_edge/live/state_2026.py \
+            src/nfl_edge/live/totals_features.py \
+            src/nfl_edge/live/scorer_2026.py \
+            scripts/run_2026_live_football_scoring_v1.py
+
+      - name: Focused live football tests
+        run: |
+          pytest -q \
+            tests/live/test_week1_2026.py \
+            tests/live/test_roof_resolution.py \
+            tests/live/test_roof_scenario_adapter.py \
+            tests/live/test_sleeper_qb_live_resolver.py \
+            tests/live/test_live_2026_scoring.py
+
+  real-sleeper-week1-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    needs: deterministic-football-gate
+    env:
+      PYTHONHASHSEED: "0"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OPENBLAS_CORETYPE: "HASWELL"
+      MKL_NUM_THREADS: "1"
+      MKL_CBWR: "COMPATIBLE"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11', cache: pip}
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+
+      - name: Collect one fresh Sleeper QB audit snapshot
+        run: |
+          mkdir -p artifacts/live_2026_football
+          python scripts/collect_sleeper_qbs.py --kind scheduled \
+            > artifacts/live_2026_football/sleeper_collection.json
+
+      - name: Score the real Week 1 schedule twice from the same Sleeper snapshot
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import polars as pl
+          from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, score_week1
+          from nfl_edge.live.sleeper_qb import SleeperExpectedQBResolver, SleeperQBSource, load_overrides
+          from nfl_edge.live.state_2026 import bootstrap_entering_2026_state
+
+          root = Path.cwd()
+          pointer = json.loads((root/'data/source_audits/sleeper_qb_v1/latest_snapshot.json').read_text())
+          snapshot_id = pointer['snapshot_id']
+          rows = pl.read_parquet(root/'data/source_audits/sleeper_qb_v1/normalized/qb_snapshots.parquet').filter(
+              pl.col('snapshot_id').cast(pl.Utf8) == snapshot_id
+          )
+          observed = sorted(str(x) for x in rows['fetched_at_utc'].drop_nulls().unique().to_list())
+          assert len(observed) == 1
+          as_of = observed[0]
+          source = SleeperQBSource.load(root, prediction_as_of_utc=as_of)
+          resolver = SleeperExpectedQBResolver(
+              source,
+              overrides=load_overrides(root/'config/live_qb_overrides_v1.json'),
+          )
+          state = bootstrap_entering_2026_state(root)
+          first = score_week1(
+              repository_root=root,
+              prediction_as_of_utc=as_of,
+              resolver=resolver,
+              entering_state=state,
+          )
+          second = score_week1(
+              repository_root=root,
+              prediction_as_of_utc=as_of,
+              resolver=resolver,
+              entering_state=state,
+          )
+          a = canonical_snapshot_bytes(first)
+          b = canonical_snapshot_bytes(second)
+          assert a == b
+          out = root/'artifacts/live_2026_football'
+          (out/'week1_football_snapshot.json').write_bytes(a)
+          (out/'week1_football_snapshot_repeat.json').write_bytes(b)
+          proof = {
+              'verdict': '2026_LIVE_FOOTBALL_SCORING_READY',
+              'prediction_as_of_utc': as_of,
+              'sleeper_snapshot_id': snapshot_id,
+              'snapshot_sha256': first['snapshot_sha256'],
+              'week1_game_count': len(first['games']),
+              'qb_resolution_counts': first['qb_resolution_counts'],
+              'model_scoring_counts': first['model_scoring_counts'],
+              'deterministic_repeat_bytes': True,
+              'odds_api_called': False,
+              'market_data_read': False,
+          }
+          (out/'proof.json').write_text(json.dumps(proof, indent=2, sort_keys=True)+'\n')
+          print(json.dumps(proof, sort_keys=True))
+          PY
+          cmp artifacts/live_2026_football/week1_football_snapshot.json \
+              artifacts/live_2026_football/week1_football_snapshot_repeat.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-2026-football-scoring-${{ github.sha }}
+          path: artifacts/live_2026_football/
+          if-no-files-found: warn

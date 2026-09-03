@@ -1,0 +1,17 @@
+{
+  "schema_version": "NFL_EDGE_LIVE_ROOF_STATUS_V1",
+  "games": [
+    {
+      "game_id": "2026_01_BAL_IND",
+      "status": "PENDING",
+      "source": "manual official-source resolution pending",
+      "source_at_utc": "2026-09-02T20:00:00Z"
+    },
+    {
+      "game_id": "2026_01_BUF_HOU",
+      "status": "PENDING",
+      "source": "manual official-source resolution pending",
+      "source_at_utc": "2026-09-02T20:00:00Z"
+    }
+  ]
+}

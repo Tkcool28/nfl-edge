@@ -8,8 +8,8 @@ import pytest
 
 from nfl_edge.contracts.common_v1 import require_number
 from nfl_edge.contracts.live_product_v1 import (
-    ContractValidationError,
     PRODUCT_SCHEMA_VERSION,
+    ContractValidationError,
     UserProfileState,
     profile_update_preserves_recommendation,
     validate_exact_offer_request,
@@ -105,6 +105,154 @@ def test_unavailable_model_is_legal_and_explicit() -> None:
     model = payload["games"][0]["football_outputs"]["xgboost_v2"]
     model.update(status="UNAVAILABLE", prediction=None, support="UNSUPPORTED", warnings=["artifact unavailable"])
     validate_product_snapshot(payload)
+
+
+def test_pending_roof_scenario_model_is_available_without_singular_prediction() -> None:
+    payload = _fixture()
+    model = payload["games"][0]["football_outputs"]["xgboost_v2"]
+    model.update(
+        status="AVAILABLE_WITH_ROOF_SCENARIOS",
+        prediction=None,
+        support="PARTIAL",
+        warnings=["roof state pending; scenario predictions available"],
+        roof_resolution_status="PENDING",
+        roof_selected_scenario=None,
+        xgboost_open_probability=0.51,
+        xgboost_closed_probability=0.57,
+        xgboost_scenario_delta=0.06,
+        roof_scenario_downstream={
+            "status": "NOT_EVALUATED_MISSING_EVIDENCE",
+            "agreement_status": "NOT_EVALUABLE",
+            "open_state": None,
+            "closed_state": None,
+            "shared_state": None,
+        },
+    )
+    validate_product_snapshot(payload)
+
+
+def _roof_scenario_payload() -> tuple[dict, dict]:
+    payload = _fixture()
+    model = payload["games"][0]["football_outputs"]["xgboost_v2"]
+    model.update(
+        status="AVAILABLE_WITH_ROOF_SCENARIOS",
+        prediction=None,
+        support="PARTIAL",
+        warnings=["roof state pending; scenario predictions available"],
+        roof_resolution_status="PENDING",
+        roof_selected_scenario=None,
+        xgboost_open_probability=0.51,
+        xgboost_closed_probability=0.57,
+        xgboost_scenario_delta=0.06,
+    )
+    return payload, model
+
+
+def test_malformed_evaluated_agree_with_null_states_is_rejected() -> None:
+    payload, model = _roof_scenario_payload()
+    model["roof_scenario_downstream"] = {
+        "status": "EVALUATED",
+        "agreement_status": "AGREE",
+        "open_state": None,
+        "closed_state": None,
+        "shared_state": {"verdict": "BET", "recommended_units": 1.0},
+    }
+    with pytest.raises(ContractValidationError):
+        validate_product_snapshot(payload)
+
+
+def test_malformed_evaluated_disagreeing_states_is_rejected() -> None:
+    payload, model = _roof_scenario_payload()
+    state = {"verdict": "NO", "recommended_units": 0.0}
+    other = {"verdict": "BET", "recommended_units": 1.0}
+    model["roof_scenario_downstream"] = {
+        "status": "EVALUATED",
+        "agreement_status": "AGREE",
+        "open_state": state,
+        "closed_state": other,
+        "shared_state": state,
+    }
+    with pytest.raises(ContractValidationError):
+        validate_product_snapshot(payload)
+
+
+def test_valid_evaluated_agree_with_identical_states_passes() -> None:
+    payload, model = _roof_scenario_payload()
+    state = {"verdict": "BET", "recommended_units": 1.0}
+    model["roof_scenario_downstream"] = {
+        "status": "EVALUATED",
+        "agreement_status": "AGREE",
+        "open_state": state,
+        "closed_state": state,
+        "shared_state": state,
+    }
+    validate_product_snapshot(payload)
+
+
+def test_malformed_roof_sensitive_with_null_states_is_rejected() -> None:
+    payload, model = _roof_scenario_payload()
+    model["roof_scenario_downstream"] = {
+        "status": "ROOF_SENSITIVE",
+        "agreement_status": "ROOF_SENSITIVE",
+        "open_state": None,
+        "closed_state": None,
+        "shared_state": None,
+    }
+    with pytest.raises(ContractValidationError):
+        validate_product_snapshot(payload)
+
+
+def test_malformed_roof_sensitive_with_identical_states_is_rejected() -> None:
+    payload, model = _roof_scenario_payload()
+    state = {"verdict": "BET", "recommended_units": 1.0}
+    model["roof_scenario_downstream"] = {
+        "status": "ROOF_SENSITIVE",
+        "agreement_status": "ROOF_SENSITIVE",
+        "open_state": state,
+        "closed_state": state,
+        "shared_state": None,
+    }
+    with pytest.raises(ContractValidationError):
+        validate_product_snapshot(payload)
+
+
+def test_valid_roof_sensitive_with_distinct_states_passes() -> None:
+    payload, model = _roof_scenario_payload()
+    model["roof_scenario_downstream"] = {
+        "status": "ROOF_SENSITIVE",
+        "agreement_status": "ROOF_SENSITIVE",
+        "open_state": {"verdict": "NO", "recommended_units": 0.0},
+        "closed_state": {"verdict": "BET", "recommended_units": 1.0},
+        "shared_state": None,
+    }
+    validate_product_snapshot(payload)
+
+
+def test_not_evaluated_missing_evidence_remains_valid() -> None:
+    payload, model = _roof_scenario_payload()
+    model["roof_scenario_downstream"] = {
+        "status": "NOT_EVALUATED_MISSING_EVIDENCE",
+        "agreement_status": "NOT_EVALUABLE",
+        "open_state": None,
+        "closed_state": None,
+        "shared_state": None,
+    }
+    validate_product_snapshot(payload)
+
+
+def test_pending_roof_keeps_prediction_null_and_scenarios_separate() -> None:
+    payload, model = _roof_scenario_payload()
+    model["roof_scenario_downstream"] = {
+        "status": "NOT_EVALUATED_MISSING_EVIDENCE",
+        "agreement_status": "NOT_EVALUABLE",
+        "open_state": None,
+        "closed_state": None,
+        "shared_state": None,
+    }
+    validate_product_snapshot(payload)
+    assert model["prediction"] is None
+    assert model["roof_selected_scenario"] is None
+    assert model["xgboost_open_probability"] != model["xgboost_closed_probability"]
 
 
 def test_bankroll_and_profile_update_cannot_change_recommended_units() -> None:

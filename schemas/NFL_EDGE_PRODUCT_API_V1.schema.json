@@ -1,5 +1,33 @@
 {
   "$defs": {
+    "evaluation_state": {
+      "additionalProperties": false,
+      "properties": {
+        "actionable_probability": {"maximum": 1, "minimum": 0, "type": ["number", "null"]},
+        "break_even_probability": {"maximum": 1, "minimum": 0, "type": ["number", "null"]},
+        "conditional_nonpush_probability": {"maximum": 1, "minimum": 0, "type": ["number", "null"]},
+        "evaluated_edge_probability": {"type": ["number", "null"]},
+        "evaluator_version": {"minLength": 1, "type": "string"},
+        "evidence": {"type": "object"},
+        "expected_value": {"type": ["number", "null"]},
+        "fair_price_american": {"type": ["integer", "null"]},
+        "p_loss": {"maximum": 1, "minimum": 0, "type": ["number", "null"]},
+        "p_push": {"maximum": 1, "minimum": 0, "type": ["number", "null"]},
+        "p_win": {"maximum": 1, "minimum": 0, "type": ["number", "null"]},
+        "reason": {"type": ["string", "null"]},
+        "reliability": {"minLength": 1, "type": "string"},
+        "staking_anchor_probability": {"maximum": 1, "minimum": 0, "type": ["number", "null"]},
+        "staking_edge_probability": {"type": ["number", "null"]},
+        "staking_probability": {"maximum": 1, "minimum": 0, "type": ["number", "null"]},
+        "strict_positive_value": {"type": "boolean"},
+        "support_distance": {"minimum": 0, "type": ["number", "null"]},
+        "support_n": {"minimum": 0, "type": "integer"},
+        "supported": {"type": "boolean"},
+        "uncertainty": {"minimum": 0, "type": ["number", "null"]}
+      },
+      "required": ["p_win", "p_push", "p_loss", "actionable_probability", "conditional_nonpush_probability", "staking_probability", "staking_anchor_probability", "fair_price_american", "expected_value", "strict_positive_value", "break_even_probability", "evaluated_edge_probability", "staking_edge_probability", "reliability", "uncertainty", "support_n", "support_distance", "evaluator_version", "supported", "reason", "evidence"],
+      "type": "object"
+    },
     "freshness": {
       "additionalProperties": false,
       "properties": {
@@ -127,6 +155,13 @@
       "type": "object"
     },
     "model_output": {
+      "oneOf": [
+        {"$ref": "#/$defs/ordinary_model_output"},
+        {"$ref": "#/$defs/pending_roof_model_output"},
+        {"$ref": "#/$defs/resolved_roof_model_output"}
+      ]
+    },
+    "ordinary_model_output": {
       "additionalProperties": false,
       "properties": {
         "artifact_version": {"minLength": 1, "type": "string"},
@@ -137,6 +172,25 @@
         "warnings": {"items": {"type": "string"}, "type": "array"}
       },
       "required": ["status", "prediction", "support", "input_identity", "artifact_version", "warnings"],
+      "type": "object"
+    },
+    "pending_roof_model_output": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_version": {"minLength": 1, "type": "string"},
+        "input_identity": {"minLength": 1, "type": "string"},
+        "prediction": {"const": null},
+        "roof_resolution_status": {"const": "PENDING"},
+        "roof_scenario_downstream": {"$ref": "#/$defs/roof_scenario_downstream"},
+        "roof_selected_scenario": {"const": null},
+        "status": {"const": "AVAILABLE_WITH_ROOF_SCENARIOS"},
+        "support": {"const": "PARTIAL"},
+        "warnings": {"items": {"type": "string"}, "type": "array"},
+        "xgboost_closed_probability": {"maximum": 1, "minimum": 0, "type": "number"},
+        "xgboost_open_probability": {"maximum": 1, "minimum": 0, "type": "number"},
+        "xgboost_scenario_delta": {"maximum": 1, "minimum": -1, "type": "number"}
+      },
+      "required": ["status", "prediction", "support", "input_identity", "artifact_version", "warnings", "roof_resolution_status", "roof_selected_scenario", "xgboost_open_probability", "xgboost_closed_probability", "xgboost_scenario_delta", "roof_scenario_downstream"],
       "type": "object"
     },
     "qb_context": {
@@ -159,6 +213,81 @@
         "warning_state": {"type": ["string", "null"]}
       },
       "required": ["team", "game_id", "expected_starter", "sleeper_player_id", "canonical_qb_id", "gsis_id", "depth_designation", "injury_status", "source", "source_snapshot_at_utc", "provenance_id", "resolution_status", "freshness", "warning_state", "last_changed_at_utc"],
+      "type": "object"
+    },
+    "resolved_roof_model_output": {
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {
+            "roof_resolution_status": {"const": "OPEN"},
+            "roof_selected_scenario": {"const": "open"}
+          }
+        },
+        {
+          "properties": {
+            "roof_resolution_status": {"const": "CLOSED"},
+            "roof_selected_scenario": {"const": "closed"}
+          }
+        }
+      ],
+      "properties": {
+        "artifact_version": {"minLength": 1, "type": "string"},
+        "input_identity": {"minLength": 1, "type": "string"},
+        "prediction": {"maximum": 1, "minimum": 0, "type": "number"},
+        "roof_resolution_status": {"enum": ["OPEN", "CLOSED"]},
+        "roof_selected_scenario": {"enum": ["open", "closed"]},
+        "status": {"const": "AVAILABLE"},
+        "support": {"const": "SUPPORTED"},
+        "warnings": {"items": {"type": "string"}, "type": "array"},
+        "xgboost_closed_probability": {"maximum": 1, "minimum": 0, "type": "number"},
+        "xgboost_open_probability": {"maximum": 1, "minimum": 0, "type": "number"}
+      },
+      "required": ["status", "prediction", "support", "input_identity", "artifact_version", "warnings", "roof_resolution_status", "roof_selected_scenario", "xgboost_open_probability", "xgboost_closed_probability"],
+      "type": "object"
+    },
+    "roof_scenario_downstream": {
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {
+            "agreement_status": {"const": "NOT_EVALUABLE"},
+            "closed_state": {"const": null},
+            "open_state": {"const": null},
+            "shared_state": {"const": null},
+            "status": {"const": "NOT_EVALUATED_MISSING_EVIDENCE"}
+          },
+          "required": ["status", "agreement_status", "open_state", "closed_state", "shared_state"]
+        },
+        {
+          "properties": {
+            "agreement_status": {"const": "AGREE"},
+            "closed_state": {"$ref": "#/$defs/evaluation_state"},
+            "open_state": {"$ref": "#/$defs/evaluation_state"},
+            "shared_state": {"$ref": "#/$defs/evaluation_state"},
+            "status": {"const": "EVALUATED"}
+          },
+          "required": ["status", "agreement_status", "open_state", "closed_state", "shared_state"]
+        },
+        {
+          "properties": {
+            "agreement_status": {"const": "ROOF_SENSITIVE"},
+            "closed_state": {"$ref": "#/$defs/evaluation_state"},
+            "open_state": {"$ref": "#/$defs/evaluation_state"},
+            "shared_state": {"const": null},
+            "status": {"const": "ROOF_SENSITIVE"}
+          },
+          "required": ["status", "agreement_status", "open_state", "closed_state", "shared_state"]
+        }
+      ],
+      "properties": {
+        "agreement_status": {"enum": ["NOT_EVALUABLE", "AGREE", "ROOF_SENSITIVE"]},
+        "closed_state": {"oneOf": [{"$ref": "#/$defs/evaluation_state"}, {"type": "null"}]},
+        "open_state": {"oneOf": [{"$ref": "#/$defs/evaluation_state"}, {"type": "null"}]},
+        "shared_state": {"oneOf": [{"$ref": "#/$defs/evaluation_state"}, {"type": "null"}]},
+        "status": {"enum": ["NOT_EVALUATED_MISSING_EVIDENCE", "EVALUATED", "ROOF_SENSITIVE"]}
+      },
+      "required": ["status", "agreement_status", "open_state", "closed_state", "shared_state"],
       "type": "object"
     }
   },

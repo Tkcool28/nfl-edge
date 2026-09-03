@@ -25,7 +25,14 @@ SLATE_STATUSES = frozenset({"UPCOMING", "ACTIVE", "COMPLETE", "OFFSEASON"})
 QB_RESOLUTION_STATUSES = frozenset(
     {"RESOLVED", "NEW_PLAYER", "UNRESOLVED", "AMBIGUOUS", "MISSING_EVIDENCE", "OVERRIDDEN"}
 )
-MODEL_OUTPUT_STATUSES = frozenset({"AVAILABLE", "UNAVAILABLE", "UNSUPPORTED", "FAILED", "STALE_INPUT"})
+MODEL_OUTPUT_STATUSES = frozenset({
+    "AVAILABLE",
+    "AVAILABLE_WITH_ROOF_SCENARIOS",
+    "UNAVAILABLE",
+    "UNSUPPORTED",
+    "FAILED",
+    "STALE_INPUT",
+})
 SUPPORT_STATES = frozenset({"SUPPORTED", "PARTIAL", "UNSUPPORTED"})
 VERDICTS = frozenset({"BET", "NO", "TARGET_ONLY", "SUPPRESSED", "UNSUPPORTED"})
 
@@ -86,9 +93,10 @@ def require_number(value: Any, path: str, minimum: float | None = None, maximum:
     return number
 
 
-def validate_probability(value: Any, path: str) -> None:
-    if value is not None:
-        require_number(value, path, 0.0, 1.0)
+def validate_probability(value: Any, path: str) -> float | None:
+    if value is None:
+        return None
+    return require_number(value, path, 0.0, 1.0)
 
 
 def validate_utc_timestamp(value: Any, path: str, nullable: bool = False) -> None:

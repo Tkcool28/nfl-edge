@@ -174,7 +174,7 @@ The product records status/output for:
 - Expected Margin
 - Ridge Totals R4
 
-Each model output contains:
+Ordinary model outputs contain:
 
 - `status`: `AVAILABLE | UNAVAILABLE | UNSUPPORTED | FAILED | STALE_INPUT`
 - prediction (nullable when unavailable)
@@ -184,6 +184,42 @@ Each model output contains:
 - warnings
 
 One unavailable model is represented honestly; it is not fabricated. Downstream evaluator/selector/product generation must consume the support/status and fail closed where its own prerequisites are not met.
+
+### Pending retractable-roof XGBoost state
+
+For a retractable-roof game whose official roof state is still unresolved, XGBoost remains model-available through the distinct V1 status `AVAILABLE_WITH_ROOF_SCENARIOS`. This is not a singular selected prediction. The contract requires:
+
+- `prediction = null`
+- `support = PARTIAL`
+- `roof_resolution_status = PENDING`
+- `roof_selected_scenario = null`
+- finite `xgboost_open_probability` in `[0,1]`
+- finite `xgboost_closed_probability` in `[0,1]`
+- finite `xgboost_scenario_delta` in `[-1,1]`
+- a valid `roof_scenario_downstream` object
+
+OPEN and CLOSED probabilities remain separate. They are never averaged and neither is selected before official roof resolution.
+
+`roof_scenario_downstream` has exactly five fields: `status`, `agreement_status`, `open_state`, `closed_state`, and `shared_state`.
+
+- Missing market/evaluator evidence: `status = NOT_EVALUATED_MISSING_EVIDENCE`, `agreement_status = NOT_EVALUABLE`, and all three state objects are null. No downstream decision is invented.
+- OPEN/CLOSED agreement: `status = EVALUATED`, `agreement_status = AGREE`, and `open_state == closed_state == shared_state`. All three states are required and non-null.
+- OPEN/CLOSED disagreement: `status = ROOF_SENSITIVE`, `agreement_status = ROOF_SENSITIVE`; `open_state` and `closed_state` are required and differ, while `shared_state = null`.
+
+The JSON Schema fixes the allowed field shapes and nullability. Python runtime validation additionally enforces semantic object equality/inequality where JSON Schema cannot compare sibling object values.
+
+### Resolved retractable-roof XGBoost state
+
+When official roof state is known, XGBoost returns to ordinary `AVAILABLE` semantics with `support = SUPPORTED` and one concrete selected prediction. The resolved-roof V1 subshape preserves four roof provenance fields:
+
+- `roof_resolution_status = OPEN | CLOSED`
+- `roof_selected_scenario = open | closed`, matching the resolved status
+- `xgboost_open_probability`
+- `xgboost_closed_probability`
+
+The concrete `prediction` must equal the selected frozen scenario probability. Pending-only `xgboost_scenario_delta` and `roof_scenario_downstream` fields are absent. Non-retractable ordinary outputs do not admit roof-only fields.
+
+This contract representation does not alter frozen XGBoost features, candidate/configuration, categorical vocabulary, chronological fit/refit, or evaluator behavior.
 
 ## 7. Sleeper -> expected QB — `NFL_EDGE_EXPECTED_QB_RESOLVER_V1`
 
