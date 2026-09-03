@@ -1,0 +1,19 @@
+name: Inspect Live Product State Contract
+
+on:
+  push:
+    branches:
+      - feat/2026-live-market-product-snapshot-v1
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print product-state materializer and loader tail
+        run: |
+          sed -n '300,560p' src/nfl_edge/live/product_state_2026.py
