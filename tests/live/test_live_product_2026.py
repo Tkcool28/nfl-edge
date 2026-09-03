@@ -196,7 +196,13 @@ def test_full_fixture_product_validates_and_replays_identically(tmp_path):
     assert first_proof["evaluator_by_market"].get("total", 0) > 0
     assert product_snapshot_bytes(first) == product_snapshot_bytes(second)
     assert first_proof == second_proof
-    pending = first["games"][0]["football_outputs"]["xgboost_v2"]["roof_scenario_downstream"]
+    pending_games = [
+        game
+        for game in first["games"]
+        if game["football_outputs"]["xgboost_v2"]["status"] == "AVAILABLE_WITH_ROOF_SCENARIOS"
+    ]
+    assert len(pending_games) == 1
+    pending = pending_games[0]["football_outputs"]["xgboost_v2"]["roof_scenario_downstream"]
     assert pending["status"] in {"EVALUATED", "ROOF_SENSITIVE"}
     if pending["status"] == "ROOF_SENSITIVE":
         assert pending["shared_state"] is None
