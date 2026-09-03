@@ -92,6 +92,7 @@ jobs:
             src/nfl_edge/backend/db.py \
             src/nfl_edge/backend/publication.py \
             src/nfl_edge/backend/exact_offer.py \
+            src/nfl_edge/backend/_base_app.py \
             src/nfl_edge/backend/app.py \
             scripts/run_backend_v1.py \
             scripts/publish_backend_product_v1.py
@@ -100,7 +101,7 @@ jobs:
       - name: Run backend acceptance suite
         run: |
           pytest -q \
-            tests/backend/test_backend_v1.py \
+            tests/backend \
             tests/contracts/test_live_product_backend_contract_v1.py \
             tests/contracts/test_live_product_backend_contract_v1_final_review.py
 
