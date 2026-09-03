@@ -30,10 +30,18 @@ jobs:
           python-version: '3.11'
           cache: pip
 
-      - name: Install frozen model runtime and test tools
+      - name: Install accepted numerical runtime and test tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e '.[model-development]' pyyaml pytest 'jsonschema>=4.23,<5'
+          python -m pip install -e '.[model-development]' pyyaml pytest 'jsonschema>=4.23,<5' 'scikit-learn==1.8.0'
+
+      - name: Prove accepted scikit-learn runtime
+        run: |
+          python - <<'PY'
+          import sklearn
+          assert sklearn.__version__ == '1.8.0', sklearn.__version__
+          print('ACCEPTED_SCIKIT_LEARN_RUNTIME', sklearn.__version__)
+          PY
 
       - name: Prove frozen methodology surfaces are untouched
         run: |
@@ -61,6 +69,7 @@ jobs:
 
       - name: Materialize entering-2026 decision state from accepted evidence
         run: |
+          set -o pipefail
           mkdir -p artifacts/live_2026_product
           python scripts/materialize_2026_entering_product_state_v1.py \
             --output artifacts/live_2026_product/entering_product_state_v1.json \
@@ -85,6 +94,7 @@ jobs:
               'odds_api_key_present': False,
               'live_odds_api_calls': 0,
               'automatic_retries': 0,
+              'accepted_scikit_learn_version': '1.8.0',
               'methodology_changed': False,
           }
           (out/'zero_credit_gate.json').write_text(json.dumps(proof, indent=2, sort_keys=True)+'\n')
