@@ -101,6 +101,14 @@ jobs:
           print('TASK05F_TO_V2_2025_TO_2026_STATE_CHAIN=PASS')
           PY
 
+      - name: Prove committed entering-2026 state is exact regeneration
+        run: |
+          echo 'cf5f1a0f255befae56d7ac91d97af8641500a466c1d84097fe401e950020158b  data/live/2026/entering_product_state_v1.json' | sha256sum --check --strict
+          cmp --silent \
+            data/live/2026/entering_product_state_v1.json \
+            artifacts/live_2026_product/entering_product_state_v1.json
+          echo 'COMMITTED_ENTERING_2026_STATE_EXACT_REGENERATION=PASS'
+
       - name: Run zero-credit market and product integration tests
         run: |
           pytest -q \
@@ -123,6 +131,7 @@ jobs:
               'accepted_numpy_version': '2.4.2',
               'accepted_scipy_version': '1.17.1',
               'accepted_scikit_learn_version': '1.8.0',
+              'committed_entering_2026_state_sha256': 'cf5f1a0f255befae56d7ac91d97af8641500a466c1d84097fe401e950020158b',
               'methodology_changed': False,
           }
           (out/'zero_credit_gate.json').write_text(json.dumps(proof, indent=2, sort_keys=True)+'\n')
