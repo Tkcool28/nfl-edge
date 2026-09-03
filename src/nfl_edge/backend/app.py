@@ -26,7 +26,10 @@ def _drop_route(app: FastAPI, path: str, method: str) -> None:
 
 def create_app(settings: BackendSettings | None = None) -> FastAPI:
     """Build the backend and normalize all credential failures to one response."""
-    app = _base.create_app(settings)
+    # _base_app constructs the process-global application at import. Reuse that
+    # instance for production; explicit settings always create an isolated app,
+    # which is what tests and future embedding callers need.
+    app = _base.app if settings is None else _base.create_app(settings)
     active_settings: BackendSettings = app.state.settings
     db = app.state.db
 
@@ -82,12 +85,10 @@ def create_app(settings: BackendSettings | None = None) -> FastAPI:
             samesite=active_settings.cookie_samesite,
             path="/",
         )
-        return {
-            "user": _base._profile_public(
-                db.get_profile(str(user["user_id"]))
-                or (_ for _ in ()).throw(RuntimeError("authenticated profile missing"))
-            )
-        }
+        profile = db.get_profile(str(user["user_id"]))
+        if profile is None:
+            raise HTTPException(500, "authenticated profile missing")
+        return {"user": _base._profile_public(profile)}
 
     return app
 
