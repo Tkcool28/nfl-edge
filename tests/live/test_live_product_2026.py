@@ -151,6 +151,14 @@ def _market_snapshot(schedule):
 def test_entering_2026_state_reconstructs_accepted_2024_parity_and_resets_value(tmp_path):
     payload = materialize_entering_2026_product_state(ROOT)
     assert payload["source_evidence"]["reconstructed_2024_state_parity"] == "PASS"
+    assert payload["source_evidence"]["task05f_starting_state_parity"] == "PASS"
+    assert payload["source_evidence"]["task05f_historical_board_sha256"] == (
+        "58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8"
+    )
+    assert payload["source_evidence"]["task05f_frozen_state_sha256"] == (
+        "34ac985835ce4ceb65c6135b07851cd4f7e3ab2cc311315ae11efc773d1aa8c9"
+    )
+    assert payload["source_evidence"]["accepted_2025_advancement"] == "CAUSAL_PROSPECTIVE"
     assert payload["source_evidence"]["accepted_2025_games"] == 285
     assert payload["source_evidence"]["accepted_2025_blocks"] == 22
     assert payload["value_selector_state"] == {

@@ -1,16 +1,19 @@
 """Materialize and load the frozen entering-2026 market/product decision state.
 
-The one-time materializer consumes only accepted 2020-2024 evaluator evidence,
-the frozen canonical historical market files already used by Task05F, and the
-already-published 2025 post-V5 V2 diagnostic artifact. Ordinary live refreshes
-load the resulting JSON and perform no evaluator/confidence fitting.
+The one-time materializer reproduces the accepted Task05F historical starting
+state and board fingerprints used by the standard 2025 evaluation, then carries
+forward the already-published prospective V2 2025 evidence into an entering-2026
+state. Ordinary live refreshes load the resulting JSON and perform no
+evaluator/confidence fitting.
 """
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import importlib.util
 import io
 import json
+import tempfile
 import zipfile
 from pathlib import Path
 from typing import Any, Iterable, Mapping
@@ -41,9 +44,9 @@ from nfl_edge.value.wager_economics import line_allows_push
 
 SCHEMA_VERSION = "NFL_EDGE_ENTERING_2026_PRODUCT_STATE_V1"
 ARCH_ROOT = Path("reports/architecture_verification/post_v5_v2_2020_2025")
-HISTORICAL_ZIP = ARCH_ROOT / "post-v5-v2-historical-e2e.zip"
 DIAGNOSTIC_ZIP = ARCH_ROOT / "post-v5-v2-all-years-diagnostic.zip"
-EXPECTED_HISTORICAL_SHA256 = "056d349381cf3cf2e2fbe8929c3c5d435d43e0a30be44b8b7febb5f82b9208e0"
+EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256 = "58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8"
+EXPECTED_TASK05F_FROZEN_STATE_SHA256 = "34ac985835ce4ceb65c6135b07851cd4f7e3ab2cc311315ae11efc773d1aa8c9"
 EXPECTED_DIAGNOSTIC_SHA256 = "b38eae4df11dc52fe4fc5aeb87a402abcc8ffb9b60e3f252d56f56c9aef78b41"
 ACCEPTED_SCIKIT_LEARN_VERSION = "1.8.0"
 
@@ -125,14 +128,37 @@ def _assert_state_parity(observed: Mapping[str, Any], expected: Mapping[str, Any
             raise Entering2026ProductStateError(f"{here} drift: {a!r} != {b!r}")
 
 
-def _read_historical_evidence(root: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    path = root / HISTORICAL_ZIP
-    got = _sha256(path)
-    if got != EXPECTED_HISTORICAL_SHA256:
-        raise Entering2026ProductStateError(f"historical evidence SHA drift: {got}")
-    with zipfile.ZipFile(path) as zf:
-        board = pl.read_parquet(io.BytesIO(zf.read("upstream/historical_evaluator_board.parquet"))).to_dicts()
-        frozen = json.loads(zf.read("upstream/frozen_evaluator_state.json"))
+def _materialize_task05f_starting_evidence(
+    root: Path, task05f: Any
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Reproduce the exact Task05F state/board used to open standard 2025."""
+    with tempfile.TemporaryDirectory(prefix="nfl-edge-task05f-start-") as tmp:
+        out = Path(tmp)
+        # The accepted standard 2025 workflow performs this same materialization
+        # before execution. Suppress the runner scorecard here so this one-time
+        # state materializer emits only its own bounded status output.
+        with contextlib.redirect_stdout(io.StringIO()):
+            task05f.run(
+                root,
+                root / "config/task05f_evaluator_final_v1.yaml",
+                out,
+            )
+        board_path = out / "historical_evaluator_board.parquet"
+        state_path = out / "frozen_evaluator_state.json"
+        board_sha = _sha256(board_path)
+        state_sha = _sha256(state_path)
+        if board_sha != EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256:
+            raise Entering2026ProductStateError(
+                "accepted Task05F historical board SHA drift: "
+                f"{board_sha} != {EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256}"
+            )
+        if state_sha != EXPECTED_TASK05F_FROZEN_STATE_SHA256:
+            raise Entering2026ProductStateError(
+                "accepted Task05F frozen state SHA drift: "
+                f"{state_sha} != {EXPECTED_TASK05F_FROZEN_STATE_SHA256}"
+            )
+        board = pl.read_parquet(board_path).to_dicts()
+        frozen = json.loads(state_path.read_text(encoding="utf-8"))
     return [dict(row) for row in board], frozen
 
 
@@ -350,7 +376,7 @@ def materialize_entering_2026_product_state(root: Path) -> dict[str, Any]:
     confidence_v2 = _load_script("live_2026_confidence_v2", root / "scripts/task05g_model_confidence_v2_runner.py")
     spread_v3 = _load_script("live_2026_spread_v3", root / "scripts/task05g_spread_confidence_v3_runner.py")
 
-    historical_board, frozen_2024 = _read_historical_evidence(root)
+    historical_board, frozen_2024 = _materialize_task05f_starting_evidence(root, task05f)
     historical_games = task05f.build_inputs(root)
     historical_idx = task05f.build_market(root, historical_games)
     historical_material = task05f._training_material(
@@ -458,8 +484,8 @@ def materialize_entering_2026_product_state(root: Path) -> dict[str, Any]:
         "season": 2026,
         "week": 1,
         "source_evidence": {
-            "historical_zip": str(HISTORICAL_ZIP),
-            "historical_zip_sha256": EXPECTED_HISTORICAL_SHA256,
+            "task05f_historical_board_sha256": EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256,
+            "task05f_frozen_state_sha256": EXPECTED_TASK05F_FROZEN_STATE_SHA256,
             "diagnostic_2025_zip": str(DIAGNOSTIC_ZIP),
             "diagnostic_2025_zip_sha256": EXPECTED_DIAGNOSTIC_SHA256,
             "accepted_scikit_learn_version": ACCEPTED_SCIKIT_LEARN_VERSION,
@@ -470,8 +496,10 @@ def materialize_entering_2026_product_state(root: Path) -> dict[str, Any]:
             "combined_prior_games": len(all_games),
             "combined_prior_board_rows": len(combined_board),
             "reconstructed_2024_state_parity": "PASS",
-            "historical_market_source": "canonical Task05F repository market files",
+            "task05f_starting_state_parity": "PASS",
+            "historical_market_source": "accepted Task05F canonical repository market files",
             "accepted_2025_training_source": "post-V5 V2 settled evaluator rows",
+            "accepted_2025_advancement": "CAUSAL_PROSPECTIVE",
         },
         "task05f": {
             "evaluators": {
