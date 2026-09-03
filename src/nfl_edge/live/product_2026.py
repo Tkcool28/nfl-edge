@@ -491,53 +491,40 @@ def _aggregate_roof_scenarios(
     market_index: Mapping[Any, Any],
     decision_state: Mapping[str, Any],
 ) -> dict[str, Any]:
+    """Compare OPEN/CLOSED on the canonical home-side best retail moneyline offer.
+
+    ``roof_scenario_downstream`` is a single evaluation-state slot in the frozen
+    product schema, not a multi-offer board. The canonical home-side exact offer
+    gives one deterministic, auditable comparison while the complete DK/FD board
+    remains available elsewhere in the game object. If the required Pinnacle
+    anchor or home-side retail offer is absent, do not invent a downstream state.
+    """
     xgb = game["football_outputs"]["xgboost_v2"]
     if str(xgb.get("status")) != "AVAILABLE_WITH_ROOF_SCENARIOS":
         raise LiveProductError("roof scenario aggregation called for non-pending game")
     anchor = task05f._moneyline_anchor(market_index, str(game["game_id"]))
-    if anchor is None:
+    offer = task05f._best(market_index, str(game["game_id"]), "moneyline", "home")
+    if anchor is None or offer is None:
         return missing_roof_scenario_evaluation()
     base = GameState(
-        str(game["game_id"]), 2026, "1", None,
-        qbelo_home=current_game.get("qbelo_home"), xgb_home=None,
+        str(game["game_id"]),
+        2026,
+        "1",
+        None,
+        qbelo_home=current_game.get("qbelo_home"),
+        xgb_home=None,
         expected_home_margin=current_game.get("expected_home_margin"),
         predicted_total_r4=current_game.get("predicted_total"),
     )
-    results = {}
-    for side in ("home", "away"):
-        offer = task05f._best(market_index, str(game["game_id"]), "moneyline", side)
-        if offer is None:
-            continue
-        results[side] = compare_moneyline_roof_scenarios(
-            game=base,
-            open_xgb_home=float(xgb["xgboost_open_probability"]),
-            closed_xgb_home=float(xgb["xgboost_closed_probability"]),
-            offer=offer,
-            evaluator_state=decision_state["moneyline"],
-            anchor=anchor,
-            reliability_state=decision_state["reliability"]["moneyline"],
-        )
-    if not results:
-        return missing_roof_scenario_evaluation()
-    if any(result["status"] == "NOT_EVALUATED_MISSING_EVIDENCE" for result in results.values()):
-        return missing_roof_scenario_evaluation()
-    open_state = {side: result["open_state"] for side, result in sorted(results.items())}
-    closed_state = {side: result["closed_state"] for side, result in sorted(results.items())}
-    if open_state == closed_state:
-        return {
-            "status": "EVALUATED",
-            "agreement_status": "AGREE",
-            "open_state": open_state,
-            "closed_state": closed_state,
-            "shared_state": open_state,
-        }
-    return {
-        "status": "ROOF_SENSITIVE",
-        "agreement_status": "ROOF_SENSITIVE",
-        "open_state": open_state,
-        "closed_state": closed_state,
-        "shared_state": None,
-    }
+    return compare_moneyline_roof_scenarios(
+        game=base,
+        open_xgb_home=float(xgb["xgboost_open_probability"]),
+        closed_xgb_home=float(xgb["xgboost_closed_probability"]),
+        offer=offer,
+        evaluator_state=decision_state["moneyline"],
+        anchor=anchor,
+        reliability_state=decision_state["reliability"]["moneyline"],
+    )
 
 
 def _game_warnings(market_board: Mapping[str, Any], xgb: Mapping[str, Any]) -> list[str]:
