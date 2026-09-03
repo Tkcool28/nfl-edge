@@ -1,0 +1,51 @@
+name: Promote Entering 2026 Product State
+
+on:
+  push:
+    branches:
+      - feat/2026-live-market-product-snapshot-v1
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  promote:
+    if: github.event.head_commit.message == 'Promote green entering-2026 state artifact'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: live-2026-market-product-fixture-019d564263eae6c27cc8bbf2b42c4d8815f77104
+          path: /tmp/green-state
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 33797172399
+      - name: Verify and stage exact green state bytes
+        run: |
+          set -euo pipefail
+          echo 'cf5f1a0f255befae56d7ac91d97af8641500a466c1d84097fe401e950020158b  /tmp/green-state/entering_product_state_v1.json' | sha256sum --check --strict
+          mkdir -p data/live/2026
+          cp /tmp/green-state/entering_product_state_v1.json data/live/2026/entering_product_state_v1.json
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tests/live/test_live_product_2026.py')
+          s=p.read_text()
+          old='''    assert payload["source_evidence"]["accepted_2025_games"] == 285\n    assert payload["source_evidence"]["accepted_2025_blocks"] == 22\n    assert payload["value_selector_state"] == {\n'''
+          new='''    assert payload["source_evidence"]["accepted_2025_games"] == 285\n    assert payload["source_evidence"]["accepted_2025_blocks"] == 22\n    regenerated = (json.dumps(payload, sort_keys=True, indent=2, allow_nan=False) + "\\n").encode("utf-8")\n    committed = ROOT / "data/live/2026/entering_product_state_v1.json"\n    assert hashlib.sha256(committed.read_bytes()).hexdigest() == (\n        "cf5f1a0f255befae56d7ac91d97af8641500a466c1d84097fe401e950020158b"\n    )\n    assert committed.read_bytes() == regenerated\n    assert payload["value_selector_state"] == {\n'''
+          assert old in s, 'state parity test seam drifted'
+          p.write_text(s.replace(old,new))
+          PY
+          python -m py_compile tests/live/test_live_product_2026.py
+          rm .github/workflows/promote-entering-2026-product-state.yml
+          git diff --check
+      - name: Commit frozen state and parity test
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/live/2026/entering_product_state_v1.json tests/live/test_live_product_2026.py .github/workflows/promote-entering-2026-product-state.yml
+          git commit -m 'Freeze entering-2026 product state V1'
+          git push origin HEAD:feat/2026-live-market-product-snapshot-v1
