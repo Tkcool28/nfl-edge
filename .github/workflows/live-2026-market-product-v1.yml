@@ -1,0 +1,145 @@
+name: Live 2026 Market Product V1
+
+on:
+  push:
+    branches:
+      - feat/2026-live-market-product-snapshot-v1
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  zero-credit-fixture-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      PYTHONHASHSEED: "0"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OPENBLAS_CORETYPE: "HASWELL"
+      MKL_NUM_THREADS: "1"
+      MKL_CBWR: "COMPATIBLE"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install accepted numerical runtime and test tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest 'jsonschema>=4.23,<5' \
+            'numpy==2.4.2' 'scipy==1.17.1' 'scikit-learn==1.8.0'
+
+      - name: Prove accepted numerical runtime
+        run: |
+          python - <<'PY'
+          import numpy
+          import scipy
+          import sklearn
+          assert numpy.__version__ == '2.4.2', numpy.__version__
+          assert scipy.__version__ == '1.17.1', scipy.__version__
+          assert sklearn.__version__ == '1.8.0', sklearn.__version__
+          print('ACCEPTED_NUMERICAL_RUNTIME', {
+              'numpy': numpy.__version__,
+              'scipy': scipy.__version__,
+              'scikit_learn': sklearn.__version__,
+          })
+          PY
+
+      - name: Prove frozen methodology surfaces are untouched
+        run: |
+          git fetch origin main
+          changed="$(git diff --name-only origin/main...HEAD)"
+          echo "$changed"
+          if echo "$changed" | grep -E '^(src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/value/evaluators.py$|src/nfl_edge/value/accepted_calibration.py$|src/nfl_edge/recommendation/final_selectors_v1.py$|src/nfl_edge/recommendation/headline_staking_v1.py$|src/nfl_edge/recommendation/staking_v1.py$|src/nfl_edge/staking_policy_v1.py$|config/task05f_|config/task05g_|config/expected_margin_v1.yaml$|config/qb_elo_v1.yaml$|config/totals_)'; then
+            echo 'ERROR: frozen methodology surface changed' >&2
+            exit 1
+          fi
+
+      - name: Prove ordinary CI has no Odds API credential
+        run: |
+          test -z "${ODDS_API_KEY:-}"
+          echo 'ODDS_API_KEY_ABSENT_ZERO_CREDIT_CI'
+
+      - name: Compile live market and product surfaces
+        run: |
+          python -m py_compile \
+            src/nfl_edge/live/markets_2026.py \
+            src/nfl_edge/live/product_state_2026.py \
+            src/nfl_edge/live/product_2026.py \
+            scripts/materialize_2026_entering_product_state_v1.py \
+            scripts/run_2026_live_market_product_snapshot_v1.py
+
+      - name: Materialize entering-2026 decision state from accepted evidence
+        run: |
+          set -o pipefail
+          mkdir -p artifacts/live_2026_product
+          python scripts/materialize_2026_entering_product_state_v1.py \
+            --output artifacts/live_2026_product/entering_product_state_v1.json \
+            | tee artifacts/live_2026_product/state_materialization.json
+
+      - name: Prove accepted Task05F seed and causal 2025 chain
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload=json.loads(Path('artifacts/live_2026_product/entering_product_state_v1.json').read_text())
+          source=payload['source_evidence']
+          assert source['task05f_historical_board_sha256'] == '58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8'
+          assert source['task05f_frozen_state_sha256'] == '34ac985835ce4ceb65c6135b07851cd4f7e3ab2cc311315ae11efc773d1aa8c9'
+          assert source['task05f_starting_state_parity'] == 'PASS'
+          assert source['accepted_2025_advancement'] == 'CAUSAL_PROSPECTIVE'
+          assert source['accepted_2025_games'] == 285
+          assert source['accepted_2025_blocks'] == 22
+          assert source['combined_prior_games'] == 1693
+          print('TASK05F_TO_V2_2025_TO_2026_STATE_CHAIN=PASS')
+          PY
+
+      - name: Prove committed entering-2026 state is exact regeneration
+        run: |
+          echo 'cf5f1a0f255befae56d7ac91d97af8641500a466c1d84097fe401e950020158b  data/live/2026/entering_product_state_v1.json' | sha256sum --check --strict
+          cmp --silent \
+            data/live/2026/entering_product_state_v1.json \
+            artifacts/live_2026_product/entering_product_state_v1.json
+          echo 'COMMITTED_ENTERING_2026_STATE_EXACT_REGENERATION=PASS'
+
+      - name: Run zero-credit market and product integration tests
+        run: |
+          pytest -q \
+            tests/live/test_live_markets_2026.py \
+            tests/live/test_live_product_2026.py
+
+      - name: Record zero-credit gate proof
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          out = Path('artifacts/live_2026_product')
+          out.mkdir(parents=True, exist_ok=True)
+          proof = {
+              'gate': 'LIVE_2026_MARKET_PRODUCT_ZERO_CREDIT_FIXTURE_GATE',
+              'odds_api_key_present': False,
+              'live_odds_api_calls': 0,
+              'automatic_retries': 0,
+              'accepted_numpy_version': '2.4.2',
+              'accepted_scipy_version': '1.17.1',
+              'accepted_scikit_learn_version': '1.8.0',
+              'committed_entering_2026_state_sha256': 'cf5f1a0f255befae56d7ac91d97af8641500a466c1d84097fe401e950020158b',
+              'methodology_changed': False,
+          }
+          (out/'zero_credit_gate.json').write_text(json.dumps(proof, indent=2, sort_keys=True)+'\n')
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-2026-market-product-fixture-${{ github.sha }}
+          path: artifacts/live_2026_product/
+          if-no-files-found: warn
