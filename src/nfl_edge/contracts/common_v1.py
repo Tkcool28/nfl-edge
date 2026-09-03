@@ -93,9 +93,10 @@ def require_number(value: Any, path: str, minimum: float | None = None, maximum:
     return number
 
 
-def validate_probability(value: Any, path: str) -> None:
-    if value is not None:
-        require_number(value, path, 0.0, 1.0)
+def validate_probability(value: Any, path: str) -> float | None:
+    if value is None:
+        return None
+    return require_number(value, path, 0.0, 1.0)
 
 
 def validate_utc_timestamp(value: Any, path: str, nullable: bool = False) -> None:
