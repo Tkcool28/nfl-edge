@@ -43,6 +43,7 @@ jobs:
           python -m py_compile \
             src/nfl_edge/live/week1_2026.py \
             src/nfl_edge/live/roof.py \
+            src/nfl_edge/live/roof_scenarios.py \
             src/nfl_edge/live/sleeper_qb.py \
             src/nfl_edge/live/features_2026.py \
             src/nfl_edge/live/model_adapters.py \
@@ -57,6 +58,7 @@ jobs:
           pytest -q \
             tests/live/test_week1_2026.py \
             tests/live/test_roof_resolution.py \
+            tests/live/test_roof_scenario_adapter.py \
             tests/live/test_sleeper_qb_live_resolver.py \
             tests/live/test_live_2026_scoring.py
 

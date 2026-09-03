@@ -21,6 +21,7 @@ from nfl_edge.live.model_adapters import (
 )
 from nfl_edge.live.qb_inputs import build_qb_adjustment_resolver, build_totals_qb_surface
 from nfl_edge.live.roof import DEFAULT_ROOF_STATUS_PATH, RoofResolver
+from nfl_edge.live.roof_scenarios import missing_roof_scenario_evaluation
 from nfl_edge.live.sleeper_qb import SleeperExpectedQBResolver
 from nfl_edge.live.state_2026 import Entering2026FootballState, bootstrap_entering_2026_state
 from nfl_edge.live.totals_features import materialize_live_totals_feature_block
@@ -382,13 +383,14 @@ def score_week1(
                 }
                 if roof.status == "PENDING":
                     xgb_output = _model_output(
-                        status="UNAVAILABLE",
+                        status="AVAILABLE_WITH_ROOF_SCENARIOS",
                         prediction=None,
                         support="PARTIAL",
                         input_identity=base_identity["xgboost_v2"],
                         artifact_version=MODEL_VERSIONS["xgboost_v2"],
                         warnings=[
-                            "Retractable roof status is pending; open and closed scenarios are preserved without selection."
+                            "Retractable roof status is pending; open and closed "
+                            "scenarios are preserved without selection."
                         ],
                     )
                     selected_scenario = None
@@ -407,6 +409,11 @@ def score_week1(
                     "xgboost_open_probability": scenarios["open"],
                     "xgboost_closed_probability": scenarios["closed"],
                 })
+                if roof.status == "PENDING":
+                    xgb_output.update({
+                        "xgboost_scenario_delta": scenarios["closed"] - scenarios["open"],
+                        "roof_scenario_downstream": missing_roof_scenario_evaluation(),
+                    })
             else:
                 xgb_output = _model_output(
                     status="AVAILABLE",

@@ -140,7 +140,7 @@ def test_real_week1_schedule_scores_available_models_deterministically(entering_
         "expected_margin": {"AVAILABLE": 16},
         "qb_elo": {"AVAILABLE": 16},
         "ridge_totals_r4": {"AVAILABLE": 16},
-        "xgboost_v2": {"AVAILABLE": 14, "UNAVAILABLE": 2},
+        "xgboost_v2": {"AVAILABLE": 14, "AVAILABLE_WITH_ROOF_SCENARIOS": 2},
     }
 
     for game in first["games"]:
@@ -154,12 +154,22 @@ def test_real_week1_schedule_scores_available_models_deterministically(entering_
         if game["game_id"] in EXPECTED_MISSING_ROOF_GAME_IDS:
             assert game["roof"]["roof_structure"] == "RETRACTABLE"
             assert game["roof"]["roof_resolution_status"] == "PENDING"
-            assert xgb["status"] == "UNAVAILABLE"
+            assert xgb["status"] == "AVAILABLE_WITH_ROOF_SCENARIOS"
             assert xgb["support"] == "PARTIAL"
             assert xgb["prediction"] is None
             assert xgb["roof_selected_scenario"] is None
             assert xgb["xgboost_open_probability"] is not None
             assert xgb["xgboost_closed_probability"] is not None
+            assert xgb["xgboost_scenario_delta"] == (
+                xgb["xgboost_closed_probability"] - xgb["xgboost_open_probability"]
+            )
+            assert xgb["roof_scenario_downstream"] == {
+                "status": "NOT_EVALUATED_MISSING_EVIDENCE",
+                "agreement_status": "NOT_EVALUABLE",
+                "open_state": None,
+                "closed_state": None,
+                "shared_state": None,
+            }
             assert any("scenarios" in warning for warning in xgb["warnings"])
         else:
             assert xgb["status"] == "AVAILABLE"
