@@ -1,0 +1,142 @@
+name: Backend Users Wagers V1
+
+on:
+  push:
+    branches:
+      - feat/backend-users-wagers-v1
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backend-v1:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      PYTHONHASHSEED: "0"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OPENBLAS_CORETYPE: "HASWELL"
+      MKL_NUM_THREADS: "1"
+      MKL_CBWR: "COMPATIBLE"
+      NUMEXPR_NUM_THREADS: "1"
+      NFL_EDGE_COOKIE_SECURE: "false"
+      NFL_EDGE_DB_PATH: "/tmp/nfl-edge-backend-ci.sqlite3"
+      NFL_EDGE_PRODUCT_DIR: "/tmp/nfl-edge-backend-ci-product"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install accepted runtime and backend test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest httpx \
+            'numpy==2.4.2' 'scipy==1.17.1' 'scikit-learn==1.8.0'
+
+      - name: Prove accepted numerical runtime
+        run: |
+          python - <<'PY'
+          import numpy
+          import scipy
+          import sklearn
+          assert numpy.__version__ == '2.4.2'
+          assert scipy.__version__ == '1.17.1'
+          assert sklearn.__version__ == '1.8.0'
+          print('ACCEPTED_NUMERICAL_RUNTIME=PASS')
+          PY
+
+      - name: Prove frozen methodology surfaces are untouched
+        run: |
+          git fetch origin main
+          changed="$(git diff --name-only origin/main...HEAD)"
+          echo "$changed"
+          if echo "$changed" | grep -E '^(src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/value/evaluators.py$|src/nfl_edge/value/accepted_calibration.py$|src/nfl_edge/recommendation/final_selectors_v1.py$|src/nfl_edge/recommendation/headline_staking_v1.py$|src/nfl_edge/recommendation/staking_v1.py$|src/nfl_edge/staking_policy_v1.py$|src/nfl_edge/live/product_2026.py$|src/nfl_edge/live/markets_2026.py$|src/nfl_edge/live/roof_scenarios.py$|config/task05f_|config/task05g_|config/expected_margin_v1.yaml$|config/qb_elo_v1.yaml$|config/totals_)'; then
+            echo 'ERROR: frozen methodology/product-generation surface changed' >&2
+            exit 1
+          fi
+
+      - name: Prove canonical Product API V1 remains strict and unchanged
+        run: |
+          git diff --exit-code origin/main...HEAD -- \
+            src/nfl_edge/contracts/product_api_v1.py \
+            schemas/NFL_EDGE_PRODUCT_API_V1.schema.json
+          echo 'CANONICAL_PRODUCT_API_V1_UNCHANGED=PASS'
+
+      - name: Prove ordinary backend CI has zero Odds API credential
+        run: |
+          test -z "${ODDS_API_KEY:-}"
+          echo 'ODDS_API_KEY_ABSENT=PASS'
+
+      - name: Prove backend request package has no generation/acquisition calls
+        run: |
+          if grep -R -n -E 'acquire_live_response|score_week1|materialize_entering_2026_product_state|build_product_snapshot|collect_sleeper_qbs|ODDS_API_KEY' src/nfl_edge/backend; then
+            echo 'ERROR: forbidden live acquisition/scoring/materialization/generation symbol in backend package' >&2
+            exit 1
+          fi
+          echo 'BACKEND_REQUEST_PATH_STATIC_GUARD=PASS'
+
+      - name: Compile backend entry points
+        run: |
+          python -m py_compile \
+            src/nfl_edge/backend/__init__.py \
+            src/nfl_edge/backend/settings.py \
+            src/nfl_edge/backend/db.py \
+            src/nfl_edge/backend/publication.py \
+            src/nfl_edge/backend/exact_offer.py \
+            src/nfl_edge/backend/app.py \
+            scripts/run_backend_v1.py \
+            scripts/publish_backend_product_v1.py
+          echo 'BACKEND_COMPILE=PASS'
+
+      - name: Run backend acceptance suite
+        run: |
+          pytest -q \
+            tests/backend/test_backend_v1.py \
+            tests/contracts/test_live_product_backend_contract_v1.py \
+            tests/contracts/test_live_product_backend_contract_v1_final_review.py
+
+      - name: Re-run live product fixture gates at zero credits
+        run: |
+          pytest -q \
+            tests/live/test_live_markets_2026.py \
+            tests/live/test_live_product_2026.py
+
+      - name: Record zero-credit backend proof
+        if: always()
+        run: |
+          mkdir -p artifacts/backend_v1
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          proof = {
+              'gate': 'NFL_EDGE_BACKEND_V1_ZERO_CREDIT_CI',
+              'odds_api_key_present': False,
+              'live_odds_api_calls': 0,
+              'sleeper_collection_calls': 0,
+              'football_scorer_request_calls': 0,
+              'entering_state_materializer_request_calls': 0,
+              'product_generator_request_calls': 0,
+              'odds_api_credits_consumed': 0,
+              'methodology_changed': False,
+              'canonical_product_api_changed': False,
+          }
+          Path('artifacts/backend_v1/zero_credit_proof.json').write_text(
+              json.dumps(proof, indent=2, sort_keys=True) + '\n'
+          )
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-v1-proof-${{ github.sha }}
+          path: artifacts/backend_v1/
+          if-no-files-found: warn
