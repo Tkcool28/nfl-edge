@@ -33,14 +33,23 @@ jobs:
       - name: Install accepted numerical runtime and test tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e '.[model-development]' pyyaml pytest 'jsonschema>=4.23,<5' 'scikit-learn==1.8.0'
+          python -m pip install -e '.[model-development]' pyyaml pytest 'jsonschema>=4.23,<5' \
+            'numpy==2.4.2' 'scipy==1.17.1' 'scikit-learn==1.8.0'
 
-      - name: Prove accepted scikit-learn runtime
+      - name: Prove accepted numerical runtime
         run: |
           python - <<'PY'
+          import numpy
+          import scipy
           import sklearn
+          assert numpy.__version__ == '2.4.2', numpy.__version__
+          assert scipy.__version__ == '1.17.1', scipy.__version__
           assert sklearn.__version__ == '1.8.0', sklearn.__version__
-          print('ACCEPTED_SCIKIT_LEARN_RUNTIME', sklearn.__version__)
+          print('ACCEPTED_NUMERICAL_RUNTIME', {
+              'numpy': numpy.__version__,
+              'scipy': scipy.__version__,
+              'scikit_learn': sklearn.__version__,
+          })
           PY
 
       - name: Prove frozen methodology surfaces are untouched
@@ -94,6 +103,8 @@ jobs:
               'odds_api_key_present': False,
               'live_odds_api_calls': 0,
               'automatic_retries': 0,
+              'accepted_numpy_version': '2.4.2',
+              'accepted_scipy_version': '1.17.1',
               'accepted_scikit_learn_version': '1.8.0',
               'methodology_changed': False,
           }
