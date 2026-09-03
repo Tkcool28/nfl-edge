@@ -84,6 +84,23 @@ jobs:
             --output artifacts/live_2026_product/entering_product_state_v1.json \
             | tee artifacts/live_2026_product/state_materialization.json
 
+      - name: Prove accepted Task05F seed and causal 2025 chain
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload=json.loads(Path('artifacts/live_2026_product/entering_product_state_v1.json').read_text())
+          source=payload['source_evidence']
+          assert source['task05f_historical_board_sha256'] == '58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8'
+          assert source['task05f_frozen_state_sha256'] == '34ac985835ce4ceb65c6135b07851cd4f7e3ab2cc311315ae11efc773d1aa8c9'
+          assert source['task05f_starting_state_parity'] == 'PASS'
+          assert source['accepted_2025_advancement'] == 'CAUSAL_PROSPECTIVE'
+          assert source['accepted_2025_games'] == 285
+          assert source['accepted_2025_blocks'] == 22
+          assert source['combined_prior_games'] == 1693
+          print('TASK05F_TO_V2_2025_TO_2026_STATE_CHAIN=PASS')
+          PY
+
       - name: Run zero-credit market and product integration tests
         run: |
           pytest -q \
