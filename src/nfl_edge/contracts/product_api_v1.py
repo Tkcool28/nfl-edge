@@ -101,11 +101,13 @@ def validate_headline(value: Any, path: str = "headline") -> None:
             validate_american_odds(obj["american_odds"], f"{path}.american_odds")
 
 
-_ROOF_SCENARIO_OUTPUT_FIELDS = frozenset({
+_ROOF_RESOLVED_OUTPUT_FIELDS = frozenset({
     "roof_resolution_status",
     "roof_selected_scenario",
     "xgboost_open_probability",
     "xgboost_closed_probability",
+})
+_ROOF_SCENARIO_OUTPUT_FIELDS = _ROOF_RESOLVED_OUTPUT_FIELDS | frozenset({
     "xgboost_scenario_delta",
     "roof_scenario_downstream",
 })
@@ -150,9 +152,7 @@ def _validate_roof_scenario_downstream(value: Any, path: str) -> None:
                 f"{path} roof-sensitive state requires non-null open and closed states"
             )
         if obj["open_state"] == obj["closed_state"]:
-            raise ContractValidationError(
-                f"{path} roof-sensitive state requires open_state != closed_state"
-            )
+            raise ContractValidationError(f"{path} roof-sensitive state requires open_state != closed_state")
         if obj["shared_state"] is not None:
             raise ContractValidationError(f"{path} roof-sensitive state must not expose a shared state")
     else:
@@ -162,9 +162,17 @@ def _validate_roof_scenario_downstream(value: Any, path: str) -> None:
 def _validate_model_output(value: Any, path: str) -> None:
     obj = require_map(value, path)
     fields = {"status", "prediction", "support", "input_identity", "artifact_version", "warnings"}
-    is_roof_scenario = obj.get("status") == "AVAILABLE_WITH_ROOF_SCENARIOS"
-    require_keys = fields | (_ROOF_SCENARIO_OUTPUT_FIELDS if is_roof_scenario else frozenset())
-    require_exact_keys(obj, require_keys, path)
+    status_value = obj.get("status")
+    has_roof_fields = bool(set(obj) & _ROOF_SCENARIO_OUTPUT_FIELDS)
+    is_pending_roof = status_value == "AVAILABLE_WITH_ROOF_SCENARIOS"
+    is_resolved_roof = status_value == "AVAILABLE" and has_roof_fields
+    if is_pending_roof:
+        required_keys = fields | _ROOF_SCENARIO_OUTPUT_FIELDS
+    elif is_resolved_roof:
+        required_keys = fields | _ROOF_RESOLVED_OUTPUT_FIELDS
+    else:
+        required_keys = fields
+    require_exact_keys(obj, required_keys, path)
     status = require_enum(obj["status"], MODEL_OUTPUT_STATUSES, f"{path}.status")
     require_enum(obj["support"], SUPPORT_STATES, f"{path}.support")
     require_string(obj["input_identity"], f"{path}.input_identity")
@@ -174,7 +182,7 @@ def _validate_model_output(value: Any, path: str) -> None:
         raise ContractValidationError(f"{path}.prediction is required when status=AVAILABLE")
     if obj["prediction"] is not None:
         require_number(obj["prediction"], f"{path}.prediction")
-    if status == "AVAILABLE_WITH_ROOF_SCENARIOS":
+    if is_pending_roof:
         if obj["prediction"] is not None or obj["support"] != "PARTIAL":
             raise ContractValidationError(
                 f"{path} roof-scenario availability requires null prediction and PARTIAL support"
@@ -185,6 +193,23 @@ def _validate_model_output(value: Any, path: str) -> None:
         validate_probability(obj["xgboost_closed_probability"], f"{path}.xgboost_closed_probability")
         require_number(obj["xgboost_scenario_delta"], f"{path}.xgboost_scenario_delta", -1.0, 1.0)
         _validate_roof_scenario_downstream(obj["roof_scenario_downstream"], f"{path}.roof_scenario_downstream")
+    elif is_resolved_roof:
+        if obj["support"] != "SUPPORTED":
+            raise ContractValidationError(f"{path} resolved roof availability requires SUPPORTED support")
+        roof_status = require_enum(
+            obj["roof_resolution_status"], frozenset({"OPEN", "CLOSED"}), f"{path}.roof_resolution_status"
+        )
+        selected = require_enum(
+            obj["roof_selected_scenario"], frozenset({"open", "closed"}), f"{path}.roof_selected_scenario"
+        )
+        expected_selected = roof_status.lower()
+        if selected != expected_selected:
+            raise ContractValidationError(f"{path}.roof_selected_scenario must match resolved roof status")
+        open_probability = validate_probability(obj["xgboost_open_probability"], f"{path}.xgboost_open_probability")
+        closed_probability = validate_probability(obj["xgboost_closed_probability"], f"{path}.xgboost_closed_probability")
+        selected_probability = open_probability if selected == "open" else closed_probability
+        if obj["prediction"] != selected_probability:
+            raise ContractValidationError(f"{path}.prediction must equal the selected resolved roof scenario")
 
 
 def validate_game(value: Any, path: str = "game") -> None:
