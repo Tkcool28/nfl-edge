@@ -9,8 +9,10 @@ on:
       - 'src/nfl_edge/recommendation/staking_v1.py'
       - 'tests/contracts/test_live_product_backend_contract_v1.py'
       - 'tests/contracts/test_live_product_backend_contract_v1_final_review.py'
+      - 'tests/contracts/test_roof_scenario_product_schema_v1.py'
       - 'fixtures/contracts/**'
       - 'schemas/NFL_EDGE_PRODUCT_API_V1.schema.json'
+      - 'docs/LIVE_PRODUCT_BACKEND_CONTRACT_V1.md'
       - '.github/workflows/live-product-contract-v1.yml'
 
 permissions:
@@ -26,10 +28,10 @@ jobs:
         with:
           python-version: '3.11'
           cache: pip
-      - name: Install base production dependencies only
+      - name: Install base production dependencies plus contract test tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e . pytest
+          python -m pip install -e . pytest 'jsonschema>=4.23,<5'
       - name: Prove model-development extras are absent
         run: |
           python - <<'PY'
@@ -62,4 +64,5 @@ jobs:
         run: |
           pytest -q \
             tests/contracts/test_live_product_backend_contract_v1.py \
-            tests/contracts/test_live_product_backend_contract_v1_final_review.py
+            tests/contracts/test_live_product_backend_contract_v1_final_review.py \
+            tests/contracts/test_roof_scenario_product_schema_v1.py
