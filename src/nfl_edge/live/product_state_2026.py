@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 import polars as pl
+import sklearn
 
 from nfl_edge.holdout import product_2025
 from nfl_edge.recommendation.final_selectors_v1 import ValueSelectorState
@@ -44,6 +45,7 @@ HISTORICAL_ZIP = ARCH_ROOT / "post-v5-v2-historical-e2e.zip"
 DIAGNOSTIC_ZIP = ARCH_ROOT / "post-v5-v2-all-years-diagnostic.zip"
 EXPECTED_HISTORICAL_SHA256 = "056d349381cf3cf2e2fbe8929c3c5d435d43e0a30be44b8b7febb5f82b9208e0"
 EXPECTED_DIAGNOSTIC_SHA256 = "b38eae4df11dc52fe4fc5aeb87a402abcc8ffb9b60e3f252d56f56c9aef78b41"
+ACCEPTED_SCIKIT_LEARN_VERSION = "1.8.0"
 
 
 class Entering2026ProductStateError(RuntimeError):
@@ -338,6 +340,12 @@ def _fit_states_from_material(
 
 
 def materialize_entering_2026_product_state(root: Path) -> dict[str, Any]:
+    if sklearn.__version__ != ACCEPTED_SCIKIT_LEARN_VERSION:
+        raise Entering2026ProductStateError(
+            "entering-2026 state materialization must use the accepted architecture "
+            f"scikit-learn runtime {ACCEPTED_SCIKIT_LEARN_VERSION}; got {sklearn.__version__}"
+        )
+
     task05f = _load_script("live_2026_task05f", root / "scripts/task05f_evaluator_final_runner.py")
     confidence_v2 = _load_script("live_2026_confidence_v2", root / "scripts/task05g_model_confidence_v2_runner.py")
     spread_v3 = _load_script("live_2026_spread_v3", root / "scripts/task05g_spread_confidence_v3_runner.py")
@@ -440,9 +448,9 @@ def materialize_entering_2026_product_state(root: Path) -> dict[str, Any]:
         )
     spread_confidence_state = spread_v3._fit_state(spread_observations)
 
-    if len(all_games) != 1692:
+    if len(all_games) != 1693:
         raise Entering2026ProductStateError(
-            f"entering-2026 prior product game count drift: {len(all_games)} != 1692"
+            f"entering-2026 prior product game count drift: {len(all_games)} != 1693"
         )
 
     return {
@@ -454,6 +462,7 @@ def materialize_entering_2026_product_state(root: Path) -> dict[str, Any]:
             "historical_zip_sha256": EXPECTED_HISTORICAL_SHA256,
             "diagnostic_2025_zip": str(DIAGNOSTIC_ZIP),
             "diagnostic_2025_zip_sha256": EXPECTED_DIAGNOSTIC_SHA256,
+            "accepted_scikit_learn_version": ACCEPTED_SCIKIT_LEARN_VERSION,
             "historical_games": len(historical_games),
             "accepted_2025_games": len(games_2025),
             "accepted_2025_blocks": len(blocks_2025),
