@@ -14,6 +14,9 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - name: Print product-state materializer and loader tail
+      - name: Print materializer prefix and confidence consumers
         run: |
-          sed -n '300,560p' src/nfl_edge/live/product_state_2026.py
+          echo '=== PRODUCT_STATE_PREFIX ==='
+          sed -n '1,299p' src/nfl_edge/live/product_state_2026.py
+          echo '=== PRODUCT_CONFIDENCE_CONSUMERS ==='
+          grep -n -B 18 -A 35 -E 'ml_confidence|spread_residuals|spread_v3' src/nfl_edge/live/product_2026.py
