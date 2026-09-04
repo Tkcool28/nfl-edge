@@ -1,6 +1,11 @@
 name: Materialize Frontend V1
 
 on:
+  push:
+    branches:
+      - feat/frontend-api-pwa-v1
+    paths:
+      - '.github/workflows/materialize-frontend-v1.yml'
   workflow_dispatch:
 
 permissions:
