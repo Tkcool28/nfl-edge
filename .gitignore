@@ -27,6 +27,7 @@ dist/
 /data/raw/
 /data/cache/
 /data/live_snapshots/private/
+/data/runtime/
 
 # Derived market-data artifacts are normally regenerated from production RAW.
 # Task05F requires the exact frozen 05E T-60 canonical inputs for deterministic
