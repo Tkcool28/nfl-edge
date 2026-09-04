@@ -9,8 +9,8 @@ const read=name=>readFileSync(resolve(root,name),'utf8');
 
 test('saved UX visual lineage is materially restored',()=>{
   const html=read('index.html'),css=read('saved-ux.css');
-  for(const marker of ['theme-popover','theme-grid','headlines','hcard','slate','games','tabbar'])assert.match(html,new RegExp(marker));
-  for(const marker of ['theme-tile-fancy','theme-tile-modern','theme-tile-extreme','hcard\\[data-lane="HHR"\\]','ribbon-balanced','edge-purple'])assert.match(css,new RegExp(marker));
+  for(const marker of ['theme-popover','theme-grid','headlines','slate','games','tabbar'])assert.match(html,new RegExp(marker));
+  for(const marker of ['theme-tile-fancy','theme-tile-modern','theme-tile-extreme','\\.hcard','hcard\\[data-lane="HHR"\\]','ribbon-balanced','edge-purple'])assert.match(css,new RegExp(marker));
 });
 
 test('production frontend has no saved mock artifact authority',()=>{
