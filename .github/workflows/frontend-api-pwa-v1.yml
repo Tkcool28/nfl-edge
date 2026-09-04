@@ -25,10 +25,20 @@ jobs:
         with: {python-version: '3.11', cache: pip}
       - uses: actions/setup-node@v4
         with: {node-version: '22'}
-      - name: Install bounded dependencies
+      - name: Install accepted backend runtime and bounded frontend test dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e . pytest httpx jsonschema
+          python -m pip install -e '.[model-development]' pyyaml pytest httpx jsonschema \
+            'numpy==2.4.2' 'scipy==1.17.1' 'scikit-learn==1.8.0'
+      - name: Prove accepted numerical runtime
+        run: |
+          python - <<'PY'
+          import numpy, scipy, sklearn
+          assert numpy.__version__ == '2.4.2'
+          assert scipy.__version__ == '1.17.1'
+          assert sklearn.__version__ == '1.8.0'
+          print('ACCEPTED_NUMERICAL_RUNTIME=PASS')
+          PY
       - name: Prove frozen methodology and canonical product contract untouched
         run: |
           git fetch origin main
