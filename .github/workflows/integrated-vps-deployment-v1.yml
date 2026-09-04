@@ -1,0 +1,40 @@
+name: Integrated VPS Deployment V1
+
+on:
+  pull_request:
+    paths:
+      - "deploy/**"
+      - "docs/deployment_contract.md"
+      - "docs/integrated_vps_deployment_v1.md"
+      - "tests/deploy/**"
+      - ".github/workflows/integrated-vps-deployment-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integrated-vps-deployment-v1-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deployment-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test tooling
+        run: python -m pip install -r requirements/dev.txt
+
+      - name: Validate deployment contract tests
+        run: python -m pytest -q tests/deploy/test_integrated_vps_deployment_contract.py
+
+      - name: Validate frontend activation shell syntax
+        run: bash -n deploy/scripts/sync_frontend_v1.sh
