@@ -17,3 +17,9 @@ tiles.forEach(tile=>tile.addEventListener('click',()=>{apply(tile.dataset.themeC
 document.addEventListener('click',e=>{if(!popover.hidden&&!popover.contains(e.target)&&e.target!==trigger)close()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 document.getElementById('account-quick-btn')?.addEventListener('click',()=>document.querySelector('[data-nav="account"]')?.click());
+function relabelHeadlineActions(){
+  document.querySelectorAll('#headlines [data-log]').forEach(button=>{button.textContent='Log Bet'});
+  document.querySelectorAll('#headlines [data-signin]').forEach(button=>{button.textContent='Sign in to log bet'});
+}
+const headlines=document.getElementById('headlines');
+if(headlines){relabelHeadlineActions();new MutationObserver(relabelHeadlineActions).observe(headlines,{childList:true,subtree:true})}
