@@ -18,8 +18,8 @@ document.addEventListener('click',e=>{if(!popover.hidden&&!popover.contains(e.ta
 document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 document.getElementById('account-quick-btn')?.addEventListener('click',()=>document.querySelector('[data-nav="account"]')?.click());
 function relabelHeadlineActions(){
-  document.querySelectorAll('#headlines [data-log]').forEach(button=>{button.textContent='Log Bet'});
-  document.querySelectorAll('#headlines [data-signin]').forEach(button=>{button.textContent='Sign in to log bet'});
+  document.querySelectorAll('#headlines [data-log]').forEach(button=>{if(button.textContent!=='Log Bet')button.textContent='Log Bet'});
+  document.querySelectorAll('#headlines [data-signin]').forEach(button=>{if(button.textContent!=='Sign in to log bet')button.textContent='Sign in to log bet'});
 }
 const headlines=document.getElementById('headlines');
 if(headlines){relabelHeadlineActions();new MutationObserver(relabelHeadlineActions).observe(headlines,{childList:true,subtree:true})}
