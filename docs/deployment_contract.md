@@ -1,110 +1,217 @@
-# Deployment Contract
+# NFL EDGE Production Deployment Contract
 
 ## Purpose
 
-Define a reproducible static deployment that does not turn the VPS into a training or application runtime.
+Define the production boundary for the integrated NFL EDGE application: HTTPS frontend/PWA, same-origin FastAPI API, persistent users/wagers, and validated last-good product publication.
 
-## Production target
+This contract supersedes the former static-only deployment rule. It does not change football-model methodology, evaluators, selectors, staking, or sportsbook-provider policy.
+
+## Production origin
 
 ```text
 https://nfl.tkhermes.duckdns.org
 ```
 
-Caddy serves a dedicated NFL Edge static directory.
+Caddy is the only public application listener for NFL EDGE.
+
+## Production request path
+
+```text
+browser/PWA
+  -> Caddy HTTPS
+     -> static frontend release under /srv/nfl-edge/frontend/current
+
+browser/PWA
+  -> Caddy HTTPS /api/v1/...
+     -> 127.0.0.1:8769
+        -> scripts/run_backend_v1.py
+           -> FastAPI
+              -> persistent SQLite user/wager state
+              -> validated last-good product snapshot
+              -> frozen entering-2026 decision state for exact-offer evaluation
+```
+
+HTTP requests must never trigger Sleeper acquisition, football scoring, sportsbook acquisition, model fitting, or product generation.
+
+## Production paths
+
+The default integrated deployment uses these stable paths:
+
+```text
+repository:       /root/nfl-edge
+frontend releases:/srv/nfl-edge/frontend/releases/<git-sha>
+frontend current: /srv/nfl-edge/frontend/current
+backend env:      /etc/nfl-edge/backend.env
+backend DB:       /var/lib/nfl-edge/backend/nfl_edge_users_v1.sqlite3
+product root:     /var/lib/nfl-edge/product_v1
+backend listener: 127.0.0.1:8769
+decision state:   /root/nfl-edge/data/live/2026/entering_product_state_v1.json
+```
+
+The DB and product publication directories are deliberately outside the Git working tree. Git checkout, reset, or frontend activation must not replace them.
 
 ## Allowed production contents
 
-- Generated HTML
-- CSS
-- JavaScript
-- Public JSON
-- Static images/icons when later approved
-- Caddy configuration for the isolated site
-- Bounded deployment and rollback records
+- Git-tracked NFL EDGE application code at a declared commit.
+- One Python environment required to run the merged backend and existing scheduled Sleeper services.
+- Versioned static frontend releases generated directly from the merged `frontend/` directory.
+- The dedicated FastAPI backend systemd service.
+- Existing reviewed Sleeper evidence services/timers.
+- Persistent SQLite user/profile/session/wager state under the declared runtime directory.
+- Validated canonical product publications, immutable versions, `latest.json`, and publication status under the declared publication directory.
+- Caddy configuration for the isolated NFL EDGE site.
+- Bounded backup, deployment, validation, and rollback records.
 
-## Prohibited production contents
+## Prohibited production behavior/content
 
-- Raw play-by-play archives
-- Historical model-training tables
-- Training notebooks
-- NFL Python virtual environments
-- Streamlit
-- XGBoost training processes
-- Odds API credentials
-- A permanent NFL backend service
-- Mutable files that exist only on the VPS and cannot be reconstructed from GitHub
+- Model refitting or methodology changes during deployment or backend startup.
+- Raw historical training archives copied to the public/static tree.
+- Training notebooks or ad-hoc model-development processes on the request-serving path.
+- Streamlit as production authority.
+- A second backend/server entrypoint when `scripts/run_backend_v1.py` already exists.
+- Direct public exposure of the FastAPI listener.
+- Browser-side sportsbook-provider calls.
+- Odds API credentials in frontend assets or the backend service environment.
+- Live SQLite files, session tokens, passwords, provider keys, or private runtime artifacts committed to Git.
+- Production DB/product files inside paths subject to `git clean`, checkout replacement, or frontend release activation.
+- API responses stored as authoritative service-worker cache state.
 
-## Deployment source
+## Backend service contract
 
-Only a validated static bundle created from a declared repository commit and scoring run may deploy.
+The backend must:
 
-Required deployment metadata:
+- use `scripts/run_backend_v1.py`;
+- bind `127.0.0.1:8769` unless a reviewed deployment change explicitly selects another loopback port;
+- load settings through the existing `NFL_EDGE_*` environment contract;
+- use `Restart=on-failure`, bounded restart behavior, and journal logging;
+- start after local filesystem/network prerequisites;
+- have no provider acquisition command in `ExecStart`, `ExecStartPre`, or request handling;
+- write only to declared runtime/publication locations required by the application.
+
+## SQLite durability contract
+
+Production DB authority is:
 
 ```text
-deployment_id
-repository_commit_sha
-site_build_version
-public_run_id
-bundle_sha256
-created_at_utc
-deployed_at_utc
-target_path
-previous_deployment_id
+/var/lib/nfl-edge/backend/nfl_edge_users_v1.sqlite3
 ```
 
-## Staging and atomicity
+The merged database layer remains authoritative for:
 
-1. Build the bundle outside the live directory.
-2. Validate required files and JSON schema.
-3. Calculate the bundle checksum.
-4. Copy to a versioned staging directory on the VPS.
-5. Verify file counts/checksums.
-6. Atomically switch the live path or perform an equivalent safe replacement.
-7. Run an external URL smoke test.
-8. Retain the previous successful version for rollback.
+- WAL journal mode;
+- `busy_timeout=30000` ms;
+- `foreign_keys=ON` on application connections;
+- explicit `BEGIN IMMEDIATE` write transactions;
+- commit/rollback semantics.
 
-## Restricted credentials
+Backups must use SQLite's online backup mechanism (CLI `.backup` or Python `sqlite3.Connection.backup`) rather than copying only the main DB file while the service is writing. A created backup is not accepted until `PRAGMA integrity_check` returns `ok`.
 
-Deployment credentials should be limited to the NFL static deployment path and necessary commands. They must not grant broad access to unrelated repositories or services when a narrower option is practical.
+A restore is performed with the backend stopped. It must preserve a pre-restore copy, remove stale WAL/SHM companions only while the service is stopped, restore controlled ownership/permissions, restart the backend, and re-run health/user-state proof.
+
+## Product publication contract
+
+Production product authority is:
+
+```text
+/var/lib/nfl-edge/product_v1/latest.json
+```
+
+Publication uses the existing `ProductStore` / `scripts/publish_backend_product_v1.py` path. Candidates validate before promotion; immutable versions remain available when created by the publication implementation; a failed candidate must not truncate or replace the last-good `latest.json`.
+
+The backend loads the validated last-good product at startup and serves it independently of later acquisition failures. Runtime health must report FRESH/AGING/STALE/unavailable and refresh-failure state truthfully.
+
+## Exact-offer decision state
+
+The backend reads the already-materialized entering-2026 decision state from the configured `NFL_EDGE_DECISION_STATE_PATH`. Deployment must point to the accepted tracked state for the deployed commit and must not regenerate/refit it during backend startup.
+
+## Same-origin/Caddy contract
+
+Caddy must:
+
+- terminate HTTPS for `nfl.tkhermes.duckdns.org`;
+- serve the activated `frontend/` release;
+- reverse proxy `/api/*` to the loopback backend without stripping `/api`;
+- keep API responses non-cacheable at the browser/proxy boundary;
+- serve the service worker and manifest at root scope;
+- preserve correct static MIME types;
+- validate the full Caddy configuration before reload;
+- leave unrelated site blocks untouched.
+
+FastAPI is not exposed directly through the public firewall/listener surface.
+
+## Authentication/security contract
+
+Production sessions retain the merged backend behavior:
+
+- server-side session persistence;
+- random client token with only its hash persisted;
+- HttpOnly cookie;
+- Secure cookie over HTTPS;
+- SameSite policy from reviewed settings;
+- cookie path `/`;
+- expiry enforced server-side;
+- logout revokes the server-side session;
+- username/session authority is not stored in browser local storage.
+
+`NFL_EDGE_ALLOWED_HOSTS` must include the final production hostname. For the same-origin deployment, `NFL_EDGE_ALLOWED_ORIGIN` is intentionally empty unless VPS validation proves an explicit value is required; this avoids adding CORS when the frontend and API share one origin.
+
+## Frontend/PWA contract
+
+The merged `frontend/` directory is production authority. Do not deploy the obsolete staged `NFL_Front` tree.
+
+The service worker may cache the app shell, but `/api/...` remains network/no-store. Offline navigation may show the offline shell; cached recommendations must not be presented as current actionable state.
+
+## Scheduled pipelines
+
+Sleeper / live football scoring / live markets / product generation are operationally separate from the request-serving backend. Existing Sleeper cadence/methodology is not changed by this deployment.
+
+Live provider acquisition is not required for Caddy/backend/frontend plumbing proof. Deployment target cost is `0` new Odds API credits unless a later explicit acceptance step requires a bounded live refresh.
+
+## Deployment source and atomicity
+
+Application code deploys only from a declared merged Git commit. Frontend activation uses `deploy/scripts/sync_frontend_v1.sh`, which stages a versioned release and atomically changes the `current` symlink.
+
+Before updating the production repo:
+
+1. inventory branch/HEAD, tracked modifications, staged files, untracked/runtime paths, services, listeners, Caddy, DB/product locations, and Sleeper timers;
+2. do not run `git clean`;
+3. preserve unrelated runtime/untracked artifacts;
+4. fetch the reviewed merged commit;
+5. update code without replacing `/var/lib/nfl-edge` state;
+6. activate the frontend release;
+7. restart only the NFL EDGE backend if required;
+8. validate local health and external HTTPS.
 
 ## Caddy change rules
 
-- Add one isolated site block for NFL Edge.
-- Do not modify existing site blocks.
-- Validate the full Caddy configuration before reload.
-- Reload rather than restart when appropriate.
-- Record the pre-change configuration checksum and preserve a rollback copy.
-
-## Non-interference proof
-
-Deployment proof must confirm:
-
-- Existing Caddy configuration remains valid.
-- Existing public endpoints remain reachable.
-- No unrelated service was restarted or reconfigured.
-- No existing site directory was modified.
-- The NFL site uses its own directory and hostname.
+- Add/update only the isolated NFL EDGE site block.
+- Preserve a pre-change Caddy config copy/checksum.
+- Run `caddy validate` against the full production config before reload.
+- Reload rather than restart when possible.
+- Verify unrelated sites/services afterward.
 
 ## Rollback
 
-A rollback must restore the previous successful static bundle without rebuilding the model or fetching new data.
+A code/frontend rollback must not roll back user/wager data.
 
-Rollback proof includes:
+- Code: switch the repo to the previous known-good commit (detached is acceptable for bounded rollback), then restart only the backend.
+- Frontend: atomically point `/srv/nfl-edge/frontend/current` at the previous release.
+- Caddy: restore the preserved previous configuration only if the NFL EDGE site change itself caused the fault, validate, then reload.
+- Product: retain/restore the prior validated last-good publication without provider acquisition.
+- DB: restore from an integrity-checked SQLite backup only when database recovery is actually required; ordinary code rollback does not replace the DB.
 
-- Previous deployment ID
-- Command or atomic switch used
-- Resulting live bundle checksum
-- Public URL smoke test
+## Non-interference proof
 
-## Cleanup
+Acceptance must confirm:
 
-After final production proof:
-
-- Remove temporary deployment directories not needed for rollback.
-- Remove temporary Hermes training environments and raw local data.
-- Confirm no NFL venv or raw training data exists on the VPS.
-- Keep only bounded successful rollback bundles according to the retention policy.
+- existing Sleeper services/timers remain healthy;
+- unrelated Caddy sites remain valid/reachable;
+- no unrelated service is restarted/reconfigured;
+- no unrelated site directory is modified;
+- backend listener is loopback only;
+- persistent DB/product paths survive code and service restart;
+- provider requests and Odds API credits consumed are reported explicitly.
 
 ## Failure behavior
 
-A deployment failure may not damage the last known good public site. The workflow stops and reports when validation, transfer, checksum, Caddy validation, or smoke testing fails.
+A deployment failure may not damage the last-good product, persistent user/wager DB, previous frontend release, or unrelated VPS applications. Stop and report on failed validation, unexpected repo state, invalid Caddy config, unhealthy backend, corrupt backup, or security/path mismatch rather than forcing promotion.

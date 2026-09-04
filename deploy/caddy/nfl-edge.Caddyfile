@@ -1,0 +1,39 @@
+# NFL EDGE isolated production site block.
+# Integrate only this site into the existing production Caddy configuration.
+# Validate the complete production config before reload.
+
+nfl.tkhermes.duckdns.org {
+    encode zstd gzip
+
+    # API stays same-origin and is never served from a cache.
+    @api path /api/*
+    handle @api {
+        header Cache-Control "no-store"
+        reverse_proxy 127.0.0.1:8769
+    }
+
+    # Root-scope PWA control files should be revalidated aggressively.
+    @service_worker path /sw.js
+    handle @service_worker {
+        root * /srv/nfl-edge/frontend/current
+        header Cache-Control "no-cache, no-store, must-revalidate"
+        file_server
+    }
+
+    @manifest path /manifest.webmanifest
+    handle @manifest {
+        root * /srv/nfl-edge/frontend/current
+        header Cache-Control "no-cache"
+        header Content-Type "application/manifest+json"
+        file_server
+    }
+
+    # The merged frontend/ directory is activated into a versioned release and
+    # exposed through the current symlink. try_files supports client navigation
+    # without intercepting /api because the API handler above wins first.
+    handle {
+        root * /srv/nfl-edge/frontend/current
+        try_files {path} /index.html
+        file_server
+    }
+}

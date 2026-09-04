@@ -1,0 +1,50 @@
+[Unit]
+Description=NFL EDGE FastAPI backend V1
+Documentation=file:///root/nfl-edge/docs/integrated_vps_deployment_v1.md
+After=network-online.target local-fs.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+ConditionPathExists=/root/nfl-edge/scripts/run_backend_v1.py
+ConditionPathExists=/etc/nfl-edge/backend.env
+
+[Service]
+Type=simple
+WorkingDirectory=/root/nfl-edge
+EnvironmentFile=/etc/nfl-edge/backend.env
+Environment="PYTHONPATH=/root/nfl-edge/src"
+Environment="PYTHONDONTWRITEBYTECODE=1"
+Environment="PYTHONUNBUFFERED=1"
+ExecStart=/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/run_backend_v1.py
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=30
+TimeoutStopSec=30
+KillSignal=SIGINT
+UMask=0027
+
+# The current production repository/venv live below /root, matching the existing
+# NFL EDGE Sleeper units. Filesystem writes are restricted to declared runtime
+# state; revisit an unprivileged service account only with a reviewed relocation
+# of readable code/interpreter paths outside /root.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/nfl-edge/backend /var/lib/nfl-edge/product_v1
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictNamespaces=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+SystemCallArchitectures=native
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nfl-edge-backend
+
+[Install]
+WantedBy=multi-user.target
