@@ -186,17 +186,17 @@ class BackendDatabase:
         return session_id
 
     def resolve_session(self, *, token_hash: str, now: str) -> dict[str, Any] | None:
-        with self._write() as conn:
+        conn = self._connect()
+        try:
             row = conn.execute(
                 "SELECT s.session_id, s.user_id, s.expires_at, u.username, u.username_norm, u.created_at AS user_created_at "
                 "FROM sessions s JOIN users u ON u.user_id=s.user_id "
                 "WHERE s.token_hash=? AND s.revoked_at IS NULL AND s.expires_at>? AND u.active=1",
                 (token_hash, now),
             ).fetchone()
-            if row is None:
-                return None
-            conn.execute("UPDATE sessions SET last_seen_at=? WHERE session_id=?", (now, row["session_id"]))
-            return dict(row)
+            return dict(row) if row else None
+        finally:
+            conn.close()
 
     def revoke_session(self, *, token_hash: str) -> None:
         now = utc_now()
