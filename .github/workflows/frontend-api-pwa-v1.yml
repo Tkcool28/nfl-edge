@@ -1,0 +1,110 @@
+name: Frontend API PWA V1
+on:
+  push:
+    branches: [feat/frontend-api-pwa-v1]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  frontend-api-pwa-v1:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      PYTHONHASHSEED: "0"
+      NFL_EDGE_COOKIE_SECURE: "false"
+      NFL_EDGE_DB_PATH: "/tmp/nfl-edge-frontend-ci.sqlite3"
+      NFL_EDGE_PRODUCT_DIR: "/tmp/nfl-edge-frontend-ci-product"
+      NFL_EDGE_BACKEND_HOST: "127.0.0.1"
+      NFL_EDGE_BACKEND_PORT: "8770"
+      NFL_EDGE_AUTH_RATE_LIMIT_PER_MINUTE: "100"
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11', cache: pip}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Install accepted backend runtime and bounded frontend test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest httpx jsonschema \
+            'numpy==2.4.2' 'scipy==1.17.1' 'scikit-learn==1.8.0'
+      - name: Prove accepted numerical runtime
+        run: |
+          python - <<'PY'
+          import numpy, scipy, sklearn
+          assert numpy.__version__ == '2.4.2'
+          assert scipy.__version__ == '1.17.1'
+          assert sklearn.__version__ == '1.8.0'
+          print('ACCEPTED_NUMERICAL_RUNTIME=PASS')
+          PY
+      - name: Prove frozen methodology and canonical product contract untouched
+        run: |
+          git fetch origin main
+          changed="$(git diff --name-only origin/main...HEAD)"
+          echo "$changed"
+          if echo "$changed" | grep -E '^(src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/value/evaluators.py$|src/nfl_edge/value/accepted_calibration.py$|src/nfl_edge/recommendation/final_selectors_v1.py$|src/nfl_edge/recommendation/headline_staking_v1.py$|src/nfl_edge/recommendation/staking_v1.py$|src/nfl_edge/staking_policy_v1.py$|src/nfl_edge/live/product_2026.py$|src/nfl_edge/live/markets_2026.py$|src/nfl_edge/live/roof_scenarios.py$|config/task05f_|config/task05g_|config/expected_margin_v1.yaml$|config/qb_elo_v1.yaml$|config/totals_)'; then exit 1; fi
+          git diff --exit-code origin/main...HEAD -- src/nfl_edge/contracts/product_api_v1.py schemas/NFL_EDGE_PRODUCT_API_V1.schema.json
+      - name: Prove zero provider access
+        run: |
+          test -z "${ODDS_API_KEY:-}"
+          if grep -RInE 'ODDS_API_KEY|api\.the-odds-api\.com|api\.sleeper|data/latest\.json' frontend --include='*.js' --include='*.html'; then exit 1; fi
+      - name: Parse and test static/PWA boundaries
+        run: |
+          node --check frontend/api.js
+          node --check frontend/ui-core.js
+          node --check frontend/app.js
+          node --check frontend/sw.js
+          python -m py_compile scripts/serve_frontend_backend_smoke_v1.py
+          pytest -q tests/frontend/test_frontend_static_contract_v1.py
+          node --test frontend/tests/frontend.test.mjs
+      - name: Run real backend integration flow
+        run: pytest -q tests/frontend/test_frontend_backend_integration_v1.py
+      - name: Publish fixture and launch same-origin smoke
+        run: |
+          rm -rf "$NFL_EDGE_PRODUCT_DIR" "$NFL_EDGE_DB_PATH"
+          python scripts/publish_backend_product_v1.py fixtures/contracts/nfl_edge_product_api_v1_week1_mock.json --publication-dir "$NFL_EDGE_PRODUCT_DIR"
+          python scripts/serve_frontend_backend_smoke_v1.py --host 127.0.0.1 --port 8770 >/tmp/nfl-edge-front-server.log 2>&1 &
+          echo $! >/tmp/nfl-edge-front-server.pid
+          python - <<'PY'
+          import json,time,urllib.request
+          for _ in range(60):
+              try:
+                  with urllib.request.urlopen('http://127.0.0.1:8770/api/v1/health',timeout=1) as r: body=json.load(r)
+                  assert body['api_healthy'] and body['product_available']; print('SAME_ORIGIN_BACKEND_READY=PASS'); break
+              except Exception: time.sleep(.25)
+          else: raise SystemExit('server not ready')
+          PY
+      - name: Prove anonymous render at 320px
+        run: |
+          chrome="$(command -v google-chrome || command -v chromium || true)"
+          test -n "$chrome"
+          mkdir -p artifacts/frontend_v1
+          "$chrome" --headless=new --no-sandbox --disable-gpu --window-size=320,900 --virtual-time-budget=5000 --dump-dom http://127.0.0.1:8770/ > artifacts/frontend_v1/rendered-320.html
+          "$chrome" --headless=new --no-sandbox --disable-gpu --window-size=320,900 --virtual-time-budget=5000 --screenshot=artifacts/frontend_v1/mobile-320.png http://127.0.0.1:8770/
+          grep -q 'Hit Rate' artifacts/frontend_v1/rendered-320.html
+          grep -q 'BALANCED\|Balanced' artifacts/frontend_v1/rendered-320.html
+          grep -q 'VALUE\|Value' artifacts/frontend_v1/rendered-320.html
+          grep -q 'backend-calculated dollar stakes' artifacts/frontend_v1/rendered-320.html
+          ! grep -q 'Loading live recommendations' artifacts/frontend_v1/rendered-320.html
+      - name: Record zero-credit proof
+        if: always()
+        run: |
+          mkdir -p artifacts/frontend_v1
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p={'gate':'NFL_FRONT_API_INTEGRATION_READY_CI','odds_api_key_present':False,'live_odds_api_calls':0,'odds_api_credits_consumed':0,'frontend_provider_calls':0,'frontend_model_logic_added':False,'frontend_staking_logic_added':False,'api_responses_cached_by_service_worker':False,'canonical_product_api_changed':False,'frozen_methodology_changed':False}
+          Path('artifacts/frontend_v1/zero_credit_proof.json').write_text(json.dumps(p,indent=2,sort_keys=True)+'\n')
+          PY
+          test ! -f /tmp/nfl-edge-front-server.log || cp /tmp/nfl-edge-front-server.log artifacts/frontend_v1/server.log
+      - name: Stop smoke server
+        if: always()
+        run: test ! -f /tmp/nfl-edge-front-server.pid || kill "$(cat /tmp/nfl-edge-front-server.pid)" 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-api-pwa-v1-${{ github.sha }}
+          path: artifacts/frontend_v1/
+          if-no-files-found: warn
