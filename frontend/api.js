@@ -1,7 +1,7 @@
 export class ApiError extends Error { constructor(status,message,payload=null){ super(message||`Request failed (${status})`); this.name='ApiError'; this.status=status; this.payload=payload; } }
 function base(x){ return x ? String(x).replace(/\/$/,'') : ''; }
 export class ApiClient {
-  constructor({baseUrl='',fetchImpl=globalThis.fetch}={}){ if(typeof fetchImpl!=='function') throw new TypeError('fetch implementation required'); this.baseUrl=base(baseUrl); this.fetchImpl=fetchImpl; }
+  constructor({baseUrl='',fetchImpl}={}){ const impl=fetchImpl??(typeof globalThis.fetch==='function'?globalThis.fetch.bind(globalThis):null); if(typeof impl!=='function') throw new TypeError('fetch implementation required'); this.baseUrl=base(baseUrl); this.fetchImpl=impl; }
   async request(path,{method='GET',body,headers={},signal}={}){
     const init={method,credentials:'include',cache:'no-store',headers:{Accept:'application/json',...headers},signal};
     if(body!==undefined){ init.headers['Content-Type']='application/json'; init.body=JSON.stringify(body); }
