@@ -38,8 +38,8 @@ test('production-only controls survive the restored shell',()=>{
   assert.match(html,/Log bet/i);
 });
 
-test('320px compatibility rules are explicit',()=>{
-  const css=read('saved-ux.css');
-  assert.match(css,/@media\(max-width:320px\)/);
-  assert.match(css,/grid-template-columns:repeat\(4,1fr\)/);
+test('320px compatibility rules and four production tabs are explicit',()=>{
+  const saved=read('saved-ux.css'),base=read('styles.css');
+  assert.match(saved,/@media\(max-width:320px\)/);
+  assert.match(base,/grid-template-columns:repeat\(4,1fr\)/);
 });
