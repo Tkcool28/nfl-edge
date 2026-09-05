@@ -14,6 +14,8 @@ test('production layout remains primary while seven themes and compare controls 
   for(const marker of ['theme-popover','compare-toggle','compare-info','compare-help'])assert.match(html,new RegExp(marker));
   for(const theme of ['light','cream','slate','mint','fancy','modern','extreme'])assert.match(html,new RegExp(`data-theme-choice="${theme}"`));
   assert.match(html,/ui-polish\.css/);
+  assert.match(html,/ui-branding\.css/);
+  assert.match(html,/nfl-edge-wordmark\.png/);
   assert.match(css,/Theme: Fancy/);assert.match(css,/Theme: Modern/);assert.match(css,/Theme: Extreme/);
   assert.match(css,/--ribbon-value:#146cff/);
 });
@@ -35,7 +37,9 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/fetch\(request,\{cache:'no-store'\}\)/);
   assert.match(sw,/market-compare\.js/);
   assert.match(sw,/ui-polish\.css/);
-  assert.match(sw,/nfl-edge-shell-v7/);
+  assert.match(sw,/ui-branding\.css/);
+  assert.match(sw,/nfl-edge-wordmark\.png/);
+  assert.match(sw,/nfl-edge-shell-v8/);
 });
 
 test('Pinnacle help semantics match approved color contract',()=>{
@@ -112,10 +116,22 @@ test('theme and comparison settings are persisted locally without provider API a
   assert.doesNotMatch(ux,/the-odds-api|api\.sleeper/i);
 });
 
+test('Ultra profile selection requires a presentation-only acknowledgement',()=>{
+  const ux=read('ux.js'),branding=read('ui-branding.css');
+  assert.match(ux,/Ultra staking/);
+  assert.match(ux,/does not increase win probability/);
+  assert.match(ux,/expected percentage return/);
+  assert.match(ux,/Only the dollar swings get larger/);
+  assert.match(ux,/data-ultra-confirm/);
+  assert.match(branding,/risk-warning/);
+});
+
 test('mobile rules and four production tabs remain explicit',()=>{
-  const saved=read('saved-ux.css'),base=read('styles.css'),html=read('index.html'),polish=read('ui-polish.css');
+  const saved=read('saved-ux.css'),base=read('styles.css'),html=read('index.html'),polish=read('ui-polish.css'),branding=read('ui-branding.css');
   assert.match(saved,/@media\(max-width:320px\)/);
   assert.match(polish,/@media\(max-width:320px\)/);
   assert.match(base,/grid-template-columns:repeat\(4,1fr\)/);
   assert.equal((html.match(/data-nav=/g)||[]).length,4);
+  assert.equal((html.match(/class="tab-icon"/g)||[]).length,4);
+  assert.match(branding,/\.tab \.tab-icon/);
 });
