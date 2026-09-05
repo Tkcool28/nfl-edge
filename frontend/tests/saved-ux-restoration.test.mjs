@@ -17,13 +17,15 @@ test('production layout remains primary while seven themes and compare controls 
   assert.match(html,/ui-branding\.css/);
   assert.match(html,/ui-motion\.css/);
   assert.match(html,/ui-theme-finish\.css/);
+  assert.match(html,/manual-guidance\.js/);
+  assert.match(html,/install-affordance\.js/);
   assert.match(html,/nfl-edge-wordmark\.png/);
   assert.match(css,/Theme: Fancy/);assert.match(css,/Theme: Modern/);assert.match(css,/Theme: Extreme/);
   assert.match(css,/--ribbon-value:#146cff/);
 });
 
 test('production frontend has no saved mock artifact authority',()=>{
-  for(const name of ['index.html','api.js','ui-core.js','app.js','ux.js','market-compare.js','sw.js']){
+  for(const name of ['index.html','api.js','ui-core.js','app.js','ux.js','manual-guidance.js','install-affordance.js','market-compare.js','sw.js']){
     const source=read(name);
     assert.doesNotMatch(source,/data\/latest\.json/i,`${name} must not load saved mock data`);
     assert.doesNotMatch(source,/MOCK_GAMES|HEADLINES\s*=\s*\{/i,`${name} must not restore saved mock model state`);
@@ -42,8 +44,10 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/ui-branding\.css/);
   assert.match(sw,/ui-motion\.css/);
   assert.match(sw,/ui-theme-finish\.css/);
+  assert.match(sw,/manual-guidance\.js/);
+  assert.match(sw,/install-affordance\.js/);
   assert.match(sw,/nfl-edge-wordmark\.png/);
-  assert.match(sw,/nfl-edge-shell-v13/);
+  assert.match(sw,/nfl-edge-shell-v14/);
 });
 
 test('Pinnacle help semantics match approved color contract',()=>{
@@ -88,6 +92,28 @@ test('game detail offers are actionable and reuse exact-offer evaluator without 
   assert.match(app,/openDetailExact/);
   assert.match(app,/Log wager/);
   assert.doesNotMatch(app,/the-odds-api|api\.sleeper/i);
+});
+
+test('manual Check explains price quality separately from recommendation and can log a user choice',()=>{
+  const guidance=read('manual-guidance.js');
+  assert.match(guidance,/VALUE PRICE/);
+  assert.match(guidance,/PLAYABLE PRICE/);
+  assert.match(guidance,/OUTSIDE RANGE/);
+  assert.match(guidance,/No recommended stake because model reliability is LOW\./);
+  assert.match(guidance,/does not have enough confidence in this model state to recommend\./);
+  assert.match(guidance,/You can log this wager for tracking, but NFL EDGE is not recommending a stake\./);
+  assert.match(guidance,/buildExactWagerPayload/);
+  assert.match(guidance,/api\.createWager/);
+  assert.doesNotMatch(guidance,/the-odds-api|api\.sleeper|ODDS_API_KEY/i);
+});
+
+test('install affordance remains visible with native prompt or browser-instruction fallback',()=>{
+  const install=read('install-affordance.js');
+  assert.match(install,/beforeinstallprompt/);
+  assert.match(install,/Install App/);
+  assert.match(install,/Install app or Add to Home screen/);
+  assert.match(install,/display-mode: standalone/);
+  assert.match(install,/appinstalled/);
 });
 
 test('game detail has real market tabs and visual assets with stable fallbacks',()=>{
