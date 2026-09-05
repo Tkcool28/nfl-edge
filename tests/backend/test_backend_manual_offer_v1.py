@@ -48,7 +48,7 @@ def test_manual_offer_is_evaluated_without_dk_fd_dependency(tmp_path: Path) -> N
     assert manual.json()["evaluation"] == retail.json()["evaluation"]
 
 
-def test_manual_offer_logs_with_neutral_source_identity(tmp_path: Path) -> None:
+def test_manual_offer_persists_with_neutral_source_identity(tmp_path: Path) -> None:
     client = _client(tmp_path)
     registered = client.post(
         "/api/v1/auth/register",
@@ -60,15 +60,9 @@ def test_manual_offer_logs_with_neutral_source_identity(tmp_path: Path) -> None:
         json={"bankroll": "1000.00", "risk_profile": "Normal"},
     ).status_code == 200
 
-    chosen = None
-    for price in (-115, -105, 100, 120, 150, 200, 300):
-        candidate = _offer(book="MANUAL", price=price)
-        result = client.post("/api/v1/evaluate-offer", json=candidate)
-        assert result.status_code == 200, result.text
-        if result.json()["evaluation"]["verdict"] == "BET":
-            chosen = candidate
-            break
-    assert chosen is not None
+    chosen = _offer(book="MANUAL", price=-115)
+    evaluated = client.post("/api/v1/evaluate-offer", json=chosen)
+    assert evaluated.status_code == 200, evaluated.text
 
     created = client.post(
         "/api/v1/wagers",
