@@ -1,101 +1,13 @@
-<!doctype html>
-<html lang="en" data-theme="light">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b1320">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="NFL EDGE">
-  <title>NFL EDGE</title>
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="apple-touch-icon" href="./icons/icon-192.png">
-  <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./saved-ux.css">
-</head>
-<body>
-<a class="skip-link" href="#main-content">Skip to content</a>
-<header class="appbar" id="appbar">
-  <div class="appbar-left">
-    <button id="back-btn" class="back-btn" type="button" hidden aria-label="Back">
-      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <div class="app-name-block">
-      <span class="app-name">NFL Edge</span>
-      <span id="health-label" class="app-sub" aria-live="polite">Connecting…</span>
-    </div>
-  </div>
-  <div class="appbar-right">
-    <button id="refresh-btn" class="refresh-btn icon-only" type="button" aria-label="Refresh">
-      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M18 4v4h-4M6 20v-4h4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <button id="install-btn" class="install-btn" type="button" hidden>Install</button>
-    <button id="account-quick-btn" class="account-quick-btn" type="button" aria-label="Account" title="Account">●</button>
-    <button class="theme-popover-trigger" id="theme-trigger" type="button" aria-haspopup="dialog" aria-expanded="false" title="Pick a theme" aria-label="Theme">
-      <span class="dot-stack" aria-hidden="true"><span style="background:#f4f1ec"></span><span style="background:#d4a256"></span><span style="background:#0a0a0b;box-shadow:inset 0 0 0 1px #ff4d3a"></span></span>
-    </button>
-    <div class="theme-popover" id="theme-popover" role="dialog" aria-label="Pick a theme" hidden>
-      <h4>Theme</h4>
-      <div class="theme-grid">
-        <button class="theme-tile theme-tile-light" data-theme-choice="light" type="button" aria-pressed="true"><span class="tile-swatch"></span><span class="tile-name">Light</span></button>
-        <button class="theme-tile theme-tile-cream" data-theme-choice="cream" type="button" aria-pressed="false"><span class="tile-swatch"></span><span class="tile-name">Cream</span></button>
-        <button class="theme-tile theme-tile-slate" data-theme-choice="slate" type="button" aria-pressed="false"><span class="tile-swatch"></span><span class="tile-name">Slate</span></button>
-        <button class="theme-tile theme-tile-mint" data-theme-choice="mint" type="button" aria-pressed="false"><span class="tile-swatch"></span><span class="tile-name">Mint</span></button>
-        <button class="theme-tile theme-tile-fancy" data-theme-choice="fancy" type="button" aria-pressed="false"><span class="tile-swatch"></span><span class="tile-name">Fancy</span></button>
-        <button class="theme-tile theme-tile-modern" data-theme-choice="modern" type="button" aria-pressed="false"><span class="tile-swatch"></span><span class="tile-name">Modern</span></button>
-        <button class="theme-tile theme-tile-extreme" data-theme-choice="extreme" type="button" aria-pressed="false"><span class="tile-swatch"></span><span class="tile-name">Extreme</span></button>
-      </div>
-    </div>
-  </div>
-</header>
-<div id="status-banner" class="status-banner" role="status" hidden></div>
-<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#0e1116"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="NFL EDGE"><title>NFL EDGE</title><link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icons/icon-192.png"><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./saved-ux.css"></head><body>
+<a class="skip-link" href="#main-content">Skip to content</a><header class="appbar"><div class="appbar-left"><button id="back-btn" class="back-btn" type="button" hidden aria-label="Back">‹</button><div class="app-name-block"><span class="app-name">NFL EDGE</span><span id="health-label" class="app-sub" aria-live="polite">Connecting…</span></div></div><div class="appbar-right"><button id="refresh-btn" class="refresh-btn icon-only" type="button" aria-label="Refresh">↻</button><button id="install-btn" class="install-btn" type="button" hidden>Install</button><button class="theme-trigger" id="theme-trigger" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Choose theme" title="Theme"><span class="theme-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="theme-caret">▾</span></button><button id="compare-toggle" class="compare-toggle is-on" type="button" role="switch" aria-checked="true" aria-label="Toggle Pinnacle comparison colors" title="Pinnacle comparison colors"><span></span></button><button id="compare-info" class="compare-info" type="button" aria-label="Explain Pinnacle comparison colors" title="Explain comparison colors">!</button><div class="theme-popover" id="theme-popover" role="dialog" aria-label="Choose theme" hidden><h4>Theme</h4><div class="theme-grid"><button class="theme-tile theme-tile-light" data-theme-choice="light" type="button" aria-pressed="true"><span class="tile-swatch"></span><span class="tile-name">Light</span></button><button class="theme-tile theme-tile-cream" data-theme-choice="cream" type="button" aria-pressed="false"><span class="tile-swatch"></span><span class="tile-name">Cream</span></button><button class="theme-tile theme-tile-slate" data-theme-choice="slate" type="button" aria-pressed="false"><span class="tile-swatch"></span><span class="tile-name">Slate</span></button><button class="theme-tile theme-tile-mint" data-theme-choice="mint" type="button" aria-pressed="false"><span class="tile-swatch"></span><span class="tile-name">Mint</span></button><button class="theme-tile theme-tile-fancy" data-theme-choice="fancy" type="button" aria-pressed="false"><span class="tile-swatch"></span><span class="tile-name">Fancy</span></button><button class="theme-tile theme-tile-modern" data-theme-choice="modern" type="button" aria-pressed="false"><span class="tile-swatch"></span><span class="tile-name">Modern</span></button><button class="theme-tile theme-tile-extreme" data-theme-choice="extreme" type="button" aria-pressed="false"><span class="tile-swatch"></span><span class="tile-name">Extreme</span></button></div></div></div></header>
+<div id="status-banner" class="status-banner" role="status" hidden></div><div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 <div id="main-content">
-  <main class="view view-today" id="view-board">
-    <section id="user-strip" class="welcome-strip"></section>
-    <section id="headlines" class="headlines" aria-label="This week's top picks"><div class="loading-card">Loading live recommendations…</div></section>
-    <section class="slate" aria-label="Current slate">
-      <div class="section-row"><div><h2 class="slate-title">Today's slate</h2><p class="slate-hint">Tap a game to see the backend math and market context.</p></div><span id="product-version" class="product-version"></span></div>
-      <div id="games-list" class="games"><div class="loading-card">Loading games…</div></div>
-    </section>
-  </main>
-  <main class="view view-detail" id="view-detail" hidden><section id="detail-card" class="detail-card"></section></main>
-  <main class="view view-check" id="view-check" hidden>
-    <section class="week-card">
-      <h2 class="week-title">Check an exact offer</h2>
-      <p class="week-blurb">Evaluate the exact DraftKings or FanDuel offer you can bet against the current backend product.</p>
-      <form id="exact-form" class="manual exact-form">
-        <div class="manual-field"><label for="offer-game">Game</label><select id="offer-game" required></select></div>
-        <div class="manual-row"><div class="manual-field"><label for="offer-market">Market</label><select id="offer-market"><option value="MONEYLINE">Moneyline</option><option value="SPREAD">Spread</option><option value="TOTAL">Total</option></select></div><div class="manual-field"><label for="offer-selection">Selection</label><select id="offer-selection"></select></div></div>
-        <div class="manual-row"><div class="manual-field"><label for="offer-book">Sportsbook</label><select id="offer-book"><option value="DRAFTKINGS">DraftKings</option><option value="FANDUEL">FanDuel</option></select></div><div class="manual-field"><label for="offer-line">Line</label><input id="offer-line" type="number" step="0.5" inputmode="decimal"></div></div>
-        <div class="manual-field"><label for="offer-price">American odds</label><input id="offer-price" type="number" step="1" required inputmode="numeric"></div>
-        <div id="exact-error" class="form-error" role="alert"></div><div class="manual-actions"><button class="btn-primary" type="submit">Evaluate offer</button></div>
-      </form>
-      <div id="exact-result" aria-live="polite"></div>
-    </section>
-  </main>
-  <main class="view view-bets" id="view-bets" hidden>
-    <div class="section-row"><div><h2 class="section-h">My bets</h2><p class="section-sub">Backend-saved wagers. Settlement remains manual in V1.</p></div><select id="wager-filter" class="compact-select" aria-label="Filter wagers"><option value="">All</option><option value="open">Open</option><option value="settled">Settled</option></select></div>
-    <div id="wager-list"></div>
-  </main>
-  <main class="view view-account" id="view-account" hidden><section id="account-content"></section></main>
-</div>
-<nav class="tabbar" aria-label="Primary navigation">
-  <button class="tab is-active" type="button" data-nav="board">★<span>Today</span></button>
-  <button class="tab" type="button" data-nav="check">✓<span>Check</span></button>
-  <button class="tab" type="button" data-nav="bets">▤<span>My Bets</span></button>
-  <button class="tab" type="button" data-nav="account">●<span>Account</span></button>
-</nav>
-<dialog id="wager-dialog" class="wager-dialog">
-  <form id="wager-form" class="setup-card">
-    <div class="dialog-head"><h2 id="wager-dialog-title">Log bet</h2><button id="wager-dialog-close" class="dialog-close" type="button" aria-label="Close">×</button></div>
-    <p id="wager-dialog-copy"></p>
-    <div class="manual-row"><div class="manual-field"><label for="wager-units">Actual units</label><input id="wager-units" type="number" min="0" step="0.25"></div><div class="manual-field"><label for="wager-dollars">Actual dollars</label><input id="wager-dollars" type="number" min="0" step="0.01"></div></div>
-    <div class="manual-field"><label for="wager-note">Note</label><input id="wager-note" maxlength="2000"></div>
-    <div id="wager-error" class="form-error" role="alert"></div>
-    <div class="manual-actions"><button id="wager-cancel" class="btn-secondary" type="button">Cancel</button><button class="btn-primary" type="submit">Log bet</button></div>
-  </form>
-</dialog>
-<script type="module" src="./app.js"></script>
-<script type="module" src="./ux.js"></script>
-</body>
-</html>
+<main class="view" id="view-board"><section id="user-strip" class="welcome-strip"></section><section id="headlines" class="headlines" aria-label="Headline recommendations"><div class="loading-card">Loading live recommendations…</div></section><section class="slate"><div class="section-row"><div><h2 class="slate-title">Week 1 slate</h2><p class="slate-hint">Tap a game for backend model, QB, market, and roof context.</p></div><span id="product-version" class="product-version"></span></div><div id="games-list" class="games"><div class="loading-card">Loading games…</div></div></section></main>
+<main class="view" id="view-detail" hidden><section id="detail-card" class="detail-card"></section></main>
+<main class="view" id="view-check" hidden><section class="week-card"><h2 class="week-title">Check an exact offer</h2><p class="week-blurb">Evaluate the exact retail offer you can bet against the current backend product.</p><form id="exact-form" class="manual exact-form"><div class="manual-field"><label for="offer-game">Game</label><select id="offer-game" required></select></div><div class="manual-row"><div class="manual-field"><label for="offer-market">Market</label><select id="offer-market"><option value="MONEYLINE">Moneyline</option><option value="SPREAD">Spread</option><option value="TOTAL">Total</option></select></div><div class="manual-field"><label for="offer-selection">Selection</label><select id="offer-selection"></select></div></div><div class="manual-row"><div class="manual-field"><label for="offer-book">Sportsbook</label><select id="offer-book"><option value="DRAFTKINGS">DraftKings</option><option value="FANDUEL">FanDuel</option></select></div><div class="manual-field"><label for="offer-line">Line</label><input id="offer-line" type="number" step="0.5" inputmode="decimal"></div></div><div class="manual-field"><label for="offer-price">American odds</label><input id="offer-price" type="number" step="1" required inputmode="numeric"></div><div id="exact-error" class="form-error" role="alert"></div><div class="manual-actions"><button class="btn-primary" type="submit">Evaluate offer</button></div></form><div id="exact-result" aria-live="polite"></div></section></main>
+<main class="view" id="view-bets" hidden><div class="section-row"><div><h2 class="section-h">My bets</h2><p class="section-sub">Backend-saved wagers. Settlement is manual in V1.</p></div><select id="wager-filter" class="compact-select" aria-label="Filter wagers"><option value="">All</option><option value="open">Open</option><option value="settled">Settled</option></select></div><div id="wager-list"></div></main>
+<main class="view" id="view-account" hidden><section id="account-content"></section></main></div>
+<nav class="tabbar" aria-label="Primary navigation"><button class="tab is-active" type="button" data-nav="board">★<span>Board</span></button><button class="tab" type="button" data-nav="check">✓<span>Check</span></button><button class="tab" type="button" data-nav="bets">▤<span>Bets</span></button><button class="tab" type="button" data-nav="account">●<span>Account</span></button></nav>
+<dialog id="compare-help" class="compare-help"><section class="compare-help-card"><div class="dialog-head"><div><h2>Market comparison colors</h2><p>Pinnacle is the hidden benchmark. DraftKings and FanDuel remain the actionable books.</p></div><button id="compare-help-close" class="dialog-close" type="button" aria-label="Close">×</button></div><div class="compare-legend"><div><i class="legend-dot cmp-line"></i><strong>Blue</strong><span>Better line than Pinnacle.</span></div><div><i class="legend-dot cmp-price"></i><strong>Green</strong><span>Better price than Pinnacle.</span></div><div><i class="legend-dot cmp-both"></i><strong>Purple</strong><span>Both line and price are better.</span></div><div><i class="legend-dot cmp-worse"></i><strong>Red</strong><span>The line or price is worse than Pinnacle.</span></div><div><i class="legend-dot cmp-same"></i><strong>No color</strong><span>Same line and price as Pinnacle.</span></div></div><p class="compare-example">Spread comparison is side-aware: -7 is better than -10 for the same favorite, and +10 is better than +7 for the same underdog. For totals, a lower Over line or higher Under line is better. Moneyline compares price only.</p></section></dialog>
+<dialog id="wager-dialog" class="wager-dialog"><form id="wager-form" class="setup-card"><div class="dialog-head"><h2 id="wager-dialog-title">Log wager</h2><button id="wager-dialog-close" class="dialog-close" type="button" aria-label="Close">×</button></div><p id="wager-dialog-copy"></p><div class="manual-row"><div class="manual-field"><label for="wager-units">Actual units</label><input id="wager-units" type="number" min="0" step="0.25"></div><div class="manual-field"><label for="wager-dollars">Actual dollars</label><input id="wager-dollars" type="number" min="0" step="0.01"></div></div><div class="manual-field"><label for="wager-note">Note</label><input id="wager-note" maxlength="2000"></div><div id="wager-error" class="form-error" role="alert"></div><div class="manual-actions"><button id="wager-cancel" class="btn-secondary" type="button">Cancel</button><button class="btn-primary" type="submit">Save wager</button></div></form></dialog>
+<script type="module" src="./app.js"></script><script type="module" src="./ux.js"></script></body></html>
