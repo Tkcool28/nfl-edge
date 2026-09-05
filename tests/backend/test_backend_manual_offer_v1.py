@@ -48,6 +48,24 @@ def test_manual_offer_is_evaluated_without_dk_fd_dependency(tmp_path: Path) -> N
     assert manual.json()["evaluation"] == retail.json()["evaluation"]
 
 
+def test_manual_moneyline_targets_do_not_chase_entered_price(tmp_path: Path) -> None:
+    client = _client(tmp_path)
+    evaluations = []
+    for price in (-115, -150, -200, -300):
+        response = client.post("/api/v1/evaluate-offer", json=_offer(book="MANUAL", price=price))
+        assert response.status_code == 200, response.text
+        evaluation = response.json()["evaluation"]
+        assert evaluation["verdict"] != "TARGET_ONLY"
+        assert evaluation["value_at"] is None
+        evaluations.append(evaluation)
+
+    # Moneyline model probability/reliability and therefore Play Through are
+    # anchored to the same game + Pinnacle snapshot, not the user's entered price.
+    play_through = [evaluation["play_through"] for evaluation in evaluations]
+    assert play_through[0] is not None
+    assert all(target == play_through[0] for target in play_through[1:])
+
+
 def test_manual_offer_persists_with_neutral_source_identity(tmp_path: Path) -> None:
     client = _client(tmp_path)
     registered = client.post(
