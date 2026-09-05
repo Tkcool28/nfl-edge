@@ -178,6 +178,7 @@ def _module_bundle(snapshot: dict) -> str:
 
     fetch_shim = f"""
 const __NFL_EDGE_PREVIEW={payload};
+globalThis.NFL_EDGE_UI_PREVIEW=true;
 const __nativeFetch=globalThis.fetch?.bind(globalThis);
 const __jsonResponse=(payload,status=200)=>Promise.resolve(new Response(JSON.stringify(payload),{{status,headers:{{'content-type':'application/json'}}}}));
 const __offerKey=o=>[o.game_id,o.market_type,o.selection,o.book,o.line==null?'':o.line,o.price].map(v=>String(v??'')).join('|');
@@ -232,19 +233,32 @@ globalThis.fetch=async(input,init={{}})=>{{
 def build(base_url: str, output: Path) -> None:
     snapshot = _snapshot_api(base_url)
     html = (FRONTEND / "index.html").read_text()
-    css = "\n".join(
-        (FRONTEND / name).read_text() for name in ("styles.css", "saved-ux.css", "ui-polish.css", "ui-branding.css")
+    css_names = (
+        "styles.css", "saved-ux.css", "ui-polish.css", "ui-branding.css", "ui-motion.css", "ui-theme-finish.css"
     )
+    css = "\n".join((FRONTEND / name).read_text() for name in css_names)
     wordmark = base64.b64encode((FRONTEND / "assets" / "nfl-edge-wordmark.png").read_bytes()).decode("ascii")
     html = html.replace("./assets/nfl-edge-wordmark.png", f"data:image/png;base64,{wordmark}")
     html = re.sub(r'<link rel="manifest"[^>]*>', '', html)
     html = re.sub(r'<link rel="apple-touch-icon"[^>]*>', '', html)
-    html = re.sub(r'<link rel="stylesheet" href="\./(?:styles|saved-ux|ui-polish|ui-branding)\.css">', '', html)
+    html = re.sub(r'<link rel="stylesheet" href="\./(?:styles|saved-ux|ui-polish|ui-branding|ui-motion|ui-theme-finish)\.css">', '', html)
     html = html.replace("</head>", f"<style>\n{css}\n</style></head>")
     html = re.sub(r'<script type="module" src="\./(?:app|ux)\.js"></script>', '', html)
+    replay = """
+<script>
+/* Preview-only: replay the real launch layer long enough for a human to judge it. Production adds no artificial delay. */
+(()=>{
+  const root=document.documentElement;
+  const motionOn=(()=>{try{return localStorage.getItem('nfl-edge-motion-v1')!=='off'}catch{return true}})();
+  if(motionOn)root.dataset.motion='on';
+  root.classList.remove('app-ready');
+  setTimeout(()=>root.classList.add('app-ready'),1300);
+})();
+</script>
+"""
     html = html.replace(
         "</body>",
-        "<script>\n" + _module_bundle(snapshot) + "\n</script>\n"
+        "<script>\n" + _module_bundle(snapshot) + "\n</script>\n" + replay +
         "<!-- Standalone UI review artifact: signed-in preview state; API writes/install are intentionally disabled. -->\n"
         "</body>",
     )
