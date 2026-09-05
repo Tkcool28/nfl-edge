@@ -1,6 +1,14 @@
 const button=document.getElementById('install-btn');
 let deferredPrompt=null;
 
+// Presentation invariant: a headline whose backend state is BET must keep BET styling even when
+// duplicate suppression removes the second actionable stake. The suppression note explains why
+// it cannot be logged again; it must not visually convert a BET recommendation into a red NO.
+const headlineStateStyle=document.createElement('style');
+headlineStateStyle.id='headline-state-presentation-guard';
+headlineStateStyle.textContent='.hcard.state-bet .action-verb.is-no{background:var(--action-soft);color:var(--action-bet)}';
+document.head.append(headlineStateStyle);
+
 const isStandalone=()=>globalThis.matchMedia?.('(display-mode: standalone)')?.matches===true||globalThis.navigator?.standalone===true;
 
 function ensureHelpDialog(){

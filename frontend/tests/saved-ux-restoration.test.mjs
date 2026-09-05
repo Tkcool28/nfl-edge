@@ -20,6 +20,8 @@ test('production layout remains primary while seven themes and compare controls 
   assert.match(html,/manual-guidance\.js/);
   assert.match(html,/install-affordance\.js/);
   assert.match(html,/nfl-edge-wordmark\.png/);
+  assert.match(html,/icon-192-v2\.png/);
+  assert.match(html,/icon-512-v2\.png/);
   assert.match(css,/Theme: Fancy/);assert.match(css,/Theme: Modern/);assert.match(css,/Theme: Extreme/);
   assert.match(css,/--ribbon-value:#146cff/);
 });
@@ -47,7 +49,15 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/manual-guidance\.js/);
   assert.match(sw,/install-affordance\.js/);
   assert.match(sw,/nfl-edge-wordmark\.png/);
-  assert.match(sw,/nfl-edge-shell-v14/);
+  assert.match(sw,/icon-192-v2\.png/);
+  assert.match(sw,/icon-512-v2\.png/);
+  assert.match(sw,/nfl-edge-shell-v16/);
+});
+
+test('duplicate-suppressed BET headlines retain BET styling',()=>{
+  const install=read('install-affordance.js');
+  assert.match(install,/\.hcard\.state-bet \.action-verb\.is-no/);
+  assert.match(install,/var\(--action-bet\)/);
 });
 
 test('Pinnacle help semantics match approved color contract',()=>{
