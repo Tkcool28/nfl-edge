@@ -13,8 +13,6 @@
 <script>
 (()=>{
   const root=document.documentElement;
-  const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
-  const motionAllowed=()=>{try{return localStorage.getItem('nfl-edge-motion-v1')!=='off'&&!reduced?.matches}catch{return !reduced?.matches}};
   const preview=/^(file:|content:)$/.test(location.protocol);
   const splash=document.createElement('div');
   splash.className='app-splash';
@@ -34,20 +32,6 @@
   watchReady.observe(root,{attributes:true,attributeFilter:['class']});
   if(root.classList.contains('app-ready'))leave();
   setTimeout(leave,preview?2200:5000);
-
-  document.querySelector('.tabbar')?.addEventListener('click',event=>{
-    if(!event.target.closest('[data-nav]')||!motionAllowed())return;
-    requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      const view=document.querySelector('.view:not([hidden])');
-      if(!view)return;
-      view.classList.remove('view-transition-finish');
-      void view.offsetWidth;
-      view.classList.add('view-transition-finish');
-      const clear=()=>view.classList.remove('view-transition-finish');
-      view.addEventListener('animationend',clear,{once:true});
-      setTimeout(clear,480);
-    }));
-  });
 })();
 </script>
 <script type="module" src="./app.js"></script><script type="module" src="./ux.js"></script></body></html>
