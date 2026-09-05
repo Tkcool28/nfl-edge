@@ -55,10 +55,12 @@ jobs:
           node --check frontend/api.js
           node --check frontend/ui-core.js
           node --check frontend/app.js
+          node --check frontend/ux.js
+          node --check frontend/market-compare.js
           node --check frontend/sw.js
           python -m py_compile scripts/serve_frontend_backend_smoke_v1.py
           pytest -q tests/frontend/test_frontend_static_contract_v1.py
-          node --test frontend/tests/frontend.test.mjs
+          node --test frontend/tests/*.test.mjs
       - name: Run real backend integration flow
         run: pytest -q tests/frontend/test_frontend_backend_integration_v1.py
       - name: Publish fixture and launch same-origin smoke
@@ -87,6 +89,8 @@ jobs:
           grep -q 'BALANCED\|Balanced' artifacts/frontend_v1/rendered-320.html
           grep -q 'VALUE\|Value' artifacts/frontend_v1/rendered-320.html
           grep -q 'backend-calculated dollar stakes' artifacts/frontend_v1/rendered-320.html
+          grep -q 'compare-toggle' artifacts/frontend_v1/rendered-320.html
+          grep -q 'Market comparison colors' artifacts/frontend_v1/rendered-320.html
           ! grep -q 'Loading live recommendations' artifacts/frontend_v1/rendered-320.html
       - name: Record zero-credit proof
         if: always()
