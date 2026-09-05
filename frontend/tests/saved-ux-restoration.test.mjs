@@ -43,7 +43,7 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/ui-motion\.css/);
   assert.match(sw,/ui-theme-finish\.css/);
   assert.match(sw,/nfl-edge-wordmark\.png/);
-  assert.match(sw,/nfl-edge-shell-v11/);
+  assert.match(sw,/nfl-edge-shell-v12/);
 });
 
 test('Pinnacle help semantics match approved color contract',()=>{
@@ -134,16 +134,25 @@ test('brand image has an embedded fallback and motion can be disabled locally',(
   const ux=read('ux.js'),branding=read('ui-branding.css'),motion=read('ui-motion.css'),finish=read('ui-theme-finish.css');
   assert.match(branding,/content:url\("data:image\/png;base64,/);
   assert.match(branding,/Loading the board/);
-  assert.match(branding,/view-transition-in/);
   assert.match(motion,/body::before\{animation:none!important/);
   assert.match(motion,/@keyframes yard-lines-move/);
   assert.match(finish,/view-enter-finish/);
+  assert.match(finish,/#2f8a45/);
+  assert.match(finish,/20   25   30/);
   assert.match(finish,/\[data-theme="extreme"\] \.app-logo/);
   assert.match(finish,/\[data-theme="fancy"\] \.app-logo/);
   assert.match(ux,/nfl-edge-motion-v1/);
   assert.match(ux,/Transitions & loading animation/);
   assert.match(ux,/prefers-reduced-motion: reduce/);
+  assert.match(ux,/armTabTransition/);
   assert.match(ux,/app-ready/);
+});
+
+test('wager dialog remains bounded and theme-readable',()=>{
+  const finish=read('ui-theme-finish.css');
+  assert.match(finish,/\.wager-dialog\{color:var\(--ink\)/);
+  assert.match(finish,/grid-template-columns:minmax\(0,1fr\) minmax\(0,1fr\)/);
+  assert.match(finish,/\.wager-dialog \.manual-field input\{display:block;width:100%;min-width:0/);
 });
 
 test('mobile rules and four production tabs remain explicit',()=>{
