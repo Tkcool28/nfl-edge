@@ -1,12 +1,38 @@
 /* Final theme-aware brand + perceptible motion treatment. Presentation only. */
-/* One approved geometry, three deliberately distinct finishes. */
+/* One approved geometry with deliberate finishes. Slate keeps the normal approved mark. */
 [data-theme="light"] .app-logo,[data-theme="cream"] .app-logo,[data-theme="mint"] .app-logo{filter:brightness(.74) contrast(1.34) saturate(.86) drop-shadow(0 1px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1px rgba(0,0,0,.18))}
-[data-theme="slate"] .app-logo,[data-theme="modern"] .app-logo{filter:brightness(1.28) contrast(1.12) saturate(.72) hue-rotate(176deg) drop-shadow(0 0 5px rgba(78,168,255,.14))}
+[data-theme="slate"] .app-logo{filter:drop-shadow(0 1px 1px rgba(0,0,0,.18))}
+[data-theme="modern"] .app-logo{filter:brightness(1.28) contrast(1.12) saturate(.72) hue-rotate(176deg) drop-shadow(0 0 5px rgba(78,168,255,.14))}
 [data-theme="fancy"] .app-logo{filter:brightness(1.16) contrast(1.18) saturate(1.28) sepia(.22) drop-shadow(0 0 5px rgba(212,162,86,.18))}
 [data-theme="extreme"] .app-logo{filter:grayscale(1) sepia(1) saturate(7.5) hue-rotate(34deg) brightness(1.27) contrast(1.38) drop-shadow(0 0 4px rgba(199,255,0,.42))}
 
-/* Motion remains restrained, but must be perceptible enough to read as navigation. */
-.view.view-transition-in{animation:view-enter-finish .24s cubic-bezier(.18,.78,.2,1)}
-@keyframes view-enter-finish{from{opacity:.18;transform:translateY(10px) scale(.994)}to{opacity:1;transform:translateY(0) scale(1)}}
-html[data-motion="off"] .view.view-transition-in{animation:none!important}
-@media(prefers-reduced-motion:reduce){.view.view-transition-in{animation:none!important}}
+/* Pinnacle comparison colors are product semantics, not theme colors. Keep them invariant. */
+[data-theme="extreme"]{--cmp-line:#2577d8;--cmp-price:#14934d;--cmp-both:#7a35c2;--cmp-worse:#d33b35;--cmp-same:#7e8790}
+[data-theme="extreme"] body.pinny-compare-on .detail-offer.cmp-line{border-color:#2577d8!important;box-shadow:inset 4px 0 0 #2577d8!important}
+[data-theme="extreme"] body.pinny-compare-on .detail-offer.cmp-price{border-color:#14934d!important;box-shadow:inset 4px 0 0 #14934d!important}
+[data-theme="extreme"] body.pinny-compare-on .detail-offer.cmp-both{border-color:#7a35c2!important;box-shadow:inset 4px 0 0 #7a35c2!important}
+[data-theme="extreme"] body.pinny-compare-on .detail-offer.cmp-worse{border-color:#d33b35!important;box-shadow:inset 4px 0 0 #d33b35!important}
+[data-theme="extreme"] .market-book:has(.detail-offer[data-book="DRAFTKINGS"]) .market-book-head::before{color:#f36c21!important;border-color:#f36c21!important;box-shadow:inset 0 -3px 0 #168447!important}
+[data-theme="extreme"] .market-book:has(.detail-offer[data-book="FANDUEL"]) .market-book-head::before{color:#1495e7!important;border-color:#1495e7!important;box-shadow:inset 0 -3px 0 #1495e7!important}
+
+/* Replace the old pseudo-element launch treatment with a real splash element. */
+html:not(.app-ready) body::before,html:not(.app-ready) body::after{display:none!important}
+.app-splash{position:fixed;z-index:2200;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;background:#070a0f;color:#c4c9d1;opacity:1;visibility:visible;transition:opacity .24s ease,visibility 0s linear .24s}
+.app-splash.is-leaving{opacity:0;visibility:hidden}
+.app-splash-logo{display:block;width:min(74vw,340px);height:auto;object-fit:contain}
+.app-splash-copy{font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.app-splash-yard{position:relative;width:min(62vw,250px);height:18px;overflow:hidden;border-top:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12)}
+.app-splash-yard::before{content:"";position:absolute;inset:0;width:calc(100% + 52px);background:repeating-linear-gradient(90deg,transparent 0 24px,rgba(183,255,0,.95) 24px 26px,transparent 26px 52px);background-position:0 0}
+html[data-motion="on"] .app-splash-yard::before{animation:yard-lines-finish .78s linear infinite}
+@keyframes yard-lines-finish{to{transform:translateX(52px)}}
+[data-theme="light"] .app-splash,[data-theme="cream"] .app-splash,[data-theme="mint"] .app-splash{background:#0b1018}
+[data-theme="extreme"] .app-splash{background:#000;color:#dce3d7}
+[data-theme="extreme"] .app-splash-yard{border-color:#283028}
+[data-theme="extreme"] .app-splash-yard::before{background:repeating-linear-gradient(90deg,transparent 0 24px,#c7ff00 24px 26px,transparent 26px 52px);filter:drop-shadow(0 0 5px rgba(199,255,0,.42))}
+
+/* Motion is still short, but now clearly reads as a page transition. */
+.view.view-transition-in{animation:none!important}
+.view.view-transition-finish{animation:view-enter-finish .34s cubic-bezier(.16,.82,.2,1)}
+@keyframes view-enter-finish{from{opacity:.08;transform:translateY(14px) scale(.992)}to{opacity:1;transform:translateY(0) scale(1)}}
+html[data-motion="off"] .view.view-transition-finish{animation:none!important}
+@media(prefers-reduced-motion:reduce){.view.view-transition-finish,.app-splash-yard::before{animation:none!important}.app-splash{transition:none!important}}
