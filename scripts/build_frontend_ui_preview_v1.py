@@ -14,6 +14,7 @@ BET -> Log Wager interaction. Production evaluator output is never modified.
 from __future__ import annotations
 
 import argparse
+import base64
 import copy
 import json
 import re
@@ -232,11 +233,13 @@ def build(base_url: str, output: Path) -> None:
     snapshot = _snapshot_api(base_url)
     html = (FRONTEND / "index.html").read_text()
     css = "\n".join(
-        (FRONTEND / name).read_text() for name in ("styles.css", "saved-ux.css", "ui-polish.css")
+        (FRONTEND / name).read_text() for name in ("styles.css", "saved-ux.css", "ui-polish.css", "ui-branding.css")
     )
+    wordmark = base64.b64encode((FRONTEND / "assets" / "nfl-edge-wordmark.png").read_bytes()).decode("ascii")
+    html = html.replace("./assets/nfl-edge-wordmark.png", f"data:image/png;base64,{wordmark}")
     html = re.sub(r'<link rel="manifest"[^>]*>', '', html)
     html = re.sub(r'<link rel="apple-touch-icon"[^>]*>', '', html)
-    html = re.sub(r'<link rel="stylesheet" href="\./(?:styles|saved-ux|ui-polish)\.css">', '', html)
+    html = re.sub(r'<link rel="stylesheet" href="\./(?:styles|saved-ux|ui-polish|ui-branding)\.css">', '', html)
     html = html.replace("</head>", f"<style>\n{css}\n</style></head>")
     html = re.sub(r'<script type="module" src="\./(?:app|ux)\.js"></script>', '', html)
     html = html.replace(
