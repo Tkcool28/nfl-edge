@@ -43,7 +43,7 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/ui-motion\.css/);
   assert.match(sw,/ui-theme-finish\.css/);
   assert.match(sw,/nfl-edge-wordmark\.png/);
-  assert.match(sw,/nfl-edge-shell-v12/);
+  assert.match(sw,/nfl-edge-shell-v13/);
 });
 
 test('Pinnacle help semantics match approved color contract',()=>{
