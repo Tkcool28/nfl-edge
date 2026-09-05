@@ -16,6 +16,7 @@ test('production layout remains primary while seven themes and compare controls 
   assert.match(html,/ui-polish\.css/);
   assert.match(html,/ui-branding\.css/);
   assert.match(html,/ui-motion\.css/);
+  assert.match(html,/ui-theme-finish\.css/);
   assert.match(html,/nfl-edge-wordmark\.png/);
   assert.match(css,/Theme: Fancy/);assert.match(css,/Theme: Modern/);assert.match(css,/Theme: Extreme/);
   assert.match(css,/--ribbon-value:#146cff/);
@@ -40,8 +41,9 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/ui-polish\.css/);
   assert.match(sw,/ui-branding\.css/);
   assert.match(sw,/ui-motion\.css/);
+  assert.match(sw,/ui-theme-finish\.css/);
   assert.match(sw,/nfl-edge-wordmark\.png/);
-  assert.match(sw,/nfl-edge-shell-v10/);
+  assert.match(sw,/nfl-edge-shell-v11/);
 });
 
 test('Pinnacle help semantics match approved color contract',()=>{
@@ -129,12 +131,15 @@ test('Ultra profile selection requires a presentation-only acknowledgement',()=>
 });
 
 test('brand image has an embedded fallback and motion can be disabled locally',()=>{
-  const ux=read('ux.js'),branding=read('ui-branding.css'),motion=read('ui-motion.css');
+  const ux=read('ux.js'),branding=read('ui-branding.css'),motion=read('ui-motion.css'),finish=read('ui-theme-finish.css');
   assert.match(branding,/content:url\("data:image\/png;base64,/);
   assert.match(branding,/Loading the board/);
   assert.match(branding,/view-transition-in/);
   assert.match(motion,/body::before\{animation:none!important/);
   assert.match(motion,/@keyframes yard-lines-move/);
+  assert.match(finish,/view-enter-finish/);
+  assert.match(finish,/\[data-theme="extreme"\] \.app-logo/);
+  assert.match(finish,/\[data-theme="fancy"\] \.app-logo/);
   assert.match(ux,/nfl-edge-motion-v1/);
   assert.match(ux,/Transitions & loading animation/);
   assert.match(ux,/prefers-reduced-motion: reduce/);
