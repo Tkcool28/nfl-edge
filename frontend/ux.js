@@ -19,6 +19,7 @@ const loadingCards=new WeakSet();
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtLine=v=>v==null||v===''?'':`${Number(v)>0?'+':''}${Number(v)}`;
 const fmtPrice=v=>v==null||v===''?'—':`${Number(v)>0?'+':''}${Number(v)}`;
+const marketType=market=>String(market).toLowerCase()==='moneyline'?'ML':'SPREAD';
 const marketLabel=(market,offer)=>{
   const selection=esc(offer.selection||'');
   const line=String(market).toLowerCase()==='moneyline'?'':` ${fmtLine(offer.line)}`;
@@ -56,8 +57,8 @@ function renderComparisonRows(card,rows){
   if(!rows.length||card.querySelector('.game-compare'))return;
   const wrapper=document.createElement('span');
   wrapper.className='game-compare';
-  wrapper.setAttribute('aria-label','DraftKings and FanDuel compared with hidden Pinnacle benchmark');
-  wrapper.innerHTML=rows.map(row=>`<span class="game-compare-row cmp-${esc(row.status)}"><span class="game-compare-book">${row.book==='DRAFTKINGS'?'DK':'FD'}</span><span><span class="game-compare-market">${marketLabel(row.market,row.retail)}</span><span class="game-compare-label">${esc(row.label)}</span></span><span class="game-compare-price">${fmtPrice(row.retail.price)}</span></span>`).join('');
+  wrapper.setAttribute('aria-label','DraftKings and FanDuel moneyline and spread offers compared with hidden Pinnacle benchmark');
+  wrapper.innerHTML=rows.map(row=>`<span class="game-compare-row cmp-${esc(row.status)}"><span class="game-compare-book">${row.book==='DRAFTKINGS'?'DK':'FD'}</span><span class="game-compare-offer"><span class="game-compare-type">${marketType(row.market)}</span><span class="game-compare-market">${marketLabel(row.market,row.retail)}</span><span class="game-compare-label">${esc(row.label)}</span></span><span class="game-compare-price">${fmtPrice(row.retail.price)}</span></span>`).join('');
   card.append(wrapper);
 }
 
@@ -74,3 +75,99 @@ async function hydrateGameCard(card){
 function hydrateVisibleGameCards(){document.querySelectorAll('#games-list .gcard[data-game]').forEach(hydrateGameCard)}
 const games=document.getElementById('games-list');
 if(games){hydrateVisibleGameCards();new MutationObserver(hydrateVisibleGameCards).observe(games,{childList:true,subtree:true})}
+
+/* Ultra changes stake size only. Require an explicit acknowledgement before the selector keeps it. */
+let ultraPending=null;
+function ultraDialog(){
+  let dialog=document.getElementById('ultra-risk-warning');
+  if(dialog)return dialog;
+  dialog=document.createElement('dialog');
+  dialog.id='ultra-risk-warning';
+  dialog.className='risk-warning';
+  dialog.setAttribute('aria-labelledby','ultra-risk-title');
+  dialog.innerHTML=`<section class="risk-warning-card"><span class="risk-warning-kicker">Higher bankroll exposure</span><h2 id="ultra-risk-title">Ultra staking</h2><p>Choosing Ultra changes stake size, not the wager. It does not increase win probability, improve the model's edge, or improve the expected percentage return.</p><p class="risk-warning-emphasis">Only the dollar swings get larger — both wins and losses.</p><p>Use Ultra only when you intentionally want more of your bankroll at risk on the same recommendations.</p><div class="risk-warning-actions"><button class="btn-secondary" type="button" data-ultra-back>Go back</button><button class="btn-primary" type="button" data-ultra-confirm>Use Ultra</button></div></section>`;
+  document.body.append(dialog);
+  const cancel=()=>{if(ultraPending?.select?.isConnected)ultraPending.select.value=ultraPending.previous;ultraPending=null;dialog.close()};
+  dialog.querySelector('[data-ultra-back]').addEventListener('click',cancel);
+  dialog.querySelector('[data-ultra-confirm]').addEventListener('click',()=>{if(ultraPending?.select?.isConnected)ultraPending.select.dataset.previousRisk='Ultra';ultraPending=null;dialog.close()});
+  dialog.addEventListener('cancel',e=>{e.preventDefault();cancel()});
+  dialog.addEventListener('click',e=>{if(e.target===dialog)cancel()});
+  return dialog;
+}
+function rememberRisk(select){if(select?.id==='risk')select.dataset.previousRisk=select.value}
+document.addEventListener('pointerdown',e=>rememberRisk(e.target));
+document.addEventListener('focusin',e=>{if(e.target?.id==='risk'&&!e.target.dataset.previousRisk)rememberRisk(e.target)});
+document.addEventListener('change',e=>{
+  const select=e.target;
+  if(select?.id!=='risk')return;
+  const previous=select.dataset.previousRisk||'Normal';
+  if(select.value!=='Ultra'){select.dataset.previousRisk=select.value;return}
+  if(previous==='Ultra')return;
+  ultraPending={select,previous};
+  ultraDialog().showModal();
+});
+
+/* Motion is a local presentation preference. Device Reduced Motion always wins. */
+const MOTION_KEY='nfl-edge-motion-v1';
+const reducedMotion=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
+const motionPreference=()=>{try{return localStorage.getItem(MOTION_KEY)!=='off'}catch{return true}};
+const motionAllowed=()=>motionPreference()&&!reducedMotion?.matches;
+function syncMotion(){root.dataset.motion=motionAllowed()?'on':'off'}
+function setMotionPreference(enabled){try{localStorage.setItem(MOTION_KEY,enabled?'on':'off')}catch{}syncMotion();wireMotionSetting()}
+syncMotion();
+reducedMotion?.addEventListener?.('change',()=>{syncMotion();wireMotionSetting()});
+
+function motionSettingMarkup(){
+  const preferred=motionPreference(),blocked=!!reducedMotion?.matches;
+  return `<section class="motion-settings" data-motion-settings><div class="motion-settings-copy"><strong>Transitions & loading animation</strong><span>${blocked?'Your device Reduced Motion setting is currently overriding app animation.':'Use short page transitions and the animated yard-line loading screen on this device.'}</span></div><button class="motion-switch" type="button" role="switch" aria-checked="${preferred?'true':'false'}" data-motion-toggle><span class="motion-switch-track" aria-hidden="true"><i class="motion-switch-thumb"></i></span><span class="motion-switch-state">${preferred?'On':'Off'}</span></button></section>`;
+}
+function wireMotionSetting(){
+  const account=document.getElementById('account-content');
+  if(!account)return;
+  let panel=account.querySelector('[data-motion-settings]');
+  if(!panel){account.insertAdjacentHTML('beforeend',motionSettingMarkup());panel=account.querySelector('[data-motion-settings]')}
+  const button=panel?.querySelector('[data-motion-toggle]');
+  if(!button)return;
+  const preferred=motionPreference(),blocked=!!reducedMotion?.matches;
+  button.setAttribute('aria-checked',preferred?'true':'false');
+  button.querySelector('.motion-switch-state').textContent=preferred?'On':'Off';
+  panel.querySelector('.motion-settings-copy span').textContent=blocked?'Your device Reduced Motion setting is currently overriding app animation.':'Use short page transitions and the animated yard-line loading screen on this device.';
+  if(!button.dataset.motionWired){button.dataset.motionWired='1';button.addEventListener('click',()=>setMotionPreference(!motionPreference()))}
+}
+const account=document.getElementById('account-content');
+if(account){wireMotionSetting();new MutationObserver(wireMotionSetting).observe(account,{childList:true,subtree:false})}
+
+/* Arm the destination before app.js swaps hidden views so there is no one-frame flash. */
+function armTabTransition(event){
+  if(!motionAllowed())return;
+  const target=event.target.closest('[data-nav]');
+  if(!target)return;
+  const next=document.getElementById(`view-${target.dataset.nav}`);
+  const current=document.querySelector('.view:not([hidden])');
+  if(!next||!current||next===current)return;
+  const tabs=[...document.querySelectorAll('[data-nav]')];
+  const from=tabs.findIndex(button=>button.classList.contains('is-active'));
+  const to=tabs.indexOf(target);
+  root.dataset.navDirection=to<from?'back':'forward';
+  next.classList.remove('view-transition-finish');
+  next.classList.add('view-transition-finish');
+  const clear=()=>{next.classList.remove('view-transition-finish');delete root.dataset.navDirection};
+  next.addEventListener('animationend',clear,{once:true});
+  setTimeout(clear,700);
+}
+document.querySelector('.tabbar')?.addEventListener('click',armTabTransition,true);
+
+/* The splash disappears as soon as the initial Board state has actually resolved. */
+let launchDone=false;
+function finishLaunch(){if(launchDone)return;launchDone=true;root.classList.add('app-ready')}
+function launchReady(){
+  const headlines=document.getElementById('headlines'),gamesList=document.getElementById('games-list');
+  if(!headlines||!gamesList)return false;
+  return !headlines.querySelector('.loading-card')&&!gamesList.querySelector('.loading-card');
+}
+function checkLaunch(){if(launchReady())finishLaunch()}
+const main=document.getElementById('main-content');
+if(main)new MutationObserver(checkLaunch).observe(main,{childList:true,subtree:true});
+window.addEventListener('load',checkLaunch,{once:true});
+checkLaunch();
+setTimeout(finishLaunch,4500);

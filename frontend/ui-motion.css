@@ -1,0 +1,10 @@
+/* Motion-only overrides. Keep the full-screen splash static; animate only the small yard-line strip. */
+html:not(.app-ready) body::before{animation:none!important;background-size:min(76vw,340px) auto,230px 2px,0 0!important}
+html:not(.app-ready) body::after{content:"";position:fixed;z-index:1001;left:50%;top:calc(50% + 35px);width:230px;height:16px;transform:translateX(-50%);background:repeating-linear-gradient(90deg,transparent 0 24px,rgba(183,255,0,.9) 24px 26px,transparent 26px 52px);background-position:0 0;opacity:1;visibility:visible;pointer-events:none;transition:opacity .18s ease,visibility 0s linear .18s}
+html[data-motion="on"]:not(.app-ready) body::after{animation:yard-lines-move .78s linear infinite}
+html.app-ready body::after{opacity:0;visibility:hidden}
+@keyframes yard-lines-move{to{background-position:52px 0}}
+[data-theme="light"]:not(.app-ready) body::after,[data-theme="cream"]:not(.app-ready) body::after,[data-theme="mint"]:not(.app-ready) body::after{filter:drop-shadow(0 0 3px rgba(183,255,0,.2))}
+[data-theme="extreme"]:not(.app-ready) body::after{background-image:repeating-linear-gradient(90deg,transparent 0 24px,#c7ff00 24px 26px,transparent 26px 52px);filter:drop-shadow(0 0 5px rgba(199,255,0,.42))}
+@media(max-width:360px){html:not(.app-ready) body::after{width:190px}}
+@media(prefers-reduced-motion:reduce){html:not(.app-ready) body::after{animation:none!important;transition:none!important}}

@@ -28,7 +28,7 @@ jobs:
       - name: Install accepted backend runtime and bounded frontend test dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e '.[model-development]' pyyaml pytest httpx jsonschema \
+          python -m pip install -e '.[model-development]' pyyaml pytest httpx jsonschema selenium \
             'numpy==2.4.2' 'scipy==1.17.1' 'scikit-learn==1.8.0'
       - name: Prove accepted numerical runtime
         run: |
@@ -58,7 +58,7 @@ jobs:
           node --check frontend/ux.js
           node --check frontend/market-compare.js
           node --check frontend/sw.js
-          python -m py_compile scripts/serve_frontend_backend_smoke_v1.py
+          python -m py_compile scripts/serve_frontend_backend_smoke_v1.py scripts/build_frontend_ui_preview_v1.py
           pytest -q tests/frontend/test_frontend_static_contract_v1.py
           node --test frontend/tests/*.test.mjs
       - name: Run real backend integration flow
@@ -78,6 +78,15 @@ jobs:
               except Exception: time.sleep(.25)
           else: raise SystemExit('server not ready')
           PY
+      - name: Build standalone browser UI preview
+        run: |
+          mkdir -p artifacts/frontend_v1
+          python scripts/build_frontend_ui_preview_v1.py \
+            --base-url http://127.0.0.1:8770 \
+            --output artifacts/frontend_v1/NFL_EDGE_UI_PREVIEW.html
+          grep -q 'nfl-edge-theme-v1' artifacts/frontend_v1/NFL_EDGE_UI_PREVIEW.html
+          grep -q 'detail-market-tabs' artifacts/frontend_v1/NFL_EDGE_UI_PREVIEW.html
+          grep -q '__NFL_EDGE_PREVIEW' artifacts/frontend_v1/NFL_EDGE_UI_PREVIEW.html
       - name: Prove anonymous render at 320px
         run: |
           chrome="$(command -v google-chrome || command -v chromium || true)"
@@ -88,10 +97,89 @@ jobs:
           grep -q 'Hit Rate' artifacts/frontend_v1/rendered-320.html
           grep -q 'BALANCED\|Balanced' artifacts/frontend_v1/rendered-320.html
           grep -q 'VALUE\|Value' artifacts/frontend_v1/rendered-320.html
-          grep -q 'backend-calculated dollar stakes' artifacts/frontend_v1/rendered-320.html
+          grep -q 'model-calculated dollar stakes' artifacts/frontend_v1/rendered-320.html
           grep -q 'compare-toggle' artifacts/frontend_v1/rendered-320.html
           grep -q 'Market comparison colors' artifacts/frontend_v1/rendered-320.html
           ! grep -q 'Loading live recommendations' artifacts/frontend_v1/rendered-320.html
+      - name: Capture interactive UI review states
+        run: |
+          python - <<'PY'
+          import shutil,time
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+          from selenium.webdriver.chrome.service import Service
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.support.ui import WebDriverWait
+
+          out=Path('artifacts/frontend_v1'); out.mkdir(parents=True,exist_ok=True)
+          chrome=shutil.which('google-chrome') or shutil.which('chromium')
+          driver_bin=shutil.which('chromedriver')
+          assert chrome, 'Chrome/Chromium is required for UI preview capture'
+          options=Options(); options.binary_location=chrome
+          for arg in ['--headless=new','--no-sandbox','--disable-gpu','--window-size=390,844','--force-device-scale-factor=1']:
+              options.add_argument(arg)
+          service=Service(driver_bin) if driver_bin else Service()
+          driver=webdriver.Chrome(service=service,options=options)
+          wait=WebDriverWait(driver,12)
+          click=lambda selector: driver.execute_script('arguments[0].click()',wait.until(lambda d:d.find_element(By.CSS_SELECTOR,selector)))
+          try:
+              driver.get('http://127.0.0.1:8770/')
+              wait.until(lambda d:'Loading live recommendations' not in d.page_source)
+              wait.until(lambda d:d.find_elements(By.CSS_SELECTOR,'.gcard[data-game]'))
+              driver.save_screenshot(out/'preview-board-390.png')
+              game_card=driver.find_element(By.CSS_SELECTOR,'.gcard[data-game]')
+              driver.execute_script("arguments[0].scrollIntoView({block:'start'})",game_card); time.sleep(.25)
+              driver.save_screenshot(out/'preview-board-games-390.png')
+
+              driver.execute_script('arguments[0].click()',game_card)
+              wait.until(lambda d:d.find_elements(By.CSS_SELECTOR,'.detail-market-tabs'))
+              wait.until(lambda d:d.find_elements(By.CSS_SELECTOR,'.qb-card-visual'))
+              driver.execute_script('window.scrollTo(0,0)'); time.sleep(.15)
+              driver.save_screenshot(out/'preview-detail-top-390.png')
+
+              tabs=driver.find_element(By.CSS_SELECTOR,'.detail-market-tabs')
+              driver.execute_script("arguments[0].scrollIntoView({block:'start'})",tabs); time.sleep(.2)
+              driver.save_screenshot(out/'preview-detail-moneyline-390.png')
+
+              spread=driver.find_element(By.CSS_SELECTOR,'[data-market-tab="spread"]')
+              if spread.is_enabled():
+                  driver.execute_script('arguments[0].click()',spread)
+                  wait.until(lambda d:d.find_elements(By.CSS_SELECTOR,'[data-market-panel="spread"]'))
+                  driver.save_screenshot(out/'preview-detail-spread-390.png')
+
+              total=driver.find_element(By.CSS_SELECTOR,'[data-market-tab="total"]')
+              if total.is_enabled():
+                  driver.execute_script('arguments[0].click()',total)
+                  wait.until(lambda d:d.find_elements(By.CSS_SELECTOR,'[data-market-panel="total"]'))
+                  driver.save_screenshot(out/'preview-detail-total-390.png')
+
+              moneyline=driver.find_element(By.CSS_SELECTOR,'[data-market-tab="moneyline"]')
+              driver.execute_script('arguments[0].click()',moneyline)
+              offer=wait.until(lambda d:d.find_element(By.CSS_SELECTOR,'.detail-offer[data-detail-offer]'))
+              driver.execute_script('arguments[0].click()',offer)
+              evaluation=wait.until(lambda d:d.find_element(By.CSS_SELECTOR,'.offer-evaluation'))
+              driver.execute_script("arguments[0].scrollIntoView({block:'start'})",evaluation); time.sleep(.2)
+              driver.save_screenshot(out/'preview-detail-evaluation-390.png')
+
+              click('[data-nav="check"]')
+              wait.until(lambda d:d.find_element(By.ID,'view-check').is_displayed())
+              driver.execute_script('window.scrollTo(0,0)');
+              driver.save_screenshot(out/'preview-check-390.png')
+
+              driver.execute_script("localStorage.setItem('nfl-edge-theme-v1','extreme')")
+              driver.refresh(); wait.until(lambda d:'Loading live recommendations' not in d.page_source)
+              click('[data-nav="account"]')
+              wait.until(lambda d:d.find_elements(By.ID,'login-form'))
+              driver.save_screenshot(out/'preview-account-extreme-390.png')
+              click('[data-nav="board"]')
+              extreme_game=wait.until(lambda d:d.find_element(By.CSS_SELECTOR,'.gcard[data-game]'))
+              driver.execute_script("arguments[0].scrollIntoView({block:'start'})",extreme_game); time.sleep(.2)
+              driver.save_screenshot(out/'preview-board-games-extreme-390.png')
+          finally:
+              driver.quit()
+          print('INTERACTIVE_UI_PREVIEW=PASS')
+          PY
       - name: Record zero-credit proof
         if: always()
         run: |

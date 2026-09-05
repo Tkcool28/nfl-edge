@@ -1,0 +1,53 @@
+/* Final theme-aware brand + perceptible motion treatment. Presentation only. */
+/* One approved geometry with deliberate finishes. Slate keeps the normal approved mark. */
+[data-theme="light"] .app-logo,[data-theme="cream"] .app-logo,[data-theme="mint"] .app-logo{filter:brightness(.74) contrast(1.34) saturate(.86) drop-shadow(0 1px 0 rgba(255,255,255,.72)) drop-shadow(0 1px 1px rgba(0,0,0,.18))}
+[data-theme="slate"] .app-logo{filter:drop-shadow(0 1px 1px rgba(0,0,0,.18))}
+[data-theme="modern"] .app-logo{filter:brightness(1.28) contrast(1.12) saturate(.72) hue-rotate(176deg) drop-shadow(0 0 5px rgba(78,168,255,.14))}
+[data-theme="fancy"] .app-logo{filter:brightness(1.16) contrast(1.18) saturate(1.28) sepia(.22) drop-shadow(0 0 5px rgba(212,162,86,.18))}
+[data-theme="extreme"] .app-logo{filter:grayscale(1) sepia(1) saturate(7.5) hue-rotate(34deg) brightness(1.27) contrast(1.38) drop-shadow(0 0 4px rgba(199,255,0,.42))}
+
+/* Pinnacle comparison colors are product semantics, not theme colors. Keep them invariant. */
+[data-theme="extreme"]{--cmp-line:#2577d8;--cmp-price:#14934d;--cmp-both:#7a35c2;--cmp-worse:#d33b35;--cmp-same:#7e8790}
+[data-theme="extreme"] body.pinny-compare-on .detail-offer.cmp-line{border-color:#2577d8!important;box-shadow:inset 4px 0 0 #2577d8!important}
+[data-theme="extreme"] body.pinny-compare-on .detail-offer.cmp-price{border-color:#14934d!important;box-shadow:inset 4px 0 0 #14934d!important}
+[data-theme="extreme"] body.pinny-compare-on .detail-offer.cmp-both{border-color:#7a35c2!important;box-shadow:inset 4px 0 0 #7a35c2!important}
+[data-theme="extreme"] body.pinny-compare-on .detail-offer.cmp-worse{border-color:#d33b35!important;box-shadow:inset 4px 0 0 #d33b35!important}
+[data-theme="extreme"] .market-book:has(.detail-offer[data-book="DRAFTKINGS"]) .market-book-head::before{color:#f36c21!important;border-color:#f36c21!important;box-shadow:inset 0 -3px 0 #168447!important}
+[data-theme="extreme"] .market-book:has(.detail-offer[data-book="FANDUEL"]) .market-book-head::before{color:#1495e7!important;border-color:#1495e7!important;box-shadow:inset 0 -3px 0 #1495e7!important}
+
+/* Wager dialog must inherit theme color and stay inside the phone viewport. */
+.wager-dialog{color:var(--ink);max-width:calc(100vw - 24px)}
+.wager-dialog .setup-card{color:var(--ink);background:var(--surface);width:100%;max-width:100%;overflow:hidden}
+.wager-dialog .dialog-head h2,.wager-dialog #wager-dialog-copy,.wager-dialog .manual-field label,.wager-dialog .dialog-close{color:var(--ink)}
+.wager-dialog .manual-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);width:100%}
+.wager-dialog .manual-field{min-width:0}
+.wager-dialog .manual-field input{display:block;width:100%;min-width:0;max-width:100%;color:var(--ink);background:var(--surface)}
+.wager-dialog .manual-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);gap:10px}
+.wager-dialog .manual-actions button{width:100%;min-width:0}
+@media(max-width:360px){.wager-dialog .manual-row{grid-template-columns:1fr}.wager-dialog .manual-actions{grid-template-columns:1fr 1fr}}
+[data-theme="extreme"] .wager-dialog .setup-card,[data-theme="extreme"] .wager-dialog .manual-field input{background:#000!important;color:var(--ink)!important}
+
+/* Replace the old pseudo-element launch treatment with a real splash element. */
+html:not(.app-ready) body::before,html:not(.app-ready) body::after{display:none!important}
+.app-splash{position:fixed;z-index:2200;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;background:#070a0f;color:#c4c9d1;opacity:1;visibility:visible;transition:opacity .24s ease,visibility 0s linear .24s}
+.app-splash.is-leaving{opacity:0;visibility:hidden}
+.app-splash-logo{display:block;width:min(74vw,340px);height:auto;object-fit:contain}
+.app-splash-copy{font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+/* Football-field loading strip: green turf, white moving yard lines, small yard numbers. */
+.app-splash-yard{position:relative;width:min(70vw,280px);height:38px;overflow:hidden;border:1px solid rgba(255,255,255,.45);border-radius:4px;background:linear-gradient(180deg,#2f8a45,#176b34);box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.app-splash-yard::before{content:"";position:absolute;inset:0;width:calc(100% + 58px);background:repeating-linear-gradient(90deg,transparent 0 27px,rgba(255,255,255,.95) 27px 29px,transparent 29px 58px);transform:translateX(0)}
+.app-splash-yard::after{content:"20   25   30   35   40   45";position:absolute;left:8px;right:8px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.9);font:700 9px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:10px;white-space:nowrap;text-shadow:0 1px 1px rgba(0,0,0,.35);pointer-events:none}
+html[data-motion="on"] .app-splash-yard::before{animation:yard-lines-finish .9s linear infinite}
+@keyframes yard-lines-finish{to{transform:translateX(58px)}}
+[data-theme="light"] .app-splash,[data-theme="cream"] .app-splash,[data-theme="mint"] .app-splash{background:#0b1018}
+[data-theme="extreme"] .app-splash{background:#000;color:#dce3d7}
+[data-theme="extreme"] .app-splash-yard{border-color:#dfe8df;background:linear-gradient(180deg,#2b833f,#12622d);box-shadow:0 0 12px rgba(199,255,0,.12),inset 0 0 0 1px rgba(0,0,0,.2)}
+
+/* Arm the destination before hidden is removed; this prevents the old one-frame flash. */
+.view.view-transition-in{animation:none!important}
+html[data-nav-direction="forward"] .view.view-transition-finish{--nav-shift:18px}
+html[data-nav-direction="back"] .view.view-transition-finish{--nav-shift:-18px}
+.view.view-transition-finish{animation:view-enter-finish .44s cubic-bezier(.16,.78,.18,1) both}
+@keyframes view-enter-finish{from{opacity:.18;transform:translateX(var(--nav-shift,14px)) scale(.995)}55%{opacity:.82}to{opacity:1;transform:translateX(0) scale(1)}}
+html[data-motion="off"] .view.view-transition-finish{animation:none!important}
+@media(prefers-reduced-motion:reduce){.view.view-transition-finish,.app-splash-yard::before{animation:none!important}.app-splash{transition:none!important}}

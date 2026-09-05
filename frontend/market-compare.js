@@ -1,5 +1,5 @@
 const BOOKS=['DRAFTKINGS','FANDUEL'];
-const MARKET_ORDER=['spread','moneyline','total'];
+const BOARD_MARKETS=['moneyline','spread'];
 const same=(a,b)=>String(a??'').trim().toUpperCase()===String(b??'').trim().toUpperCase();
 const num=v=>v==null||v===''?null:Number(v);
 
@@ -32,7 +32,7 @@ export function comparisonLabel(status){
   return{line:'better line',price:'better price',both:'better line + price',worse:'worse vs benchmark',same:'same as benchmark'}[status]||'';
 }
 
-function findPinnyOffer(pinnyOffers,retail){
+export function findPinnyOffer(pinnyOffers,retail){
   return(pinnyOffers||[]).find(p=>same(p.selection,retail.selection))||null;
 }
 
@@ -41,18 +41,15 @@ export function gameComparisonRows(game){
   if(!board)return[];
   const rows=[];
   for(const book of BOOKS){
-    let chosen=null;
-    for(const market of MARKET_ORDER){
+    for(const market of BOARD_MARKETS){
       const retailOffers=board?.[market]?.[book]||[];
       const pinnyOffers=board?.[market]?.PINNACLE||[];
       for(const retail of retailOffers){
         const pinny=findPinnyOffer(pinnyOffers,retail);
         const status=compareOffer(market,retail,pinny);
-        if(status){chosen={book,market,retail,status,label:comparisonLabel(status)};break}
+        if(status)rows.push({book,market,retail,pinny,status,label:comparisonLabel(status)});
       }
-      if(chosen)break;
     }
-    if(chosen)rows.push(chosen);
   }
   return rows;
 }

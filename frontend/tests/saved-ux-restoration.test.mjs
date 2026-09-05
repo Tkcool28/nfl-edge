@@ -13,6 +13,11 @@ test('production layout remains primary while seven themes and compare controls 
   for(const marker of ['headlines','games-list','view-detail','view-check','view-bets','view-account','wager-dialog'])assert.match(html,new RegExp(marker));
   for(const marker of ['theme-popover','compare-toggle','compare-info','compare-help'])assert.match(html,new RegExp(marker));
   for(const theme of ['light','cream','slate','mint','fancy','modern','extreme'])assert.match(html,new RegExp(`data-theme-choice="${theme}"`));
+  assert.match(html,/ui-polish\.css/);
+  assert.match(html,/ui-branding\.css/);
+  assert.match(html,/ui-motion\.css/);
+  assert.match(html,/ui-theme-finish\.css/);
+  assert.match(html,/nfl-edge-wordmark\.png/);
   assert.match(css,/Theme: Fancy/);assert.match(css,/Theme: Modern/);assert.match(css,/Theme: Extreme/);
   assert.match(css,/--ribbon-value:#146cff/);
 });
@@ -33,6 +38,12 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/pathname\.startsWith\('\/api\/'\)/);
   assert.match(sw,/fetch\(request,\{cache:'no-store'\}\)/);
   assert.match(sw,/market-compare\.js/);
+  assert.match(sw,/ui-polish\.css/);
+  assert.match(sw,/ui-branding\.css/);
+  assert.match(sw,/ui-motion\.css/);
+  assert.match(sw,/ui-theme-finish\.css/);
+  assert.match(sw,/nfl-edge-wordmark\.png/);
+  assert.match(sw,/nfl-edge-shell-v12/);
 });
 
 test('Pinnacle help semantics match approved color contract',()=>{
@@ -57,25 +68,99 @@ test('offer comparison is side-aware and worse overrides mixed improvement',()=>
   assert.equal(comparisonLabel('both'),'better line + price');
 });
 
-test('game comparison rows expose only actionable books, never Pinnacle',()=>{
-  const game={market_board:{spread:{DRAFTKINGS:[{selection:'CHI',line:-7,price:-110}],FANDUEL:[{selection:'CHI',line:-10,price:+100}],PINNACLE:[{selection:'CHI',line:-10,price:-110}]}}};
+test('board comparison rows include moneyline and spread for both retail books and never Pinnacle',()=>{
+  const game={market_board:{
+    moneyline:{DRAFTKINGS:[{selection:'CAR',line:null,price:130},{selection:'CHI',line:null,price:-155}],FANDUEL:[{selection:'CAR',line:null,price:132},{selection:'CHI',line:null,price:-156}],PINNACLE:[{selection:'CAR',line:null,price:132},{selection:'CHI',line:null,price:-149}]},
+    spread:{DRAFTKINGS:[{selection:'CAR',line:2.5,price:-102},{selection:'CHI',line:-2.5,price:-118}],FANDUEL:[{selection:'CAR',line:2.5,price:102},{selection:'CHI',line:-2.5,price:-124}],PINNACLE:[{selection:'CAR',line:2.5,price:102},{selection:'CHI',line:-2.5,price:-115}]}
+  }};
   const rows=gameComparisonRows(game);
-  assert.deepEqual(rows.map(r=>r.book),['DRAFTKINGS','FANDUEL']);
-  assert.deepEqual(rows.map(r=>r.status),['line','price']);
+  assert.equal(rows.length,8);
+  assert.deepEqual([...new Set(rows.map(r=>r.market))],['moneyline','spread']);
+  assert.deepEqual([...new Set(rows.map(r=>r.book))],['DRAFTKINGS','FANDUEL']);
   assert.ok(rows.every(r=>r.book!=='PINNACLE'));
 });
 
-test('theme and comparison settings are persisted locally without provider access',()=>{
+test('game detail offers are actionable and reuse exact-offer evaluator without provider API access',()=>{
+  const app=read('app.js');
+  assert.match(app,/data-detail-offer/);
+  assert.match(app,/evaluateDetailOffer/);
+  assert.match(app,/api\.evaluateOffer\(offer\)/);
+  assert.match(app,/openDetailExact/);
+  assert.match(app,/Log wager/);
+  assert.doesNotMatch(app,/the-odds-api|api\.sleeper/i);
+});
+
+test('game detail has real market tabs and visual assets with stable fallbacks',()=>{
+  const app=read('app.js'),polish=read('ui-polish.css');
+  for(const marker of ['data-market-tab="moneyline"','data-market-tab="spread"','data-market-tab="total"','setDetailMarket','detail-market-panel'])assert.match(app,new RegExp(marker));
+  assert.match(app,/a\.espncdn\.com\/i\/teamlogos\/nfl\/500/);
+  assert.match(app,/sleepercdn\.com\/content\/nfl\/players/);
+  assert.match(app,/sleeper_player_id/);
+  assert.match(app,/asset-failed/);
+  assert.match(polish,/asset-team-hero/);
+  assert.match(polish,/asset-qb/);
+  assert.match(polish,/detail-market-tabs/);
+  assert.match(polish,/evaluation-grid/);
+});
+
+test('extreme primary actions are outlined chartreuse and header is protected from wrapping',()=>{
+  const saved=read('saved-ux.css'),base=read('styles.css');
+  assert.match(saved,/\[data-theme="extreme"\] \.btn-primary\{border:1px solid #c7ff00;background:#080a08;color:#c7ff00/);
+  assert.match(base,/\.app-name\{font-weight:800;white-space:nowrap/);
+  assert.match(base,/grid-template-columns:minmax\(0,1fr\) auto/);
+});
+
+test('theme and comparison settings are persisted locally without provider API access',()=>{
   const ux=read('ux.js');
   assert.match(ux,/nfl-edge-theme-v1/);
   assert.match(ux,/nfl-edge-pinny-compare-v1/);
   assert.match(ux,/new ApiClient/);
-  assert.doesNotMatch(ux,/the-odds-api|sleeper/i);
+  assert.match(ux,/ML/);
+  assert.match(ux,/SPREAD/);
+  assert.doesNotMatch(ux,/the-odds-api|api\.sleeper/i);
+});
+
+test('Ultra profile selection requires a presentation-only acknowledgement',()=>{
+  const ux=read('ux.js'),branding=read('ui-branding.css');
+  assert.match(ux,/Ultra staking/);
+  assert.match(ux,/does not increase win probability/);
+  assert.match(ux,/expected percentage return/);
+  assert.match(ux,/Only the dollar swings get larger/);
+  assert.match(ux,/data-ultra-confirm/);
+  assert.match(branding,/risk-warning/);
+});
+
+test('brand image has an embedded fallback and motion can be disabled locally',()=>{
+  const ux=read('ux.js'),branding=read('ui-branding.css'),motion=read('ui-motion.css'),finish=read('ui-theme-finish.css');
+  assert.match(branding,/content:url\("data:image\/png;base64,/);
+  assert.match(branding,/Loading the board/);
+  assert.match(motion,/body::before\{animation:none!important/);
+  assert.match(motion,/@keyframes yard-lines-move/);
+  assert.match(finish,/view-enter-finish/);
+  assert.match(finish,/#2f8a45/);
+  assert.match(finish,/20   25   30/);
+  assert.match(finish,/\[data-theme="extreme"\] \.app-logo/);
+  assert.match(finish,/\[data-theme="fancy"\] \.app-logo/);
+  assert.match(ux,/nfl-edge-motion-v1/);
+  assert.match(ux,/Transitions & loading animation/);
+  assert.match(ux,/prefers-reduced-motion: reduce/);
+  assert.match(ux,/armTabTransition/);
+  assert.match(ux,/app-ready/);
+});
+
+test('wager dialog remains bounded and theme-readable',()=>{
+  const finish=read('ui-theme-finish.css');
+  assert.match(finish,/\.wager-dialog\{color:var\(--ink\)/);
+  assert.match(finish,/grid-template-columns:minmax\(0,1fr\) minmax\(0,1fr\)/);
+  assert.match(finish,/\.wager-dialog \.manual-field input\{display:block;width:100%;min-width:0/);
 });
 
 test('mobile rules and four production tabs remain explicit',()=>{
-  const saved=read('saved-ux.css'),base=read('styles.css'),html=read('index.html');
+  const saved=read('saved-ux.css'),base=read('styles.css'),html=read('index.html'),polish=read('ui-polish.css'),branding=read('ui-branding.css');
   assert.match(saved,/@media\(max-width:320px\)/);
+  assert.match(polish,/@media\(max-width:320px\)/);
   assert.match(base,/grid-template-columns:repeat\(4,1fr\)/);
   assert.equal((html.match(/data-nav=/g)||[]).length,4);
+  assert.equal((html.match(/class="tab-icon"/g)||[]).length,4);
+  assert.match(branding,/\.tab \.tab-icon/);
 });

@@ -5,7 +5,7 @@ export class ApiClient {
   async request(path,{method='GET',body,headers={},signal}={}){
     const init={method,credentials:'include',cache:'no-store',headers:{Accept:'application/json',...headers},signal};
     if(body!==undefined){ init.headers['Content-Type']='application/json'; init.body=JSON.stringify(body); }
-    let r; try{ r=await this.fetchImpl(`${this.baseUrl}${path}`,init); }catch(e){ throw new ApiError(0,'Backend unavailable',{cause:String(e)}); }
+    let r; try{ r=await this.fetchImpl(`${this.baseUrl}${path}`,init); }catch(e){ throw new ApiError(0,'App unavailable',{cause:String(e)}); }
     if(r.status===204) return null;
     const ct=r.headers?.get?.('content-type')||''; let payload=null;
     try{ payload=ct.includes('application/json')?await r.json():await r.text(); }catch{}
