@@ -106,3 +106,62 @@ document.addEventListener('change',e=>{
   ultraPending={select,previous};
   ultraDialog().showModal();
 });
+
+/* Motion is a local presentation preference. Device Reduced Motion always wins. */
+const MOTION_KEY='nfl-edge-motion-v1';
+const reducedMotion=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
+const motionPreference=()=>{try{return localStorage.getItem(MOTION_KEY)!=='off'}catch{return true}};
+const motionAllowed=()=>motionPreference()&&!reducedMotion?.matches;
+function syncMotion(){root.dataset.motion=motionAllowed()?'on':'off'}
+function setMotionPreference(enabled){try{localStorage.setItem(MOTION_KEY,enabled?'on':'off')}catch{}syncMotion();wireMotionSetting()}
+syncMotion();
+reducedMotion?.addEventListener?.('change',()=>{syncMotion();wireMotionSetting()});
+
+function motionSettingMarkup(){
+  const preferred=motionPreference(),blocked=!!reducedMotion?.matches;
+  return `<section class="motion-settings" data-motion-settings><div class="motion-settings-copy"><strong>Transitions & loading animation</strong><span>${blocked?'Your device Reduced Motion setting is currently overriding app animation.':'Use short page transitions and the animated yard-line loading screen on this device.'}</span></div><button class="motion-switch" type="button" role="switch" aria-checked="${preferred?'true':'false'}" data-motion-toggle><span class="motion-switch-track" aria-hidden="true"><i class="motion-switch-thumb"></i></span><span class="motion-switch-state">${preferred?'On':'Off'}</span></button></section>`;
+}
+function wireMotionSetting(){
+  const account=document.getElementById('account-content');
+  if(!account)return;
+  let panel=account.querySelector('[data-motion-settings]');
+  if(!panel){account.insertAdjacentHTML('beforeend',motionSettingMarkup());panel=account.querySelector('[data-motion-settings]')}
+  const button=panel?.querySelector('[data-motion-toggle]');
+  if(!button)return;
+  const preferred=motionPreference(),blocked=!!reducedMotion?.matches;
+  button.setAttribute('aria-checked',preferred?'true':'false');
+  button.querySelector('.motion-switch-state').textContent=preferred?'On':'Off';
+  panel.querySelector('.motion-settings-copy span').textContent=blocked?'Your device Reduced Motion setting is currently overriding app animation.':'Use short page transitions and the animated yard-line loading screen on this device.';
+  if(!button.dataset.motionWired){button.dataset.motionWired='1';button.addEventListener('click',()=>setMotionPreference(!motionPreference()))}
+}
+const account=document.getElementById('account-content');
+if(account){wireMotionSetting();new MutationObserver(wireMotionSetting).observe(account,{childList:true,subtree:false})}
+
+function animateCurrentView(){
+  if(!motionAllowed())return;
+  const view=document.querySelector('.view:not([hidden])');
+  if(!view)return;
+  view.classList.remove('view-transition-in');
+  void view.offsetWidth;
+  view.classList.add('view-transition-in');
+  setTimeout(()=>view.classList.remove('view-transition-in'),220);
+}
+document.querySelector('.tabbar')?.addEventListener('click',e=>{
+  if(!e.target.closest('[data-nav]'))return;
+  requestAnimationFrame(()=>requestAnimationFrame(animateCurrentView));
+});
+
+/* The splash disappears as soon as the initial Board state has actually resolved. */
+let launchDone=false;
+function finishLaunch(){if(launchDone)return;launchDone=true;root.classList.add('app-ready')}
+function launchReady(){
+  const headlines=document.getElementById('headlines'),gamesList=document.getElementById('games-list');
+  if(!headlines||!gamesList)return false;
+  return !headlines.querySelector('.loading-card')&&!gamesList.querySelector('.loading-card');
+}
+function checkLaunch(){if(launchReady())finishLaunch()}
+const main=document.getElementById('main-content');
+if(main)new MutationObserver(checkLaunch).observe(main,{childList:true,subtree:true});
+window.addEventListener('load',checkLaunch,{once:true});
+checkLaunch();
+setTimeout(finishLaunch,4500);
