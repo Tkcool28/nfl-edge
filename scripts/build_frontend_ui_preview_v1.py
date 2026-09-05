@@ -72,6 +72,7 @@ def _preview_bet_response(source: dict | None, product_version: str) -> dict:
     response = copy.deepcopy(source or {})
     response["product_version"] = response.get("product_version") or product_version
     response["recommended_dollars"] = "7.50"
+    response["user"] = PREVIEW_USER
     evaluation = response.setdefault("evaluation", {})
     evaluation.update(
         verdict="BET",
@@ -120,6 +121,8 @@ def _snapshot_api(base_url: str) -> dict:
                         base_url, "/api/v1/evaluate-offer", method="POST", body=offer
                     )
                     if eval_status == 200:
+                        evaluation = copy.deepcopy(evaluation)
+                        evaluation["user"] = PREVIEW_USER
                         evaluations[key] = evaluation
                         fallback_evaluation = fallback_evaluation or evaluation
 
@@ -128,9 +131,10 @@ def _snapshot_api(base_url: str) -> dict:
         fallback_evaluation = {
             "product_version": product_version,
             "recommended_dollars": None,
+            "user": PREVIEW_USER,
             "evaluation": {
-                "verdict": "UNSUPPORTED", "recommended_units": 0,
-                "probability": None, "trust_probability": None, "ev": None,
+                "verdict": "UNSUPPORTED", "supported": False, "recommended_units": 0,
+                "probability": None, "trust_probability": None, "break_even_probability": None, "ev": None,
                 "play_through": None, "value_at": None,
             },
         }
@@ -172,7 +176,9 @@ def _module_bundle(snapshot: dict) -> str:
     api_src = _without_exports((FRONTEND / "api.js").read_text())
     core_src = _without_exports((FRONTEND / "ui-core.js").read_text())
     compare_src = _without_exports((FRONTEND / "market-compare.js").read_text())
+    install_src = _without_imports((FRONTEND / "install-affordance.js").read_text())
     app_src = _without_imports((FRONTEND / "app.js").read_text())
+    manual_src = _without_imports((FRONTEND / "manual-guidance.js").read_text())
     ux_src = _without_imports((FRONTEND / "ux.js").read_text())
     payload = json.dumps(snapshot, separators=(",", ":")).replace("</", "<\\/")
 
@@ -216,6 +222,7 @@ globalThis.fetch=async(input,init={{}})=>{{
     core_bundle = f"const __core=(()=>{{\n{core_src}\nreturn {{{core_returns}}};\n}})();"
     compare_returns = ",".join(COMPARE_EXPORTS)
     compare_bundle = f"const __compare=(()=>{{\n{compare_src}\nreturn {{{compare_returns}}};\n}})();"
+    install_bundle = f"(()=>{{\n{install_src}\n}})();"
     app_imports = ",".join(CORE_EXPORTS)
     app_bundle = (
         "(()=>{const {ApiClient,ApiError}=__api;"
@@ -223,11 +230,16 @@ globalThis.fetch=async(input,init={{}})=>{{
         "const {compareOffer,comparisonLabel,findPinnyOffer}=__compare;\n"
         f"{app_src}\n}})();"
     )
+    manual_bundle = (
+        "(()=>{const {ApiClient,ApiError}=__api;"
+        "const {buildExactWagerPayload,esc,line,money,odds,pct,playThroughPresentation,units}=__core;\n"
+        f"{manual_src}\n}})();"
+    )
     ux_bundle = (
         "(()=>{const {ApiClient}=__api;const {gameComparisonRows}=__compare;\n"
         f"{ux_src}\n}})();"
     )
-    return "\n".join((fetch_shim, api_bundle, core_bundle, compare_bundle, app_bundle, ux_bundle))
+    return "\n".join((fetch_shim, api_bundle, core_bundle, compare_bundle, install_bundle, app_bundle, manual_bundle, ux_bundle))
 
 
 def build(base_url: str, output: Path) -> None:
@@ -243,7 +255,7 @@ def build(base_url: str, output: Path) -> None:
     html = re.sub(r'<link rel="apple-touch-icon"[^>]*>', '', html)
     html = re.sub(r'<link rel="stylesheet" href="\./(?:styles|saved-ux|ui-polish|ui-branding|ui-motion|ui-theme-finish)\.css">', '', html)
     html = html.replace("</head>", f"<style>\n{css}\n</style></head>")
-    html = re.sub(r'<script type="module" src="\./(?:app|ux)\.js"></script>', '', html)
+    html = re.sub(r'<script type="module" src="\./(?:app|ux|manual-guidance|install-affordance)\.js"></script>', '', html)
     replay = """
 <script>
 /* Preview-only: replay the real launch layer long enough for a human to judge it. Production adds no artificial delay. */
