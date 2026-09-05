@@ -10,4 +10,44 @@
 <nav class="tabbar" aria-label="Primary navigation"><button class="tab is-active" type="button" data-nav="board"><span class="tab-icon" aria-hidden="true">★</span><span class="tab-label">Board</span></button><button class="tab" type="button" data-nav="check"><span class="tab-icon" aria-hidden="true">✓</span><span class="tab-label">Check</span></button><button class="tab" type="button" data-nav="bets"><span class="tab-icon" aria-hidden="true">▤</span><span class="tab-label">Bets</span></button><button class="tab" type="button" data-nav="account"><span class="tab-icon" aria-hidden="true">●</span><span class="tab-label">Account</span></button></nav>
 <dialog id="compare-help" class="compare-help"><section class="compare-help-card"><div class="dialog-head"><div><h2>Market comparison colors</h2><p>Pinnacle is the hidden benchmark. DraftKings and FanDuel are the automatically displayed retail books; Check can evaluate a manually entered offer from any sportsbook.</p></div><button id="compare-help-close" class="dialog-close" type="button" aria-label="Close">×</button></div><div class="compare-legend"><div><i class="legend-dot cmp-line"></i><strong>Blue</strong><span>Better line than Pinnacle.</span></div><div><i class="legend-dot cmp-price"></i><strong>Green</strong><span>Better price than Pinnacle.</span></div><div><i class="legend-dot cmp-both"></i><strong>Purple</strong><span>Both line and price are better.</span></div><div><i class="legend-dot cmp-worse"></i><strong>Red</strong><span>The line or price is worse than Pinnacle.</span></div><div><i class="legend-dot cmp-same"></i><strong>No color</strong><span>Same line and price as Pinnacle.</span></div></div><p class="compare-example">Spread comparison is side-aware: -7 is better than -10 for the same favorite, and +10 is better than +7 for the same underdog. For totals, a lower Over line or higher Under line is better. Moneyline compares price only.</p></section></dialog>
 <dialog id="wager-dialog" class="wager-dialog"><form id="wager-form" class="setup-card"><div class="dialog-head"><h2 id="wager-dialog-title">Log wager</h2><button id="wager-dialog-close" class="dialog-close" type="button" aria-label="Close">×</button></div><p id="wager-dialog-copy"></p><div class="manual-row"><div class="manual-field"><label for="wager-units">Actual units</label><input id="wager-units" type="number" min="0" step="0.25"></div><div class="manual-field"><label for="wager-dollars">Actual dollars</label><input id="wager-dollars" type="number" min="0" step="0.01"></div></div><div class="manual-field"><label for="wager-note">Note</label><input id="wager-note" maxlength="2000"></div><div id="wager-error" class="form-error" role="alert"></div><div class="manual-actions"><button id="wager-cancel" class="btn-secondary" type="button">Cancel</button><button class="btn-primary" type="submit">Save wager</button></div></form></dialog>
+<script>
+(()=>{
+  const root=document.documentElement;
+  const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
+  const motionAllowed=()=>{try{return localStorage.getItem('nfl-edge-motion-v1')!=='off'&&!reduced?.matches}catch{return !reduced?.matches}};
+  const preview=/^(file:|content:)$/.test(location.protocol);
+  const splash=document.createElement('div');
+  splash.className='app-splash';
+  splash.setAttribute('role','status');
+  splash.setAttribute('aria-label','NFL EDGE loading');
+  splash.innerHTML='<img class="app-splash-logo app-logo" src="./assets/nfl-edge-wordmark.png" alt="NFL EDGE"><div class="app-splash-yard" aria-hidden="true"></div><div class="app-splash-copy">Loading the board…</div>';
+  document.body.prepend(splash);
+  const started=performance.now(),minimum=preview?1700:0;
+  let leaving=false;
+  const leave=()=>{
+    if(leaving)return;
+    const finish=()=>{if(leaving)return;leaving=true;splash.classList.add('is-leaving');setTimeout(()=>splash.remove(),260)};
+    const wait=Math.max(0,minimum-(performance.now()-started));
+    if(wait)setTimeout(finish,wait);else finish();
+  };
+  const watchReady=new MutationObserver(()=>{if(root.classList.contains('app-ready'))leave()});
+  watchReady.observe(root,{attributes:true,attributeFilter:['class']});
+  if(root.classList.contains('app-ready'))leave();
+  setTimeout(leave,preview?2200:5000);
+
+  document.querySelector('.tabbar')?.addEventListener('click',event=>{
+    if(!event.target.closest('[data-nav]')||!motionAllowed())return;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      const view=document.querySelector('.view:not([hidden])');
+      if(!view)return;
+      view.classList.remove('view-transition-finish');
+      void view.offsetWidth;
+      view.classList.add('view-transition-finish');
+      const clear=()=>view.classList.remove('view-transition-finish');
+      view.addEventListener('animationend',clear,{once:true});
+      setTimeout(clear,480);
+    }));
+  });
+})();
+</script>
 <script type="module" src="./app.js"></script><script type="module" src="./ux.js"></script></body></html>
