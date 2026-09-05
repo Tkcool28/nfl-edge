@@ -166,7 +166,17 @@ class ExactOfferEngine:
         self.state_version = str(payload.get("state_version") or payload.get("schema_version"))
 
     def evaluate(self, product: Mapping[str, Any], request: Mapping[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-        req = validate_exact_offer_request(request)
+        raw_request = dict(request)
+        manual_offer = str(raw_request.get("book") or "").upper() == "MANUAL"
+        validation_request = dict(raw_request)
+        if manual_offer:
+            # The canonical V1 validator predates sportsbook-agnostic manual entry and only
+            # knows retail acquisition books. Validate all wager economics fields through
+            # that frozen contract, then restore a neutral source identity for evaluation.
+            validation_request["book"] = "DRAFTKINGS"
+        req = validate_exact_offer_request(validation_request)
+        if manual_offer:
+            req["book"] = "MANUAL"
         games = {str(game["game_id"]): game for game in product["games"]}
         game = games.get(str(req["game_id"]))
         if game is None:
@@ -204,7 +214,7 @@ class ExactOfferEngine:
         offer = NormalizedOffer(
             market_type=market,
             side=side,
-            book=BOOKS[str(req["book"])],
+            book="manual" if manual_offer else BOOKS[str(req["book"])],
             price_american=int(req["price"]),
             line=None if req["line"] is None else float(req["line"]),
             snapshot_utc=str(product["generated_at_utc"]),

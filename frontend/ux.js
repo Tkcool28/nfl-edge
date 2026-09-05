@@ -14,8 +14,7 @@ const compareInfo=document.getElementById('compare-info');
 const compareHelp=document.getElementById('compare-help');
 const compareHelpClose=document.getElementById('compare-help-close');
 const api=new ApiClient({baseUrl:globalThis.NFL_EDGE_API_BASE||''});
-const loadedGames=new Set();
-const loadingGames=new Set();
+const loadingCards=new WeakSet();
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtLine=v=>v==null||v===''?'':`${Number(v)>0?'+':''}${Number(v)}`;
@@ -64,14 +63,13 @@ function renderComparisonRows(card,rows){
 
 async function hydrateGameCard(card){
   const id=card?.dataset?.game;
-  if(!id||loadedGames.has(id)||loadingGames.has(id))return;
-  loadingGames.add(id);
+  if(!id||card.querySelector('.game-compare')||loadingCards.has(card))return;
+  loadingCards.add(card);
   try{
     const response=await api.game(id);
     const game=response?.game||response;
-    renderComparisonRows(card,gameComparisonRows(game));
-    loadedGames.add(id);
-  }catch{}finally{loadingGames.delete(id)}
+    if(card.isConnected)renderComparisonRows(card,gameComparisonRows(game));
+  }catch{}finally{loadingCards.delete(card)}
 }
 function hydrateVisibleGameCards(){document.querySelectorAll('#games-list .gcard[data-game]').forEach(hydrateGameCard)}
 const games=document.getElementById('games-list');
