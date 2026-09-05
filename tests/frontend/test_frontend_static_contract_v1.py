@@ -9,7 +9,7 @@ def test_manifest_and_install_assets_are_valid():
 def test_index_mobile_accessible_model_driven():
  h=(FRONTEND/'index.html').read_text(); assert 'width=device-width' in h and 'manifest.webmanifest' in h and 'data/latest.json' not in h; assert 'id="offer-book"' not in h; assert 'available at any sportsbook' in h; assert 'class="skip-link"' in h and 'aria-live=' in h; assert 'backend' not in h.lower()
 def test_service_worker_never_caches_api_responses():
- s=(FRONTEND/'sw.js').read_text(); assert "url.pathname.startsWith('/api/')" in s; assert "fetch(request,{cache:'no-store'})" in s; assert "nfl-edge-shell-v5" in s; shell=re.search(r'APP_SHELL=\[(.*?)\];',s,re.S).group(1); assert '/api/' not in shell
+ s=(FRONTEND/'sw.js').read_text(); assert "url.pathname.startsWith('/api/')" in s; assert "fetch(request,{cache:'no-store'})" in s; assert "nfl-edge-shell-v6" in s; assert "./ui-polish.css" in s; shell=re.search(r'APP_SHELL=\[(.*?)\];',s,re.S).group(1); assert '/api/' not in shell
 def test_no_mock_or_frozen_business_logic():
  js='\n'.join(p.read_text() for p in FRONTEND.glob('*.js')); forbidden=['data/latest.json','PER_WAGER_CAP','SLATE_CAP','STAKE_FLOOR','UNIT_LADDER','RELIABILITY_HAIRCUT','PT_CONCESSION_PP','MANUAL_DEFAULT_PROB','americanToImplied','stakeFromUnits','unitDollars','ODDS_API_KEY','api.the-odds-api.com']; [(_ for _ in ()).throw(AssertionError(x)) for x in forbidden if x in js]
 def test_api_routes_centralized_relative():
@@ -17,8 +17,8 @@ def test_api_routes_centralized_relative():
 def test_user_facing_app_copy_avoids_backend_jargon():
  app=(FRONTEND/'app.js').read_text(); assert 'Backend unavailable' not in app; assert 'Backend details' not in app; assert 'backend-calculated' not in app; assert 'backend session' not in app; assert 'Model details' in app; assert 'model-calculated' in app
 def test_detail_market_rows_are_actionable_and_legible():
- app=(FRONTEND/'app.js').read_text(); css=(FRONTEND/'styles.css').read_text(); assert 'data-detail-offer' in app and 'evaluateDetailOffer' in app and 'openDetailExact' in app; assert '.detail-offer' in css and '.market-offers' in css and '.model-value' in css
+ app=(FRONTEND/'app.js').read_text(); css=(FRONTEND/'styles.css').read_text(); polish=(FRONTEND/'ui-polish.css').read_text(); assert 'data-detail-offer' in app and 'evaluateDetailOffer' in app and 'openDetailExact' in app; assert '.detail-offer' in css and '.market-offers' in css and '.model-value' in css; assert '.detail-market-tabs' in polish and '.evaluation-grid' in polish
 def test_local_storage_is_presentation_only():
  app=(FRONTEND/'app.js').read_text(); keys=re.findall(r"localStorage\.(?:getItem|setItem)\((?:key|'([^']+)'|\"([^\"]+)\")",app); text=' '.join(sum(([a,b] for a,b in keys),[])); assert 'bankroll' not in text.lower() and 'wager' not in text.lower() and 'password' not in text.lower()
 def test_mobile_touch_and_states_exist():
- c=(FRONTEND/'styles.css').read_text(); assert '@media(max-width:340px)' in c and 'min-height:44px' in c and ':focus-visible' in c and '.state-chip' in c and '.roof-badge' in c
+ c=(FRONTEND/'styles.css').read_text(); p=(FRONTEND/'ui-polish.css').read_text(); assert '@media(max-width:340px)' in c and 'min-height:44px' in c and ':focus-visible' in c and '.state-chip' in c and '.roof-badge' in c; assert '@media(max-width:320px)' in p
