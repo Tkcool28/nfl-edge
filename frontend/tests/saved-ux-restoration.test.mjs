@@ -80,6 +80,19 @@ test('game detail offers are actionable and reuse exact-offer evaluator without 
   assert.doesNotMatch(app,/the-odds-api|sleeper/i);
 });
 
+test('team logos and QB headshots use existing game identity with resilient fallbacks',()=>{
+  const ux=read('ux.js');
+  assert.match(ux,/a\.espncdn\.com\/i\/teamlogos\/nfl\/500/);
+  assert.match(ux,/sleepercdn\.com\/content\/nfl\/players\/thumb/);
+  assert.match(ux,/sleeper_player_id/);
+  assert.match(ux,/asset-fallback/);
+  assert.match(ux,/asset-failed/);
+  assert.match(ux,/decorateQbCard/);
+  assert.match(ux,/detail-matchup-visual/);
+  assert.match(ux,/game-matchup-visual/);
+  assert.doesNotMatch(ux,/api\.sleeper|the-odds-api/i);
+});
+
 test('extreme primary actions are outlined chartreuse and header is protected from wrapping',()=>{
   const saved=read('saved-ux.css'),base=read('styles.css');
   assert.match(saved,/\[data-theme="extreme"\] \.btn-primary\{border:1px solid #c7ff00;background:#080a08;color:#c7ff00/);
@@ -87,14 +100,14 @@ test('extreme primary actions are outlined chartreuse and header is protected fr
   assert.match(base,/grid-template-columns:minmax\(0,1fr\) auto/);
 });
 
-test('theme and comparison settings are persisted locally without provider access',()=>{
+test('theme and comparison settings are persisted locally without provider API access',()=>{
   const ux=read('ux.js');
   assert.match(ux,/nfl-edge-theme-v1/);
   assert.match(ux,/nfl-edge-pinny-compare-v1/);
   assert.match(ux,/new ApiClient/);
   assert.match(ux,/ML/);
   assert.match(ux,/SPREAD/);
-  assert.doesNotMatch(ux,/the-odds-api|sleeper/i);
+  assert.doesNotMatch(ux,/the-odds-api|api\.sleeper/i);
 });
 
 test('mobile rules and four production tabs remain explicit',()=>{
