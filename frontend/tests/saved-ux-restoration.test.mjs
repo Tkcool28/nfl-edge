@@ -13,6 +13,7 @@ test('production layout remains primary while seven themes and compare controls 
   for(const marker of ['headlines','games-list','view-detail','view-check','view-bets','view-account','wager-dialog'])assert.match(html,new RegExp(marker));
   for(const marker of ['theme-popover','compare-toggle','compare-info','compare-help'])assert.match(html,new RegExp(marker));
   for(const theme of ['light','cream','slate','mint','fancy','modern','extreme'])assert.match(html,new RegExp(`data-theme-choice="${theme}"`));
+  assert.match(html,/ui-polish\.css/);
   assert.match(css,/Theme: Fancy/);assert.match(css,/Theme: Modern/);assert.match(css,/Theme: Extreme/);
   assert.match(css,/--ribbon-value:#146cff/);
 });
@@ -33,7 +34,8 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/pathname\.startsWith\('\/api\/'\)/);
   assert.match(sw,/fetch\(request,\{cache:'no-store'\}\)/);
   assert.match(sw,/market-compare\.js/);
-  assert.match(sw,/nfl-edge-shell-v5/);
+  assert.match(sw,/ui-polish\.css/);
+  assert.match(sw,/nfl-edge-shell-v6/);
 });
 
 test('Pinnacle help semantics match approved color contract',()=>{
@@ -70,27 +72,27 @@ test('board comparison rows include moneyline and spread for both retail books a
   assert.ok(rows.every(r=>r.book!=='PINNACLE'));
 });
 
-test('game detail offers are actionable and reuse exact-offer evaluator without provider access',()=>{
+test('game detail offers are actionable and reuse exact-offer evaluator without provider API access',()=>{
   const app=read('app.js');
   assert.match(app,/data-detail-offer/);
   assert.match(app,/evaluateDetailOffer/);
   assert.match(app,/api\.evaluateOffer\(offer\)/);
   assert.match(app,/openDetailExact/);
   assert.match(app,/Log wager/);
-  assert.doesNotMatch(app,/the-odds-api|sleeper/i);
+  assert.doesNotMatch(app,/the-odds-api|api\.sleeper/i);
 });
 
-test('team logos and QB headshots use existing game identity with resilient fallbacks',()=>{
-  const ux=read('ux.js');
-  assert.match(ux,/a\.espncdn\.com\/i\/teamlogos\/nfl\/500/);
-  assert.match(ux,/sleepercdn\.com\/content\/nfl\/players\/thumb/);
-  assert.match(ux,/sleeper_player_id/);
-  assert.match(ux,/asset-fallback/);
-  assert.match(ux,/asset-failed/);
-  assert.match(ux,/decorateQbCard/);
-  assert.match(ux,/detail-matchup-visual/);
-  assert.match(ux,/game-matchup-visual/);
-  assert.doesNotMatch(ux,/api\.sleeper|the-odds-api/i);
+test('game detail has real market tabs and visual assets with stable fallbacks',()=>{
+  const app=read('app.js'),polish=read('ui-polish.css');
+  for(const marker of ['data-market-tab="moneyline"','data-market-tab="spread"','data-market-tab="total"','setDetailMarket','detail-market-panel'])assert.match(app,new RegExp(marker));
+  assert.match(app,/a\.espncdn\.com\/i\/teamlogos\/nfl\/500/);
+  assert.match(app,/sleepercdn\.com\/content\/nfl\/players/);
+  assert.match(app,/sleeper_player_id/);
+  assert.match(app,/asset-failed/);
+  assert.match(polish,/asset-team-hero/);
+  assert.match(polish,/asset-qb/);
+  assert.match(polish,/detail-market-tabs/);
+  assert.match(polish,/evaluation-grid/);
 });
 
 test('extreme primary actions are outlined chartreuse and header is protected from wrapping',()=>{
@@ -111,8 +113,9 @@ test('theme and comparison settings are persisted locally without provider API a
 });
 
 test('mobile rules and four production tabs remain explicit',()=>{
-  const saved=read('saved-ux.css'),base=read('styles.css'),html=read('index.html');
+  const saved=read('saved-ux.css'),base=read('styles.css'),html=read('index.html'),polish=read('ui-polish.css');
   assert.match(saved,/@media\(max-width:320px\)/);
+  assert.match(polish,/@media\(max-width:320px\)/);
   assert.match(base,/grid-template-columns:repeat\(4,1fr\)/);
   assert.equal((html.match(/data-nav=/g)||[]).length,4);
 });
