@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from nfl_edge.contracts.live_product_v1 import validate_exact_offer_request, validate_exact_offer_response
-from nfl_edge.recommendation.headline_staking_v1 import value_headline_actionability
 from nfl_edge.staking_policy_v1 import recommended_units
 from nfl_edge.value.contracts import GameState, MarketAnchor, NormalizedOffer
 from nfl_edge.value.evaluators import evaluate_offer
@@ -240,13 +239,11 @@ class ExactOfferEngine:
             "line": req["line"],
         }
         units = float(recommended_units(row))
-        value_at = None
+        # Exact/manual offers use the generic exact-offer staking policy only.
+        # The selected Value-headline "Value At" rescue is lane-specific and must
+        # never derive a moving target from whatever exact price a user submits.
         verdict = "UNSUPPORTED" if not result.supported else "BET" if units > 0 else "NO"
-        if result.supported and units == 0.0 and str(play.status).upper() == "VALUE":
-            action = value_headline_actionability(row)
-            if action.primary_action == "VALUE_AT" and action.value_at_price_american is not None:
-                verdict = "TARGET_ONLY"
-                value_at = {"line": req["line"], "price_american": int(action.value_at_price_american)}
+        value_at = None
         play_through = None
         if play.play_through_price_american is not None:
             play_through = {"line": req["line"], "price_american": int(play.play_through_price_american)}
