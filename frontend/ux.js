@@ -19,6 +19,7 @@ const loadingCards=new WeakSet();
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtLine=v=>v==null||v===''?'':`${Number(v)>0?'+':''}${Number(v)}`;
 const fmtPrice=v=>v==null||v===''?'—':`${Number(v)>0?'+':''}${Number(v)}`;
+const marketType=market=>String(market).toLowerCase()==='moneyline'?'ML':'SPREAD';
 const marketLabel=(market,offer)=>{
   const selection=esc(offer.selection||'');
   const line=String(market).toLowerCase()==='moneyline'?'':` ${fmtLine(offer.line)}`;
@@ -56,8 +57,8 @@ function renderComparisonRows(card,rows){
   if(!rows.length||card.querySelector('.game-compare'))return;
   const wrapper=document.createElement('span');
   wrapper.className='game-compare';
-  wrapper.setAttribute('aria-label','DraftKings and FanDuel compared with hidden Pinnacle benchmark');
-  wrapper.innerHTML=rows.map(row=>`<span class="game-compare-row cmp-${esc(row.status)}"><span class="game-compare-book">${row.book==='DRAFTKINGS'?'DK':'FD'}</span><span><span class="game-compare-market">${marketLabel(row.market,row.retail)}</span><span class="game-compare-label">${esc(row.label)}</span></span><span class="game-compare-price">${fmtPrice(row.retail.price)}</span></span>`).join('');
+  wrapper.setAttribute('aria-label','DraftKings and FanDuel moneyline and spread offers compared with hidden Pinnacle benchmark');
+  wrapper.innerHTML=rows.map(row=>`<span class="game-compare-row cmp-${esc(row.status)}"><span class="game-compare-book">${row.book==='DRAFTKINGS'?'DK':'FD'}</span><span class="game-compare-offer"><span class="game-compare-type">${marketType(row.market)}</span><span class="game-compare-market">${marketLabel(row.market,row.retail)}</span><span class="game-compare-label">${esc(row.label)}</span></span><span class="game-compare-price">${fmtPrice(row.retail.price)}</span></span>`).join('');
   card.append(wrapper);
 }
 
