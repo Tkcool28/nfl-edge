@@ -75,3 +75,34 @@ async function hydrateGameCard(card){
 function hydrateVisibleGameCards(){document.querySelectorAll('#games-list .gcard[data-game]').forEach(hydrateGameCard)}
 const games=document.getElementById('games-list');
 if(games){hydrateVisibleGameCards();new MutationObserver(hydrateVisibleGameCards).observe(games,{childList:true,subtree:true})}
+
+/* Ultra changes stake size only. Require an explicit acknowledgement before the selector keeps it. */
+let ultraPending=null;
+function ultraDialog(){
+  let dialog=document.getElementById('ultra-risk-warning');
+  if(dialog)return dialog;
+  dialog=document.createElement('dialog');
+  dialog.id='ultra-risk-warning';
+  dialog.className='risk-warning';
+  dialog.setAttribute('aria-labelledby','ultra-risk-title');
+  dialog.innerHTML=`<section class="risk-warning-card"><span class="risk-warning-kicker">Higher bankroll exposure</span><h2 id="ultra-risk-title">Ultra staking</h2><p>Choosing Ultra changes stake size, not the wager. It does not increase win probability, improve the model's edge, or improve the expected percentage return.</p><p class="risk-warning-emphasis">Only the dollar swings get larger — both wins and losses.</p><p>Use Ultra only when you intentionally want more of your bankroll at risk on the same recommendations.</p><div class="risk-warning-actions"><button class="btn-secondary" type="button" data-ultra-back>Go back</button><button class="btn-primary" type="button" data-ultra-confirm>Use Ultra</button></div></section>`;
+  document.body.append(dialog);
+  const cancel=()=>{if(ultraPending?.select?.isConnected)ultraPending.select.value=ultraPending.previous;ultraPending=null;dialog.close()};
+  dialog.querySelector('[data-ultra-back]').addEventListener('click',cancel);
+  dialog.querySelector('[data-ultra-confirm]').addEventListener('click',()=>{if(ultraPending?.select?.isConnected)ultraPending.select.dataset.previousRisk='Ultra';ultraPending=null;dialog.close()});
+  dialog.addEventListener('cancel',e=>{e.preventDefault();cancel()});
+  dialog.addEventListener('click',e=>{if(e.target===dialog)cancel()});
+  return dialog;
+}
+function rememberRisk(select){if(select?.id==='risk')select.dataset.previousRisk=select.value}
+document.addEventListener('pointerdown',e=>rememberRisk(e.target));
+document.addEventListener('focusin',e=>{if(e.target?.id==='risk'&&!e.target.dataset.previousRisk)rememberRisk(e.target)});
+document.addEventListener('change',e=>{
+  const select=e.target;
+  if(select?.id!=='risk')return;
+  const previous=select.dataset.previousRisk||'Normal';
+  if(select.value!=='Ultra'){select.dataset.previousRisk=select.value;return}
+  if(previous==='Ultra')return;
+  ultraPending={select,previous};
+  ultraDialog().showModal();
+});
