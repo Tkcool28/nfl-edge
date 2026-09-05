@@ -39,7 +39,7 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/ui-polish\.css/);
   assert.match(sw,/ui-branding\.css/);
   assert.match(sw,/nfl-edge-wordmark\.png/);
-  assert.match(sw,/nfl-edge-shell-v8/);
+  assert.match(sw,/nfl-edge-shell-v9/);
 });
 
 test('Pinnacle help semantics match approved color contract',()=>{
@@ -124,6 +124,18 @@ test('Ultra profile selection requires a presentation-only acknowledgement',()=>
   assert.match(ux,/Only the dollar swings get larger/);
   assert.match(ux,/data-ultra-confirm/);
   assert.match(branding,/risk-warning/);
+});
+
+test('brand image has an embedded fallback and motion can be disabled locally',()=>{
+  const ux=read('ux.js'),branding=read('ui-branding.css');
+  assert.match(branding,/content:url\("data:image\/png;base64,/);
+  assert.match(branding,/Loading the board/);
+  assert.match(branding,/@keyframes yard-drive/);
+  assert.match(branding,/view-transition-in/);
+  assert.match(ux,/nfl-edge-motion-v1/);
+  assert.match(ux,/Transitions & loading animation/);
+  assert.match(ux,/prefers-reduced-motion: reduce/);
+  assert.match(ux,/app-ready/);
 });
 
 test('mobile rules and four production tabs remain explicit',()=>{
