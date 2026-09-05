@@ -35,7 +35,7 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/fetch\(request,\{cache:'no-store'\}\)/);
   assert.match(sw,/market-compare\.js/);
   assert.match(sw,/ui-polish\.css/);
-  assert.match(sw,/nfl-edge-shell-v6/);
+  assert.match(sw,/nfl-edge-shell-v7/);
 });
 
 test('Pinnacle help semantics match approved color contract',()=>{
