@@ -137,19 +137,25 @@ function wireMotionSetting(){
 const account=document.getElementById('account-content');
 if(account){wireMotionSetting();new MutationObserver(wireMotionSetting).observe(account,{childList:true,subtree:false})}
 
-function animateCurrentView(){
+/* Arm the destination before app.js swaps hidden views so there is no one-frame flash. */
+function armTabTransition(event){
   if(!motionAllowed())return;
-  const view=document.querySelector('.view:not([hidden])');
-  if(!view)return;
-  view.classList.remove('view-transition-in');
-  void view.offsetWidth;
-  view.classList.add('view-transition-in');
-  setTimeout(()=>view.classList.remove('view-transition-in'),220);
+  const target=event.target.closest('[data-nav]');
+  if(!target)return;
+  const next=document.getElementById(`view-${target.dataset.nav}`);
+  const current=document.querySelector('.view:not([hidden])');
+  if(!next||!current||next===current)return;
+  const tabs=[...document.querySelectorAll('[data-nav]')];
+  const from=tabs.findIndex(button=>button.classList.contains('is-active'));
+  const to=tabs.indexOf(target);
+  root.dataset.navDirection=to<from?'back':'forward';
+  next.classList.remove('view-transition-finish');
+  next.classList.add('view-transition-finish');
+  const clear=()=>{next.classList.remove('view-transition-finish');delete root.dataset.navDirection};
+  next.addEventListener('animationend',clear,{once:true});
+  setTimeout(clear,700);
 }
-document.querySelector('.tabbar')?.addEventListener('click',e=>{
-  if(!e.target.closest('[data-nav]'))return;
-  requestAnimationFrame(()=>requestAnimationFrame(animateCurrentView));
-});
+document.querySelector('.tabbar')?.addEventListener('click',armTabTransition,true);
 
 /* The splash disappears as soon as the initial Board state has actually resolved. */
 let launchDone=false;
