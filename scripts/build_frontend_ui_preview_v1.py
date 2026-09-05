@@ -5,10 +5,16 @@ This is preview tooling only. It snapshots the local CI smoke API into an embedd
 fetch shim, inlines the production frontend assets, and bundles the real frontend
 modules into isolated script scopes. The result can be opened directly from disk
 without a server so UI review does not require deploying the feature branch.
+
+The standalone review artifact emulates a signed-in Normal-risk user. If the
+bounded smoke fixture contains no actionable retail offer, one captured offer is
+promoted to a clearly preview-only BET response so reviewers can inspect the full
+BET -> Log Wager interaction. Production evaluator output is never modified.
 """
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import re
 import urllib.error
@@ -24,6 +30,15 @@ CORE_EXPORTS = [
     "buildHeadlineWagerPayload", "buildExactWagerPayload",
 ]
 COMPARE_EXPORTS = ["compareOffer", "comparisonLabel", "findPinnyOffer", "gameComparisonRows"]
+PREVIEW_USER = {
+    "schema_version": "NFL_EDGE_USER_STATE_V1",
+    "user_id": "ui-preview-user",
+    "username": "Preview User",
+    "bankroll": "1000.00",
+    "risk_profile": "Normal",
+    "created_at": "2026-09-05T00:00:00Z",
+    "updated_at": "2026-09-05T00:00:00Z",
+}
 
 
 def _json_request(base_url: str, path: str, *, method: str = "GET", body: dict | None = None) -> tuple[int, object]:
@@ -52,6 +67,22 @@ def _offer_key(offer: dict) -> str:
     ) + f"|{line}|{offer.get('price', '')}"
 
 
+def _preview_bet_response(source: dict | None, product_version: str) -> dict:
+    response = copy.deepcopy(source or {})
+    response["product_version"] = response.get("product_version") or product_version
+    response["recommended_dollars"] = "7.50"
+    evaluation = response.setdefault("evaluation", {})
+    evaluation.update(
+        verdict="BET",
+        supported=True,
+        recommended_units=0.75,
+        probability=evaluation.get("probability") if evaluation.get("probability") is not None else 0.565,
+        trust_probability=evaluation.get("trust_probability") if evaluation.get("trust_probability") is not None else 0.548,
+        ev=evaluation.get("ev") if evaluation.get("ev") is not None else 0.061,
+    )
+    return response
+
+
 def _snapshot_api(base_url: str) -> dict:
     health_status, health = _json_request(base_url, "/api/v1/health")
     product_status, product = _json_request(base_url, "/api/v1/product/latest")
@@ -62,6 +93,7 @@ def _snapshot_api(base_url: str) -> dict:
     details: dict[str, object] = {}
     evaluations: dict[str, object] = {}
     fallback_evaluation = None
+    first_offer_key = None
     for game_summary in (games or {}).get("games", []):
         game_id = str(game_summary["game_id"])
         status, detail = _json_request(base_url, f"/api/v1/games/{urllib.parse.quote(game_id, safe='')}")
@@ -81,16 +113,19 @@ def _snapshot_api(base_url: str) -> dict:
                         "line": raw_offer.get("line"),
                         "price": raw_offer.get("price"),
                     }
+                    key = _offer_key(offer)
+                    first_offer_key = first_offer_key or key
                     eval_status, evaluation = _json_request(
                         base_url, "/api/v1/evaluate-offer", method="POST", body=offer
                     )
                     if eval_status == 200:
-                        evaluations[_offer_key(offer)] = evaluation
+                        evaluations[key] = evaluation
                         fallback_evaluation = fallback_evaluation or evaluation
 
+    product_version = (product or {}).get("product", {}).get("product_version", "preview")
     if fallback_evaluation is None:
         fallback_evaluation = {
-            "product_version": (product or {}).get("product", {}).get("product_version", "preview"),
+            "product_version": product_version,
             "recommended_dollars": None,
             "evaluation": {
                 "verdict": "UNSUPPORTED", "recommended_units": 0,
@@ -99,6 +134,18 @@ def _snapshot_api(base_url: str) -> dict:
             },
         }
 
+    bet_key = next(
+        (key for key, value in evaluations.items() if (value or {}).get("evaluation", {}).get("verdict") == "BET"),
+        None,
+    )
+    forced_bet = False
+    if bet_key is None and first_offer_key is not None:
+        bet_key = first_offer_key
+        evaluations[bet_key] = _preview_bet_response(evaluations.get(bet_key), product_version)
+        forced_bet = True
+    elif bet_key is not None:
+        evaluations[bet_key] = _preview_bet_response(evaluations[bet_key], product_version)
+
     return {
         "health": health,
         "product": product,
@@ -106,6 +153,9 @@ def _snapshot_api(base_url: str) -> dict:
         "details": details,
         "evaluations": evaluations,
         "fallback_evaluation": fallback_evaluation,
+        "preview_user": PREVIEW_USER,
+        "preview_bet_key": bet_key,
+        "preview_bet_forced": forced_bet,
     }
 
 
@@ -149,8 +199,12 @@ globalThis.fetch=async(input,init={{}})=>{{
     let body={{}};try{{body=JSON.parse(init?.body||'{{}}')}}catch{{}}
     return __jsonResponse(__NFL_EDGE_PREVIEW.evaluations[__offerKey(body)]||__NFL_EDGE_PREVIEW.fallback_evaluation);
   }}
-  if(path==='/api/v1/auth/me'||path==='/api/v1/profile'||path.startsWith('/api/v1/wagers'))return __jsonResponse({{detail:'Preview mode — sign-in and wager persistence are disabled.'}},401);
-  if(path.startsWith('/api/v1/auth/'))return __jsonResponse({{detail:'Preview mode — authentication is disabled.'}},503);
+  if(method==='GET'&&path==='/api/v1/auth/me')return __jsonResponse({{user:__NFL_EDGE_PREVIEW.preview_user}});
+  if(method==='GET'&&path==='/api/v1/profile')return __jsonResponse(__NFL_EDGE_PREVIEW.preview_user);
+  if(method==='GET'&&path==='/api/v1/wagers')return __jsonResponse({{wagers:[]}});
+  if(path.startsWith('/api/v1/wagers'))return __jsonResponse({{detail:'Preview mode — wager persistence is disabled.'}},503);
+  if(path.startsWith('/api/v1/auth/'))return __jsonResponse({{detail:'Preview mode — authentication changes are disabled.'}},503);
+  if(path==='/api/v1/profile')return __jsonResponse({{detail:'Preview mode — profile writes are disabled.'}},503);
   return __jsonResponse({{detail:'This server action is disabled in the UI preview.'}},503);
 }};
 """
@@ -188,12 +242,14 @@ def build(base_url: str, output: Path) -> None:
     html = html.replace(
         "</body>",
         "<script>\n" + _module_bundle(snapshot) + "\n</script>\n"
-        "<!-- Standalone UI review artifact: API writes/auth/install are intentionally disabled. -->\n"
+        "<!-- Standalone UI review artifact: signed-in preview state; API writes/install are intentionally disabled. -->\n"
         "</body>",
     )
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(html)
     print(f"UI_PREVIEW_BUILT={output}")
+    print(f"UI_PREVIEW_BET_KEY={snapshot.get('preview_bet_key')}")
+    print(f"UI_PREVIEW_BET_FORCED={snapshot.get('preview_bet_forced')}")
 
 
 def main() -> None:
