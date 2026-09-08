@@ -10,7 +10,6 @@ const signedUsd=value=>{
   if(!Number.isFinite(n))return'—';
   return `${n>0?'+':n<0?'-':''}$${Math.abs(n).toFixed(2)}`;
 };
-const esc=value=>String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
 
 function host(){
   const view=document.getElementById('view-bets');
@@ -31,9 +30,8 @@ function render(summary){
   const node=host();
   if(!node)return;
   if(!summary){node.hidden=true;node.innerHTML='';return;}
-  const legacy=Number(summary.legacy_untracked_wagers||0);
   node.hidden=false;
-  node.innerHTML=`<div class="bank-label">Current bankroll</div><div class="account-name">${usd(summary.current_bankroll)}</div><div class="wager-money"><span>Settled P/L <strong>${signedUsd(summary.realized_pl)}</strong></span><span>Open stakes <strong>${usd(summary.open_stakes)}</strong></span></div><p class="section-sub">Open wagers reserve their stake. Wins return the full payout.</p>${legacy>0?`<p class="section-sub bankroll-legacy-note">${esc(legacy)} earlier wager${legacy===1?'':'s'} predate automatic bankroll tracking and are not retroactively applied.</p>`:''}`;
+  node.innerHTML=`<div class="bank-label">Current bankroll</div><div class="account-name">${usd(summary.current_bankroll)}</div><div class="wager-money"><span>Settled P/L <strong>${signedUsd(summary.realized_pl)}</strong></span><span>Open stakes <strong>${usd(summary.open_stakes)}</strong></span></div><p class="section-sub">Open wagers reserve their stake. Wins return the full payout.</p>`;
 }
 
 async function refresh(){
