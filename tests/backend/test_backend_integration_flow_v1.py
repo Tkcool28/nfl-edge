@@ -117,6 +117,14 @@ def test_full_backend_flow_two_users_wager_restart_and_exact_offers(
     )
     assert logged.status_code == 201, logged.text
     wager_id = logged.json()["wager"]["wager_id"]
+    assert logged.json()["wager"]["bankroll_tracked"] is True
+    assert logged.json()["wager"]["bankroll_effect"] == "-4.00"
+    assert relog_a.get("/api/v1/profile").json()["bankroll"] == "496.00"
+    summary = relog_a.get("/api/v1/bankroll")
+    assert summary.status_code == 200, summary.text
+    assert summary.json()["current_bankroll"] == "496.00"
+    assert summary.json()["open_stakes"] == "4.00"
+    assert summary.json()["realized_pl"] == "0.00"
 
     # Close/reopen the client while preserving the persistent session cookie.
     saved_cookies = dict(relog_a.cookies)
@@ -130,11 +138,12 @@ def test_full_backend_flow_two_users_wager_restart_and_exact_offers(
     assert user_b.get(f"/api/v1/wagers/{wager_id}").status_code == 404
     assert user_b.get("/api/v1/wagers").json()["wagers"] == []
 
-    # Restart the backend process object: SQLite/session/product state remains authoritative.
+    # Restart the backend process object: SQLite/session/product/bankroll state remains authoritative.
     restarted = TestClient(create_app(settings))
     restarted.cookies.update(saved_cookies)
     assert restarted.get("/api/v1/auth/me").json()["user"]["user_id"] == a_id
-    assert restarted.get("/api/v1/profile").json()["bankroll"] == "500.00"
+    assert restarted.get("/api/v1/profile").json()["bankroll"] == "496.00"
+    assert restarted.get("/api/v1/bankroll").json()["open_stakes"] == "4.00"
     assert restarted.get(f"/api/v1/wagers/{wager_id}").json()["actual_dollars"] == "4.00"
     assert restarted.get("/api/v1/product/latest").json()["headline_overlays"]["balanced"]["wager_logged"] is True
 
