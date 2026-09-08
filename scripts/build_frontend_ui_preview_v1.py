@@ -40,6 +40,15 @@ PREVIEW_USER = {
     "created_at": "2026-09-05T00:00:00Z",
     "updated_at": "2026-09-05T00:00:00Z",
 }
+PREVIEW_BANKROLL = {
+    "schema_version": "NFL_EDGE_BANKROLL_SUMMARY_V1",
+    "current_bankroll": "1000.00",
+    "realized_pl": "24.50",
+    "open_stakes": "12.00",
+    "tracked_open_wagers": 2,
+    "tracked_settled_wagers": 5,
+    "legacy_untracked_wagers": 0,
+}
 
 
 def _json_request(base_url: str, path: str, *, method: str = "GET", body: dict | None = None) -> tuple[int, object]:
@@ -159,6 +168,7 @@ def _snapshot_api(base_url: str) -> dict:
         "evaluations": evaluations,
         "fallback_evaluation": fallback_evaluation,
         "preview_user": PREVIEW_USER,
+        "preview_bankroll": PREVIEW_BANKROLL,
         "preview_bet_key": bet_key,
         "preview_bet_forced": forced_bet,
     }
@@ -179,6 +189,7 @@ def _module_bundle(snapshot: dict) -> str:
     install_src = _without_imports((FRONTEND / "install-affordance.js").read_text())
     app_src = _without_imports((FRONTEND / "app.js").read_text())
     manual_src = _without_imports((FRONTEND / "manual-guidance.js").read_text())
+    bankroll_src = _without_imports(_without_exports((FRONTEND / "bankroll-ui.js").read_text()))
     ux_src = _without_imports((FRONTEND / "ux.js").read_text())
     payload = json.dumps(snapshot, separators=(",", ":")).replace("</", "<\\/")
 
@@ -209,6 +220,7 @@ globalThis.fetch=async(input,init={{}})=>{{
   }}
   if(method==='GET'&&path==='/api/v1/auth/me')return __jsonResponse({{user:__NFL_EDGE_PREVIEW.preview_user}});
   if(method==='GET'&&path==='/api/v1/profile')return __jsonResponse(__NFL_EDGE_PREVIEW.preview_user);
+  if(method==='GET'&&path==='/api/v1/bankroll')return __jsonResponse(__NFL_EDGE_PREVIEW.preview_bankroll);
   if(method==='GET'&&path==='/api/v1/wagers')return __jsonResponse({{wagers:[]}});
   if(path.startsWith('/api/v1/wagers'))return __jsonResponse({{detail:'Preview mode — wager persistence is disabled.'}},503);
   if(path.startsWith('/api/v1/auth/'))return __jsonResponse({{detail:'Preview mode — authentication changes are disabled.'}},503);
@@ -235,11 +247,12 @@ globalThis.fetch=async(input,init={{}})=>{{
         "const {buildExactWagerPayload,esc,line,money,odds,pct,playThroughPresentation,units}=__core;\n"
         f"{manual_src}\n}})();"
     )
+    bankroll_bundle = f"(()=>{{const {{ApiClient,ApiError}}=__api;\n{bankroll_src}\n}})();"
     ux_bundle = (
         "(()=>{const {ApiClient}=__api;const {gameComparisonRows}=__compare;\n"
         f"{ux_src}\n}})();"
     )
-    return "\n".join((fetch_shim, api_bundle, core_bundle, compare_bundle, install_bundle, app_bundle, manual_bundle, ux_bundle))
+    return "\n".join((fetch_shim, api_bundle, core_bundle, compare_bundle, install_bundle, app_bundle, manual_bundle, bankroll_bundle, ux_bundle))
 
 
 def build(base_url: str, output: Path) -> None:
@@ -255,7 +268,7 @@ def build(base_url: str, output: Path) -> None:
     html = re.sub(r'<link rel="apple-touch-icon"[^>]*>', '', html)
     html = re.sub(r'<link rel="stylesheet" href="\./(?:styles|saved-ux|ui-polish|ui-branding|ui-motion|ui-theme-finish)\.css">', '', html)
     html = html.replace("</head>", f"<style>\n{css}\n</style></head>")
-    html = re.sub(r'<script type="module" src="\./(?:app|ux|manual-guidance|install-affordance)\.js"></script>', '', html)
+    html = re.sub(r'<script type="module" src="\./(?:app|ux|manual-guidance|bankroll-ui|install-affordance)\.js"></script>', '', html)
     replay = """
 <script>
 /* Preview-only: replay the real launch layer long enough for a human to judge it. Production adds no artificial delay. */
