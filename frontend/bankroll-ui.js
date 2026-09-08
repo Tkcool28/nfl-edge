@@ -57,5 +57,3 @@ window.addEventListener('nfl-edge-bankroll-refresh',schedule);
 
 // Keep the summary current even when Bets is the first authenticated view rendered.
 refresh();
-
-export {refresh as refreshBankrollSummary,signedUsd};
