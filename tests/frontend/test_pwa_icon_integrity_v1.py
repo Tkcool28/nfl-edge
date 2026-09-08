@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import json
 import struct
+import subprocess
+import sys
 import zlib
 from pathlib import Path
 
@@ -12,6 +14,11 @@ ROOT = Path(__file__).resolve().parents[2]
 FRONTEND = ROOT / "frontend"
 ICONS = FRONTEND / "icons"
 PNG_SIG = b"\x89PNG\r\n\x1a\n"
+
+subprocess.run(
+    [sys.executable, str(ROOT / "scripts" / "materialize_pwa_icon_assets_v1.py")],
+    check=True,
+)
 
 EXPECTED_SHA256 = {
     "icon-192-v3.png": "8c6d08ec8f41b6b895126ec864199e59fdb14ccefda85935b6c352c96080b008",
