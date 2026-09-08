@@ -11,13 +11,11 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[2]
 FRONTEND = ROOT / "frontend"
 ICONS = FRONTEND / "icons"
-SOURCE = ICONS / "nfl_edge_pixel_football_icon.png"
 PNG_SIG = b"\x89PNG\r\n\x1a\n"
 
 EXPECTED_SHA256 = {
-    "nfl_edge_pixel_football_icon.png": "071250402b32f4b7e16e163f72054398ccbd50628541ab772e8078d593b863c9",
-    "icon-192-v3.png": "dccc225d0311230ea579335b4eca973c38af5ea7046d49d60cda08df0d642d22",
-    "icon-512-v3.png": "45fdb2ca57849f5648c103742f7e3e6b0fc8ee14b826ca74b31c1a41ad6e86cc",
+    "icon-192-v3.png": "8c6d08ec8f41b6b895126ec864199e59fdb14ccefda85935b6c352c96080b008",
+    "icon-512-v3.png": "754eebc9266d02cb709e13f4f29e006727d2aa37a5f447a42c8a899b375dc747",
     "favicon.ico": "857936a759ca6d738c92c5836908c1b09b4663c64aa87f2dacd1c4afd35ac23b",
 }
 
@@ -62,30 +60,23 @@ def _validate_png(path: Path, expected_size: tuple[int, int]) -> None:
 
 
 def test_all_pwa_png_variants_are_structurally_valid_and_decodable() -> None:
-    _validate_png(SOURCE, (64, 64))
     for name in ("icon-192.png", "icon-192-v2.png", "icon-192-v3.png"):
         _validate_png(ICONS / name, (192, 192))
     for name in ("icon-512.png", "icon-512-v2.png", "icon-512-v3.png"):
         _validate_png(ICONS / name, (512, 512))
 
 
-def test_active_icons_are_exact_nearest_neighbor_derivatives_of_selected_16bit_art() -> None:
-    with Image.open(SOURCE) as source_image:
-        source_image.load()
-        source_rgb = source_image.convert("RGB")
-        assert source_rgb.size == (64, 64)
-        for name, size in (("icon-192-v3.png", 192), ("icon-512-v3.png", 512)):
-            expected = source_rgb.resize((size, size), Image.Resampling.NEAREST)
-            with Image.open(ICONS / name) as actual_image:
-                actual_image.load()
-                actual = actual_image.convert("RGB")
-                assert actual.size == (size, size)
-                assert actual.tobytes() == expected.tobytes()
+def test_compatibility_icon_paths_match_active_approved_artwork() -> None:
+    active_192 = (ICONS / "icon-192-v3.png").read_bytes()
+    active_512 = (ICONS / "icon-512-v3.png").read_bytes()
+    assert (ICONS / "icon-192.png").read_bytes() == active_192
+    assert (ICONS / "icon-192-v2.png").read_bytes() == active_192
+    assert (ICONS / "icon-512.png").read_bytes() == active_512
+    assert (ICONS / "icon-512-v2.png").read_bytes() == active_512
 
 
-def test_selected_16bit_icon_art_hashes_are_locked() -> None:
+def test_approved_16bit_icon_hashes_are_locked() -> None:
     paths = {
-        "nfl_edge_pixel_football_icon.png": SOURCE,
         "icon-192-v3.png": ICONS / "icon-192-v3.png",
         "icon-512-v3.png": ICONS / "icon-512-v3.png",
         "favicon.ico": FRONTEND / "favicon.ico",
