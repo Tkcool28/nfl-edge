@@ -15,7 +15,7 @@ PNG_SIG = b"\x89PNG\r\n\x1a\n"
 
 EXPECTED_SHA256 = {
     "icon-192-v3.png": "8c6d08ec8f41b6b895126ec864199e59fdb14ccefda85935b6c352c96080b008",
-    "icon-512-v3.png": "754eebc9266d02cb709e13f4f29e006727d2aa37a5f447a42c8a899b375dc747",
+    "icon-512-v3.png": "2a725327d9c09373a4132e869a3440535ff203c5130bfee2b47fbde6c33f0fe9",
     "favicon.ico": "857936a759ca6d738c92c5836908c1b09b4663c64aa87f2dacd1c4afd35ac23b",
 }
 
@@ -59,7 +59,7 @@ def _validate_png(path: Path, expected_size: tuple[int, int]) -> None:
         assert image.size == expected_size
 
 
-def test_all_pwa_png_variants_are_structurally_valid_and_decodable() -> None:
+def test_all_materialized_pwa_png_variants_are_structurally_valid_and_decodable() -> None:
     for name in ("icon-192.png", "icon-192-v2.png", "icon-192-v3.png"):
         _validate_png(ICONS / name, (192, 192))
     for name in ("icon-512.png", "icon-512-v2.png", "icon-512-v3.png"):
@@ -75,7 +75,17 @@ def test_compatibility_icon_paths_match_active_approved_artwork() -> None:
     assert (ICONS / "icon-512-v2.png").read_bytes() == active_512
 
 
-def test_approved_16bit_icon_hashes_are_locked() -> None:
+def test_materialized_512_is_exact_nearest_neighbor_derivative_of_approved_192() -> None:
+    with Image.open(ICONS / "icon-192-v3.png") as source_image:
+        source_image.load()
+        expected = source_image.convert("RGB").resize((512, 512), Image.Resampling.NEAREST)
+    with Image.open(ICONS / "icon-512-v3.png") as actual_image:
+        actual_image.load()
+        actual = actual_image.convert("RGB")
+    assert actual.tobytes() == expected.tobytes()
+
+
+def test_approved_icon_hashes_are_locked() -> None:
     paths = {
         "icon-192-v3.png": ICONS / "icon-192-v3.png",
         "icon-512-v3.png": ICONS / "icon-512-v3.png",
@@ -121,3 +131,12 @@ def test_service_worker_forces_fresh_v17_icon_cache_population() -> None:
     assert "caches.delete(CACHE_NAME)" in sw
     assert "fetch(path,{cache:'reload'})" in sw
     assert "fetch(request,{cache:'no-store'})" in sw
+
+
+def test_materializer_contract_is_locked_to_approved_source_and_generated_hash() -> None:
+    script = (ROOT / "scripts" / "materialize_pwa_icon_assets_v1.py").read_text()
+    assert EXPECTED_SHA256["icon-192-v3.png"] in script
+    assert EXPECTED_SHA256["icon-512-v3.png"] in script
+    assert 'Image.Resampling.NEAREST' in script
+    assert 'icon-192-v3.png' in script
+    assert 'icon-512-v3.png' in script
