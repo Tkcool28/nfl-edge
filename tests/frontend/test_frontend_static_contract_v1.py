@@ -1,7 +1,8 @@
 from __future__ import annotations
-import json,re,struct
+import json,re,struct,subprocess,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]; FRONTEND=ROOT/'frontend'
+subprocess.run([sys.executable,str(ROOT/'scripts'/'materialize_pwa_icon_assets_v1.py')],check=True)
 def png_size(p):
  d=p.read_bytes(); assert d[:8]==b'\x89PNG\r\n\x1a\n'; return struct.unpack('>II',d[16:24])
 def test_manifest_and_install_assets_are_valid():
