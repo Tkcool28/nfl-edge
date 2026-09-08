@@ -9,6 +9,7 @@ from argon2.exceptions import VerificationError, VerifyMismatchError
 from fastapi import Body, FastAPI, HTTPException, Request, Response
 
 from . import _base_app as _base
+from .db import BankrollError, utc_now
 from .settings import BackendSettings
 
 LANE_ORDER = ("hit_rate", "balanced", "value")
@@ -78,6 +79,7 @@ def create_app(settings: BackendSettings | None = None) -> FastAPI:
     del core_login  # intentionally replaced below
     core_product_latest = _take_route(app, "/api/v1/product/latest", "GET")
     core_create_wager = _take_route(app, "/api/v1/wagers", "POST")
+    core_patch_wager = _take_route(app, "/api/v1/wagers/{wager_id}", "PATCH")
 
     # Normalize invalid-looking and ordinary wrong credentials to the same
     # generic failure. A dummy Argon2id verify also avoids a cheap username
@@ -85,6 +87,15 @@ def create_app(settings: BackendSettings | None = None) -> FastAPI:
     hasher = PasswordHasher()
     dummy_hash = hasher.hash("nfl-edge-login-dummy-credential-v1")
     limiter = _base._AuthLimiter(active_settings.auth_rate_limit_per_minute)
+
+    def require_user_id(request: Request) -> str:
+        token = request.cookies.get(active_settings.cookie_name)
+        if not token:
+            raise HTTPException(401, "authentication required")
+        user = db.resolve_session(token_hash=_base._token_hash(token), now=utc_now())
+        if user is None:
+            raise HTTPException(401, "authentication required")
+        return str(user["user_id"])
 
     @app.post("/api/v1/auth/login")
     def login(request: Request, response: Response, payload: dict[str, Any] = Body(...)) -> dict[str, Any]:
@@ -190,6 +201,10 @@ def create_app(settings: BackendSettings | None = None) -> FastAPI:
                 overlays[lane_key][field] = overlays[primary][field]
         return view
 
+    @app.get("/api/v1/bankroll")
+    def bankroll(request: Request) -> dict[str, Any]:
+        return db.bankroll_summary(user_id=require_user_id(request))
+
     @app.post("/api/v1/wagers", status_code=201)
     def create_wager(request: Request, payload: dict[str, Any] = Body(...)) -> dict[str, Any]:
         source_type = str(payload.get("source_type") or "HEADLINE").upper()
@@ -210,7 +225,17 @@ def create_app(settings: BackendSettings | None = None) -> FastAPI:
                             409,
                             f"duplicate headline recommendation; log the {primary_lane} card for this exact offer",
                         )
-        return core_create_wager(request, payload)
+        try:
+            return core_create_wager(request, payload)
+        except BankrollError as exc:
+            raise HTTPException(409, str(exc)) from None
+
+    @app.patch("/api/v1/wagers/{wager_id}")
+    def patch_wager(request: Request, wager_id: str, payload: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        try:
+            return core_patch_wager(request, wager_id, payload)
+        except BankrollError as exc:
+            raise HTTPException(409, str(exc)) from None
 
     return app
 
