@@ -16,7 +16,7 @@ test('Bets tab exposes current bankroll, settled P/L, and open stakes without mo
   assert.match(ui,/Settled P\/L/);
   assert.match(ui,/Open stakes/);
   assert.match(ui,/Open wagers reserve their stake\. Wins return the full payout\./);
-  assert.match(ui,/legacy_untracked_wagers/);
+  assert.doesNotMatch(ui,/legacy_untracked_wagers|predate automatic bankroll tracking/);
   assert.doesNotMatch(ui,/model_probability|trust_probability|recommended_units|Play Through|the-odds-api|api\.sleeper|ODDS_API_KEY/i);
 });
 
