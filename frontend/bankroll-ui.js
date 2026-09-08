@@ -1,7 +1,6 @@
 import {ApiClient,ApiError} from './api.js';
 
 const api=new ApiClient({baseUrl:globalThis.NFL_EDGE_API_BASE||''});
-const settled=new Set(['WON','LOST','PUSH','VOID','CANCELLED']);
 let timer=null;
 
 const usd=value=>value==null?'—':`$${Number(value).toFixed(2)}`;
@@ -21,7 +20,7 @@ function host(){
   if(!node){
     node=document.createElement('section');
     node.id='bankroll-summary';
-    node.className='week-card bankroll-summary-card';
+    node.className='bank-hero bankroll-summary-card';
     node.setAttribute('aria-live','polite');
     view.insertBefore(node,list);
   }
@@ -34,7 +33,7 @@ function render(summary){
   if(!summary){node.hidden=true;node.innerHTML='';return;}
   const legacy=Number(summary.legacy_untracked_wagers||0);
   node.hidden=false;
-  node.innerHTML=`<div class="bankroll-summary-head"><span class="bank-label">Current bankroll</span><strong class="bankroll-current">${usd(summary.current_bankroll)}</strong></div><div class="wager-money bankroll-summary-meta"><span>Settled P/L <strong>${signedUsd(summary.realized_pl)}</strong></span><span>Open stakes <strong>${usd(summary.open_stakes)}</strong></span></div><p class="section-sub">Open wagers reserve their stake. Wins return the full payout.</p>${legacy>0?`<p class="section-sub bankroll-legacy-note">${esc(legacy)} earlier wager${legacy===1?'':'s'} predate automatic bankroll tracking and are not retroactively applied.</p>`:''}`;
+  node.innerHTML=`<div class="bank-label">Current bankroll</div><div class="account-name">${usd(summary.current_bankroll)}</div><div class="wager-money"><span>Settled P/L <strong>${signedUsd(summary.realized_pl)}</strong></span><span>Open stakes <strong>${usd(summary.open_stakes)}</strong></span></div><p class="section-sub">Open wagers reserve their stake. Wins return the full payout.</p>${legacy>0?`<p class="section-sub bankroll-legacy-note">${esc(legacy)} earlier wager${legacy===1?'':'s'} predate automatic bankroll tracking and are not retroactively applied.</p>`:''}`;
 }
 
 async function refresh(){
