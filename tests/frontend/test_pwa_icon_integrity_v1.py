@@ -1,12 +1,25 @@
 from __future__ import annotations
 
+import hashlib
+import json
 import struct
 import zlib
 from pathlib import Path
 
+from PIL import Image
+
 ROOT = Path(__file__).resolve().parents[2]
 FRONTEND = ROOT / "frontend"
+ICONS = FRONTEND / "icons"
+SOURCE = ICONS / "nfl_edge_pixel_football_icon.png"
 PNG_SIG = b"\x89PNG\r\n\x1a\n"
+
+EXPECTED_SHA256 = {
+    "nfl_edge_pixel_football_icon.png": "071250402b32f4b7e16e163f72054398ccbd50628541ab772e8078d593b863c9",
+    "icon-192-v3.png": "dccc225d0311230ea579335b4eca973c38af5ea7046d49d60cda08df0d642d22",
+    "icon-512-v3.png": "45fdb2ca57849f5648c103742f7e3e6b0fc8ee14b826ca74b31c1a41ad6e86cc",
+    "favicon.ico": "857936a759ca6d738c92c5836908c1b09b4663c64aa87f2dacd1c4afd35ac23b",
+}
 
 
 def _validate_png(path: Path, expected_size: tuple[int, int]) -> None:
@@ -42,24 +55,77 @@ def _validate_png(path: Path, expected_size: tuple[int, int]) -> None:
     assert seen_ihdr and seen_idat and seen_iend
     assert size == expected_size
 
+    with Image.open(path) as image:
+        image.load()
+        assert image.format == "PNG"
+        assert image.size == expected_size
 
-def test_manifest_pngs_are_structurally_valid() -> None:
-    _validate_png(FRONTEND / "icons" / "icon-192-v2.png", (192, 192))
-    _validate_png(FRONTEND / "icons" / "icon-512-v2.png", (512, 512))
+
+def test_all_pwa_png_variants_are_structurally_valid_and_decodable() -> None:
+    _validate_png(SOURCE, (64, 64))
+    for name in ("icon-192.png", "icon-192-v2.png", "icon-192-v3.png"):
+        _validate_png(ICONS / name, (192, 192))
+    for name in ("icon-512.png", "icon-512-v2.png", "icon-512-v3.png"):
+        _validate_png(ICONS / name, (512, 512))
 
 
-def test_root_favicon_is_a_real_ico_file() -> None:
+def test_active_icons_are_exact_nearest_neighbor_derivatives_of_selected_16bit_art() -> None:
+    with Image.open(SOURCE) as source_image:
+        source_image.load()
+        source_rgb = source_image.convert("RGB")
+        assert source_rgb.size == (64, 64)
+        for name, size in (("icon-192-v3.png", 192), ("icon-512-v3.png", 512)):
+            expected = source_rgb.resize((size, size), Image.Resampling.NEAREST)
+            with Image.open(ICONS / name) as actual_image:
+                actual_image.load()
+                actual = actual_image.convert("RGB")
+                assert actual.size == (size, size)
+                assert actual.tobytes() == expected.tobytes()
+
+
+def test_selected_16bit_icon_art_hashes_are_locked() -> None:
+    paths = {
+        "nfl_edge_pixel_football_icon.png": SOURCE,
+        "icon-192-v3.png": ICONS / "icon-192-v3.png",
+        "icon-512-v3.png": ICONS / "icon-512-v3.png",
+        "favicon.ico": FRONTEND / "favicon.ico",
+    }
+    for name, path in paths.items():
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == EXPECTED_SHA256[name]
+
+
+def test_root_favicon_is_a_real_decodable_ico_file() -> None:
     data = (FRONTEND / "favicon.ico").read_bytes()
     reserved, image_type, count = struct.unpack("<HHH", data[:6])
     assert reserved == 0
     assert image_type == 1
-    assert count >= 1
+    assert count == 4
     assert len(data) > 6 + 16 * count
+    with Image.open(FRONTEND / "favicon.ico") as image:
+        image.load()
+        assert image.format == "ICO"
+        assert image.size == (64, 64)
 
 
-def test_service_worker_forces_fresh_icon_cache_population() -> None:
+def test_manifest_and_head_use_fresh_v3_icon_urls() -> None:
+    manifest = json.loads((FRONTEND / "manifest.webmanifest").read_text())
+    assert [icon["src"] for icon in manifest["icons"]] == [
+        "./icons/icon-192-v3.png",
+        "./icons/icon-512-v3.png",
+    ]
+    html = (FRONTEND / "index.html").read_text()
+    assert 'rel="shortcut icon" href="./favicon.ico"' in html
+    assert 'href="./icons/icon-192-v3.png"' in html
+    assert 'href="./icons/icon-512-v3.png"' in html
+    assert 'rel="apple-touch-icon" href="./icons/icon-192-v3.png"' in html
+
+
+def test_service_worker_forces_fresh_v17_icon_cache_population() -> None:
     sw = (FRONTEND / "sw.js").read_text()
+    assert "nfl-edge-shell-v17" in sw
     assert "./favicon.ico" in sw
+    assert "./icons/icon-192-v3.png" in sw
+    assert "./icons/icon-512-v3.png" in sw
     assert "installFreshShell" in sw
     assert "caches.delete(CACHE_NAME)" in sw
     assert "fetch(path,{cache:'reload'})" in sw
