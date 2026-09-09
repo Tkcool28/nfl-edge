@@ -35,3 +35,6 @@ def test_local_storage_is_presentation_only():
  app=(FRONTEND/'app.js').read_text(); keys=re.findall(r"localStorage\.(?:getItem|setItem)\((?:key|'([^']+)'|\"([^\"]+)\")",app); text=' '.join(sum(([a,b] for a,b in keys),[])); assert 'bankroll' not in text.lower() and 'wager' not in text.lower() and 'password' not in text.lower()
 def test_mobile_touch_and_states_exist():
  c=(FRONTEND/'styles.css').read_text(); p=(FRONTEND/'ui-polish.css').read_text(); assert '@media(max-width:340px)' in c and 'min-height:44px' in c and ':focus-visible' in c and '.state-chip' in c and '.roof-badge' in c; assert '@media(max-width:320px)' in p
+
+def test_user_education_tutorial_contract_suite():
+ subprocess.run([sys.executable,'-m','pytest','-q',str(ROOT/'tests'/'frontend'/'test_user_education_tutorial_v1.py')],cwd=ROOT,check=True)
