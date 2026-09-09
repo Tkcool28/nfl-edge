@@ -54,6 +54,31 @@ class ProductStore:
         self.status_path = self.root / STATUS_FILE
         self._lock = threading.RLock()
         self._snapshot: dict[str, Any] | None = None
+        self._loaded_identity: tuple[int, int, int, int] | None = None
+        self._observed_identity: tuple[int, int, int, int] | None = None
+        self._reload_failure: dict[str, Any] | None = None
+
+    def _latest_identity(self) -> tuple[int, int, int, int] | None:
+        try:
+            state = self.latest_path.stat()
+        except FileNotFoundError:
+            return None
+        return (state.st_dev, state.st_ino, state.st_size, state.st_mtime_ns)
+
+    def _load_validated_latest(self, *, required: bool) -> tuple[dict[str, Any], tuple[int, int, int, int]] | None:
+        # The publisher replaces latest.json atomically. Require a stable stat identity
+        # around the read so a rapid successive publication never installs uncertain bytes.
+        for _ in range(2):
+            before = self._latest_identity()
+            if before is None:
+                if required:
+                    raise FileNotFoundError(self.latest_path)
+                return None
+            payload = json.loads(self.latest_path.read_text(encoding="utf-8"))
+            after = self._latest_identity()
+            if after is not None and before == after:
+                return validate_product_snapshot(payload), after
+        raise RuntimeError("latest.json changed while being loaded")
 
     def _read_status(self) -> dict[str, Any]:
         if not self.status_path.exists():
@@ -73,19 +98,69 @@ class ProductStore:
             }
 
     def load_latest(self, *, required: bool = False) -> dict[str, Any] | None:
-        if not self.latest_path.exists():
-            if required:
-                raise FileNotFoundError(self.latest_path)
-            return None
-        payload = json.loads(self.latest_path.read_text(encoding="utf-8"))
-        validated = validate_product_snapshot(payload)
         with self._lock:
+            loaded = self._load_validated_latest(required=required)
+            if loaded is None:
+                return None
+            validated, identity = loaded
             self._snapshot = validated
+            self._loaded_identity = identity
+            self._observed_identity = identity
+            self._reload_failure = None
+            return deepcopy(validated)
+
+    def _record_reload_failure(self, exc: BaseException) -> None:
+        if self._snapshot is not None:
+            self._reload_failure = {
+                "at": _now(),
+                "type": type(exc).__name__,
+                "message": str(exc)[:500],
+            }
+
+    def refresh_if_changed(self) -> dict[str, Any] | None:
+        """Return the current last-good snapshot, reloading only after local replacement.
+
+        Failed reads or validation preserve the prior in-memory snapshot. The failed
+        file identity is remembered so unchanged broken bytes do not trigger repeated
+        parsing on every request; a later atomic replacement is retried automatically.
+        """
+        with self._lock:
+            try:
+                identity = self._latest_identity()
+            except OSError as exc:
+                self._record_reload_failure(exc)
+                return deepcopy(self._snapshot) if self._snapshot is not None else None
+            if identity == self._observed_identity:
+                return deepcopy(self._snapshot) if self._snapshot is not None else None
+            try:
+                loaded = self._load_validated_latest(required=False)
+                if loaded is None:
+                    self._observed_identity = None
+                    if self._snapshot is not None:
+                        self._reload_failure = {
+                            "at": _now(),
+                            "type": "FileNotFoundError",
+                            "message": "latest.json disappeared after a valid product was loaded",
+                        }
+                    return deepcopy(self._snapshot) if self._snapshot is not None else None
+                validated, stable_identity = loaded
+            except Exception as exc:
+                self._observed_identity = identity
+                if self._snapshot is not None:
+                    self._reload_failure = {
+                        "at": _now(),
+                        "type": type(exc).__name__,
+                        "message": str(exc)[:500],
+                    }
+                return deepcopy(self._snapshot) if self._snapshot is not None else None
+            self._snapshot = validated
+            self._loaded_identity = stable_identity
+            self._observed_identity = stable_identity
+            self._reload_failure = None
             return deepcopy(validated)
 
     def snapshot(self) -> dict[str, Any] | None:
-        with self._lock:
-            return deepcopy(self._snapshot) if self._snapshot is not None else None
+        return self.refresh_if_changed()
 
     def publish(self, candidate: Mapping[str, Any]) -> Path:
         attempt = _now()
@@ -122,14 +197,30 @@ class ProductStore:
         )
         _atomic_json(self.status_path, status)
         with self._lock:
-            self._snapshot = deepcopy(validated)
+            # Re-read the atomically published pointer. Another publisher can replace
+            # latest.json between our promotion and this instance's cache update.
+            # Pair only the validated on-disk bytes with their stable identity.
+            loaded = self._load_validated_latest(required=True)
+            if loaded is None:  # pragma: no cover - required=True raises instead
+                raise FileNotFoundError(self.latest_path)
+            current, identity = loaded
+            self._snapshot = current
+            self._loaded_identity = identity
+            self._observed_identity = identity
+            self._reload_failure = None
         return immutable
 
     def metadata(self) -> dict[str, Any]:
         snapshot = self.snapshot()
         status = self._read_status()
+        with self._lock:
+            reload_failure = deepcopy(self._reload_failure)
         if snapshot is None:
-            return {**status, "product_available": False}
+            return {
+                **status,
+                "product_available": False,
+                "last_reload_failure": reload_failure,
+            }
         generated = datetime.fromisoformat(str(snapshot["generated_at_utc"])[:-1] + "+00:00")
         age = max(0.0, (datetime.now(timezone.utc) - generated).total_seconds())
         threshold = float(snapshot["freshness"]["threshold_seconds"])
@@ -150,5 +241,6 @@ class ProductStore:
             "market_snapshot_version": snapshot["market_snapshot_version"],
             "runtime_age_seconds": age,
             "runtime_freshness_state": runtime_state,
+            "last_reload_failure": reload_failure,
             "stale": runtime_state == "STALE" or bool(snapshot["stale"]),
         }
