@@ -1,0 +1,17 @@
+[Unit]
+Description=NFL EDGE production refresh after twice-daily Sleeper audit
+Documentation=file:///root/nfl-edge/docs/production_refresh_v1.md
+
+[Timer]
+# Existing Sleeper audit fires at fixed 00:00 and 12:00 UTC and recently completes in ~4 seconds.
+# The five-minute delay provides bounded completion margin without racing the source audit.
+OnCalendar=*-*-* 00:05:00 UTC
+OnCalendar=*-*-* 12:05:00 UTC
+# A boot after a missed billable cycle must not create a catch-up provider request.
+Persistent=false
+AccuracySec=1s
+RandomizedDelaySec=0
+Unit=nfl-edge-production-refresh.service
+
+[Install]
+WantedBy=timers.target

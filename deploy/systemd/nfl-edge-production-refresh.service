@@ -1,0 +1,37 @@
+[Unit]
+Description=NFL EDGE bounded twice-daily production refresh
+Documentation=file:///root/nfl-edge/docs/production_refresh_v1.md
+After=network-online.target nfl-edge-sleeper-qb-audit.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/nfl-edge
+Environment="PYTHONPATH=/root/nfl-edge/src"
+# Contains only ODDS_API_KEY, owned root:root mode 0600. Never place its value in this unit.
+EnvironmentFile=/etc/nfl-edge/refresh.env
+ExecStart=/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/run_production_refresh_v1.py --live --run-root /var/lib/nfl-edge/production_refresh_v1 --publication-dir /var/lib/nfl-edge/product_v1
+# A failed run is terminal. The timer waits for the next regular cycle; no retries.
+Restart=no
+TimeoutStartSec=10min
+MemoryMax=768M
+MemoryHigh=512M
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/nfl-edge/production_refresh_v1 /var/lib/nfl-edge/product_v1
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictNamespaces=true
+SystemCallArchitectures=native
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nfl-edge-production-refresh
+
+[Install]
+WantedBy=multi-user.target
