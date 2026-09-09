@@ -30,7 +30,7 @@ from nfl_edge.live.markets_2026 import (
 )
 from nfl_edge.live.product_2026 import build_product_snapshot, product_snapshot_bytes
 from nfl_edge.live.product_state_2026 import load_entering_2026_product_state
-from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, score_week1
+from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash, score_week1
 from nfl_edge.live.sleeper_qb import DEFAULT_OVERRIDES, SleeperExpectedQBResolver, SleeperQBSource, load_overrides
 from nfl_edge.live.week1_2026 import load_week1_schedule
 
@@ -156,10 +156,12 @@ def _validate_football(path: Path) -> dict[str, Any]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict) or not isinstance(payload.get("games"), list) or not payload["games"]:
         raise RuntimeError("football scorer did not create a non-empty canonical games snapshot")
-    if not isinstance(payload.get("snapshot_sha256"), str) or len(payload["snapshot_sha256"]) != 64:
+    stored = payload.get("snapshot_sha256")
+    if not isinstance(stored, str) or len(stored) != 64 or any(c not in "0123456789abcdef" for c in stored.lower()):
         raise RuntimeError("football scorer snapshot SHA-256 is missing or malformed")
-    canonical = canonical_snapshot_bytes(payload)
-    if hashlib.sha256(canonical).hexdigest() != payload["snapshot_sha256"]:
+    # Shared identity contract with the scorer: hash excludes snapshot_sha256
+    # itself and is independent of file formatting.
+    if football_snapshot_hash(payload) != stored:
         raise RuntimeError("football scorer canonical snapshot SHA-256 mismatch")
     return payload
 
@@ -331,7 +333,7 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                 market_path.parent.mkdir(parents=True, exist_ok=True)
                 market_path.write_bytes(market_snapshot_bytes(market))
                 summary["credits_consumed"] = metadata.get("credits_consumed")
-                summary["market_snapshot_version"] = market["snapshot_version"]
+                summary["market_snapshot_version"] = market.get("market_snapshot_version") or market.get("snapshot_version")
                 summary["market_snapshot_sha256"] = market["snapshot_sha256"]
             except Exception as exc:
                 return finish(RefreshOutcome.MARKET_NORMALIZATION_FAILED, exc)

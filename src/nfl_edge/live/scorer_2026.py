@@ -1,6 +1,7 @@
 """Deterministic market-independent 2026 Week 1 football scorer."""
 from __future__ import annotations
 
+import decimal
 import hashlib
 import json
 from collections import Counter
@@ -44,6 +45,58 @@ class LiveScoringError(RuntimeError):
 def _sha(value: Any) -> str:
     raw = json.dumps(
         value, sort_keys=True, separators=(",", ":"), allow_nan=False, default=str
+    ).encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
+
+
+_SNAPSHOT_IDENTITY_EXCLUDED_FIELDS = ("snapshot_sha256",)
+
+
+def _normalize_identity_value(value: Any) -> Any:
+    """Normalize non-JSON-native scalars deterministically without changing data.
+
+    numpy/pandas scalars are converted to their JSON-native equivalents; NaN and
+    +-inf (not JSON-representable) are preserved via their float identity so the
+    hash stays deterministic. Values are never altered, only re-typed.
+    """
+    if value is None or isinstance(value, (bool, str)):
+        return value
+    if isinstance(value, int):
+        return int(value)
+    if isinstance(value, float):
+        return float(value)
+    if isinstance(value, decimal.Decimal):
+        return float(value)
+    # numpy/pandas scalar bridge without importing numpy eagerly.
+    item = getattr(value, "item", None)
+    if callable(item) and not isinstance(value, (list, tuple, dict)):
+        try:
+            return _normalize_identity_value(item())
+        except Exception:
+            return str(value)
+    if isinstance(value, dict):
+        return {str(key): _normalize_identity_value(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [_normalize_identity_value(item) for item in value]
+    return value
+
+
+def football_snapshot_hash(snapshot: dict[str, Any]) -> str:
+    """Single canonical football snapshot identity contract (V1).
+
+    SHA-256 over compact sorted-key JSON of the complete snapshot EXCLUDING the
+    ``snapshot_sha256`` field itself. Shared by the scorer (creation) and the
+    production-refresh orchestrator (validation) so producer and validator can
+    never diverge. File formatting (indentation, trailing newline) is not part
+    of the identity.
+    """
+    identity_view = {
+        key: _normalize_identity_value(value)
+        for key, value in snapshot.items()
+        if key not in _SNAPSHOT_IDENTITY_EXCLUDED_FIELDS
+    }
+    raw = json.dumps(
+        identity_view, sort_keys=True, separators=(",", ":"), allow_nan=False, default=str
     ).encode("utf-8")
     return hashlib.sha256(raw).hexdigest()
 
@@ -538,7 +591,7 @@ def score_week1(
     }
     if len(snapshot["games"]) != 16:
         raise LiveScoringError("football snapshot must contain exactly 16 Week 1 games")
-    snapshot["snapshot_sha256"] = _sha(snapshot)
+    snapshot["snapshot_sha256"] = football_snapshot_hash(snapshot)
     return snapshot
 
 
