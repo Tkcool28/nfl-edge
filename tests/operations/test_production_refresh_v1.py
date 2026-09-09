@@ -7,6 +7,7 @@ from types import SimpleNamespace
 import pytest
 
 from nfl_edge.operations import production_refresh_v1 as refresh
+from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash
 
 
 class _FreshSleeper:
@@ -316,6 +317,110 @@ def test_same_second_pre_provider_failure_still_writes_truthful_status(
     assert summary["run_id"] != first_id
     status = json.loads((tmp_path / "runs" / "latest-status.json").read_text())
     assert status["outcome"] == "SLEEPER_NOT_READY"
+
+
+def test_football_snapshot_hash_excludes_itself_and_survives_round_trip() -> None:
+    base_view = {
+        "schema_version": "NFL_EDGE_2026_WEEK1_FOOTBALL_V1",
+        "games": [{"game_id": "g1", "model": -2.5}],
+    }
+    expected = football_snapshot_hash(base_view)
+
+    # snapshot_sha256 itself is excluded: any stored value must not shift identity.
+    assert football_snapshot_hash({**base_view, "snapshot_sha256": "f" * 64}) == expected
+    assert football_snapshot_hash({**base_view, "snapshot_sha256": "a" * 64}) == expected
+
+    # Formatting changes (indentation, trailing newline) do not alter identity.
+    snapshot = {**base_view, "snapshot_sha256": expected}
+    pretty = json.dumps(snapshot, indent=2, sort_keys=True) + "\n"
+    compact = json.dumps(snapshot, separators=(",", ":"), sort_keys=True)
+    assert json.loads(pretty) == json.loads(compact)
+    assert football_snapshot_hash(json.loads(pretty)) == expected
+    assert football_snapshot_hash(json.loads(compact)) == expected
+
+
+def test_validate_football_rejects_tampered_fields_and_self_hash(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    snapshot = {
+        "schema_version": "NFL_EDGE_2026_WEEK1_FOOTBALL_V1",
+        "games": [{"game_id": "g1", "model": -2.5}],
+        "prediction_as_of_utc": "2026-09-09T00:00:00Z",
+    }
+    snapshot["snapshot_sha256"] = football_snapshot_hash(snapshot)
+    path = tmp_path / "football.json"
+    path.write_bytes(canonical_snapshot_bytes(snapshot))
+    assert refresh._validate_football(path) == snapshot
+
+    # A: modify a real football field -> hash mismatch
+    tampered = json.loads(path.read_text())
+    tampered["games"][0]["model"] = -3.0
+    bad = tmp_path / "tampered-field.json"
+    bad.write_bytes(canonical_snapshot_bytes(tampered))
+    with pytest.raises(RuntimeError, match="SHA-256 mismatch"):
+        refresh._validate_football(bad)
+
+    # B: modify snapshot_sha256 alone -> mismatch
+    self_tampered = json.loads(path.read_text())
+    self_tampered["snapshot_sha256"] = "a" * 64
+    bad_self = tmp_path / "tampered-self.json"
+    bad_self.write_bytes(canonical_snapshot_bytes(self_tampered))
+    with pytest.raises(RuntimeError, match="SHA-256 mismatch"):
+        refresh._validate_football(bad_self)
+
+    # C: malformed / missing hash fails closed
+    for value in (None, "xyz", "a" * 63):
+        malformed = json.loads(path.read_text())
+        malformed["snapshot_sha256"] = value
+        bad_malformed = tmp_path / "malformed.json"
+        bad_malformed.write_bytes(canonical_snapshot_bytes(malformed))
+        with pytest.raises(RuntimeError, match="missing or malformed"):
+            refresh._validate_football(bad_malformed)
+
+
+def test_validate_football_accepts_real_scorer_output_bytes_round_trip(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """PR #113 orchestrator consumes real scorer output through the JSON round trip."""
+    from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes
+
+    snapshot = {
+        "schema_version": "NFL_EDGE_2026_WEEK1_FOOTBALL_V1",
+        "prediction_as_of_utc": "2026-09-09T00:00:00Z",
+        "generated_at_utc": "2026-09-09T00:00:00Z",
+        "completed_football_state_version": "v9",
+        "qb_snapshot_version": "sleeper-x",
+        "model_versions": {"xgboost_v2": "post-v5-v2"},
+        "games": [
+            {
+                "game_id": f"g{i}",
+                "home_team": "KC",
+                "away_team": "BAL",
+                "xgboost": None,
+                "expected_margin": 1.5 + i,
+                "numpy_like": float(i * 2),  # would round-trip unstably under default=str
+            }
+            for i in range(16)
+        ],
+        "guardrails": {"market_data_read": False},
+    }
+    # Compute via the real scorer seam.
+    snapshot["snapshot_sha256"] = football_snapshot_hash(snapshot)
+
+    # in-memory verification
+    assert football_snapshot_hash(snapshot) == snapshot["snapshot_sha256"]
+
+    # write (deterministic file bytes) -> read -> verify
+    path = tmp_path / "NFL_EDGE_2026_WEEK1_FOOTBALL_V1.json"
+    path.write_bytes(canonical_snapshot_bytes(snapshot))
+    reloaded = json.loads(path.read_text(encoding="utf-8"))
+    assert refresh._validate_football(path)["snapshot_sha256"] == snapshot["snapshot_sha256"]
+    assert football_snapshot_hash(reloaded) == snapshot["snapshot_sha256"]
+
+    # repeated identical content retains the same hash (determinism)
+    again = json.loads(json.dumps(snapshot))
+    again["snapshot_sha256"] = football_snapshot_hash(again)
+    assert again["snapshot_sha256"] == snapshot["snapshot_sha256"]
 
 
 def test_systemd_contract_is_billable_safe() -> None:
