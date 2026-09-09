@@ -16,7 +16,7 @@ os.environ.setdefault("NFL_EDGE_PRODUCT_DIR", "/tmp/nfl-edge-backend-v1-import-p
 os.environ.setdefault("NFL_EDGE_COOKIE_SECURE", "false")
 
 from nfl_edge.backend.app import create_app  # noqa: E402
-from nfl_edge.backend.publication import ProductStore  # noqa: E402
+from nfl_edge.backend.publication import ProductStore, promote_validated_snapshot  # noqa: E402
 from nfl_edge.backend.settings import BackendSettings  # noqa: E402
 from nfl_edge.contracts.live_product_v1 import ContractValidationError, validate_product_snapshot  # noqa: E402
 
@@ -107,6 +107,173 @@ def _set_profile(client: TestClient, bankroll: str, risk: str) -> dict:
     response = client.put("/api/v1/profile", json={"bankroll": bankroll, "risk_profile": risk})
     assert response.status_code == 200, response.text
     return response.json()
+
+
+def test_backend_serves_atomically_published_replacement_without_restart(tmp_path: Path) -> None:
+    client, settings = _client(tmp_path, _product(version="hot-reload-a", generated="2026-09-03T14:00:00Z"))
+    assert client.get("/api/v1/product/latest").json()["product"]["product_version"] == "hot-reload-a"
+
+    # A separate publisher atomically replaces latest.json after application startup.
+    # The existing backend process must discover this local file-only update itself.
+    ProductStore(settings.product_dir).publish(_product(version="hot-reload-b", generated="2026-09-03T15:00:00Z"))
+
+    product = client.get("/api/v1/product/latest")
+    assert product.status_code == 200
+    assert product.json()["product"]["product_version"] == "hot-reload-b"
+    exact = client.post("/api/v1/evaluate-offer", json=_exact_request())
+    assert exact.status_code == 200
+    assert exact.json()["product_version"] == "hot-reload-b"
+    health = client.get("/api/v1/health")
+    assert health.status_code == 200
+    assert health.json()["product_version"] == "hot-reload-b"
+
+
+def test_backend_keeps_last_good_after_invalid_replacement_then_recovers(tmp_path: Path) -> None:
+    client, settings = _client(tmp_path, _product(version="hot-reload-a", generated="2026-09-03T14:00:00Z"))
+    latest = settings.product_dir / "latest.json"
+    broken = latest.with_name(".latest-broken")
+    broken.write_text('{"broken":', encoding="utf-8")
+    os.replace(broken, latest)
+
+    assert client.get("/api/v1/product/latest").json()["product"]["product_version"] == "hot-reload-a"
+    health = client.get("/api/v1/health").json()
+    assert health["product_version"] == "hot-reload-a"
+    assert health["last_refresh_failed"] is True
+
+    ProductStore(settings.product_dir).publish(_product(version="hot-reload-b", generated="2026-09-03T15:00:00Z"))
+    assert client.get("/api/v1/product/latest").json()["product"]["product_version"] == "hot-reload-b"
+    assert client.get("/api/v1/health").json()["last_refresh_failed"] is False
+
+
+def test_backend_keeps_last_good_when_latest_disappears(tmp_path: Path) -> None:
+    client, settings = _client(tmp_path, _product(version="hot-reload-a", generated="2026-09-03T14:00:00Z"))
+    (settings.product_dir / "latest.json").unlink()
+    assert client.get("/api/v1/product/latest").json()["product"]["product_version"] == "hot-reload-a"
+    health = client.get("/api/v1/health").json()
+    assert health["last_refresh_failed"] is True
+    assert health["product_available"] is True
+
+
+def test_product_store_publish_caches_current_pointer_after_concurrent_external_publication(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    store = ProductStore(tmp_path)
+    original_promote = promote_validated_snapshot
+    injected = False
+
+    def promote_then_external_publish(candidate: dict, root: Path) -> Path:
+        nonlocal injected
+        immutable = original_promote(candidate, root)
+        if not injected:
+            injected = True
+            ProductStore(tmp_path).publish(_product(version="hot-reload-b", generated="2026-09-03T15:00:00Z"))
+        return immutable
+
+    monkeypatch.setattr("nfl_edge.backend.publication.promote_validated_snapshot", promote_then_external_publish)
+    store.publish(_product(version="hot-reload-a", generated="2026-09-03T14:00:00Z"))
+    snapshot = store.snapshot()
+    assert snapshot is not None
+    assert snapshot["product_version"] == "hot-reload-b"
+
+
+def test_product_store_loads_latest_while_holding_reader_lock(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    ProductStore(tmp_path).publish(_product(version="hot-reload-a", generated="2026-09-03T14:00:00Z"))
+    store = ProductStore(tmp_path)
+    original_load = store._load_validated_latest
+
+    def locked_load(*, required: bool) -> tuple[dict, tuple[int, int, int, int]] | None:
+        assert getattr(store._lock, "_is_owned")()
+        return original_load(required=required)
+
+    monkeypatch.setattr(store, "_load_validated_latest", locked_load)
+    snapshot = store.load_latest(required=True)
+    assert snapshot is not None
+    assert snapshot["product_version"] == "hot-reload-a"
+
+
+def test_product_store_checks_reload_identity_while_holding_reader_lock(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    store = ProductStore(tmp_path)
+    store.publish(_product(version="hot-reload-a", generated="2026-09-03T14:00:00Z"))
+    original_identity = store._latest_identity
+
+    def locked_identity() -> tuple[int, int, int, int] | None:
+        assert getattr(store._lock, "_is_owned")()
+        return original_identity()
+
+    monkeypatch.setattr(store, "_latest_identity", locked_identity)
+    ProductStore(tmp_path).publish(_product(version="hot-reload-b", generated="2026-09-03T15:00:00Z"))
+    snapshot = store.snapshot()
+    assert snapshot is not None
+    assert snapshot["product_version"] == "hot-reload-b"
+
+
+def test_product_store_keeps_last_good_after_stat_error(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    store = ProductStore(tmp_path)
+    store.publish(_product(version="hot-reload-a", generated="2026-09-03T14:00:00Z"))
+
+    def stat_failure() -> tuple[int, int, int, int] | None:
+        raise PermissionError("publication directory temporarily unavailable")
+
+    monkeypatch.setattr(store, "_latest_identity", stat_failure)
+    snapshot = store.snapshot()
+    assert snapshot is not None
+    assert snapshot["product_version"] == "hot-reload-a"
+    assert store.metadata()["last_reload_failure"]["type"] == "PermissionError"
+
+
+def test_health_separates_historical_publication_failure_from_reload_failure(tmp_path: Path) -> None:
+    client, settings = _client(tmp_path, _product(version="hot-reload-a", generated="2026-09-03T14:00:00Z"))
+    status_path = settings.product_dir / "publication-status-v1.json"
+    status = json.loads(status_path.read_text(encoding="utf-8"))
+    status["last_failure"] = {"at": "2026-09-03T14:30:00Z", "type": "PublisherFailure", "message": "historical"}
+    status_path.write_text(json.dumps(status), encoding="utf-8")
+
+    health = client.get("/api/v1/health").json()
+    assert health["last_failure"]["type"] == "PublisherFailure"
+    assert health["last_reload_failure"] is None
+    assert health["last_refresh_failed"] is False
+
+
+def test_product_store_concurrent_refresh_returns_only_complete_last_good_snapshots(tmp_path: Path) -> None:
+    store = ProductStore(tmp_path)
+    store.publish(_product(version="hot-reload-a", generated="2026-09-03T14:00:00Z"))
+    observed: list[str] = []
+    failures: list[BaseException] = []
+    readers_ready = threading.Barrier(5)
+    replacement_published = threading.Event()
+
+    def reader() -> None:
+        try:
+            first = store.snapshot()
+            assert first is not None
+            observed.append(str(first["product_version"]))
+            readers_ready.wait(timeout=5)
+            assert replacement_published.wait(timeout=5)
+            for _ in range(100):
+                snapshot = store.snapshot()
+                assert snapshot is not None
+                observed.append(str(snapshot["product_version"]))
+        except BaseException as exc:  # pragma: no cover - assertion captures concurrent reader failures
+            failures.append(exc)
+
+    threads = [threading.Thread(target=reader) for _ in range(4)]
+    for thread in threads:
+        thread.start()
+    readers_ready.wait(timeout=5)
+    ProductStore(tmp_path).publish(_product(version="hot-reload-b", generated="2026-09-03T15:00:00Z"))
+    replacement_published.set()
+    for thread in threads:
+        thread.join(timeout=5)
+    assert not failures
+    assert observed
+    assert "hot-reload-a" in observed
+    assert "hot-reload-b" in observed
+    assert set(observed) <= {"hot-reload-a", "hot-reload-b"}
+    final_snapshot = store.snapshot()
+    assert final_snapshot is not None
+    assert final_snapshot["product_version"] == "hot-reload-b"
 
 
 def test_health_product_games_and_game_detail(tmp_path: Path) -> None:
