@@ -188,18 +188,21 @@ class ExactOfferEngine:
             response = validate_exact_offer_response({
                 "supported": False,
                 "probability": None,
-                "evaluator_probability": None,
                 "trust_probability": None,
                 "break_even_probability": None,
                 "ev": None,
-                "reliability": "UNSUPPORTED",
                 "verdict": "UNSUPPORTED",
                 "recommended_units": 0.0,
                 "play_through": None,
                 "value_at": None,
                 "warnings": ["Required current Pinnacle benchmark evidence is unavailable."],
             })
-            return response, {"request": dict(req), "reason": "missing_pinnacle_anchor"}
+            return response, {
+                "request": dict(req),
+                "reason": "missing_pinnacle_anchor",
+                "evaluator_probability": None,
+                "reliability": "UNSUPPORTED",
+            }
 
         output = game["football_outputs"]
         game_state = GameState(
@@ -254,14 +257,10 @@ class ExactOfferEngine:
             warnings.append(str(result.reason or "Unsupported by frozen evaluator state."))
         response = validate_exact_offer_response({
             "supported": bool(result.supported),
-            # Legacy exact-offer field retained for compatibility. This is p_win,
-            # not the conditional non-push probability that explains EV sign.
             "probability": result.actionable_probability,
-            "evaluator_probability": result.conditional_nonpush_probability,
             "trust_probability": result.staking_probability,
             "break_even_probability": result.break_even_probability,
             "ev": result.expected_value,
-            "reliability": result.reliability,
             "verdict": verdict,
             "recommended_units": units,
             "play_through": play_through,
@@ -272,6 +271,7 @@ class ExactOfferEngine:
             "request": dict(req),
             "side": side,
             "evaluator_version": result.evaluator_version,
+            "evaluator_probability": result.conditional_nonpush_probability,
             "reliability": result.reliability,
             "state_version": self.state_version,
             "recommendation": dict(response),
