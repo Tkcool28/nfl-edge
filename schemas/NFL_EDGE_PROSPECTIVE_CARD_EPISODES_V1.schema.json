@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1.schema.json",
+  "title": "NFL EDGE Prospective Card Episodes V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "builder_version",
+    "season",
+    "week",
+    "source_publication_ids",
+    "episodes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1"
+    },
+    "builder_version": {
+      "const": "prospective-card-tracking-v1"
+    },
+    "season": {
+      "type": "integer"
+    },
+    "week": {
+      "type": "integer"
+    },
+    "source_publication_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "episodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "episode_id",
+          "lane_key",
+          "logical_recommendation_id",
+          "game_id",
+          "market",
+          "selection",
+          "normalized_selection",
+          "normalized_side",
+          "returned_after_gap",
+          "first_seen_at_utc",
+          "last_seen_at_utc",
+          "first_publication_id",
+          "last_publication_id",
+          "publication_count",
+          "first_price",
+          "last_price",
+          "best_price",
+          "worst_price",
+          "first_line",
+          "last_line",
+          "best_line",
+          "worst_line",
+          "terminal_reason",
+          "observations"
+        ],
+        "properties": {
+          "terminal_reason": {
+            "enum": [
+              "DISAPPEARED",
+              "REPLACED",
+              "WEEK_HISTORY_END"
+            ]
+          },
+          "returned_after_gap": {
+            "type": "boolean"
+          },
+          "observations": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      }
+    }
+  }
+}

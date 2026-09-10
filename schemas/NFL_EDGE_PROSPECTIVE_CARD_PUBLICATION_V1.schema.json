@@ -1,0 +1,357 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1.schema.json",
+  "title": "NFL EDGE Prospective Card Publication V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "builder_version",
+    "capture_mode",
+    "publication_id",
+    "season",
+    "week",
+    "product_generated_at_utc",
+    "published_at_utc",
+    "source_product_version",
+    "source_product_sha256",
+    "source_commit_sha",
+    "product_freshness",
+    "product_stale",
+    "product_warnings",
+    "source_provenance",
+    "field_availability",
+    "lanes",
+    "creation_provenance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1"
+    },
+    "builder_version": {
+      "const": "prospective-card-tracking-v1"
+    },
+    "capture_mode": {
+      "enum": [
+        "NATIVE_PROSPECTIVE",
+        "RECONSTRUCTED_FROM_ARCHIVED_PRODUCTION_ARTIFACT",
+        "REPO_SIMULATION"
+      ]
+    },
+    "publication_id": {
+      "type": "string",
+      "pattern": "^publication-[0-9a-f]{24}$"
+    },
+    "season": {
+      "type": "integer",
+      "minimum": 2000
+    },
+    "week": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "product_generated_at_utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "published_at_utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "source_product_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_product_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_commit_sha": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "product_freshness": {
+      "type": "object"
+    },
+    "product_stale": {
+      "type": "boolean"
+    },
+    "product_warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_provenance": {
+      "type": "object"
+    },
+    "field_availability": {
+      "type": "object"
+    },
+    "lanes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hit_rate",
+        "balanced",
+        "value"
+      ],
+      "properties": {
+        "hit_rate": {
+          "$ref": "#/$defs/lane"
+        },
+        "balanced": {
+          "$ref": "#/$defs/lane"
+        },
+        "value": {
+          "$ref": "#/$defs/lane"
+        }
+      }
+    },
+    "creation_provenance": {
+      "type": "object"
+    }
+  },
+  "$defs": {
+    "lane": {
+      "type": "object",
+      "required": [
+        "lane_key",
+        "lane",
+        "state",
+        "game_id",
+        "away_team",
+        "home_team",
+        "kickoff_at_utc",
+        "market",
+        "selection",
+        "normalized_selection",
+        "normalized_side",
+        "book",
+        "line",
+        "american_odds",
+        "recommended_units",
+        "play_through",
+        "value_at",
+        "model_probability",
+        "trust_probability",
+        "market_probability",
+        "ev",
+        "support",
+        "reliability",
+        "warnings",
+        "selector_version",
+        "roof_state",
+        "canonical_headline",
+        "portfolio_duplicate_of_lane",
+        "portfolio_stake_suppressed_reason",
+        "logical_recommendation_id",
+        "wager_identity_id",
+        "exact_offer_identity_id"
+      ],
+      "properties": {
+        "lane_key": {
+          "enum": [
+            "hit_rate",
+            "balanced",
+            "value"
+          ]
+        },
+        "lane": {
+          "enum": [
+            "HIT_RATE",
+            "BALANCED",
+            "VALUE"
+          ]
+        },
+        "state": {
+          "enum": [
+            "BET",
+            "NO_PLAY",
+            "TARGET_ONLY",
+            "SUPPRESSED",
+            "UNSUPPORTED"
+          ]
+        },
+        "game_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "away_team": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "home_team": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "kickoff_at_utc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "market": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "selection": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "normalized_selection": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "normalized_side": {
+          "enum": [
+            "home",
+            "away",
+            "over",
+            "under",
+            null
+          ]
+        },
+        "book": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "line": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "american_odds": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "recommended_units": {
+          "type": "number",
+          "minimum": 0
+        },
+        "play_through": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "value_at": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "model_probability": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "trust_probability": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "market_probability": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "ev": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "support": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reliability": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "selector_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "roof_state": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "canonical_headline": {
+          "type": "object"
+        },
+        "portfolio_duplicate_of_lane": {
+          "enum": [
+            "hit_rate",
+            "balanced",
+            "value",
+            null
+          ]
+        },
+        "portfolio_stake_suppressed_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "logical_recommendation_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "wager_identity_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "exact_offer_identity_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}
