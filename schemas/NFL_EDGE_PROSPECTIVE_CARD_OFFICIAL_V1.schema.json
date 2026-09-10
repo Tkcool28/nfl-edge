@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "NFL_EDGE_PROSPECTIVE_CARD_OFFICIAL_V1.schema.json",
+  "title": "NFL EDGE Prospective Official Pre-Kick Cards V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "builder_version",
+    "season",
+    "week",
+    "official_definition",
+    "source_publication_ids",
+    "resolutions",
+    "official_wagers",
+    "portfolio_entries",
+    "overlap_count"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "NFL_EDGE_PROSPECTIVE_CARD_OFFICIAL_V1"
+    },
+    "builder_version": {
+      "const": "prospective-card-tracking-v1"
+    },
+    "season": {
+      "type": "integer"
+    },
+    "week": {
+      "type": "integer"
+    },
+    "official_definition": {
+      "const": "FINAL_VALID_PUBLISHED_LANE_STATE_STRICTLY_BEFORE_GAME_KICKOFF"
+    },
+    "source_publication_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "resolutions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "official_wagers": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "portfolio_entries": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "overlap_count": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}
