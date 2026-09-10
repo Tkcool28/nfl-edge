@@ -167,8 +167,9 @@ def test_pwa_shell_loads_and_precaches_education_asset_without_touching_api_poli
     install = (FRONTEND / "install-affordance.js").read_text()
     sw = (FRONTEND / "sw.js").read_text()
     assert "import './education.js';" in install
-    assert "SHELL_REVISION='user-education-tutorial-v1'" in sw
-    assert "CACHE_NAME='nfl-edge-shell-v17-education-v1'" in sw
+    assert "SHELL_REVISION='user-education-tutorial-v1-post-pr118'" in sw
+    assert "CACHE_NAME='nfl-edge-shell-v19'" in sw
     assert "'./education.js'" in sw
+    assert "'./manual-guidance.js'" in sw
     assert "url.pathname.startsWith('/api/')" in sw
     assert "fetch(request,{cache:'no-store'})" in sw
