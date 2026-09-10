@@ -51,7 +51,7 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/nfl-edge-wordmark\.png/);
   assert.match(sw,/icon-192-v3\.png/);
   assert.match(sw,/icon-512-v3\.png/);
-  assert.match(sw,/nfl-edge-shell-v17/);
+  assert.match(sw,/nfl-edge-shell-v18/);
 });
 
 test('duplicate-suppressed BET headlines retain BET styling',()=>{
@@ -104,13 +104,16 @@ test('game detail offers are actionable and reuse exact-offer evaluator without 
   assert.doesNotMatch(app,/the-odds-api|api\.sleeper/i);
 });
 
-test('manual Check explains price quality separately from recommendation and can log a user choice',()=>{
+test('manual Check explains evaluator economics and distinguishes Bet At from Play Through',()=>{
   const guidance=read('manual-guidance.js');
   assert.match(guidance,/VALUE PRICE/);
   assert.match(guidance,/PLAYABLE PRICE/);
   assert.match(guidance,/OUTSIDE RANGE/);
-  assert.match(guidance,/No recommended stake because model reliability is LOW\./);
-  assert.match(guidance,/does not have enough confidence in this model state to recommend\./);
+  assert.match(guidance,/No recommended stake because evaluator reliability is LOW\./);
+  assert.match(guidance,/does not have enough reliability to recommend a stake\./);
+  assert.match(guidance,/Bet At/);
+  assert.match(guidance,/Evaluator probability/);
+  assert.match(guidance,/Break-even probability/);
   assert.match(guidance,/You can log this wager for tracking, but NFL EDGE is not recommending a stake\./);
   assert.match(guidance,/buildExactWagerPayload/);
   assert.match(guidance,/api\.createWager/);

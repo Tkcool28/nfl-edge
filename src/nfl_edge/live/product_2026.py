@@ -25,6 +25,8 @@ from nfl_edge.recommendation.remediation_provenance_v1 import REGION_SPECS
 from nfl_edge.value.candidate_table import build_candidate_table, make_candidate_id
 from nfl_edge.value.contracts import GameState, NormalizedOffer
 from nfl_edge.value.evaluators import evaluate_offer
+from nfl_edge.value.market_math import break_even_probability
+from nfl_edge.value.play_through import conservative_american_threshold
 from nfl_edge.value.wager_economics import Settlement
 
 from .markets_2026 import BOOK_MAP
@@ -406,29 +408,69 @@ def _public_selection(row: Mapping[str, Any], football_game: Mapping[str, Any]) 
     return side.upper()
 
 
-def _post_selection_play_through(row: Mapping[str, Any], *, state: str) -> dict[str, Any] | None:
-    """Expose Play Through only as an extension of an already-accepted BET.
+def _next_better_american_price(price: int) -> int:
+    """Move one valid American-odds tick toward a better bettor price."""
+    value = int(price)
+    if value < -100:
+        return value + 1
+    if value == -100:
+        return 100
+    return value + 1
 
-    Task05F may calculate a raw same-line boundary while evaluating an exact
-    offer, but headline selection never uses that boundary as an eligibility
-    gate. The public headline only exposes the boundary after the primary card
-    is a BET, and only when the boundary is a strictly worse American price than
-    the accepted current offer. A better/equal boundary is not a stretch and is
-    therefore not a Play Through instruction.
+
+def _post_selection_play_through(
+    row: Mapping[str, Any],
+    *,
+    lane: str,
+    state: str,
+) -> dict[str, Any] | None:
+    """Apply the frozen Task05F concession to the exact price selected for a headline.
+
+    Task05F owns the Play Through mechanics: its 1.5pp maximum, reliability
+    haircut, uncertainty factor, and resulting ``play_through_break_even_concession``
+    are unchanged. The headline layer runs after selection and uses that already-
+    computed concession as the execution allowance from the selected sportsbook
+    price. It never feeds this range back into HHR/Balanced/Value selection.
+
+    Value uses the same selected-price corridor but may expose it only while the
+    boundary remains strict positive EV, as required by the frozen product contract.
     """
     if state != "BET":
         return None
     current = row.get("american_odds")
-    boundary = row.get("play_through_price_american")
-    if current is None or boundary is None:
+    current_be = row.get("break_even_probability")
+    concession = row.get("play_through_break_even_concession")
+    if current is None or current_be is None or concession is None:
         return None
+
     current_price = int(current)
-    boundary_price = int(boundary)
+    allowed_concession = float(concession)
+    if allowed_concession <= 0.0:
+        return None
+
+    target_break_even = min(0.99, float(current_be) + allowed_concession)
+    normalized_lane = str(lane).strip().lower()
+    evaluator_q = row.get("conditional_nonpush_probability")
+    if normalized_lane == "value":
+        if row.get("expected_value") is None or float(row["expected_value"]) <= 0.0 or evaluator_q is None:
+            return None
+        q = float(evaluator_q)
+        if q <= float(current_be):
+            return None
+        target_break_even = min(target_break_even, q)
+
+    boundary_price = conservative_american_threshold(1.0 / target_break_even)
+
+    if normalized_lane == "value":
+        q = float(evaluator_q)
+        while break_even_probability(boundary_price) >= q - 1e-12:
+            boundary_price = _next_better_american_price(boundary_price)
+
     if boundary_price >= current_price:
         return None
     return {
         "line": row.get("line"),
-        "price_american": boundary_price,
+        "price_american": int(boundary_price),
     }
 
 
@@ -469,7 +511,7 @@ def _headline(lane: str, row: Mapping[str, Any] | None, football_games: Mapping[
     else:
         state = "SUPPRESSED"
         units = 0.0
-    play_through = _post_selection_play_through(material, state=state)
+    play_through = _post_selection_play_through(material, lane=lane, state=state)
     value_at = None
     if action.value_at_price_american is not None:
         value_at = {
