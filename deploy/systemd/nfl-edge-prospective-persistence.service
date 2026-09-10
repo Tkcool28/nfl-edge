@@ -8,7 +8,7 @@ Wants=network-online.target
 Type=oneshot
 WorkingDirectory=/var/lib/nfl-edge/prospective_repo_v1
 Environment="PYTHONPATH=/root/nfl-edge/src"
-ExecStart=/root/nfl-edge/deploy/scripts/persist_prospective_evidence_v1.sh /var/lib/nfl-edge/prospective_card_log_v1 /var/lib/nfl-edge/prospective_repo_v1 /root/nfl-edge ops/prospective-card-evidence-v1
+ExecStart=/bin/bash /root/nfl-edge/deploy/scripts/persist_prospective_evidence_v1.sh /var/lib/nfl-edge/prospective_card_log_v1 /var/lib/nfl-edge/prospective_repo_v1 /root/nfl-edge ops/prospective-card-evidence-v1
 Restart=no
 TimeoutStartSec=5min
 UMask=0077
