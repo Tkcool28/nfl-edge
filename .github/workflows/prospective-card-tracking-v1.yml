@@ -12,6 +12,7 @@ on:
       - 'tests/operations/test_production_refresh_v1.py'
       - 'deploy/systemd/nfl-edge-production-refresh.service'
       - 'docs/production_refresh_v1.md'
+      - 'docs/prospective_card_persistence_v1.md'
       - 'tests/prospective/**'
       - 'prospective/**'
       - 'schemas/NFL_EDGE_PROSPECTIVE_CARD_*'
