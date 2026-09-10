@@ -24,9 +24,10 @@ __all__ = [
     "write_publication_snapshot",
     "capture_published_product",
     "runtime_publications_dir",
+    "finalize_ready_weeks",
     "finalize_week_evidence",
     "sync_runtime_evidence",
 ]
 
 from .runtime_v1 import capture_published_product, runtime_publications_dir
-from .persistence_v1 import finalize_week_evidence, sync_runtime_evidence
+from .persistence_v1 import finalize_ready_weeks, finalize_week_evidence, sync_runtime_evidence
