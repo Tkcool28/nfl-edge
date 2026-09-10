@@ -18,6 +18,7 @@ from nfl_edge.prospective.common_v1 import (
 )
 from nfl_edge.prospective.derive_v1 import derive_episodes, resolve_official
 from nfl_edge.prospective.runtime_v1 import capture_published_product, runtime_publications_dir
+from nfl_edge.prospective.persistence_v1 import finalize_week_evidence, sync_runtime_evidence
 from nfl_edge.prospective.results_v1 import (
     build_pending_results,
     build_summary,
@@ -47,4 +48,6 @@ __all__ = [
     "write_publication_snapshot",
     "capture_published_product",
     "runtime_publications_dir",
+    "finalize_week_evidence",
+    "sync_runtime_evidence",
 ]
