@@ -13,6 +13,7 @@
     "week",
     "product_generated_at_utc",
     "published_at_utc",
+    "source_week_last_kickoff_at_utc",
     "source_product_version",
     "source_product_sha256",
     "source_commit_sha",
@@ -114,6 +115,11 @@
     },
     "creation_provenance": {
       "type": "object"
+    },
+    "source_week_last_kickoff_at_utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
     }
   },
   "$defs": {
