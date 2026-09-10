@@ -52,7 +52,7 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/nfl-edge-wordmark\.png/);
   assert.match(sw,/icon-192-v3\.png/);
   assert.match(sw,/icon-512-v3\.png/);
-  assert.match(sw,/nfl-edge-shell-v20/);
+  assert.match(sw,/nfl-edge-shell-v21/);
 });
 
 test('duplicate-suppressed BET headlines retain BET styling',()=>{
@@ -134,6 +134,7 @@ test('game detail has real market tabs and visual assets with stable fallbacks',
   const app=read('app.js'),polish=read('ui-polish.css');
   for(const marker of ['data-market-tab="moneyline"','data-market-tab="spread"','data-market-tab="total"','setDetailMarket','detail-market-panel'])assert.match(app,new RegExp(marker));
   assert.match(app,/a\.espncdn\.com\/i\/teamlogos\/nfl\/500/);
+  assert.match(app,/logoTeam=String\(o\.normalized_selection\|\|selection\)/);
   assert.match(app,/sleepercdn\.com\/content\/nfl\/players/);
   assert.match(app,/sleeper_player_id/);
   assert.match(app,/asset-failed/);
