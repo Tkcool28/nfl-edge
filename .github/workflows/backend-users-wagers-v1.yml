@@ -59,7 +59,8 @@ jobs:
           git fetch origin main
           changed="$(git diff --name-only origin/main...HEAD)"
           echo "$changed"
-          if echo "$changed" | grep -E '^(src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/value/evaluators.py$|src/nfl_edge/value/accepted_calibration.py$|src/nfl_edge/recommendation/final_selectors_v1.py$|src/nfl_edge/recommendation/headline_staking_v1.py$|src/nfl_edge/recommendation/staking_v1.py$|src/nfl_edge/staking_policy_v1.py$|src/nfl_edge/live/product_2026.py$|src/nfl_edge/live/markets_2026.py$|src/nfl_edge/live/roof_scenarios.py$|config/task05f_|config/task05g_|config/expected_margin_v1.yaml$|config/qb_elo_v1.yaml$|config/totals_)'; then
+          # product_2026.py is intentionally owned by the dedicated Live 2026 Market Product V1 gate.
+          if echo "$changed" | grep -E '^(src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/value/evaluators.py$|src/nfl_edge/value/accepted_calibration.py$|src/nfl_edge/recommendation/final_selectors_v1.py$|src/nfl_edge/recommendation/headline_staking_v1.py$|src/nfl_edge/recommendation/staking_v1.py$|src/nfl_edge/staking_policy_v1.py$|src/nfl_edge/live/markets_2026.py$|src/nfl_edge/live/roof_scenarios.py$|config/task05f_|config/task05g_|config/expected_margin_v1.yaml$|config/qb_elo_v1.yaml$|config/totals_)'; then
             echo 'ERROR: frozen methodology/product-generation surface changed' >&2
             exit 1
           fi

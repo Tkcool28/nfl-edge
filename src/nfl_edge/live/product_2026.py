@@ -15,10 +15,10 @@ from nfl_edge.live.roof_scenarios import compare_moneyline_roof_scenarios, missi
 from nfl_edge.market_edge import candidates as task05e_candidates
 from nfl_edge.recommendation.final_selectors_v1 import (
     ValueSelectorState,
-    select_balanced,
     select_hit_rate,
     select_value,
 )
+from nfl_edge.recommendation.final_selectors_v2 import select_balanced
 from nfl_edge.recommendation.headline_staking_v1 import headline_actionability
 from nfl_edge.recommendation.policy import NO_BALANCED_PLAY, NO_HIT_RATE_PLAY, NO_VALUE_PLAY
 from nfl_edge.recommendation.remediation_provenance_v1 import REGION_SPECS
@@ -406,6 +406,32 @@ def _public_selection(row: Mapping[str, Any], football_game: Mapping[str, Any]) 
     return side.upper()
 
 
+def _post_selection_play_through(row: Mapping[str, Any], *, state: str) -> dict[str, Any] | None:
+    """Expose Play Through only as an extension of an already-accepted BET.
+
+    Task05F may calculate a raw same-line boundary while evaluating an exact
+    offer, but headline selection never uses that boundary as an eligibility
+    gate. The public headline only exposes the boundary after the primary card
+    is a BET, and only when the boundary is a strictly worse American price than
+    the accepted current offer. A better/equal boundary is not a stretch and is
+    therefore not a Play Through instruction.
+    """
+    if state != "BET":
+        return None
+    current = row.get("american_odds")
+    boundary = row.get("play_through_price_american")
+    if current is None or boundary is None:
+        return None
+    current_price = int(current)
+    boundary_price = int(boundary)
+    if boundary_price >= current_price:
+        return None
+    return {
+        "line": row.get("line"),
+        "price_american": boundary_price,
+    }
+
+
 def _headline(lane: str, row: Mapping[str, Any] | None, football_games: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
     lane_name = {"hit_rate": "HIT_RATE", "balanced": "BALANCED", "value": "VALUE"}[lane]
     if row is None:
@@ -443,12 +469,7 @@ def _headline(lane: str, row: Mapping[str, Any] | None, football_games: Mapping[
     else:
         state = "SUPPRESSED"
         units = 0.0
-    play_through = None
-    if material.get("play_through_price_american") is not None:
-        play_through = {
-            "line": material.get("line"),
-            "price_american": int(material["play_through_price_american"]),
-        }
+    play_through = _post_selection_play_through(material, state=state)
     value_at = None
     if action.value_at_price_american is not None:
         value_at = {
