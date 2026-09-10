@@ -52,7 +52,7 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/nfl-edge-wordmark\.png/);
   assert.match(sw,/icon-192-v3\.png/);
   assert.match(sw,/icon-512-v3\.png/);
-  assert.match(sw,/nfl-edge-shell-v19/);
+  assert.match(sw,/nfl-edge-shell-v20/);
 });
 
 test('duplicate-suppressed BET headlines retain BET styling',()=>{
@@ -137,6 +137,7 @@ test('game detail has real market tabs and visual assets with stable fallbacks',
   assert.match(app,/sleepercdn\.com\/content\/nfl\/players/);
   assert.match(app,/sleeper_player_id/);
   assert.match(app,/asset-failed/);
+  assert.doesNotMatch(app,/img\.complete&&!img\.naturalWidth/);
   assert.match(polish,/asset-team-hero/);
   assert.match(polish,/asset-qb/);
   assert.match(polish,/detail-market-tabs/);
