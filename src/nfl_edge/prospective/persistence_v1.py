@@ -281,8 +281,92 @@ def finalize_week_evidence(
     }
 
 
+def finalize_ready_weeks(
+    *,
+    evidence_root: str | Path,
+    as_of_utc: str,
+) -> dict[str, Any]:
+    """Finalize every captured week whose full canonical slate is behind as_of_utc."""
+    as_of = parse_utc(as_of_utc)
+    root = Path(evidence_root) / "prospective" / "cards"
+    finalized: list[dict[str, Any]] = []
+    pending: list[dict[str, Any]] = []
+
+    if not root.exists():
+        return {
+            "schema_version": PERSISTENCE_SCHEMA_VERSION,
+            "as_of_utc": str(as_of_utc),
+            "weeks_finalized": finalized,
+            "weeks_pending": pending,
+            "provider_calls": 0,
+        }
+
+    for week_root in sorted(root.glob("*/week-*")):
+        publications = load_publications(week_root / "publications")
+        if not publications:
+            continue
+        season, week = int(publications[0]["season"]), int(publications[0]["week"])
+        boundaries = [
+            str(row.get("source_week_last_kickoff_at_utc") or "")
+            for row in publications
+        ]
+        if any(not value for value in boundaries):
+            raise ProspectiveCardError(
+                f"publication history lacks source full-week kickoff boundary: {week_root}"
+            )
+        last_kickoff = max(boundaries, key=parse_utc)
+        if as_of <= parse_utc(last_kickoff):
+            pending.append(
+                {
+                    "season": season,
+                    "week": week,
+                    "week_last_kickoff_at_utc": last_kickoff,
+                }
+            )
+            continue
+
+        official_path = week_root / "official.json"
+        if official_path.exists():
+            finalized.append(
+                {
+                    "season": season,
+                    "week": week,
+                    "week_last_kickoff_at_utc": last_kickoff,
+                    "status": "ALREADY_FINALIZED",
+                }
+            )
+            continue
+
+        result = finalize_week_evidence(
+            evidence_root=evidence_root,
+            season=season,
+            week=week,
+            finalized_at_utc=str(as_of_utc),
+            week_last_kickoff_at_utc=last_kickoff,
+        )
+        finalized.append(
+            {
+                "season": season,
+                "week": week,
+                "week_last_kickoff_at_utc": last_kickoff,
+                "status": "FINALIZED",
+                "official_wagers": result["official_wagers"],
+                "portfolio_entries": result["portfolio_entries"],
+            }
+        )
+
+    return {
+        "schema_version": PERSISTENCE_SCHEMA_VERSION,
+        "as_of_utc": str(as_of_utc),
+        "weeks_finalized": finalized,
+        "weeks_pending": pending,
+        "provider_calls": 0,
+    }
+
+
 __all__ = [
     "PERSISTENCE_SCHEMA_VERSION",
+    "finalize_ready_weeks",
     "finalize_week_evidence",
     "sync_runtime_evidence",
 ]
