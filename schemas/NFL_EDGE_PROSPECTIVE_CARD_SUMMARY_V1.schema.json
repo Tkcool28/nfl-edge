@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "NFL_EDGE_PROSPECTIVE_CARD_SUMMARY_V1.schema.json",
+  "title": "NFL EDGE Prospective Card Summary V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "builder_version",
+    "season",
+    "week",
+    "lanes",
+    "portfolio",
+    "overlap_count",
+    "episode_count",
+    "card_churn",
+    "interpretation"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "NFL_EDGE_PROSPECTIVE_CARD_SUMMARY_V1"
+    },
+    "builder_version": {
+      "const": "prospective-card-tracking-v1"
+    },
+    "season": {
+      "type": "integer"
+    },
+    "week": {
+      "type": "integer"
+    },
+    "lanes": {
+      "type": "object"
+    },
+    "portfolio": {
+      "type": "object"
+    },
+    "overlap_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "episode_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "card_churn": {
+      "type": "object"
+    },
+    "interpretation": {
+      "const": "DESCRIPTIVE_PROSPECTIVE_EVIDENCE_ONLY_NO_RETUNING"
+    }
+  }
+}
