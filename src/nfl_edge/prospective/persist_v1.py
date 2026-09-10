@@ -14,6 +14,9 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any, Mapping
 
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError, ValidationError
+
 from nfl_edge.prospective.capture_v1 import load_publications, write_publication_snapshot
 from nfl_edge.prospective.common_v1 import (
     PUBLICATION_SCHEMA_VERSION,
@@ -27,6 +30,13 @@ from nfl_edge.prospective.runtime_v1 import runtime_publications_dir
 
 PERSISTENCE_SCHEMA_VERSION = "NFL_EDGE_PROSPECTIVE_CARD_PERSISTENCE_V1"
 EVIDENCE_PREFIX = Path("prospective/cards")
+_SCHEMA_FILES = {
+    "publication": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1.schema.json",
+    "episodes": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1.schema.json",
+    "official": "NFL_EDGE_PROSPECTIVE_CARD_OFFICIAL_V1.schema.json",
+    "results": "NFL_EDGE_PROSPECTIVE_CARD_RESULT_V1.schema.json",
+    "summary": "NFL_EDGE_PROSPECTIVE_CARD_SUMMARY_V1.schema.json",
+}
 
 
 class EvidencePersistenceError(ProspectiveCardError):
@@ -58,7 +68,26 @@ def _atomic_json(path: Path, payload: Mapping[str, Any]) -> None:
             temp.unlink(missing_ok=True)
 
 
-def _validate_runtime_publication(row: Mapping[str, Any], *, season: int, week: int) -> None:
+def _validate_schema(evidence_repo_root: str | Path, schema_key: str, payload: Mapping[str, Any]) -> None:
+    schema_path = Path(evidence_repo_root) / "schemas" / _SCHEMA_FILES[schema_key]
+    if not schema_path.is_file():
+        raise EvidencePersistenceError(f"required schema is missing from evidence worktree: {schema_path}")
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        Draft202012Validator(schema).validate(dict(payload))
+    except (OSError, ValueError, SchemaError, ValidationError) as exc:
+        raise EvidencePersistenceError(f"{schema_key} schema validation failed: {exc}") from exc
+
+
+def _validate_runtime_publication(
+    row: Mapping[str, Any],
+    *,
+    evidence_repo_root: str | Path,
+    season: int,
+    week: int,
+) -> None:
+    _validate_schema(evidence_repo_root, "publication", row)
     if row.get("schema_version") != PUBLICATION_SCHEMA_VERSION:
         raise EvidencePersistenceError("runtime publication has unexpected schema version")
     if int(row.get("season", -1)) != int(season) or int(row.get("week", -1)) != int(week):
@@ -163,7 +192,12 @@ def sync_runtime_week(
         }
 
     for row in runtime_publications:
-        _validate_runtime_publication(row, season=season, week=week)
+        _validate_runtime_publication(
+            row,
+            evidence_repo_root=evidence_repo_root,
+            season=season,
+            week=week,
+        )
 
     week_root = evidence_week_root(evidence_repo_root, season=season, week=week)
     publications_dir = week_root / "publications"
@@ -186,6 +220,11 @@ def sync_runtime_week(
         previous_results = loaded
     results = _merge_results(previous_results, pending)
     summary = build_summary(official=official, results=results, episodes=episodes)
+
+    _validate_schema(evidence_repo_root, "episodes", episodes)
+    _validate_schema(evidence_repo_root, "official", official)
+    _validate_schema(evidence_repo_root, "results", results)
+    _validate_schema(evidence_repo_root, "summary", summary)
 
     _atomic_json(week_root / "episodes.json", episodes)
     _atomic_json(week_root / "official.json", official)
