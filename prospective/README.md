@@ -77,7 +77,7 @@ ROI is net units divided by units risked. Hit rate is wins divided by wins plus 
 
 ## Runtime capture and repository persistence design
 
-Repo-side proof is complete. The follow-on runtime integration adds only a post-publication observational capture seam; repository persistence remains a separate operational chunk.
+Repo-side proof and post-publication runtime capture are complete. Repository persistence is implemented as a separate isolated checkout/branch so the production `main` worktree remains read-only to the persistence service.
 
 Recommended operational sequence:
 
@@ -85,8 +85,9 @@ Recommended operational sequence:
 2. ProductStore publication succeeds and that product becomes production-authoritative;
 3. the production refresh attempts an observational capture only after successful publication and writes immutable evidence to `/var/lib/nfl-edge/prospective_card_log_v1/<season>/week-XX/publications/`;
 4. tracker failure is visible in refresh operational status but does not roll back the product or change a successful refresh outcome;
-5. a dedicated persistence process copies only validated prospective evidence into an isolated evidence worktree/branch;
-6. the persistence process commits only prospective/ evidence paths and pushes through the trusted GitHub workflow.
+5. `nfl-edge-prospective-persistence.service` copies only validated prospective evidence into `/var/lib/nfl-edge/prospective_repo_v1` on `ops/prospective-card-evidence-v1`;
+6. the persistence wrapper refuses a dirty/wrong/diverged checkout, stages only `prospective/cards/**`, never rebases or force-pushes, and pushes only the evidence branch;
+7. each captured publication preserves the full canonical slate's last kickoff; the persistence run finalizes a week only once the current UTC time is strictly after that boundary.
 
 The public HTTP backend should not make arbitrary Git commits. The production /root/nfl-edge main worktree should remain clean. Runtime tracking requires **zero additional sportsbook-provider calls** because it consumes the product that was already published.
 
@@ -124,4 +125,10 @@ The production refresh accepts an optional `--prospective-dir`. When configured,
 
 The production systemd contract grants write access only to the existing refresh/product roots plus `/var/lib/nfl-edge/prospective_card_log_v1`. It does not alter the twice-daily timer, provider credential, backend service, or HTTP surface.
 
-Repository synchronization of runtime observations is intentionally still separate. The public backend never commits to Git, and `/root/nfl-edge` must remain a clean production checkout.
+Repository synchronization is handled by the dedicated persistence service, never by the public backend. The evidence checkout is `/var/lib/nfl-edge/prospective_repo_v1` on the long-lived `ops/prospective-card-evidence-v1` branch. `/root/nfl-edge` is passed to the worker only as a read-only code source and isolation reference; the persistence service's systemd sandbox explicitly mounts it read-only.
+
+The persistence timer runs at `00:20 UTC` and `12:20 UTC`, after the existing `00:05/12:05 UTC` production refresh windows. This is a non-billable Git/evidence operation, so catch-up with `Persistent=true` is safe and does not create sportsbook-provider requests.
+
+When a week's captured full-slate kickoff boundary has passed, the same persistence cycle writes immutable `official.json` and initial `results.json` (PENDING) plus derived `summary.json`. Later post-kick publication observations may extend immutable history, but they cannot rewrite the finalized official wager set. A recovered late pre-kick record that would change finalized official performance fails loudly and requires explicit correction handling rather than silent history repair.
+
+The remote evidence branch must exist before activation. VPS activation and the exact first native prospective publication timestamp remain deployment evidence, not something the repository implementation fabricates.

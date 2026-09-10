@@ -59,6 +59,16 @@
     "overlap_count": {
       "type": "integer",
       "minimum": 0
+    },
+    "finalized_at_utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "week_last_kickoff_at_utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
     }
   }
 }

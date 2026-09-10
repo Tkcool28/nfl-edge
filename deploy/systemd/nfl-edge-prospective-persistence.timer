@@ -1,0 +1,16 @@
+[Unit]
+Description=Persist NFL EDGE prospective evidence after ordinary refresh windows
+Documentation=file:///root/nfl-edge/prospective/README.md
+
+[Timer]
+# Non-billable evidence sync runs after the 00:05/12:05 UTC refresh windows.
+OnCalendar=*-*-* 00:20:00 UTC
+OnCalendar=*-*-* 12:20:00 UTC
+# Catch-up is safe: this unit never calls sportsbook providers.
+Persistent=true
+AccuracySec=1s
+RandomizedDelaySec=0
+Unit=nfl-edge-prospective-persistence.service
+
+[Install]
+WantedBy=timers.target

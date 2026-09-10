@@ -140,6 +140,7 @@ def test_publication_is_deterministic_links_hash_and_preserves_nulls() -> None:
     assert first == second
     assert canonical_json_bytes(first) == canonical_json_bytes(second)
     assert first["source_product_sha256"] == hashlib.sha256(canonical_json_bytes(product)).hexdigest()
+    assert first["source_week_last_kickoff_at_utc"] == "2026-09-06T17:00:00Z"
     assert first["creation_provenance"]["provider_calls"] == 0
     assert first["creation_provenance"]["user_specific_data_included"] is False
     assert first["lanes"]["hit_rate"]["state"] == "NO_PLAY"

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from pathlib import Path
 
 from nfl_edge.prospective.runtime_v1 import (
@@ -59,3 +60,39 @@ def test_runtime_capture_never_writes_user_specific_dollar_fields(tmp_path: Path
         "wager_history",
     ):
         assert forbidden not in payload
+
+
+def test_runtime_capture_preserves_null_week_boundary_for_empty_slate(tmp_path: Path) -> None:
+    product = _product()
+    no_play = deepcopy(product["headlines"]["hit_rate"])
+    no_play["game_id"] = None
+    no_play["matchup"] = None
+    no_play["market"] = None
+    no_play["selection"] = None
+    no_play["book"] = None
+    no_play["line"] = None
+    no_play["american_odds"] = None
+    no_play["model_probability"] = None
+    no_play["trust_probability"] = None
+    no_play["market_probability"] = None
+    no_play["ev"] = None
+    no_play["recommended_units"] = 0.0
+    no_play["play_through"] = None
+    no_play["value_at"] = None
+    for lane_key, lane_name in (
+        ("hit_rate", "HIT_RATE"),
+        ("balanced", "BALANCED"),
+        ("value", "VALUE"),
+    ):
+        lane = deepcopy(no_play)
+        lane["lane"] = lane_name
+        product["headlines"][lane_key] = lane
+    product["games"] = []
+
+    capture_published_product(
+        product,
+        runtime_root=tmp_path,
+        published_at_utc="2026-09-02T14:00:05Z",
+    )
+    stored = json.loads(next(tmp_path.rglob("*.json")).read_text(encoding="utf-8"))
+    assert stored["source_week_last_kickoff_at_utc"] is None
