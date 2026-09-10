@@ -307,13 +307,20 @@ def finalize_ready_weeks(
             continue
         season, week = int(publications[0]["season"]), int(publications[0]["week"])
         boundaries = [
-            str(row.get("source_week_last_kickoff_at_utc") or "")
+            str(row["source_week_last_kickoff_at_utc"])
             for row in publications
+            if row.get("source_week_last_kickoff_at_utc") is not None
         ]
-        if any(not value for value in boundaries):
-            raise ProspectiveCardError(
-                f"publication history lacks source full-week kickoff boundary: {week_root}"
+        if not boundaries:
+            pending.append(
+                {
+                    "season": season,
+                    "week": week,
+                    "week_last_kickoff_at_utc": None,
+                    "reason": "NO_CANONICAL_GAME_KICKOFF_BOUNDARY",
+                }
             )
+            continue
         last_kickoff = max(boundaries, key=parse_utc)
         if as_of <= parse_utc(last_kickoff):
             pending.append(
