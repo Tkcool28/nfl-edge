@@ -66,6 +66,11 @@ fi
   --evidence-root "${evidence_root}" \
   --production-worktree "${production_root}"
 
+as_of_utc="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+"${NFL_EDGE_PROSPECTIVE_PYTHON:-${production_root}/.venv/bin/python}" "${production_root}/scripts/sync_prospective_evidence_v1.py" finalize-ready \
+  --evidence-root "${evidence_root}" \
+  --as-of-utc "${as_of_utc}"
+
 status="$(git -C "${evidence_root}" status --porcelain=v1 --untracked-files=all)"
 if [ -z "${status}" ]; then
   echo "PROSPECTIVE_PERSISTENCE_NO_CHANGES"
