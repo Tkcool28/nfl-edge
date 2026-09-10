@@ -5,12 +5,17 @@ on:
     paths:
       - 'src/nfl_edge/prospective/**'
       - 'src/nfl_edge/operations/production_refresh_v1.py'
+      - 'scripts/sync_prospective_card_evidence_v1.py'
       - 'tests/operations/test_production_refresh_v1.py'
+      - 'deploy/scripts/persist_prospective_card_evidence_v1.sh'
       - 'deploy/systemd/nfl-edge-production-refresh.service'
+      - 'deploy/systemd/nfl-edge-prospective-persist.service'
+      - 'deploy/nfl-edge-prospective-persist.env.example'
       - 'docs/production_refresh_v1.md'
       - 'tests/prospective/**'
       - 'prospective/**'
       - 'schemas/NFL_EDGE_PROSPECTIVE_CARD_*'
+      - 'pyproject.toml'
       - '.github/workflows/prospective-card-tracking-v1.yml'
   workflow_dispatch:
 
@@ -37,10 +42,10 @@ jobs:
       - name: Install production package and test tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e '.[model-development]' pyyaml pytest 'jsonschema>=4.23,<5' \
+          python -m pip install -e '.[model-development]' pyyaml pytest \
             'numpy==2.4.2' 'scipy==1.17.1' 'scikit-learn==1.8.0'
 
-      - name: Prove frozen methodology and production generation surfaces are untouched
+      - name: Prove frozen methodology and product-generation surfaces are untouched
         run: |
           git fetch origin main
           changed="$(git diff --name-only origin/main...HEAD)"
@@ -65,8 +70,11 @@ jobs:
             src/nfl_edge/prospective/derive_v1.py \
             src/nfl_edge/prospective/results_v1.py \
             src/nfl_edge/prospective/runtime_v1.py \
+            src/nfl_edge/prospective/persist_v1.py \
             src/nfl_edge/prospective/card_tracking_v1.py \
-            src/nfl_edge/operations/production_refresh_v1.py
+            src/nfl_edge/operations/production_refresh_v1.py \
+            scripts/sync_prospective_card_evidence_v1.py
+          bash -n deploy/scripts/persist_prospective_card_evidence_v1.sh
           echo 'PROSPECTIVE_COMPILE=PASS'
 
       - name: Validate prospective schema documents
@@ -84,6 +92,19 @@ jobs:
               validator_for(schema).check_schema(schema)
               print("SCHEMA_OK", path)
           PY
+
+      - name: Prove persistence worker is path-scoped and credential-free
+        run: |
+          grep -q 'git .* add -- prospective/cards' deploy/scripts/persist_prospective_card_evidence_v1.sh
+          grep -q 'prospective/cards/\*' deploy/scripts/persist_prospective_card_evidence_v1.sh
+          if grep -Ei '(github.*token|ghp_|authorization:|password=)' \
+              deploy/scripts/persist_prospective_card_evidence_v1.sh \
+              deploy/nfl-edge-prospective-persist.env.example \
+              deploy/systemd/nfl-edge-prospective-persist.service; then
+            echo 'ERROR: persistence deployment files contain credential-like material' >&2
+            exit 1
+          fi
+          echo 'PERSISTENCE_PATH_AND_CREDENTIAL_GUARDS=PASS'
 
       - name: Run prospective and refresh-integration acceptance suite
         run: |
