@@ -1,0 +1,33 @@
+[Unit]
+Description=NFL EDGE prospective evidence repository persistence
+Documentation=file:///root/nfl-edge/prospective/README.md
+After=network-online.target nfl-edge-production-refresh.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/var/lib/nfl-edge/prospective_repo_v1
+Environment="PYTHONPATH=/root/nfl-edge/src"
+ExecStart=/root/nfl-edge/deploy/scripts/persist_prospective_evidence_v1.sh /var/lib/nfl-edge/prospective_card_log_v1 /var/lib/nfl-edge/prospective_repo_v1 /root/nfl-edge ops/prospective-card-evidence-v1
+Restart=no
+TimeoutStartSec=5min
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadOnlyPaths=/root/nfl-edge /var/lib/nfl-edge/prospective_card_log_v1
+ReadWritePaths=/var/lib/nfl-edge/prospective_repo_v1
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictNamespaces=true
+SystemCallArchitectures=native
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nfl-edge-prospective-persistence
+
+[Install]
+WantedBy=multi-user.target
