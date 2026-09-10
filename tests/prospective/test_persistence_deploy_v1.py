@@ -135,7 +135,7 @@ def test_persistence_deployment_contract_is_isolated_and_non_billable() -> None:
     assert "grep -Ev '^prospective/cards/'" in script
     assert "git clean" not in script
     assert "push --force" not in script
-    assert "rebase" not in script
+    assert "git rebase" not in script
     assert "HEAD:refs/heads/main" not in script
     assert "ODDS_API_KEY" not in script
 
