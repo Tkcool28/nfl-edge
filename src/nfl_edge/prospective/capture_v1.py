@@ -141,6 +141,10 @@ def build_publication_snapshot(
 
     source_sha = source_product_sha256(validated)
     games = _game_index(validated)
+    week_last_kickoff_at_utc = max(
+        (str(game["kickoff_at_utc"]) for game in games.values()),
+        key=parse_utc,
+    )
     selector_versions = dict(validated["selector_versions"])
     lanes: dict[str, dict[str, Any]] = {}
     for lane_key in LANE_ORDER:
@@ -176,6 +180,7 @@ def build_publication_snapshot(
         "week": int(validated["week"]),
         "product_generated_at_utc": str(validated["generated_at_utc"]),
         "published_at_utc": str(published_at_utc),
+        "source_week_last_kickoff_at_utc": week_last_kickoff_at_utc,
         "source_product_version": str(validated["product_version"]),
         "source_product_sha256": source_sha,
         "source_commit_sha": None if source_commit_sha is None else str(source_commit_sha),
