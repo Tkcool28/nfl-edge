@@ -62,7 +62,7 @@ def test_required_user_facing_terms_have_definitions():
         "Break-even Probability", "Expected Value (EV)", "Hit Rate", "Balanced", "Value",
         "Trust Probability", "Reliability", "Confidence / Model Confidence", "Moneyline", "Spread",
         "Over / Under / Total", "American Odds / Price", "Juice / Vig", "Line", "Price vs Line",
-        "Exact Offer", "Play Through", "Value At", "Units", "Bankroll", "Risk Profile", "BET",
+        "Exact Offer", "Play Through", "Bet At / Bet At X or better", "Value At", "Units", "Bankroll", "Risk Profile", "BET",
         "BET (CAPPED)", "NO PLAY", "TARGET ONLY / Watch Price", "Suppressed", "Unsupported",
         "Favorite", "Underdog", "Push", "Sportsbook", "Pinnacle", "Market",
         "Market Comparison Colors", "Fresh", "Aging", "Stale", "Model Details", "Roof Sensitive",
@@ -91,6 +91,27 @@ def test_beginner_copy_uses_concrete_examples_and_preserves_product_semantics():
         "you still place the actual bet in your sportsbook",
     ]
     for phrase in must_have:
+        assert phrase in js
+
+
+def test_post_pr118_terms_are_explained_in_plain_english_without_collapsing_the_layers():
+    js = _education()
+    for phrase in [
+        "Model Probability is the football model’s estimate",
+        "Trust Probability is the selector’s more cautious version",
+        "Evaluator Probability is the number used to judge the exact sportsbook offer and its price",
+        "Break-even Probability is how often that price needs to win just to come out even",
+        "These numbers can disagree; that is useful information, not necessarily an error",
+        "It does not replace the Hit Rate, Balanced, or Value selector",
+        "if the model says 60% and the market is closer to 53%",
+        "use a more cautious number such as 56%",
+        "MEDIUM does not mean the bet is “50 to 60 percent likely” to win",
+        "Play Through starts from the exact price chosen for that card",
+        "if the card is -120 and Play Through is -125",
+        "Bet At +170 or better",
+        "Sometimes NFL EDGE will not show a Bet At target when the supporting evidence is too weak",
+        "If no strict Value play exists, NFL EDGE may simply show NO VALUE PLAY instead of inventing a target",
+    ]:
         assert phrase in js
 
 
