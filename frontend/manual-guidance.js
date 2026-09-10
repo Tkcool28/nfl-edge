@@ -1,5 +1,5 @@
 import {ApiClient,ApiError} from './api.js';
-import {buildExactWagerPayload,esc,line,money,odds,pct,playThroughPresentation,units} from './ui-core.js';
+import {buildExactWagerPayload,esc,line,money,odds,pct,playThroughPresentation,exactPriceGuidance,units} from './ui-core.js';
 
 const api=new ApiClient({baseUrl:globalThis.NFL_EDGE_API_BASE||''});
 const $=id=>document.getElementById(id);
@@ -50,31 +50,36 @@ function priceState(v,pt){
   return {key:'outside',label:'OUTSIDE RANGE'};
 }
 
-function recommendationCopy(v,offer,pt,price){
+function recommendationCopy(v,offer,pt,price,guidance,reliability){
   const zero=Number(v.recommended_units||0)<=0;
   const clears=pt?.inside===true;
-  const lowReliability=v.supported&&zero&&(price.key==='value'||price.key==='playable');
+  const lowReliability=v.supported&&zero&&String(reliability).toUpperCase()==='LOW'&&(price.key==='value'||price.key==='playable');
   if(v.verdict==='BET'&&!zero){
-    return {low:false,title:`Recommended stake ${units(v.recommended_units)}`,body:'This offer meets the model price and reliability requirements for a recommended wager.',reliability:'MEETS THRESHOLD'};
+    return {low:false,title:`Recommended stake ${units(v.recommended_units)}`,body:'This offer meets the evaluator price and reliability requirements for a recommended wager.'};
   }
   if(lowReliability){
-    const threshold=pt?.price_american==null?'the Play Through price':`Play Through ${odds(pt.price_american)}`;
+    const threshold=pt?.price_american==null?'the evaluator price corridor':`the ${odds(pt.price_american)} corridor threshold`;
     const body=clears
-      ? `Your ${odds(offer.price)} price clears ${threshold}, but NFL EDGE does not have enough confidence in this model state to recommend.`
-      : `This price qualifies on value, but NFL EDGE does not have enough confidence in this model state to recommend.`;
-    return {low:true,title:'No recommended stake because model reliability is LOW.',body,reliability:'LOW'};
+      ? `Your ${odds(offer.price)} price clears ${threshold}, but NFL EDGE does not have enough reliability to recommend a stake.`
+      : `This price qualifies on value, but NFL EDGE does not have enough reliability to recommend a stake.`;
+    return {low:true,title:'No recommended stake because evaluator reliability is LOW.',body};
   }
-  if(!v.supported)return {low:false,title:'No recommendation',body:(v.warnings||[])[0]||'Required model or market evidence is unavailable.',reliability:'—'};
-  if(pt&&pt.inside===false)return {low:false,title:'No recommended stake at this price.',body:`Your ${odds(offer.price)} price is outside Play Through ${odds(pt.price_american)}.`,reliability:'—'};
-  return {low:false,title:'No recommended stake.',body:'This offer does not meet the current requirements for a wager recommendation.',reliability:'—'};
+  if(!v.supported)return {low:false,title:'No recommendation',body:(v.warnings||[])[0]||'Required model or market evidence is unavailable.'};
+  if(guidance?.verb==='Bet At'){
+    return {low:false,title:'No recommended stake at this price.',body:`Bet at ${odds(guidance.price_american)} or better on this same line if that price becomes available.`};
+  }
+  return {low:false,title:'No recommended stake.',body:'This offer does not meet the current requirements for a wager recommendation.'};
 }
 
 function render(result,offer){
   const host=$('exact-result');
   const v=result.evaluation;
+  const reliability=result.provenance?.reliability||'—';
+  const evaluatorProbability=result.provenance?.evaluator_probability??v.probability;
   const pt=playThroughPresentation(offer.line,offer.price,v.play_through);
+  const guidance=exactPriceGuidance(v.verdict,reliability,offer.line,offer.price,v.play_through);
   const price=priceState(v,pt);
-  const rec=recommendationCopy(v,offer,pt,price);
+  const rec=recommendationCopy(v,offer,pt,price,guidance,reliability);
   const recommendedDollars=v.verdict==='BET'&&result.recommended_dollars!=null?` · ${money(result.recommended_dollars)}`:'';
   const logNote=Number(v.recommended_units||0)>0
     ? 'Log the wager you actually made.'
@@ -84,7 +89,8 @@ function render(result,offer){
       ? '<button class="btn-primary" type="button" data-manual-log>Log Wager</button>'
       : '<button class="btn-secondary" type="button" data-manual-signin>Sign in to log wager</button>'
     : '';
-  host.innerHTML=`<section class="manual-guidance-card"><div class="manual-guidance-top"><span class="manual-price-chip ${price.key}">${price.label}</span><span class="offer-source">Manual offer</span></div><h3 class="manual-offer-title">${esc(offer.selection)} ${line(offer.line)} · ${odds(offer.price)}</h3><section class="manual-recommendation ${rec.low?'low':''}"><strong>${rec.title}</strong><span>${rec.body}</span></section><div class="manual-essentials"><div class="manual-essential"><span>Model probability</span><strong>${pct(v.probability)}</strong></div><div class="manual-essential"><span>Expected value</span><strong>${v.ev==null?'—':`${(Number(v.ev)*100).toFixed(2)}%`}</strong></div><div class="manual-essential"><span>Play Through</span><strong>${pt?odds(pt.price_american):'—'}</strong></div><div class="manual-essential ${rec.low?'reliability-low':''}"><span>Reliability</span><strong>${rec.reliability}</strong></div><div class="manual-essential"><span>Recommended stake</span><strong>${units(v.recommended_units)}${recommendedDollars}</strong></div></div><details><summary>Model details</summary><div class="manual-detail-grid"><span>Trust probability</span><strong>${pct(v.trust_probability)}</strong><span>Break-even probability</span><strong>${pct(v.break_even_probability)}</strong><span>Evaluator result</span><strong>${esc(v.verdict)}</strong></div></details><p class="manual-log-note">${logNote}</p>${action}<p class="evaluation-disclaimer">Model evaluation only. NFL EDGE does not place sportsbook wagers.</p></section>`;
+  const guidanceValue=guidance?`${odds(guidance.price_american)}${guidance.suffix?` ${guidance.suffix}`:''}`:'—';
+  host.innerHTML=`<section class="manual-guidance-card"><div class="manual-guidance-top"><span class="manual-price-chip ${price.key}">${price.label}</span><span class="offer-source">Manual offer</span></div><h3 class="manual-offer-title">${esc(offer.selection)} ${line(offer.line)} · ${odds(offer.price)}</h3><section class="manual-recommendation ${rec.low?'low':''}"><strong>${rec.title}</strong><span>${rec.body}</span></section><div class="manual-essentials"><div class="manual-essential"><span>Evaluator probability</span><strong>${pct(evaluatorProbability)}</strong></div><div class="manual-essential"><span>Staking probability</span><strong>${pct(v.trust_probability)}</strong></div><div class="manual-essential"><span>Break-even probability</span><strong>${pct(v.break_even_probability)}</strong></div><div class="manual-essential"><span>Expected value at this price</span><strong>${v.ev==null?'—':`${(Number(v.ev)*100).toFixed(2)}%`}</strong></div><div class="manual-essential"><span>${guidance?esc(guidance.verb):'Price guidance'}</span><strong>${guidanceValue}</strong></div><div class="manual-essential ${String(reliability).toUpperCase()==='LOW'?'reliability-low':''}"><span>Reliability</span><strong>${esc(reliability)}</strong></div><div class="manual-essential"><span>Recommended stake</span><strong>${units(v.recommended_units)}${recommendedDollars}</strong></div></div><details><summary>More evaluator details</summary><div class="manual-detail-grid"><span>Win probability</span><strong>${pct(v.probability)}</strong><span>Evaluator version</span><strong>${esc(result.provenance?.evaluator_version||'—')}</strong></div></details><p class="manual-log-note">Evaluator probability and break-even probability drive the displayed EV; staking probability includes the reliability/uncertainty safety layer.</p><p class="manual-log-note">${logNote}</p>${action}<p class="evaluation-disclaimer">Model evaluation only. NFL EDGE does not place sportsbook wagers.</p></section>`;
   host.querySelector('[data-manual-log]')?.addEventListener('click',()=>openLog(result,offer));
   host.querySelector('[data-manual-signin]')?.addEventListener('click',()=>document.querySelector('[data-nav="account"]')?.click());
 }
