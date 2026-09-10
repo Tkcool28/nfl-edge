@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -108,6 +109,128 @@ def test_success_orders_stages_and_writes_secret_safe_artifacts(
     status = json.loads((tmp_path / "runs" / "latest-status.json").read_text())
     assert status["outcome"] == "SUCCESS"
     assert "ODDS_API_KEY" not in json.dumps(status)
+
+
+
+
+def test_prospective_capture_runs_only_after_successful_publication(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    calls: list[str] = []
+    _wire_success(monkeypatch, tmp_path, calls)
+
+    def capture(product, **kwargs):
+        calls.append("prospective")
+        assert calls[-2] == "publish"
+        assert kwargs["runtime_root"] == tmp_path / "prospective-runtime"
+        return {
+            "status": "CAPTURED",
+            "publication_id": "publication-test",
+            "source_product_sha256": hashlib.sha256(b"product").hexdigest(),
+            "runtime_path": str(tmp_path / "prospective-runtime" / "record.json"),
+        }
+
+    monkeypatch.setattr(refresh, "capture_published_product", capture)
+    config = _config(tmp_path)
+    config = refresh.RefreshConfig(
+        repository_root=config.repository_root,
+        run_root=config.run_root,
+        publication_dir=config.publication_dir,
+        prediction_as_of_utc=config.prediction_as_of_utc,
+        live=config.live,
+        market_response=config.market_response,
+        market_metadata=config.market_metadata,
+        prospective_dir=tmp_path / "prospective-runtime",
+    )
+
+    outcome, summary = refresh.run_refresh(config)
+
+    assert outcome is refresh.RefreshOutcome.SUCCESS
+    assert calls == [
+        "sleeper",
+        "score",
+        "provider",
+        "normalize",
+        "materialize",
+        "materialize",
+        "publish",
+        "prospective",
+    ]
+    assert summary["publication_result"] == "PUBLISHED"
+    assert summary["prospective_capture_result"] == "CAPTURED"
+    assert summary["prospective_publication_id"] == "publication-test"
+    assert summary["prospective_source_product_sha256"] == hashlib.sha256(b"product").hexdigest()
+
+
+def test_prospective_capture_failure_is_visible_but_never_blocks_publication(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    calls: list[str] = []
+    _wire_success(monkeypatch, tmp_path, calls)
+
+    def fail_capture(product, **kwargs):
+        calls.append("prospective")
+        raise RuntimeError("prospective token=super-secret-value failed")
+
+    monkeypatch.setattr(refresh, "capture_published_product", fail_capture)
+    config = _config(tmp_path)
+    config = refresh.RefreshConfig(
+        repository_root=config.repository_root,
+        run_root=config.run_root,
+        publication_dir=config.publication_dir,
+        prediction_as_of_utc=config.prediction_as_of_utc,
+        live=config.live,
+        market_response=config.market_response,
+        market_metadata=config.market_metadata,
+        prospective_dir=tmp_path / "prospective-runtime",
+    )
+
+    outcome, summary = refresh.run_refresh(config)
+
+    assert outcome is refresh.RefreshOutcome.SUCCESS
+    assert summary["publication_result"] == "PUBLISHED"
+    assert summary["prospective_capture_result"] == "FAILED"
+    assert summary["prospective_capture_error_type"] == "RuntimeError"
+    assert "super-secret-value" not in str(summary["prospective_capture_error_message"])
+    assert "[REDACTED]" in str(summary["prospective_capture_error_message"])
+    persisted = json.loads((tmp_path / "runs" / "latest-status.json").read_text())
+    assert persisted["outcome"] == "SUCCESS"
+    assert persisted["prospective_capture_result"] == "FAILED"
+
+
+def test_publication_failure_never_attempts_prospective_capture(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    calls: list[str] = []
+    _wire_success(monkeypatch, tmp_path, calls)
+
+    class FailingStore:
+        def __init__(self, root: Path) -> None:
+            self.root = root
+
+        def publish(self, product: dict[str, object]) -> Path:
+            calls.append("publish")
+            raise RuntimeError("publish failed")
+
+    monkeypatch.setattr(refresh, "ProductStore", FailingStore)
+    monkeypatch.setattr(refresh, "capture_published_product", lambda *a, **k: calls.append("prospective"))
+    config = _config(tmp_path)
+    config = refresh.RefreshConfig(
+        repository_root=config.repository_root,
+        run_root=config.run_root,
+        publication_dir=config.publication_dir,
+        prediction_as_of_utc=config.prediction_as_of_utc,
+        live=config.live,
+        market_response=config.market_response,
+        market_metadata=config.market_metadata,
+        prospective_dir=tmp_path / "prospective-runtime",
+    )
+
+    outcome, summary = refresh.run_refresh(config)
+
+    assert outcome is refresh.RefreshOutcome.PUBLICATION_FAILED
+    assert "prospective" not in calls
+    assert summary["prospective_capture_result"] == "PENDING"
 
 
 def test_saved_response_replay_never_calls_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -433,6 +556,11 @@ def test_systemd_contract_is_billable_safe() -> None:
     assert "ODDS_API_KEY=" not in service
     assert "Restart=no" in service
     assert "systemctl restart" not in service
+    assert "--prospective-dir /var/lib/nfl-edge/prospective_card_log_v1" in service
+    assert (
+        "ReadWritePaths=/var/lib/nfl-edge/production_refresh_v1 "
+        "/var/lib/nfl-edge/product_v1 /var/lib/nfl-edge/prospective_card_log_v1"
+    ) in service
     assert "Persistent=false" in timer
     assert "00:05:00 UTC" in timer
     assert "12:05:00 UTC" in timer
