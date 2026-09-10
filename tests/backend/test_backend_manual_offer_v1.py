@@ -49,6 +49,44 @@ def test_manual_offer_is_evaluated_without_dk_fd_dependency(tmp_path: Path) -> N
     assert manual.json()["evaluation"] == retail.json()["evaluation"]
 
 
+def test_exact_offer_view_exposes_evaluator_probability_without_changing_evaluation_contract(tmp_path: Path) -> None:
+    client = _client(tmp_path)
+    response = client.post("/api/v1/evaluate-offer", json=_offer(book="MANUAL"))
+    assert response.status_code == 200, response.text
+    payload = response.json()
+    evaluation = payload["evaluation"]
+    provenance = payload["provenance"]
+    assert set(evaluation) == {
+        "supported",
+        "probability",
+        "trust_probability",
+        "break_even_probability",
+        "ev",
+        "verdict",
+        "recommended_units",
+        "play_through",
+        "value_at",
+        "warnings",
+    }
+    assert provenance["evaluator_probability"] is not None
+    assert 0.0 < float(provenance["evaluator_probability"]) < 1.0
+    assert provenance["reliability"] in {"HIGH", "MEDIUM", "LOW", "UNSUPPORTED"}
+
+
+def test_product_view_exposes_headline_evaluator_economics_as_overlay_only(tmp_path: Path) -> None:
+    client = _client(tmp_path)
+    response = client.get("/api/v1/product/latest")
+    assert response.status_code == 200, response.text
+    payload = response.json()
+    product = payload["product"]
+    overlay = payload["headline_overlays"]["balanced"]
+    assert "evaluator_probability" not in product["headlines"]["balanced"]
+    assert overlay["evaluator_probability"] is not None
+    assert overlay["evaluator_break_even_probability"] is not None
+    assert overlay["evaluator_ev"] is not None
+    assert overlay["evaluator_reliability"] in {"HIGH", "MEDIUM", "LOW", "UNSUPPORTED"}
+
+
 def test_manual_moneyline_targets_do_not_chase_entered_price(tmp_path: Path) -> None:
     client = _client(tmp_path)
     evaluations = []
