@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -216,3 +217,83 @@ def test_finalize_week_refuses_incomplete_last_kickoff_claim(tmp_path: Path) -> 
             finalized_at_utc="2026-09-07T00:00:00Z",
             week_last_kickoff_at_utc="2026-09-06T16:00:00Z",
         )
+
+
+def test_postkick_publication_can_extend_history_without_rewriting_official(tmp_path: Path) -> None:
+    runtime = tmp_path / "runtime"
+    evidence = tmp_path / "evidence"
+    production = tmp_path / "production"
+    production.mkdir()
+    _capture(runtime)
+    sync_runtime_evidence(
+        runtime_root=runtime,
+        evidence_root=evidence,
+        production_worktree=production,
+    )
+    finalize_week_evidence(
+        evidence_root=evidence,
+        season=2026,
+        week=1,
+        finalized_at_utc="2026-09-07T00:00:00Z",
+        week_last_kickoff_at_utc="2026-09-06T23:00:00Z",
+    )
+    week_root = evidence / "prospective/cards/2026/week-01"
+    before = (week_root / "official.json").read_bytes()
+
+    later_product = deepcopy(_product())
+    later_product["product_version"] = "mock-week1-postkick-observation"
+    later_product["headlines"]["balanced"]["american_odds"] = -105
+    capture_published_product(
+        later_product,
+        runtime_root=runtime,
+        published_at_utc="2026-09-06T18:00:00Z",
+    )
+
+    sync_runtime_evidence(
+        runtime_root=runtime,
+        evidence_root=evidence,
+        production_worktree=production,
+    )
+
+    assert (week_root / "official.json").read_bytes() == before
+    assert len(list((week_root / "publications").glob("*.json"))) == 2
+
+
+def test_late_recovered_prekick_evidence_cannot_silently_change_finalized_official(tmp_path: Path) -> None:
+    runtime = tmp_path / "runtime"
+    evidence = tmp_path / "evidence"
+    production = tmp_path / "production"
+    production.mkdir()
+    _capture(runtime)
+    sync_runtime_evidence(
+        runtime_root=runtime,
+        evidence_root=evidence,
+        production_worktree=production,
+    )
+    finalize_week_evidence(
+        evidence_root=evidence,
+        season=2026,
+        week=1,
+        finalized_at_utc="2026-09-07T00:00:00Z",
+        week_last_kickoff_at_utc="2026-09-06T23:00:00Z",
+    )
+    week_root = evidence / "prospective/cards/2026/week-01"
+    before = (week_root / "official.json").read_bytes()
+
+    recovered = deepcopy(_product())
+    recovered["product_version"] = "mock-week1-recovered-prekick"
+    recovered["headlines"]["balanced"]["american_odds"] = -105
+    capture_published_product(
+        recovered,
+        runtime_root=runtime,
+        published_at_utc="2026-09-06T16:59:00Z",
+    )
+
+    with pytest.raises(AppendOnlyViolation, match="already-finalized official card"):
+        sync_runtime_evidence(
+            runtime_root=runtime,
+            evidence_root=evidence,
+            production_worktree=production,
+        )
+
+    assert (week_root / "official.json").read_bytes() == before
