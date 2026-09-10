@@ -67,7 +67,7 @@ def _headline_duplicate_map(product: Mapping[str, Any]) -> tuple[dict[str, str],
 
 
 def _headline_evaluator_overlay(exact: Any, product: Mapping[str, Any], headline: Mapping[str, Any]) -> dict[str, Any]:
-    """Expose the evaluator numbers that explain headline EV without changing the product contract."""
+    """Expose evaluator economics beside selector metrics without changing the product snapshot contract."""
     empty = {
         "evaluator_probability": None,
         "evaluator_break_even_probability": None,
@@ -81,7 +81,7 @@ def _headline_evaluator_overlay(exact: Any, product: Mapping[str, Any], headline
     required = ("game_id", "market", "selection", "american_odds")
     if any(headline.get(field) is None for field in required):
         return empty
-    request = {
+    exact_request = {
         "game_id": str(headline["game_id"]),
         "market_type": str(headline["market"]),
         "selection": str(headline["selection"]),
@@ -90,7 +90,7 @@ def _headline_evaluator_overlay(exact: Any, product: Mapping[str, Any], headline
         "price": int(headline["american_odds"]),
     }
     try:
-        evaluation, context = exact.evaluate(product, request)
+        evaluation, context = exact.evaluate(product, exact_request)
     except (ValueError, KeyError, TypeError):
         return empty
     return {
@@ -114,6 +114,7 @@ def create_app(settings: BackendSettings | None = None) -> FastAPI:
     core_login = _take_route(app, "/api/v1/auth/login", "POST")
     del core_login  # intentionally replaced below
     core_product_latest = _take_route(app, "/api/v1/product/latest", "GET")
+    core_evaluate_offer = _take_route(app, "/api/v1/evaluate-offer", "POST")
     core_create_wager = _take_route(app, "/api/v1/wagers", "POST")
     core_patch_wager = _take_route(app, "/api/v1/wagers/{wager_id}", "PATCH")
 
@@ -238,6 +239,23 @@ def create_app(settings: BackendSettings | None = None) -> FastAPI:
             # identical offer; do not make the UI imply a second wager is needed.
             for field in ("wager_logged", "logged_wager_id", "actual_units", "actual_dollars", "wager_status"):
                 overlays[lane_key][field] = overlays[primary][field]
+        return view
+
+    @app.post("/api/v1/evaluate-offer")
+    def evaluate_offer(request: Request, payload: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        """Preserve the exact-offer contract and add evaluator explanation to the outer view provenance."""
+        view = core_evaluate_offer(request, payload)
+        product = app.state.product_store.snapshot()
+        if product is None:
+            return view
+        try:
+            _, context = exact.evaluate(product, payload)
+        except (ValueError, KeyError, TypeError):
+            return view
+        provenance = dict(view.get("provenance") or {})
+        provenance["evaluator_probability"] = context.get("evaluator_probability")
+        provenance["reliability"] = context.get("reliability")
+        view["provenance"] = provenance
         return view
 
     @app.get("/api/v1/bankroll")
