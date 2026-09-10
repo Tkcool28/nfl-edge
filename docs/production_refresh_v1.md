@@ -8,7 +8,8 @@ The refresh composes frozen existing contracts only:
 
 ```text
 validated Sleeper audit -> football scorer -> one Odds API capture ->
-market normalization -> deterministic materialization -> atomic publication ->\nobservational prospective capture
+market normalization -> deterministic materialization -> atomic publication ->
+observational prospective capture
 ```
 
 It neither changes models, evaluators, selectors, staking, provider set, frontend, nor settlement. Prospective capture consumes only the already-published canonical product and makes no sportsbook-provider request.
