@@ -117,9 +117,16 @@
       "type": "object"
     },
     "source_week_last_kickoff_at_utc": {
-      "type": "string",
-      "format": "date-time",
-      "pattern": "Z$"
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        {
+          "type": "null"
+        }
+      ]
     }
   },
   "$defs": {
