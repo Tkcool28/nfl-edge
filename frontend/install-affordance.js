@@ -1,3 +1,5 @@
+import './education.js';
+
 const button=document.getElementById('install-btn');
 let deferredPrompt=null;
 
