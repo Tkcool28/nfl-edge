@@ -128,9 +128,9 @@ def test_manifest_and_head_use_fresh_v3_icon_urls() -> None:
     assert 'rel="apple-touch-icon" href="./icons/icon-192-v3.png"' in html
 
 
-def test_service_worker_forces_fresh_v18_icon_cache_population() -> None:
+def test_service_worker_forces_fresh_v19_icon_cache_population() -> None:
     sw = (FRONTEND / "sw.js").read_text()
-    assert "nfl-edge-shell-v18" in sw
+    assert "nfl-edge-shell-v19" in sw
     assert "./favicon.ico" in sw
     assert "./icons/icon-192-v3.png" in sw
     assert "./icons/icon-512-v3.png" in sw
