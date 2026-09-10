@@ -4,6 +4,10 @@ on:
   pull_request:
     paths:
       - 'src/nfl_edge/prospective/**'
+      - 'scripts/sync_prospective_evidence_v1.py'
+      - 'deploy/scripts/persist_prospective_evidence_v1.sh'
+      - 'deploy/systemd/nfl-edge-prospective-persistence.service'
+      - 'deploy/systemd/nfl-edge-prospective-persistence.timer'
       - 'src/nfl_edge/operations/production_refresh_v1.py'
       - 'tests/operations/test_production_refresh_v1.py'
       - 'deploy/systemd/nfl-edge-production-refresh.service'
@@ -65,8 +69,10 @@ jobs:
             src/nfl_edge/prospective/derive_v1.py \
             src/nfl_edge/prospective/results_v1.py \
             src/nfl_edge/prospective/runtime_v1.py \
+            src/nfl_edge/prospective/persistence_v1.py \
             src/nfl_edge/prospective/card_tracking_v1.py \
-            src/nfl_edge/operations/production_refresh_v1.py
+            src/nfl_edge/operations/production_refresh_v1.py \
+            scripts/sync_prospective_evidence_v1.py
           echo 'PROSPECTIVE_COMPILE=PASS'
 
       - name: Validate prospective schema documents
@@ -84,6 +90,10 @@ jobs:
               validator_for(schema).check_schema(schema)
               print("SCHEMA_OK", path)
           PY
+
+      - name: Validate persistence shell syntax
+        run: |
+          bash -n deploy/scripts/persist_prospective_evidence_v1.sh
 
       - name: Run prospective and refresh-integration acceptance suite
         run: |
