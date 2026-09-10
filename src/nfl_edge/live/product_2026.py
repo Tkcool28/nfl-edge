@@ -238,7 +238,7 @@ def _attach_regions(rows: Iterable[Mapping[str, Any]], registry: Mapping[tuple[s
     out = []
     for source in rows:
         row = dict(source)
-        key = (str(row["game_id"]), str(row["market_type"]), str(row["selected_side"])]
+        key = (str(row["game_id"]), str(row["market_type"]), str(row["selected_side"]))
         regions = registry.get(key, ())
         row["model_candidate"] = bool(regions)
         row["model_candidate_regions"] = ";".join(regions)
