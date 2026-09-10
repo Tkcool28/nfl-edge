@@ -48,10 +48,11 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/ui-theme-finish\.css/);
   assert.match(sw,/manual-guidance\.js/);
   assert.match(sw,/install-affordance\.js/);
+  assert.match(sw,/education\.js/);
   assert.match(sw,/nfl-edge-wordmark\.png/);
   assert.match(sw,/icon-192-v3\.png/);
   assert.match(sw,/icon-512-v3\.png/);
-  assert.match(sw,/nfl-edge-shell-v18/);
+  assert.match(sw,/nfl-edge-shell-v19/);
 });
 
 test('duplicate-suppressed BET headlines retain BET styling',()=>{
