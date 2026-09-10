@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "NFL_EDGE_PROSPECTIVE_CARD_RESULT_V1.schema.json",
+  "title": "NFL EDGE Prospective Card Result V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "builder_version",
+    "season",
+    "week",
+    "settlement_status",
+    "lane_results",
+    "portfolio_results"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "NFL_EDGE_PROSPECTIVE_CARD_RESULT_V1"
+    },
+    "builder_version": {
+      "const": "prospective-card-tracking-v1"
+    },
+    "season": {
+      "type": "integer"
+    },
+    "week": {
+      "type": "integer"
+    },
+    "settlement_status": {
+      "enum": [
+        "PENDING",
+        "PARTIAL",
+        "SETTLED"
+      ]
+    },
+    "lane_results": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "portfolio_results": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}
