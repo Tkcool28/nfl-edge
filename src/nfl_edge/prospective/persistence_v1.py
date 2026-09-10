@@ -7,6 +7,9 @@ import tempfile
 from pathlib import Path
 from typing import Any, Mapping
 
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError, ValidationError
+
 from nfl_edge.prospective.capture_v1 import load_publications, publication_filename
 from nfl_edge.prospective.common_v1 import (
     PUBLICATION_SCHEMA_VERSION,
@@ -19,6 +22,26 @@ from nfl_edge.prospective.derive_v1 import derive_episodes, resolve_official
 from nfl_edge.prospective.results_v1 import build_pending_results, build_summary
 
 PERSISTENCE_SCHEMA_VERSION = "NFL_EDGE_PROSPECTIVE_CARD_PERSISTENCE_V1"
+_SCHEMA_ROOT = Path(__file__).resolve().parents[3]
+_SCHEMA_FILES = {
+    "publication": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1.schema.json",
+    "episodes": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1.schema.json",
+    "official": "NFL_EDGE_PROSPECTIVE_CARD_OFFICIAL_V1.schema.json",
+    "results": "NFL_EDGE_PROSPECTIVE_CARD_RESULT_V1.schema.json",
+    "summary": "NFL_EDGE_PROSPECTIVE_CARD_SUMMARY_V1.schema.json",
+}
+
+
+def _validate_schema(schema_key: str, payload: Mapping[str, Any]) -> None:
+    schema_path = _SCHEMA_ROOT / "schemas" / _SCHEMA_FILES[schema_key]
+    if not schema_path.is_file():
+        raise ProspectiveCardError(f"required prospective schema is missing: {schema_path}")
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        Draft202012Validator(schema).validate(dict(payload))
+    except (OSError, ValueError, SchemaError, ValidationError) as exc:
+        raise ProspectiveCardError(f"{schema_key} schema validation failed: {exc}") from exc
 
 
 def _assert_isolated(
@@ -89,6 +112,7 @@ def _load_runtime_publication(path: Path) -> dict[str, Any]:
         raise ProspectiveCardError(f"runtime prospective publication is invalid JSON: {path}") from exc
     if not isinstance(payload, dict) or payload.get("schema_version") != PUBLICATION_SCHEMA_VERSION:
         raise ProspectiveCardError(f"runtime prospective publication has unexpected schema: {path}")
+    _validate_schema("publication", payload)
     if raw != canonical_json_bytes(payload):
         raise ProspectiveCardError(f"runtime prospective publication is not canonical deterministic JSON: {path}")
     if publication_filename(payload) != path.name:
@@ -174,6 +198,7 @@ def sync_runtime_evidence(
         week_root = _week_target(evidence, season, week)
         publications = load_publications(week_root / "publications")
         episodes = derive_episodes(publications)
+        _validate_schema("episodes", episodes)
         official_path = week_root / "official.json"
         results_path = week_root / "results.json"
         if official_path.exists():
@@ -182,7 +207,9 @@ def sync_runtime_evidence(
                     f"finalized official evidence exists without results contract: {week_root}"
                 )
             stored_official = json.loads(official_path.read_text(encoding="utf-8"))
+            _validate_schema("official", stored_official)
             recomputed_official = resolve_official(publications)
+            _validate_schema("official", recomputed_official)
             comparison_fields = (
                 "resolutions",
                 "official_wagers",
@@ -197,14 +224,14 @@ def sync_runtime_evidence(
                     "newly synchronized evidence would change already-finalized official card"
                 )
             stored_results = json.loads(results_path.read_text(encoding="utf-8"))
-            _atomic_json(
-                week_root / "summary.json",
-                build_summary(
-                    official=stored_official,
-                    results=stored_results,
-                    episodes=episodes,
-                ),
+            _validate_schema("results", stored_results)
+            summary = build_summary(
+                official=stored_official,
+                results=stored_results,
+                episodes=episodes,
             )
+            _validate_schema("summary", summary)
+            _atomic_json(week_root / "summary.json", summary)
         _atomic_json(week_root / "episodes.json", episodes)
 
     return {
@@ -261,6 +288,11 @@ def finalize_week_evidence(
     official["week_last_kickoff_at_utc"] = str(week_last_kickoff_at_utc)
     results = build_pending_results(official)
     summary = build_summary(official=official, results=results, episodes=episodes)
+
+    _validate_schema("episodes", episodes)
+    _validate_schema("official", official)
+    _validate_schema("results", results)
+    _validate_schema("summary", summary)
 
     _atomic_json(week_root / "episodes.json", episodes)
     official_created = _write_once(week_root / "official.json", official)
