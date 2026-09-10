@@ -61,7 +61,7 @@ if [ "${local_ahead}" != "0" ]; then
     || fail "local/remote evidence branch mismatch after push retry"
 fi
 
-/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/sync_prospective_evidence_v1.py sync \
+"${NFL_EDGE_PROSPECTIVE_PYTHON:-${production_root}/.venv/bin/python}" "${production_root}/scripts/sync_prospective_evidence_v1.py" sync \
   --runtime-root "${runtime_root}" \
   --evidence-root "${evidence_root}" \
   --production-worktree "${production_root}"
