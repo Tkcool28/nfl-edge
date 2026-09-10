@@ -12,6 +12,7 @@ from nfl_edge.prospective.card_tracking_v1 import (
     ProspectiveCardError,
 )
 from nfl_edge.prospective.persistence_v1 import (
+    finalize_ready_weeks,
     finalize_week_evidence,
     sync_runtime_evidence,
 )
@@ -297,3 +298,41 @@ def test_late_recovered_prekick_evidence_cannot_silently_change_finalized_offici
         )
 
     assert (week_root / "official.json").read_bytes() == before
+
+
+def test_ready_week_finalizer_uses_full_source_slate_boundary(tmp_path: Path) -> None:
+    runtime = tmp_path / "runtime"
+    evidence = tmp_path / "evidence"
+    production = tmp_path / "production"
+    production.mkdir()
+    _capture(runtime)
+    sync_runtime_evidence(
+        runtime_root=runtime,
+        evidence_root=evidence,
+        production_worktree=production,
+    )
+    publication = json.loads(next(runtime.rglob("*.json")).read_text())
+    boundary = publication["source_week_last_kickoff_at_utc"]
+    assert boundary == "2026-09-06T17:00:00Z"
+
+    pending = finalize_ready_weeks(
+        evidence_root=evidence,
+        as_of_utc="2026-09-06T16:59:59Z",
+    )
+    assert pending["weeks_finalized"] == []
+    assert pending["weeks_pending"][0]["week_last_kickoff_at_utc"] == boundary
+    assert not (evidence / "prospective/cards/2026/week-01/official.json").exists()
+
+    finalized = finalize_ready_weeks(
+        evidence_root=evidence,
+        as_of_utc="2026-09-06T17:00:01Z",
+    )
+    assert finalized["weeks_finalized"][0]["status"] == "FINALIZED"
+    assert finalized["weeks_finalized"][0]["week_last_kickoff_at_utc"] == boundary
+    assert finalized["provider_calls"] == 0
+
+    retry = finalize_ready_weeks(
+        evidence_root=evidence,
+        as_of_utc="2026-09-07T00:00:00Z",
+    )
+    assert retry["weeks_finalized"][0]["status"] == "ALREADY_FINALIZED"
