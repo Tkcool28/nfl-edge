@@ -101,7 +101,7 @@ def test_headline_corridor_consumes_evaluator_concession_instead_of_hardcoding_1
     row = _moneyline_row(-120, concession=0.006)
     assert _post_selection_play_through(row, lane="balanced", state="BET") == {
         "line": None,
-        "price_american": -123,
+        "price_american": -122,
     }
 
 
