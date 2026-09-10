@@ -25,7 +25,34 @@ def _client(tmp_path: Path) -> TestClient:
         allowed_hosts=("testserver",),
         auth_rate_limit_per_minute=100,
     )
-    ProductStore(settings.product_dir).publish(json.loads(FIXTURE.read_text(encoding="utf-8")))
+    product = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    # The canonical mock fixture intentionally carries only one Pinnacle
+    # moneyline side, which is enough for transport/schema tests but not enough
+    # to reconstruct the no-vig anchor needed by the real evaluator. Enrich the
+    # test-only copy with the mirrored side so evaluator-visibility assertions
+    # exercise a genuinely supported exact evaluation instead of asserting on
+    # an UNSUPPORTED missing-anchor response.
+    product["games"][0]["market_board"]["moneyline"]["PINNACLE"].append(
+        {
+            "offer_id": "mock-pin-ml-aaa",
+            "provider": "mock-fixture",
+            "game_id": "mock-2026-w01-AAA-BBB",
+            "sportsbook": "PINNACLE",
+            "market_type": "MONEYLINE",
+            "selection": "AAA",
+            "line": None,
+            "price": 100,
+            "snapshot_at_utc": "2026-09-02T13:58:00Z",
+            "normalized_selection": "AAA",
+            "freshness": {
+                "state": "FRESH",
+                "observed_at_utc": "2026-09-02T13:58:00Z",
+                "age_seconds": 120,
+                "threshold_seconds": 300,
+            },
+        }
+    )
+    ProductStore(settings.product_dir).publish(product)
     return TestClient(create_app(settings))
 
 
@@ -49,6 +76,45 @@ def test_manual_offer_is_evaluated_without_dk_fd_dependency(tmp_path: Path) -> N
     assert manual.json()["evaluation"] == retail.json()["evaluation"]
 
 
+def test_exact_offer_view_exposes_evaluator_probability_without_changing_evaluation_contract(tmp_path: Path) -> None:
+    client = _client(tmp_path)
+    response = client.post("/api/v1/evaluate-offer", json=_offer(book="MANUAL"))
+    assert response.status_code == 200, response.text
+    payload = response.json()
+    evaluation = payload["evaluation"]
+    provenance = payload["provenance"]
+    assert set(evaluation) == {
+        "supported",
+        "probability",
+        "trust_probability",
+        "break_even_probability",
+        "ev",
+        "verdict",
+        "recommended_units",
+        "play_through",
+        "value_at",
+        "warnings",
+    }
+    assert evaluation["supported"] is True
+    assert provenance["evaluator_probability"] is not None
+    assert 0.0 < float(provenance["evaluator_probability"]) < 1.0
+    assert provenance["reliability"] in {"HIGH", "MEDIUM", "LOW"}
+
+
+def test_product_view_exposes_headline_evaluator_economics_as_overlay_only(tmp_path: Path) -> None:
+    client = _client(tmp_path)
+    response = client.get("/api/v1/product/latest")
+    assert response.status_code == 200, response.text
+    payload = response.json()
+    product = payload["product"]
+    overlay = payload["headline_overlays"]["balanced"]
+    assert "evaluator_probability" not in product["headlines"]["balanced"]
+    assert overlay["evaluator_probability"] is not None
+    assert overlay["evaluator_break_even_probability"] is not None
+    assert overlay["evaluator_ev"] is not None
+    assert overlay["evaluator_reliability"] in {"HIGH", "MEDIUM", "LOW"}
+
+
 def test_manual_moneyline_targets_do_not_chase_entered_price(tmp_path: Path) -> None:
     client = _client(tmp_path)
     evaluations = []
@@ -60,8 +126,6 @@ def test_manual_moneyline_targets_do_not_chase_entered_price(tmp_path: Path) -> 
         assert evaluation["value_at"] is None
         evaluations.append(evaluation)
 
-    # This fixture is allowed to have no published Play Through target. What must
-    # remain invariant across entered prices is the model/trust probability surface.
     assert len({evaluation["probability"] for evaluation in evaluations}) == 1
     assert len({evaluation["trust_probability"] for evaluation in evaluations}) == 1
     non_null_targets = [evaluation["play_through"] for evaluation in evaluations if evaluation["play_through"] is not None]
@@ -69,9 +133,6 @@ def test_manual_moneyline_targets_do_not_chase_entered_price(tmp_path: Path) -> 
 
 
 def test_play_through_threshold_is_independent_of_current_entered_price() -> None:
-    # The frozen Play Through threshold is determined by conditional non-push
-    # probability, reliability, and uncertainty. Current price only changes the
-    # status classification through its break-even probability.
     assessments = [
         assess_play_through(
             supported=True,

@@ -197,7 +197,12 @@ class ExactOfferEngine:
                 "value_at": None,
                 "warnings": ["Required current Pinnacle benchmark evidence is unavailable."],
             })
-            return response, {"request": dict(req), "reason": "missing_pinnacle_anchor"}
+            return response, {
+                "request": dict(req),
+                "reason": "missing_pinnacle_anchor",
+                "evaluator_probability": None,
+                "reliability": "UNSUPPORTED",
+            }
 
         output = game["football_outputs"]
         game_state = GameState(
@@ -266,6 +271,7 @@ class ExactOfferEngine:
             "request": dict(req),
             "side": side,
             "evaluator_version": result.evaluator_version,
+            "evaluator_probability": result.conditional_nonpush_probability,
             "reliability": result.reliability,
             "state_version": self.state_version,
             "recommendation": dict(response),

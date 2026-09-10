@@ -18,9 +18,9 @@ jobs:
       PYTHONHASHSEED: "0"
       OMP_NUM_THREADS: "1"
       OPENBLAS_NUM_THREADS: "1"
-      OPENBLAS_CORETYPE: "HASWELL"
+      OPENBLAS_CORETYPE: HASWELL
       MKL_NUM_THREADS: "1"
-      MKL_CBWR: "COMPATIBLE"
+      MKL_CBWR: COMPATIBLE
       NUMEXPR_NUM_THREADS: "1"
     steps:
       - uses: actions/checkout@v4
@@ -113,7 +113,8 @@ jobs:
         run: |
           pytest -q \
             tests/live/test_live_markets_2026.py \
-            tests/live/test_live_product_2026.py
+            tests/live/test_live_product_2026.py \
+            tests/live/test_live_product_headline_hotfix_v1.py
 
       - name: Record zero-credit gate proof
         if: always()

@@ -66,6 +66,41 @@ def _headline_duplicate_map(product: Mapping[str, Any]) -> tuple[dict[str, str],
     return duplicate_to_primary, identity_key_by_lane
 
 
+def _headline_evaluator_overlay(exact: Any, product: Mapping[str, Any], headline: Mapping[str, Any]) -> dict[str, Any]:
+    """Expose evaluator economics beside selector metrics without changing the product snapshot contract."""
+    empty = {
+        "evaluator_probability": None,
+        "evaluator_break_even_probability": None,
+        "evaluator_ev": None,
+        "evaluator_reliability": None,
+    }
+    if str(headline.get("state")) not in {"BET", "TARGET_ONLY"}:
+        return empty
+    if str(headline.get("book")) not in {"DRAFTKINGS", "FANDUEL"}:
+        return empty
+    required = ("game_id", "market", "selection", "american_odds")
+    if any(headline.get(field) is None for field in required):
+        return empty
+    exact_request = {
+        "game_id": str(headline["game_id"]),
+        "market_type": str(headline["market"]),
+        "selection": str(headline["selection"]),
+        "book": str(headline["book"]),
+        "line": headline.get("line"),
+        "price": int(headline["american_odds"]),
+    }
+    try:
+        evaluation, context = exact.evaluate(product, exact_request)
+    except (ValueError, KeyError, TypeError):
+        return empty
+    return {
+        "evaluator_probability": context.get("evaluator_probability"),
+        "evaluator_break_even_probability": evaluation.get("break_even_probability"),
+        "evaluator_ev": evaluation.get("ev"),
+        "evaluator_reliability": context.get("reliability"),
+    }
+
+
 def create_app(settings: BackendSettings | None = None) -> FastAPI:
     """Build the backend and apply final transport/presentation safety guards."""
     # _base_app constructs the process-global application at import. Reuse that
@@ -74,10 +109,12 @@ def create_app(settings: BackendSettings | None = None) -> FastAPI:
     app = _base.app if settings is None else _base.create_app(settings)
     active_settings: BackendSettings = app.state.settings
     db = app.state.db
+    exact = app.state.exact_offer_engine
 
     core_login = _take_route(app, "/api/v1/auth/login", "POST")
     del core_login  # intentionally replaced below
     core_product_latest = _take_route(app, "/api/v1/product/latest", "GET")
+    core_evaluate_offer = _take_route(app, "/api/v1/evaluate-offer", "POST")
     core_create_wager = _take_route(app, "/api/v1/wagers", "POST")
     core_patch_wager = _take_route(app, "/api/v1/wagers/{wager_id}", "PATCH")
 
@@ -149,12 +186,15 @@ def create_app(settings: BackendSettings | None = None) -> FastAPI:
     @app.get("/api/v1/product/latest")
     def product_latest(request: Request) -> dict[str, Any]:
         view = core_product_latest(request)
+        product = view["product"]
+        overlays = view["headline_overlays"]
+        for lane_key in LANE_ORDER:
+            overlays[lane_key].update(_headline_evaluator_overlay(exact, product, product["headlines"][lane_key]))
+
         user = view.get("user")
         if user is None:
             return view
 
-        product = view["product"]
-        overlays = view["headline_overlays"]
         profile = db.get_profile(str(user["user_id"]))
         if profile is None:
             raise HTTPException(500, "authenticated profile missing")
@@ -199,6 +239,23 @@ def create_app(settings: BackendSettings | None = None) -> FastAPI:
             # identical offer; do not make the UI imply a second wager is needed.
             for field in ("wager_logged", "logged_wager_id", "actual_units", "actual_dollars", "wager_status"):
                 overlays[lane_key][field] = overlays[primary][field]
+        return view
+
+    @app.post("/api/v1/evaluate-offer")
+    def evaluate_offer(request: Request, payload: dict[str, Any] = Body(...)) -> dict[str, Any]:
+        """Preserve the exact-offer contract and add evaluator explanation to the outer view provenance."""
+        view = core_evaluate_offer(request, payload)
+        product = app.state.product_store.snapshot()
+        if product is None:
+            return view
+        try:
+            _, context = exact.evaluate(product, payload)
+        except (ValueError, KeyError, TypeError):
+            return view
+        provenance = dict(view.get("provenance") or {})
+        provenance["evaluator_probability"] = context.get("evaluator_probability")
+        provenance["reliability"] = context.get("reliability")
+        view["provenance"] = provenance
         return view
 
     @app.get("/api/v1/bankroll")
