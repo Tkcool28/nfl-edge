@@ -1,0 +1,36 @@
+[Unit]
+Description=NFL EDGE prospective card evidence persistence
+Documentation=file:///root/nfl-edge/prospective/README.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/nfl-edge
+Environment="PYTHONPATH=/root/nfl-edge/src"
+EnvironmentFile=/etc/nfl-edge/prospective-persist.env
+ExecStart=/bin/bash /root/nfl-edge/deploy/scripts/persist_prospective_card_evidence_v1.sh
+Restart=no
+TimeoutStartSec=5min
+MemoryMax=384M
+MemoryHigh=256M
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadOnlyPaths=/var/lib/nfl-edge/prospective_card_log_v1
+ReadWritePaths=/var/lib/nfl-edge/prospective_git_v1 /var/lib/nfl-edge/prospective_card_log_v1
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictNamespaces=true
+SystemCallArchitectures=native
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nfl-edge-prospective-persist
+
+# Intentionally no [Install] activation contract yet. VPS activation is a later
+# reviewed operational chunk after the isolated worktree/remote are inspected.
