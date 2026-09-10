@@ -83,6 +83,28 @@ def test_sync_rejects_production_worktree_overlap(tmp_path: Path, evidence_name:
         )
 
 
+
+def test_sync_rejects_schema_invalid_runtime_evidence(tmp_path: Path) -> None:
+    runtime = tmp_path / "runtime"
+    evidence = tmp_path / "evidence"
+    production = tmp_path / "production"
+    production.mkdir()
+    _capture(runtime)
+    source = next(runtime.rglob("*.json"))
+    payload = json.loads(source.read_text())
+    del payload["lanes"]
+    # Preserve canonical JSON so this specifically proves schema validation rather
+    # than the existing canonical-byte guard.
+    source.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    with pytest.raises(ProspectiveCardError, match="publication schema validation failed"):
+        sync_runtime_evidence(
+            runtime_root=runtime,
+            evidence_root=evidence,
+            production_worktree=production,
+        )
+
+
 def test_sync_rejects_noncanonical_runtime_evidence(tmp_path: Path) -> None:
     runtime = tmp_path / "runtime"
     evidence = tmp_path / "evidence"
