@@ -22,5 +22,8 @@ Production state is split deliberately:
 - persistent user/wager DB: `/var/lib/nfl-edge/backend`
 - validated product publication: `/var/lib/nfl-edge/product_v1`
 - prospective runtime observations: `/var/lib/nfl-edge/prospective_card_log_v1`
+- isolated prospective Git checkout: `/var/lib/nfl-edge/prospective_repo_v1` on `ops/prospective-card-evidence-v1`
 
 See `docs/deployment_contract.md` for the authoritative production boundary and `docs/integrated_vps_deployment_v1.md` for the deployment/acceptance procedure.
+
+Prospective repository persistence is performed only by the dedicated oneshot/timer pair. It reads `/root/nfl-edge` and the runtime observation directory, writes only the isolated evidence checkout, stages only `prospective/cards/**`, and pushes only the evidence branch. It never makes sportsbook-provider calls.
