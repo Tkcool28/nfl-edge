@@ -157,7 +157,14 @@ def _merge_results(previous: Mapping[str, Any] | None, pending: Mapping[str, Any
         portfolio=True,
     )
     all_rows = lane_results + portfolio_results
-    settlement_status = "PENDING" if any(str(row.get("grade") or "").upper() == "PENDING" for row in all_rows) else "SETTLED"
+    pending_count = sum(str(row.get("grade") or "").upper() == "PENDING" for row in all_rows)
+    settled_count = len(all_rows) - pending_count
+    if pending_count and settled_count:
+        settlement_status = "PARTIAL"
+    elif pending_count:
+        settlement_status = "PENDING"
+    else:
+        settlement_status = "SETTLED"
     return {
         **deepcopy(dict(pending)),
         "settlement_status": settlement_status,
