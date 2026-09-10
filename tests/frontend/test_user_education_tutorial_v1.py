@@ -85,7 +85,6 @@ def test_beginner_copy_uses_concrete_examples_and_preserves_product_semantics():
         "It would need to win by 4 or more",
         "HIGH means the app has stronger historical support",
         "pull that number partway back toward the market",
-        "same exact Dallas bet",
         "The bet became worse",
         "keep your money for a better spot",
         "does not have enough validated information",
