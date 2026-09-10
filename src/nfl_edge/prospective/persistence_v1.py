@@ -173,7 +173,39 @@ def sync_runtime_evidence(
     for season, week in sorted(touched):
         week_root = _week_target(evidence, season, week)
         publications = load_publications(week_root / "publications")
-        _atomic_json(week_root / "episodes.json", derive_episodes(publications))
+        episodes = derive_episodes(publications)
+        official_path = week_root / "official.json"
+        results_path = week_root / "results.json"
+        if official_path.exists():
+            if not results_path.exists():
+                raise ProspectiveCardError(
+                    f"finalized official evidence exists without results contract: {week_root}"
+                )
+            stored_official = json.loads(official_path.read_text(encoding="utf-8"))
+            recomputed_official = resolve_official(publications)
+            comparison_fields = (
+                "resolutions",
+                "official_wagers",
+                "portfolio_entries",
+                "overlap_count",
+            )
+            if any(
+                stored_official.get(field) != recomputed_official.get(field)
+                for field in comparison_fields
+            ):
+                raise AppendOnlyViolation(
+                    "newly synchronized evidence would change already-finalized official card"
+                )
+            stored_results = json.loads(results_path.read_text(encoding="utf-8"))
+            _atomic_json(
+                week_root / "summary.json",
+                build_summary(
+                    official=stored_official,
+                    results=stored_results,
+                    episodes=episodes,
+                ),
+            )
+        _atomic_json(week_root / "episodes.json", episodes)
 
     return {
         "schema_version": PERSISTENCE_SCHEMA_VERSION,
