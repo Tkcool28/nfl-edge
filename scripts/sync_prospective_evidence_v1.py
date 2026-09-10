@@ -13,6 +13,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from nfl_edge.prospective.persistence_v1 import (  # noqa: E402
+    finalize_ready_weeks,
     finalize_week_evidence,
     sync_runtime_evidence,
 )
@@ -27,6 +28,10 @@ def main(argv: list[str] | None = None) -> int:
     sync.add_argument("--evidence-root", type=Path, required=True)
     sync.add_argument("--production-worktree", type=Path, required=True)
 
+    ready = sub.add_parser("finalize-ready", help="finalize captured weeks whose full slate has crossed kickoff")
+    ready.add_argument("--evidence-root", type=Path, required=True)
+    ready.add_argument("--as-of-utc", required=True)
+
     finalize = sub.add_parser("finalize-week", help="freeze official pre-kick evidence after the full week")
     finalize.add_argument("--evidence-root", type=Path, required=True)
     finalize.add_argument("--season", type=int, required=True)
@@ -40,6 +45,11 @@ def main(argv: list[str] | None = None) -> int:
             runtime_root=args.runtime_root,
             evidence_root=args.evidence_root,
             production_worktree=args.production_worktree,
+        )
+    elif args.command == "finalize-ready":
+        result = finalize_ready_weeks(
+            evidence_root=args.evidence_root,
+            as_of_utc=args.as_of_utc,
         )
     else:
         result = finalize_week_evidence(
