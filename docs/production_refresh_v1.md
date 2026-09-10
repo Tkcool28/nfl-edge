@@ -8,10 +8,11 @@ The refresh composes frozen existing contracts only:
 
 ```text
 validated Sleeper audit -> football scorer -> one Odds API capture ->
-market normalization -> deterministic materialization -> atomic publication
+market normalization -> deterministic materialization -> atomic publication ->
+observational prospective capture
 ```
 
-It neither changes models, evaluators, selectors, staking, provider set, frontend, nor settlement.
+It neither changes models, evaluators, selectors, staking, provider set, frontend, nor settlement. Prospective capture consumes only the already-published canonical product and makes no sportsbook-provider request.
 
 ## Schedule and time zone
 
@@ -46,7 +47,7 @@ Artifacts include `sleeper-source.json`, football snapshot, raw response/metadat
 
 Outcomes are `SUCCESS`, `SLEEPER_NOT_READY`, `SCORING_FAILED`, `MARKET_ACQUISITION_FAILED`, `MARKET_NORMALIZATION_FAILED`, `MATERIALIZATION_FAILED`, `PUBLICATION_FAILED`, or `LOCKED`. An exclusive non-blocking `flock` on `/var/lib/nfl-edge/production_refresh_v1/.production-refresh.lock` makes a concurrent invocation return `LOCKED` before it can create artifacts or call the provider.
 
-Publication uses the existing `ProductStore.publish()` atomic publisher. The backend is never restarted or reloaded by this unit. The merged ProductStore refresh-on-read behavior observes the new valid `latest.json` on future product-dependent requests in the same backend PID.
+Publication uses the existing `ProductStore.publish()` atomic publisher. Only after publication succeeds and the authoritative latest product is re-read does the orchestrator attempt prospective capture under `/var/lib/nfl-edge/prospective_card_log_v1/`. A capture failure is recorded in `run-status.json` / `latest-status.json` as `prospective_capture_result=FAILED` with redacted error metadata, but the refresh remains `SUCCESS` because the product was already published. The backend is never restarted or reloaded by this unit. The merged ProductStore refresh-on-read behavior observes the new valid `latest.json` on future product-dependent requests in the same backend PID.
 
 ## Secret installation
 
@@ -81,10 +82,10 @@ A manual `--live` invocation is a billable request and requires explicit owner a
 ## Post-merge deployment plan (not executed by this PR)
 
 1. `git fetch origin`, require clean tracked state, and fast-forward `/root/nfl-edge` to the reviewed merged main SHA.
-2. Install the two reviewed unit files under `/etc/systemd/system/`; create `/var/lib/nfl-edge/production_refresh_v1` with root-only write access.
+2. Install the two reviewed unit files under `/etc/systemd/system/`; create `/var/lib/nfl-edge/production_refresh_v1` and `/var/lib/nfl-edge/prospective_card_log_v1` with root-only write access.
 3. Install `/etc/nfl-edge/refresh.env` as `root:root 0600`, retaining the same existing key and checking only a safe fingerprint equality.
 4. Run `systemctl daemon-reload` and `systemd-analyze verify` on both installed units.
 5. Do **not** enable the timer yet.
-6. Run a zero-credit replay fixture against isolated run/publication roots; verify candidate publication and backend hot-reload with unchanged backend PID where the fixture is suitable.
+6. Run a zero-credit replay fixture against isolated run/publication/prospective roots; verify candidate publication, one native-format prospective capture, capture idempotency, and backend hot-reload with unchanged backend PID where the fixture is suitable.
 7. Enable the timer only after that acceptance. Inspect `systemctl list-timers --all` and record the next `00:05 UTC` and `12:05 UTC` triggers.
 8. Observe the first ordinary scheduled live run as a separate acceptance event. Record one provider attempt, reported credits, artifacts, publication, unchanged backend PID, and public product transition. Do not manually trigger a second billable run merely to test scheduling.

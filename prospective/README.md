@@ -77,14 +77,14 @@ ROI is net units divided by units risked. Hit rate is wins divided by wins plus 
 
 ## Runtime capture and repository persistence design
 
-Repo-side proof comes first. Runtime integration is intentionally not part of the initial implementation branch.
+Repo-side proof is complete. The follow-on runtime integration adds only a post-publication observational capture seam; repository persistence remains a separate operational chunk.
 
 Recommended operational sequence:
 
 1. production refresh generates and validates the canonical product;
 2. ProductStore publication succeeds and that product becomes production-authoritative;
-3. an observational capture step writes immutable evidence to a bounded runtime directory such as /var/lib/nfl-edge/prospective_card_log_v1/;
-4. tracker failure is visible in operational status but does not roll back or make an already-successful product publication unavailable;
+3. the production refresh attempts an observational capture only after successful publication and writes immutable evidence to `/var/lib/nfl-edge/prospective_card_log_v1/<season>/week-XX/publications/`;
+4. tracker failure is visible in refresh operational status but does not roll back the product or change a successful refresh outcome;
 5. a dedicated persistence process copies only validated prospective evidence into an isolated evidence worktree/branch;
 6. the persistence process commits only prospective/ evidence paths and pushes through the trusted GitHub workflow.
 
@@ -117,3 +117,11 @@ Any later import of archived pre-activation production artifacts must be explici
             summary.json
 
 A future current-card pointer and NFL_EDGE_DAILY_NEWS_BRIEF_V1 may consume these records, but News implementation is outside this milestone and immutable publication files remain historical authority.
+
+## Runtime integration boundary
+
+The production refresh accepts an optional `--prospective-dir`. When configured, the sequence is strictly `publish -> re-read authoritative latest -> capture`. Candidate products that fail publication are never captured. The same canonical product encountered twice is deduplicated by source-product hash, preserving the first immutable publication timestamp.
+
+The production systemd contract grants write access only to the existing refresh/product roots plus `/var/lib/nfl-edge/prospective_card_log_v1`. It does not alter the twice-daily timer, provider credential, backend service, or HTTP surface.
+
+Repository synchronization of runtime observations is intentionally still separate. The public backend never commits to Git, and `/root/nfl-edge` must remain a clean production checkout.

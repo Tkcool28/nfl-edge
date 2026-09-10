@@ -33,6 +33,7 @@ from nfl_edge.live.product_state_2026 import load_entering_2026_product_state
 from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash, score_week1
 from nfl_edge.live.sleeper_qb import DEFAULT_OVERRIDES, SleeperExpectedQBResolver, SleeperQBSource, load_overrides
 from nfl_edge.live.week1_2026 import load_week1_schedule
+from nfl_edge.prospective.runtime_v1 import capture_published_product
 
 
 class RefreshOutcome(str, Enum):
@@ -71,6 +72,7 @@ class RefreshConfig:
     live: bool
     market_response: Path | None = None
     market_metadata: Path | None = None
+    prospective_dir: Path | None = None
 
 
 def _utc_now() -> str:
@@ -203,6 +205,12 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
         "product_version": None,
         "product_sha256": None,
         "publication_result": None,
+        "prospective_capture_result": "DISABLED" if config.prospective_dir is None else "PENDING",
+        "prospective_publication_id": None,
+        "prospective_source_product_sha256": None,
+        "prospective_runtime_path": None,
+        "prospective_capture_error_type": None,
+        "prospective_capture_error_message": None,
         "error_type": None,
         "error_message": None,
     }
@@ -382,6 +390,31 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                 summary["immutable_snapshot"] = str(immutable)
             except Exception as exc:
                 return finish(RefreshOutcome.PUBLICATION_FAILED, exc)
+
+            # Prospective evidence is observational and begins only after the product
+            # is production-authoritative. Failure here is visible but cannot roll
+            # back a successful publication or alter the refresh SUCCESS outcome.
+            if config.prospective_dir is not None:
+                try:
+                    capture = capture_published_product(
+                        current,
+                        runtime_root=config.prospective_dir,
+                        published_at_utc=_utc_now(),
+                    )
+                    if capture["source_product_sha256"] != summary["product_sha256"]:
+                        raise RuntimeError(
+                            "prospective source product hash did not match published product hash"
+                        )
+                    summary.update(
+                        prospective_capture_result=str(capture["status"]),
+                        prospective_publication_id=str(capture["publication_id"]),
+                        prospective_source_product_sha256=str(capture["source_product_sha256"]),
+                        prospective_runtime_path=str(capture["runtime_path"]),
+                    )
+                except Exception as exc:
+                    summary["prospective_capture_result"] = "FAILED"
+                    summary["prospective_capture_error_type"] = type(exc).__name__
+                    summary["prospective_capture_error_message"] = _redact_error(exc)
             return finish(RefreshOutcome.SUCCESS)
     except RefreshLockedError as exc:
         # A locked invocation creates no run directory and therefore cannot interleave artifacts.
@@ -400,6 +433,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--publication-dir", type=Path, required=True)
+    parser.add_argument("--prospective-dir", type=Path)
     parser.add_argument("--prediction-as-of-utc", default=_utc_now())
     parser.add_argument("--repository-root", type=Path, default=Path(__file__).resolve().parents[3])
     source = parser.add_mutually_exclusive_group(required=True)
@@ -416,6 +450,7 @@ def main(argv: list[str] | None = None) -> int:
             live=args.live,
             market_response=args.market_response,
             market_metadata=args.market_metadata,
+            prospective_dir=args.prospective_dir,
         )
     )
     print(json.dumps(summary, sort_keys=True))

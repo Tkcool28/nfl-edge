@@ -17,6 +17,7 @@ from nfl_edge.prospective.common_v1 import (
     canonical_json_bytes,
 )
 from nfl_edge.prospective.derive_v1 import derive_episodes, resolve_official
+from nfl_edge.prospective.runtime_v1 import capture_published_product, runtime_publications_dir
 from nfl_edge.prospective.results_v1 import (
     build_pending_results,
     build_summary,
@@ -44,4 +45,6 @@ __all__ = [
     "realized_profit_units",
     "resolve_official",
     "write_publication_snapshot",
+    "capture_published_product",
+    "runtime_publications_dir",
 ]

@@ -21,5 +21,6 @@ Production state is split deliberately:
 - backend environment: `/etc/nfl-edge/backend.env`
 - persistent user/wager DB: `/var/lib/nfl-edge/backend`
 - validated product publication: `/var/lib/nfl-edge/product_v1`
+- prospective runtime observations: `/var/lib/nfl-edge/prospective_card_log_v1`
 
 See `docs/deployment_contract.md` for the authoritative production boundary and `docs/integrated_vps_deployment_v1.md` for the deployment/acceptance procedure.
