@@ -141,9 +141,11 @@ def build_publication_snapshot(
 
     source_sha = source_product_sha256(validated)
     games = _game_index(validated)
-    week_last_kickoff_at_utc = max(
-        (str(game["kickoff_at_utc"]) for game in games.values()),
-        key=parse_utc,
+    game_kickoffs = [str(game["kickoff_at_utc"]) for game in games.values()]
+    week_last_kickoff_at_utc = (
+        max(game_kickoffs, key=parse_utc)
+        if game_kickoffs
+        else None
     )
     selector_versions = dict(validated["selector_versions"])
     lanes: dict[str, dict[str, Any]] = {}
