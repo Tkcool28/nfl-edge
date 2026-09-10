@@ -75,20 +75,37 @@ V1 initially creates PENDING result references. When settlement is attached late
 
 ROI is net units divided by units risked. Hit rate is wins divided by wins plus losses, so pushes and voids do not inflate the hit-rate denominator.
 
-## Runtime capture and repository persistence design
+Persistence rebuilds pending identities from the official card while preserving any already-settled result row with the same stable identity. A settled row that would disappear from regenerated official evidence causes a fail-closed persistence error rather than silent historical rewriting. Mixed settled/pending weeks are labeled PARTIAL.
 
-Repo-side proof is complete. The follow-on runtime integration adds only a post-publication observational capture seam; repository persistence remains a separate operational chunk.
+## Runtime capture
 
-Recommended operational sequence:
+The production refresh accepts an optional `--prospective-dir`. When configured, the sequence is strictly `publish -> re-read authoritative latest -> capture`. Candidate products that fail publication are never captured. The same canonical product encountered twice is deduplicated by source-product hash, preserving the first immutable publication timestamp.
 
-1. production refresh generates and validates the canonical product;
-2. ProductStore publication succeeds and that product becomes production-authoritative;
-3. the production refresh attempts an observational capture only after successful publication and writes immutable evidence to `/var/lib/nfl-edge/prospective_card_log_v1/<season>/week-XX/publications/`;
-4. tracker failure is visible in refresh operational status but does not roll back the product or change a successful refresh outcome;
-5. a dedicated persistence process copies only validated prospective evidence into an isolated evidence worktree/branch;
-6. the persistence process commits only prospective/ evidence paths and pushes through the trusted GitHub workflow.
+Native runtime evidence is written under `/var/lib/nfl-edge/prospective_card_log_v1/<season>/week-XX/publications/`. Capture is observational and requires zero additional sportsbook-provider calls. Capture failure is recorded in refresh status but does not roll back a product that already published successfully.
 
-The public HTTP backend should not make arbitrary Git commits. The production /root/nfl-edge main worktree should remain clean. Runtime tracking requires **zero additional sportsbook-provider calls** because it consumes the product that was already published.
+The production systemd contract grants write access only to the existing refresh/product roots plus `/var/lib/nfl-edge/prospective_card_log_v1`. It does not alter the twice-daily timer, provider credential, backend service, or HTTP surface.
+
+## Repository persistence
+
+Repository persistence is implemented as a separate worker and is deliberately not part of the public HTTP backend or product publisher.
+
+The intended production sequence is:
+
+1. production refresh publishes the canonical product;
+2. post-publication capture writes immutable runtime evidence under `/var/lib/nfl-edge/prospective_card_log_v1/`;
+3. a dedicated persistence invocation reads one season/week from runtime staging;
+4. every runtime publication is validated against the checked-in Draft 2020-12 publication schema and V1 privacy/provider invariants;
+5. immutable publications are copied into an isolated evidence worktree under `prospective/cards/<season>/week-XX/publications/`;
+6. episodes.json, official.json, results.json, and summary.json are deterministically regenerated and schema-validated;
+7. the Git wrapper stages only `prospective/cards`, verifies every staged path remains below that prefix, commits, and pushes only the configured evidence branch.
+
+The wrapper refuses to run if the evidence worktree is dirty before sync or is checked out on any branch other than the configured evidence branch. It fast-forwards from the matching remote branch before copying evidence and fails rather than force-pushing or rewriting divergent history.
+
+The production `/root/nfl-edge` checkout is therefore read-only from the persistence worker's perspective and should remain clean. The suggested evidence worktree location is `/var/lib/nfl-edge/prospective_git_v1/worktree` on a dedicated `prospective-evidence-v1` branch.
+
+Git credentials are not accepted as CLI arguments or stored in the tracked environment example. The worktree's `origin` must already be authenticated through the VPS's approved trusted Git mechanism using least privilege. Tokens/keys must remain outside the repository and logs.
+
+The repository includes a hardened oneshot systemd service contract for this worker, but activation is intentionally deferred until the VPS worktree, remote authentication, permissions, and current production state are inspected after merge. No persistence timer/cadence is introduced repo-side in V1.
 
 ## Privacy and safety
 
@@ -117,11 +134,3 @@ Any later import of archived pre-activation production artifacts must be explici
             summary.json
 
 A future current-card pointer and NFL_EDGE_DAILY_NEWS_BRIEF_V1 may consume these records, but News implementation is outside this milestone and immutable publication files remain historical authority.
-
-## Runtime integration boundary
-
-The production refresh accepts an optional `--prospective-dir`. When configured, the sequence is strictly `publish -> re-read authoritative latest -> capture`. Candidate products that fail publication are never captured. The same canonical product encountered twice is deduplicated by source-product hash, preserving the first immutable publication timestamp.
-
-The production systemd contract grants write access only to the existing refresh/product roots plus `/var/lib/nfl-edge/prospective_card_log_v1`. It does not alter the twice-daily timer, provider credential, backend service, or HTTP surface.
-
-Repository synchronization of runtime observations is intentionally still separate. The public backend never commits to Git, and `/root/nfl-edge` must remain a clean production checkout.
