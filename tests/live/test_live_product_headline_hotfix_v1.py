@@ -14,12 +14,7 @@ FOOTBALL_GAMES = {
 }
 
 
-def _moneyline_row(
-    price: int,
-    *,
-    play_through_price: int | None,
-    play_through_concession: float = 0.015,
-) -> dict:
+def _moneyline_row(price: int, *, play_through_price: int | None) -> dict:
     return {
         "candidate_id": f"2026_01_SF_LAR|moneyline|home|draftkings|{price}",
         "game_id": "2026_01_SF_LAR",
@@ -42,9 +37,6 @@ def _moneyline_row(
         "model_candidate_regions": "",
         "evaluated_edge_probability": -0.01,
         "model_price_gap": 0.01,
-        "play_through_break_even_concession": play_through_concession,
-        # This is the pre-selection Task05F absolute boundary. Headline Play
-        # Through must not use it as either a selector gate or its public range.
         "play_through_price_american": play_through_price,
     }
 
@@ -58,10 +50,10 @@ def test_live_balanced_uses_price_bounded_v2_not_legacy_v1_band():
     assert selections["balanced"] is None
 
 
-def test_balanced_play_through_is_built_after_the_primary_bet():
-    # Even though Task05F's pre-selection absolute boundary points to a BETTER
-    # price, Balanced first accepts -120 under its own lane contract. Only then
-    # is the evaluator's 1.5pp concession applied to the accepted spot.
+def test_play_through_is_post_selection_extension_not_a_bet_gate():
+    # The selected Balanced card remains a BET even when Task05F's raw boundary
+    # points to a BETTER price. That boundary is not an execution extension and
+    # therefore must not be published as Play Through.
     selections = _lane_selection(
         [_moneyline_row(-120, play_through_price=-110)],
         ValueSelectorState(),
@@ -73,31 +65,12 @@ def test_balanced_play_through_is_built_after_the_primary_bet():
     assert headline["state"] == "BET"
     assert headline["american_odds"] == -120
     assert headline["recommended_units"] == 0.75
-    assert headline["play_through"] == {"line": None, "price_american": -127}
+    assert headline["play_through"] is None
 
 
-def test_hhr_screenshot_shape_keeps_bet_then_stretches_from_that_price():
-    # Regression for the production contradiction that looked like
-    # BET -198 / Play Through -187. The raw -187 boundary cannot veto the HHR
-    # BET and cannot become its public Play Through. The public extension starts
-    # from the accepted -198 spot and moves only in the worse-price direction.
+def test_play_through_publishes_only_when_it_stretches_the_selected_bet():
     selections = _lane_selection(
-        [_moneyline_row(-198, play_through_price=-187)],
-        ValueSelectorState(),
-    )
-    selected = selections["hit_rate"]
-    assert selected is not None
-
-    headline = _headline("hit_rate", selected, FOOTBALL_GAMES)
-    assert headline["state"] == "BET"
-    assert headline["american_odds"] == -198
-    assert headline["recommended_units"] > 0.0
-    assert headline["play_through"] == {"line": None, "price_american": -211}
-
-
-def test_no_headline_play_through_without_positive_evaluator_concession():
-    selections = _lane_selection(
-        [_moneyline_row(-120, play_through_price=-110, play_through_concession=0.0)],
+        [_moneyline_row(-120, play_through_price=-130)],
         ValueSelectorState(),
     )
     selected = selections["balanced"]
@@ -105,4 +78,5 @@ def test_no_headline_play_through_without_positive_evaluator_concession():
 
     headline = _headline("balanced", selected, FOOTBALL_GAMES)
     assert headline["state"] == "BET"
-    assert headline["play_through"] is None
+    assert headline["american_odds"] == -120
+    assert headline["play_through"] == {"line": None, "price_american": -130}
