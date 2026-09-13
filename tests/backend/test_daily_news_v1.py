@@ -8,12 +8,15 @@ from fastapi.testclient import TestClient
 from nfl_edge.backend.app import create_app
 from nfl_edge.backend.settings import BackendSettings
 
+ROOT = Path(__file__).resolve().parents[2]
+STATE = ROOT / "data/live/2026/entering_product_state_v1.json"
+
 
 def _settings(tmp_path: Path) -> BackendSettings:
     return BackendSettings(
         db_path=tmp_path / "users.sqlite3",
         product_dir=tmp_path / "product",
-        decision_state_path=tmp_path / "decision.json",
+        decision_state_path=STATE,
         news_latest_path=tmp_path / "news" / "latest.json",
         cookie_secure=False,
         allowed_origin="http://testserver",
