@@ -10,7 +10,7 @@ Type=oneshot
 WorkingDirectory=/root/nfl-edge
 EnvironmentFile=/etc/nfl-edge/news.env
 Environment="PYTHONPATH=/root/nfl-edge/src"
-ExecStart=/usr/bin/python3 /root/nfl-edge/scripts/nfl_edge_daily_news_v1.py
+ExecStart=/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/nfl_edge_daily_news_v1.py
 Restart=no
 TimeoutStartSec=7min
 UMask=0077
