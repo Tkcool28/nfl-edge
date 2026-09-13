@@ -91,4 +91,4 @@ def stage_editorial_submission(path: Path, payload: Mapping[str, Any]) -> dict[s
     raw = (json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n").encode("utf-8")
     digest = hashlib.sha256(raw).hexdigest()
     _atomic_bytes(path, raw)
-    return {"submission_sha256": digest, "path": str(path)}
+    return {"submission_sha256": digest}

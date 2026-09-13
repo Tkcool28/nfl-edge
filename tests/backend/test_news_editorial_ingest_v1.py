@@ -79,6 +79,7 @@ def test_editorial_ingest_requires_bearer_and_stages_only_inbox(tmp_path: Path) 
     )
 
     assert response.status_code == 202
+    assert set(response.json()) == {"status", "submission_sha256"}
     assert response.json()["status"] == "STAGED"
     assert json.loads(settings.news_editorial_inbox_path.read_text(encoding="utf-8")) == payload
     assert not settings.news_latest_path.exists()
