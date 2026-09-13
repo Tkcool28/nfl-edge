@@ -1,0 +1,45 @@
+{
+  "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+  "published_at_utc": "2026-09-13T00:20:00Z",
+  "edition": "Saturday Night Check",
+  "title": "NFL EDGE Saturday Night Brief",
+  "dek": "What changed today, what matters tomorrow, and which numbers are worth watching before Sunday kickoff.",
+  "sections": [
+    {
+      "id": "what-matters",
+      "title": "What Matters Today",
+      "icon": "🏈",
+      "items": [
+        {
+          "headline": "Example injury update",
+          "paragraphs": [
+            "Keep the football explanation short and direct.",
+            "Say what changed, then explain why a bettor using NFL EDGE should care."
+          ],
+          "takeaway": "Check the current card and price again before kickoff.",
+          "sources": [
+            {
+              "label": "Official source",
+              "url": "https://www.nfl.com/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fade",
+      "title": "The Fade",
+      "icon": "🔥",
+      "items": [
+        {
+          "headline": "Example retail-vs-sharper-market split",
+          "paragraphs": [
+            "Explain the split in normal betting language.",
+            "Explain what price movement would make the same side more or less attractive."
+          ],
+          "takeaway": "Use The Fade as another layer when deciding whether to bet now, wait for a better price, or pass."
+        }
+      ]
+    }
+  ]
+}
