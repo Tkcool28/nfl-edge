@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "NFL_EDGE_DAILY_NEWS_EXTERNAL_RESEARCH_V1.schema.json",
+  "title": "NFL EDGE Daily News External Research V1",
+  "type": "object",
+  "required": ["schema_version", "evidence"],
+  "properties": {
+    "schema_version": {"const": "NFL_EDGE_DAILY_NEWS_EXTERNAL_RESEARCH_V1"},
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["evidence_id", "fact", "sources"],
+        "properties": {
+          "evidence_id": {"type": "string", "minLength": 1},
+          "category": {"type": "string"},
+          "verification": {"type": "string"},
+          "fact": {"type": "string", "minLength": 1},
+          "interpretation": {"type": "string"},
+          "app_guidance": {"type": "string"},
+          "sources": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["url"],
+              "properties": {
+                "label": {"type": "string"},
+                "url": {"type": "string", "pattern": "^https?://"},
+                "published_at_utc": {"type": "string"}
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
