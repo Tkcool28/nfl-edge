@@ -288,9 +288,14 @@ def create_app(settings: BackendSettings | None = None) -> FastAPI:
                 raise HTTPException(400, "invalid content length") from None
         if request.headers.get("content-type", "").split(";", 1)[0].strip().lower() != "application/json":
             raise HTTPException(415, "editorial submission must use application/json")
-        raw = await request.body()
-        if len(raw) > MAX_SUBMISSION_BYTES:
-            raise HTTPException(413, "editorial submission exceeds size limit")
+        raw_buffer = bytearray()
+        async for chunk in request.stream():
+            if not chunk:
+                continue
+            if len(raw_buffer) + len(chunk) > MAX_SUBMISSION_BYTES:
+                raise HTTPException(413, "editorial submission exceeds size limit")
+            raw_buffer.extend(chunk)
+        raw = bytes(raw_buffer)
         try:
             payload = parse_strict_json(raw)
             staged = stage_editorial_submission(active_settings.news_editorial_inbox_path, payload)
