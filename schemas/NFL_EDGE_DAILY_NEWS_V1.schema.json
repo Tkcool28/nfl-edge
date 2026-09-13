@@ -10,6 +10,7 @@
     "edition": {"type": "string"},
     "title": {"type": "string", "minLength": 1},
     "dek": {"type": "string"},
+    "research_generated_at_utc": {"type": "string"},
     "sections": {
       "type": "array",
       "minItems": 1,
