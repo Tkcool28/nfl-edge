@@ -1,0 +1,844 @@
+{
+  "audience": "Football fans who bet, including casual and newer bettors.",
+  "card_context": {
+    "episodes": [
+      {
+        "book": "DRAFTKINGS",
+        "episode_id": "episode-849debb8a470b6f19783482c",
+        "first": {
+          "american_odds": -162,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-c2b1aa7d5a0a27e8f58af0db",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -167
+          },
+          "publication_id": "publication-9f793ed0608f65565c8a806a",
+          "published_at_utc": "2026-09-11T00:08:00.128231Z",
+          "recommended_units": 1.0,
+          "source_product_sha256": "9f793ed0608f65565c8a806a75a5f57d29689fd8d95e539123414bb9324670e9",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-4e1f8a17cdfd898e68e12f4f"
+        },
+        "kickoff_at_utc": null,
+        "lane": "HIT_RATE",
+        "latest": {
+          "american_odds": -166,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-e6c912d987ca7201ccdd8e86",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -171
+          },
+          "publication_id": "publication-e9ce21501de065df639a0c8a",
+          "published_at_utc": "2026-09-13T00:07:59.388155Z",
+          "recommended_units": 1.0,
+          "source_product_sha256": "e9ce21501de065df639a0c8ab134dcb37fc7a01140a8ef0bab37bb2f7cb42b1e",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-4e1f8a17cdfd898e68e12f4f"
+        },
+        "market": "MONEYLINE",
+        "present_in_latest": true,
+        "previous": {
+          "american_odds": -166,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-e6c912d987ca7201ccdd8e86",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -171
+          },
+          "publication_id": "publication-7c31aeb7d95e0e33f2c06bd0",
+          "published_at_utc": "2026-09-12T12:07:57.311847Z",
+          "recommended_units": 1.0,
+          "source_product_sha256": "7c31aeb7d95e0e33f2c06bd07b73f6eb42b3820fb32cc8c7039ecca83fef4a38",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-4e1f8a17cdfd898e68e12f4f"
+        },
+        "returned_after_gap": false,
+        "selection": "CHI",
+        "state": "BET",
+        "terminal_reason": "WEEK_HISTORY_END"
+      },
+      {
+        "book": "FANDUEL",
+        "episode_id": "episode-4d1cd78265e4c273d0aa3c32",
+        "first": {
+          "american_odds": -120,
+          "book": "FANDUEL",
+          "exact_offer_identity_id": "offer-84c6f1ab98c6169a9a2fa4c3",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -123
+          },
+          "publication_id": "publication-9f793ed0608f65565c8a806a",
+          "published_at_utc": "2026-09-11T00:08:00.128231Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "9f793ed0608f65565c8a806a75a5f57d29689fd8d95e539123414bb9324670e9",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-769b4072652e4c1d9ca5c225"
+        },
+        "kickoff_at_utc": null,
+        "lane": "BALANCED",
+        "latest": {
+          "american_odds": -126,
+          "book": "FANDUEL",
+          "exact_offer_identity_id": "offer-47354bc4005b381ae1e06fda",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -129
+          },
+          "publication_id": "publication-e9ce21501de065df639a0c8a",
+          "published_at_utc": "2026-09-13T00:07:59.388155Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "e9ce21501de065df639a0c8ab134dcb37fc7a01140a8ef0bab37bb2f7cb42b1e",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-769b4072652e4c1d9ca5c225"
+        },
+        "market": "MONEYLINE",
+        "present_in_latest": true,
+        "previous": {
+          "american_odds": -125,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-b260aff9e2a1634bd49a8ef2",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -128
+          },
+          "publication_id": "publication-7c31aeb7d95e0e33f2c06bd0",
+          "published_at_utc": "2026-09-12T12:07:57.311847Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "7c31aeb7d95e0e33f2c06bd07b73f6eb42b3820fb32cc8c7039ecca83fef4a38",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-769b4072652e4c1d9ca5c225"
+        },
+        "returned_after_gap": false,
+        "selection": "MIN",
+        "state": "BET",
+        "terminal_reason": "WEEK_HISTORY_END"
+      },
+      {
+        "book": "DRAFTKINGS",
+        "episode_id": "episode-648dd76afda7260c403ee3f2",
+        "first": {
+          "american_odds": -102,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-5efd6b9d1ff56b5abe81b5d9",
+          "line": 2.5,
+          "play_through": {
+            "line": 2.5,
+            "price_american": -105
+          },
+          "publication_id": "publication-9f793ed0608f65565c8a806a",
+          "published_at_utc": "2026-09-11T00:08:00.128231Z",
+          "recommended_units": 1.0,
+          "source_product_sha256": "9f793ed0608f65565c8a806a75a5f57d29689fd8d95e539123414bb9324670e9",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-8af04591a683a0664b8e5b20"
+        },
+        "kickoff_at_utc": null,
+        "lane": "VALUE",
+        "latest": {
+          "american_odds": -102,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-5efd6b9d1ff56b5abe81b5d9",
+          "line": 2.5,
+          "play_through": {
+            "line": 2.5,
+            "price_american": -105
+          },
+          "publication_id": "publication-cfef0d9f6d82868653d4da12",
+          "published_at_utc": "2026-09-11T12:07:55.410054Z",
+          "recommended_units": 1.0,
+          "source_product_sha256": "cfef0d9f6d82868653d4da122bd3b6823b02517c6ee2e61e7730bdaa21141bd8",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-8af04591a683a0664b8e5b20"
+        },
+        "market": "SPREAD",
+        "present_in_latest": false,
+        "previous": {
+          "american_odds": -102,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-5efd6b9d1ff56b5abe81b5d9",
+          "line": 2.5,
+          "play_through": {
+            "line": 2.5,
+            "price_american": -105
+          },
+          "publication_id": "publication-9f793ed0608f65565c8a806a",
+          "published_at_utc": "2026-09-11T00:08:00.128231Z",
+          "recommended_units": 1.0,
+          "source_product_sha256": "9f793ed0608f65565c8a806a75a5f57d29689fd8d95e539123414bb9324670e9",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-8af04591a683a0664b8e5b20"
+        },
+        "returned_after_gap": false,
+        "selection": "DEN",
+        "state": "BET",
+        "terminal_reason": "REPLACED"
+      },
+      {
+        "book": "DRAFTKINGS",
+        "episode_id": "episode-4b1a30e690ce54b23598582e",
+        "first": {
+          "american_odds": 102,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-40a4b6df2308364ab4a70075",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -100
+          },
+          "publication_id": "publication-2f3c1c772bbb502b4f1eefa2",
+          "published_at_utc": "2026-09-12T00:08:01.116625Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "2f3c1c772bbb502b4f1eefa2f03d111cd6dfdcb49f34246d5aab63941dbdc577",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-2e42d0d613733c30c6abfcd4"
+        },
+        "kickoff_at_utc": null,
+        "lane": "VALUE",
+        "latest": {
+          "american_odds": 102,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-40a4b6df2308364ab4a70075",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -100
+          },
+          "publication_id": "publication-e9ce21501de065df639a0c8a",
+          "published_at_utc": "2026-09-13T00:07:59.388155Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "e9ce21501de065df639a0c8ab134dcb37fc7a01140a8ef0bab37bb2f7cb42b1e",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-2e42d0d613733c30c6abfcd4"
+        },
+        "market": "MONEYLINE",
+        "present_in_latest": true,
+        "previous": {
+          "american_odds": 102,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-40a4b6df2308364ab4a70075",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -100
+          },
+          "publication_id": "publication-7c31aeb7d95e0e33f2c06bd0",
+          "published_at_utc": "2026-09-12T12:07:57.311847Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "7c31aeb7d95e0e33f2c06bd07b73f6eb42b3820fb32cc8c7039ecca83fef4a38",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-2e42d0d613733c30c6abfcd4"
+        },
+        "returned_after_gap": false,
+        "selection": "NYJ",
+        "state": "BET",
+        "terminal_reason": "WEEK_HISTORY_END"
+      }
+    ],
+    "latest_publication_id": "publication-e9ce21501de065df639a0c8a",
+    "latest_published_at_utc": "2026-09-13T00:07:59.388155Z",
+    "previous_publication_id": "publication-7c31aeb7d95e0e33f2c06bd0",
+    "previous_published_at_utc": "2026-09-12T12:07:57.311847Z",
+    "provider_calls": 0,
+    "schema_version": "NFL_EDGE_DAILY_NEWS_CARD_CONTEXT_V1",
+    "season": 2026,
+    "week": 1
+  },
+  "editorial_rule": "Personality strong, evidence strict.",
+  "evidence": [
+    {
+      "app_guidance": "For users holding the Vikings moneyline as a live BET, Smith being cleared removes one defensive-availability question on Minnesota's side; confirm the official inactives before kickoff. Do not treat a three-questionable status as evidence the Packers are weakened.",
+      "category": "injury",
+      "evidence_id": "ext-2026wk1-min-vs-gb-injury-report",
+      "fact": "For the Minnesota Vikings' Week 1 opener at US Bank Stadium against the Green Bay Packers, the Packers' official injury report listed three players as questionable; Vikings head coach Kevin O'Connell told reporters after Friday's practice that safety Harrison Smith, who re-signed with the Vikings this past week, will play Sunday.",
+      "interpretation": "This confirms Smith's availability for the Vikings' defensive backfield in Week 1. The three Packers listed as questionable is team-reported status as of Friday and does not by itself predict either team's performance or the final inactive list.",
+      "sources": [
+        {
+          "label": "Packers.com (official team news)",
+          "url": "https://www.packers.com/news/packers-list-three-questionable-vs-vikings-week-1-injury-report-2026"
+        }
+      ],
+      "verification": "OFFICIAL"
+    },
+    {
+      "app_guidance": "The Broncos-Chiefs game is part of this slate's context even though the Denver spread pick was dropped from the card. If a user is watching the side of the Broncos-Chiefs game at all, Mahomes being confirmed as the Week 1 starter is the QB-status baseline for that matchup.",
+      "category": "qb",
+      "evidence_id": "ext-2026wk1-mahomes-week1-start",
+      "fact": "Patrick Mahomes, coming off an ACL tear roughly nine months ago, told reporters he is feeling ready for a Week 1 start and is set to return Monday night at Arrowhead Stadium against the Denver Broncos in the Broncos-Chiefs season opener.",
+      "interpretation": "This reports Mahomes' stated readiness and that the Chiefs intend to start him in the Denver game. It is a player/team statement, not a confirmation of physical form or of how the Broncos-Chiefs game will play out.",
+      "sources": [
+        {
+          "label": "KCTV-5 (Kansas City local affiliate)",
+          "url": "https://www.kctv5.com/2026/09/10/mahomes-feeling-ready-week-1-start-9-months-after-acl-tear/"
+        }
+      ],
+      "verification": "CREDIBLE_REPORTING"
+    },
+    {
+      "app_guidance": "For users holding the Jets moneyline as a live BET, confirm the Titans' official inactives at kickoff before factoring their defense into the read; one possible missing defender does not change the line on its own.",
+      "category": "injury",
+      "evidence_id": "ext-2026wk1-jets-titans-defender",
+      "fact": "The New York Jets' Week 1 game is against the Tennessee Titans, and pre-game reporting notes the Titans could be without one of their top defensive players for the matchup in Nashville.",
+      "interpretation": "This is a pre-game status note on the Jets' opponent, reported before the final inactive list. It indicates a possible availability question on Tennessee's side but should not be read as a settled inactive or as a reason by itself to expect an easier Jets path.",
+      "sources": [
+        {
+          "label": "Jets X-Factor",
+          "url": "https://jetsxfactor.com/2026/09/07/new-york-jets-week-1-opponent-could-be-without-a-top-defender/"
+        }
+      ],
+      "verification": "CREDIBLE_REPORTING"
+    },
+    {
+      "app_guidance": "Explain current price, Play Through changes/crossings, replacements, disappearances, and returns exactly as supported.",
+      "category": "market_watch",
+      "evidence_id": "card:latest-prospective-context",
+      "fact": "Latest and prior prospective card observations are attached in card_context.",
+      "interpretation": "Use only observed tracker changes; do not infer movement from a single observation.",
+      "sources": [],
+      "verification": "INTERNAL_CANONICAL"
+    },
+    {
+      "app_guidance": "Explain the observed price/line/Play Through change in plain language and whether the recommendation remains current. Do not expose internal metrics opportunistically.",
+      "category": "market_watch",
+      "evidence_id": "card:episode-849debb8a470b6f19783482c",
+      "fact": "HIT_RATE CHI MONEYLINE: latest book=DRAFTKINGS, line=None, price=-166, play_through={'line': None, 'price_american': -171}, state=BET, present_in_latest=True. Previous observation: book=DRAFTKINGS, line=None, price=-166, play_through={'line': None, 'price_american': -171}, state=BET.",
+      "interpretation": "Compare the latest and previous observations only. If present_in_latest is false, do not describe this as a current recommendation.",
+      "sources": [],
+      "verification": "INTERNAL_CANONICAL"
+    },
+    {
+      "app_guidance": "Explain the observed price/line/Play Through change in plain language and whether the recommendation remains current. Do not expose internal metrics opportunistically.",
+      "category": "market_watch",
+      "evidence_id": "card:episode-4d1cd78265e4c273d0aa3c32",
+      "fact": "BALANCED MIN MONEYLINE: latest book=FANDUEL, line=None, price=-126, play_through={'line': None, 'price_american': -129}, state=BET, present_in_latest=True. Previous observation: book=DRAFTKINGS, line=None, price=-125, play_through={'line': None, 'price_american': -128}, state=BET.",
+      "interpretation": "Compare the latest and previous observations only. If present_in_latest is false, do not describe this as a current recommendation.",
+      "sources": [],
+      "verification": "INTERNAL_CANONICAL"
+    },
+    {
+      "app_guidance": "Explain the observed price/line/Play Through change in plain language and whether the recommendation remains current. Do not expose internal metrics opportunistically.",
+      "category": "market_watch",
+      "evidence_id": "card:episode-648dd76afda7260c403ee3f2",
+      "fact": "VALUE DEN SPREAD: latest book=DRAFTKINGS, line=2.5, price=-102, play_through={'line': 2.5, 'price_american': -105}, state=BET, present_in_latest=False. Previous observation: book=DRAFTKINGS, line=2.5, price=-102, play_through={'line': 2.5, 'price_american': -105}, state=BET.",
+      "interpretation": "Compare the latest and previous observations only. If present_in_latest is false, do not describe this as a current recommendation.",
+      "sources": [],
+      "verification": "INTERNAL_CANONICAL"
+    },
+    {
+      "app_guidance": "Explain the observed price/line/Play Through change in plain language and whether the recommendation remains current. Do not expose internal metrics opportunistically.",
+      "category": "market_watch",
+      "evidence_id": "card:episode-4b1a30e690ce54b23598582e",
+      "fact": "VALUE NYJ MONEYLINE: latest book=DRAFTKINGS, line=None, price=102, play_through={'line': None, 'price_american': -100}, state=BET, present_in_latest=True. Previous observation: book=DRAFTKINGS, line=None, price=102, play_through={'line': None, 'price_american': -100}, state=BET.",
+      "interpretation": "Compare the latest and previous observations only. If present_in_latest is false, do not describe this as a current recommendation.",
+      "sources": [],
+      "verification": "INTERNAL_CANONICAL"
+    }
+  ],
+  "generated_at_utc": "2026-09-13T07:51:27.381380Z",
+  "previous_article": {
+    "dek": "One single-point move, one card out of the lineup, and two prices that didn't budge. Here's where the NFL EDGE card stands today.",
+    "published_at_utc": "2026-09-13T07:41:41.578381Z",
+    "research_generated_at_utc": "2026-09-13T07:41:41.578381Z",
+    "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+    "sections": [
+      {
+        "id": "what-matters",
+        "items": [
+          {
+            "evidence_ids": [
+              "card:episode-4d1cd78265e4c273d0aa3c32"
+            ],
+            "headline": "The Vikings moneyline changed hands — and books",
+            "paragraphs": [
+              "The MIN moneyline went from -125 on DraftKings to -126 on FanDuel since the last check — the only live card on today's card that actually moved. The model's fair price ticked along with it, from about -128 to about -129. It's still a BET and still in the latest publication, so the pick is live; the move is one point, which is noise, not a reason to chase."
+            ],
+            "sources": []
+          },
+          {
+            "evidence_ids": [
+              "card:episode-648dd76afda7260c403ee3f2"
+            ],
+            "headline": "The Broncos spread is off the board",
+            "paragraphs": [
+              "Denver's 2.5-point spread at -102 no longer appears in the latest card — it was dropped from the lineup, not carried over. It is not a current recommendation, so treat it as closed rather than as a live play."
+            ],
+            "sources": []
+          },
+          {
+            "evidence_ids": [
+              "card:episode-849debb8a470b6f19783482c",
+              "card:episode-4b1a30e690ce54b23598582e"
+            ],
+            "headline": "Chicago and the Jets held their lines",
+            "paragraphs": [
+              "Two cards didn't budge. Chicago's moneyline sits at -166 with a model fair price around -171, and the Jets are plus money at +102 against a fair price near even. Both are still present in the latest card, so the prices in front of you are the live ones."
+            ],
+            "sources": []
+          }
+        ],
+        "title": "What Matters Today"
+      },
+      {
+        "id": "what-it-means",
+        "items": [
+          {
+            "evidence_ids": [
+              "card:episode-4d1cd78265e4c273d0aa3c32",
+              "card:episode-648dd76afda7260c403ee3f2",
+              "card:episode-849debb8a470b6f19783482c",
+              "card:episode-4b1a30e690ce54b23598582e"
+            ],
+            "headline": "Small moves are the news — don't overread them",
+            "paragraphs": [
+              "Week 1 cards are still settling, and everything that changed today is the ordinary kind: a one-point tick on the Vikings, a book swap underneath it, and a Denver spread that got cut from the card. None of it rewrites a bet; it just tells you where the card stands right now.",
+              "The Denver removal is the only thing that changes your plan. A selection that's no longer in the latest publication shouldn't be treated as a live recommendation — if it was on your slip, that's the signal to drop it. The steady lines on Chicago and the Jets mean the prices you saw this morning are the prices still in front of you."
+            ],
+            "sources": []
+          }
+        ],
+        "title": "What It Means"
+      },
+      {
+        "id": "market-watch",
+        "items": [
+          {
+            "evidence_ids": [
+              "card:episode-4d1cd78265e4c273d0aa3c32"
+            ],
+            "headline": "MIN moneyline: -125 to -126, and the offer flipped to FanDuel",
+            "paragraphs": [
+              "Against the last observation, the Vikings moneyline moved one point from -125 on DraftKings to -126, and the offer now shows up on FanDuel. The model's fair price sits around -129 (it was about -128). Still a live BET. A one-point tick plus a book switch is worth watching, not worth chasing."
+            ],
+            "sources": []
+          },
+          {
+            "evidence_ids": [
+              "card:episode-4b1a30e690ce54b23598582e"
+            ],
+            "headline": "NYJ moneyline: +102 steady, fair price near even",
+            "paragraphs": [
+              "The Jets are unchanged from the previous observation to the latest: +102. The model's fair price is around -100, so the plus-money quote is on a side the model sees close to a coin flip. Still live. For newer bettors, whether that quote drifts toward the fair price is the thing to keep an eye on."
+            ],
+            "sources": []
+          },
+          {
+            "evidence_ids": [
+              "card:episode-849debb8a470b6f19783482c"
+            ],
+            "headline": "CHI moneyline: -166, unchanged",
+            "paragraphs": [
+              "Chicago didn't move between the previous and latest observations: -166 with a model fair price near -171, still a live BET. When a line holds at your price, the decision is easy — the number you were quoted is still the real one."
+            ],
+            "sources": []
+          },
+          {
+            "evidence_ids": [
+              "card:episode-648dd76afda7260c403ee3f2"
+            ],
+            "headline": "DEN spread 2.5 at -102: dropped, not current",
+            "paragraphs": [
+              "The Broncos spread was previously offered at 2.5 points, -102. It is not present in the latest card. That's a removal, not a recommendation — leave it off the slip and don't treat it as a live play."
+            ],
+            "sources": []
+          }
+        ],
+        "title": "Market Watch"
+      },
+      {
+        "id": "today-tip",
+        "items": [
+          {
+            "evidence_ids": [
+              "card:episode-849debb8a470b6f19783482c",
+              "card:episode-4b1a30e690ce54b23598582e",
+              "card:episode-4d1cd78265e4c273d0aa3c32",
+              "card:episode-648dd76afda7260c403ee3f2"
+            ],
+            "headline": "The price in front of you is the only one that counts",
+            "paragraphs": [
+              "For new bettors, the market-watch habit is simple: a card holding still (Chicago, the Jets) means the quote you're looking at is real, and a card that switched books (the Vikings) is worth reading twice so you don't place at the wrong price. A one-point move is noise — what matters is that you're betting the number you think you're betting, on the book you think you're on.",
+              "And when a pick disappears from the latest card, like Denver's spread did, treat it as closed. There's no edge in betting a line the card has already dropped."
+            ],
+            "sources": []
+          }
+        ],
+        "title": "Today's Tip"
+      }
+    ],
+    "title": "Week 1 Card Watch: MIN moves, DEN is off the board, CHI and NYJ hold"
+  },
+  "previous_research": {
+    "audience": "Football fans who bet, including casual and newer bettors.",
+    "card_context": {
+      "episodes": [
+        {
+          "book": "DRAFTKINGS",
+          "episode_id": "episode-849debb8a470b6f19783482c",
+          "first": {
+            "american_odds": -162,
+            "book": "DRAFTKINGS",
+            "exact_offer_identity_id": "offer-c2b1aa7d5a0a27e8f58af0db",
+            "line": null,
+            "play_through": {
+              "line": null,
+              "price_american": -167
+            },
+            "publication_id": "publication-9f793ed0608f65565c8a806a",
+            "published_at_utc": "2026-09-11T00:08:00.128231Z",
+            "recommended_units": 1.0,
+            "source_product_sha256": "9f793ed0608f65565c8a806a75a5f57d29689fd8d95e539123414bb9324670e9",
+            "state": "BET",
+            "value_at": null,
+            "wager_identity_id": "wager-4e1f8a17cdfd898e68e12f4f"
+          },
+          "kickoff_at_utc": null,
+          "lane": "HIT_RATE",
+          "latest": {
+            "american_odds": -166,
+            "book": "DRAFTKINGS",
+            "exact_offer_identity_id": "offer-e6c912d987ca7201ccdd8e86",
+            "line": null,
+            "play_through": {
+              "line": null,
+              "price_american": -171
+            },
+            "publication_id": "publication-e9ce21501de065df639a0c8a",
+            "published_at_utc": "2026-09-13T00:07:59.388155Z",
+            "recommended_units": 1.0,
+            "source_product_sha256": "e9ce21501de065df639a0c8ab134dcb37fc7a01140a8ef0bab37bb2f7cb42b1e",
+            "state": "BET",
+            "value_at": null,
+            "wager_identity_id": "wager-4e1f8a17cdfd898e68e12f4f"
+          },
+          "market": "MONEYLINE",
+          "present_in_latest": true,
+          "previous": {
+            "american_odds": -166,
+            "book": "DRAFTKINGS",
+            "exact_offer_identity_id": "offer-e6c912d987ca7201ccdd8e86",
+            "line": null,
+            "play_through": {
+              "line": null,
+              "price_american": -171
+            },
+            "publication_id": "publication-7c31aeb7d95e0e33f2c06bd0",
+            "published_at_utc": "2026-09-12T12:07:57.311847Z",
+            "recommended_units": 1.0,
+            "source_product_sha256": "7c31aeb7d95e0e33f2c06bd07b73f6eb42b3820fb32cc8c7039ecca83fef4a38",
+            "state": "BET",
+            "value_at": null,
+            "wager_identity_id": "wager-4e1f8a17cdfd898e68e12f4f"
+          },
+          "returned_after_gap": false,
+          "selection": "CHI",
+          "state": "BET",
+          "terminal_reason": "WEEK_HISTORY_END"
+        },
+        {
+          "book": "FANDUEL",
+          "episode_id": "episode-4d1cd78265e4c273d0aa3c32",
+          "first": {
+            "american_odds": -120,
+            "book": "FANDUEL",
+            "exact_offer_identity_id": "offer-84c6f1ab98c6169a9a2fa4c3",
+            "line": null,
+            "play_through": {
+              "line": null,
+              "price_american": -123
+            },
+            "publication_id": "publication-9f793ed0608f65565c8a806a",
+            "published_at_utc": "2026-09-11T00:08:00.128231Z",
+            "recommended_units": 0.75,
+            "source_product_sha256": "9f793ed0608f65565c8a806a75a5f57d29689fd8d95e539123414bb9324670e9",
+            "state": "BET",
+            "value_at": null,
+            "wager_identity_id": "wager-769b4072652e4c1d9ca5c225"
+          },
+          "kickoff_at_utc": null,
+          "lane": "BALANCED",
+          "latest": {
+            "american_odds": -126,
+            "book": "FANDUEL",
+            "exact_offer_identity_id": "offer-47354bc4005b381ae1e06fda",
+            "line": null,
+            "play_through": {
+              "line": null,
+              "price_american": -129
+            },
+            "publication_id": "publication-e9ce21501de065df639a0c8a",
+            "published_at_utc": "2026-09-13T00:07:59.388155Z",
+            "recommended_units": 0.75,
+            "source_product_sha256": "e9ce21501de065df639a0c8ab134dcb37fc7a01140a8ef0bab37bb2f7cb42b1e",
+            "state": "BET",
+            "value_at": null,
+            "wager_identity_id": "wager-769b4072652e4c1d9ca5c225"
+          },
+          "market": "MONEYLINE",
+          "present_in_latest": true,
+          "previous": {
+            "american_odds": -125,
+            "book": "DRAFTKINGS",
+            "exact_offer_identity_id": "offer-b260aff9e2a1634bd49a8ef2",
+            "line": null,
+            "play_through": {
+              "line": null,
+              "price_american": -128
+            },
+            "publication_id": "publication-7c31aeb7d95e0e33f2c06bd0",
+            "published_at_utc": "2026-09-12T12:07:57.311847Z",
+            "recommended_units": 0.75,
+            "source_product_sha256": "7c31aeb7d95e0e33f2c06bd07b73f6eb42b3820fb32cc8c7039ecca83fef4a38",
+            "state": "BET",
+            "value_at": null,
+            "wager_identity_id": "wager-769b4072652e4c1d9ca5c225"
+          },
+          "returned_after_gap": false,
+          "selection": "MIN",
+          "state": "BET",
+          "terminal_reason": "WEEK_HISTORY_END"
+        },
+        {
+          "book": "DRAFTKINGS",
+          "episode_id": "episode-648dd76afda7260c403ee3f2",
+          "first": {
+            "american_odds": -102,
+            "book": "DRAFTKINGS",
+            "exact_offer_identity_id": "offer-5efd6b9d1ff56b5abe81b5d9",
+            "line": 2.5,
+            "play_through": {
+              "line": 2.5,
+              "price_american": -105
+            },
+            "publication_id": "publication-9f793ed0608f65565c8a806a",
+            "published_at_utc": "2026-09-11T00:08:00.128231Z",
+            "recommended_units": 1.0,
+            "source_product_sha256": "9f793ed0608f65565c8a806a75a5f57d29689fd8d95e539123414bb9324670e9",
+            "state": "BET",
+            "value_at": null,
+            "wager_identity_id": "wager-8af04591a683a0664b8e5b20"
+          },
+          "kickoff_at_utc": null,
+          "lane": "VALUE",
+          "latest": {
+            "american_odds": -102,
+            "book": "DRAFTKINGS",
+            "exact_offer_identity_id": "offer-5efd6b9d1ff56b5abe81b5d9",
+            "line": 2.5,
+            "play_through": {
+              "line": 2.5,
+              "price_american": -105
+            },
+            "publication_id": "publication-cfef0d9f6d82868653d4da12",
+            "published_at_utc": "2026-09-11T12:07:55.410054Z",
+            "recommended_units": 1.0,
+            "source_product_sha256": "cfef0d9f6d82868653d4da122bd3b6823b02517c6ee2e61e7730bdaa21141bd8",
+            "state": "BET",
+            "value_at": null,
+            "wager_identity_id": "wager-8af04591a683a0664b8e5b20"
+          },
+          "market": "SPREAD",
+          "present_in_latest": false,
+          "previous": {
+            "american_odds": -102,
+            "book": "DRAFTKINGS",
+            "exact_offer_identity_id": "offer-5efd6b9d1ff56b5abe81b5d9",
+            "line": 2.5,
+            "play_through": {
+              "line": 2.5,
+              "price_american": -105
+            },
+            "publication_id": "publication-9f793ed0608f65565c8a806a",
+            "published_at_utc": "2026-09-11T00:08:00.128231Z",
+            "recommended_units": 1.0,
+            "source_product_sha256": "9f793ed0608f65565c8a806a75a5f57d29689fd8d95e539123414bb9324670e9",
+            "state": "BET",
+            "value_at": null,
+            "wager_identity_id": "wager-8af04591a683a0664b8e5b20"
+          },
+          "returned_after_gap": false,
+          "selection": "DEN",
+          "state": "BET",
+          "terminal_reason": "REPLACED"
+        },
+        {
+          "book": "DRAFTKINGS",
+          "episode_id": "episode-4b1a30e690ce54b23598582e",
+          "first": {
+            "american_odds": 102,
+            "book": "DRAFTKINGS",
+            "exact_offer_identity_id": "offer-40a4b6df2308364ab4a70075",
+            "line": null,
+            "play_through": {
+              "line": null,
+              "price_american": -100
+            },
+            "publication_id": "publication-2f3c1c772bbb502b4f1eefa2",
+            "published_at_utc": "2026-09-12T00:08:01.116625Z",
+            "recommended_units": 0.75,
+            "source_product_sha256": "2f3c1c772bbb502b4f1eefa2f03d111cd6dfdcb49f34246d5aab63941dbdc577",
+            "state": "BET",
+            "value_at": null,
+            "wager_identity_id": "wager-2e42d0d613733c30c6abfcd4"
+          },
+          "kickoff_at_utc": null,
+          "lane": "VALUE",
+          "latest": {
+            "american_odds": 102,
+            "book": "DRAFTKINGS",
+            "exact_offer_identity_id": "offer-40a4b6df2308364ab4a70075",
+            "line": null,
+            "play_through": {
+              "line": null,
+              "price_american": -100
+            },
+            "publication_id": "publication-e9ce21501de065df639a0c8a",
+            "published_at_utc": "2026-09-13T00:07:59.388155Z",
+            "recommended_units": 0.75,
+            "source_product_sha256": "e9ce21501de065df639a0c8ab134dcb37fc7a01140a8ef0bab37bb2f7cb42b1e",
+            "state": "BET",
+            "value_at": null,
+            "wager_identity_id": "wager-2e42d0d613733c30c6abfcd4"
+          },
+          "market": "MONEYLINE",
+          "present_in_latest": true,
+          "previous": {
+            "american_odds": 102,
+            "book": "DRAFTKINGS",
+            "exact_offer_identity_id": "offer-40a4b6df2308364ab4a70075",
+            "line": null,
+            "play_through": {
+              "line": null,
+              "price_american": -100
+            },
+            "publication_id": "publication-7c31aeb7d95e0e33f2c06bd0",
+            "published_at_utc": "2026-09-12T12:07:57.311847Z",
+            "recommended_units": 0.75,
+            "source_product_sha256": "7c31aeb7d95e0e33f2c06bd07b73f6eb42b3820fb32cc8c7039ecca83fef4a38",
+            "state": "BET",
+            "value_at": null,
+            "wager_identity_id": "wager-2e42d0d613733c30c6abfcd4"
+          },
+          "returned_after_gap": false,
+          "selection": "NYJ",
+          "state": "BET",
+          "terminal_reason": "WEEK_HISTORY_END"
+        }
+      ],
+      "latest_publication_id": "publication-e9ce21501de065df639a0c8a",
+      "latest_published_at_utc": "2026-09-13T00:07:59.388155Z",
+      "previous_publication_id": "publication-7c31aeb7d95e0e33f2c06bd0",
+      "previous_published_at_utc": "2026-09-12T12:07:57.311847Z",
+      "provider_calls": 0,
+      "schema_version": "NFL_EDGE_DAILY_NEWS_CARD_CONTEXT_V1",
+      "season": 2026,
+      "week": 1
+    },
+    "editorial_rule": "Personality strong, evidence strict.",
+    "evidence": [
+      {
+        "app_guidance": "Explain current price, Play Through changes/crossings, replacements, disappearances, and returns exactly as supported.",
+        "category": "market_watch",
+        "evidence_id": "card:latest-prospective-context",
+        "fact": "Latest and prior prospective card observations are attached in card_context.",
+        "interpretation": "Use only observed tracker changes; do not infer movement from a single observation.",
+        "sources": [],
+        "verification": "INTERNAL_CANONICAL"
+      },
+      {
+        "app_guidance": "Explain the observed price/line/Play Through change in plain language and whether the recommendation remains current. Do not expose internal metrics opportunistically.",
+        "category": "market_watch",
+        "evidence_id": "card:episode-849debb8a470b6f19783482c",
+        "fact": "HIT_RATE CHI MONEYLINE: latest book=DRAFTKINGS, line=None, price=-166, play_through={'line': None, 'price_american': -171}, state=BET, present_in_latest=True. Previous observation: book=DRAFTKINGS, line=None, price=-166, play_through={'line': None, 'price_american': -171}, state=BET.",
+        "interpretation": "Compare the latest and previous observations only. If present_in_latest is false, do not describe this as a current recommendation.",
+        "sources": [],
+        "verification": "INTERNAL_CANONICAL"
+      },
+      {
+        "app_guidance": "Explain the observed price/line/Play Through change in plain language and whether the recommendation remains current. Do not expose internal metrics opportunistically.",
+        "category": "market_watch",
+        "evidence_id": "card:episode-4d1cd78265e4c273d0aa3c32",
+        "fact": "BALANCED MIN MONEYLINE: latest book=FANDUEL, line=None, price=-126, play_through={'line': None, 'price_american': -129}, state=BET, present_in_latest=True. Previous observation: book=DRAFTKINGS, line=None, price=-125, play_through={'line': None, 'price_american': -128}, state=BET.",
+        "interpretation": "Compare the latest and previous observations only. If present_in_latest is false, do not describe this as a current recommendation.",
+        "sources": [],
+        "verification": "INTERNAL_CANONICAL"
+      },
+      {
+        "app_guidance": "Explain the observed price/line/Play Through change in plain language and whether the recommendation remains current. Do not expose internal metrics opportunistically.",
+        "category": "market_watch",
+        "evidence_id": "card:episode-648dd76afda7260c403ee3f2",
+        "fact": "VALUE DEN SPREAD: latest book=DRAFTKINGS, line=2.5, price=-102, play_through={'line': 2.5, 'price_american': -105}, state=BET, present_in_latest=False. Previous observation: book=DRAFTKINGS, line=2.5, price=-102, play_through={'line': 2.5, 'price_american': -105}, state=BET.",
+        "interpretation": "Compare the latest and previous observations only. If present_in_latest is false, do not describe this as a current recommendation.",
+        "sources": [],
+        "verification": "INTERNAL_CANONICAL"
+      },
+      {
+        "app_guidance": "Explain the observed price/line/Play Through change in plain language and whether the recommendation remains current. Do not expose internal metrics opportunistically.",
+        "category": "market_watch",
+        "evidence_id": "card:episode-4b1a30e690ce54b23598582e",
+        "fact": "VALUE NYJ MONEYLINE: latest book=DRAFTKINGS, line=None, price=102, play_through={'line': None, 'price_american': -100}, state=BET, present_in_latest=True. Previous observation: book=DRAFTKINGS, line=None, price=102, play_through={'line': None, 'price_american': -100}, state=BET.",
+        "interpretation": "Compare the latest and previous observations only. If present_in_latest is false, do not describe this as a current recommendation.",
+        "sources": [],
+        "verification": "INTERNAL_CANONICAL"
+      }
+    ],
+    "generated_at_utc": "2026-09-13T07:41:41.578381Z",
+    "schema_version": "NFL_EDGE_DAILY_NEWS_RESEARCH_V1",
+    "writer_rules": {
+      "approved_catchphrases": [
+        "Monday game? Monday check.",
+        "Thursday game? Thursday check."
+      ],
+      "fade_must_explain_usage": true,
+      "news_cannot_change_model": true,
+      "no_blind_fade_signal": true,
+      "no_new_catchphrases": true,
+      "plain_language": true,
+      "section_order": [
+        "what-matters",
+        "what-it-means",
+        "fade",
+        "market-watch",
+        "today-tip"
+      ]
+    }
+  },
+  "schema_version": "NFL_EDGE_DAILY_NEWS_RESEARCH_V1",
+  "writer_rules": {
+    "approved_catchphrases": [
+      "Monday game? Monday check.",
+      "Thursday game? Thursday check."
+    ],
+    "fade_must_explain_usage": true,
+    "news_cannot_change_model": true,
+    "no_blind_fade_signal": true,
+    "no_new_catchphrases": true,
+    "plain_language": true,
+    "section_order": [
+      "what-matters",
+      "what-it-means",
+      "fade",
+      "market-watch",
+      "today-tip"
+    ]
+  }
+}
