@@ -131,6 +131,16 @@ def build_card_context(evidence_root: Path) -> dict[str, Any]:
 
 
 
+
+def _previous_research_view(payload: Mapping[str, Any] | None) -> dict[str, Any] | None:
+    if payload is None:
+        return None
+    view = dict(payload)
+    view.pop("previous_research", None)
+    view.pop("previous_article", None)
+    return view
+
+
 def build_research_request(
     *,
     card_context: Mapping[str, Any],
@@ -376,7 +386,8 @@ def run_pipeline(
 
     card = build_card_context(evidence_root)
     previous_article = _load_object(paths.latest) if paths.latest.exists() else None
-    previous_research = _load_object(paths.research_latest) if paths.research_latest.exists() else None
+    previous_research_raw = _load_object(paths.research_latest) if paths.research_latest.exists() else None
+    previous_research = _previous_research_view(previous_research_raw)
     research_request = build_research_request(
         card_context=card,
         generated_at_utc=generated,
