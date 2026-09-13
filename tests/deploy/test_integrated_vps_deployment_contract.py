@@ -19,7 +19,7 @@ def test_backend_systemd_uses_existing_entrypoint_and_bounded_restart() -> None:
     assert "ProtectSystem=strict" in unit
     assert (
         "ReadWritePaths=/var/lib/nfl-edge/backend /var/lib/nfl-edge/product_v1 "
-        "/var/lib/nfl-edge/news_v1/editorial_submissions"
+        "/var/lib/nfl-edge/news_v1/editorial_inbox"
     ) in unit
     assert "run_2026_live_market_product_snapshot" not in unit
     assert "ODDS_API_KEY" not in unit
