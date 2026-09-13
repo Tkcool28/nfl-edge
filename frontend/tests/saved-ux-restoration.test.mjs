@@ -52,7 +52,8 @@ test('same-origin API and no-store service-worker exclusion remain intact',()=>{
   assert.match(sw,/nfl-edge-wordmark\.png/);
   assert.match(sw,/icon-192-v3\.png/);
   assert.match(sw,/icon-512-v3\.png/);
-  assert.match(sw,/nfl-edge-shell-v21/);
+  assert.match(sw,/nfl-edge-shell-v22/);
+  assert.doesNotMatch(sw,/nfl-edge-shell-v21/);
 });
 
 test('duplicate-suppressed BET headlines retain BET styling',()=>{
