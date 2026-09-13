@@ -97,6 +97,7 @@ def build_card_context(evidence_root: Path) -> dict[str, Any]:
                 "latest": obs[-1],
                 "previous": obs[-2] if len(obs) > 1 else None,
                 "returned_after_gap": bool(episode.get("returned_after_gap")),
+                "present_in_latest": obs[-1].get("publication_id") == latest.get("publication_id"),
                 "terminal_reason": episode.get("terminal_reason"),
             }
         )
@@ -182,6 +183,43 @@ def build_research_packet(
             "sources": [],
         }
     )
+    for episode in card_context.get("episodes", []):
+        if not isinstance(episode, dict):
+            continue
+        episode_id = str(episode.get("episode_id") or "").strip()
+        if not episode_id:
+            continue
+        latest_obs = episode.get("latest") if isinstance(episode.get("latest"), dict) else {}
+        previous_obs = episode.get("previous") if isinstance(episode.get("previous"), dict) else None
+        fact = (
+            f"{episode.get('lane')} {episode.get('selection')} {episode.get('market')}: "
+            f"latest book={latest_obs.get('book')}, line={latest_obs.get('line')}, "
+            f"price={latest_obs.get('american_odds')}, play_through={latest_obs.get('play_through')}, "
+            f"state={latest_obs.get('state')}, present_in_latest={bool(episode.get('present_in_latest'))}."
+        )
+        if previous_obs is not None:
+            fact += (
+                f" Previous observation: book={previous_obs.get('book')}, line={previous_obs.get('line')}, "
+                f"price={previous_obs.get('american_odds')}, play_through={previous_obs.get('play_through')}, "
+                f"state={previous_obs.get('state')}."
+            )
+        normalized.append(
+            {
+                "evidence_id": f"card:{episode_id}",
+                "category": "market_watch",
+                "verification": "INTERNAL_CANONICAL",
+                "fact": fact,
+                "interpretation": (
+                    "Compare the latest and previous observations only. "
+                    "If present_in_latest is false, do not describe this as a current recommendation."
+                ),
+                "app_guidance": (
+                    "Explain the observed price/line/Play Through change in plain language and whether the "
+                    "recommendation remains current. Do not expose internal metrics opportunistically."
+                ),
+                "sources": [],
+            }
+        )
     return {
         "schema_version": RESEARCH_SCHEMA,
         "generated_at_utc": generated_at_utc,
