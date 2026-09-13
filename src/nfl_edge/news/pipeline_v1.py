@@ -88,10 +88,10 @@ def build_card_context(evidence_root: Path) -> dict[str, Any]:
             {
                 "episode_id": episode.get("episode_id"),
                 "lane": episode.get("lane"),
-                "state": episode.get("state"),
-                "selection": episode.get("selection"),
+                "state": obs[-1].get("state"),
+                "selection": episode.get("selection") or episode.get("normalized_selection"),
                 "market": episode.get("market"),
-                "book": episode.get("book"),
+                "book": obs[-1].get("book"),
                 "kickoff_at_utc": episode.get("kickoff_at_utc"),
                 "first": obs[0],
                 "latest": obs[-1],
