@@ -32,7 +32,21 @@ def test_news_latest_serves_valid_artifact(tmp_path: Path) -> None:
         "published_at_utc": "2026-09-13T00:20:00Z",
         "edition": "Saturday Night Check",
         "title": "NFL EDGE Saturday Night Brief",
-        "sections": [],
+        "sections": [
+            {
+                "id": "today-tip",
+                "title": "Today's Tip",
+                "items": [
+                    {
+                        "headline": "Price matters",
+                        "paragraphs": ["The same team at a different price is a different bet."],
+                        "editorial_only": True,
+                        "evidence_ids": [],
+                        "sources": [],
+                    }
+                ],
+            }
+        ],
     }
     settings.news_latest_path.write_text(json.dumps(payload), encoding="utf-8")
 
