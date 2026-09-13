@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "NFL_EDGE_DAILY_NEWS_RESEARCH_V1.schema.json",
+  "title": "NFL EDGE Daily News Governed Research Packet V1",
+  "type": "object",
+  "required": ["schema_version", "generated_at_utc", "editorial_rule", "audience", "card_context", "evidence", "writer_rules"],
+  "properties": {
+    "schema_version": {"const": "NFL_EDGE_DAILY_NEWS_RESEARCH_V1"},
+    "generated_at_utc": {"type": "string", "minLength": 1},
+    "editorial_rule": {"const": "Personality strong, evidence strict."},
+    "audience": {"type": "string", "minLength": 1},
+    "card_context": {"type": "object"},
+    "evidence": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "writer_rules": {"type": "object"}
+  },
+  "additionalProperties": true
+}
