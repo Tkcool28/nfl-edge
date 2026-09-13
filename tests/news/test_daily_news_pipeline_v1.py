@@ -7,7 +7,13 @@ from pathlib import Path
 
 import pytest
 
-from nfl_edge.news.pipeline_v1 import NewsPipelineError, build_card_context, run_pipeline, verify_article
+from nfl_edge.news.pipeline_v1 import (
+    NewsPipelineError,
+    _previous_research_view,
+    build_card_context,
+    run_pipeline,
+    verify_article,
+)
 
 
 def _evidence_root(tmp_path: Path) -> Path:
@@ -212,3 +218,17 @@ def test_editorial_only_cannot_bypass_evidence_outside_tip() -> None:
     }
     with pytest.raises(NewsPipelineError):
         verify_article(article, packet)
+
+
+def test_previous_research_view_drops_recursive_history() -> None:
+    payload = {
+        "schema_version": "NFL_EDGE_DAILY_NEWS_RESEARCH_V1",
+        "evidence": [{"evidence_id": "x"}],
+        "previous_article": {"title": "older"},
+        "previous_research": {"previous_research": {"too": "deep"}},
+    }
+    view = _previous_research_view(payload)
+    assert view is not None
+    assert "previous_article" not in view
+    assert "previous_research" not in view
+    assert view["evidence"] == [{"evidence_id": "x"}]
