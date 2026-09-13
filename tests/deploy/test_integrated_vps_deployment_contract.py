@@ -17,7 +17,10 @@ def test_backend_systemd_uses_existing_entrypoint_and_bounded_restart() -> None:
     assert "Restart=on-failure" in unit
     assert "StartLimitBurst=5" in unit
     assert "ProtectSystem=strict" in unit
-    assert "ReadWritePaths=/var/lib/nfl-edge/backend /var/lib/nfl-edge/product_v1" in unit
+    assert (
+        "ReadWritePaths=/var/lib/nfl-edge/backend /var/lib/nfl-edge/product_v1 "
+        "/var/lib/nfl-edge/news_v1/editorial_inbox"
+    ) in unit
     assert "run_2026_live_market_product_snapshot" not in unit
     assert "ODDS_API_KEY" not in unit
 
@@ -96,4 +99,23 @@ def test_daily_news_runtime_is_isolated_and_waits_for_fresh_tracker() -> None:
     assert "NFL_EDGE_NEWS_RUNTIME_ROOT=/var/lib/nfl-edge/news_v1" in env
     assert "NFL_EDGE_NEWS_EVIDENCE_ROOT=/var/lib/nfl-edge/prospective_repo_v1" in env
     assert "NFL_EDGE_NEWS_LATEST_PATH=/var/lib/nfl-edge/news_v1/latest.json" in backend_env
+    assert (
+        "NFL_EDGE_NEWS_EDITORIAL_INBOX_PATH=/var/lib/nfl-edge/news_v1/editorial_inbox/latest.json"
+        in backend_env
+    )
+    assert "NFL_EDGE_NEWS_EDITORIAL_TOKEN=" in backend_env
     assert "ODDS_API_KEY" not in env
+
+
+def test_editorial_publisher_is_a_separate_inactive_timer_contract() -> None:
+    unit = _read("deploy/systemd/nfl-edge-news-editorial-publisher.service")
+    timer = _read("deploy/systemd/nfl-edge-news-editorial-publisher.timer")
+    old_timer = _read("deploy/systemd/nfl-edge-daily-news.timer")
+
+    assert "ExecStart=/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/publish_news_editorial_v1.py" in unit
+    assert "ReadOnlyPaths=/root/nfl-edge" in unit
+    assert "ReadWritePaths=/var/lib/nfl-edge/news_v1" in unit
+    assert "06:35:00 America/Denver" in timer
+    assert "18:35:00 America/Denver" in timer
+    assert "nfl-edge-daily-news.service" in old_timer
+    assert "nfl-edge-news-editorial-publisher.service" not in old_timer

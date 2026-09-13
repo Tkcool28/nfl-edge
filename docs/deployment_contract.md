@@ -165,6 +165,10 @@ The service worker may cache the app shell, but `/api/...` remains network/no-st
 
 Sleeper / live football scoring / live markets / product generation are operationally separate from the request-serving backend. Existing Sleeper cadence/methodology is not changed by this deployment.
 
+### Daily News editorial ingest boundary
+
+The backend's optional ChatGPT editorial endpoint is disabled when `NFL_EDGE_NEWS_EDITORIAL_TOKEN` is empty. When configured, the backend is authorized to write only `/var/lib/nfl-edge/news_v1/editorial_inbox`; it must not publish Daily News `candidate.json`, `latest.json`, or archive files. A separate deterministic `nfl-edge-news-editorial-publisher.service` consumes the staged submission, applies a 45-minute freshness limit and the existing article evidence/source verifier, then atomically promotes a verified article while preserving the last good `latest.json` on any failure. The 06:35/18:35 America/Denver publisher timer template is intentionally not enabled by this source change; the existing 06:20/18:20 Daily News timer remains untouched.
+
 Live provider acquisition is not required for Caddy/backend/frontend plumbing proof. Deployment target cost is `0` new Odds API credits unless a later explicit acceptance step requires a bounded live refresh.
 
 ## Deployment source and atomicity

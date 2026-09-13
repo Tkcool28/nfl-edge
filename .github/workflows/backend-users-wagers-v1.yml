@@ -92,12 +92,14 @@ jobs:
             src/nfl_edge/backend/settings.py \
             src/nfl_edge/backend/db.py \
             src/nfl_edge/backend/publication.py \
+            src/nfl_edge/backend/news_editorial.py \
             src/nfl_edge/backend/exact_offer.py \
             src/nfl_edge/backend/_base_app.py \
             src/nfl_edge/backend/app.py \
             src/nfl_edge/news/__init__.py \
             src/nfl_edge/news/pipeline_v1.py \
             scripts/nfl_edge_daily_news_v1.py \
+            scripts/publish_news_editorial_v1.py \
             scripts/run_backend_v1.py \
             scripts/publish_backend_product_v1.py
           echo 'BACKEND_COMPILE=PASS'

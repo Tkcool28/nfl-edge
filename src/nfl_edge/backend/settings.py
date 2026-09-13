@@ -21,6 +21,8 @@ class BackendSettings:
     product_dir: Path = Path("data/runtime/product_v1")
     decision_state_path: Path = Path("data/live/2026/entering_product_state_v1.json")
     news_latest_path: Path = Path("data/runtime/news_v1/latest.json")
+    news_editorial_inbox_path: Path = Path("data/runtime/news_v1/editorial_inbox/latest.json")
+    news_editorial_bearer_token: str = ""
     session_lifetime_seconds: int = 30 * 24 * 60 * 60
     cookie_name: str = "nfl_edge_session"
     cookie_secure: bool = True
@@ -48,6 +50,13 @@ class BackendSettings:
             news_latest_path=Path(
                 os.getenv("NFL_EDGE_NEWS_LATEST_PATH", "data/runtime/news_v1/latest.json")
             ),
+            news_editorial_inbox_path=Path(
+                os.getenv(
+                    "NFL_EDGE_NEWS_EDITORIAL_INBOX_PATH",
+                    "data/runtime/news_v1/editorial_inbox/latest.json",
+                )
+            ),
+            news_editorial_bearer_token=os.getenv("NFL_EDGE_NEWS_EDITORIAL_TOKEN", ""),
             session_lifetime_seconds=int(os.getenv("NFL_EDGE_SESSION_LIFETIME_SECONDS", str(30 * 24 * 60 * 60))),
             cookie_name=os.getenv("NFL_EDGE_SESSION_COOKIE", "nfl_edge_session"),
             cookie_secure=_bool("NFL_EDGE_COOKIE_SECURE", True),
