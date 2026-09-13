@@ -5,8 +5,12 @@ import json
 from pathlib import Path
 from typing import Any
 
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError, ValidationError
+
 NEWS_SCHEMA_VERSION = "NFL_EDGE_DAILY_NEWS_V1"
 MAX_NEWS_BYTES = 1_000_000
+_SCHEMA_PATH = Path(__file__).resolve().parents[3] / "schemas" / "NFL_EDGE_DAILY_NEWS_V1.schema.json"
 
 
 def load_latest_news(path: Path) -> dict[str, Any]:
@@ -36,4 +40,10 @@ def load_latest_news(path: Path) -> dict[str, Any]:
         raise ValueError("title must be a non-empty string")
     if not isinstance(payload["sections"], list):
         raise ValueError("sections must be a list")
+    try:
+        schema = json.loads(_SCHEMA_PATH.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        Draft202012Validator(schema).validate(payload)
+    except (OSError, ValueError, SchemaError, ValidationError) as exc:
+        raise ValueError(f"news artifact schema validation failed: {exc}") from exc
     return payload
