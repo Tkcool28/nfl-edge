@@ -84,7 +84,11 @@ def test_pipeline_publishes_only_verified_article(tmp_path: Path) -> None:
     research = _script(
         tmp_path / "research.py",
         """import json,sys
-card=json.load(sys.stdin)
+request=json.load(sys.stdin)
+assert request["schema_version"]=="NFL_EDGE_DAILY_NEWS_RESEARCH_REQUEST_V1"
+assert request["card_context"]["latest_publication_id"]=="p2"
+assert request["previous_article"] is None
+assert request["previous_research"] is None
 print(json.dumps({"schema_version":"NFL_EDGE_DAILY_NEWS_EXTERNAL_RESEARCH_V1","evidence":[{"evidence_id":"injury:1","category":"injury","verification":"OFFICIAL","fact":"Player is out.","interpretation":"Availability changed.","app_guidance":"Re-check the current card.","sources":[{"label":"NFL","url":"https://www.nfl.com/example"}]}]}))
 """,
     )
@@ -131,7 +135,8 @@ def test_failed_candidate_does_not_replace_last_good(tmp_path: Path) -> None:
     research = _script(
         tmp_path / "research.py",
         """import json,sys
-json.load(sys.stdin)
+request=json.load(sys.stdin)
+assert request["previous_article"]["title"]=="Last good"
 print(json.dumps({"schema_version":"NFL_EDGE_DAILY_NEWS_EXTERNAL_RESEARCH_V1","evidence":[{"evidence_id":"x","fact":"fact","sources":[{"label":"source","url":"https://example.com"}]}]}))
 """,
     )
