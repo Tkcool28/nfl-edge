@@ -117,7 +117,7 @@ def main() -> int:
         "--inbox-path",
         default=os.getenv(
             "NFL_EDGE_NEWS_EDITORIAL_INBOX_PATH",
-            "/var/lib/nfl-edge/news_v1/editorial_submissions/candidate.json",
+            "/var/lib/nfl-edge/news_v1/editorial_inbox/latest.json",
         ),
     )
     args = parser.parse_args()

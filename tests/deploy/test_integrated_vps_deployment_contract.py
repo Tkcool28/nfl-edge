@@ -100,10 +100,10 @@ def test_daily_news_runtime_is_isolated_and_waits_for_fresh_tracker() -> None:
     assert "NFL_EDGE_NEWS_EVIDENCE_ROOT=/var/lib/nfl-edge/prospective_repo_v1" in env
     assert "NFL_EDGE_NEWS_LATEST_PATH=/var/lib/nfl-edge/news_v1/latest.json" in backend_env
     assert (
-        "NFL_EDGE_NEWS_EDITORIAL_INBOX_PATH=/var/lib/nfl-edge/news_v1/editorial_submissions/candidate.json"
+        "NFL_EDGE_NEWS_EDITORIAL_INBOX_PATH=/var/lib/nfl-edge/news_v1/editorial_inbox/latest.json"
         in backend_env
     )
-    assert "NFL_EDGE_NEWS_EDITORIAL_BEARER_TOKEN=" in backend_env
+    assert "NFL_EDGE_NEWS_EDITORIAL_TOKEN=" in backend_env
     assert "ODDS_API_KEY" not in env
 
 
