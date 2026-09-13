@@ -1,0 +1,70 @@
+"""Authenticated staging boundary for ChatGPT-authored NFL EDGE Daily News submissions."""
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+import secrets
+import tempfile
+from pathlib import Path
+from typing import Any, Mapping
+
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError, ValidationError
+
+SUBMISSION_SCHEMA_VERSION = "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1"
+MAX_SUBMISSION_BYTES = 1_500_000
+_ROOT = Path(__file__).resolve().parents[3]
+_SUBMISSION_SCHEMA = _ROOT / "schemas" / "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1.schema.json"
+_ARTICLE_SCHEMA = _ROOT / "schemas" / "NFL_EDGE_DAILY_NEWS_V1.schema.json"
+
+
+def _schema(path: Path) -> dict[str, Any]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    Draft202012Validator.check_schema(payload)
+    return payload
+
+
+def validate_editorial_submission(payload: Mapping[str, Any]) -> dict[str, Any]:
+    value = dict(payload)
+    try:
+        Draft202012Validator(_schema(_SUBMISSION_SCHEMA)).validate(value)
+        Draft202012Validator(_schema(_ARTICLE_SCHEMA)).validate(value["article"])
+    except (OSError, ValueError, SchemaError, ValidationError) as exc:
+        raise ValueError(f"editorial submission schema validation failed: {exc}") from exc
+    raw = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    if len(raw) > MAX_SUBMISSION_BYTES:
+        raise ValueError("editorial submission exceeds size limit")
+    return value
+
+
+def require_bearer(authorization: str | None, expected_token: str) -> None:
+    if not expected_token:
+        raise RuntimeError("editorial ingest is not configured")
+    prefix = "Bearer "
+    supplied = authorization[len(prefix):] if authorization and authorization.startswith(prefix) else ""
+    if not supplied or not secrets.compare_digest(supplied, expected_token):
+        raise PermissionError("invalid editorial token")
+
+
+def _atomic_bytes(path: Path, raw: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile("wb", dir=path.parent, prefix=f".{path.name}-", delete=False) as handle:
+            temp = Path(handle.name)
+            handle.write(raw)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temp, path)
+    finally:
+        if temp is not None:
+            temp.unlink(missing_ok=True)
+
+
+def stage_editorial_submission(path: Path, payload: Mapping[str, Any]) -> dict[str, str]:
+    value = validate_editorial_submission(payload)
+    raw = (json.dumps(value, indent=2, sort_keys=True, ensure_ascii=False) + "\n").encode("utf-8")
+    digest = hashlib.sha256(raw).hexdigest()
+    _atomic_bytes(path, raw)
+    return {"submission_sha256": digest, "path": str(path)}
