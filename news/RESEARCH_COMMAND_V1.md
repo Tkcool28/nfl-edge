@@ -4,13 +4,17 @@ The research command is an external agent boundary. NFL EDGE sends canonical car
 
 ## Input
 
-Schema: `NFL_EDGE_DAILY_NEWS_CARD_CONTEXT_V1`
+Schema: `NFL_EDGE_DAILY_NEWS_RESEARCH_REQUEST_V1`
 
 It contains:
-- latest and previous prospective publication IDs/timestamps;
-- current recommendation episodes;
-- previous/latest observations for real movement comparison;
-- provider_calls = 0.
+- `card_context` with latest and previous prospective publication IDs/timestamps;
+- current recommendation episodes and previous/latest observations for real movement comparison;
+- `previous_article` when a prior morning/evening brief exists;
+- `previous_research` when the prior governed research packet exists;
+- explicit comparison instructions;
+- card-context provider_calls = 0.
+
+Use the previous article/research to identify verified changes since the last brief. Do not reconstruct a prior state from memory when the prior packet is available.
 
 ## Output
 
