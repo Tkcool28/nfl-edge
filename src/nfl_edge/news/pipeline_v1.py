@@ -130,6 +130,29 @@ def build_card_context(evidence_root: Path) -> dict[str, Any]:
     }
 
 
+
+def build_research_request(
+    *,
+    card_context: Mapping[str, Any],
+    generated_at_utc: str,
+    previous_article: Mapping[str, Any] | None,
+    previous_research: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    request = {
+        "schema_version": "NFL_EDGE_DAILY_NEWS_RESEARCH_REQUEST_V1",
+        "generated_at_utc": generated_at_utc,
+        "card_context": dict(card_context),
+        "previous_article": None if previous_article is None else dict(previous_article),
+        "previous_research": None if previous_research is None else dict(previous_research),
+        "comparison_instructions": (
+            "Identify only verified changes since the previous research/article: injuries, QB status, weather, "
+            "retail-vs-Circa Fade evidence, and other slate-relevant developments. Preserve 'no change' when supported."
+        ),
+    }
+    _validate_schema_file("NFL_EDGE_DAILY_NEWS_RESEARCH_REQUEST_V1.schema.json", request)
+    return request
+
+
 def _run_json_command(command: str, payload: Mapping[str, Any], *, timeout: int) -> dict[str, Any]:
     argv = shlex.split(command)
     if not argv:
@@ -352,8 +375,19 @@ def run_pipeline(
     paths = PipelinePaths(runtime_root)
 
     card = build_card_context(evidence_root)
-    external = _run_json_command(research_command, card, timeout=180)
+    previous_article = _load_object(paths.latest) if paths.latest.exists() else None
+    previous_research = _load_object(paths.research_latest) if paths.research_latest.exists() else None
+    research_request = build_research_request(
+        card_context=card,
+        generated_at_utc=generated,
+        previous_article=previous_article,
+        previous_research=previous_research,
+    )
+    external = _run_json_command(research_command, research_request, timeout=180)
     packet = build_research_packet(card_context=card, external=external, generated_at_utc=generated)
+    packet["previous_article"] = previous_article
+    packet["previous_research"] = previous_research
+    _validate_schema_file("NFL_EDGE_DAILY_NEWS_RESEARCH_V1.schema.json", packet)
     _atomic_json(paths.research_latest, packet)
 
     article = _run_json_command(writer_command, packet, timeout=180)
