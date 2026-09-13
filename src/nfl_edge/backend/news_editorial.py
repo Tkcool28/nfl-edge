@@ -47,6 +47,30 @@ def require_bearer(authorization: str | None, expected_token: str) -> None:
         raise PermissionError("invalid editorial token")
 
 
+def parse_strict_json(raw: bytes) -> dict[str, Any]:
+    """Decode one bounded JSON object without duplicate keys or non-finite values."""
+
+    def reject_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"duplicate JSON key: {key}")
+            result[key] = value
+        return result
+
+    try:
+        value = json.loads(
+            raw.decode("utf-8"),
+            object_pairs_hook=reject_duplicates,
+            parse_constant=lambda value: (_ for _ in ()).throw(ValueError(f"invalid JSON constant: {value}")),
+        )
+    except (UnicodeDecodeError, ValueError, json.JSONDecodeError) as exc:
+        raise ValueError(f"invalid editorial JSON: {exc}") from exc
+    if not isinstance(value, dict):
+        raise ValueError("editorial submission must be a JSON object")
+    return value
+
+
 def _atomic_bytes(path: Path, raw: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temp: Path | None = None

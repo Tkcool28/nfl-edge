@@ -1,0 +1,15 @@
+[Unit]
+Description=Publish staged NFL EDGE Daily News editorials twice daily
+Documentation=file:///root/nfl-edge/news/README.md
+
+[Timer]
+# Denver-local editorial promotion; DST follows the named timezone.
+OnCalendar=*-*-* 06:35:00 America/Denver
+OnCalendar=*-*-* 18:35:00 America/Denver
+Persistent=true
+AccuracySec=1s
+RandomizedDelaySec=0
+Unit=nfl-edge-news-editorial-publisher.service
+
+[Install]
+WantedBy=timers.target

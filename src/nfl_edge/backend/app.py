@@ -11,6 +11,7 @@ from fastapi import Body, FastAPI, HTTPException, Request, Response
 from . import _base_app as _base
 from .db import BankrollError, utc_now
 from .news import load_latest_news
+from .news_editorial import MAX_SUBMISSION_BYTES, parse_strict_json, require_bearer, stage_editorial_submission
 from .settings import BackendSettings
 
 LANE_ORDER = ("hit_rate", "balanced", "value")
@@ -268,6 +269,34 @@ def create_app(settings: BackendSettings | None = None) -> FastAPI:
             raise HTTPException(404, "daily news not published yet") from None
         except (OSError, ValueError):
             raise HTTPException(503, "daily news temporarily unavailable") from None
+
+    @app.post("/api/v1/news/editorial", status_code=202)
+    async def stage_news_editorial(request: Request) -> dict[str, Any]:
+        """Accept a ChatGPT submission into the isolated publisher inbox only."""
+        if not active_settings.news_editorial_bearer_token:
+            raise HTTPException(404, "editorial ingest is disabled")
+        try:
+            require_bearer(request.headers.get("authorization"), active_settings.news_editorial_bearer_token)
+        except PermissionError:
+            raise HTTPException(401, "invalid editorial token") from None
+        content_length = request.headers.get("content-length")
+        if content_length is not None:
+            try:
+                if int(content_length) > MAX_SUBMISSION_BYTES:
+                    raise HTTPException(413, "editorial submission exceeds size limit")
+            except ValueError:
+                raise HTTPException(400, "invalid content length") from None
+        if request.headers.get("content-type", "").split(";", 1)[0].strip().lower() != "application/json":
+            raise HTTPException(415, "editorial submission must use application/json")
+        raw = await request.body()
+        if len(raw) > MAX_SUBMISSION_BYTES:
+            raise HTTPException(413, "editorial submission exceeds size limit")
+        try:
+            payload = parse_strict_json(raw)
+            staged = stage_editorial_submission(active_settings.news_editorial_inbox_path, payload)
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from None
+        return {"status": "STAGED", **staged}
 
     @app.get("/api/v1/bankroll")
     def bankroll(request: Request) -> dict[str, Any]:

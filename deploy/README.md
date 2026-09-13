@@ -45,3 +45,9 @@ The dedicated `nfl-edge-daily-news.service`:
 The timer is scheduled at 06:20 and 18:20 America/Denver. It adds zero Odds API calls by contract.
 
 Research/writer command configuration lives in `/etc/nfl-edge/news.env`. The backend does not own or invoke those agents.
+
+## ChatGPT Editorial Ingest V1
+
+`POST /api/v1/news/editorial` is disabled unless `NFL_EDGE_NEWS_EDITORIAL_BEARER_TOKEN` is non-empty. It accepts only a bounded JSON submission using `NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1` and atomically stages it at `/var/lib/nfl-edge/news_v1/editorial_submissions/candidate.json`; it cannot write `candidate.json`, `latest.json`, or public archives.
+
+`nfl-edge-news-editorial-publisher.service` is a separate deterministic oneshot template. Its companion timer template schedules 06:35 and 18:35 America/Denver, verifies the submission's 45-minute freshness plus the existing evidence/source verifier, archives idempotently, and promotes only a verified submission. Installing or enabling either the existing Daily News timer or this publisher timer is an explicit later deployment action and is not performed by this repository change.

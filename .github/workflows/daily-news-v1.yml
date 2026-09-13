@@ -4,22 +4,34 @@ on:
   pull_request:
     paths:
       - "src/nfl_edge/news/**"
+      - "src/nfl_edge/backend/news_editorial.py"
+      - "src/nfl_edge/backend/app.py"
+      - "src/nfl_edge/backend/settings.py"
       - "scripts/nfl_edge_daily_news_v1.py"
+      - "scripts/publish_news_editorial_v1.py"
       - "tests/news/**"
+      - "tests/backend/test_news_editorial_ingest_v1.py"
       - "news/**"
       - "deploy/nfl-edge-news.env.example"
       - "deploy/systemd/nfl-edge-daily-news.*"
+      - "deploy/systemd/nfl-edge-news-editorial-publisher.*"
       - "deploy/nfl-edge-backend.env.example"
       - ".github/workflows/daily-news-v1.yml"
   push:
     branches: [main]
     paths:
       - "src/nfl_edge/news/**"
+      - "src/nfl_edge/backend/news_editorial.py"
+      - "src/nfl_edge/backend/app.py"
+      - "src/nfl_edge/backend/settings.py"
       - "scripts/nfl_edge_daily_news_v1.py"
+      - "scripts/publish_news_editorial_v1.py"
       - "tests/news/**"
+      - "tests/backend/test_news_editorial_ingest_v1.py"
       - "news/**"
       - "deploy/nfl-edge-news.env.example"
       - "deploy/systemd/nfl-edge-daily-news.*"
+      - "deploy/systemd/nfl-edge-news-editorial-publisher.*"
       - "deploy/nfl-edge-backend.env.example"
       - ".github/workflows/daily-news-v1.yml"
   workflow_dispatch:
@@ -41,10 +53,10 @@ jobs:
           python -m pip install pytest 'jsonschema>=4.23,<5'
       - name: Compile News entry points
         run: |
-          python -m py_compile src/nfl_edge/news/pipeline_v1.py scripts/nfl_edge_daily_news_v1.py
+          python -m py_compile src/nfl_edge/news/pipeline_v1.py src/nfl_edge/backend/news_editorial.py scripts/nfl_edge_daily_news_v1.py scripts/publish_news_editorial_v1.py
       - name: Prove News code contains no sportsbook acquisition calls
         run: |
-          if grep -R -n -E 'api\.the-odds-api\.com|THE_ODDS_API_KEY|odds_api_key' src/nfl_edge/news scripts/nfl_edge_daily_news_v1.py; then
+          if grep -R -n -E 'api\.the-odds-api\.com|THE_ODDS_API_KEY|odds_api_key' src/nfl_edge/news scripts/nfl_edge_daily_news_v1.py scripts/publish_news_editorial_v1.py; then
             echo "News pipeline must not call paid sportsbook providers"
             exit 1
           fi
@@ -56,3 +68,6 @@ jobs:
           grep -F '06:20:00 America/Denver' deploy/systemd/nfl-edge-daily-news.timer
           grep -F '18:20:00 America/Denver' deploy/systemd/nfl-edge-daily-news.timer
           grep -F 'ReadWritePaths=/var/lib/nfl-edge/news_v1' deploy/systemd/nfl-edge-daily-news.service
+          grep -F '06:35:00 America/Denver' deploy/systemd/nfl-edge-news-editorial-publisher.timer
+          grep -F '18:35:00 America/Denver' deploy/systemd/nfl-edge-news-editorial-publisher.timer
+          grep -F 'ExecStart=/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/publish_news_editorial_v1.py' deploy/systemd/nfl-edge-news-editorial-publisher.service
