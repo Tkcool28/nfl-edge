@@ -183,3 +183,27 @@ def test_verifier_rejects_untraceable_source() -> None:
     }
     with pytest.raises(NewsPipelineError):
         verify_article(article, packet)
+
+
+def test_editorial_only_cannot_bypass_evidence_outside_tip() -> None:
+    packet = {"evidence": []}
+    article = {
+        "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+        "published_at_utc": "2026-09-13T00:20:00Z",
+        "title": "Test",
+        "sections": [
+            {
+                "id": "what-matters",
+                "items": [
+                    {
+                        "headline": "Unsupported",
+                        "paragraphs": ["A factual claim."],
+                        "editorial_only": True,
+                        "evidence_ids": [],
+                    }
+                ],
+            }
+        ],
+    }
+    with pytest.raises(NewsPipelineError):
+        verify_article(article, packet)
