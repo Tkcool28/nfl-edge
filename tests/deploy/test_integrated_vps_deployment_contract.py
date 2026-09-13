@@ -77,3 +77,23 @@ def test_runbook_preserves_zero_credit_deployment_target_and_acceptance_boundary
     assert "Repository preparation alone does **not** earn that verdict." in runbook
     assert "Do not run `git clean`." in runbook
     assert "After acceptance, stop. Launch UX Polish is the next separate milestone" in runbook
+
+
+def test_daily_news_runtime_is_isolated_and_waits_for_fresh_tracker() -> None:
+    unit = _read("deploy/systemd/nfl-edge-daily-news.service")
+    timer = _read("deploy/systemd/nfl-edge-daily-news.timer")
+    env = _read("deploy/nfl-edge-news.env.example")
+    backend_env = _read("deploy/nfl-edge-backend.env.example")
+
+    assert "Requires=nfl-edge-prospective-persistence.service" in unit
+    assert "After=network-online.target nfl-edge-prospective-persistence.service" in unit
+    assert "ReadOnlyPaths=/root/nfl-edge /var/lib/nfl-edge/prospective_repo_v1" in unit
+    assert "ExecStart=/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/nfl_edge_daily_news_v1.py" in unit
+    assert "ReadWritePaths=/var/lib/nfl-edge/news_v1" in unit
+    assert "ODDS_API_KEY" not in unit
+    assert "06:20:00 America/Denver" in timer
+    assert "18:20:00 America/Denver" in timer
+    assert "NFL_EDGE_NEWS_RUNTIME_ROOT=/var/lib/nfl-edge/news_v1" in env
+    assert "NFL_EDGE_NEWS_EVIDENCE_ROOT=/var/lib/nfl-edge/prospective_repo_v1" in env
+    assert "NFL_EDGE_NEWS_LATEST_PATH=/var/lib/nfl-edge/news_v1/latest.json" in backend_env
+    assert "ODDS_API_KEY" not in env

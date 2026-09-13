@@ -23,7 +23,25 @@ Production state is split deliberately:
 - validated product publication: `/var/lib/nfl-edge/product_v1`
 - prospective runtime observations: `/var/lib/nfl-edge/prospective_card_log_v1`
 - isolated prospective Git checkout: `/var/lib/nfl-edge/prospective_repo_v1` on `ops/prospective-card-evidence-v1`
+- governed Daily News runtime: `/var/lib/nfl-edge/news_v1`
 
 See `docs/deployment_contract.md` for the authoritative production boundary and `docs/integrated_vps_deployment_v1.md` for the deployment/acceptance procedure.
 
 Prospective repository persistence is performed only by the dedicated oneshot/timer pair. It reads `/root/nfl-edge` and the runtime observation directory, writes only the isolated evidence checkout, stages only `prospective/cards/**`, and pushes only the evidence branch. It never makes sportsbook-provider calls.
+
+
+## Daily News V1
+
+Daily News runtime state lives at `/var/lib/nfl-edge/news_v1`. The backend reads only `latest.json`.
+
+The dedicated `nfl-edge-daily-news.service`:
+- reads the isolated prospective evidence checkout;
+- invokes the configured research and writer commands;
+- verifies evidence/source linkage and The Fade usage guidance;
+- writes research/candidate artifacts;
+- atomically promotes only a verified article to `latest.json`;
+- leaves the last good article untouched on any failed run.
+
+The timer is scheduled at 06:20 and 18:20 America/Denver. It adds zero Odds API calls by contract.
+
+Research/writer command configuration lives in `/etc/nfl-edge/news.env`. The backend does not own or invoke those agents.

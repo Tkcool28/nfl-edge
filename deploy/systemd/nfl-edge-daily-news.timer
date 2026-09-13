@@ -1,0 +1,15 @@
+[Unit]
+Description=Publish NFL EDGE Daily News morning/evening checks
+Documentation=file:///root/nfl-edge/news/README.md
+
+[Timer]
+# Denver-local morning/evening checks. DST is handled by the named timezone.
+OnCalendar=*-*-* 06:20:00 America/Denver
+OnCalendar=*-*-* 18:20:00 America/Denver
+Persistent=true
+AccuracySec=1s
+RandomizedDelaySec=0
+Unit=nfl-edge-daily-news.service
+
+[Install]
+WantedBy=timers.target
