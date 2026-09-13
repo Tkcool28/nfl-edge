@@ -15,6 +15,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError, ValidationError
+
 RESEARCH_SCHEMA = "NFL_EDGE_DAILY_NEWS_RESEARCH_V1"
 ARTICLE_SCHEMA = "NFL_EDGE_DAILY_NEWS_V1"
 SECTION_ORDER = (
@@ -24,10 +27,22 @@ SECTION_ORDER = (
     "market-watch",
     "today-tip",
 )
+_SCHEMA_ROOT = Path(__file__).resolve().parents[3] / "schemas"
 
 
 class NewsPipelineError(RuntimeError):
     pass
+
+
+
+def _validate_schema_file(filename: str, payload: Mapping[str, Any]) -> None:
+    path = _SCHEMA_ROOT / filename
+    try:
+        schema = json.loads(path.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+        Draft202012Validator(schema).validate(dict(payload))
+    except (OSError, ValueError, SchemaError, ValidationError) as exc:
+        raise NewsPipelineError(f"schema validation failed for {filename}: {exc}") from exc
 
 
 def _load_object(path: Path) -> dict[str, Any]:
@@ -148,6 +163,7 @@ def build_research_packet(
 ) -> dict[str, Any]:
     if external.get("schema_version") != "NFL_EDGE_DAILY_NEWS_EXTERNAL_RESEARCH_V1":
         raise NewsPipelineError("external research has unexpected schema")
+    _validate_schema_file("NFL_EDGE_DAILY_NEWS_EXTERNAL_RESEARCH_V1.schema.json", external)
     evidence = external.get("evidence")
     if not isinstance(evidence, list):
         raise NewsPipelineError("external research evidence must be a list")
@@ -220,7 +236,7 @@ def build_research_packet(
                 "sources": [],
             }
         )
-    return {
+    packet = {
         "schema_version": RESEARCH_SCHEMA,
         "generated_at_utc": generated_at_utc,
         "editorial_rule": "Personality strong, evidence strict.",
@@ -237,11 +253,14 @@ def build_research_packet(
             "news_cannot_change_model": True,
         },
     }
+    _validate_schema_file("NFL_EDGE_DAILY_NEWS_RESEARCH_V1.schema.json", packet)
+    return packet
 
 
 def verify_article(article: Mapping[str, Any], packet: Mapping[str, Any]) -> None:
     if article.get("schema_version") != ARTICLE_SCHEMA:
         raise NewsPipelineError("article has unexpected schema")
+    _validate_schema_file("NFL_EDGE_DAILY_NEWS_V1.schema.json", article)
     for key in ("published_at_utc", "title", "sections"):
         if key not in article:
             raise NewsPipelineError(f"article missing {key}")
