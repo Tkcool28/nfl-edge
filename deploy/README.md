@@ -23,6 +23,7 @@ Production state is split deliberately:
 - validated product publication: `/var/lib/nfl-edge/product_v1`
 - prospective runtime observations: `/var/lib/nfl-edge/prospective_card_log_v1`
 - isolated prospective Git checkout: `/var/lib/nfl-edge/prospective_repo_v1` on `ops/prospective-card-evidence-v1`
+- governed Daily News runtime: `/var/lib/nfl-edge/news_v1`
 
 See `docs/deployment_contract.md` for the authoritative production boundary and `docs/integrated_vps_deployment_v1.md` for the deployment/acceptance procedure.
 
