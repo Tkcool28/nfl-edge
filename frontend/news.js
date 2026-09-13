@@ -145,7 +145,6 @@ newsView();
 makeQuickLinks();
 loadNews(false);
 
-new MutationObserver(makeQuickLinks).observe($('main-content')||document.body,{childList:true,subtree:true});
 $('refresh-btn')?.addEventListener('click',()=>loadNews(false));
 
 $('back-btn')?.addEventListener('click',event=>{
