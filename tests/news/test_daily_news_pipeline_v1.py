@@ -178,6 +178,8 @@ print(json.dumps({"schema_version":"NFL_EDGE_DAILY_NEWS_V1","published_at_utc":"
 
 def test_verifier_rejects_untraceable_source() -> None:
     packet = {
+        "generated_at_utc": "2026-09-13T00:20:00Z",
+        "previous_article": None,
         "evidence": [
             {
                 "evidence_id": "x",
@@ -208,7 +210,11 @@ def test_verifier_rejects_untraceable_source() -> None:
 
 
 def test_editorial_only_cannot_bypass_evidence_outside_tip() -> None:
-    packet = {"evidence": []}
+    packet = {
+        "generated_at_utc": "2026-09-13T00:20:00Z",
+        "previous_article": None,
+        "evidence": [],
+    }
     article = {
         "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
         "published_at_utc": "2026-09-13T00:20:00Z",
