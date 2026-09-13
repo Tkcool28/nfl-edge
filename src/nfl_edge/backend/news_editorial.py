@@ -32,6 +32,35 @@ def validate_editorial_submission(payload: Mapping[str, Any]) -> dict[str, Any]:
         Draft202012Validator(_schema(_ARTICLE_SCHEMA)).validate(value["article"])
     except (OSError, ValueError, SchemaError, ValidationError) as exc:
         raise ValueError(f"editorial submission schema validation failed: {exc}") from exc
+    evidence_by_id = {
+        str(item.get("evidence_id")): item
+        for item in value.get("evidence", [])
+        if isinstance(item, dict) and item.get("evidence_id")
+    }
+    for evidence_id, evidence in evidence_by_id.items():
+        sources = evidence.get("sources")
+        if not isinstance(sources, list):
+            raise ValueError(f"evidence {evidence_id} sources must be a list")
+        if evidence.get("verification") != "INTERNAL_CANONICAL" and not sources:
+            raise ValueError(f"external evidence {evidence_id} must include at least one source")
+    for section in value["article"].get("sections", []):
+        if not isinstance(section, dict):
+            continue
+        for item in section.get("items", []):
+            if not isinstance(item, dict):
+                continue
+            evidence_ids = [str(x) for x in item.get("evidence_ids", [])]
+            external_ids = [
+                evidence_id
+                for evidence_id in evidence_ids
+                if evidence_id in evidence_by_id
+                and evidence_by_id[evidence_id].get("verification") != "INTERNAL_CANONICAL"
+            ]
+            if external_ids and not item.get("sources"):
+                raise ValueError(
+                    "article items citing external evidence must include at least one cited source"
+                )
+
     raw = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
     if len(raw) > MAX_SUBMISSION_BYTES:
         raise ValueError("editorial submission exceeds size limit")
