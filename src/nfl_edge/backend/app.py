@@ -10,6 +10,7 @@ from fastapi import Body, FastAPI, HTTPException, Request, Response
 
 from . import _base_app as _base
 from .db import BankrollError, utc_now
+from .news import load_latest_news
 from .settings import BackendSettings
 
 LANE_ORDER = ("hit_rate", "balanced", "value")
@@ -257,6 +258,16 @@ def create_app(settings: BackendSettings | None = None) -> FastAPI:
         provenance["reliability"] = context.get("reliability")
         view["provenance"] = provenance
         return view
+
+    @app.get("/api/v1/news/latest")
+    def news_latest() -> dict[str, Any]:
+        """Serve the independently published editorial brief without coupling it to product health."""
+        try:
+            return load_latest_news(active_settings.news_latest_path)
+        except FileNotFoundError:
+            raise HTTPException(404, "daily news not published yet") from None
+        except (OSError, ValueError):
+            raise HTTPException(503, "daily news temporarily unavailable") from None
 
     @app.get("/api/v1/bankroll")
     def bankroll(request: Request) -> dict[str, Any]:
