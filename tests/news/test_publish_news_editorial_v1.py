@@ -115,3 +115,28 @@ def test_publisher_rejects_stale_submission_without_replacing_last_good(tmp_path
         publisher.publish_editorial_submission(runtime_root=tmp_path, now_utc=now)
 
     assert json.loads((tmp_path / "latest.json").read_text(encoding="utf-8")) == old
+
+
+def test_publisher_rejects_external_evidence_without_sources(tmp_path: Path) -> None:
+    now = datetime(2026, 9, 13, 6, 30, tzinfo=timezone.utc)
+    old = {
+        "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+        "published_at_utc": "2026-09-13T06:00:00Z",
+        "title": "Last good",
+        "sections": [],
+    }
+    (tmp_path / "latest.json").write_text(json.dumps(old), encoding="utf-8")
+    submission = _submission(now)
+    evidence = submission["evidence"]
+    assert isinstance(evidence, list)
+    evidence[0]["sources"] = []
+    article = submission["article"]
+    assert isinstance(article, dict)
+    article["sections"][0]["items"][0]["sources"] = []
+    _stage(tmp_path, submission)
+
+    with pytest.raises(NewsPipelineError, match="source"):
+        publisher.publish_editorial_submission(runtime_root=tmp_path, now_utc=now)
+
+    assert json.loads((tmp_path / "latest.json").read_text(encoding="utf-8")) == old
+    assert not (tmp_path / "candidate.json").exists()
