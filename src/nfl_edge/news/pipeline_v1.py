@@ -35,6 +35,20 @@ class NewsPipelineError(RuntimeError):
 
 
 
+
+def _parse_utc(value: str) -> datetime:
+    text = str(value).strip()
+    if text.endswith("Z"):
+        text = text[:-1] + "+00:00"
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError as exc:
+        raise NewsPipelineError(f"invalid UTC timestamp: {value}") from exc
+    if parsed.tzinfo is None:
+        raise NewsPipelineError(f"timestamp must include timezone: {value}")
+    return parsed.astimezone(timezone.utc)
+
+
 def _validate_schema_file(filename: str, payload: Mapping[str, Any]) -> None:
     path = _SCHEMA_ROOT / filename
     try:
@@ -300,6 +314,16 @@ def verify_article(article: Mapping[str, Any], packet: Mapping[str, Any]) -> Non
     sections = article.get("sections")
     if not isinstance(sections, list) or not sections:
         raise NewsPipelineError("article sections must be a non-empty list")
+
+    published_at = _parse_utc(str(article["published_at_utc"]))
+    generated_at = _parse_utc(str(packet.get("generated_at_utc") or ""))
+    if abs((published_at - generated_at).total_seconds()) > 20 * 60:
+        raise NewsPipelineError("article publication time is too far from the current research run")
+    previous_article = packet.get("previous_article")
+    if isinstance(previous_article, dict) and previous_article.get("published_at_utc"):
+        previous_published = _parse_utc(str(previous_article["published_at_utc"]))
+        if published_at <= previous_published:
+            raise NewsPipelineError("article publication time must advance beyond the previous brief")
 
     evidence_by_id = {
         str(item["evidence_id"]): item
