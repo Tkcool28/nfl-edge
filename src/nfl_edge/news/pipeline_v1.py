@@ -238,7 +238,9 @@ def verify_article(article: Mapping[str, Any], packet: Mapping[str, Any]) -> Non
                 raise NewsPipelineError(f"section {sid} item missing paragraphs")
             evidence_ids = item.get("evidence_ids", [])
             editorial_only = bool(item.get("editorial_only"))
-            if sid != "today-tip" and not editorial_only and not evidence_ids:
+            if editorial_only and sid != "today-tip":
+                raise NewsPipelineError("editorial_only is permitted only in Today's Tip")
+            if sid != "today-tip" and not evidence_ids:
                 raise NewsPipelineError(f"section {sid} item must cite evidence_ids")
             if not isinstance(evidence_ids, list) or any(str(x) not in evidence_by_id for x in evidence_ids):
                 raise NewsPipelineError(f"section {sid} item cites unknown evidence")
