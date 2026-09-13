@@ -88,6 +88,7 @@ def test_daily_news_runtime_is_isolated_and_waits_for_fresh_tracker() -> None:
     assert "Requires=nfl-edge-prospective-persistence.service" in unit
     assert "After=network-online.target nfl-edge-prospective-persistence.service" in unit
     assert "ReadOnlyPaths=/root/nfl-edge /var/lib/nfl-edge/prospective_repo_v1" in unit
+    assert "ExecStart=/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/nfl_edge_daily_news_v1.py" in unit
     assert "ReadWritePaths=/var/lib/nfl-edge/news_v1" in unit
     assert "ODDS_API_KEY" not in unit
     assert "06:20:00 America/Denver" in timer
