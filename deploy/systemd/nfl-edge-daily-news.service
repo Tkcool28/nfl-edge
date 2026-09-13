@@ -3,6 +3,7 @@ Description=NFL EDGE Daily News governed publication
 Documentation=file:///root/nfl-edge/news/README.md
 After=network-online.target nfl-edge-prospective-persistence.service
 Wants=network-online.target
+Requires=nfl-edge-prospective-persistence.service
 
 [Service]
 Type=oneshot
