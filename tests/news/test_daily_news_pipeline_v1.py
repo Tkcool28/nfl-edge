@@ -136,13 +136,22 @@ def test_failed_candidate_does_not_replace_last_good(tmp_path: Path) -> None:
         "published_at_utc": "2026-09-12T12:20:00Z",
         "title": "Last good",
         "sections": [],
+        "research_generated_at_utc": "2026-09-12T12:20:00Z",
+    }
+    old_research = {
+        "schema_version": "NFL_EDGE_DAILY_NEWS_RESEARCH_V1",
+        "generated_at_utc": "2026-09-12T12:20:00Z",
+        "evidence": [{"evidence_id": "old"}],
     }
     (runtime / "latest.json").write_text(json.dumps(old), encoding="utf-8")
+    (runtime / "research").mkdir()
+    (runtime / "research/latest.json").write_text(json.dumps(old_research), encoding="utf-8")
     research = _script(
         tmp_path / "research.py",
         """import json,sys
 request=json.load(sys.stdin)
 assert request["previous_article"]["title"]=="Last good"
+assert request["previous_research"]["evidence"][0]["evidence_id"]=="old"
 print(json.dumps({"schema_version":"NFL_EDGE_DAILY_NEWS_EXTERNAL_RESEARCH_V1","evidence":[{"evidence_id":"x","fact":"fact","sources":[{"label":"source","url":"https://example.com"}]}]}))
 """,
     )
@@ -163,6 +172,8 @@ print(json.dumps({"schema_version":"NFL_EDGE_DAILY_NEWS_V1","published_at_utc":"
         )
 
     assert json.loads((runtime / "latest.json").read_text(encoding="utf-8")) == old
+    assert json.loads((runtime / "research/latest.json").read_text(encoding="utf-8")) == old_research
+    assert (runtime / "research/candidate.json").is_file()
 
 
 def test_verifier_rejects_untraceable_source() -> None:
