@@ -364,6 +364,10 @@ class PipelinePaths:
         return self.runtime_root / "research" / "latest.json"
 
     @property
+    def research_candidate(self) -> Path:
+        return self.runtime_root / "research" / "candidate.json"
+
+    @property
     def candidate(self) -> Path:
         return self.runtime_root / "candidate.json"
 
@@ -387,7 +391,14 @@ def run_pipeline(
     card = build_card_context(evidence_root)
     previous_article = _load_object(paths.latest) if paths.latest.exists() else None
     previous_research_raw = _load_object(paths.research_latest) if paths.research_latest.exists() else None
-    previous_research = _previous_research_view(previous_research_raw)
+    if (
+        previous_article is not None
+        and previous_research_raw is not None
+        and previous_article.get("research_generated_at_utc") == previous_research_raw.get("generated_at_utc")
+    ):
+        previous_research = _previous_research_view(previous_research_raw)
+    else:
+        previous_research = None
     research_request = build_research_request(
         card_context=card,
         generated_at_utc=generated,
@@ -399,9 +410,10 @@ def run_pipeline(
     packet["previous_article"] = previous_article
     packet["previous_research"] = previous_research
     _validate_schema_file("NFL_EDGE_DAILY_NEWS_RESEARCH_V1.schema.json", packet)
-    _atomic_json(paths.research_latest, packet)
+    _atomic_json(paths.research_candidate, packet)
 
     article = _run_json_command(writer_command, packet, timeout=180)
+    article["research_generated_at_utc"] = generated
     verify_article(article, packet)
     _atomic_json(paths.candidate, article)
 
@@ -412,6 +424,7 @@ def run_pipeline(
             raise NewsPipelineError(f"archive conflict: {archive_path}")
     else:
         _atomic_json(archive_path, article)
+    _atomic_json(paths.research_latest, packet)
     _atomic_json(paths.latest, article)
     return {
         "schema_version": "NFL_EDGE_DAILY_NEWS_PIPELINE_RESULT_V1",
