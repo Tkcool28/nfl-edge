@@ -106,3 +106,55 @@ def test_editorial_ingest_rejects_non_strict_or_oversize_json(tmp_path: Path) ->
     assert client.post(
         "/api/v1/news/editorial", content=b"{" + (b" " * 1_500_000) + b"}", headers=headers
     ).status_code == 413
+
+
+def test_editorial_ingest_rejects_external_evidence_without_sources(tmp_path: Path) -> None:
+    client = TestClient(create_app(_settings(tmp_path)))
+    payload = _submission()
+    evidence = payload["evidence"]
+    assert isinstance(evidence, list)
+    evidence[0]["sources"] = []
+    article = payload["article"]
+    assert isinstance(article, dict)
+    article["sections"][0]["items"][0]["sources"] = []
+
+    response = client.post(
+        "/api/v1/news/editorial",
+        json=payload,
+        headers={"Authorization": "Bearer editorial-secret"},
+    )
+
+    assert response.status_code == 422
+    assert "source" in response.json()["detail"].lower()
+
+
+def test_editorial_ingest_rejects_external_evidence_item_without_article_source(tmp_path: Path) -> None:
+    client = TestClient(create_app(_settings(tmp_path)))
+    payload = _submission()
+    article = payload["article"]
+    assert isinstance(article, dict)
+    article["sections"][0]["items"][0]["sources"] = []
+
+    response = client.post(
+        "/api/v1/news/editorial",
+        json=payload,
+        headers={"Authorization": "Bearer editorial-secret"},
+    )
+
+    assert response.status_code == 422
+    assert "external evidence" in response.json()["detail"].lower()
+
+
+def test_editorial_ingest_rejects_oversize_chunked_body_without_content_length(tmp_path: Path) -> None:
+    client = TestClient(create_app(_settings(tmp_path)))
+    headers = {"Authorization": "Bearer editorial-secret", "Content-Type": "application/json"}
+
+    def chunks():
+        yield b'{"padding":"'
+        for _ in range(4):
+            yield b"x" * 500_000
+        yield b'"}'
+
+    response = client.post("/api/v1/news/editorial", content=chunks(), headers=headers)
+
+    assert response.status_code == 413
