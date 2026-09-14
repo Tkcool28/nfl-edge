@@ -1,0 +1,43 @@
+[Unit]
+Description=NFL EDGE Daily News editorial GitHub courier
+Documentation=file:///root/nfl-edge/news/README.md
+After=network-online.target nfl-edge-backend.service
+Wants=network-online.target
+ConditionPathExists=/root/nfl-edge/scripts/courier_news_editorial_v1.py
+ConditionPathExists=/etc/nfl-edge/backend.env
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/nfl-edge
+EnvironmentFile=/etc/nfl-edge/backend.env
+Environment="PYTHONPATH=/root/nfl-edge/src"
+Environment="PYTHONDONTWRITEBYTECODE=1"
+Environment="NFL_EDGE_EDITORIAL_COURIER_REPO=/var/lib/nfl-edge-news-editorial-courier/source.git"
+Environment="NFL_EDGE_EDITORIAL_COURIER_REMOTE_URL=https://github.com/Tkcool28/nfl-edge.git"
+ExecStart=/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/courier_news_editorial_v1.py
+Restart=no
+TimeoutStartSec=1min
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadOnlyPaths=/root/nfl-edge
+StateDirectory=nfl-edge-news-editorial-courier
+StateDirectoryMode=0700
+ReadWritePaths=/var/lib/nfl-edge-news-editorial-courier
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictNamespaces=true
+RestrictAddressFamilies=AF_UNIX AF_INET
+SystemCallArchitectures=native
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nfl-edge-news-editorial-courier
+
+[Install]
+WantedBy=multi-user.target
