@@ -1,0 +1,15 @@
+[Unit]
+Description=Courier ChatGPT-authored NFL EDGE editorials before publication
+Documentation=file:///root/nfl-edge/news/README.md
+
+[Timer]
+# Denver-local courier; DST follows the named timezone.
+OnCalendar=*-*-* 06:30:00 America/Denver
+OnCalendar=*-*-* 18:30:00 America/Denver
+Persistent=true
+AccuracySec=1s
+RandomizedDelaySec=0
+Unit=nfl-edge-news-editorial-courier.service
+
+[Install]
+WantedBy=timers.target
