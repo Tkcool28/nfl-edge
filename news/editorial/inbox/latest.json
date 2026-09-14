@@ -1,10 +1,10 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-09-14T15:33:35Z",
-  "research_generated_at_utc": "2026-09-14T15:33:35Z",
+  "submitted_at_utc": "2026-09-14T21:39:14Z",
+  "research_generated_at_utc": "2026-09-14T21:39:14Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-09-14T15:33:35Z",
+    "published_at_utc": "2026-09-14T21:39:14Z",
     "edition": "Monday Morning Brief",
     "title": "NFL EDGE Monday Morning Brief",
     "dek": "One game left, two Denver plays gone, and no reason to force a bet.",
@@ -18,14 +18,9 @@
             "paragraphs": [
               "Chiefs tackle Josh Simmons is out with a back injury and defensive back Chamarri Conner is out with a knee injury. Patrick Mahomes practiced fully Saturday and has no game designation."
             ],
-            "evidence_ids": [
-              "injury:kc-final"
-            ],
+            "evidence_ids": ["injury:kc-final"],
             "sources": [
-              {
-                "label": "Kansas City Chiefs — Week 1 Injury Report",
-                "url": "https://www.chiefs.com/news/week-1-injury-report-broncos-vs-chiefs-2026"
-              }
+              {"label": "Kansas City Chiefs — Week 1 Injury Report", "url": "https://www.chiefs.com/news/week-1-injury-report-broncos-vs-chiefs-2026"}
             ]
           },
           {
@@ -33,14 +28,9 @@
             "paragraphs": [
               "Marvin Mims Jr. practiced fully all week and was not assigned a game status. Denver says all 53 players on the active roster are expected to be available."
             ],
-            "evidence_ids": [
-              "injury:den-final"
-            ],
+            "evidence_ids": ["injury:den-final"],
             "sources": [
-              {
-                "label": "Denver Broncos — Final Week 1 Injury Report",
-                "url": "https://www.denverbroncos.com/news/injuryreport/injury-report-wr-marvin-mims-jr-not-assigned-game-status-for-week-1-vs-chiefs"
-              }
+              {"label": "Denver Broncos — Final Week 1 Injury Report", "url": "https://www.denverbroncos.com/news/injuryreport/injury-report-wr-marvin-mims-jr-not-assigned-game-status-for-week-1-vs-chiefs"}
             ]
           },
           {
@@ -48,14 +38,9 @@
             "paragraphs": [
               "The National Weather Service has Monday night in Kansas City mostly clear with only a 5% precipitation chance. Nothing there is strong enough to change how we use the card."
             ],
-            "evidence_ids": [
-              "weather:kc-kickoff"
-            ],
+            "evidence_ids": ["weather:kc-kickoff"],
             "sources": [
-              {
-                "label": "National Weather Service — Kansas City",
-                "url": "https://beta.weather.gov/place/MO/Kansas_City/"
-              }
+              {"label": "National Weather Service — Kansas City", "url": "https://beta.weather.gov/place/MO/Kansas_City/"}
             ]
           }
         ]
@@ -70,19 +55,10 @@
               "Kansas City losing a starting tackle is worth knowing, especially against Denver's pass rush. But NFL EDGE no longer has either of yesterday's Denver recommendations on the current governed card.",
               "That means the injury news is not permission to revive an old bet. The current instruction is simpler: pass unless a Denver play returns."
             ],
-            "evidence_ids": [
-              "injury:kc-final",
-              "card:publication-latest"
-            ],
+            "evidence_ids": ["injury:kc-final", "card:publication-latest"],
             "sources": [
-              {
-                "label": "Kansas City Chiefs — Week 1 Injury Report",
-                "url": "https://www.chiefs.com/news/week-1-injury-report-broncos-vs-chiefs-2026"
-              },
-              {
-                "label": "NFL EDGE canonical prospective-card evidence",
-                "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"
-              }
+              {"label": "Kansas City Chiefs — Week 1 Injury Report", "url": "https://www.chiefs.com/news/week-1-injury-report-broncos-vs-chiefs-2026"},
+              {"label": "NFL EDGE canonical prospective-card evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"}
             ]
           }
         ]
@@ -98,24 +74,11 @@
               "That is mixed, not a clean public-versus-sharper-market disagreement. DraftKings shows a gap between how many bets are on Denver and where the money is landing, while Circa still leans Denver. There is not enough here to manufacture a Fade."
             ],
             "takeaway": "NFL EDGE currently has no play on this game, so pass. A useful Fade setup would require the retail betting to keep piling onto Denver while Circa meaningfully shifts toward Kansas City. Until then, do not chase yesterday's Denver recommendation.",
-            "evidence_ids": [
-              "splits:dk-den-kc",
-              "splits:circa-den-kc",
-              "card:publication-latest"
-            ],
+            "evidence_ids": ["splits:dk-den-kc", "splits:circa-den-kc", "card:publication-latest"],
             "sources": [
-              {
-                "label": "VSiN — DraftKings NFL Betting Splits",
-                "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"
-              },
-              {
-                "label": "VSiN — Circa NFL Betting Splits",
-                "url": "https://data.vsin.com/betting-splits/?display=card&source=CIRCA&sport=NFL"
-              },
-              {
-                "label": "NFL EDGE canonical prospective-card evidence",
-                "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"
-              }
+              {"label": "VSiN — DraftKings NFL Betting Splits", "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"},
+              {"label": "VSiN — Circa NFL Betting Splits", "url": "https://data.vsin.com/betting-splits/?display=card&source=CIRCA&sport=NFL"},
+              {"label": "NFL EDGE canonical prospective-card evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"}
             ]
           }
         ]
@@ -132,15 +95,9 @@
               "The newest publication also warns that 15 Week 1 games lack a provider event, so this should not be described as the model suddenly preferring Kansas City. The safe conclusion is only that there is no current actionable recommendation."
             ],
             "takeaway": "Yesterday's Denver prices and Play Through numbers are expired. Do not use them as standing permission to bet Denver today.",
-            "evidence_ids": [
-              "card:publication-prior",
-              "card:publication-latest"
-            ],
+            "evidence_ids": ["card:publication-prior", "card:publication-latest"],
             "sources": [
-              {
-                "label": "NFL EDGE canonical prospective-card evidence",
-                "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"
-              }
+              {"label": "NFL EDGE canonical prospective-card evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"}
             ]
           }
         ]
@@ -166,74 +123,39 @@
       "fact": "The immediately preceding governed publication had Balanced Denver +2.5 at DraftKings -110 with Play Through -113, Hit Rate Denver moneyline +114 with Play Through +111, and Value NO_PLAY.",
       "source_publication_id": "publication-8b3b50936950e1c8a1da630d",
       "observed_at_utc": "2026-09-14T00:07:58Z",
-      "sources": [
-        {
-          "label": "NFL EDGE canonical prospective-card evidence",
-          "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"
-        }
-      ]
+      "sources": [{"label": "NFL EDGE canonical prospective-card evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"}]
     },
     {
       "evidence_id": "card:publication-latest",
       "fact": "The newest governed publication has Balanced, Hit Rate, and Value all NO_PLAY; the two prior Denver recommendations are absent. The publication warns that 15 canonical Week 1 games lack a provider event.",
       "source_publication_id": "publication-705c929f90a091ad44b068d0",
       "observed_at_utc": "2026-09-14T12:07:58Z",
-      "sources": [
-        {
-          "label": "NFL EDGE canonical prospective-card evidence",
-          "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"
-        }
-      ]
+      "sources": [{"label": "NFL EDGE canonical prospective-card evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"}]
     },
     {
       "evidence_id": "injury:kc-final",
       "fact": "Kansas City ruled DB Chamarri Conner and T Josh Simmons out. QB Patrick Mahomes was a full participant Saturday and has no game designation.",
-      "sources": [
-        {
-          "label": "Kansas City Chiefs — Week 1 Injury Report",
-          "url": "https://www.chiefs.com/news/week-1-injury-report-broncos-vs-chiefs-2026"
-        }
-      ]
+      "sources": [{"label": "Kansas City Chiefs — Week 1 Injury Report", "url": "https://www.chiefs.com/news/week-1-injury-report-broncos-vs-chiefs-2026"}]
     },
     {
       "evidence_id": "injury:den-final",
       "fact": "Marvin Mims Jr. was a full participant Saturday with no game designation, and Denver reported all 53 active-roster players expected to be available.",
-      "sources": [
-        {
-          "label": "Denver Broncos — Final Week 1 Injury Report",
-          "url": "https://www.denverbroncos.com/news/injuryreport/injury-report-wr-marvin-mims-jr-not-assigned-game-status-for-week-1-vs-chiefs"
-        }
-      ]
+      "sources": [{"label": "Denver Broncos — Final Week 1 Injury Report", "url": "https://www.denverbroncos.com/news/injuryreport/injury-report-wr-marvin-mims-jr-not-assigned-game-status-for-week-1-vs-chiefs"}]
     },
     {
       "evidence_id": "weather:kc-kickoff",
       "fact": "The National Weather Service forecast for Kansas City calls for mostly clear conditions Monday night with a 5% precipitation chance.",
-      "sources": [
-        {
-          "label": "National Weather Service — Kansas City",
-          "url": "https://beta.weather.gov/place/MO/Kansas_City/"
-        }
-      ]
+      "sources": [{"label": "National Weather Service — Kansas City", "url": "https://beta.weather.gov/place/MO/Kansas_City/"}]
     },
     {
       "evidence_id": "splits:dk-den-kc",
       "fact": "VSiN's current DraftKings spread splits show Denver +2.5 with 66% of bets and 48% of spread money; Kansas City -2.5 has 34% of bets and 52% of spread money.",
-      "sources": [
-        {
-          "label": "VSiN — DraftKings NFL Betting Splits",
-          "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"
-        }
-      ]
+      "sources": [{"label": "VSiN — DraftKings NFL Betting Splits", "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"}]
     },
     {
       "evidence_id": "splits:circa-den-kc",
       "fact": "VSiN's current Circa spread splits show Denver +2 with 58% of bets and 53% of spread money; Kansas City -2 has 42% of bets and 47% of spread money.",
-      "sources": [
-        {
-          "label": "VSiN — Circa NFL Betting Splits",
-          "url": "https://data.vsin.com/betting-splits/?display=card&source=CIRCA&sport=NFL"
-        }
-      ]
+      "sources": [{"label": "VSiN — Circa NFL Betting Splits", "url": "https://data.vsin.com/betting-splits/?display=card&source=CIRCA&sport=NFL"}]
     }
   ]
 }
