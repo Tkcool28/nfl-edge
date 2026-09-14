@@ -240,7 +240,7 @@
       "publication_count": 6,
       "returned_after_gap": false,
       "selection": "MIN",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "REPLACED",
       "worst_line": null,
       "worst_price": -126
     },
@@ -426,9 +426,99 @@
       "publication_count": 1,
       "returned_after_gap": false,
       "selection": "PHI",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "REPLACED",
       "worst_line": null,
       "worst_price": -245
+    },
+    {
+      "best_line": null,
+      "best_price": 114,
+      "episode_id": "episode-54be2095e3d6ccbf6a169f90",
+      "first_line": null,
+      "first_price": 114,
+      "first_publication_id": "publication-8b3b50936950e1c8a1da630d",
+      "first_seen_at_utc": "2026-09-14T00:07:58.611095Z",
+      "game_id": "2026_01_DEN_KC",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "last_line": null,
+      "last_price": 114,
+      "last_publication_id": "publication-8b3b50936950e1c8a1da630d",
+      "last_seen_at_utc": "2026-09-14T00:07:58.611095Z",
+      "logical_recommendation_id": "logical-f15479ffb3c1fdfcdda6db0e",
+      "market": "MONEYLINE",
+      "normalized_selection": "DEN",
+      "normalized_side": "away",
+      "observations": [
+        {
+          "american_odds": 114,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-85dd8f45ff11ecf61aeb2a36",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": 111
+          },
+          "publication_id": "publication-8b3b50936950e1c8a1da630d",
+          "published_at_utc": "2026-09-14T00:07:58.611095Z",
+          "recommended_units": 0.5,
+          "source_product_sha256": "8b3b50936950e1c8a1da630d24d46bc4ecfcf3ce890fd390d2a8662caa8ebbe1",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-833d1ce7bed23b34328c1a80"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "DEN",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": null,
+      "worst_price": 114
+    },
+    {
+      "best_line": 2.5,
+      "best_price": -110,
+      "episode_id": "episode-1ac99e9a077f4d20ea088d62",
+      "first_line": 2.5,
+      "first_price": -110,
+      "first_publication_id": "publication-8b3b50936950e1c8a1da630d",
+      "first_seen_at_utc": "2026-09-14T00:07:58.611095Z",
+      "game_id": "2026_01_DEN_KC",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "last_line": 2.5,
+      "last_price": -110,
+      "last_publication_id": "publication-8b3b50936950e1c8a1da630d",
+      "last_seen_at_utc": "2026-09-14T00:07:58.611095Z",
+      "logical_recommendation_id": "logical-3504b02093b1857ff17275c9",
+      "market": "SPREAD",
+      "normalized_selection": "DEN",
+      "normalized_side": "away",
+      "observations": [
+        {
+          "american_odds": -110,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-473ed60c1b5e1ba2179ba5ae",
+          "line": 2.5,
+          "play_through": {
+            "line": 2.5,
+            "price_american": -113
+          },
+          "publication_id": "publication-8b3b50936950e1c8a1da630d",
+          "published_at_utc": "2026-09-14T00:07:58.611095Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "8b3b50936950e1c8a1da630d24d46bc4ecfcf3ce890fd390d2a8662caa8ebbe1",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-9ea78065571a601f548ca67c"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "DEN",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": 2.5,
+      "worst_price": -110
     }
   ],
   "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1",
@@ -439,7 +529,8 @@
     "publication-2f3c1c772bbb502b4f1eefa2",
     "publication-7c31aeb7d95e0e33f2c06bd0",
     "publication-e9ce21501de065df639a0c8a",
-    "publication-ad77040cd62f4aaee97eaf49"
+    "publication-ad77040cd62f4aaee97eaf49",
+    "publication-8b3b50936950e1c8a1da630d"
   ],
   "week": 1
 }
