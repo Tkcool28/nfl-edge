@@ -1,0 +1,231 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "capture_mode": "NATIVE_PROSPECTIVE",
+  "creation_provenance": {
+    "provider_calls": 0,
+    "source": "CANONICAL_PUBLISHED_PRODUCT",
+    "user_specific_data_included": false
+  },
+  "field_availability": {
+    "backend_user_overlay": "EXCLUDED_USER_SPECIFIC_DATA",
+    "evaluator_probability": "NOT_EXPOSED_BY_CANONICAL_PRODUCT_V1"
+  },
+  "lanes": {
+    "balanced": {
+      "american_odds": null,
+      "away_team": null,
+      "book": null,
+      "canonical_headline": {
+        "american_odds": null,
+        "book": null,
+        "ev": null,
+        "game_id": null,
+        "lane": "BALANCED",
+        "line": null,
+        "market": null,
+        "market_probability": null,
+        "matchup": null,
+        "model_probability": null,
+        "play_through": null,
+        "recommended_units": 0.0,
+        "reliability": null,
+        "selection": null,
+        "state": "NO_PLAY",
+        "support": "SUPPORTED",
+        "trust_probability": null,
+        "value_at": null,
+        "warnings": [
+          "No offer currently satisfies the frozen BALANCED lane contract."
+        ]
+      },
+      "ev": null,
+      "exact_offer_identity_id": null,
+      "game_id": null,
+      "home_team": null,
+      "kickoff_at_utc": null,
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "line": null,
+      "logical_recommendation_id": null,
+      "market": null,
+      "market_probability": null,
+      "model_probability": null,
+      "normalized_selection": null,
+      "normalized_side": null,
+      "play_through": null,
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.0,
+      "reliability": null,
+      "roof_state": null,
+      "selection": null,
+      "selector_version": "balanced-price-bounded-v2",
+      "state": "NO_PLAY",
+      "support": "SUPPORTED",
+      "trust_probability": null,
+      "value_at": null,
+      "wager_identity_id": null,
+      "warnings": [
+        "No offer currently satisfies the frozen BALANCED lane contract."
+      ]
+    },
+    "hit_rate": {
+      "american_odds": null,
+      "away_team": null,
+      "book": null,
+      "canonical_headline": {
+        "american_odds": null,
+        "book": null,
+        "ev": null,
+        "game_id": null,
+        "lane": "HIT_RATE",
+        "line": null,
+        "market": null,
+        "market_probability": null,
+        "matchup": null,
+        "model_probability": null,
+        "play_through": null,
+        "recommended_units": 0.0,
+        "reliability": null,
+        "selection": null,
+        "state": "NO_PLAY",
+        "support": "SUPPORTED",
+        "trust_probability": null,
+        "value_at": null,
+        "warnings": [
+          "No offer currently satisfies the frozen HIT_RATE lane contract."
+        ]
+      },
+      "ev": null,
+      "exact_offer_identity_id": null,
+      "game_id": null,
+      "home_team": null,
+      "kickoff_at_utc": null,
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "line": null,
+      "logical_recommendation_id": null,
+      "market": null,
+      "market_probability": null,
+      "model_probability": null,
+      "normalized_selection": null,
+      "normalized_side": null,
+      "play_through": null,
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.0,
+      "reliability": null,
+      "roof_state": null,
+      "selection": null,
+      "selector_version": "v1",
+      "state": "NO_PLAY",
+      "support": "SUPPORTED",
+      "trust_probability": null,
+      "value_at": null,
+      "wager_identity_id": null,
+      "warnings": [
+        "No offer currently satisfies the frozen HIT_RATE lane contract."
+      ]
+    },
+    "value": {
+      "american_odds": null,
+      "away_team": null,
+      "book": null,
+      "canonical_headline": {
+        "american_odds": null,
+        "book": null,
+        "ev": null,
+        "game_id": null,
+        "lane": "VALUE",
+        "line": null,
+        "market": null,
+        "market_probability": null,
+        "matchup": null,
+        "model_probability": null,
+        "play_through": null,
+        "recommended_units": 0.0,
+        "reliability": null,
+        "selection": null,
+        "state": "NO_PLAY",
+        "support": "SUPPORTED",
+        "trust_probability": null,
+        "value_at": null,
+        "warnings": [
+          "No offer currently satisfies the frozen VALUE lane contract."
+        ]
+      },
+      "ev": null,
+      "exact_offer_identity_id": null,
+      "game_id": null,
+      "home_team": null,
+      "kickoff_at_utc": null,
+      "lane": "VALUE",
+      "lane_key": "value",
+      "line": null,
+      "logical_recommendation_id": null,
+      "market": null,
+      "market_probability": null,
+      "model_probability": null,
+      "normalized_selection": null,
+      "normalized_side": null,
+      "play_through": null,
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.0,
+      "reliability": null,
+      "roof_state": null,
+      "selection": null,
+      "selector_version": "v1",
+      "state": "NO_PLAY",
+      "support": "SUPPORTED",
+      "trust_probability": null,
+      "value_at": null,
+      "wager_identity_id": null,
+      "warnings": [
+        "No offer currently satisfies the frozen VALUE lane contract."
+      ]
+    }
+  },
+  "product_freshness": {
+    "age_seconds": 0.0,
+    "observed_at_utc": "2026-09-14T12:07:58Z",
+    "state": "FRESH",
+    "threshold_seconds": 43200.0
+  },
+  "product_generated_at_utc": "2026-09-14T12:07:58Z",
+  "product_stale": false,
+  "product_warnings": [
+    "15 canonical Week 1 game(s) lack a provider event."
+  ],
+  "publication_id": "publication-705c929f90a091ad44b068d0",
+  "published_at_utc": "2026-09-14T12:07:59.000646Z",
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1",
+  "season": 2026,
+  "source_commit_sha": null,
+  "source_product_sha256": "705c929f90a091ad44b068d0b8105799982dad2def582ee50f4ef8002cce161d",
+  "source_product_version": "live-2026-week1-product-v1",
+  "source_provenance": {
+    "evaluator_versions": {
+      "moneyline": "ml_v4",
+      "spread": "spread_v3",
+      "total": "total_v3"
+    },
+    "football_data_version": "entering-2026:ab8458a6da5955481c1fae11",
+    "market_snapshot_version": "live-market:9e65789a70669f3c68e01fe7",
+    "model_versions": {
+      "expected_margin": "expected-margin-v1-stable",
+      "qb_elo": "qb-elo-v1.0.0",
+      "ridge_totals_r4": "ridge-totals-r4-alpha100",
+      "xgboost_v2": "post-v5-v2-conservative-adaptive-tail"
+    },
+    "prediction_as_of_utc": "2026-09-14T12:05:04.533904Z",
+    "qb_snapshot_version": "sleeper-scheduled-20260914T120001Z-e39c8121",
+    "selector_versions": {
+      "balanced": "balanced-price-bounded-v2",
+      "hit_rate": "v1",
+      "value": "v1"
+    }
+  },
+  "source_week_last_kickoff_at_utc": "2026-09-15T00:15:00Z",
+  "week": 1
+}
