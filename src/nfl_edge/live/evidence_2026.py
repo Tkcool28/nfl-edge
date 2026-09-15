@@ -23,6 +23,11 @@ import requests
 from nfl_edge.contracts.runtime_interfaces_v1 import ExpectedQBResolution
 from nfl_edge.features.pipeline import FeatureInputs
 from nfl_edge.features.totals_v1.pbp_semantics import REQUIRED_PBP_COLUMNS
+from nfl_edge.live.nflverse_2026_identity import (
+    NFLVerse2026IdentityError,
+    canonical_team,
+    normalize_frame,
+)
 from nfl_edge.live.schedule_materializer_2026 import (
     NFLVERSE_GAMES_URL,
     build_week_schedule,
@@ -242,10 +247,11 @@ def _canonical_games(rows: list[Mapping[str, Any]], *, through_week: int) -> pl.
         away_score = row.get("away_score")
         if home_score in (None, "") or away_score in (None, ""):
             raise SettledEvidenceError(f"2026 REG Week {week} is not fully settled")
-        away = str(row.get("away_team") or "").strip()
-        home = str(row.get("home_team") or "").strip()
-        if not away or not home:
-            raise SettledEvidenceError("settled game is missing canonical teams")
+        try:
+            away = canonical_team(row.get("away_team"), field="away_team")
+            home = canonical_team(row.get("home_team"), field="home_team")
+        except NFLVerse2026IdentityError as exc:
+            raise SettledEvidenceError(str(exc)) from exc
         selected.append(
             {
                 "game_id": f"2026_{week:02d}_{away}_{home}",
@@ -291,7 +297,11 @@ def _filter_stats(
     missing = sorted(required - set(frame.columns))
     if missing:
         raise SettledEvidenceError(f"{kind} stats missing required columns: {missing}")
-    selected = frame.filter((pl.col("season") == 2026) & pl.col("game_id").cast(pl.Utf8).is_in(sorted(game_ids)))
+    try:
+        normalized = normalize_frame(frame, team_columns=("team", "opponent_team"))
+    except NFLVerse2026IdentityError as exc:
+        raise SettledEvidenceError(str(exc)) from exc
+    selected = normalized.filter((pl.col("season") == 2026) & pl.col("game_id").cast(pl.Utf8).is_in(sorted(game_ids)))
     if kind == "player":
         if "position" in selected.columns:
             selected = selected.filter(pl.col("position").cast(pl.Utf8).str.to_uppercase() == "QB")
@@ -333,10 +343,7 @@ def validate_settled_evidence(
     terminal_score_columns = {"total_home_score", "total_away_score"}
     missing_terminal_score_columns = sorted(terminal_score_columns - set(pbp.columns))
     if missing_terminal_score_columns:
-        raise SettledEvidenceError(
-            "PBP is missing required terminal-score columns: "
-            f"{missing_terminal_score_columns}"
-        )
+        raise SettledEvidenceError(f"PBP is missing required terminal-score columns: {missing_terminal_score_columns}")
     pbp_ids = set(str(x) for x in pbp["game_id"].drop_nulls().unique().to_list())
     missing_pbp = sorted(game_ids - pbp_ids)
     if missing_pbp:
@@ -363,9 +370,9 @@ def validate_settled_evidence(
         # A Q4 terminal must end at 0:00. An OT terminal (Q5+) may retain time
         # after a walk-off score, but its scoreboard must still match the
         # official final; missing OT PBP therefore fails closed.
-        terminal = terminal_rows.sort(
-            ["_terminal_qtr", "_terminal_play_id"], descending=[True, True]
-        ).row(0, named=True)
+        terminal = terminal_rows.sort(["_terminal_qtr", "_terminal_play_id"], descending=[True, True]).row(
+            0, named=True
+        )
         if int(terminal["_terminal_qtr"]) == 4 and float(terminal["_terminal_clock"]) != 0.0:
             incomplete_pbp.append(game_id)
             continue
@@ -453,13 +460,29 @@ def _materialize_settled_evidence(
         _write_json_atomic(root / "settled_evidence_manifest.json", manifest)
         return _load_settled_evidence(root)
 
+    # Settled schedule construction and active-slate construction must produce
+    # exactly the same canonical identity for every revealed week.
+    schedule_ids = {
+        game["game_id"]
+        for week in range(1, through_week + 1)
+        for game in build_week_schedule(rows, season=2026, week=week, observed_at_utc=observed)["games"]
+    }
     game_ids = set(str(x) for x in games["game_id"].to_list())
+    if game_ids != schedule_ids:
+        raise SettledEvidenceError(
+            "canonical settled game IDs differ from canonical schedule IDs: "
+            f"settled_only={sorted(game_ids - schedule_ids)[:5]} schedule_only={sorted(schedule_ids - game_ids)[:5]}"
+        )
     team_raw, team_sha = _download_parquet(TEAM_STATS_URL, session=session)
     player_raw, player_sha = _download_parquet(PLAYER_STATS_URL, session=session)
     pbp_raw, pbp_sha = _download_parquet(PBP_URL, session=session)
     team_stats = _filter_stats(team_raw, game_ids=game_ids, kind="team")
     qb_stats = _filter_stats(player_raw, game_ids=game_ids, kind="player")
-    pbp = pbp_raw.filter(pl.col("game_id").cast(pl.Utf8).is_in(sorted(game_ids)))
+    try:
+        pbp_normalized = normalize_frame(pbp_raw, team_columns=("home_team", "away_team", "posteam", "defteam"))
+    except NFLVerse2026IdentityError as exc:
+        raise SettledEvidenceError(str(exc)) from exc
+    pbp = pbp_normalized.filter(pl.col("game_id").cast(pl.Utf8).is_in(sorted(game_ids)))
 
     validate_settled_evidence(
         games=games,

@@ -43,6 +43,33 @@ def test_canonical_settled_games_include_targets_and_actual_qbs() -> None:
     assert row["roof_actual"] == "outdoors"
 
 
+def test_settled_games_normalize_nflverse_la_to_the_same_canonical_schedule_identity() -> None:
+    source = _schedule_row()
+    source.update(away_team="SF", home_team="LA")
+    row = _canonical_games([source], through_week=1).to_dicts()[0]
+    assert row["home_team"] == "LAR"
+    assert row["game_id"] == "2026_01_SF_LAR"
+
+
+def test_team_weekly_stats_use_the_same_nflverse_identity_normalization() -> None:
+    source = pl.DataFrame(
+        [
+            {
+                "game_id": "2026_01_SF_LA",
+                "season": 2026,
+                "week": 1,
+                "team": "LA",
+                "passing_epa": 1.0,
+                "rushing_epa": 2.0,
+                "passing_yards": 250,
+                "rushing_yards": 100,
+            }
+        ]
+    )
+    normalized = _filter_stats(source, game_ids={"2026_01_SF_LAR"}, kind="team")
+    assert normalized.select("game_id", "team").to_dicts() == [{"game_id": "2026_01_SF_LAR", "team": "LAR"}]
+
+
 def test_unsettled_prior_week_fails_closed() -> None:
     with pytest.raises(SettledEvidenceError, match="not fully settled"):
         _canonical_games(
@@ -101,9 +128,7 @@ def test_partial_pbp_cannot_advance_completed_game_evidence() -> None:
             {"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "NE"},
         ]
     )
-    qb = pl.DataFrame(
-        [{"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA", "player_id": "qb"}]
-    )
+    qb = pl.DataFrame([{"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA", "player_id": "qb"}])
     pbp = pl.DataFrame({column: [0] for column in REQUIRED_PBP_COLUMNS}).with_columns(
         pl.lit("2026_01_NE_SEA").alias("game_id"),
         pl.lit(3).alias("qtr"),
@@ -124,9 +149,7 @@ def test_overtime_game_requires_terminal_pbp_score_to_match_official_final() -> 
             {"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "NE"},
         ]
     )
-    qb = pl.DataFrame(
-        [{"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA", "player_id": "qb"}]
-    )
+    qb = pl.DataFrame([{"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA", "player_id": "qb"}])
     pbp = pl.DataFrame({column: [0] for column in REQUIRED_PBP_COLUMNS}).with_columns(
         pl.lit("2026_01_NE_SEA").alias("game_id"),
         pl.lit(4).alias("qtr"),
@@ -147,9 +170,7 @@ def test_walkoff_overtime_terminal_pbp_with_clock_remaining_is_complete() -> Non
             {"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "NE"},
         ]
     )
-    qb = pl.DataFrame(
-        [{"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA", "player_id": "qb"}]
-    )
+    qb = pl.DataFrame([{"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA", "player_id": "qb"}])
     pbp = pl.DataFrame({column: [0] for column in REQUIRED_PBP_COLUMNS}).with_columns(
         pl.lit("2026_01_NE_SEA").alias("game_id"),
         pl.lit(5).alias("qtr"),
