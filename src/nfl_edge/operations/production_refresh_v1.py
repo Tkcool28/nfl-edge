@@ -72,7 +72,7 @@ class RefreshConfig:
     live: bool
     market_response: Path | None = None
     market_metadata: Path | None = None
-    prospective_dir: Path | None = None
+    prospective_dir: Path | None = None\n    schedule_root: Path | None = None
 
 
 def _utc_now() -> str:
@@ -256,9 +256,10 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                 active_schedule = resolve_active_schedule(
                     config.repository_root,
                     prediction_as_of_utc=config.prediction_as_of_utc,
+                    schedule_root=config.schedule_root,
                 )
                 schedule = active_schedule.payload
-                schedule_path = active_schedule.path.relative_to(config.repository_root)
+                schedule_path = active_schedule.path
                 summary.update(
                     season=active_schedule.season,
                     week=active_schedule.week,
@@ -472,7 +473,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--publication-dir", type=Path, required=True)
     parser.add_argument("--prospective-dir", type=Path)
     parser.add_argument("--prediction-as-of-utc", default=_utc_now())
-    parser.add_argument("--repository-root", type=Path, default=Path(__file__).resolve().parents[3])
+    parser.add_argument("--repository-root", type=Path, default=Path(__file__).resolve().parents[3])\n    parser.add_argument("--schedule-root", type=Path)
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--live", action="store_true")
     source.add_argument("--market-response", type=Path)
@@ -488,6 +489,7 @@ def main(argv: list[str] | None = None) -> int:
             market_response=args.market_response,
             market_metadata=args.market_metadata,
             prospective_dir=args.prospective_dir,
+            schedule_root=args.schedule_root,
         )
     )
     print(json.dumps(summary, sort_keys=True))
