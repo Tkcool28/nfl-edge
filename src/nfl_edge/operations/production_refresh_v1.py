@@ -293,6 +293,7 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
 
             advanced_state = None
             prior_live_inputs = None
+            evidence = None
             if active_schedule.week > 1:
                 try:
                     if config.evidence_root is None:
@@ -346,6 +347,25 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                 summary["football_snapshot_sha256"] = _sha256(football_path)
             except Exception as exc:
                 return finish(RefreshOutcome.SCORING_FAILED, exc)
+
+            # Selector trust is part of the causal product state.  Reconstruct
+            # it from settled, pre-kickoff prior boards before the one paid
+            # acquisition seam, after the existing no-cost football gates.
+            try:
+                decision_state = load_entering_2026_product_state(
+                    config.repository_root / "data/live/2026/entering_product_state_v1.json"
+                )
+                if active_schedule.week > 1:
+                    assert evidence is not None
+                    decision_state["value_state"] = advance_live_value_state(
+                        entering=decision_state["value_state"], evidence=evidence, run_root=config.run_root
+                    )
+                    summary["selector_state_observations"] = {
+                        "moneyline": len(decision_state["value_state"].ml_observations),
+                        "spread": len(decision_state["value_state"].spread_observations),
+                    }
+            except Exception as exc:
+                return finish(RefreshOutcome.FOOTBALL_STATE_NOT_READY, exc)
 
             capture_events: list[dict[str, Any]] | None = None
             capture_metadata: dict[str, Any] | None = None
@@ -421,14 +441,6 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                 return finish(RefreshOutcome.MARKET_NORMALIZATION_FAILED, exc)
 
             try:
-                decision_state = load_entering_2026_product_state(
-                    config.repository_root / "data/live/2026/entering_product_state_v1.json"
-                )
-                if active_schedule.week > 1:
-                    assert evidence is not None
-                    decision_state["value_state"] = advance_live_value_state(
-                        entering=decision_state["value_state"], evidence=evidence, run_root=config.run_root
-                    )
                 product, proof = build_product_snapshot(
                     root=config.repository_root,
                     football_snapshot=football,

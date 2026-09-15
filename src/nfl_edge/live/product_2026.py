@@ -478,7 +478,9 @@ def _post_selection_play_through(
     }
 
 
-def _headline(lane: str, row: Mapping[str, Any] | None, football_games: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
+def _headline(
+    lane: str, row: Mapping[str, Any] | None, football_games: Mapping[str, Mapping[str, Any]]
+) -> dict[str, Any]:
     lane_name = {"hit_rate": "HIT_RATE", "balanced": "BALANCED", "value": "VALUE"}[lane]
     if row is None:
         return {
@@ -601,7 +603,9 @@ def _game_warnings(market_board: Mapping[str, Any], xgb: Mapping[str, Any]) -> l
     if str(xgb.get("status")) == "AVAILABLE_WITH_ROOF_SCENARIOS":
         downstream = xgb["roof_scenario_downstream"]
         if downstream["status"] == "ROOF_SENSITIVE":
-            warnings.append("XGBoost moneyline evaluation is ROOF_SENSITIVE; no singular pending-roof ML state is published.")
+            warnings.append(
+                "XGBoost moneyline evaluation is ROOF_SENSITIVE; no singular pending-roof ML state is published."
+            )
         elif downstream["status"] == "NOT_EVALUATED_MISSING_EVIDENCE":
             warnings.append("Pending-roof XGBoost downstream state lacks current market/evaluator evidence.")
     return warnings
@@ -631,7 +635,9 @@ def build_product_snapshot(
         raise LiveProductError("football/market canonical game IDs differ")
 
     task05f = _load_script("live_2026_task05f_product", root / "scripts/task05f_evaluator_final_runner.py")
-    confidence_v2 = _load_script("live_2026_confidence_v2_product", root / "scripts/task05g_model_confidence_v2_runner.py")
+    confidence_v2 = _load_script(
+        "live_2026_confidence_v2_product", root / "scripts/task05g_model_confidence_v2_runner.py"
+    )
     spread_v3 = _load_script("live_2026_spread_v3_product", root / "scripts/task05g_spread_confidence_v3_runner.py")
     market_index = _market_snapshot_index(market_snapshot, football_games)
     current_games = {gid: _current_game(game) for gid, game in football_games.items()}
@@ -691,7 +697,11 @@ def build_product_snapshot(
                 "home_team": str(source["home_team"]),
                 "away_team": str(source["away_team"]),
                 "kickoff_at_utc": str(source["kickoff_at_utc"]),
-                "game_status": "PREGAME" if _parse_utc(generated) < _parse_utc(str(source["kickoff_at_utc"])) else "IN_PROGRESS",
+                "game_status": (
+                    "PREGAME"
+                    if _parse_utc(generated) < _parse_utc(str(source["kickoff_at_utc"]))
+                    else "IN_PROGRESS"
+                ),
                 "venue": source.get("venue"),
                 "neutral_site": bool(source["neutral_site"]),
                 "updated_at_utc": generated,
@@ -740,8 +750,21 @@ def build_product_snapshot(
     validate_product_snapshot(snapshot)
     proof = {
         # Private forensic surface for strictly-postgame selector-state
-        # advancement. This is intentionally excluded from the public product API.
-        "selector_evidence_rows": [{**row, "week": week} for row in board],
+        # advancement.  The capture time and each scheduled kickoff make the
+        # later state transition prove that it used a completed week's final
+        # *pregame* board, never an in-progress refresh.  This is intentionally
+        # excluded from the public product API.
+        "selector_evidence": {
+            "schema_version": "NFL_EDGE_LIVE_SELECTOR_EVIDENCE_V1",
+            "season": season,
+            "week": week,
+            "captured_at_utc": generated,
+            "games": [
+                {"game_id": gid, "kickoff_at_utc": str(football_games[gid]["kickoff_at_utc"])}
+                for gid in sorted(football_games)
+            ],
+            "rows": [{**row, "week": week} for row in board],
+        },
         "evaluator_rows": len(board),
         "evaluator_by_market": dict(sorted(Counter(str(row["market_type"]) for row in board).items())),
         "evaluator_supported_by_market": dict(sorted(Counter(
