@@ -1,0 +1,12 @@
+[Unit]
+Description=Refresh NFL EDGE non-billable live weekly inputs before production
+
+[Timer]
+OnCalendar=*-*-* 00:01:00 UTC
+OnCalendar=*-*-* 12:01:00 UTC
+Persistent=false
+AccuracySec=1s
+Unit=nfl-edge-live-weekly-inputs.service
+
+[Install]
+WantedBy=timers.target
