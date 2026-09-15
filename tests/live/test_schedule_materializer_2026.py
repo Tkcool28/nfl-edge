@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 
+from nfl_edge.live.schedule_2026 import LiveScheduleError, validate_schedule
 from nfl_edge.live.schedule_materializer_2026 import (
     ScheduleMaterializationError,
     build_week_schedule,
@@ -63,3 +64,17 @@ def test_unknown_nflverse_team_code_fails_closed_before_canonical_schedule() -> 
             week=2,
             observed_at_utc="2026-09-15T21:00:00Z",
         )
+
+
+def test_canonical_schedule_contract_still_rejects_raw_source_alias() -> None:
+    payload = build_week_schedule(
+        [_row()],
+        season=2026,
+        week=2,
+        observed_at_utc="2026-09-15T21:00:00Z",
+    )
+    payload["games"][0]["home_team"] = "LA"
+    payload["games"][0]["game_id"] = "2026_02_SF_LA"
+
+    with pytest.raises(LiveScheduleError, match="invalid canonical teams"):
+        validate_schedule(payload)
