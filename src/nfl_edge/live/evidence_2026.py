@@ -339,7 +339,18 @@ def materialize_settled_evidence(
 
     games = _canonical_games(rows, through_week=through_week)
     if through_week == 0:
-        empty = pl.DataFrame()
+        empties = {
+            "games": pl.DataFrame({
+                "game_id": [], "season": [], "season_type": [], "week": [],
+            }),
+            "team_stats": pl.DataFrame({
+                "game_id": [], "season": [], "week": [], "team": [],
+            }),
+            "qb_stats": pl.DataFrame({
+                "game_id": [], "season": [], "week": [], "team": [], "player_id": [],
+            }),
+            "pbp": pl.DataFrame({"game_id": []}),
+        }
         manifest = {
             "schema_version": EVIDENCE_SCHEMA,
             "season": 2026,
@@ -349,8 +360,8 @@ def materialize_settled_evidence(
             "source_urls": {"schedule": NFLVERSE_GAMES_URL},
             "row_counts": {"games": 0, "team_stats": 0, "qb_stats": 0, "pbp": 0},
         }
-        for name in ("games", "team_stats", "qb_stats", "pbp"):
-            _write_parquet_atomic(root / f"settled_{name}.parquet", empty)
+        for name, frame in empties.items():
+            _write_parquet_atomic(root / f"settled_{name}.parquet", frame)
         _write_json_atomic(root / "settled_evidence_manifest.json", manifest)
         return load_settled_evidence(root)
 
