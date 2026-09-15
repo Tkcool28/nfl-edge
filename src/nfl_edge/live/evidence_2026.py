@@ -18,6 +18,7 @@ from typing import Any, Mapping
 import polars as pl
 import requests
 
+from nfl_edge.contracts.runtime_interfaces_v1 import ExpectedQBResolution
 from nfl_edge.features.pipeline import FeatureInputs
 from nfl_edge.live.schedule_materializer_2026 import (
     NFLVERSE_GAMES_URL,
@@ -64,6 +65,84 @@ class SettledSeasonEvidence:
             depth_charts=pl.DataFrame(),
             rosters=pl.DataFrame(),
         )
+
+
+
+class SettledActualQBResolver:
+    """Postgame-only resolver for advancing future model state.
+
+    Actual starters are never exposed to the same game's live prediction.
+    They are consumed only after the complete week is settled.
+    """
+
+    def __init__(self, games: pl.DataFrame, *, observed_at_utc: str) -> None:
+        self.observed_at_utc = observed_at_utc
+        self._games = {str(row["game_id"]): row for row in games.to_dicts()}
+
+    def _side(self, *, game_id: str, team: str, side: str) -> ExpectedQBResolution:
+        row = self._games.get(game_id)
+        if row is None:
+            raise SettledEvidenceError(f"settled QB resolver missing game {game_id}")
+        qb_id = str(row.get(f"{side}_qb_id") or "").strip()
+        qb_name = str(row.get(f"{side}_qb_name") or "").strip()
+        if not qb_id or not qb_name:
+            raise SettledEvidenceError(
+                f"settled QB identity missing for {game_id} {side} ({team})"
+            )
+        identity = f"{game_id}|{team}|{qb_id}|{self.observed_at_utc}".encode()
+        provenance = "settled-actual-qb:" + hashlib.sha256(identity).hexdigest()[:24]
+        return ExpectedQBResolution(
+            team=team,
+            game_id=game_id,
+            expected_starter=qb_name,
+            sleeper_player_id=None,
+            canonical_qb_id=qb_id,
+            gsis_id=qb_id,
+            model_qb_state_id=qb_id,
+            depth_designation="POSTGAME_ACTUAL_STARTER",
+            injury_status=None,
+            source_snapshot_at_utc=self.observed_at_utc,
+            provenance_id=provenance,
+            resolution_status="RESOLVED",
+            freshness_state="FRESH",
+            source_warning_state=None,
+        ).validate()
+
+    def resolve_game(self, game: Mapping[str, Any]) -> dict[str, Any]:
+        game_id = str(game["game_id"])
+        return {
+            "home": self._side(
+                game_id=game_id, team=str(game["home_team"]), side="home"
+            ),
+            "away": self._side(
+                game_id=game_id, team=str(game["away_team"]), side="away"
+            ),
+            "overrides": [],
+        }
+
+    def to_product_context(self, resolution: ExpectedQBResolution) -> dict[str, Any]:
+        return {
+            "team": resolution.team,
+            "game_id": resolution.game_id,
+            "expected_starter": resolution.expected_starter,
+            "sleeper_player_id": None,
+            "canonical_qb_id": resolution.canonical_qb_id,
+            "gsis_id": resolution.gsis_id,
+            "depth_designation": resolution.depth_designation,
+            "injury_status": None,
+            "source": "NFLVERSE_SETTLED_ACTUAL_QB",
+            "source_snapshot_at_utc": resolution.source_snapshot_at_utc,
+            "provenance_id": resolution.provenance_id,
+            "resolution_status": resolution.resolution_status,
+            "freshness": {
+                "state": "FRESH",
+                "observed_at_utc": self.observed_at_utc,
+                "age_seconds": 0.0,
+                "threshold_seconds": 0.0,
+            },
+            "warning_state": None,
+            "last_changed_at_utc": None,
+        }
 
 
 def _now() -> str:
