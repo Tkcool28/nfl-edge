@@ -204,8 +204,10 @@ def score_week(
     repository_root: str | Path,
     prediction_as_of_utc: str,
     resolver: SleeperExpectedQBResolver,
-    schedule_path: str | Path,\n    entering_state: Entering2026FootballState | None = None,
+    schedule_path: str | Path,
+    entering_state: Entering2026FootballState | None = None,
     roof_resolver: RoofResolver | None = None,
+    prior_live_inputs: FeatureInputs | None = None,
 ) -> dict[str, Any]:
     """Score one canonical 2026 regular-season week without reading market data."""
     root = Path(repository_root).resolve()
