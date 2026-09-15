@@ -330,12 +330,20 @@ def validate_settled_evidence(
     missing_pbp_columns = sorted(set(REQUIRED_PBP_COLUMNS) - set(pbp.columns))
     if missing_pbp_columns:
         raise SettledEvidenceError(f"PBP is missing required totals columns: {missing_pbp_columns}")
+    terminal_score_columns = {"total_home_score", "total_away_score"}
+    missing_terminal_score_columns = sorted(terminal_score_columns - set(pbp.columns))
+    if missing_terminal_score_columns:
+        raise SettledEvidenceError(
+            "PBP is missing required terminal-score columns: "
+            f"{missing_terminal_score_columns}"
+        )
     pbp_ids = set(str(x) for x in pbp["game_id"].drop_nulls().unique().to_list())
     missing_pbp = sorted(game_ids - pbp_ids)
     if missing_pbp:
         raise SettledEvidenceError(f"PBP coverage missing completed games: {missing_pbp[:5]}")
     incomplete_pbp = []
-    for game_id in sorted(game_ids):
+    for game in sorted(games.iter_rows(named=True), key=lambda row: str(row["game_id"])):
+        game_id = str(game["game_id"])
         game_pbp = pbp.filter(pl.col("game_id").cast(pl.Utf8) == game_id)
         final_rows = game_pbp.filter(
             (pl.col("qtr").cast(pl.Int64, strict=False) >= 4)
@@ -343,9 +351,24 @@ def validate_settled_evidence(
         )
         if final_rows.is_empty():
             incomplete_pbp.append(game_id)
+            continue
+        # A Q4 0:00 row alone is not sufficient: an overtime game can have
+        # regulation PBP published before its OT plays.  The latest terminal
+        # row must carry the official final scoreboard, which naturally
+        # requires overtime PBP to exist whenever the final differs from the
+        # regulation tie.
+        terminal = final_rows.sort(["qtr", "play_id"], descending=[True, True]).row(0, named=True)
+        try:
+            terminal_home = int(terminal["total_home_score"])
+            terminal_away = int(terminal["total_away_score"])
+        except (TypeError, ValueError):
+            incomplete_pbp.append(game_id)
+            continue
+        if terminal_home != int(game["home_score"]) or terminal_away != int(game["away_score"]):
+            incomplete_pbp.append(game_id)
     if incomplete_pbp:
         raise SettledEvidenceError(
-            "PBP completion invariant missing final-clock row for completed games: "
+            "PBP completion invariant missing a terminal row matching the official final score for completed games: "
             f"{incomplete_pbp[:5]}"
         )
 

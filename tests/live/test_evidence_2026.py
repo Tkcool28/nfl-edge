@@ -4,7 +4,6 @@ import polars as pl
 import pytest
 
 from nfl_edge.features.totals_v1.pbp_semantics import REQUIRED_PBP_COLUMNS
-
 from nfl_edge.live.evidence_2026 import (
     SettledActualQBResolver,
     SettledEvidenceError,
@@ -109,8 +108,34 @@ def test_partial_pbp_cannot_advance_completed_game_evidence() -> None:
         pl.lit("2026_01_NE_SEA").alias("game_id"),
         pl.lit(3).alias("qtr"),
         pl.lit(20.0).alias("game_seconds_remaining"),
+        pl.lit(0).alias("total_home_score"),
+        pl.lit(0).alias("total_away_score"),
     )
     with pytest.raises(SettledEvidenceError, match="completion invariant"):
+        validate_settled_evidence(games=games, team_stats=team, qb_stats=qb, pbp=pbp, through_week=1)
+
+
+def test_overtime_game_requires_terminal_pbp_score_to_match_official_final() -> None:
+    """A regulation 0:00 row must not certify an OT final whose PBP is missing."""
+    games = _canonical_games([_schedule_row(home_score=23, away_score=20)], through_week=1)
+    team = pl.DataFrame(
+        [
+            {"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA"},
+            {"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "NE"},
+        ]
+    )
+    qb = pl.DataFrame(
+        [{"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA", "player_id": "qb"}]
+    )
+    pbp = pl.DataFrame({column: [0] for column in REQUIRED_PBP_COLUMNS}).with_columns(
+        pl.lit("2026_01_NE_SEA").alias("game_id"),
+        pl.lit(4).alias("qtr"),
+        pl.lit(0.0).alias("game_seconds_remaining"),
+        pl.lit(20).alias("total_home_score"),
+        pl.lit(20).alias("total_away_score"),
+    )
+
+    with pytest.raises(SettledEvidenceError, match="terminal row matching the official final score"):
         validate_settled_evidence(games=games, team_stats=team, qb_stats=qb, pbp=pbp, through_week=1)
 
 
