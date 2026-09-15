@@ -221,6 +221,7 @@ def build_live_week_features(
     resolver: SleeperExpectedQBResolver,
     schedule_path: str | Path,
     feature_config_path: str | Path = "config/features.yaml",
+    prior_live_inputs: FeatureInputs | None = None,
 ) -> LiveWeekFeatures:
     root = Path(repository_root)
     cutoff = _parse_utc(prediction_as_of_utc)
@@ -231,6 +232,25 @@ def build_live_week_features(
     block = build_live_block(current)
     inputs = FeatureInputs.from_repository(root)
     config = load_feature_config(root / feature_config_path)
+
+    if prior_live_inputs is not None:
+        prior_games = prior_live_inputs.games.filter(
+            (pl.col("season") == season)
+            & (pl.col("season_type").cast(pl.Utf8).str.to_uppercase() == "REG")
+            & (pl.col("week") < week)
+        )
+        prior_ids = set(str(x) for x in prior_games["game_id"].to_list())
+        prior_team_stats = prior_live_inputs.team_stats.filter(
+            pl.col("game_id").cast(pl.Utf8).is_in(sorted(prior_ids))
+        )
+        prior_qb_stats = prior_live_inputs.qb_stats.filter(
+            pl.col("game_id").cast(pl.Utf8).is_in(sorted(prior_ids))
+        )
+        inputs = inputs.replace(
+            games=pl.concat([inputs.games, prior_games], how="diagonal_relaxed"),
+            team_stats=pl.concat([inputs.team_stats, prior_team_stats], how="diagonal_relaxed"),
+            qb_stats=pl.concat([inputs.qb_stats, prior_qb_stats], how="diagonal_relaxed"),
+        )
 
     combined = pl.concat([inputs.games, current], how="diagonal_relaxed").sort(
         ["season", "week", "game_id"]
@@ -318,6 +338,7 @@ def build_live_week1_features(
     resolver: SleeperExpectedQBResolver,
     schedule_path: str | Path = "data/live/2026/week1_schedule_v1.json",
     feature_config_path: str | Path = "config/features.yaml",
+    prior_live_inputs: FeatureInputs | None = None,
 ) -> LiveWeekFeatures:
     return build_live_week_features(
         repository_root=repository_root,
@@ -325,4 +346,5 @@ def build_live_week1_features(
         resolver=resolver,
         schedule_path=schedule_path,
         feature_config_path=feature_config_path,
+        prior_live_inputs=prior_live_inputs,
     )
