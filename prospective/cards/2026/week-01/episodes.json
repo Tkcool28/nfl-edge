@@ -561,7 +561,7 @@
       "publication_count": 1,
       "returned_after_gap": true,
       "selection": "DEN",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "DISAPPEARED",
       "worst_line": null,
       "worst_price": 112
     },
@@ -606,7 +606,7 @@
       "publication_count": 1,
       "returned_after_gap": true,
       "selection": "DEN",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "DISAPPEARED",
       "worst_line": 2.5,
       "worst_price": -112
     },
@@ -651,7 +651,7 @@
       "publication_count": 1,
       "returned_after_gap": true,
       "selection": "DEN",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "DISAPPEARED",
       "worst_line": 2.5,
       "worst_price": -112
     }
@@ -667,7 +667,8 @@
     "publication-ad77040cd62f4aaee97eaf49",
     "publication-8b3b50936950e1c8a1da630d",
     "publication-705c929f90a091ad44b068d0",
-    "publication-3d4c4bba382ef5c7510cd12c"
+    "publication-3d4c4bba382ef5c7510cd12c",
+    "publication-419d6e12fa3d713cf84f1aaf"
   ],
   "week": 1
 }
