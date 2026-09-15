@@ -234,6 +234,7 @@ def _canonical_games(rows: list[Mapping[str, Any]], *, through_week: int) -> pl.
             "away_qb_id": str(row.get("away_qb_id") or "").strip() or None,
             "home_qb_name": str(row.get("home_qb_name") or "").strip() or None,
             "away_qb_name": str(row.get("away_qb_name") or "").strip() or None,
+            "roof_actual": str(row.get("roof") or "").strip().lower() or None,
         })
     frame = pl.DataFrame(selected)
     if through_week == 0:
