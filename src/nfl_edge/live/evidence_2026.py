@@ -315,16 +315,17 @@ def validate_settled_evidence(
 def materialize_settled_evidence(
     *,
     output_dir: str | Path,
-    active_as_of_utc: str,
+    active_as_of_utc: str | None = None,
     session: requests.Session | None = None,
     schedule_rows: list[Mapping[str, Any]] | None = None,
 ) -> SettledSeasonEvidence:
     observed = _now()
+    active_as_of = active_as_of_utc or observed
     rows = list(schedule_rows) if schedule_rows is not None else fetch_nflverse_rows(session=session)
     active = choose_active_schedule(
         rows,
         season=2026,
-        active_as_of_utc=active_as_of_utc,
+        active_as_of_utc=active_as_of,
         observed_at_utc=observed,
     )
     active_week = int(active["week"])
