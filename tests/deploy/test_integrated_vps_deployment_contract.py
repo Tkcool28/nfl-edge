@@ -119,3 +119,19 @@ def test_editorial_publisher_is_a_separate_inactive_timer_contract() -> None:
     assert "18:35:00 America/Denver" in timer
     assert "nfl-edge-daily-news.service" in old_timer
     assert "nfl-edge-news-editorial-publisher.service" not in old_timer
+
+
+
+def test_live_weekly_inputs_are_non_billable_and_precede_production() -> None:
+    service = _read("deploy/systemd/nfl-edge-live-weekly-inputs.service")
+    timer = _read("deploy/systemd/nfl-edge-live-weekly-inputs.timer")
+    production = _read("deploy/systemd/nfl-edge-production-refresh.service")
+
+    assert "materialize_live_weekly_inputs_v1.py" in service
+    assert "ODDS_API_KEY" not in service
+    assert "live_inputs_v1/2026" in service
+    assert "00:01:00 UTC" in timer
+    assert "12:01:00 UTC" in timer
+    assert "Persistent=false" in timer
+    assert "--schedule-root /var/lib/nfl-edge/live_inputs_v1/2026" in production
+    assert "--evidence-root /var/lib/nfl-edge/live_inputs_v1/2026" in production
