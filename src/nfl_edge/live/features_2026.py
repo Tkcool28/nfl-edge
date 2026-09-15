@@ -225,7 +225,9 @@ def build_live_week_features(
 ) -> LiveWeekFeatures:
     root = Path(repository_root)
     cutoff = _parse_utc(prediction_as_of_utc)
-    schedule = load_schedule(root / schedule_path)\n    season = int(schedule["season"])\n    week = int(schedule["week"])
+    schedule = load_schedule(root / schedule_path)
+    season = int(schedule["season"])
+    week = int(schedule["week"])
     current = schedule_to_frame(
         schedule, prediction_as_of_utc=cutoff.isoformat().replace("+00:00", "Z")
     )
