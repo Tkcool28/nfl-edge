@@ -30,16 +30,16 @@ from nfl_edge.live.markets_2026 import (
 )
 from nfl_edge.live.product_2026 import build_product_snapshot, product_snapshot_bytes
 from nfl_edge.live.product_state_2026 import load_entering_2026_product_state
-from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash, score_week1
+from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash, score_week
 from nfl_edge.live.sleeper_qb import DEFAULT_OVERRIDES, SleeperExpectedQBResolver, SleeperQBSource, load_overrides
-from nfl_edge.live.week1_2026 import load_week1_schedule
+from nfl_edge.live.schedule_2026 import resolve_active_schedule
 from nfl_edge.prospective.runtime_v1 import capture_published_product
 
 
 class RefreshOutcome(str, Enum):
     SUCCESS = "SUCCESS"
     LOCKED = "LOCKED"
-    SLEEPER_NOT_READY = "SLEEPER_NOT_READY"
+    SCHEDULE_NOT_READY = "SCHEDULE_NOT_READY"\n    SLEEPER_NOT_READY = "SLEEPER_NOT_READY"
     SCORING_FAILED = "SCORING_FAILED"
     MARKET_ACQUISITION_FAILED = "MARKET_ACQUISITION_FAILED"
     MARKET_NORMALIZATION_FAILED = "MARKET_NORMALIZATION_FAILED"
@@ -50,7 +50,7 @@ class RefreshOutcome(str, Enum):
 EXIT_CODES = {
     RefreshOutcome.SUCCESS: 0,
     RefreshOutcome.LOCKED: 75,
-    RefreshOutcome.SLEEPER_NOT_READY: 20,
+    RefreshOutcome.SCHEDULE_NOT_READY: 19,\n    RefreshOutcome.SLEEPER_NOT_READY: 20,
     RefreshOutcome.SCORING_FAILED: 21,
     RefreshOutcome.MARKET_ACQUISITION_FAILED: 22,
     RefreshOutcome.MARKET_NORMALIZATION_FAILED: 23,
@@ -197,6 +197,11 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
         "outcome": None,
         "provider_request_count": 0,
         "credits_consumed": None,
+        "season": None,
+        "week": None,
+        "schedule_version": None,
+        "schedule_path": None,
+        "schedule_rollover_at_utc": None,
         "sleeper_snapshot_id": None,
         "prediction_as_of_utc": config.prediction_as_of_utc,
         "football_snapshot_sha256": None,
@@ -246,6 +251,34 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                 else:
                     raise RuntimeError("could not allocate a unique run directory within the same second")
                 summary["run_id"] = run_id
+
+            try:
+                active_schedule = resolve_active_schedule(
+                    config.repository_root,
+                    prediction_as_of_utc=config.prediction_as_of_utc,
+                )
+                schedule = active_schedule.payload
+                schedule_path = active_schedule.path.relative_to(config.repository_root)
+                summary.update(
+                    season=active_schedule.season,
+                    week=active_schedule.week,
+                    schedule_version=str(schedule["schedule_version"]),
+                    schedule_path=str(schedule_path),
+                    schedule_rollover_at_utc=active_schedule.rollover_at_utc,
+                )
+                _atomic_json(
+                    run_dir / "active-schedule.json",
+                    {
+                        "season": active_schedule.season,
+                        "week": active_schedule.week,
+                        "schedule_version": str(schedule["schedule_version"]),
+                        "schedule_path": str(schedule_path),
+                        "rollover_at_utc": active_schedule.rollover_at_utc,
+                    },
+                )
+            except Exception as exc:
+                return finish(RefreshOutcome.SCHEDULE_NOT_READY, exc)
+
             try:
                 sleeper = _validate_sleeper(config)
                 summary["sleeper_snapshot_id"] = sleeper.snapshot_id
@@ -261,13 +294,18 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
             except Exception as exc:
                 return finish(RefreshOutcome.SLEEPER_NOT_READY, exc)
 
-            football_path = run_dir / "football" / "NFL_EDGE_2026_WEEK1_FOOTBALL_V1.json"
+            football_path = (
+                run_dir
+                / "football"
+                / f"NFL_EDGE_{active_schedule.season}_WEEK{active_schedule.week}_FOOTBALL_V1.json"
+            )
             try:
                 overrides = load_overrides(config.repository_root / DEFAULT_OVERRIDES)
-                football = score_week1(
+                football = score_week(
                     repository_root=config.repository_root,
                     prediction_as_of_utc=config.prediction_as_of_utc,
                     resolver=SleeperExpectedQBResolver(sleeper, overrides=overrides),
+                    schedule_path=schedule_path,
                 )
                 football_path.parent.mkdir(parents=True, exist_ok=True)
                 football_path.write_bytes(canonical_snapshot_bytes(football))
@@ -276,7 +314,6 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
             except Exception as exc:
                 return finish(RefreshOutcome.SCORING_FAILED, exc)
 
-            schedule = load_week1_schedule(config.repository_root / "data/live/2026/week1_schedule_v1.json")
             capture_events: list[dict[str, Any]] | None = None
             capture_metadata: dict[str, Any] | None = None
             try:
