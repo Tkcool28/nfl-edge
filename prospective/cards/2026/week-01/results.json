@@ -1,0 +1,136 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "lane_results": [
+    {
+      "correction": null,
+      "game_id": "2026_01_WAS_PHI",
+      "grade": "PENDING",
+      "lane_key": "hit_rate",
+      "official_score": null,
+      "official_source_product_sha256": "ad77040cd62f4aaee97eaf4909c8bb102f298820a3872f4f847855c0cc7f721b",
+      "official_source_publication_id": "publication-ad77040cd62f4aaee97eaf49",
+      "price_used_for_scoring": -245,
+      "realized_units": null,
+      "result_id": "result-d00a9eeba999d629c6b3b789",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.25
+    },
+    {
+      "correction": null,
+      "game_id": "2026_01_GB_MIN",
+      "grade": "PENDING",
+      "lane_key": "balanced",
+      "official_score": null,
+      "official_source_product_sha256": "ad77040cd62f4aaee97eaf4909c8bb102f298820a3872f4f847855c0cc7f721b",
+      "official_source_publication_id": "publication-ad77040cd62f4aaee97eaf49",
+      "price_used_for_scoring": -126,
+      "realized_units": null,
+      "result_id": "result-b9f9150eec55b612b7073f2d",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    },
+    {
+      "correction": null,
+      "game_id": "2026_01_DEN_KC",
+      "grade": "PENDING",
+      "lane_key": "hit_rate",
+      "official_score": null,
+      "official_source_product_sha256": "3d4c4bba382ef5c7510cd12c22fd7fa2dc96ce69786f7bfbcd810e97eba3bbe0",
+      "official_source_publication_id": "publication-3d4c4bba382ef5c7510cd12c",
+      "price_used_for_scoring": 112,
+      "realized_units": null,
+      "result_id": "result-bf7f9ba3cabeb5c776490afd",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.5
+    },
+    {
+      "correction": null,
+      "game_id": "2026_01_DEN_KC",
+      "grade": "PENDING",
+      "lane_key": "balanced",
+      "official_score": null,
+      "official_source_product_sha256": "3d4c4bba382ef5c7510cd12c22fd7fa2dc96ce69786f7bfbcd810e97eba3bbe0",
+      "official_source_publication_id": "publication-3d4c4bba382ef5c7510cd12c",
+      "price_used_for_scoring": -112,
+      "realized_units": null,
+      "result_id": "result-8abe55d561fb9919bb617f0a",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    },
+    {
+      "correction": null,
+      "game_id": "2026_01_DEN_KC",
+      "grade": "PENDING",
+      "lane_key": "value",
+      "official_score": null,
+      "official_source_product_sha256": "3d4c4bba382ef5c7510cd12c22fd7fa2dc96ce69786f7bfbcd810e97eba3bbe0",
+      "official_source_publication_id": "publication-3d4c4bba382ef5c7510cd12c",
+      "price_used_for_scoring": -112,
+      "realized_units": null,
+      "result_id": "result-0bea97fbdceed54a241e236d",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    }
+  ],
+  "portfolio_results": [
+    {
+      "game_id": "2026_01_WAS_PHI",
+      "grade": "PENDING",
+      "lane_keys": [
+        "hit_rate"
+      ],
+      "portfolio_entry_id": "portfolio-9a4307b99dc3ac9b5ebbce93",
+      "price_used_for_scoring": -245,
+      "realized_units": null,
+      "units_risked": 0.25
+    },
+    {
+      "game_id": "2026_01_GB_MIN",
+      "grade": "PENDING",
+      "lane_keys": [
+        "balanced"
+      ],
+      "portfolio_entry_id": "portfolio-47354bc4005b381ae1e06fda",
+      "price_used_for_scoring": -126,
+      "realized_units": null,
+      "units_risked": 0.75
+    },
+    {
+      "game_id": "2026_01_DEN_KC",
+      "grade": "PENDING",
+      "lane_keys": [
+        "hit_rate"
+      ],
+      "portfolio_entry_id": "portfolio-f84360cec75ad163f1de7eaf",
+      "price_used_for_scoring": 112,
+      "realized_units": null,
+      "units_risked": 0.5
+    },
+    {
+      "game_id": "2026_01_DEN_KC",
+      "grade": "PENDING",
+      "lane_keys": [
+        "balanced",
+        "value"
+      ],
+      "portfolio_entry_id": "portfolio-dee21f50ee5e9a954f78456c",
+      "price_used_for_scoring": -112,
+      "realized_units": null,
+      "units_risked": 0.75
+    }
+  ],
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_RESULT_V1",
+  "season": 2026,
+  "settlement_status": "PENDING",
+  "week": 1
+}

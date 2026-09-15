@@ -1,0 +1,60 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "card_churn": {
+    "balanced": 2,
+    "hit_rate": 3,
+    "value": 2
+  },
+  "episode_count": 10,
+  "interpretation": "DESCRIPTIVE_PROSPECTIVE_EVIDENCE_ONLY_NO_RETUNING",
+  "lanes": {
+    "balanced": {
+      "hit_rate": null,
+      "losses": 0,
+      "net_units": 0,
+      "pushes": 0,
+      "roi": null,
+      "settled_wagers": 0,
+      "units_risked": 0,
+      "voids": 0,
+      "wins": 0
+    },
+    "hit_rate": {
+      "hit_rate": null,
+      "losses": 0,
+      "net_units": 0,
+      "pushes": 0,
+      "roi": null,
+      "settled_wagers": 0,
+      "units_risked": 0,
+      "voids": 0,
+      "wins": 0
+    },
+    "value": {
+      "hit_rate": null,
+      "losses": 0,
+      "net_units": 0,
+      "pushes": 0,
+      "roi": null,
+      "settled_wagers": 0,
+      "units_risked": 0,
+      "voids": 0,
+      "wins": 0
+    }
+  },
+  "overlap_count": 1,
+  "portfolio": {
+    "hit_rate": null,
+    "losses": 0,
+    "net_units": 0,
+    "pushes": 0,
+    "roi": null,
+    "settled_wagers": 0,
+    "units_risked": 0,
+    "voids": 0,
+    "wins": 0
+  },
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_SUMMARY_V1",
+  "season": 2026,
+  "week": 1
+}

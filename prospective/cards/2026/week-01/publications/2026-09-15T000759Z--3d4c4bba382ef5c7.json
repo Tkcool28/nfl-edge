@@ -1,0 +1,255 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "capture_mode": "NATIVE_PROSPECTIVE",
+  "creation_provenance": {
+    "provider_calls": 0,
+    "source": "CANONICAL_PUBLISHED_PRODUCT",
+    "user_specific_data_included": false
+  },
+  "field_availability": {
+    "backend_user_overlay": "EXCLUDED_USER_SPECIFIC_DATA",
+    "evaluator_probability": "NOT_EXPOSED_BY_CANONICAL_PRODUCT_V1"
+  },
+  "lanes": {
+    "balanced": {
+      "american_odds": -112,
+      "away_team": "DEN",
+      "book": "DRAFTKINGS",
+      "canonical_headline": {
+        "american_odds": -112,
+        "book": "DRAFTKINGS",
+        "ev": 0.018500168662506256,
+        "game_id": "2026_01_DEN_KC",
+        "lane": "BALANCED",
+        "line": 2.5,
+        "market": "SPREAD",
+        "market_probability": 0.48605192232383504,
+        "matchup": {
+          "away_team": "DEN",
+          "home_team": "KC"
+        },
+        "model_probability": 0.5055145196842267,
+        "play_through": {
+          "line": 2.5,
+          "price_american": -115
+        },
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "selection": "DEN",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5055145196842267,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.018500168662506256,
+      "exact_offer_identity_id": "offer-dee21f50ee5e9a954f78456c",
+      "game_id": "2026_01_DEN_KC",
+      "home_team": "KC",
+      "kickoff_at_utc": "2026-09-15T00:15:00Z",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "line": 2.5,
+      "logical_recommendation_id": "logical-3504b02093b1857ff17275c9",
+      "market": "SPREAD",
+      "market_probability": 0.48605192232383504,
+      "model_probability": 0.5055145196842267,
+      "normalized_selection": "DEN",
+      "normalized_side": "away",
+      "play_through": {
+        "line": 2.5,
+        "price_american": -115
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.75,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "DEN",
+      "selector_version": "balanced-price-bounded-v2",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5055145196842267,
+      "value_at": null,
+      "wager_identity_id": "wager-9ea78065571a601f548ca67c",
+      "warnings": []
+    },
+    "hit_rate": {
+      "american_odds": 112,
+      "away_team": "DEN",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": 112,
+        "book": "FANDUEL",
+        "ev": 0.008306883104245544,
+        "game_id": "2026_01_DEN_KC",
+        "lane": "HIT_RATE",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.465165228372974,
+        "matchup": {
+          "away_team": "DEN",
+          "home_team": "KC"
+        },
+        "model_probability": 0.6384820779345983,
+        "play_through": {
+          "line": null,
+          "price_american": 109
+        },
+        "recommended_units": 0.5,
+        "reliability": "MEDIUM",
+        "selection": "DEN",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5518236531537861,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.008306883104245544,
+      "exact_offer_identity_id": "offer-f84360cec75ad163f1de7eaf",
+      "game_id": "2026_01_DEN_KC",
+      "home_team": "KC",
+      "kickoff_at_utc": "2026-09-15T00:15:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "line": null,
+      "logical_recommendation_id": "logical-f15479ffb3c1fdfcdda6db0e",
+      "market": "MONEYLINE",
+      "market_probability": 0.465165228372974,
+      "model_probability": 0.6384820779345983,
+      "normalized_selection": "DEN",
+      "normalized_side": "away",
+      "play_through": {
+        "line": null,
+        "price_american": 109
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.5,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "DEN",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5518236531537861,
+      "value_at": null,
+      "wager_identity_id": "wager-833d1ce7bed23b34328c1a80",
+      "warnings": []
+    },
+    "value": {
+      "american_odds": -112,
+      "away_team": "DEN",
+      "book": "DRAFTKINGS",
+      "canonical_headline": {
+        "american_odds": -112,
+        "book": "DRAFTKINGS",
+        "ev": 0.018500168662506256,
+        "game_id": "2026_01_DEN_KC",
+        "lane": "VALUE",
+        "line": 2.5,
+        "market": "SPREAD",
+        "market_probability": 0.48605192232383504,
+        "matchup": {
+          "away_team": "DEN",
+          "home_team": "KC"
+        },
+        "model_probability": 0.5055145196842267,
+        "play_through": {
+          "line": 2.5,
+          "price_american": -115
+        },
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "selection": "DEN",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5055145196842267,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.018500168662506256,
+      "exact_offer_identity_id": "offer-dee21f50ee5e9a954f78456c",
+      "game_id": "2026_01_DEN_KC",
+      "home_team": "KC",
+      "kickoff_at_utc": "2026-09-15T00:15:00Z",
+      "lane": "VALUE",
+      "lane_key": "value",
+      "line": 2.5,
+      "logical_recommendation_id": "logical-2c7383615afdb1a332d90eab",
+      "market": "SPREAD",
+      "market_probability": 0.48605192232383504,
+      "model_probability": 0.5055145196842267,
+      "normalized_selection": "DEN",
+      "normalized_side": "away",
+      "play_through": {
+        "line": 2.5,
+        "price_american": -115
+      },
+      "portfolio_duplicate_of_lane": "balanced",
+      "portfolio_stake_suppressed_reason": "DUPLICATE_EXACT_OFFER",
+      "recommended_units": 0.75,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "DEN",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5055145196842267,
+      "value_at": null,
+      "wager_identity_id": "wager-8af04591a683a0664b8e5b20",
+      "warnings": []
+    }
+  },
+  "product_freshness": {
+    "age_seconds": 0.0,
+    "observed_at_utc": "2026-09-15T00:07:59Z",
+    "state": "FRESH",
+    "threshold_seconds": 43200.0
+  },
+  "product_generated_at_utc": "2026-09-15T00:07:59Z",
+  "product_stale": false,
+  "product_warnings": [
+    "15 canonical Week 1 game(s) lack a provider event."
+  ],
+  "publication_id": "publication-3d4c4bba382ef5c7510cd12c",
+  "published_at_utc": "2026-09-15T00:07:59.597039Z",
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1",
+  "season": 2026,
+  "source_commit_sha": null,
+  "source_product_sha256": "3d4c4bba382ef5c7510cd12c22fd7fa2dc96ce69786f7bfbcd810e97eba3bbe0",
+  "source_product_version": "live-2026-week1-product-v1",
+  "source_provenance": {
+    "evaluator_versions": {
+      "moneyline": "ml_v4",
+      "spread": "spread_v3",
+      "total": "total_v3"
+    },
+    "football_data_version": "entering-2026:ab8458a6da5955481c1fae11",
+    "market_snapshot_version": "live-market:5de5517c3d3805a71f5659a3",
+    "model_versions": {
+      "expected_margin": "expected-margin-v1-stable",
+      "qb_elo": "qb-elo-v1.0.0",
+      "ridge_totals_r4": "ridge-totals-r4-alpha100",
+      "xgboost_v2": "post-v5-v2-conservative-adaptive-tail"
+    },
+    "prediction_as_of_utc": "2026-09-15T00:05:03.459439Z",
+    "qb_snapshot_version": "sleeper-scheduled-20260915T000001Z-8d433bdf",
+    "selector_versions": {
+      "balanced": "balanced-price-bounded-v2",
+      "hit_rate": "v1",
+      "value": "v1"
+    }
+  },
+  "source_week_last_kickoff_at_utc": "2026-09-15T00:15:00Z",
+  "week": 1
+}
