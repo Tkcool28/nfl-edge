@@ -1,4 +1,5 @@
 """Materialize the active 2026 NFL regular-season schedule from nflverse."""
+
 from __future__ import annotations
 
 import csv
@@ -13,17 +14,13 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-from .schedule_2026 import EXPECTED_TEAMS, LiveScheduleError, rollover_at_utc, validate_schedule
+from .nflverse_2026_identity import NFLVerse2026IdentityError, canonical_team
+from .schedule_2026 import LiveScheduleError, rollover_at_utc, validate_schedule
+from .venue_structure_2026 import VenueStructure2026Error, structure_for_blank_roof
 
 NFLVERSE_GAMES_URL = "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv"
 SOURCE_NAME = "nflverse/nfldata games.csv"
 EASTERN = ZoneInfo("America/New_York")
-
-# Source-specific aliases are normalized at the nflverse ingestion seam. The
-# canonical schedule contract remains strict and never accepts source aliases.
-NFLVERSE_TEAM_ALIASES = {
-    "LA": "LAR",
-}
 
 
 class ScheduleMaterializationError(RuntimeError):
@@ -48,13 +45,10 @@ def _required(row: Mapping[str, Any], field: str) -> str:
 
 
 def _canonical_team(row: Mapping[str, Any], field: str) -> str:
-    source = _required(row, field).upper()
-    canonical = NFLVERSE_TEAM_ALIASES.get(source, source)
-    if canonical not in EXPECTED_TEAMS:
-        raise ScheduleMaterializationError(
-            f"unsupported nflverse team code {source!r} in {field}"
-        )
-    return canonical
+    try:
+        return canonical_team(_required(row, field), field=field)
+    except NFLVerse2026IdentityError as exc:
+        raise ScheduleMaterializationError(str(exc)) from exc
 
 
 def _integer(row: Mapping[str, Any], field: str) -> int:
@@ -71,14 +65,22 @@ def _kickoff_utc(row: Mapping[str, Any]) -> str:
     try:
         local = datetime.fromisoformat(f"{gameday}T{gametime}").replace(tzinfo=EASTERN)
     except ValueError as exc:
-        raise ScheduleMaterializationError(
-            f"invalid nflverse gameday/gametime: {gameday} {gametime}"
-        ) from exc
+        raise ScheduleMaterializationError(f"invalid nflverse gameday/gametime: {gameday} {gametime}") from exc
     return local.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
 def _roof(row: Mapping[str, Any]) -> tuple[str | None, str]:
-    value = _required(row, "roof").lower()
+    value = str(row.get("roof") or "").strip().lower()
+    if not value:
+        try:
+            structure = structure_for_blank_roof(row)
+        except VenueStructure2026Error as exc:
+            raise ScheduleMaterializationError(str(exc)) from exc
+        if structure == "OUTDOOR":
+            return "outdoors", structure
+        if structure == "FIXED":
+            return "dome", structure
+        return None, "RETRACTABLE"
     if value == "outdoors":
         return "outdoors", "OUTDOOR"
     if value == "dome":
@@ -150,9 +152,7 @@ def build_week_schedule(
         "context_source": SOURCE_NAME,
         "context_source_url": NFLVERSE_GAMES_URL,
         "context_verified_at_utc": observed_at_utc,
-        "context_fields": [
-            "away_rest", "home_rest", "roof", "surface", "stadium_id", "stadium"
-        ],
+        "context_fields": ["away_rest", "home_rest", "roof", "surface", "stadium_id", "stadium"],
         "market_fields_consumed": [],
         "games": games,
     }
@@ -173,9 +173,7 @@ def choose_active_schedule(
     candidates: list[dict[str, Any]] = []
     for week in range(1, 19):
         try:
-            payload = build_week_schedule(
-                rows, season=season, week=week, observed_at_utc=observed_at_utc
-            )
+            payload = build_week_schedule(rows, season=season, week=week, observed_at_utc=observed_at_utc)
         except ScheduleMaterializationError as exc:
             if "has no" in str(exc):
                 continue
@@ -183,9 +181,7 @@ def choose_active_schedule(
         if rollover_at_utc(payload) <= now:
             candidates.append(payload)
     if not candidates:
-        raise ScheduleMaterializationError(
-            f"no {season} regular-season week is active at {active_as_of_utc}"
-        )
+        raise ScheduleMaterializationError(f"no {season} regular-season week is active at {active_as_of_utc}")
     return max(candidates, key=lambda payload: int(payload["week"]))
 
 

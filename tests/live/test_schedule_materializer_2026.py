@@ -78,3 +78,28 @@ def test_canonical_schedule_contract_still_rejects_raw_source_alias() -> None:
 
     with pytest.raises(LiveScheduleError, match="invalid canonical teams"):
         validate_schedule(payload)
+
+
+@pytest.mark.parametrize(
+    ("stadium_id", "stadium", "expected_type", "expected_structure"),
+    [
+        ("RIO00", "Maracana Stadium", "outdoors", "OUTDOOR"),
+        ("DET00", "Ford Field", "dome", "FIXED"),
+        ("ATL97", "Mercedes-Benz Stadium", None, "RETRACTABLE"),
+    ],
+)
+def test_blank_nflverse_roof_uses_audited_venue_structure(
+    stadium_id: str, stadium: str, expected_type: str | None, expected_structure: str
+) -> None:
+    row = _row()
+    row.update(stadium_id=stadium_id, stadium=stadium, roof="")
+    game = build_week_schedule([row], season=2026, week=2, observed_at_utc="2026-09-15T21:00:00Z")["games"][0]
+    assert game["roof_type"] == expected_type
+    assert game["roof_structure"] == expected_structure
+
+
+def test_blank_roof_unknown_stadium_fails_closed() -> None:
+    row = _row()
+    row.update(stadium_id="UNKNOWN", stadium="Unknown Stadium", roof="")
+    with pytest.raises(ScheduleMaterializationError, match="unknown stadium_id"):
+        build_week_schedule([row], season=2026, week=2, observed_at_utc="2026-09-15T21:00:00Z")
