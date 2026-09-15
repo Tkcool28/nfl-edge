@@ -55,7 +55,8 @@ jobs:
             src/nfl_edge/features/totals_v1/game_observations.py \
             src/nfl_edge/live/scorer_2026.py \
             src/nfl_edge/live/schedule_materializer_2026.py \
-            scripts/run_2026_live_football_scoring_v1.py
+            scripts/run_2026_live_football_scoring_v1.py \
+            scripts/verify_live_2026_preprovider_v1.py
 
       - name: Focused live football tests
         run: |
