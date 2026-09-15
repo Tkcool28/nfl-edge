@@ -148,10 +148,12 @@ def expected_credit_cost(
 def build_request_plan(schedule: Mapping[str, Any]) -> dict[str, Any]:
     """Build the one bounded request without including the API key."""
     games = list(schedule.get("games") or [])
-    if int(schedule.get("season", -1)) != 2026 or int(schedule.get("week", -1)) != 1:
-        raise LiveMarketError("live market request requires the canonical 2026 Week 1 schedule")
-    if len(games) != 16:
-        raise LiveMarketError(f"canonical Week 1 schedule must contain 16 games, got {len(games)}")
+    season = int(schedule.get("season", -1))
+    week = int(schedule.get("week", -1))
+    if season != 2026 or not 1 <= week <= 18:
+        raise LiveMarketError("live market request requires a canonical 2026 regular-season schedule")
+    if not games:
+        raise LiveMarketError("canonical weekly schedule must contain at least one game")
     kickoffs = sorted(_parse_utc(str(game["scheduled_start_utc"])) for game in games)
     pad = MATCH_KICKOFF_TOLERANCE_SECONDS
     start = datetime.fromtimestamp(kickoffs[0].timestamp() - pad, tz=timezone.utc)
@@ -214,7 +216,8 @@ def acquire_live_response(
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
     compact = acquired.replace("-", "").replace(":", "")
-    response_path = out / f"odds-api-nfl-week1-{compact}-{digest[:12]}.json"
+    week = int(schedule["week"])
+    response_path = out / f"odds-api-nfl-week{week}-{compact}-{digest[:12]}.json"
     metadata_path = response_path.with_suffix(".meta.json")
 
     # Persist the exact successful body before parsing/normalization.  A parser
@@ -603,8 +606,8 @@ def normalize_market_snapshot(
         "acquired_at_utc": acquired_at_utc,
         "response_sha256": response_sha256,
         "sport": SPORT_KEY,
-        "season": 2026,
-        "week": 1,
+        "season": int(schedule["season"]),
+        "week": int(schedule["week"]),
         "books": list(BOOK_MAP.values()),
         "market_types": ["MONEYLINE", "SPREAD", "TOTAL"],
         "credits_consumed": credits_consumed,
