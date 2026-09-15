@@ -209,8 +209,13 @@ def rollover_at_utc(payload: dict[str, Any]) -> datetime:
     return datetime.combine(rollover_date, ROLLOVER_LOCAL_TIME, tzinfo=DENVER).astimezone(timezone.utc)
 
 
-def _schedule_files(repository_root: Path, *, season: int) -> list[tuple[Path, dict[str, Any]]]:
-    base = repository_root / "data" / "live" / str(season)
+def _schedule_files(
+    repository_root: Path,
+    *,
+    season: int,
+    schedule_root: Path | None = None,
+) -> list[tuple[Path, dict[str, Any]]]:
+    base = schedule_root if schedule_root is not None else repository_root / "data" / "live" / str(season)
     found: list[tuple[Path, dict[str, Any]]] = []
     if not base.is_dir():
         return found
@@ -230,10 +235,13 @@ def resolve_active_schedule(
     *,
     prediction_as_of_utc: str,
     season: int = 2026,
+    schedule_root: str | Path | None = None,
 ) -> ActiveSchedule:
     """Resolve the active week and fail closed when a Tuesday rollover is missing."""
     now = _utc(prediction_as_of_utc, field="prediction_as_of_utc")
-    candidates = _schedule_files(Path(repository_root), season=season)
+    root = Path(repository_root)
+    external_root = None if schedule_root is None else Path(schedule_root)
+    candidates = _schedule_files(root, season=season, schedule_root=external_root)
     eligible = [
         (path, payload, rollover_at_utc(payload))
         for path, payload in candidates
@@ -247,7 +255,8 @@ def resolve_active_schedule(
     if week < 18:
         next_rollover = rollover + timedelta(days=7)
         if now >= next_rollover:
-            next_path = Path(repository_root) / "data" / "live" / str(season) / f"week{week + 1}_schedule_v1.json"
+            base = external_root if external_root is not None else root / "data" / "live" / str(season)
+            next_path = base / f"week{week + 1}_schedule_v1.json"
             raise LiveScheduleError(
                 f"Week {week + 1} schedule is required after Tuesday rollover; missing or not eligible: {next_path}"
             )
