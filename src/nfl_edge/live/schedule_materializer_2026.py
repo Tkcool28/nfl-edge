@@ -13,11 +13,17 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-from .schedule_2026 import LiveScheduleError, rollover_at_utc, validate_schedule
+from .schedule_2026 import EXPECTED_TEAMS, LiveScheduleError, rollover_at_utc, validate_schedule
 
 NFLVERSE_GAMES_URL = "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv"
 SOURCE_NAME = "nflverse/nfldata games.csv"
 EASTERN = ZoneInfo("America/New_York")
+
+# Source-specific aliases are normalized at the nflverse ingestion seam. The
+# canonical schedule contract remains strict and never accepts source aliases.
+NFLVERSE_TEAM_ALIASES = {
+    "LA": "LAR",
+}
 
 
 class ScheduleMaterializationError(RuntimeError):
@@ -39,6 +45,16 @@ def _required(row: Mapping[str, Any], field: str) -> str:
     if not value:
         raise ScheduleMaterializationError(f"nflverse row is missing required {field}")
     return value
+
+
+def _canonical_team(row: Mapping[str, Any], field: str) -> str:
+    source = _required(row, field).upper()
+    canonical = NFLVERSE_TEAM_ALIASES.get(source, source)
+    if canonical not in EXPECTED_TEAMS:
+        raise ScheduleMaterializationError(
+            f"unsupported nflverse team code {source!r} in {field}"
+        )
+    return canonical
 
 
 def _integer(row: Mapping[str, Any], field: str) -> int:
@@ -99,8 +115,8 @@ def build_week_schedule(
 
     games: list[dict[str, Any]] = []
     for row in selected:
-        away = _required(row, "away_team")
-        home = _required(row, "home_team")
+        away = _canonical_team(row, "away_team")
+        home = _canonical_team(row, "home_team")
         roof_type, roof_structure = _roof(row)
         location = str(row.get("location") or "").strip().lower()
         games.append(
