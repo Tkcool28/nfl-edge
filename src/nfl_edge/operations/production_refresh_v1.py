@@ -30,7 +30,9 @@ from nfl_edge.live.markets_2026 import (
 )
 from nfl_edge.live.product_2026 import build_product_snapshot, product_snapshot_bytes
 from nfl_edge.live.product_state_2026 import load_entering_2026_product_state
+from nfl_edge.live.evidence_2026 import load_settled_evidence
 from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash, score_week
+from nfl_edge.live.state_advancement_2026 import advance_entering_state_through_settled_weeks
 from nfl_edge.live.sleeper_qb import DEFAULT_OVERRIDES, SleeperExpectedQBResolver, SleeperQBSource, load_overrides
 from nfl_edge.live.schedule_2026 import resolve_active_schedule
 from nfl_edge.prospective.runtime_v1 import capture_published_product
@@ -73,6 +75,7 @@ class RefreshConfig:
     market_response: Path | None = None
     market_metadata: Path | None = None
     prospective_dir: Path | None = None\n    schedule_root: Path | None = None
+    evidence_root: Path | None = None
 
 
 def _utc_now() -> str:
@@ -202,6 +205,8 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
         "schedule_version": None,
         "schedule_path": None,
         "schedule_rollover_at_utc": None,
+        "completed_2026_blocks": [],
+        "football_state_version": None,
         "sleeper_snapshot_id": None,
         "prediction_as_of_utc": config.prediction_as_of_utc,
         "football_snapshot_sha256": None,
@@ -280,6 +285,29 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
             except Exception as exc:
                 return finish(RefreshOutcome.SCHEDULE_NOT_READY, exc)
 
+            advanced_state = None
+            prior_live_inputs = None
+            if active_schedule.week > 1:
+                try:
+                    if config.evidence_root is None:
+                        raise RuntimeError(
+                            "active Week > 1 requires --evidence-root with settled prior-week evidence"
+                        )
+                    evidence = load_settled_evidence(config.evidence_root)
+                    advanced_state = advance_entering_state_through_settled_weeks(
+                        repository_root=config.repository_root,
+                        active_schedule_path=active_schedule.path,
+                        evidence=evidence,
+                    )
+                    prior_live_inputs = evidence.feature_inputs()
+                    summary.update(
+                        completed_2026_blocks=list(advanced_state.completed_2026_blocks),
+                        football_state_version=advanced_state.state_version,
+                    )
+                    _atomic_json(run_dir / "advanced-football-state.json", advanced_state.summary())
+                except Exception as exc:
+                    return finish(RefreshOutcome.FOOTBALL_STATE_NOT_READY, exc)
+
             try:
                 sleeper = _validate_sleeper(config)
                 summary["sleeper_snapshot_id"] = sleeper.snapshot_id
@@ -307,6 +335,8 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                     prediction_as_of_utc=config.prediction_as_of_utc,
                     resolver=SleeperExpectedQBResolver(sleeper, overrides=overrides),
                     schedule_path=schedule_path,
+                    entering_state=advanced_state,
+                    prior_live_inputs=prior_live_inputs,
                 )
                 football_path.parent.mkdir(parents=True, exist_ok=True)
                 football_path.write_bytes(canonical_snapshot_bytes(football))
@@ -474,6 +504,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--prospective-dir", type=Path)
     parser.add_argument("--prediction-as-of-utc", default=_utc_now())
     parser.add_argument("--repository-root", type=Path, default=Path(__file__).resolve().parents[3])\n    parser.add_argument("--schedule-root", type=Path)
+    parser.add_argument("--evidence-root", type=Path)
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--live", action="store_true")
     source.add_argument("--market-response", type=Path)
@@ -490,6 +521,7 @@ def main(argv: list[str] | None = None) -> int:
             market_metadata=args.market_metadata,
             prospective_dir=args.prospective_dir,
             schedule_root=args.schedule_root,
+            evidence_root=args.evidence_root,
         )
     )
     print(json.dumps(summary, sort_keys=True))
