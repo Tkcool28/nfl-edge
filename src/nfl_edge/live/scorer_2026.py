@@ -10,6 +10,8 @@ from typing import Any, Mapping
 
 import polars as pl
 
+from nfl_edge.features.pipeline import FeatureInputs
+
 from nfl_edge.contracts.common_v1 import MODEL_OUTPUT_STATUSES, SUPPORT_STATES
 from nfl_edge.contracts.runtime_interfaces_v1 import LiveScorerRequest
 from nfl_edge.live.features_2026 import (
@@ -217,6 +219,7 @@ def score_week(
         prediction_as_of_utc=prediction_as_of_utc,
         resolver=resolver,
         schedule_path=schedule_path,
+        prior_live_inputs=prior_live_inputs,
     )
     active_roof_resolver = roof_resolver or RoofResolver.from_file(
         root / DEFAULT_ROOF_STATUS_PATH
@@ -619,6 +622,7 @@ def score_week1(
     resolver: SleeperExpectedQBResolver,
     entering_state: Entering2026FootballState | None = None,
     roof_resolver: RoofResolver | None = None,
+    prior_live_inputs: FeatureInputs | None = None,
 ) -> dict[str, Any]:
     """Backward-compatible frozen Week 1 scorer wrapper."""
     return score_week(
@@ -628,4 +632,5 @@ def score_week1(
         schedule_path="data/live/2026/week1_schedule_v1.json",
         entering_state=entering_state,
         roof_resolver=roof_resolver,
+        prior_live_inputs=prior_live_inputs,
     )
