@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import tempfile
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -18,10 +19,9 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Iterator
 
-import re
-
 from nfl_edge.backend.publication import ProductStore
 from nfl_edge.contracts.live_product_v1 import validate_product_snapshot
+from nfl_edge.live.evidence_2026 import load_settled_evidence
 from nfl_edge.live.markets_2026 import (
     acquire_live_response,
     load_capture,
@@ -30,18 +30,19 @@ from nfl_edge.live.markets_2026 import (
 )
 from nfl_edge.live.product_2026 import build_product_snapshot, product_snapshot_bytes
 from nfl_edge.live.product_state_2026 import load_entering_2026_product_state
-from nfl_edge.live.evidence_2026 import load_settled_evidence
-from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash, score_week
-from nfl_edge.live.state_advancement_2026 import advance_entering_state_through_settled_weeks
-from nfl_edge.live.sleeper_qb import DEFAULT_OVERRIDES, SleeperExpectedQBResolver, SleeperQBSource, load_overrides
 from nfl_edge.live.schedule_2026 import resolve_active_schedule
+from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash, score_week
+from nfl_edge.live.sleeper_qb import DEFAULT_OVERRIDES, SleeperExpectedQBResolver, SleeperQBSource, load_overrides
+from nfl_edge.live.state_advancement_2026 import advance_entering_state_through_settled_weeks
 from nfl_edge.prospective.runtime_v1 import capture_published_product
 
 
 class RefreshOutcome(str, Enum):
     SUCCESS = "SUCCESS"
     LOCKED = "LOCKED"
-    SCHEDULE_NOT_READY = "SCHEDULE_NOT_READY"\n    SLEEPER_NOT_READY = "SLEEPER_NOT_READY"
+    SCHEDULE_NOT_READY = "SCHEDULE_NOT_READY"
+    FOOTBALL_STATE_NOT_READY = "FOOTBALL_STATE_NOT_READY"
+    SLEEPER_NOT_READY = "SLEEPER_NOT_READY"
     SCORING_FAILED = "SCORING_FAILED"
     MARKET_ACQUISITION_FAILED = "MARKET_ACQUISITION_FAILED"
     MARKET_NORMALIZATION_FAILED = "MARKET_NORMALIZATION_FAILED"
@@ -52,7 +53,9 @@ class RefreshOutcome(str, Enum):
 EXIT_CODES = {
     RefreshOutcome.SUCCESS: 0,
     RefreshOutcome.LOCKED: 75,
-    RefreshOutcome.SCHEDULE_NOT_READY: 19,\n    RefreshOutcome.SLEEPER_NOT_READY: 20,
+    RefreshOutcome.SCHEDULE_NOT_READY: 19,
+    RefreshOutcome.FOOTBALL_STATE_NOT_READY: 20,
+    RefreshOutcome.SLEEPER_NOT_READY: 21,
     RefreshOutcome.SCORING_FAILED: 21,
     RefreshOutcome.MARKET_ACQUISITION_FAILED: 22,
     RefreshOutcome.MARKET_NORMALIZATION_FAILED: 23,
@@ -74,7 +77,8 @@ class RefreshConfig:
     live: bool
     market_response: Path | None = None
     market_metadata: Path | None = None
-    prospective_dir: Path | None = None\n    schedule_root: Path | None = None
+    prospective_dir: Path | None = None
+    schedule_root: Path | None = None
     evidence_root: Path | None = None
 
 
@@ -93,7 +97,9 @@ _REDACTED = "[REDACTED]"
 
 def _redact_value(value: Any) -> Any:
     if isinstance(value, dict):
-        return {key: (_REDACTED if _SECRET_KEY_RE.search(str(key)) else _redact_value(item)) for key, item in value.items()}
+        return {
+            key: (_REDACTED if _SECRET_KEY_RE.search(str(key)) else _redact_value(item)) for key, item in value.items()
+        }
     if isinstance(value, list):
         return [_redact_value(item) for item in value]
     if isinstance(value, str):
@@ -290,9 +296,7 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
             if active_schedule.week > 1:
                 try:
                     if config.evidence_root is None:
-                        raise RuntimeError(
-                            "active Week > 1 requires --evidence-root with settled prior-week evidence"
-                        )
+                        raise RuntimeError("active Week > 1 requires --evidence-root with settled prior-week evidence")
                     evidence = load_settled_evidence(config.evidence_root)
                     advanced_state = advance_entering_state_through_settled_weeks(
                         repository_root=config.repository_root,
@@ -324,9 +328,7 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                 return finish(RefreshOutcome.SLEEPER_NOT_READY, exc)
 
             football_path = (
-                run_dir
-                / "football"
-                / f"NFL_EDGE_{active_schedule.season}_WEEK{active_schedule.week}_FOOTBALL_V1.json"
+                run_dir / "football" / f"NFL_EDGE_{active_schedule.season}_WEEK{active_schedule.week}_FOOTBALL_V1.json"
             )
             try:
                 overrides = load_overrides(config.repository_root / DEFAULT_OVERRIDES)
@@ -366,11 +368,13 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                     # time and must never depend on the invocation as-of.
                     saved_ts = None
                     if config.market_metadata is not None and Path(config.market_metadata).is_file():
-                        saved_ts = str(json.loads(Path(config.market_metadata).read_text(encoding="utf-8")).get("acquired_at_utc") or "")
+                        saved_metadata = json.loads(Path(config.market_metadata).read_text(encoding="utf-8"))
+                        saved_ts = str(saved_metadata.get("acquired_at_utc") or "")
                     if not saved_ts and Path(config.market_response).with_suffix(".meta.json").is_file():
-                        saved_ts = str(
-                            json.loads(Path(config.market_response).with_suffix(".meta.json").read_text(encoding="utf-8")).get("acquired_at_utc") or ""
+                        sidecar_metadata = json.loads(
+                            Path(config.market_response).with_suffix(".meta.json").read_text(encoding="utf-8")
                         )
+                        saved_ts = str(sidecar_metadata.get("acquired_at_utc") or "")
                     if saved_ts:
                         capture_metadata["captured_acquired_at_utc"] = saved_ts
                         capture_metadata["acquired_at_utc"] = saved_ts
@@ -409,7 +413,9 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                 market_path.parent.mkdir(parents=True, exist_ok=True)
                 market_path.write_bytes(market_snapshot_bytes(market))
                 summary["credits_consumed"] = metadata.get("credits_consumed")
-                summary["market_snapshot_version"] = market.get("market_snapshot_version") or market.get("snapshot_version")
+                summary["market_snapshot_version"] = market.get("market_snapshot_version") or market.get(
+                    "snapshot_version"
+                )
                 summary["market_snapshot_sha256"] = market["snapshot_sha256"]
             except Exception as exc:
                 return finish(RefreshOutcome.MARKET_NORMALIZATION_FAILED, exc)
@@ -470,9 +476,7 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                         published_at_utc=_utc_now(),
                     )
                     if capture["source_product_sha256"] != summary["product_sha256"]:
-                        raise RuntimeError(
-                            "prospective source product hash did not match published product hash"
-                        )
+                        raise RuntimeError("prospective source product hash did not match published product hash")
                     summary.update(
                         prospective_capture_result=str(capture["status"]),
                         prospective_publication_id=str(capture["publication_id"]),
@@ -503,7 +507,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--publication-dir", type=Path, required=True)
     parser.add_argument("--prospective-dir", type=Path)
     parser.add_argument("--prediction-as-of-utc", default=_utc_now())
-    parser.add_argument("--repository-root", type=Path, default=Path(__file__).resolve().parents[3])\n    parser.add_argument("--schedule-root", type=Path)
+    parser.add_argument("--repository-root", type=Path, default=Path(__file__).resolve().parents[3])
+    parser.add_argument("--schedule-root", type=Path)
     parser.add_argument("--evidence-root", type=Path)
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--live", action="store_true")

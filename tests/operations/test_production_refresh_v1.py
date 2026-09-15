@@ -7,8 +7,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from nfl_edge.operations import production_refresh_v1 as refresh
 from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash
+from nfl_edge.operations import production_refresh_v1 as refresh
 
 
 class _FreshSleeper:
@@ -36,8 +36,6 @@ def _config(tmp_path: Path, *, live: bool = True) -> refresh.RefreshConfig:
     )
 
 
-
-
 def _wire_active_schedule(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, week: int = 1) -> None:
     path = tmp_path / "data" / "live" / "2026" / f"week{week}_schedule_v1.json"
     monkeypatch.setattr(
@@ -51,6 +49,7 @@ def _wire_active_schedule(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, we
             rollover_at_utc="2026-09-08T12:00:00Z",
         ),
     )
+
 
 def _wire_success(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, calls: list[str]) -> None:
     _wire_active_schedule(monkeypatch, tmp_path)
@@ -125,8 +124,6 @@ def test_success_orders_stages_and_writes_secret_safe_artifacts(
     status = json.loads((tmp_path / "runs" / "latest-status.json").read_text())
     assert status["outcome"] == "SUCCESS"
     assert "ODDS_API_KEY" not in json.dumps(status)
-
-
 
 
 def test_prospective_capture_runs_only_after_successful_publication(
@@ -260,10 +257,7 @@ def test_saved_response_replay_never_calls_provider(monkeypatch: pytest.MonkeyPa
     assert summary["provider_request_count"] == 0
 
 
-
-def test_missing_active_week_fails_before_sleeper_or_provider(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
+def test_missing_active_week_fails_before_sleeper_or_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     calls: list[str] = []
     monkeypatch.setattr(
         refresh,
@@ -296,6 +290,7 @@ def test_week2_requires_settled_evidence_before_sleeper_or_provider(
     assert calls == []
     assert summary["provider_request_count"] == 0
     assert summary["week"] == 2
+
 
 def test_sleeper_failure_prevents_scoring_and_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     calls: list[str] = []
@@ -378,7 +373,6 @@ def test_replay_metadata_and_error_messages_are_secret_redacted(
 ) -> None:
     calls: list[str] = []
     _wire_success(monkeypatch, tmp_path, calls)
-    saved = tmp_path / "saved-response.json"
     meta = tmp_path / "saved-response.meta.json"
     meta.write_text(
         json.dumps(
@@ -430,7 +424,10 @@ def test_replay_preserves_capture_timestamp_regardless_of_cli_as_of(
     calls: list[str] = []
     _wire_success(monkeypatch, tmp_path, calls)
     meta = tmp_path / "saved-response.meta.json"
-    meta.write_text(json.dumps({"acquired_at_utc": "2026-09-08T23:00:00Z", "response_sha256": "b" * 64}), encoding="utf-8")
+    meta.write_text(
+        json.dumps({"acquired_at_utc": "2026-09-08T23:00:00Z", "response_sha256": "b" * 64}),
+        encoding="utf-8",
+    )
 
     captured: dict[str, object] = {}
 
@@ -466,9 +463,7 @@ def test_replay_preserves_capture_timestamp_regardless_of_cli_as_of(
     assert captured["acquired_at_utc"] == "2026-09-08T23:00:00Z"
 
 
-def test_same_second_rerun_allocates_unique_run_directory(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
+def test_same_second_rerun_allocates_unique_run_directory(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     calls: list[str] = []
     _wire_success(monkeypatch, tmp_path, calls)
 

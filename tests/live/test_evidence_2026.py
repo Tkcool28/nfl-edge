@@ -7,6 +7,7 @@ from nfl_edge.live.evidence_2026 import (
     SettledActualQBResolver,
     SettledEvidenceError,
     _canonical_games,
+    _filter_stats,
     validate_settled_evidence,
 )
 
@@ -55,9 +56,7 @@ def test_settled_actual_qb_resolver_is_postgame_and_deterministic() -> None:
         games,
         observed_at_utc="2026-09-15T12:00:00Z",
     )
-    resolved = resolver.resolve_game(
-        {"game_id": "2026_01_NE_SEA", "home_team": "SEA", "away_team": "NE"}
-    )
+    resolved = resolver.resolve_game({"game_id": "2026_01_NE_SEA", "home_team": "SEA", "away_team": "NE"})
     assert resolved["home"].model_qb_state_id == "00-2222222"
     assert resolved["away"].model_qb_state_id == "00-1111111"
     assert resolved["home"].depth_designation == "POSTGAME_ACTUAL_STARTER"
@@ -66,15 +65,22 @@ def test_settled_actual_qb_resolver_is_postgame_and_deterministic() -> None:
 
 def test_evidence_requires_complete_team_and_pbp_coverage() -> None:
     games = _canonical_games([_schedule_row()], through_week=1)
-    team = pl.DataFrame([
-        {"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA"},
-    ])
-    qb = pl.DataFrame([
-        {
-            "game_id": "2026_01_NE_SEA", "season": 2026, "week": 1,
-            "team": "SEA", "player_id": "00-2222222",
-        }
-    ])
+    team = pl.DataFrame(
+        [
+            {"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA"},
+        ]
+    )
+    qb = pl.DataFrame(
+        [
+            {
+                "game_id": "2026_01_NE_SEA",
+                "season": 2026,
+                "week": 1,
+                "team": "SEA",
+                "player_id": "00-2222222",
+            }
+        ]
+    )
     pbp = pl.DataFrame({"game_id": ["2026_01_NE_SEA"]})
     with pytest.raises(SettledEvidenceError, match="team-stat coverage drift"):
         validate_settled_evidence(
@@ -84,3 +90,13 @@ def test_evidence_requires_complete_team_and_pbp_coverage() -> None:
             pbp=pbp,
             through_week=1,
         )
+
+
+def test_upstream_feature_schema_drift_fails_closed() -> None:
+    team = pl.DataFrame([{"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA"}])
+    with pytest.raises(SettledEvidenceError, match="team stats missing required columns"):
+        _filter_stats(team, game_ids={"2026_01_NE_SEA"}, kind="team")
+
+    player = team.with_columns(pl.lit("QB").alias("position"), pl.lit("qb").alias("player_id"))
+    with pytest.raises(SettledEvidenceError, match="player stats missing required columns"):
+        _filter_stats(player, game_ids={"2026_01_NE_SEA"}, kind="player")

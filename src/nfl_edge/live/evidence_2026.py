@@ -3,6 +3,7 @@
 This module deliberately separates postgame evidence from pregame scoring.
 Only fully completed REG weeks strictly before the active week are eligible.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -20,6 +21,7 @@ import requests
 
 from nfl_edge.contracts.runtime_interfaces_v1 import ExpectedQBResolution
 from nfl_edge.features.pipeline import FeatureInputs
+from nfl_edge.features.totals_v1.pbp_semantics import REQUIRED_PBP_COLUMNS
 from nfl_edge.live.schedule_materializer_2026 import (
     NFLVERSE_GAMES_URL,
     build_week_schedule,
@@ -28,18 +30,42 @@ from nfl_edge.live.schedule_materializer_2026 import (
 )
 
 PLAYER_STATS_URL = (
-    "https://github.com/nflverse/nflverse-data/releases/download/"
-    "stats_player/stats_player_week_2026.parquet"
+    "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2026.parquet"
 )
-TEAM_STATS_URL = (
-    "https://github.com/nflverse/nflverse-data/releases/download/"
-    "stats_team/stats_team_week_2026.parquet"
-)
-PBP_URL = (
-    "https://github.com/nflverse/nflverse-data/releases/download/"
-    "pbp/play_by_play_2026.parquet"
-)
+TEAM_STATS_URL = "https://github.com/nflverse/nflverse-data/releases/download/stats_team/stats_team_week_2026.parquet"
+PBP_URL = "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.parquet"
 EVIDENCE_SCHEMA = "nfl-edge-settled-2026-evidence-v1"
+
+# nflverse weekly team/player tables already use the frozen feature builders'
+# canonical names. Keep that direct mapping explicit, and reject an upstream
+# schema change instead of silently substituting null features.
+REQUIRED_TEAM_STAT_COLUMNS = frozenset(
+    {
+        "game_id",
+        "season",
+        "week",
+        "team",
+        "passing_epa",
+        "rushing_epa",
+        "passing_yards",
+        "rushing_yards",
+    }
+)
+REQUIRED_QB_STAT_COLUMNS = frozenset(
+    {
+        "game_id",
+        "season",
+        "week",
+        "team",
+        "player_id",
+        "position",
+        "attempts",
+        "sacks_suffered",
+        "passing_epa",
+        "passing_cpoe",
+        "passing_interceptions",
+    }
+)
 
 
 class SettledEvidenceError(RuntimeError):
@@ -67,7 +93,6 @@ class SettledSeasonEvidence:
         )
 
 
-
 class SettledActualQBResolver:
     """Postgame-only resolver for advancing future model state.
 
@@ -86,9 +111,7 @@ class SettledActualQBResolver:
         qb_id = str(row.get(f"{side}_qb_id") or "").strip()
         qb_name = str(row.get(f"{side}_qb_name") or "").strip()
         if not qb_id or not qb_name:
-            raise SettledEvidenceError(
-                f"settled QB identity missing for {game_id} {side} ({team})"
-            )
+            raise SettledEvidenceError(f"settled QB identity missing for {game_id} {side} ({team})")
         identity = f"{game_id}|{team}|{qb_id}|{self.observed_at_utc}".encode()
         provenance = "settled-actual-qb:" + hashlib.sha256(identity).hexdigest()[:24]
         return ExpectedQBResolution(
@@ -111,12 +134,8 @@ class SettledActualQBResolver:
     def resolve_game(self, game: Mapping[str, Any]) -> dict[str, Any]:
         game_id = str(game["game_id"])
         return {
-            "home": self._side(
-                game_id=game_id, team=str(game["home_team"]), side="home"
-            ),
-            "away": self._side(
-                game_id=game_id, team=str(game["away_team"]), side="away"
-            ),
+            "home": self._side(game_id=game_id, team=str(game["home_team"]), side="home"),
+            "away": self._side(game_id=game_id, team=str(game["away_team"]), side="away"),
             "overrides": [],
         }
 
@@ -199,10 +218,7 @@ def _write_json_atomic(path: Path, payload: Mapping[str, Any]) -> None:
 def _canonical_games(rows: list[Mapping[str, Any]], *, through_week: int) -> pl.DataFrame:
     selected: list[dict[str, Any]] = []
     for row in rows:
-        if (
-            str(row.get("season") or "") != "2026"
-            or str(row.get("game_type") or "").upper() != "REG"
-        ):
+        if str(row.get("season") or "") != "2026" or str(row.get("game_type") or "").upper() != "REG":
             continue
         week = int(float(str(row.get("week") or "0")))
         if week < 1 or week > through_week:
@@ -215,35 +231,35 @@ def _canonical_games(rows: list[Mapping[str, Any]], *, through_week: int) -> pl.
         home = str(row.get("home_team") or "").strip()
         if not away or not home:
             raise SettledEvidenceError("settled game is missing canonical teams")
-        selected.append({
-            "game_id": f"2026_{week:02d}_{away}_{home}",
-            "season": 2026,
-            "season_type": "REG",
-            "week": week,
-            "gameday": str(row.get("gameday") or "")[:10],
-            "home_team": home,
-            "away_team": away,
-            "home_score": int(float(str(home_score))),
-            "away_score": int(float(str(away_score))),
-            "target_available": True,
-            "target_margin": int(float(str(home_score))) - int(float(str(away_score))),
-            "target_home_win": int(float(str(home_score))) > int(float(str(away_score))),
-            "target_tie": int(float(str(home_score))) == int(float(str(away_score))),
-            "target_total_points": int(float(str(home_score))) + int(float(str(away_score))),
-            "home_qb_id": str(row.get("home_qb_id") or "").strip() or None,
-            "away_qb_id": str(row.get("away_qb_id") or "").strip() or None,
-            "home_qb_name": str(row.get("home_qb_name") or "").strip() or None,
-            "away_qb_name": str(row.get("away_qb_name") or "").strip() or None,
-            "roof_actual": str(row.get("roof") or "").strip().lower() or None,
-        })
+        selected.append(
+            {
+                "game_id": f"2026_{week:02d}_{away}_{home}",
+                "season": 2026,
+                "season_type": "REG",
+                "week": week,
+                "gameday": str(row.get("gameday") or "")[:10],
+                "home_team": home,
+                "away_team": away,
+                "home_score": int(float(str(home_score))),
+                "away_score": int(float(str(away_score))),
+                "target_available": True,
+                "target_margin": int(float(str(home_score))) - int(float(str(away_score))),
+                "target_home_win": int(float(str(home_score))) > int(float(str(away_score))),
+                "target_tie": int(float(str(home_score))) == int(float(str(away_score))),
+                "target_total_points": int(float(str(home_score))) + int(float(str(away_score))),
+                "home_qb_id": str(row.get("home_qb_id") or "").strip() or None,
+                "away_qb_id": str(row.get("away_qb_id") or "").strip() or None,
+                "home_qb_name": str(row.get("home_qb_name") or "").strip() or None,
+                "away_qb_name": str(row.get("away_qb_name") or "").strip() or None,
+                "roof_actual": str(row.get("roof") or "").strip().lower() or None,
+            }
+        )
     frame = pl.DataFrame(selected)
     if through_week == 0:
         return frame
     weeks = sorted(set(frame["week"].to_list())) if frame.height else []
     if weeks != list(range(1, through_week + 1)):
-        raise SettledEvidenceError(
-            f"settled 2026 game evidence has week gaps: expected 1..{through_week}, got {weeks}"
-        )
+        raise SettledEvidenceError(f"settled 2026 game evidence has week gaps: expected 1..{through_week}, got {weeks}")
     duplicates = frame.group_by("game_id").len().filter(pl.col("len") > 1)
     if duplicates.height:
         raise SettledEvidenceError("settled game evidence has duplicate game_id")
@@ -256,19 +272,14 @@ def _filter_stats(
     game_ids: set[str],
     kind: str,
 ) -> pl.DataFrame:
-    required = {"game_id", "season", "week", "team"}
+    required = REQUIRED_QB_STAT_COLUMNS if kind == "player" else REQUIRED_TEAM_STAT_COLUMNS
     missing = sorted(required - set(frame.columns))
     if missing:
         raise SettledEvidenceError(f"{kind} stats missing required columns: {missing}")
-    selected = frame.filter(
-        (pl.col("season") == 2026)
-        & pl.col("game_id").cast(pl.Utf8).is_in(sorted(game_ids))
-    )
+    selected = frame.filter((pl.col("season") == 2026) & pl.col("game_id").cast(pl.Utf8).is_in(sorted(game_ids)))
     if kind == "player":
         if "position" in selected.columns:
             selected = selected.filter(pl.col("position").cast(pl.Utf8).str.to_uppercase() == "QB")
-        if "player_id" not in selected.columns:
-            raise SettledEvidenceError("player stats missing player_id")
     return selected
 
 
@@ -289,23 +300,21 @@ def validate_settled_evidence(
         for team in (row["home_team"], row["away_team"])
     }
     actual_team_keys = set(
-        (str(row["game_id"]), str(row["team"]))
-        for row in team_stats.select("game_id", "team").iter_rows(named=True)
+        (str(row["game_id"]), str(row["team"])) for row in team_stats.select("game_id", "team").iter_rows(named=True)
     )
     if actual_team_keys != expected_team_keys:
         missing = sorted(expected_team_keys - actual_team_keys)
         extra = sorted(actual_team_keys - expected_team_keys)
-        raise SettledEvidenceError(
-            f"team-stat coverage drift: missing={missing[:5]} extra={extra[:5]}"
-        )
+        raise SettledEvidenceError(f"team-stat coverage drift: missing={missing[:5]} extra={extra[:5]}")
     if not {"game_id", "player_id", "team"}.issubset(qb_stats.columns):
         raise SettledEvidenceError("QB stats contract missing identity columns")
-    if qb_stats.filter(pl.col("player_id").is_not_null()).select(
-        "game_id", "team", "player_id"
-    ).is_duplicated().sum():
+    if qb_stats.filter(pl.col("player_id").is_not_null()).select("game_id", "team", "player_id").is_duplicated().sum():
         raise SettledEvidenceError("QB stats contain duplicate game/team/player rows")
     if "game_id" not in pbp.columns:
         raise SettledEvidenceError("PBP is missing game_id")
+    missing_pbp_columns = sorted(set(REQUIRED_PBP_COLUMNS) - set(pbp.columns))
+    if missing_pbp_columns:
+        raise SettledEvidenceError(f"PBP is missing required totals columns: {missing_pbp_columns}")
     pbp_ids = set(str(x) for x in pbp["game_id"].drop_nulls().unique().to_list())
     missing_pbp = sorted(game_ids - pbp_ids)
     if missing_pbp:
@@ -340,15 +349,31 @@ def materialize_settled_evidence(
     games = _canonical_games(rows, through_week=through_week)
     if through_week == 0:
         empties = {
-            "games": pl.DataFrame({
-                "game_id": [], "season": [], "season_type": [], "week": [],
-            }),
-            "team_stats": pl.DataFrame({
-                "game_id": [], "season": [], "week": [], "team": [],
-            }),
-            "qb_stats": pl.DataFrame({
-                "game_id": [], "season": [], "week": [], "team": [], "player_id": [],
-            }),
+            "games": pl.DataFrame(
+                {
+                    "game_id": [],
+                    "season": [],
+                    "season_type": [],
+                    "week": [],
+                }
+            ),
+            "team_stats": pl.DataFrame(
+                {
+                    "game_id": [],
+                    "season": [],
+                    "week": [],
+                    "team": [],
+                }
+            ),
+            "qb_stats": pl.DataFrame(
+                {
+                    "game_id": [],
+                    "season": [],
+                    "week": [],
+                    "team": [],
+                    "player_id": [],
+                }
+            ),
             "pbp": pl.DataFrame({"game_id": []}),
         }
         manifest = {
