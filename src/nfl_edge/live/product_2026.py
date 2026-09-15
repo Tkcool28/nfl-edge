@@ -31,7 +31,11 @@ from nfl_edge.value.wager_economics import Settlement
 
 from .markets_2026 import BOOK_MAP
 
-PRODUCT_VERSION = "live-2026-week1-product-v1"
+PRODUCT_VERSION = "live-2026-week1-product-v1"  # backward-compatible Week 1 identity
+
+
+def product_version_for_week(season: int, week: int) -> str:
+    return f"live-{season}-week{week}-product-v1"
 PRODUCT_FRESHNESS_THRESHOLD_SECONDS = 12 * 60 * 60
 SELECTOR_VERSIONS = {
     "hit_rate": "v1",
@@ -120,8 +124,8 @@ def _current_game(game: Mapping[str, Any], *, xgb_override: float | None = None)
     xgb = xgb_override if xgb_override is not None else _model_prediction(outputs["xgboost_v2"])
     return {
         "game_id": str(game["game_id"]),
-        "season": 2026,
-        "week": 1,
+        "season": int(game["season"]),
+        "week": int(game["week"]),
         "qbelo_home": _model_prediction(outputs["qb_elo"]),
         "xgb_home": xgb,
         "expected_home_margin": _model_prediction(outputs["expected_margin"]),
@@ -610,13 +614,18 @@ def build_product_snapshot(
     market_snapshot: Mapping[str, Any],
     decision_state: Mapping[str, Any],
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    if int(football_snapshot.get("season", -1)) != 2026 or int(football_snapshot.get("week", -1)) != 1:
-        raise LiveProductError("football snapshot must be 2026 Week 1")
-    if int(market_snapshot.get("season", -1)) != 2026 or int(market_snapshot.get("week", -1)) != 1:
-        raise LiveProductError("market snapshot must be 2026 Week 1")
+    season = int(football_snapshot.get("season", -1))
+    week = int(football_snapshot.get("week", -1))
+    if season != 2026 or not 1 <= week <= 18:
+        raise LiveProductError("football snapshot must be a 2026 regular-season week")
+    if (
+        int(market_snapshot.get("season", -1)) != season
+        or int(market_snapshot.get("week", -1)) != week
+    ):
+        raise LiveProductError("football/market season-week identity differs")
     football_games = {str(game["game_id"]): dict(game) for game in football_snapshot["games"]}
-    if len(football_games) != 16:
-        raise LiveProductError("football snapshot must contain 16 games")
+    if not football_games:
+        raise LiveProductError("football snapshot must contain at least one game")
     market_boards = {str(row["game_id"]): row["market_board"] for row in market_snapshot["games"]}
     if set(market_boards) != set(football_games):
         raise LiveProductError("football/market canonical game IDs differ")
@@ -677,8 +686,8 @@ def build_product_snapshot(
         games.append(
             {
                 "game_id": gid,
-                "season": 2026,
-                "week": 1,
+                "season": season,
+                "week": week,
                 "home_team": str(source["home_team"]),
                 "away_team": str(source["away_team"]),
                 "kickoff_at_utc": str(source["kickoff_at_utc"]),
@@ -697,7 +706,7 @@ def build_product_snapshot(
     audit = market_snapshot["audit"]
     if audit.get("unmatched_canonical_game_ids"):
         top_warnings.append(
-            f"{len(audit['unmatched_canonical_game_ids'])} canonical Week 1 game(s) lack a provider event."
+            f"{len(audit['unmatched_canonical_game_ids'])} canonical Week {week} game(s) lack a provider event."
         )
     if int(audit.get("stale_offers") or 0) > 0:
         top_warnings.append(
@@ -706,11 +715,11 @@ def build_product_snapshot(
 
     snapshot = {
         "schema_version": "NFL_EDGE_PRODUCT_API_V1",
-        "product_version": PRODUCT_VERSION,
+        "product_version": product_version_for_week(season, week),
         "generated_at_utc": generated,
         "prediction_as_of_utc": prediction_as_of,
-        "season": 2026,
-        "week": 1,
+        "season": season,
+        "week": week,
         "slate_status": "UPCOMING",
         "football_data_version": str(football_snapshot["completed_football_state_version"]),
         "qb_snapshot_version": str(football_snapshot["qb_snapshot_version"]),
