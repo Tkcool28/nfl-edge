@@ -1,46 +1,38 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-09-14T21:39:14Z",
-  "research_generated_at_utc": "2026-09-14T21:39:14Z",
+  "submitted_at_utc": "2026-09-15T12:27:57Z",
+  "research_generated_at_utc": "2026-09-15T12:27:57Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-09-14T21:39:14Z",
-    "edition": "Monday Morning Brief",
-    "title": "NFL EDGE Monday Morning Brief",
-    "dek": "One game left, two Denver plays gone, and no reason to force a bet.",
+    "published_at_utc": "2026-09-15T12:27:57Z",
+    "edition": "Tuesday Morning Brief",
+    "title": "NFL EDGE Tuesday Morning Brief",
+    "dek": "Week 2 is here, but the governed card is not yet ready to tell us what to bet.",
     "sections": [
       {
         "id": "what-matters",
         "title": "What Matters Today",
         "items": [
           {
-            "headline": "Kansas City is down two starters; Mahomes is good to go",
+            "headline": "Thursday night gets the first look",
             "paragraphs": [
-              "Chiefs tackle Josh Simmons is out with a back injury and defensive back Chamarri Conner is out with a knee injury. Patrick Mahomes practiced fully Saturday and has no game designation."
+              "Detroit visits Buffalo on Thursday night at 8:15 p.m. ET, the first game of Week 2 and Buffalo's first regular-season game in the new Highmark Stadium.",
+              "Official Week 2 injury reports for Lions-Bills were not yet available in the NFL game center during this morning's check, so there is no responsible injury angle to manufacture yet."
             ],
-            "evidence_ids": ["injury:kc-final"],
+            "evidence_ids": ["schedule:lions-bills", "injury:lions-bills-not-yet-posted"],
             "sources": [
-              {"label": "Kansas City Chiefs — Week 1 Injury Report", "url": "https://www.chiefs.com/news/week-1-injury-report-broncos-vs-chiefs-2026"}
+              {"label": "NFL — Lions at Bills Week 2", "url": "https://www.nfl.com/games/lions-at-bills-2026-reg-2"},
+              {"label": "Buffalo Bills — 2026 home opener", "url": "https://www.buffalobills.com/news/buffalo-bills-to-host-detroit-lions-in-2026-home-opener-at-highmark-stadium"}
             ]
           },
           {
-            "headline": "Denver enters clean",
+            "headline": "Buffalo weather deserves another check later",
             "paragraphs": [
-              "Marvin Mims Jr. practiced fully all week and was not assigned a game status. Denver says all 53 players on the active roster are expected to be available."
+              "The National Weather Service currently has showers likely around Buffalo during the day Thursday, then a 30% chance of showers Thursday night with light north wind. That is worth monitoring, but it is too early and too mild to treat as a betting adjustment."
             ],
-            "evidence_ids": ["injury:den-final"],
+            "evidence_ids": ["weather:buffalo-thursday"],
             "sources": [
-              {"label": "Denver Broncos — Final Week 1 Injury Report", "url": "https://www.denverbroncos.com/news/injuryreport/injury-report-wr-marvin-mims-jr-not-assigned-game-status-for-week-1-vs-chiefs"}
-            ]
-          },
-          {
-            "headline": "Weather is not asking for attention",
-            "paragraphs": [
-              "The National Weather Service has Monday night in Kansas City mostly clear with only a 5% precipitation chance. Nothing there is strong enough to change how we use the card."
-            ],
-            "evidence_ids": ["weather:kc-kickoff"],
-            "sources": [
-              {"label": "National Weather Service — Kansas City", "url": "https://beta.weather.gov/place/MO/Kansas_City/"}
+              {"label": "National Weather Service — Buffalo forecast", "url": "https://forecast.weather.gov/MapClick.php?FcstType=text&lat=42.9&lg=english&lon=-78.88"}
             ]
           }
         ]
@@ -50,15 +42,14 @@
         "title": "What It Means for NFL EDGE",
         "items": [
           {
-            "headline": "The news is interesting; the current card is more important",
+            "headline": "The calendar flipped before the governed card did",
             "paragraphs": [
-              "Kansas City losing a starting tackle is worth knowing, especially against Denver's pass rush. But NFL EDGE no longer has either of yesterday's Denver recommendations on the current governed card.",
-              "That means the injury news is not permission to revive an old bet. The current instruction is simpler: pass unless a Denver play returns."
+              "Week 2 has started, but the canonical Week 2 prospective-card file is not present yet. That means there is no governed NFL EDGE recommendation to attach Thursday's news or weather to this morning.",
+              "The right move is patience: let the card exist first, then judge news and price against the actual recommendation and its Play Through."
             ],
-            "evidence_ids": ["injury:kc-final", "card:publication-latest"],
+            "evidence_ids": ["card:week2-missing"],
             "sources": [
-              {"label": "Kansas City Chiefs — Week 1 Injury Report", "url": "https://www.chiefs.com/news/week-1-injury-report-broncos-vs-chiefs-2026"},
-              {"label": "NFL EDGE canonical prospective-card evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"}
+              {"label": "NFL EDGE prospective-card branch", "url": "https://github.com/Tkcool28/nfl-edge/tree/ops/prospective-card-evidence-v1/prospective/cards/2026"}
             ]
           }
         ]
@@ -68,17 +59,16 @@
         "title": "The Fade",
         "items": [
           {
-            "headline": "No useful Fade signal right now",
+            "headline": "No useful Fade signal yet",
             "paragraphs": [
-              "DraftKings has more spread tickets on Denver +2.5 — 66% — but only 48% of the spread money is on Denver. Circa is also taking more Denver spread bets, 58%, with 53% of the spread money on Denver +2.",
-              "That is mixed, not a clean public-versus-sharper-market disagreement. DraftKings shows a gap between how many bets are on Denver and where the money is landing, while Circa still leans Denver. There is not enough here to manufacture a Fade."
+              "There is no current NFL EDGE Week 2 play to test against public betting, and no verified current-day DraftKings-versus-Circa split strong enough to build a governed Fade around this morning.",
+              "VSiN's early market report has Buffalo around a field-goal favorite against Detroit, but an early line by itself is not a Fade signal. We need the NFL EDGE side and price first, then a real disagreement in where the betting is landing."
             ],
-            "takeaway": "NFL EDGE currently has no play on this game, so pass. A useful Fade setup would require the retail betting to keep piling onto Denver while Circa meaningfully shifts toward Kansas City. Until then, do not chase yesterday's Denver recommendation.",
-            "evidence_ids": ["splits:dk-den-kc", "splits:circa-den-kc", "card:publication-latest"],
+            "takeaway": "Pass on the Fade this morning. Revisit it once Week 2 recommendations exist and current betting splits have enough shape to tell us something useful.",
+            "evidence_ids": ["card:week2-missing", "market:lions-bills-early"],
             "sources": [
-              {"label": "VSiN — DraftKings NFL Betting Splits", "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"},
-              {"label": "VSiN — Circa NFL Betting Splits", "url": "https://data.vsin.com/betting-splits/?display=card&source=CIRCA&sport=NFL"},
-              {"label": "NFL EDGE canonical prospective-card evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"}
+              {"label": "VSiN — NFL Week 2 odds report", "url": "https://vsin.com/nfl/nfl-odds-week-2-schedule-line-moves-and-matchups/"},
+              {"label": "NFL EDGE prospective-card branch", "url": "https://github.com/Tkcool28/nfl-edge/tree/ops/prospective-card-evidence-v1/prospective/cards/2026"}
             ]
           }
         ]
@@ -88,16 +78,15 @@
         "title": "Market Watch",
         "items": [
           {
-            "headline": "Both Denver recommendations disappeared",
+            "headline": "Market Watch is waiting on canonical Week 2 evidence",
             "paragraphs": [
-              "The immediately preceding governed publication had two Denver plays at DraftKings: Balanced had Denver +2.5 at -110 with Play Through -113, and Hit Rate had Denver moneyline +114 with Play Through +111. Value was already No Play.",
-              "The newest governed publication has Balanced, Hit Rate, and Value all at No Play. That is the real change: both Denver recommendations are gone.",
-              "The newest publication also warns that 15 Week 1 games lack a provider event, so this should not be described as the model suddenly preferring Kansas City. The safe conclusion is only that there is no current actionable recommendation."
+              "The required canonical file prospective/cards/2026/week-02/episodes.json is not present on ops/prospective-card-evidence-v1 this morning. Because that file is the authority for Market Watch, there is no valid newest publication or immediately preceding Week 2 publication to compare yet.",
+              "No outside sportsbook price is being substituted for that missing evidence. Market Watch therefore fails closed for this edition rather than inventing a card change."
             ],
-            "takeaway": "Yesterday's Denver prices and Play Through numbers are expired. Do not use them as standing permission to bet Denver today.",
-            "evidence_ids": ["card:publication-prior", "card:publication-latest"],
+            "takeaway": "No governed Week 2 recommendation is available yet. Wait for the canonical card before treating any price as an NFL EDGE play or Play Through.",
+            "evidence_ids": ["card:week2-missing"],
             "sources": [
-              {"label": "NFL EDGE canonical prospective-card evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"}
+              {"label": "NFL EDGE prospective-card branch", "url": "https://github.com/Tkcool28/nfl-edge/tree/ops/prospective-card-evidence-v1/prospective/cards/2026"}
             ]
           }
         ]
@@ -107,10 +96,10 @@
         "title": "Today's Tip",
         "items": [
           {
-            "headline": "A half-point around 3 is not a tiny detail",
+            "headline": "An opening line is information, not an invitation",
             "paragraphs": [
-              "If your team loses by exactly three, +3 gives you your stake back while +2.5 loses. That is why line shopping matters even when two offers look almost identical.",
-              "Check the available books before you bet, but keep the NFL EDGE Play Through as the guardrail. A prettier line is useful; a price outside the current Play Through is still a pass."
+              "Sportsbooks can hang a number days before NFL EDGE has a governed recommendation. Seeing a line early does not mean you need to beat the app to it.",
+              "Let the recommendation establish the side, book, price and Play Through. Getting an early number only helps if you already have a disciplined reason to want it."
             ]
           }
         ]
@@ -119,43 +108,33 @@
   },
   "evidence": [
     {
-      "evidence_id": "card:publication-prior",
-      "fact": "The immediately preceding governed publication had Balanced Denver +2.5 at DraftKings -110 with Play Through -113, Hit Rate Denver moneyline +114 with Play Through +111, and Value NO_PLAY.",
-      "source_publication_id": "publication-8b3b50936950e1c8a1da630d",
-      "observed_at_utc": "2026-09-14T00:07:58Z",
-      "sources": [{"label": "NFL EDGE canonical prospective-card evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"}]
+      "evidence_id": "card:week2-missing",
+      "fact": "The required canonical Week 2 file prospective/cards/2026/week-02/episodes.json returned not found on branch ops/prospective-card-evidence-v1 during the 2026-09-15 morning run, so no governed Week 2 publication comparison can be made.",
+      "observed_at_utc": "2026-09-15T12:27:57Z",
+      "sources": [{"label": "NFL EDGE prospective-card branch", "url": "https://github.com/Tkcool28/nfl-edge/tree/ops/prospective-card-evidence-v1/prospective/cards/2026"}]
     },
     {
-      "evidence_id": "card:publication-latest",
-      "fact": "The newest governed publication has Balanced, Hit Rate, and Value all NO_PLAY; the two prior Denver recommendations are absent. The publication warns that 15 canonical Week 1 games lack a provider event.",
-      "source_publication_id": "publication-705c929f90a091ad44b068d0",
-      "observed_at_utc": "2026-09-14T12:07:58Z",
-      "sources": [{"label": "NFL EDGE canonical prospective-card evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-01/episodes.json"}]
+      "evidence_id": "schedule:lions-bills",
+      "fact": "Detroit visits Buffalo on Thursday, September 17, 2026 at 8:15 p.m. ET in Week 2, the first regular-season game at the new Highmark Stadium.",
+      "sources": [
+        {"label": "NFL — Lions at Bills Week 2", "url": "https://www.nfl.com/games/lions-at-bills-2026-reg-2"},
+        {"label": "Buffalo Bills — 2026 home opener", "url": "https://www.buffalobills.com/news/buffalo-bills-to-host-detroit-lions-in-2026-home-opener-at-highmark-stadium"}
+      ]
     },
     {
-      "evidence_id": "injury:kc-final",
-      "fact": "Kansas City ruled DB Chamarri Conner and T Josh Simmons out. QB Patrick Mahomes was a full participant Saturday and has no game designation.",
-      "sources": [{"label": "Kansas City Chiefs — Week 1 Injury Report", "url": "https://www.chiefs.com/news/week-1-injury-report-broncos-vs-chiefs-2026"}]
+      "evidence_id": "injury:lions-bills-not-yet-posted",
+      "fact": "The NFL Lions-Bills Week 2 game center reported that injury reports for both teams were not available during this morning's research check.",
+      "sources": [{"label": "NFL — Lions at Bills Week 2", "url": "https://www.nfl.com/games/lions-at-bills-2026-reg-2"}]
     },
     {
-      "evidence_id": "injury:den-final",
-      "fact": "Marvin Mims Jr. was a full participant Saturday with no game designation, and Denver reported all 53 active-roster players expected to be available.",
-      "sources": [{"label": "Denver Broncos — Final Week 1 Injury Report", "url": "https://www.denverbroncos.com/news/injuryreport/injury-report-wr-marvin-mims-jr-not-assigned-game-status-for-week-1-vs-chiefs"}]
+      "evidence_id": "weather:buffalo-thursday",
+      "fact": "The National Weather Service forecast calls for showers likely in Buffalo during Thursday, followed by a 30% chance of showers Thursday night with light north wind.",
+      "sources": [{"label": "National Weather Service — Buffalo forecast", "url": "https://forecast.weather.gov/MapClick.php?FcstType=text&lat=42.9&lg=english&lon=-78.88"}]
     },
     {
-      "evidence_id": "weather:kc-kickoff",
-      "fact": "The National Weather Service forecast for Kansas City calls for mostly clear conditions Monday night with a 5% precipitation chance.",
-      "sources": [{"label": "National Weather Service — Kansas City", "url": "https://beta.weather.gov/place/MO/Kansas_City/"}]
-    },
-    {
-      "evidence_id": "splits:dk-den-kc",
-      "fact": "VSiN's current DraftKings spread splits show Denver +2.5 with 66% of bets and 48% of spread money; Kansas City -2.5 has 34% of bets and 52% of spread money.",
-      "sources": [{"label": "VSiN — DraftKings NFL Betting Splits", "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"}]
-    },
-    {
-      "evidence_id": "splits:circa-den-kc",
-      "fact": "VSiN's current Circa spread splits show Denver +2 with 58% of bets and 53% of spread money; Kansas City -2 has 42% of bets and 47% of spread money.",
-      "sources": [{"label": "VSiN — Circa NFL Betting Splits", "url": "https://data.vsin.com/betting-splits/?display=card&source=CIRCA&sport=NFL"}]
+      "evidence_id": "market:lions-bills-early",
+      "fact": "VSiN's early Week 2 market report lists Buffalo around a field-goal favorite against Detroit and notes that the line had not moved much from lookahead pricing after Week 1.",
+      "sources": [{"label": "VSiN — NFL Week 2 odds report", "url": "https://vsin.com/nfl/nfl-odds-week-2-schedule-line-moves-and-matchups/"}]
     }
   ]
 }
