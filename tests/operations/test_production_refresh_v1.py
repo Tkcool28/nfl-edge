@@ -53,6 +53,7 @@ def _wire_active_schedule(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, we
     )
 
 def _wire_success(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, calls: list[str]) -> None:
+    _wire_active_schedule(monkeypatch, tmp_path)
     monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: calls.append("sleeper") or _FreshSleeper())
     monkeypatch.setattr(refresh, "load_overrides", lambda path: {})
     monkeypatch.setattr(refresh, "SleeperExpectedQBResolver", lambda source, overrides: object())
@@ -65,7 +66,6 @@ def _wire_success(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, calls: list[s
     monkeypatch.setattr(
         refresh, "_validate_football", lambda path: {"games": [{"id": "g"}], "snapshot_sha256": "a" * 64}
     )
-    monkeypatch.setattr(refresh, "load_week1_schedule", lambda path: {"season": 2026, "week": 1, "games": [{}]})
     monkeypatch.setattr(
         refresh,
         "acquire_live_response",
@@ -280,6 +280,22 @@ def test_missing_active_week_fails_before_sleeper_or_provider(
     assert summary["provider_request_count"] == 0
     assert summary["season"] is None
     assert summary["week"] is None
+
+
+def test_week2_requires_settled_evidence_before_sleeper_or_provider(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    calls: list[str] = []
+    _wire_active_schedule(monkeypatch, tmp_path, week=2)
+    monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: calls.append("sleeper"))
+    monkeypatch.setattr(refresh, "acquire_live_response", lambda **kwargs: calls.append("provider"))
+
+    outcome, summary = refresh.run_refresh(_config(tmp_path))
+
+    assert outcome is refresh.RefreshOutcome.FOOTBALL_STATE_NOT_READY
+    assert calls == []
+    assert summary["provider_request_count"] == 0
+    assert summary["week"] == 2
 
 def test_sleeper_failure_prevents_scoring_and_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     calls: list[str] = []
