@@ -36,13 +36,29 @@ def _config(tmp_path: Path, *, live: bool = True) -> refresh.RefreshConfig:
     )
 
 
+
+
+def _wire_active_schedule(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, week: int = 1) -> None:
+    path = tmp_path / "data" / "live" / "2026" / f"week{week}_schedule_v1.json"
+    monkeypatch.setattr(
+        refresh,
+        "resolve_active_schedule",
+        lambda *args, **kwargs: SimpleNamespace(
+            path=path,
+            payload={"season": 2026, "week": week, "schedule_version": f"test-week-{week}", "games": [{}]},
+            season=2026,
+            week=week,
+            rollover_at_utc="2026-09-08T12:00:00Z",
+        ),
+    )
+
 def _wire_success(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, calls: list[str]) -> None:
     monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: calls.append("sleeper") or _FreshSleeper())
     monkeypatch.setattr(refresh, "load_overrides", lambda path: {})
     monkeypatch.setattr(refresh, "SleeperExpectedQBResolver", lambda source, overrides: object())
     monkeypatch.setattr(
         refresh,
-        "score_week1",
+        "score_week",
         lambda **kwargs: calls.append("score") or {"games": [{"id": "g"}], "snapshot_sha256": "a" * 64},
     )
     monkeypatch.setattr(refresh, "canonical_snapshot_bytes", lambda value: b"football")
@@ -244,10 +260,32 @@ def test_saved_response_replay_never_calls_provider(monkeypatch: pytest.MonkeyPa
     assert summary["provider_request_count"] == 0
 
 
+
+def test_missing_active_week_fails_before_sleeper_or_provider(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    calls: list[str] = []
+    monkeypatch.setattr(
+        refresh,
+        "resolve_active_schedule",
+        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("Week 2 schedule missing")),
+    )
+    monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: calls.append("sleeper"))
+    monkeypatch.setattr(refresh, "acquire_live_response", lambda **kwargs: calls.append("provider"))
+
+    outcome, summary = refresh.run_refresh(_config(tmp_path))
+
+    assert outcome is refresh.RefreshOutcome.SCHEDULE_NOT_READY
+    assert calls == []
+    assert summary["provider_request_count"] == 0
+    assert summary["season"] is None
+    assert summary["week"] is None
+
 def test_sleeper_failure_prevents_scoring_and_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     calls: list[str] = []
+    _wire_active_schedule(monkeypatch, tmp_path)
     monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: (_ for _ in ()).throw(RuntimeError("stale")))
-    monkeypatch.setattr(refresh, "score_week1", lambda **kwargs: calls.append("score"))
+    monkeypatch.setattr(refresh, "score_week", lambda **kwargs: calls.append("score"))
     monkeypatch.setattr(refresh, "acquire_live_response", lambda **kwargs: calls.append("provider"))
 
     outcome, summary = refresh.run_refresh(_config(tmp_path))
@@ -259,10 +297,11 @@ def test_sleeper_failure_prevents_scoring_and_provider(monkeypatch: pytest.Monke
 
 def test_scoring_failure_prevents_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     calls: list[str] = []
+    _wire_active_schedule(monkeypatch, tmp_path)
     monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: _FreshSleeper())
     monkeypatch.setattr(refresh, "load_overrides", lambda path: {})
     monkeypatch.setattr(refresh, "SleeperExpectedQBResolver", lambda source, overrides: object())
-    monkeypatch.setattr(refresh, "score_week1", lambda **kwargs: (_ for _ in ()).throw(RuntimeError("score failed")))
+    monkeypatch.setattr(refresh, "score_week", lambda **kwargs: (_ for _ in ()).throw(RuntimeError("score failed")))
     monkeypatch.setattr(refresh, "acquire_live_response", lambda **kwargs: calls.append("provider"))
 
     outcome, summary = refresh.run_refresh(_config(tmp_path))
@@ -432,6 +471,7 @@ def test_same_second_pre_provider_failure_still_writes_truthful_status(
 ) -> None:
     first_id = refresh._run_id(refresh._utc_now())
     (tmp_path / "runs" / first_id).mkdir(parents=True)
+    _wire_active_schedule(monkeypatch, tmp_path)
     monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: (_ for _ in ()).throw(RuntimeError("stale")))
 
     outcome, summary = refresh.run_refresh(_config(tmp_path))
