@@ -252,14 +252,17 @@ def resolve_active_schedule(
 
     path, payload, rollover = max(eligible, key=lambda item: (int(item[1]["week"]), item[2]))
     week = int(payload["week"])
-    if week < 18:
-        next_rollover = rollover + timedelta(days=7)
-        if now >= next_rollover:
+    expiry = rollover + timedelta(days=7)
+    if now >= expiry:
+        if week < 18:
             base = external_root if external_root is not None else root / "data" / "live" / str(season)
             next_path = base / f"week{week + 1}_schedule_v1.json"
             raise LiveScheduleError(
                 f"Week {week + 1} schedule is required after Tuesday rollover; missing or not eligible: {next_path}"
             )
+        raise LiveScheduleError(
+            f"Week 18 expired at {expiry.isoformat(timespec='seconds')}; regular-season production is closed"
+        )
     return ActiveSchedule(
         path=path,
         payload=payload,

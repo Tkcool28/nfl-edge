@@ -29,7 +29,7 @@ from nfl_edge.live.markets_2026 import (
     normalize_market_snapshot,
 )
 from nfl_edge.live.product_2026 import build_product_snapshot, product_snapshot_bytes
-from nfl_edge.live.product_state_2026 import load_entering_2026_product_state
+from nfl_edge.live.product_state_2026 import advance_live_value_state, load_entering_2026_product_state
 from nfl_edge.live.schedule_2026 import resolve_active_schedule
 from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash, score_week
 from nfl_edge.live.sleeper_qb import DEFAULT_OVERRIDES, SleeperExpectedQBResolver, SleeperQBSource, load_overrides
@@ -424,6 +424,11 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                 decision_state = load_entering_2026_product_state(
                     config.repository_root / "data/live/2026/entering_product_state_v1.json"
                 )
+                if active_schedule.week > 1:
+                    assert evidence is not None
+                    decision_state["value_state"] = advance_live_value_state(
+                        entering=decision_state["value_state"], evidence=evidence, run_root=config.run_root
+                    )
                 product, proof = build_product_snapshot(
                     root=config.repository_root,
                     football_snapshot=football,

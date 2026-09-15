@@ -11,6 +11,7 @@ import io
 import json
 import os
 import tempfile
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -70,6 +71,20 @@ REQUIRED_QB_STAT_COLUMNS = frozenset(
 
 class SettledEvidenceError(RuntimeError):
     """Raised when current-season evidence is incomplete or internally inconsistent."""
+
+
+@contextmanager
+def _evidence_lock(root: Path, *, exclusive: bool):
+    """Coordinate the materializer and production reader as one evidence set."""
+    import fcntl
+
+    root.mkdir(parents=True, exist_ok=True)
+    with (root / ".live-inputs.lock").open("a+", encoding="utf-8") as handle:
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH)
+        try:
+            yield
+        finally:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
 @dataclass(frozen=True)
@@ -319,9 +334,23 @@ def validate_settled_evidence(
     missing_pbp = sorted(game_ids - pbp_ids)
     if missing_pbp:
         raise SettledEvidenceError(f"PBP coverage missing completed games: {missing_pbp[:5]}")
+    incomplete_pbp = []
+    for game_id in sorted(game_ids):
+        game_pbp = pbp.filter(pl.col("game_id").cast(pl.Utf8) == game_id)
+        final_rows = game_pbp.filter(
+            (pl.col("qtr").cast(pl.Int64, strict=False) >= 4)
+            & (pl.col("game_seconds_remaining").cast(pl.Float64, strict=False) == 0.0)
+        )
+        if final_rows.is_empty():
+            incomplete_pbp.append(game_id)
+    if incomplete_pbp:
+        raise SettledEvidenceError(
+            "PBP completion invariant missing final-clock row for completed games: "
+            f"{incomplete_pbp[:5]}"
+        )
 
 
-def materialize_settled_evidence(
+def _materialize_settled_evidence(
     *,
     output_dir: str | Path,
     active_as_of_utc: str | None = None,
@@ -388,7 +417,7 @@ def materialize_settled_evidence(
         for name, frame in empties.items():
             _write_parquet_atomic(root / f"settled_{name}.parquet", frame)
         _write_json_atomic(root / "settled_evidence_manifest.json", manifest)
-        return load_settled_evidence(root)
+        return _load_settled_evidence(root)
 
     game_ids = set(str(x) for x in games["game_id"].to_list())
     team_raw, team_sha = _download_parquet(TEAM_STATS_URL, session=session)
@@ -434,10 +463,27 @@ def materialize_settled_evidence(
         },
     }
     _write_json_atomic(root / "settled_evidence_manifest.json", manifest)
-    return load_settled_evidence(root)
+    return _load_settled_evidence(root)
 
 
-def load_settled_evidence(root: str | Path) -> SettledSeasonEvidence:
+def materialize_settled_evidence(
+    *,
+    output_dir: str | Path,
+    active_as_of_utc: str | None = None,
+    session: requests.Session | None = None,
+    schedule_rows: list[Mapping[str, Any]] | None = None,
+) -> SettledSeasonEvidence:
+    root = Path(output_dir)
+    with _evidence_lock(root, exclusive=True):
+        return _materialize_settled_evidence(
+            output_dir=root,
+            active_as_of_utc=active_as_of_utc,
+            session=session,
+            schedule_rows=schedule_rows,
+        )
+
+
+def _load_settled_evidence(root: str | Path) -> SettledSeasonEvidence:
     base = Path(root)
     manifest_path = base / "settled_evidence_manifest.json"
     if not manifest_path.is_file():
@@ -474,3 +520,9 @@ def load_settled_evidence(root: str | Path) -> SettledSeasonEvidence:
         pbp=frames["pbp"],
         manifest=manifest,
     )
+
+
+def load_settled_evidence(root: str | Path) -> SettledSeasonEvidence:
+    base = Path(root)
+    with _evidence_lock(base, exclusive=False):
+        return _load_settled_evidence(base)

@@ -74,3 +74,9 @@ def test_missing_next_week_fails_closed_after_rollover(tmp_path: Path) -> None:
     write_schedule(tmp_path, make_schedule(1, "2026-09-10T00:20:00Z", "NE", "SEA"))
     with pytest.raises(LiveScheduleError):
         resolve_active_schedule(tmp_path, prediction_as_of_utc="2026-09-15T12:00:00Z")
+
+
+def test_week18_expires_after_its_seven_day_window(tmp_path: Path) -> None:
+    write_schedule(tmp_path, make_schedule(18, "2027-01-03T18:00:00Z", "DET", "BUF"))
+    with pytest.raises(LiveScheduleError, match="Week 18 expired"):
+        resolve_active_schedule(tmp_path, prediction_as_of_utc="2027-01-06T13:00:00Z")

@@ -739,6 +739,9 @@ def build_product_snapshot(
     }
     validate_product_snapshot(snapshot)
     proof = {
+        # Private forensic surface for strictly-postgame selector-state
+        # advancement. This is intentionally excluded from the public product API.
+        "selector_evidence_rows": [{**row, "week": week} for row in board],
         "evaluator_rows": len(board),
         "evaluator_by_market": dict(sorted(Counter(str(row["market_type"]) for row in board).items())),
         "evaluator_supported_by_market": dict(sorted(Counter(

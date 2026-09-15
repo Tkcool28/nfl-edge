@@ -22,7 +22,7 @@ import polars as pl
 import sklearn
 
 from nfl_edge.holdout import product_2025
-from nfl_edge.recommendation.final_selectors_v1 import ValueSelectorState
+from nfl_edge.recommendation.final_selectors_v1 import ValueSelectorState, advance_value_state
 from nfl_edge.value.accepted_calibration import (
     calibrated_market_probability,
     fit_ml_v4,
@@ -556,3 +556,40 @@ def load_entering_2026_product_state(path: Path) -> dict[str, Any]:
         "spread_v3": dict(payload["spread_confidence_v3"]),
         "value_state": ValueSelectorState(),
     }
+
+
+def advance_live_value_state(*, entering: ValueSelectorState, evidence, run_root: Path) -> ValueSelectorState:
+    """Advance frozen selector trust from private, pre-kickoff weekly boards only."""
+    state = entering
+    games = {str(row["game_id"]): row for row in evidence.games.to_dicts()}
+    for week in range(1, int(evidence.through_week) + 1):
+        choices = []
+        for proof_path in sorted(run_root.glob("*/product/deterministic-proof.json")):
+            payload = json.loads(proof_path.read_text(encoding="utf-8"))
+            rows = payload.get("selector_evidence_rows")
+            if not isinstance(rows, list) or not rows:
+                continue
+            if {int(row.get("week", -1)) for row in rows} != {week}:
+                continue
+            choices.append(rows)
+        if not choices:
+            raise Entering2026ProductStateError(f"missing private selector evidence for settled Week {week}")
+        settled_rows = []
+        for source in choices[0]:
+            row = dict(source)
+            game = games.get(str(row.get("game_id")))
+            if game is None:
+                raise Entering2026ProductStateError("selector evidence references non-settled game")
+            side = str(row.get("selected_side"))
+            market = str(row.get("market_type"))
+            home_margin = int(game["home_score"]) - int(game["away_score"])
+            if market == "moneyline":
+                result = home_margin if side == "home" else -home_margin
+            elif market == "spread":
+                result = home_margin + float(row.get("line") or 0.0) if side == "home" else -home_margin + float(row.get("line") or 0.0)
+            else:
+                continue
+            row["settlement"] = "WIN" if result > 0 else "LOSS" if result < 0 else "PUSH"
+            settled_rows.append(row)
+        state = advance_value_state(state, settled_rows)
+    return state

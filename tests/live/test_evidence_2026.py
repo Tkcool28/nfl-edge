@@ -3,6 +3,8 @@ from __future__ import annotations
 import polars as pl
 import pytest
 
+from nfl_edge.features.totals_v1.pbp_semantics import REQUIRED_PBP_COLUMNS
+
 from nfl_edge.live.evidence_2026 import (
     SettledActualQBResolver,
     SettledEvidenceError,
@@ -90,6 +92,26 @@ def test_evidence_requires_complete_team_and_pbp_coverage() -> None:
             pbp=pbp,
             through_week=1,
         )
+
+
+def test_partial_pbp_cannot_advance_completed_game_evidence() -> None:
+    games = _canonical_games([_schedule_row()], through_week=1)
+    team = pl.DataFrame(
+        [
+            {"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA"},
+            {"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "NE"},
+        ]
+    )
+    qb = pl.DataFrame(
+        [{"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA", "player_id": "qb"}]
+    )
+    pbp = pl.DataFrame({column: [0] for column in REQUIRED_PBP_COLUMNS}).with_columns(
+        pl.lit("2026_01_NE_SEA").alias("game_id"),
+        pl.lit(3).alias("qtr"),
+        pl.lit(20.0).alias("game_seconds_remaining"),
+    )
+    with pytest.raises(SettledEvidenceError, match="completion invariant"):
+        validate_settled_evidence(games=games, team_stats=team, qb_stats=qb, pbp=pbp, through_week=1)
 
 
 def test_upstream_feature_schema_drift_fails_closed() -> None:
