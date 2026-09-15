@@ -345,19 +345,30 @@ def validate_settled_evidence(
     for game in sorted(games.iter_rows(named=True), key=lambda row: str(row["game_id"])):
         game_id = str(game["game_id"])
         game_pbp = pbp.filter(pl.col("game_id").cast(pl.Utf8) == game_id)
-        final_rows = game_pbp.filter(
-            (pl.col("qtr").cast(pl.Int64, strict=False) >= 4)
-            & (pl.col("game_seconds_remaining").cast(pl.Float64, strict=False) == 0.0)
+        terminal_rows = game_pbp.with_columns(
+            pl.col("qtr").cast(pl.Int64, strict=False).alias("_terminal_qtr"),
+            pl.col("game_seconds_remaining").cast(pl.Float64, strict=False).alias("_terminal_clock"),
+            pl.col("play_id").cast(pl.Int64, strict=False).alias("_terminal_play_id"),
+        ).filter(
+            (pl.col("_terminal_qtr") >= 4)
+            & pl.col("_terminal_clock").is_not_null()
+            & pl.col("_terminal_clock").is_finite()
+            & (pl.col("_terminal_clock") >= 0.0)
+            & pl.col("_terminal_play_id").is_not_null()
         )
-        if final_rows.is_empty():
+        if terminal_rows.is_empty():
             incomplete_pbp.append(game_id)
             continue
-        # A Q4 0:00 row alone is not sufficient: an overtime game can have
-        # regulation PBP published before its OT plays.  The latest terminal
-        # row must carry the official final scoreboard, which naturally
-        # requires overtime PBP to exist whenever the final differs from the
-        # regulation tie.
-        terminal = final_rows.sort(["qtr", "play_id"], descending=[True, True]).row(0, named=True)
+        # Use the actual terminal PBP row, not merely a regulation 0:00 row.
+        # A Q4 terminal must end at 0:00. An OT terminal (Q5+) may retain time
+        # after a walk-off score, but its scoreboard must still match the
+        # official final; missing OT PBP therefore fails closed.
+        terminal = terminal_rows.sort(
+            ["_terminal_qtr", "_terminal_play_id"], descending=[True, True]
+        ).row(0, named=True)
+        if int(terminal["_terminal_qtr"]) == 4 and float(terminal["_terminal_clock"]) != 0.0:
+            incomplete_pbp.append(game_id)
+            continue
         try:
             terminal_home = int(terminal["total_home_score"])
             terminal_away = int(terminal["total_away_score"])

@@ -139,6 +139,28 @@ def test_overtime_game_requires_terminal_pbp_score_to_match_official_final() -> 
         validate_settled_evidence(games=games, team_stats=team, qb_stats=qb, pbp=pbp, through_week=1)
 
 
+def test_walkoff_overtime_terminal_pbp_with_clock_remaining_is_complete() -> None:
+    games = _canonical_games([_schedule_row(home_score=23, away_score=20)], through_week=1)
+    team = pl.DataFrame(
+        [
+            {"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA"},
+            {"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "NE"},
+        ]
+    )
+    qb = pl.DataFrame(
+        [{"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA", "player_id": "qb"}]
+    )
+    pbp = pl.DataFrame({column: [0] for column in REQUIRED_PBP_COLUMNS}).with_columns(
+        pl.lit("2026_01_NE_SEA").alias("game_id"),
+        pl.lit(5).alias("qtr"),
+        pl.lit(321.0).alias("game_seconds_remaining"),
+        pl.lit(23).alias("total_home_score"),
+        pl.lit(20).alias("total_away_score"),
+    )
+
+    validate_settled_evidence(games=games, team_stats=team, qb_stats=qb, pbp=pbp, through_week=1)
+
+
 def test_upstream_feature_schema_drift_fails_closed() -> None:
     team = pl.DataFrame([{"game_id": "2026_01_NE_SEA", "season": 2026, "week": 1, "team": "SEA"}])
     with pytest.raises(SettledEvidenceError, match="team stats missing required columns"):
