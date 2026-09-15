@@ -225,8 +225,8 @@ def score_week(
         str(game["game_id"]): active_roof_resolver.resolve(game)
         for game in schedule["games"]
     }
-    if len(schedule["games"]) != 16 or features.current_games.height != 16:
-        raise LiveScoringError("Week 1 schedule coverage drift")
+    if features.current_games.height != game_count:
+        raise LiveScoringError(f"Week {week} schedule coverage drift")
 
     resolved_identity = {
         f"{gid}:{team}": resolution.provenance_id
@@ -521,8 +521,8 @@ def score_week(
         game_rows.append(
             {
                 "game_id": gid,
-                "season": 2026,
-                "week": 1,
+                "season": season,
+                "week": week,
                 "away_team": away_team,
                 "home_team": home_team,
                 "kickoff_at_utc": str(schedule_row["scheduled_start_utc"]),
@@ -552,8 +552,8 @@ def score_week(
         "schema_version": SNAPSHOT_SCHEMA,
         "generated_at_utc": prediction_as_of_utc,
         "prediction_as_of_utc": prediction_as_of_utc,
-        "season": 2026,
-        "week": 1,
+        "season": season,
+        "week": week,
         "schedule_version": request.schedule_version,
         "football_context_version": schedule["context_version"],
         "football_context_source": schedule["context_source"],
@@ -597,8 +597,10 @@ def score_week(
             "ridge_r4_chronological_refit_preserved": True,
         },
     }
-    if len(snapshot["games"]) != 16:
-        raise LiveScoringError("football snapshot must contain exactly 16 Week 1 games")
+    if len(snapshot["games"]) != game_count:
+        raise LiveScoringError(
+            f"football snapshot must contain exactly {game_count} Week {week} games"
+        )
     snapshot["snapshot_sha256"] = football_snapshot_hash(snapshot)
     return snapshot
 
