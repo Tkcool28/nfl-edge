@@ -18,7 +18,7 @@ from nfl_edge.live.evidence_2026 import materialize_settled_evidence  # noqa: E4
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--active-as-of-utc", required=True)
+    parser.add_argument("--active-as-of-utc")
     args = parser.parse_args()
     evidence = materialize_settled_evidence(
         output_dir=args.output_dir,
