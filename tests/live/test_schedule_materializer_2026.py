@@ -103,3 +103,14 @@ def test_blank_roof_unknown_stadium_fails_closed() -> None:
     row.update(stadium_id="UNKNOWN", stadium="Unknown Stadium", roof="")
     with pytest.raises(ScheduleMaterializationError, match="unknown stadium_id"):
         build_week_schedule([row], season=2026, week=2, observed_at_utc="2026-09-15T21:00:00Z")
+
+
+@pytest.mark.parametrize("raw_roof", ["open", "closed"])
+def test_explicit_retractable_roof_preserves_live_resolution_boundary(raw_roof: str) -> None:
+    row = _row()
+    row.update(stadium_id="ATL97", stadium="Mercedes-Benz Stadium", roof=raw_roof)
+
+    game = build_week_schedule([row], season=2026, week=2, observed_at_utc="2026-09-15T21:00:00Z")["games"][0]
+
+    assert game["roof_structure"] == "RETRACTABLE"
+    assert game["roof_type"] is None
