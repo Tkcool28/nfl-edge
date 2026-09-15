@@ -6,8 +6,9 @@ from typing import Any, Mapping
 
 VENUE_STRUCTURE_VERSION = "nfl-edge-2026-venue-structure-v1"
 
-# These are the only stadium IDs with blank roof values in the full currently
-# published 2026 REG schedule. Structures are venue facts, not current roof
+# This bounded inventory covers every stadium ID observed with a blank roof in
+# the full currently published 2026 REG schedule, plus Ford Field as the
+# fixed-dome regression case. Structures are venue facts, not current roof
 # positions; the live roof resolver remains the sole owner of OPEN/CLOSED.
 BLANK_ROOF_VENUES: Mapping[str, tuple[str, str]] = {
     "ATL97": ("Mercedes-Benz Stadium", "RETRACTABLE"),
