@@ -1,4 +1,4 @@
-"""Deterministic market-independent 2026 Week 1 football scorer."""
+"""Deterministic market-independent 2026 regular-season football scorer."""
 from __future__ import annotations
 
 import decimal
@@ -12,7 +12,11 @@ import polars as pl
 
 from nfl_edge.contracts.common_v1 import MODEL_OUTPUT_STATUSES, SUPPORT_STATES
 from nfl_edge.contracts.runtime_interfaces_v1 import LiveScorerRequest
-from nfl_edge.live.features_2026 import QB_SCOREABLE_STATES, LiveWeek1Features, build_live_week1_features
+from nfl_edge.live.features_2026 import (
+    QB_SCOREABLE_STATES,
+    LiveWeekFeatures,
+    build_live_week_features,
+)
 from nfl_edge.live.model_adapters import (
     build_live_block,
     predict_expected_margin_block,
@@ -26,7 +30,7 @@ from nfl_edge.live.roof_scenarios import missing_roof_scenario_evaluation
 from nfl_edge.live.sleeper_qb import SleeperExpectedQBResolver
 from nfl_edge.live.state_2026 import Entering2026FootballState, bootstrap_entering_2026_state
 from nfl_edge.live.totals_features import materialize_live_totals_feature_block
-from nfl_edge.live.week1_2026 import load_week1_schedule
+from nfl_edge.live.schedule_2026 import load_schedule
 
 SNAPSHOT_SCHEMA = "NFL_EDGE_LIVE_FOOTBALL_SNAPSHOT_V1"
 MODEL_VERSIONS = {
@@ -128,7 +132,7 @@ def _model_output(
     }
 
 
-def _current_expected_frame(features: LiveWeek1Features) -> pl.DataFrame:
+def _current_expected_frame(features: LiveWeekFeatures) -> pl.DataFrame:
     return features.current_games.with_columns(
         pl.lit(None, dtype=pl.Float64).alias("target_margin"),
         pl.lit(None, dtype=pl.Boolean).alias("target_home_win"),
@@ -136,7 +140,7 @@ def _current_expected_frame(features: LiveWeek1Features) -> pl.DataFrame:
     )
 
 
-def _qb_usable_game_ids(features: LiveWeek1Features) -> tuple[str, ...]:
+def _qb_usable_game_ids(features: LiveWeekFeatures) -> tuple[str, ...]:
     usable: list[str] = []
     for game in features.current_games.sort("game_id").to_dicts():
         gid = str(game["game_id"])
@@ -154,7 +158,7 @@ def _qb_usable_game_ids(features: LiveWeek1Features) -> tuple[str, ...]:
 
 
 def _unavailable_reason(
-    features: LiveWeek1Features, game: dict[str, Any]
+    features: LiveWeekFeatures, game: dict[str, Any]
 ) -> tuple[str, list[str]]:
     gid = str(game["game_id"])
     sides = (
@@ -193,23 +197,27 @@ def _prediction_identity(
     return f"football-input:{_sha(payload)[:24]}"
 
 
-def score_week1(
+def score_week(
     *,
     repository_root: str | Path,
     prediction_as_of_utc: str,
     resolver: SleeperExpectedQBResolver,
-    entering_state: Entering2026FootballState | None = None,
+    schedule_path: str | Path,\n    entering_state: Entering2026FootballState | None = None,
     roof_resolver: RoofResolver | None = None,
 ) -> dict[str, Any]:
-    """Score the real 16-game Week 1 schedule without reading any market data."""
+    """Score one canonical 2026 regular-season week without reading market data."""
     root = Path(repository_root).resolve()
     state = entering_state or bootstrap_entering_2026_state(root)
-    features = build_live_week1_features(
+    schedule = load_schedule(root / schedule_path)
+    season = int(schedule["season"])
+    week = int(schedule["week"])
+    game_count = len(schedule["games"])
+    features = build_live_week_features(
         repository_root=root,
         prediction_as_of_utc=prediction_as_of_utc,
         resolver=resolver,
+        schedule_path=schedule_path,
     )
-    schedule = load_week1_schedule(root / "data/live/2026/week1_schedule_v1.json")
     active_roof_resolver = roof_resolver or RoofResolver.from_file(
         root / DEFAULT_ROOF_STATUS_PATH
     )
@@ -234,7 +242,7 @@ def score_week1(
         resolved_expected_qb_version=f"resolved-qb:{_sha(resolved_identity)[:24]}",
         frozen_model_artifact_versions=MODEL_VERSIONS,
         feature_state_versions={
-            "live_football_features": "features-v1+live-2026-week1-v1",
+            "live_football_features": f"features-v1+live-{season}-week{week}-v1",
             "live_football_context": str(schedule["context_version"]),
             "totals": "totals-v1-exact90",
         },
@@ -248,7 +256,7 @@ def score_week1(
         block=features.block,
         candidate=state.expected_candidate,
         shared=state.expected_shared,
-        run_id="live_2026_week1_v1",
+        run_id=f"live_{season}_week{week}_v1",
         created_at=features.block.as_of_utc,
     )
     expected_by = {
@@ -291,7 +299,7 @@ def score_week1(
             state=state.qb_state,
             config=state.qb_config,
             qb_adjustment_resolver=qb_resolver,
-            run_id="live_2026_week1_v1",
+            run_id=f"live_{season}_week{week}_v1",
             created_at=qb_usable_block.as_of_utc,
         )
         qb_by = {
@@ -599,3 +607,23 @@ def canonical_snapshot_bytes(snapshot: dict[str, Any]) -> bytes:
     return (
         json.dumps(snapshot, sort_keys=True, indent=2, allow_nan=False) + "\n"
     ).encode("utf-8")
+
+
+
+def score_week1(
+    *,
+    repository_root: str | Path,
+    prediction_as_of_utc: str,
+    resolver: SleeperExpectedQBResolver,
+    entering_state: Entering2026FootballState | None = None,
+    roof_resolver: RoofResolver | None = None,
+) -> dict[str, Any]:
+    """Backward-compatible frozen Week 1 scorer wrapper."""
+    return score_week(
+        repository_root=repository_root,
+        prediction_as_of_utc=prediction_as_of_utc,
+        resolver=resolver,
+        schedule_path="data/live/2026/week1_schedule_v1.json",
+        entering_state=entering_state,
+        roof_resolver=roof_resolver,
+    )
