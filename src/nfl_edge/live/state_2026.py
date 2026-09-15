@@ -119,6 +119,7 @@ class Entering2026FootballState:
     completed_2025_blocks: tuple[str, ...]
     history_complete_through_utc: str
     state_version: str
+    completed_2026_blocks: tuple[str, ...] = ()
     schema_version: str = ENTERING_STATE_SCHEMA
 
     def summary(self) -> dict[str, Any]:
@@ -126,6 +127,7 @@ class Entering2026FootballState:
             "schema_version": self.schema_version,
             "state_version": self.state_version,
             "completed_2025_blocks": list(self.completed_2025_blocks),
+            "completed_2026_blocks": list(self.completed_2026_blocks),
             "history_complete_through_utc": self.history_complete_through_utc,
             "qb_state_season": self.qb_state.current_season,
             "qb_team_count": len(self.qb_state.teams),

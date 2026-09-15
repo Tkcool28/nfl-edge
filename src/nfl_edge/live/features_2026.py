@@ -23,7 +23,7 @@ from nfl_edge.features.team import build_team_pregame_features
 from nfl_edge.holdout.xgboost_inputs_2025 import assemble_candidate1_xgboost_surface
 from nfl_edge.live.model_adapters import LiveBlock, build_live_block
 from nfl_edge.live.sleeper_qb import SleeperExpectedQBResolver
-from nfl_edge.live.week1_2026 import load_week1_schedule, schedule_to_frame
+from nfl_edge.live.schedule_2026 import load_schedule, schedule_to_frame
 
 LIVE_AVAILABILITY_RULE = "LIVE_EXPLICIT_PREDICTION_AS_OF_UTC_V1"
 QB_SCOREABLE_STATES = frozenset({"RESOLVED", "NEW_PLAYER", "OVERRIDDEN"})
@@ -148,7 +148,7 @@ def _current_game_feature_rows(
                 "scheduled_start_utc": game["scheduled_start_utc"],
                 "availability_rule": timing["availability_rule"],
                 "feature_version": FEATURE_VERSION,
-                "data_version": f"{DATA_VERSION}+live-2026-week1-v1",
+                "data_version": f"{DATA_VERSION}+live-{int(game['season'])}-week{int(game['week'])}-v1",
                 "expected_home_qb_id": home.model_qb_state_id,
                 "expected_away_qb_id": away.model_qb_state_id,
                 "qb_status": (
@@ -187,7 +187,7 @@ def _current_game_feature_rows(
 
 
 @dataclass(frozen=True)
-class LiveWeek1Features:
+class LiveWeekFeatures:
     block: LiveBlock
     current_games: pl.DataFrame
     combined_games: pl.DataFrame
@@ -214,23 +214,45 @@ class LiveWeek1Features:
         return tuple(scoreable)
 
 
-def build_live_week1_features(
+def build_live_week_features(
     *,
     repository_root: str | Path,
     prediction_as_of_utc: str,
     resolver: SleeperExpectedQBResolver,
-    schedule_path: str | Path = "data/live/2026/week1_schedule_v1.json",
+    schedule_path: str | Path,
     feature_config_path: str | Path = "config/features.yaml",
-) -> LiveWeek1Features:
+    prior_live_inputs: FeatureInputs | None = None,
+) -> LiveWeekFeatures:
     root = Path(repository_root)
     cutoff = _parse_utc(prediction_as_of_utc)
-    schedule = load_week1_schedule(root / schedule_path)
+    schedule = load_schedule(root / schedule_path)
+    season = int(schedule["season"])
+    week = int(schedule["week"])
     current = schedule_to_frame(
         schedule, prediction_as_of_utc=cutoff.isoformat().replace("+00:00", "Z")
     )
     block = build_live_block(current)
     inputs = FeatureInputs.from_repository(root)
     config = load_feature_config(root / feature_config_path)
+
+    if prior_live_inputs is not None:
+        prior_games = prior_live_inputs.games.filter(
+            (pl.col("season") == season)
+            & (pl.col("season_type").cast(pl.Utf8).str.to_uppercase() == "REG")
+            & (pl.col("week") < week)
+        )
+        prior_ids = set(str(x) for x in prior_games["game_id"].to_list())
+        prior_team_stats = prior_live_inputs.team_stats.filter(
+            pl.col("game_id").cast(pl.Utf8).is_in(sorted(prior_ids))
+        )
+        prior_qb_stats = prior_live_inputs.qb_stats.filter(
+            pl.col("game_id").cast(pl.Utf8).is_in(sorted(prior_ids))
+        )
+        inputs = inputs.replace(
+            games=pl.concat([inputs.games, prior_games], how="diagonal_relaxed"),
+            team_stats=pl.concat([inputs.team_stats, prior_team_stats], how="diagonal_relaxed"),
+            qb_stats=pl.concat([inputs.qb_stats, prior_qb_stats], how="diagonal_relaxed"),
+        )
 
     combined = pl.concat([inputs.games, current], how="diagonal_relaxed").sort(
         ["season", "week", "game_id"]
@@ -240,7 +262,7 @@ def build_live_week1_features(
     availability = build_weekly_availability(combined, _availability_policy(config))
     availability = _override_live_availability(availability, block=block)
     live_avail = availability.filter(
-        (pl.col("season") == 2026) & (pl.col("season_type") == "REG") & (pl.col("week") == 1)
+        (pl.col("season") == season) & (pl.col("season_type") == "REG") & (pl.col("week") == week)
     )
     if live_avail["prediction_as_of_utc"].item() != cutoff:
         raise LiveFeatureError("live feature cutoff drift")
@@ -258,17 +280,24 @@ def build_live_week1_features(
             resolutions[key] = resolution
             contexts[key] = resolver.to_product_context(resolution)
         audits.extend(resolved["overrides"])
-    if len(resolutions) != 32:
-        raise LiveFeatureError(f"expected 32 Week 1 team-QB resolutions, got {len(resolutions)}")
+    expected_side_rows = current.height * 2
+    if len(resolutions) != expected_side_rows:
+        raise LiveFeatureError(
+            f"expected {expected_side_rows} Week {week} team-QB resolutions, got {len(resolutions)}"
+        )
 
     scenarios = _current_qb_scenarios(current, resolutions)
     team_all = build_team_pregame_features(combined, inputs.team_stats, availability, config)
-    current_team = team_all.filter(pl.col("season") == 2026).sort(["game_id", "side"])
-    if current_team.height != 32:
-        raise LiveFeatureError(f"expected 32 live team-feature rows, got {current_team.height}")
+    current_team = team_all.filter(
+        (pl.col("season") == season) & (pl.col("season_type") == "REG") & (pl.col("week") == week)
+    ).sort(["game_id", "side"])
+    if current_team.height != expected_side_rows:
+        raise LiveFeatureError(
+            f"expected {expected_side_rows} live team-feature rows, got {current_team.height}"
+        )
     qb = build_qb_pregame_features(combined, inputs.qb_stats, scenarios, availability, config)
-    if qb.height != 32:
-        raise LiveFeatureError(f"expected 32 live QB-feature rows, got {qb.height}")
+    if qb.height != expected_side_rows:
+        raise LiveFeatureError(f"expected {expected_side_rows} live QB-feature rows, got {qb.height}")
     game_features = _current_game_feature_rows(
         current_games=current,
         current_team=current_team,
@@ -276,16 +305,16 @@ def build_live_week1_features(
         resolutions=resolutions,
     )
     xgboost = assemble_candidate1_xgboost_surface(
-        game_features, qb, season_min=2026, season_max=2026
+        game_features, qb, season_min=season, season_max=season
     )
-    if xgboost.height != 16:
-        raise LiveFeatureError(f"expected 16 XGBoost rows, got {xgboost.height}")
+    if xgboost.height != current.height:
+        raise LiveFeatureError(f"expected {current.height} XGBoost rows, got {xgboost.height}")
     for frame_name, frame in (
         ("game_features", game_features), ("xgboost_surface", xgboost)
     ):
         if "target_available" in frame.columns and bool(frame["target_available"].fill_null(False).any()):
             raise LiveFeatureError(f"{frame_name} exposed a current outcome")
-    return LiveWeek1Features(
+    return LiveWeekFeatures(
         block=block,
         current_games=current,
         combined_games=combined,
@@ -297,4 +326,27 @@ def build_live_week1_features(
         resolutions=resolutions,
         qb_contexts=contexts,
         override_audits=tuple(audits),
+    )
+
+
+# Backward-compatible Week 1 surface retained for frozen tests and replay tooling.
+LiveWeek1Features = LiveWeekFeatures
+
+
+def build_live_week1_features(
+    *,
+    repository_root: str | Path,
+    prediction_as_of_utc: str,
+    resolver: SleeperExpectedQBResolver,
+    schedule_path: str | Path = "data/live/2026/week1_schedule_v1.json",
+    feature_config_path: str | Path = "config/features.yaml",
+    prior_live_inputs: FeatureInputs | None = None,
+) -> LiveWeekFeatures:
+    return build_live_week_features(
+        repository_root=repository_root,
+        prediction_as_of_utc=prediction_as_of_utc,
+        resolver=resolver,
+        schedule_path=schedule_path,
+        feature_config_path=feature_config_path,
+        prior_live_inputs=prior_live_inputs,
     )

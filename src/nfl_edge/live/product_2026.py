@@ -31,7 +31,11 @@ from nfl_edge.value.wager_economics import Settlement
 
 from .markets_2026 import BOOK_MAP
 
-PRODUCT_VERSION = "live-2026-week1-product-v1"
+PRODUCT_VERSION = "live-2026-week1-product-v1"  # backward-compatible Week 1 identity
+
+
+def product_version_for_week(season: int, week: int) -> str:
+    return f"live-{season}-week{week}-product-v1"
 PRODUCT_FRESHNESS_THRESHOLD_SECONDS = 12 * 60 * 60
 SELECTOR_VERSIONS = {
     "hit_rate": "v1",
@@ -120,8 +124,8 @@ def _current_game(game: Mapping[str, Any], *, xgb_override: float | None = None)
     xgb = xgb_override if xgb_override is not None else _model_prediction(outputs["xgboost_v2"])
     return {
         "game_id": str(game["game_id"]),
-        "season": 2026,
-        "week": 1,
+        "season": int(game["season"]),
+        "week": int(game["week"]),
         "qbelo_home": _model_prediction(outputs["qb_elo"]),
         "xgb_home": xgb,
         "expected_home_margin": _model_prediction(outputs["expected_margin"]),
@@ -474,7 +478,9 @@ def _post_selection_play_through(
     }
 
 
-def _headline(lane: str, row: Mapping[str, Any] | None, football_games: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
+def _headline(
+    lane: str, row: Mapping[str, Any] | None, football_games: Mapping[str, Mapping[str, Any]]
+) -> dict[str, Any]:
     lane_name = {"hit_rate": "HIT_RATE", "balanced": "BALANCED", "value": "VALUE"}[lane]
     if row is None:
         return {
@@ -597,7 +603,9 @@ def _game_warnings(market_board: Mapping[str, Any], xgb: Mapping[str, Any]) -> l
     if str(xgb.get("status")) == "AVAILABLE_WITH_ROOF_SCENARIOS":
         downstream = xgb["roof_scenario_downstream"]
         if downstream["status"] == "ROOF_SENSITIVE":
-            warnings.append("XGBoost moneyline evaluation is ROOF_SENSITIVE; no singular pending-roof ML state is published.")
+            warnings.append(
+                "XGBoost moneyline evaluation is ROOF_SENSITIVE; no singular pending-roof ML state is published."
+            )
         elif downstream["status"] == "NOT_EVALUATED_MISSING_EVIDENCE":
             warnings.append("Pending-roof XGBoost downstream state lacks current market/evaluator evidence.")
     return warnings
@@ -610,19 +618,26 @@ def build_product_snapshot(
     market_snapshot: Mapping[str, Any],
     decision_state: Mapping[str, Any],
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    if int(football_snapshot.get("season", -1)) != 2026 or int(football_snapshot.get("week", -1)) != 1:
-        raise LiveProductError("football snapshot must be 2026 Week 1")
-    if int(market_snapshot.get("season", -1)) != 2026 or int(market_snapshot.get("week", -1)) != 1:
-        raise LiveProductError("market snapshot must be 2026 Week 1")
+    season = int(football_snapshot.get("season", -1))
+    week = int(football_snapshot.get("week", -1))
+    if season != 2026 or not 1 <= week <= 18:
+        raise LiveProductError("football snapshot must be a 2026 regular-season week")
+    if (
+        int(market_snapshot.get("season", -1)) != season
+        or int(market_snapshot.get("week", -1)) != week
+    ):
+        raise LiveProductError("football/market season-week identity differs")
     football_games = {str(game["game_id"]): dict(game) for game in football_snapshot["games"]}
-    if len(football_games) != 16:
-        raise LiveProductError("football snapshot must contain 16 games")
+    if not football_games:
+        raise LiveProductError("football snapshot must contain at least one game")
     market_boards = {str(row["game_id"]): row["market_board"] for row in market_snapshot["games"]}
     if set(market_boards) != set(football_games):
         raise LiveProductError("football/market canonical game IDs differ")
 
     task05f = _load_script("live_2026_task05f_product", root / "scripts/task05f_evaluator_final_runner.py")
-    confidence_v2 = _load_script("live_2026_confidence_v2_product", root / "scripts/task05g_model_confidence_v2_runner.py")
+    confidence_v2 = _load_script(
+        "live_2026_confidence_v2_product", root / "scripts/task05g_model_confidence_v2_runner.py"
+    )
     spread_v3 = _load_script("live_2026_spread_v3_product", root / "scripts/task05g_spread_confidence_v3_runner.py")
     market_index = _market_snapshot_index(market_snapshot, football_games)
     current_games = {gid: _current_game(game) for gid, game in football_games.items()}
@@ -677,12 +692,16 @@ def build_product_snapshot(
         games.append(
             {
                 "game_id": gid,
-                "season": 2026,
-                "week": 1,
+                "season": season,
+                "week": week,
                 "home_team": str(source["home_team"]),
                 "away_team": str(source["away_team"]),
                 "kickoff_at_utc": str(source["kickoff_at_utc"]),
-                "game_status": "PREGAME" if _parse_utc(generated) < _parse_utc(str(source["kickoff_at_utc"])) else "IN_PROGRESS",
+                "game_status": (
+                    "PREGAME"
+                    if _parse_utc(generated) < _parse_utc(str(source["kickoff_at_utc"]))
+                    else "IN_PROGRESS"
+                ),
                 "venue": source.get("venue"),
                 "neutral_site": bool(source["neutral_site"]),
                 "updated_at_utc": generated,
@@ -697,7 +716,7 @@ def build_product_snapshot(
     audit = market_snapshot["audit"]
     if audit.get("unmatched_canonical_game_ids"):
         top_warnings.append(
-            f"{len(audit['unmatched_canonical_game_ids'])} canonical Week 1 game(s) lack a provider event."
+            f"{len(audit['unmatched_canonical_game_ids'])} canonical Week {week} game(s) lack a provider event."
         )
     if int(audit.get("stale_offers") or 0) > 0:
         top_warnings.append(
@@ -706,11 +725,11 @@ def build_product_snapshot(
 
     snapshot = {
         "schema_version": "NFL_EDGE_PRODUCT_API_V1",
-        "product_version": PRODUCT_VERSION,
+        "product_version": product_version_for_week(season, week),
         "generated_at_utc": generated,
         "prediction_as_of_utc": prediction_as_of,
-        "season": 2026,
-        "week": 1,
+        "season": season,
+        "week": week,
         "slate_status": "UPCOMING",
         "football_data_version": str(football_snapshot["completed_football_state_version"]),
         "qb_snapshot_version": str(football_snapshot["qb_snapshot_version"]),
@@ -730,6 +749,22 @@ def build_product_snapshot(
     }
     validate_product_snapshot(snapshot)
     proof = {
+        # Private forensic surface for strictly-postgame selector-state
+        # advancement.  The capture time and each scheduled kickoff make the
+        # later state transition prove that it used a completed week's final
+        # *pregame* board, never an in-progress refresh.  This is intentionally
+        # excluded from the public product API.
+        "selector_evidence": {
+            "schema_version": "NFL_EDGE_LIVE_SELECTOR_EVIDENCE_V1",
+            "season": season,
+            "week": week,
+            "captured_at_utc": generated,
+            "games": [
+                {"game_id": gid, "kickoff_at_utc": str(football_games[gid]["kickoff_at_utc"])}
+                for gid in sorted(football_games)
+            ],
+            "rows": [{**row, "week": week} for row in board],
+        },
         "evaluator_rows": len(board),
         "evaluator_by_market": dict(sorted(Counter(str(row["market_type"]) for row in board).items())),
         "evaluator_supported_by_market": dict(sorted(Counter(

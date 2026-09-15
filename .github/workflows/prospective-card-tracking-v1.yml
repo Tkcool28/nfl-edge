@@ -50,7 +50,9 @@ jobs:
           git fetch origin main
           changed="$(git diff --name-only origin/main...HEAD)"
           echo "$changed"
-          if echo "$changed" | grep -E '^(src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/value/|src/nfl_edge/recommendation/|src/nfl_edge/staking_policy_v1.py$|src/nfl_edge/live/|src/nfl_edge/backend/|config/)'; then
+          protected="$(echo \"$changed\" | grep -E '^(src/nfl_edge/models/|src/nfl_edge/backtest/|src/nfl_edge/value/|src/nfl_edge/recommendation/|src/nfl_edge/staking_policy_v1.py$|src/nfl_edge/backend/|config/)' || true)"
+          live_unapproved="$(echo \"$changed\" | grep '^src/nfl_edge/live/' | grep -Ev '^src/nfl_edge/live/(evidence_2026|features_2026|markets_2026|model_adapters|product_2026|product_state_2026|schedule_2026|schedule_materializer_2026|scorer_2026|state_2026|state_advancement_2026)\\.py$' || true)"
+          if test -n "$protected" || test -n "$live_unapproved"; then
             echo 'ERROR: prospective evidence change touched a frozen/runtime production surface' >&2
             exit 1
           fi

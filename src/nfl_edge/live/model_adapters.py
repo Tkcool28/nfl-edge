@@ -31,6 +31,7 @@ from nfl_edge.backtest.totals_walk_forward import IDENTITY_COLUMNS
 from nfl_edge.backtest.walk_forward import (
     _build_exposure_for_block as _elo_exposure,
     _predict_block as _elo_predict,
+    _update_block as _elo_update,
 )
 from nfl_edge.backtest.xgboost_walk_forward import (
     CANDIDATES,
@@ -227,6 +228,69 @@ def predict_qb_elo_block(
     return {
         "block": block, "predictions": predictions, "pregame_inputs": pregame_inputs,
         "block_start_state": prepared, "outcomes_revealed": False,
+    }
+
+
+
+def reveal_and_update_qb_elo_block(
+    *,
+    frozen_prediction: dict[str, Any],
+    revealed_games: pl.DataFrame,
+    config: EloConfig,
+    run_id: str,
+    update_order_start: int = 0,
+) -> dict[str, Any]:
+    """Reveal one completed live block and update QB-Elo strictly afterward."""
+    if bool(frozen_prediction.get("outcomes_revealed")):
+        raise LiveFootballContractError("live QB-Elo block outcomes already revealed")
+    block = frozen_prediction.get("block")
+    if not isinstance(block, LiveBlock):
+        raise LiveFootballContractError("missing frozen LiveBlock identity")
+    revealed = revealed_games.filter(
+        (pl.col("season") == block.season)
+        & (pl.col("season_type").cast(pl.Utf8).str.to_uppercase() == block.season_type)
+        & (pl.col("week") == block.week)
+    ).sort("game_id")
+    ids = tuple(sorted(str(x) for x in revealed["game_id"].to_list()))
+    if ids != block.game_ids:
+        raise LiveFootballContractError(
+            f"revealed live block identity mismatch: frame={ids} block={block.game_ids}"
+        )
+    if "target_available" not in revealed.columns or not bool(
+        revealed["target_available"].fill_null(False).all()
+    ):
+        raise LiveFootballContractError("revealed live block is missing completed outcomes")
+    if "target_margin" not in revealed.columns or revealed["target_margin"].null_count():
+        raise LiveFootballContractError("revealed live block is missing target_margin")
+
+    outcomes = {str(row["game_id"]): row for row in revealed.to_dicts()}
+    filled: list[dict[str, Any]] = []
+    for prior in list(frozen_prediction.get("pregame_inputs") or []):
+        gid = str(prior["game_id"])
+        if gid not in outcomes:
+            raise LiveFootballContractError(f"revealed outcome missing game_id {gid}")
+        margin = int(outcomes[gid]["target_margin"])
+        row = dict(prior)
+        row["actual_margin"] = margin
+        row["actual_tie"] = margin == 0
+        row["actual_home_win"] = None if margin == 0 else margin > 0
+        row["target_available"] = True
+        filled.append(row)
+
+    updates, new_state, next_order = _elo_update(
+        pregame_inputs=filled,
+        state=frozen_prediction["block_start_state"],
+        elo_config=config,
+        block_id=block.block_id,
+        run_id=run_id,
+        update_order_start=update_order_start,
+    )
+    return {
+        "block": block,
+        "state_updates": updates,
+        "new_state": new_state,
+        "next_update_order": next_order,
+        "outcomes_revealed": True,
     }
 
 

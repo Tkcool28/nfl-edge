@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Acquire/replay 2026 Week 1 markets and materialize NFL_EDGE_PRODUCT_API_V1.
+"""Acquire/replay an active 2026 week and materialize NFL_EDGE_PRODUCT_API_V1.
 
 Ordinary invocation is replay-only. A billable The Odds API request is possible
 only with the explicit --live flag and is exactly one bounded HTTP attempt.
@@ -20,10 +20,9 @@ from nfl_edge.live.markets_2026 import (
 )
 from nfl_edge.live.product_2026 import build_product_snapshot, product_snapshot_bytes
 from nfl_edge.live.product_state_2026 import load_entering_2026_product_state
-from nfl_edge.live.week1_2026 import load_week1_schedule
+from nfl_edge.live.schedule_2026 import load_schedule
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEDULE = ROOT / "data/live/2026/week1_schedule_v1.json"
 DEFAULT_STATE = ROOT / "data/live/2026/entering_product_state_v1.json"
 
 
@@ -44,6 +43,7 @@ def _write_json(path: Path, payload: dict) -> bytes:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--football-snapshot", type=Path, required=True)
+    parser.add_argument("--schedule", type=Path, required=True)
     parser.add_argument("--decision-state", type=Path, default=DEFAULT_STATE)
     parser.add_argument("--output-dir", type=Path, required=True)
     source = parser.add_mutually_exclusive_group(required=True)
@@ -56,7 +56,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    schedule = load_week1_schedule(SCHEDULE)
+    schedule = load_schedule(args.schedule)
     football = _json(args.football_snapshot)
     args.output_dir.mkdir(parents=True, exist_ok=True)
 

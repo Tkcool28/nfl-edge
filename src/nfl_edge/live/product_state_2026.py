@@ -15,6 +15,7 @@ import io
 import json
 import tempfile
 import zipfile
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
@@ -22,7 +23,7 @@ import polars as pl
 import sklearn
 
 from nfl_edge.holdout import product_2025
-from nfl_edge.recommendation.final_selectors_v1 import ValueSelectorState
+from nfl_edge.recommendation.final_selectors_v1 import ValueSelectorState, advance_value_state
 from nfl_edge.value.accepted_calibration import (
     calibrated_market_probability,
     fit_ml_v4,
@@ -556,3 +557,82 @@ def load_entering_2026_product_state(path: Path) -> dict[str, Any]:
         "spread_v3": dict(payload["spread_confidence_v3"]),
         "value_state": ValueSelectorState(),
     }
+
+
+def _parse_utc(value: object) -> datetime:
+    text = str(value)
+    if not text.endswith("Z"):
+        raise Entering2026ProductStateError(f"selector evidence timestamp is not UTC Z: {text!r}")
+    return datetime.fromisoformat(text[:-1] + "+00:00").astimezone(timezone.utc)
+
+
+def _successful_pregame_selector_rows(*, run_root: Path, week: int) -> list[dict[str, Any]]:
+    """Return the latest successful, strictly pre-kickoff board for ``week``.
+
+    The runtime refreshes more than once each week.  Choosing the latest board
+    before the first kickoff preserves the normal final-pregame selection
+    semantics while refusing any board that could observe a game outcome.
+    """
+    choices: list[tuple[datetime, str, list[dict[str, Any]]]] = []
+    for proof_path in sorted(run_root.glob("*/product/deterministic-proof.json")):
+        status_path = proof_path.parents[1] / "run-status.json"
+        if not status_path.is_file():
+            continue
+        status = json.loads(status_path.read_text(encoding="utf-8"))
+        if status.get("outcome") != "SUCCESS":
+            continue
+        payload = json.loads(proof_path.read_text(encoding="utf-8"))
+        selector = payload.get("selector_evidence")
+        if not isinstance(selector, Mapping):
+            continue
+        if selector.get("schema_version") != "NFL_EDGE_LIVE_SELECTOR_EVIDENCE_V1":
+            continue
+        if int(selector.get("week", -1)) != week:
+            continue
+        rows = selector.get("rows")
+        games = selector.get("games")
+        if not isinstance(rows, list) or not rows or not isinstance(games, list) or not games:
+            continue
+        if {int(row.get("week", -1)) for row in rows if isinstance(row, Mapping)} != {week}:
+            continue
+        try:
+            captured = _parse_utc(selector["captured_at_utc"])
+            earliest_kickoff = min(_parse_utc(row["kickoff_at_utc"]) for row in games if isinstance(row, Mapping))
+        except (KeyError, TypeError, ValueError, Entering2026ProductStateError):
+            continue
+        if captured >= earliest_kickoff:
+            continue
+        choices.append((captured, str(proof_path), [dict(row) for row in rows]))
+    if not choices:
+        raise Entering2026ProductStateError(
+            f"missing successful strictly pre-kickoff selector evidence for settled Week {week}"
+        )
+    return max(choices, key=lambda item: (item[0], item[1]))[2]
+
+
+def advance_live_value_state(*, entering: ValueSelectorState, evidence, run_root: Path) -> ValueSelectorState:
+    """Advance frozen selector trust from completed prior weekly boards only."""
+    state = entering
+    games = {str(row["game_id"]): row for row in evidence.games.to_dicts()}
+    for week in range(1, int(evidence.through_week) + 1):
+        rows = _successful_pregame_selector_rows(run_root=run_root, week=week)
+        settled_rows = []
+        for source in rows:
+            row = dict(source)
+            game = games.get(str(row.get("game_id")))
+            if game is None:
+                raise Entering2026ProductStateError("selector evidence references non-settled game")
+            side = str(row.get("selected_side"))
+            market = str(row.get("market_type"))
+            home_margin = int(game["home_score"]) - int(game["away_score"])
+            if market == "moneyline":
+                result = home_margin if side == "home" else -home_margin
+            elif market == "spread":
+                selected_line = float(row.get("line") or 0.0)
+                result = home_margin + selected_line if side == "home" else -home_margin + selected_line
+            else:
+                continue
+            row["settlement"] = "WIN" if result > 0 else "LOSS" if result < 0 else "PUSH"
+            settled_rows.append(row)
+        state = advance_value_state(state, settled_rows)
+    return state

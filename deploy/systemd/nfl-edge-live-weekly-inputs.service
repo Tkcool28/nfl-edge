@@ -1,0 +1,34 @@
+[Unit]
+Description=NFL EDGE non-billable live weekly input materializer
+Documentation=file:///root/nfl-edge/docs/production_refresh_v1.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/nfl-edge
+Environment="PYTHONPATH=/root/nfl-edge/src"
+ExecStart=/root/nfl-edge/.venv/bin/python /root/nfl-edge/scripts/materialize_live_weekly_inputs_v1.py --output-dir /var/lib/nfl-edge/live_inputs_v1/2026
+Restart=no
+TimeoutStartSec=4min
+MemoryHigh=1536M
+MemoryMax=2G
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/nfl-edge/live_inputs_v1
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictNamespaces=true
+SystemCallArchitectures=native
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nfl-edge-live-weekly-inputs
+
+[Install]
+WantedBy=multi-user.target

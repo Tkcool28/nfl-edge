@@ -7,8 +7,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from nfl_edge.operations import production_refresh_v1 as refresh
 from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash
+from nfl_edge.operations import production_refresh_v1 as refresh
 
 
 class _FreshSleeper:
@@ -36,20 +36,35 @@ def _config(tmp_path: Path, *, live: bool = True) -> refresh.RefreshConfig:
     )
 
 
+def _wire_active_schedule(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, week: int = 1) -> None:
+    path = tmp_path / "data" / "live" / "2026" / f"week{week}_schedule_v1.json"
+    monkeypatch.setattr(
+        refresh,
+        "resolve_active_schedule",
+        lambda *args, **kwargs: SimpleNamespace(
+            path=path,
+            payload={"season": 2026, "week": week, "schedule_version": f"test-week-{week}", "games": [{}]},
+            season=2026,
+            week=week,
+            rollover_at_utc="2026-09-08T12:00:00Z",
+        ),
+    )
+
+
 def _wire_success(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, calls: list[str]) -> None:
+    _wire_active_schedule(monkeypatch, tmp_path)
     monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: calls.append("sleeper") or _FreshSleeper())
     monkeypatch.setattr(refresh, "load_overrides", lambda path: {})
     monkeypatch.setattr(refresh, "SleeperExpectedQBResolver", lambda source, overrides: object())
     monkeypatch.setattr(
         refresh,
-        "score_week1",
+        "score_week",
         lambda **kwargs: calls.append("score") or {"games": [{"id": "g"}], "snapshot_sha256": "a" * 64},
     )
     monkeypatch.setattr(refresh, "canonical_snapshot_bytes", lambda value: b"football")
     monkeypatch.setattr(
         refresh, "_validate_football", lambda path: {"games": [{"id": "g"}], "snapshot_sha256": "a" * 64}
     )
-    monkeypatch.setattr(refresh, "load_week1_schedule", lambda path: {"season": 2026, "week": 1, "games": [{}]})
     monkeypatch.setattr(
         refresh,
         "acquire_live_response",
@@ -109,8 +124,6 @@ def test_success_orders_stages_and_writes_secret_safe_artifacts(
     status = json.loads((tmp_path / "runs" / "latest-status.json").read_text())
     assert status["outcome"] == "SUCCESS"
     assert "ODDS_API_KEY" not in json.dumps(status)
-
-
 
 
 def test_prospective_capture_runs_only_after_successful_publication(
@@ -244,10 +257,46 @@ def test_saved_response_replay_never_calls_provider(monkeypatch: pytest.MonkeyPa
     assert summary["provider_request_count"] == 0
 
 
+def test_missing_active_week_fails_before_sleeper_or_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    calls: list[str] = []
+    monkeypatch.setattr(
+        refresh,
+        "resolve_active_schedule",
+        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("Week 2 schedule missing")),
+    )
+    monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: calls.append("sleeper"))
+    monkeypatch.setattr(refresh, "acquire_live_response", lambda **kwargs: calls.append("provider"))
+
+    outcome, summary = refresh.run_refresh(_config(tmp_path))
+
+    assert outcome is refresh.RefreshOutcome.SCHEDULE_NOT_READY
+    assert calls == []
+    assert summary["provider_request_count"] == 0
+    assert summary["season"] is None
+    assert summary["week"] is None
+
+
+def test_week2_requires_settled_evidence_before_sleeper_or_provider(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    calls: list[str] = []
+    _wire_active_schedule(monkeypatch, tmp_path, week=2)
+    monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: calls.append("sleeper"))
+    monkeypatch.setattr(refresh, "acquire_live_response", lambda **kwargs: calls.append("provider"))
+
+    outcome, summary = refresh.run_refresh(_config(tmp_path))
+
+    assert outcome is refresh.RefreshOutcome.FOOTBALL_STATE_NOT_READY
+    assert calls == []
+    assert summary["provider_request_count"] == 0
+    assert summary["week"] == 2
+
+
 def test_sleeper_failure_prevents_scoring_and_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     calls: list[str] = []
+    _wire_active_schedule(monkeypatch, tmp_path)
     monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: (_ for _ in ()).throw(RuntimeError("stale")))
-    monkeypatch.setattr(refresh, "score_week1", lambda **kwargs: calls.append("score"))
+    monkeypatch.setattr(refresh, "score_week", lambda **kwargs: calls.append("score"))
     monkeypatch.setattr(refresh, "acquire_live_response", lambda **kwargs: calls.append("provider"))
 
     outcome, summary = refresh.run_refresh(_config(tmp_path))
@@ -259,10 +308,11 @@ def test_sleeper_failure_prevents_scoring_and_provider(monkeypatch: pytest.Monke
 
 def test_scoring_failure_prevents_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     calls: list[str] = []
+    _wire_active_schedule(monkeypatch, tmp_path)
     monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: _FreshSleeper())
     monkeypatch.setattr(refresh, "load_overrides", lambda path: {})
     monkeypatch.setattr(refresh, "SleeperExpectedQBResolver", lambda source, overrides: object())
-    monkeypatch.setattr(refresh, "score_week1", lambda **kwargs: (_ for _ in ()).throw(RuntimeError("score failed")))
+    monkeypatch.setattr(refresh, "score_week", lambda **kwargs: (_ for _ in ()).throw(RuntimeError("score failed")))
     monkeypatch.setattr(refresh, "acquire_live_response", lambda **kwargs: calls.append("provider"))
 
     outcome, summary = refresh.run_refresh(_config(tmp_path))
@@ -323,7 +373,6 @@ def test_replay_metadata_and_error_messages_are_secret_redacted(
 ) -> None:
     calls: list[str] = []
     _wire_success(monkeypatch, tmp_path, calls)
-    saved = tmp_path / "saved-response.json"
     meta = tmp_path / "saved-response.meta.json"
     meta.write_text(
         json.dumps(
@@ -375,7 +424,10 @@ def test_replay_preserves_capture_timestamp_regardless_of_cli_as_of(
     calls: list[str] = []
     _wire_success(monkeypatch, tmp_path, calls)
     meta = tmp_path / "saved-response.meta.json"
-    meta.write_text(json.dumps({"acquired_at_utc": "2026-09-08T23:00:00Z", "response_sha256": "b" * 64}), encoding="utf-8")
+    meta.write_text(
+        json.dumps({"acquired_at_utc": "2026-09-08T23:00:00Z", "response_sha256": "b" * 64}),
+        encoding="utf-8",
+    )
 
     captured: dict[str, object] = {}
 
@@ -411,9 +463,7 @@ def test_replay_preserves_capture_timestamp_regardless_of_cli_as_of(
     assert captured["acquired_at_utc"] == "2026-09-08T23:00:00Z"
 
 
-def test_same_second_rerun_allocates_unique_run_directory(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> None:
+def test_same_second_rerun_allocates_unique_run_directory(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     calls: list[str] = []
     _wire_success(monkeypatch, tmp_path, calls)
 
@@ -432,6 +482,7 @@ def test_same_second_pre_provider_failure_still_writes_truthful_status(
 ) -> None:
     first_id = refresh._run_id(refresh._utc_now())
     (tmp_path / "runs" / first_id).mkdir(parents=True)
+    _wire_active_schedule(monkeypatch, tmp_path)
     monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: (_ for _ in ()).throw(RuntimeError("stale")))
 
     outcome, summary = refresh.run_refresh(_config(tmp_path))
