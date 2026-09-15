@@ -419,7 +419,9 @@ def annotate_live_settled_pbp_semantics(
     eligible for future-state advancement.
     """
     require_pbp_columns(frame, where=where)
-    seasons = sorted(int(value) for value in frame["season"].drop_nulls().unique().to_list())
+    if frame["season"].null_count():
+        raise PbpSemanticsError(where, "settled-live PBP contains null season values")
+    seasons = sorted(int(value) for value in frame["season"].unique().to_list())
     if seasons != [2026]:
         raise PbpSemanticsError(
             where,
