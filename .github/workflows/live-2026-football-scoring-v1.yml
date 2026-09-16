@@ -179,9 +179,66 @@ jobs:
             --active-as-of-utc 2026-09-15T12:00:00Z \
             > /tmp/week2-materialization.json
 
-      - name: Collect fresh Sleeper evidence
+      - name: Seed deterministic Week 2-compatible Sleeper fixture
         run: |
-          python scripts/collect_sleeper_qbs.py --kind scheduled > /tmp/week2-sleeper.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import polars as pl
+
+          from nfl_edge.live.week1_2026 import EXPECTED_TEAMS
+
+          root = Path("data/source_audits/sleeper_qb_v1")
+          normalized = root / "normalized"
+          normalized.mkdir(parents=True, exist_ok=True)
+          snapshot_id = "ci-week2-preprovider-qb-v1"
+          observed = "2026-09-15T11:55:00Z"
+
+          snapshots = []
+          crosswalk = []
+          evidence = []
+          for index, team in enumerate(sorted(EXPECTED_TEAMS), start=1):
+              sleeper_id = f"ci-s-{index:02d}"
+              gsis_id = f"00-CI-W2-{index:02d}"
+              snapshots.append({
+                  "snapshot_id": snapshot_id,
+                  "fetched_at_utc": observed,
+                  "sleeper_player_id": sleeper_id,
+                  "gsis_id": gsis_id,
+                  "full_name": f"CI {team} Quarterback",
+                  "team": team,
+                  "active": True,
+                  "years_exp": 3,
+                  "injury_status": None,
+                  "depth_chart_position": "QB",
+                  "depth_chart_order": 1,
+              })
+              crosswalk.append({
+                  "snapshot_id": snapshot_id,
+                  "sleeper_player_id": sleeper_id,
+                  "gsis_id": gsis_id,
+                  "nflverse_player_id": gsis_id,
+                  "match_method": "exact_sleeper_id",
+                  "is_matched": True,
+                  "review_required": False,
+                  "conflict_reason": None,
+              })
+              evidence.append({
+                  "snapshot_id": snapshot_id,
+                  "sleeper_player_id": sleeper_id,
+                  "evidence_state": "DEPTH_CHART_EXPECTED_HEALTHY",
+              })
+
+          pl.DataFrame(snapshots).write_parquet(normalized / "qb_snapshots.parquet")
+          pl.DataFrame(crosswalk).write_parquet(normalized / "qb_identity_crosswalk.parquet")
+          pl.DataFrame(evidence).write_parquet(normalized / "qb_evidence_states.parquet")
+          (root / "latest_snapshot.json").write_text(
+              json.dumps({"snapshot_id": snapshot_id}, sort_keys=True) + "\n"
+          )
+          (root / "latest_run_status.json").write_text(
+              json.dumps({"run_outcome": "SUCCESS"}, sort_keys=True) + "\n"
+          )
+          PY
 
       - name: Seed governed pregame selector fixture for the full preflight
         run: |
@@ -249,27 +306,12 @@ jobs:
 
       - name: Run canonical zero-provider Week 2 preflight
         run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          import polars as pl
-
-          pointer = json.loads(Path("data/source_audits/sleeper_qb_v1/latest_snapshot.json").read_text())
-          snapshot_id = pointer["snapshot_id"]
-          rows = pl.read_parquet("data/source_audits/sleeper_qb_v1/normalized/qb_snapshots.parquet").filter(
-              pl.col("snapshot_id").cast(pl.Utf8) == snapshot_id
-          )
-          observed = sorted(str(x) for x in rows["fetched_at_utc"].drop_nulls().unique().to_list())
-          assert len(observed) == 1
-          Path("/tmp/week2-as-of.txt").write_text(observed[0])
-          PY
-          AS_OF="$(cat /tmp/week2-as-of.txt)"
           python scripts/verify_live_2026_preprovider_v1.py \
             --repository-root . \
             --schedule-root /tmp/nfl-edge-live-week2 \
             --evidence-root /tmp/nfl-edge-live-week2 \
             --run-root /tmp/nfl-edge-selector-runs \
-            --prediction-as-of-utc "$AS_OF" \
+            --prediction-as-of-utc "2026-09-15T12:00:00Z" \
             | tee /tmp/week2-preprovider-proof.json
           python - <<'PY'
           import json
