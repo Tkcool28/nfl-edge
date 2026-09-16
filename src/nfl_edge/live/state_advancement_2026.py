@@ -10,6 +10,7 @@ from pathlib import Path
 import polars as pl
 
 from nfl_edge.features.totals_v1.game_observations import build_game_observations_with_provenance
+from nfl_edge.features.totals_v1.pbp_semantics import annotate_live_settled_pbp_semantics
 from nfl_edge.holdout.totals_features_2025 import reveal_and_commit_totals_block
 from nfl_edge.live.evidence_2026 import SettledActualQBResolver, SettledSeasonEvidence
 from nfl_edge.live.features_2026 import build_live_week_features
@@ -163,7 +164,10 @@ def advance_entering_state_through_settled_weeks(
             for row in features.current_games.to_dicts()
         }
         observations,_ = build_game_observations_with_provenance(
-            block_id=features.block.block_id,pbp_frames=pbp_frames,game_to_teams=teams
+            block_id=features.block.block_id,
+            pbp_frames=pbp_frames,
+            game_to_teams=teams,
+            annotation_fn=annotate_live_settled_pbp_semantics,
         )
         totals_update = reveal_and_commit_totals_block(
             frozen=frozen_totals,state=state.totals_state,revealed_games=revealed,

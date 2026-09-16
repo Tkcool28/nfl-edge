@@ -49,10 +49,14 @@ jobs:
             src/nfl_edge/live/model_adapters.py \
             src/nfl_edge/live/qb_inputs.py \
             src/nfl_edge/live/state_2026.py \
+            src/nfl_edge/live/state_advancement_2026.py \
             src/nfl_edge/live/totals_features.py \
+            src/nfl_edge/features/totals_v1/pbp_semantics.py \
+            src/nfl_edge/features/totals_v1/game_observations.py \
             src/nfl_edge/live/scorer_2026.py \
             src/nfl_edge/live/schedule_materializer_2026.py \
-            scripts/run_2026_live_football_scoring_v1.py
+            scripts/run_2026_live_football_scoring_v1.py \
+            scripts/verify_live_2026_preprovider_v1.py
 
       - name: Focused live football tests
         run: |
@@ -62,7 +66,88 @@ jobs:
             tests/live/test_roof_scenario_adapter.py \
             tests/live/test_sleeper_qb_live_resolver.py \
             tests/live/test_live_2026_scoring.py \
-            tests/live/test_schedule_materializer_2026.py
+            tests/live/test_schedule_materializer_2026.py \
+            tests/live/test_settled_totals_semantics_2026.py
+
+
+  real-week2-state-advancement-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    needs: deterministic-football-gate
+    env:
+      PYTHONHASHSEED: "0"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OPENBLAS_CORETYPE: "HASWELL"
+      MKL_NUM_THREADS: "1"
+      MKL_CBWR: "COMPATIBLE"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11', cache: pip}
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+
+      - name: Materialize real Week 2 boundary inputs with zero market access
+        run: |
+          rm -rf /tmp/nfl-edge-live-week2
+          python scripts/materialize_live_weekly_inputs_v1.py \
+            --output-dir /tmp/nfl-edge-live-week2 \
+            --active-as-of-utc 2026-09-15T12:00:00Z \
+            > /tmp/week2-materialization.json
+          cat /tmp/week2-materialization.json
+
+      - name: Advance real entering-2026 state through settled Week 1
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from nfl_edge.live.evidence_2026 import load_settled_evidence
+          from nfl_edge.live.state_2026 import bootstrap_entering_2026_state
+          from nfl_edge.live.state_advancement_2026 import advance_entering_state_through_settled_weeks
+
+          root = Path.cwd()
+          evidence_root = Path("/tmp/nfl-edge-live-week2")
+          evidence = load_settled_evidence(evidence_root)
+          assert evidence.through_week == 1
+          assert evidence.games.height == 16
+          assert evidence.team_stats.height == 32
+          assert evidence.qb_stats.height >= 32
+          assert evidence.pbp.height > 0
+
+          entering = bootstrap_entering_2026_state(root)
+          advanced = advance_entering_state_through_settled_weeks(
+              repository_root=root,
+              active_schedule_path=evidence_root / "week2_schedule_v1.json",
+              evidence=evidence,
+              entering_state=entering,
+          )
+          assert len(advanced.completed_2026_blocks) == 1
+          assert advanced.state_version != entering.state_version
+          assert advanced.totals_training.height > entering.totals_training.height
+          assert advanced.xgb_history.height > entering.xgb_history.height
+          assert advanced.expected_history.height > entering.expected_history.height
+
+          proof = {
+              "verdict": "REAL_WEEK2_STATE_ADVANCEMENT_READY",
+              "active_week": 2,
+              "settled_through_week": evidence.through_week,
+              "completed_2026_blocks": list(advanced.completed_2026_blocks),
+              "entering_state_version": entering.state_version,
+              "advanced_state_version": advanced.state_version,
+              "settled_games": evidence.games.height,
+              "team_stats": evidence.team_stats.height,
+              "qb_stats": evidence.qb_stats.height,
+              "pbp_rows": evidence.pbp.height,
+              "provider_request_count": 0,
+              "odds_api_called": False,
+          }
+          print(json.dumps(proof, sort_keys=True))
+          PY
+
 
   real-sleeper-week1-proof:
     runs-on: ubuntu-24.04

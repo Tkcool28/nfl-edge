@@ -370,31 +370,8 @@ def goal_to_go_opportunity_membership_expr() -> pl.Expr:
 # ---------------------------------------------------------------------------
 
 
-def annotate_pbp_semantics(
-    frame: pl.DataFrame,
-    *,
-    where: str = "annotate_pbp_semantics",
-) -> pl.DataFrame:
-    """Return the frame annotated with explicit Boolean semantics columns.
-
-    Added columns:
-      - ``is_vfp``: Valid Football Play.
-      - ``is_pass_attempt``: VFP AND pass_attempt == 1.
-      - ``is_completion``: pass attempt AND complete_pass == 1.
-      - ``is_rush_attempt``: VFP AND rush_attempt == 1 AND qb_kneel == 0.
-      - ``is_dropback``: dropback primary OR dropback fallback.
-      - ``is_dropback_fallback``: True exactly when this row qualifies via
-        the dropback fallback (qb_dropback IS NULL). Provenance consumers
-        use this to count fallback usage.
-      - ``is_turnover_event``: qualifying interception OR lost fumble.
-      - ``has_epa_obs``: VFP AND epa non-null.
-      - ``has_success_obs``: VFP AND success non-null.
-
-    The frame is season-window-validated (NFL seasons 2018..2024 only;
-    season 2025 hard-fails) and required-column-validated up front.
-    """
-    require_pbp_columns(frame, where=where)
-    assert_pbp_development_only(frame, where=where)
+def _annotate_pbp_semantics_unchecked(frame: pl.DataFrame) -> pl.DataFrame:
+    """Apply the frozen row-level football semantics without season eligibility policy."""
     return frame.with_columns(
         [
             vfp_expr().alias("is_vfp"),
@@ -406,8 +383,6 @@ def annotate_pbp_semantics(
             turnover_event_expr().alias("is_turnover_event"),
             epa_observed_expr().alias("has_epa_obs"),
             success_observed_expr().alias("has_success_obs"),
-            # Phase 3C annotation additions. Each is a deterministic
-            # Boolean expression re-derivable from the source columns.
             neutral_expr().alias("is_neutral"),
             air_yards_observed_expr().alias("has_air_yards_obs"),
             yac_observed_expr().alias("has_yac_obs"),
@@ -418,6 +393,41 @@ def annotate_pbp_semantics(
             goal_to_go_opportunity_membership_expr().alias("is_goal_to_go"),
         ]
     )
+
+
+def annotate_pbp_semantics(
+    frame: pl.DataFrame,
+    *,
+    where: str = "annotate_pbp_semantics",
+) -> pl.DataFrame:
+    """Annotate development PBP while preserving the 2018..2024 season gate."""
+    require_pbp_columns(frame, where=where)
+    assert_pbp_development_only(frame, where=where)
+    return _annotate_pbp_semantics_unchecked(frame)
+
+
+def annotate_live_settled_pbp_semantics(
+    frame: pl.DataFrame,
+    *,
+    where: str = "annotate_live_settled_pbp_semantics",
+) -> pl.DataFrame:
+    """Annotate only settled 2026 production PBP using the frozen semantics.
+
+    This is deliberately separate from the development path. It does not relax
+    the 2018..2024 development guard or authorize 2025 sealed-holdout access.
+    The caller must already have established that the games are completed and
+    eligible for future-state advancement.
+    """
+    require_pbp_columns(frame, where=where)
+    if frame["season"].null_count():
+        raise PbpSemanticsError(where, "settled-live PBP contains null season values")
+    seasons = sorted(int(value) for value in frame["season"].unique().to_list())
+    if seasons != [2026]:
+        raise PbpSemanticsError(
+            where,
+            f"settled-live PBP must contain only season 2026; got {seasons}",
+        )
+    return _annotate_pbp_semantics_unchecked(frame)
 
 
 # ---------------------------------------------------------------------------

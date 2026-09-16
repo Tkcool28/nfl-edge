@@ -462,6 +462,8 @@ def build_game_observations(
     block_id: str,
     pbp_frames: dict[str, pl.DataFrame],
     game_to_teams: Mapping[str, tuple[str, str]] | None = None,
+    *,
+    annotation_fn: Callable[[pl.DataFrame], pl.DataFrame] = annotate_pbp_semantics,
 ) -> list[GameObservation]:
     """Build one :class:`GameObservation` per (block_id, game_id)."""
     from .drive_observations import build_possessions, possession_observations
@@ -470,7 +472,7 @@ def build_game_observations(
     all_pos_aggs: dict[str, dict[str, dict[str, list[tuple[float, float, int]]]]] = {}
 
     for game_id, frame in pbp_frames.items():
-        annotated = annotate_pbp_semantics(frame)
+        annotated = annotation_fn(frame)
         # Per-game row aggregates -> global.
         row_aggs = aggregate_row_metrics(annotated)
         for gid, per_team in row_aggs.items():
@@ -515,6 +517,8 @@ def build_game_observations_with_provenance(
     block_id: str,
     pbp_frames: dict[str, pl.DataFrame],
     game_to_teams: Mapping[str, tuple[str, str]] | None = None,
+    *,
+    annotation_fn: Callable[[pl.DataFrame], pl.DataFrame] = annotate_pbp_semantics,
 ) -> "tuple[list[GameObservation], ProvenanceCounters]":
     """Build game observations AND a populated :class:`ProvenanceCounters`.
 
@@ -537,10 +541,11 @@ def build_game_observations_with_provenance(
         block_id=block_id,
         pbp_frames=pbp_frames,
         game_to_teams=game_to_teams,
+        annotation_fn=annotation_fn,
     )
     total_fallback = 0
     for frame in pbp_frames.values():
-        annotated = annotate_pbp_semantics(frame)
+        annotated = annotation_fn(frame)
         if "is_dropback_fallback" not in annotated.columns:
             # annotate_pbp_semantics always adds this column; defensive only.
             continue
