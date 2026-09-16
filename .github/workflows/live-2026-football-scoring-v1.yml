@@ -38,14 +38,6 @@ jobs:
             exit 1
           fi
 
-      - name: Prove Week 1 selector replay dependencies remain historically frozen
-        run: |
-          git diff --exit-code 208301de3f4da43c21d2c54bdcae5462bc45db64..HEAD -- \
-            scripts/task05f_evaluator_final_runner.py \
-            scripts/task05g_model_confidence_v2_runner.py \
-            scripts/task05g_spread_confidence_v3_runner.py \
-            data/live/2026/entering_product_state_v1.json
-
       - name: Compile live scorer surfaces
         run: |
           python -m py_compile \
@@ -248,70 +240,6 @@ jobs:
           )
           PY
 
-      - name: Seed governed pregame selector fixture for the full preflight
-        run: |
-          python - <<'PY'
-          import json
-          from datetime import datetime, timedelta, timezone
-          from pathlib import Path
-
-          schedule = json.loads(Path("/tmp/nfl-edge-live-week2/week1_schedule_v1.json").read_text())
-          game = sorted(schedule["games"], key=lambda row: row["game_id"])[0]
-          kickoff = datetime.fromisoformat(game["scheduled_start_utc"].replace("Z", "+00:00"))
-          captured = (kickoff - timedelta(hours=1)).astimezone(timezone.utc)
-          captured_text = captured.isoformat(timespec="seconds").replace("+00:00", "Z")
-          run = Path("/tmp/nfl-edge-selector-runs/week1-pregame-proof")
-          (run / "product").mkdir(parents=True, exist_ok=True)
-          (run / "run-status.json").write_text(json.dumps({"outcome": "SUCCESS"}))
-
-          def row(market):
-              return {
-                  "candidate_id": f"{game['game_id']}|{market}|home",
-                  "game_id": game["game_id"],
-                  "season": 2026,
-                  "week": 1,
-                  "market_type": market,
-                  "selected_side": "home",
-                  "sportsbook": "draftkings",
-                  "line": None if market == "moneyline" else -2.5,
-                  "american_odds": -110,
-                  "supported": True,
-                  "reliability": "HIGH",
-                  "model_confidence_supported": True,
-                  "model_confidence_support_n": 512,
-                  "model_confidence_probability": 0.62,
-                  "pinnacle_anchor_probability": 0.58,
-                  "break_even_probability": 0.52,
-                  "expected_value": 0.08,
-                  "evaluated_edge_probability": 0.10,
-                  "price_status": "VALUE",
-                  "model_candidate_regions": (
-                      "ML_DOG_VALUE_ZONE_AVG"
-                      if market == "moneyline"
-                      else "SPREAD_DISAGREEMENT_EXPECTED_MARGIN_0_4"
-                  ),
-                  "model_price_gap": 0.05,
-                  "model_cover_margin_v3": 2.0,
-              }
-
-          proof = {
-              "selector_evidence": {
-                  "schema_version": "NFL_EDGE_LIVE_SELECTOR_EVIDENCE_V1",
-                  "season": 2026,
-                  "week": 1,
-                  "captured_at_utc": captured_text,
-                  "games": [{
-                      "game_id": game["game_id"],
-                      "kickoff_at_utc": game["scheduled_start_utc"],
-                  }],
-                  "rows": [row("moneyline"), row("spread")],
-              }
-          }
-          (run / "product" / "deterministic-proof.json").write_text(
-              json.dumps(proof, sort_keys=True)
-          )
-          PY
-
       - name: Run canonical zero-provider Week 2 preflight
         run: |
           python scripts/verify_live_2026_preprovider_v1.py \
@@ -335,8 +263,10 @@ jobs:
           assert proof["provider_request_count"] == 0
           assert proof["odds_api_called"] is False
           assert proof["market_data_read"] is False
-          assert proof["selector_state_observations"]["moneyline"] == 1
-          assert proof["selector_state_observations"]["spread"] == 1
+          # Selector trust intentionally starts prospectively in Week 2.
+          # Week 1 is not reconstructed or backfilled.
+          assert proof["selector_state_observations"]["moneyline"] == 0
+          assert proof["selector_state_observations"]["spread"] == 0
           PY
 
 
