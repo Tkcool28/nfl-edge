@@ -571,14 +571,18 @@ def _legacy_selector_evidence_from_run(
     repository_root: Path,
     run_dir: Path,
 ) -> dict[str, Any]:
-    """Recover selector evidence from an old successful pre-PR131 run by exact replay.
+    """Recover selector evidence from a successful pre-PR131 pregame run.
 
-    The replay is allowed only from the run's immutable pregame football and market
-    artifacts plus the frozen entering-2026 product state. The rebuilt public
-    product must match the original candidate bytes and recorded SHA-256 exactly
-    before its newly exposed private selector evidence is accepted.
+    The historical public product format evolved after Week 1, so whole-file byte
+    equality against a modern replay is too brittle. Recovery instead proves the
+    original immutable product bytes against their recorded SHA, proves that the
+    preserved football/market source artifacts exactly match the public product's
+    per-game source surfaces and version/timestamp identities, then requires the
+    replayed public headline decisions to match the immutable product before
+    accepting the newly exposed private selector board.
     """
-    from nfl_edge.live.product_2026 import build_product_snapshot, product_snapshot_bytes
+    from nfl_edge.contracts.live_product_v1 import validate_product_snapshot
+    from nfl_edge.live.product_2026 import build_product_snapshot
 
     football_paths = sorted((run_dir / "football").glob("*.json"))
     market_path = run_dir / "market" / "NFL_EDGE_LIVE_MARKET_V1.json"
@@ -605,16 +609,64 @@ def _legacy_selector_evidence_from_run(
         raise Entering2026ProductStateError(
             f"legacy selector replay original product is unavailable for {run_dir}"
         )
+
     original_bytes = product_path.read_bytes()
     recorded_sha = str(status.get("product_sha256") or "")
     observed_sha = hashlib.sha256(original_bytes).hexdigest()
-    if recorded_sha != observed_sha:
+    if not recorded_sha or recorded_sha != observed_sha:
         raise Entering2026ProductStateError(
             f"legacy selector replay product SHA mismatch: recorded={recorded_sha} observed={observed_sha}"
         )
 
+    try:
+        original = validate_product_snapshot(json.loads(original_bytes))
+    except Exception as exc:
+        raise Entering2026ProductStateError(
+            f"legacy selector replay original product validation failed: {exc}"
+        ) from exc
     football = json.loads(football_paths[0].read_text(encoding="utf-8"))
     market = json.loads(market_path.read_text(encoding="utf-8"))
+
+    if int(original.get("season", -1)) != 2026 or int(original.get("week", -1)) != 1:
+        raise Entering2026ProductStateError("legacy selector replay original product is not 2026 Week 1")
+    if str(original.get("generated_at_utc")) != str(market.get("acquired_at_utc")):
+        raise Entering2026ProductStateError("legacy selector replay market timestamp differs from original product")
+    if str(original.get("prediction_as_of_utc")) != str(football.get("prediction_as_of_utc")):
+        raise Entering2026ProductStateError("legacy selector replay football timestamp differs from original product")
+    if str(original.get("football_data_version")) != str(football.get("completed_football_state_version")):
+        raise Entering2026ProductStateError("legacy selector replay football state version differs from original product")
+    if str(original.get("qb_snapshot_version")) != str(football.get("qb_snapshot_version")):
+        raise Entering2026ProductStateError("legacy selector replay QB snapshot differs from original product")
+    if str(original.get("market_snapshot_version")) != str(market.get("market_snapshot_version")):
+        raise Entering2026ProductStateError("legacy selector replay market snapshot version differs from original product")
+
+    original_games = {str(row["game_id"]): dict(row) for row in original["games"]}
+    football_games = {str(row["game_id"]): dict(row) for row in football["games"]}
+    market_games = {str(row["game_id"]): dict(row) for row in market["games"]}
+    if set(original_games) != set(football_games) or set(original_games) != set(market_games):
+        raise Entering2026ProductStateError("legacy selector replay canonical game IDs differ across preserved artifacts")
+
+    for gid in sorted(original_games):
+        product_game = original_games[gid]
+        football_game = football_games[gid]
+        market_game = market_games[gid]
+        for key in ("home_team", "away_team", "kickoff_at_utc"):
+            if product_game.get(key) != football_game.get(key):
+                raise Entering2026ProductStateError(
+                    f"legacy selector replay {gid} {key} differs from preserved football artifact"
+                )
+        if product_game.get("market_board") != market_game.get("market_board"):
+            raise Entering2026ProductStateError(
+                f"legacy selector replay {gid} market board differs from preserved market artifact"
+            )
+        public_outputs = dict(product_game.get("football_outputs") or {})
+        public_outputs.pop("prediction_as_of_utc", None)
+        public_outputs.pop("provenance_id", None)
+        if public_outputs != dict(football_game.get("football_outputs") or {}):
+            raise Entering2026ProductStateError(
+                f"legacy selector replay {gid} football outputs differ from preserved football artifact"
+            )
+
     decision_state = load_entering_2026_product_state(
         repository_root / "data/live/2026/entering_product_state_v1.json"
     )
@@ -624,14 +676,9 @@ def _legacy_selector_evidence_from_run(
         market_snapshot=market,
         decision_state=decision_state,
     )
-    replay_bytes = product_snapshot_bytes(replay)
-    if replay_bytes != original_bytes:
+    if replay.get("headlines") != original.get("headlines"):
         raise Entering2026ProductStateError(
-            "legacy selector replay public product differs from original immutable candidate"
-        )
-    if hashlib.sha256(replay_bytes).hexdigest() != recorded_sha:
-        raise Entering2026ProductStateError(
-            "legacy selector replay SHA differs from original recorded product SHA"
+            "legacy selector replay headline decisions differ from original immutable product"
         )
     selector = proof.get("selector_evidence")
     if not isinstance(selector, Mapping):
@@ -652,6 +699,7 @@ def _successful_pregame_selector_rows(
     semantics while refusing any board that could observe a game outcome.
     """
     choices: list[tuple[datetime, str, list[dict[str, Any]]]] = []
+    replay_rejections: list[str] = []
     for proof_path in sorted(run_root.glob("*/product/deterministic-proof.json")):
         status_path = proof_path.parents[1] / "run-status.json"
         if not status_path.is_file():
@@ -669,7 +717,8 @@ def _successful_pregame_selector_rows(
                     repository_root=repository_root,
                     run_dir=proof_path.parents[1],
                 )
-            except Entering2026ProductStateError:
+            except Entering2026ProductStateError as exc:
+                replay_rejections.append(f"{proof_path.parents[1].name}: {exc}")
                 continue
         if selector.get("schema_version") != "NFL_EDGE_LIVE_SELECTOR_EVIDENCE_V1":
             continue
@@ -690,8 +739,10 @@ def _successful_pregame_selector_rows(
             continue
         choices.append((captured, str(proof_path), [dict(row) for row in rows]))
     if not choices:
+        detail = "; ".join(replay_rejections[-8:]) if replay_rejections else "no replay candidates"
         raise Entering2026ProductStateError(
-            f"missing successful strictly pre-kickoff selector evidence for settled Week {week}"
+            f"missing successful strictly pre-kickoff selector evidence for settled Week {week}; "
+            f"legacy replay rejections: {detail}"
         )
     return max(choices, key=lambda item: (item[0], item[1]))[2]
 
