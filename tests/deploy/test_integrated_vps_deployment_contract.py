@@ -135,3 +135,28 @@ def test_live_weekly_inputs_are_non_billable_and_precede_production() -> None:
     assert "Persistent=false" in timer
     assert "--schedule-root /var/lib/nfl-edge/live_inputs_v1/2026" in production
     assert "--evidence-root /var/lib/nfl-edge/live_inputs_v1/2026" in production
+
+
+def test_production_refresh_can_acquire_live_input_lock_under_hardened_sandbox() -> None:
+    """The settled-evidence reader opens <evidence-root>/.live-inputs.lock in
+    'a+' mode (shared fcntl), which requires write access on the season
+    evidence root. The production-refresh unit must grant read-write on exactly
+    that governed lock directory -- not the whole live_inputs tree -- so a
+    Week N refresh can consume the materialized weekly inputs under
+    ProtectSystem=strict without weakening other sandboxing."""
+    unit = _read("deploy/systemd/nfl-edge-production-refresh.service")
+    assert "ProtectSystem=strict" in unit
+    # The governed lock directory is the same season evidence root passed to
+    # --evidence-root. Grant it, and only it, on the live-inputs tree.
+    assert "/var/lib/nfl-edge/live_inputs_v1/2026" in unit
+    assert "ReadWritePaths=/var/lib/nfl-edge/production_refresh_v1 " \
+        "/var/lib/nfl-edge/product_v1 /var/lib/nfl-edge/prospective_card_log_v1 " \
+        "/var/lib/nfl-edge/live_inputs_v1/2026" in unit
+    # Least privilege: do NOT grant the whole live_inputs tree or its parent.
+    assert "/var/lib/nfl-edge/live_inputs_v1" in unit  # present only via .../2026
+    assert "ReadWritePaths=/var/lib/nfl-edge/live_inputs_v1 " not in " " + unit
+    assert "live_inputs_v1/2026\n" in unit or "live_inputs_v1/2026 " in unit
+    # No new broad-write paths or sandbox weakening.
+    assert "ProtectHome=read-only" in unit
+    assert "ProtectSystem=relaxed" not in unit
+    assert "ReadWritePaths=/var/lib/nfl-edge " not in " " + unit
