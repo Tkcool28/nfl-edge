@@ -267,10 +267,13 @@ def _evaluate_candidates(
     }
     for gid in sorted(current_games):
         game = dict(current_games[gid])
+        season = int(game["season"])
+        week = int(game["week"])
+        block_id = f"{season}-{week:02d}"
         game_state = GameState(
             gid,
-            2026,
-            "1",
+            season,
+            str(week),
             None,
             qbelo_home=game.get("qbelo_home"),
             xgb_home=game.get("xgb_home"),
@@ -294,7 +297,7 @@ def _evaluate_candidates(
                 anchor = anchors[market]
                 if anchor is None:
                     material = task05f._unsupported_row(
-                        gid, game, "2026-01", offer, market, "missing_pinnacle_anchor", Settlement.PUSH
+                        gid, game, block_id, offer, market, "missing_pinnacle_anchor", Settlement.PUSH
                     )
                 else:
                     result = evaluate_offer(
@@ -323,7 +326,7 @@ def _evaluate_candidates(
                     if parity != result:
                         raise LiveProductError(f"stored/manual evaluator parity failed: {gid} {market} {side}")
                     material = task05f._result_row(
-                        gid, game, "2026-01", offer, anchor, result, Settlement.PUSH
+                        gid, game, block_id, offer, anchor, result, Settlement.PUSH
                     )
                 material.pop("settlement", None)
                 material.pop("realized_profit", None)
@@ -577,8 +580,8 @@ def _aggregate_roof_scenarios(
         return missing_roof_scenario_evaluation()
     base = GameState(
         str(game["game_id"]),
-        2026,
-        "1",
+        int(game["season"]),
+        str(int(game["week"])),
         None,
         qbelo_home=current_game.get("qbelo_home"),
         xgb_home=None,

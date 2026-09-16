@@ -100,7 +100,7 @@ def _football_snapshot(schedule):
             {
                 "game_id": gid,
                 "season": 2026,
-                "week": 1,
+                "week": int(schedule["week"]),
                 "away_team": away,
                 "home_team": home,
                 "kickoff_at_utc": str(row["scheduled_start_utc"]),
@@ -119,7 +119,7 @@ def _football_snapshot(schedule):
         "generated_at_utc": PREDICTION_AT,
         "prediction_as_of_utc": PREDICTION_AT,
         "season": 2026,
-        "week": 1,
+        "week": int(schedule["week"]),
         "completed_football_state_version": "synthetic-entering-2026-football-state",
         "qb_snapshot_version": "synthetic-sleeper-snapshot",
         "model_versions": {
@@ -224,3 +224,38 @@ def test_full_fixture_product_validates_and_replays_identically(tmp_path):
     else:
         assert pending["open_state"] == pending["closed_state"] == pending["shared_state"]
     assert all(headline["market"] != "TOTAL" for headline in first["headlines"].values() if headline["market"])
+
+
+def test_week2_product_uses_week2_identity_and_preserves_pending_roof(tmp_path):
+    schedule = json.loads(SCHEDULE.read_text())
+    schedule["week"] = 2
+    schedule["schedule_version"] = "synthetic-week2"
+    for row in schedule["games"]:
+        row["week"] = 2
+        row["game_id"] = str(row["game_id"]).replace("2026_01_", "2026_02_", 1)
+
+    state_payload = materialize_entering_2026_product_state(ROOT)
+    state_path = tmp_path / "entering-2026-week2.json"
+    state_path.write_text(json.dumps(state_payload, sort_keys=True, allow_nan=False) + "\n")
+    state = load_entering_2026_product_state(state_path)
+
+    football = _football_snapshot(schedule)
+    markets = _market_snapshot(schedule)
+    product, proof = build_product_snapshot(
+        root=ROOT,
+        football_snapshot=football,
+        market_snapshot=markets,
+        decision_state=state,
+    )
+
+    assert product["season"] == 2026
+    assert product["week"] == 2
+    assert product["product_version"] == "live-2026-week2-product-v1"
+    assert proof["selector_evidence"]["week"] == 2
+    assert {row["week"] for row in proof["selector_evidence"]["rows"]} == {2}
+    pending = [
+        game for game in product["games"]
+        if game["football_outputs"]["xgboost_v2"]["status"] == "AVAILABLE_WITH_ROOF_SCENARIOS"
+    ]
+    assert len(pending) == 1
+    assert pending[0]["week"] == 2

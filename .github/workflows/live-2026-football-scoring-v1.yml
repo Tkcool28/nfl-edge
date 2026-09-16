@@ -67,7 +67,8 @@ jobs:
             tests/live/test_sleeper_qb_live_resolver.py \
             tests/live/test_live_2026_scoring.py \
             tests/live/test_schedule_materializer_2026.py \
-            tests/live/test_settled_totals_semantics_2026.py
+            tests/live/test_settled_totals_semantics_2026.py \
+            tests/live/test_product_state_2026.py
 
 
   real-week2-state-advancement-proof:
@@ -146,6 +147,188 @@ jobs:
               "odds_api_called": False,
           }
           print(json.dumps(proof, sort_keys=True))
+          PY
+
+
+
+  real-week2-preprovider-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    needs: real-week2-state-advancement-proof
+    env:
+      PYTHONHASHSEED: "0"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OPENBLAS_CORETYPE: "HASWELL"
+      MKL_NUM_THREADS: "1"
+      MKL_CBWR: "COMPATIBLE"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11', cache: pip}
+      - run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+
+      - name: Materialize real Week 2 boundary inputs
+        run: |
+          rm -rf /tmp/nfl-edge-live-week2 /tmp/nfl-edge-selector-runs
+          python scripts/materialize_live_weekly_inputs_v1.py \
+            --output-dir /tmp/nfl-edge-live-week2 \
+            --active-as-of-utc 2026-09-15T12:00:00Z \
+            > /tmp/week2-materialization.json
+
+      - name: Seed deterministic Week 2-compatible Sleeper fixture
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import polars as pl
+
+          from nfl_edge.live.week1_2026 import EXPECTED_TEAMS
+
+          root = Path("data/source_audits/sleeper_qb_v1")
+          normalized = root / "normalized"
+          normalized.mkdir(parents=True, exist_ok=True)
+          snapshot_id = "ci-week2-preprovider-qb-v1"
+          observed = "2026-09-15T11:55:00Z"
+
+          snapshots = []
+          crosswalk = []
+          evidence = []
+          for index, team in enumerate(sorted(EXPECTED_TEAMS), start=1):
+              sleeper_id = f"ci-s-{index:02d}"
+              gsis_id = f"00-CI-W2-{index:02d}"
+              snapshots.append({
+                  "snapshot_id": snapshot_id,
+                  "fetched_at_utc": observed,
+                  "sleeper_player_id": sleeper_id,
+                  "gsis_id": gsis_id,
+                  "full_name": f"CI {team} Quarterback",
+                  "team": team,
+                  "active": True,
+                  "years_exp": 3,
+                  "injury_status": None,
+                  "depth_chart_position": "QB",
+                  "depth_chart_order": 1,
+              })
+              crosswalk.append({
+                  "snapshot_id": snapshot_id,
+                  "sleeper_player_id": sleeper_id,
+                  "gsis_id": gsis_id,
+                  "nflverse_player_id": gsis_id,
+                  "match_method": "exact_sleeper_id",
+                  "is_matched": True,
+                  "review_required": False,
+                  "conflict_reason": None,
+              })
+              evidence.append({
+                  "snapshot_id": snapshot_id,
+                  "sleeper_player_id": sleeper_id,
+                  "evidence_state": "DEPTH_CHART_EXPECTED_HEALTHY",
+              })
+
+          pl.DataFrame(snapshots).write_parquet(normalized / "qb_snapshots.parquet")
+          pl.DataFrame(crosswalk).write_parquet(normalized / "qb_identity_crosswalk.parquet")
+          pl.DataFrame(evidence).write_parquet(normalized / "qb_evidence_states.parquet")
+          (root / "latest_snapshot.json").write_text(
+              json.dumps({"snapshot_id": snapshot_id}, sort_keys=True) + "\n"
+          )
+          (root / "latest_run_status.json").write_text(
+              json.dumps({"run_outcome": "SUCCESS"}, sort_keys=True) + "\n"
+          )
+          PY
+
+      - name: Seed governed pregame selector fixture for the full preflight
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime, timedelta, timezone
+          from pathlib import Path
+
+          schedule = json.loads(Path("/tmp/nfl-edge-live-week2/week1_schedule_v1.json").read_text())
+          game = sorted(schedule["games"], key=lambda row: row["game_id"])[0]
+          kickoff = datetime.fromisoformat(game["scheduled_start_utc"].replace("Z", "+00:00"))
+          captured = (kickoff - timedelta(hours=1)).astimezone(timezone.utc)
+          captured_text = captured.isoformat(timespec="seconds").replace("+00:00", "Z")
+          run = Path("/tmp/nfl-edge-selector-runs/week1-pregame-proof")
+          (run / "product").mkdir(parents=True, exist_ok=True)
+          (run / "run-status.json").write_text(json.dumps({"outcome": "SUCCESS"}))
+
+          def row(market):
+              return {
+                  "candidate_id": f"{game['game_id']}|{market}|home",
+                  "game_id": game["game_id"],
+                  "season": 2026,
+                  "week": 1,
+                  "market_type": market,
+                  "selected_side": "home",
+                  "sportsbook": "draftkings",
+                  "line": None if market == "moneyline" else -2.5,
+                  "american_odds": -110,
+                  "supported": True,
+                  "reliability": "HIGH",
+                  "model_confidence_supported": True,
+                  "model_confidence_support_n": 512,
+                  "model_confidence_probability": 0.62,
+                  "pinnacle_anchor_probability": 0.58,
+                  "break_even_probability": 0.52,
+                  "expected_value": 0.08,
+                  "evaluated_edge_probability": 0.10,
+                  "price_status": "VALUE",
+                  "model_candidate_regions": (
+                      "ML_DOG_VALUE_ZONE_AVG"
+                      if market == "moneyline"
+                      else "SPREAD_DISAGREEMENT_EXPECTED_MARGIN_0_4"
+                  ),
+                  "model_price_gap": 0.05,
+                  "model_cover_margin_v3": 2.0,
+              }
+
+          proof = {
+              "selector_evidence": {
+                  "schema_version": "NFL_EDGE_LIVE_SELECTOR_EVIDENCE_V1",
+                  "season": 2026,
+                  "week": 1,
+                  "captured_at_utc": captured_text,
+                  "games": [{
+                      "game_id": game["game_id"],
+                      "kickoff_at_utc": game["scheduled_start_utc"],
+                  }],
+                  "rows": [row("moneyline"), row("spread")],
+              }
+          }
+          (run / "product" / "deterministic-proof.json").write_text(
+              json.dumps(proof, sort_keys=True)
+          )
+          PY
+
+      - name: Run canonical zero-provider Week 2 preflight
+        run: |
+          python scripts/verify_live_2026_preprovider_v1.py \
+            --repository-root . \
+            --schedule-root /tmp/nfl-edge-live-week2 \
+            --evidence-root /tmp/nfl-edge-live-week2 \
+            --run-root /tmp/nfl-edge-selector-runs \
+            --prediction-as-of-utc "2026-09-15T12:00:00Z" \
+            | tee /tmp/week2-preprovider-proof.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          proof = json.loads(Path("/tmp/week2-preprovider-proof.json").read_text())
+          assert proof["verdict"] == "NFL_EDGE_PREPROVIDER_READY"
+          assert proof["season"] == 2026
+          assert proof["week"] == 2
+          assert proof["settled_through_week"] == 1
+          assert proof["completed_2026_blocks"] == ["2026_REG_W01"]
+          assert proof["football_game_count"] == 16
+          assert proof["provider_request_count"] == 0
+          assert proof["odds_api_called"] is False
+          assert proof["market_data_read"] is False
+          assert proof["selector_state_observations"]["moneyline"] == 1
+          assert proof["selector_state_observations"]["spread"] == 1
           PY
 
 

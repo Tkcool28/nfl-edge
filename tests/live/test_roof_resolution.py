@@ -65,3 +65,14 @@ def test_manual_override_is_explicit_and_preserves_provenance():
     assert roof.override_applied is True
     assert roof.source == "Houston Texans official roof announcement"
     assert roof.source_at_utc == "2026-09-13T15:30:00Z"
+
+
+def test_missing_retractable_status_is_explicit_pending_not_blocking():
+    game = _games()["2026_01_BAL_IND"]
+    roof = RoofResolver({}).resolve(game)
+    assert roof.structure == "RETRACTABLE"
+    assert roof.status == "PENDING"
+    assert roof.model_category is None
+    assert roof.source == "no current roof-status evidence"
+    assert roof.source_at_utc == game["context_source_at_utc"]
+    assert roof.override_applied is False
