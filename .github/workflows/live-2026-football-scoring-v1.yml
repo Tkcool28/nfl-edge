@@ -38,6 +38,14 @@ jobs:
             exit 1
           fi
 
+      - name: Prove Week 1 selector replay dependencies remain historically frozen
+        run: |
+          git diff --exit-code 208301de3f4da43c21d2c54bdcae5462bc45db64..HEAD -- \
+            scripts/task05f_evaluator_final_runner.py \
+            scripts/task05g_model_confidence_v2_runner.py \
+            scripts/task05g_spread_confidence_v3_runner.py \
+            data/live/2026/entering_product_state_v1.json
+
       - name: Compile live scorer surfaces
         run: |
           python -m py_compile \
