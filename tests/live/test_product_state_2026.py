@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from types import SimpleNamespace
 
@@ -143,3 +144,132 @@ def test_selector_state_can_recover_legacy_pregame_proof_via_governed_replay(
     assert calls == [(repo_root, run)]
     assert len(state.ml_observations) == 1
     assert len(state.spread_observations) == 1
+
+
+def test_legacy_selector_replay_accepts_semantic_source_parity_without_whole_product_byte_replay(
+    tmp_path, monkeypatch
+):
+    run = tmp_path / "legacy-week1"
+    (run / "football").mkdir(parents=True)
+    (run / "market").mkdir(parents=True)
+    (run / "product").mkdir(parents=True)
+
+    prediction_as_of = "2026-09-09T15:30:00Z"
+    acquired_at = "2026-09-09T15:34:00Z"
+    game_id = "2026_01_A_B"
+    outputs = {"qb_elo": {"status": "AVAILABLE", "home_win_probability": 0.61}}
+
+    football = {
+        "season": 2026,
+        "week": 1,
+        "prediction_as_of_utc": prediction_as_of,
+        "completed_football_state_version": "entering-2026:test",
+        "qb_snapshot_version": "sleeper:test",
+        "games": [{
+            "game_id": game_id,
+            "home_team": "B",
+            "away_team": "A",
+            "kickoff_at_utc": "2026-09-10T00:20:00Z",
+            "football_outputs": outputs,
+        }],
+    }
+    market = {
+        "season": 2026,
+        "week": 1,
+        "acquired_at_utc": acquired_at,
+        "market_snapshot_version": "market:test",
+        "games": [{"game_id": game_id, "market_board": {"moneyline": [], "spread": [], "total": []}}],
+    }
+    original = {
+        "schema_version": "NFL_EDGE_PRODUCT_API_V1",
+        "product_version": "live-2026-week1-product-v1",
+        "generated_at_utc": acquired_at,
+        "prediction_as_of_utc": prediction_as_of,
+        "season": 2026,
+        "week": 1,
+        "football_data_version": "entering-2026:test",
+        "qb_snapshot_version": "sleeper:test",
+        "market_snapshot_version": "market:test",
+        "headlines": {"hit_rate": {"state": "NO_PLAY"}, "balanced": {"state": "NO_PLAY"}, "value": {"state": "NO_PLAY"}},
+        "games": [{
+            "game_id": game_id,
+            "home_team": "B",
+            "away_team": "A",
+            "kickoff_at_utc": "2026-09-10T00:20:00Z",
+            "market_board": {"moneyline": [], "spread": [], "total": []},
+            "football_outputs": {
+                "prediction_as_of_utc": prediction_as_of,
+                "provenance_id": "football:test",
+                **outputs,
+            },
+        }],
+    }
+    original_bytes = json.dumps(original, sort_keys=True).encode()
+    product_path = run / "product" / "NFL_EDGE_PRODUCT_API_V1.json"
+    product_path.write_bytes(original_bytes)
+    (run / "football" / "football.json").write_text(json.dumps(football), encoding="utf-8")
+    (run / "market" / "NFL_EDGE_LIVE_MARKET_V1.json").write_text(json.dumps(market), encoding="utf-8")
+    (run / "run-status.json").write_text(
+        json.dumps({
+            "outcome": "SUCCESS",
+            "product_sha256": hashlib.sha256(original_bytes).hexdigest(),
+        }),
+        encoding="utf-8",
+    )
+
+    import nfl_edge.contracts.live_product_v1 as contract
+    import nfl_edge.live.product_2026 as product_2026
+
+    monkeypatch.setattr(contract, "validate_product_snapshot", lambda payload: payload)
+    monkeypatch.setattr(product_state, "load_entering_2026_product_state", lambda path: {"value_state": ValueSelectorState()})
+    selector = {
+        "schema_version": "NFL_EDGE_LIVE_SELECTOR_EVIDENCE_V1",
+        "season": 2026,
+        "week": 1,
+        "captured_at_utc": acquired_at,
+        "games": [{"game_id": game_id, "kickoff_at_utc": "2026-09-10T00:20:00Z"}],
+        "rows": [_selector_row(market="moneyline"), _selector_row(market="spread")],
+    }
+    monkeypatch.setattr(
+        product_2026,
+        "build_product_snapshot",
+        lambda **kwargs: (
+            {
+                **original,
+                # Deliberate harmless public-format evolution proves recovery
+                # is not coupled to whole-file historical byte identity.
+                "warnings": ["modern-format-only"],
+            },
+            {"selector_evidence": selector},
+        ),
+    )
+
+    recovered = product_state._legacy_selector_evidence_from_run(
+        repository_root=tmp_path,
+        run_dir=run,
+    )
+    assert recovered == selector
+
+
+def test_selector_replay_failure_reports_candidate_rejection(tmp_path, monkeypatch):
+    run = tmp_path / "legacy-week1"
+    (run / "product").mkdir(parents=True)
+    (run / "run-status.json").write_text(json.dumps({"outcome": "SUCCESS"}), encoding="utf-8")
+    (run / "product" / "deterministic-proof.json").write_text(
+        json.dumps({"schema_validation": "PASS"}), encoding="utf-8"
+    )
+
+    def reject(**kwargs):
+        raise Entering2026ProductStateError("headline decisions differ from original immutable product")
+
+    monkeypatch.setattr(product_state, "_legacy_selector_evidence_from_run", reject)
+    with pytest.raises(
+        Entering2026ProductStateError,
+        match="headline decisions differ from original immutable product",
+    ):
+        advance_live_value_state(
+            entering=ValueSelectorState(),
+            evidence=_evidence(),
+            run_root=tmp_path,
+            repository_root=tmp_path,
+        )
