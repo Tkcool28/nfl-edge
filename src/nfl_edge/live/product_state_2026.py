@@ -50,6 +50,7 @@ EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256 = "58302290e4dc98d6db13e8e8a46c148e8c58
 EXPECTED_TASK05F_FROZEN_STATE_SHA256 = "34ac985835ce4ceb65c6135b07851cd4f7e3ab2cc311315ae11efc773d1aa8c9"
 EXPECTED_DIAGNOSTIC_SHA256 = "b38eae4df11dc52fe4fc5aeb87a402abcc8ffb9b60e3f252d56f56c9aef78b41"
 ACCEPTED_SCIKIT_LEARN_VERSION = "1.8.0"
+SELECTOR_TRUST_START_WEEK = 2
 
 
 class Entering2026ProductStateError(RuntimeError):
@@ -566,148 +567,37 @@ def _parse_utc(value: object) -> datetime:
     return datetime.fromisoformat(text[:-1] + "+00:00").astimezone(timezone.utc)
 
 
-def _legacy_selector_evidence_from_run(
-    *,
-    repository_root: Path,
-    run_dir: Path,
-) -> dict[str, Any]:
-    """Recover selector evidence from a successful pre-PR131 pregame run.
-
-    The historical public product format evolved after Week 1, so whole-file byte
-    equality against a modern replay is too brittle. Recovery instead proves the
-    original immutable product bytes against their recorded SHA, proves that the
-    preserved football/market source artifacts exactly match the public product's
-    per-game source surfaces and version/timestamp identities, then requires the
-    replayed public headline decisions to match the immutable product before
-    accepting the newly exposed private selector board.
-    """
-    from nfl_edge.contracts.live_product_v1 import validate_product_snapshot
-    from nfl_edge.live.product_2026 import build_product_snapshot
-
-    football_paths = sorted((run_dir / "football").glob("*.json"))
-    market_path = run_dir / "market" / "NFL_EDGE_LIVE_MARKET_V1.json"
-    candidate_path = run_dir / "product" / "NFL_EDGE_PRODUCT_API_V1.json"
-    status_path = run_dir / "run-status.json"
-    if len(football_paths) != 1 or not market_path.is_file() or not status_path.is_file():
-        raise Entering2026ProductStateError(
-            f"legacy selector replay artifacts incomplete for {run_dir}"
-        )
-
-    status = json.loads(status_path.read_text(encoding="utf-8"))
-    if status.get("outcome") != "SUCCESS":
-        raise Entering2026ProductStateError("legacy selector replay requires successful run")
-    immutable_value = status.get("immutable_snapshot")
-    immutable_path = Path(str(immutable_value)) if immutable_value else None
-    product_path = (
-        candidate_path
-        if candidate_path.is_file()
-        else immutable_path
-        if immutable_path is not None and immutable_path.is_file()
-        else None
-    )
-    if product_path is None:
-        raise Entering2026ProductStateError(
-            f"legacy selector replay original product is unavailable for {run_dir}"
-        )
-
-    original_bytes = product_path.read_bytes()
-    recorded_sha = str(status.get("product_sha256") or "")
-    observed_sha = hashlib.sha256(original_bytes).hexdigest()
-    if not recorded_sha or recorded_sha != observed_sha:
-        raise Entering2026ProductStateError(
-            f"legacy selector replay product SHA mismatch: recorded={recorded_sha} observed={observed_sha}"
-        )
-
+def _game_week(row: Mapping[str, Any]) -> int:
+    value = row.get("week")
+    if value is not None:
+        return int(value)
+    game_id = str(row.get("game_id") or "")
     try:
-        original = validate_product_snapshot(json.loads(original_bytes))
-    except Exception as exc:
+        return int(game_id.split("_")[1])
+    except (IndexError, ValueError) as exc:
         raise Entering2026ProductStateError(
-            f"legacy selector replay original product validation failed: {exc}"
+            f"selector evidence game has no usable week identity: {game_id!r}"
         ) from exc
-    football = json.loads(football_paths[0].read_text(encoding="utf-8"))
-    market = json.loads(market_path.read_text(encoding="utf-8"))
-
-    if int(original.get("season", -1)) != 2026 or int(original.get("week", -1)) != 1:
-        raise Entering2026ProductStateError("legacy selector replay original product is not 2026 Week 1")
-    if str(original.get("generated_at_utc")) != str(market.get("acquired_at_utc")):
-        raise Entering2026ProductStateError("legacy selector replay market timestamp differs from original product")
-    if str(original.get("prediction_as_of_utc")) != str(football.get("prediction_as_of_utc")):
-        raise Entering2026ProductStateError("legacy selector replay football timestamp differs from original product")
-    if str(original.get("football_data_version")) != str(football.get("completed_football_state_version")):
-        raise Entering2026ProductStateError("legacy selector replay football state version differs from original product")
-    if str(original.get("qb_snapshot_version")) != str(football.get("qb_snapshot_version")):
-        raise Entering2026ProductStateError("legacy selector replay QB snapshot differs from original product")
-    if str(original.get("market_snapshot_version")) != str(market.get("market_snapshot_version")):
-        raise Entering2026ProductStateError("legacy selector replay market snapshot version differs from original product")
-
-    original_games = {str(row["game_id"]): dict(row) for row in original["games"]}
-    football_games = {str(row["game_id"]): dict(row) for row in football["games"]}
-    market_games = {str(row["game_id"]): dict(row) for row in market["games"]}
-    if set(original_games) != set(football_games) or set(original_games) != set(market_games):
-        raise Entering2026ProductStateError("legacy selector replay canonical game IDs differ across preserved artifacts")
-
-    for gid in sorted(original_games):
-        product_game = original_games[gid]
-        football_game = football_games[gid]
-        market_game = market_games[gid]
-        for key in ("home_team", "away_team", "kickoff_at_utc"):
-            if product_game.get(key) != football_game.get(key):
-                raise Entering2026ProductStateError(
-                    f"legacy selector replay {gid} {key} differs from preserved football artifact"
-                )
-        if product_game.get("market_board") != market_game.get("market_board"):
-            raise Entering2026ProductStateError(
-                f"legacy selector replay {gid} market board differs from preserved market artifact"
-            )
-        public_outputs = dict(product_game.get("football_outputs") or {})
-        public_outputs.pop("prediction_as_of_utc", None)
-        public_outputs.pop("provenance_id", None)
-        # Pending-roof downstream evaluation is attached only when the
-        # public product is built; it is not part of the upstream football
-        # snapshot and must not be mistaken for source drift.
-        public_xgb = public_outputs.get("xgboost_v2")
-        if isinstance(public_xgb, Mapping):
-            public_xgb = dict(public_xgb)
-            public_xgb.pop("roof_scenario_downstream", None)
-            public_outputs["xgboost_v2"] = public_xgb
-        if public_outputs != dict(football_game.get("football_outputs") or {}):
-            raise Entering2026ProductStateError(
-                f"legacy selector replay {gid} football outputs differ from preserved football artifact"
-            )
-
-    decision_state = load_entering_2026_product_state(
-        repository_root / "data/live/2026/entering_product_state_v1.json"
-    )
-    replay, proof = build_product_snapshot(
-        root=repository_root,
-        football_snapshot=football,
-        market_snapshot=market,
-        decision_state=decision_state,
-    )
-    if replay.get("headlines") != original.get("headlines"):
-        raise Entering2026ProductStateError(
-            "legacy selector replay headline decisions differ from original immutable product"
-        )
-    selector = proof.get("selector_evidence")
-    if not isinstance(selector, Mapping):
-        raise Entering2026ProductStateError("legacy selector replay did not expose selector evidence")
-    return dict(selector)
 
 
-def _successful_pregame_selector_rows(
+def _final_pregame_selector_rows(
     *,
     run_root: Path,
     week: int,
-    repository_root: Path | None = None,
+    required_game_ids: set[str],
 ) -> list[dict[str, Any]]:
-    """Return the latest successful, strictly pre-kickoff board for ``week``.
+    """Assemble one final causal selector board from per-game pre-kickoff states.
 
-    The runtime refreshes more than once each week.  Choosing the latest board
-    before the first kickoff preserves the normal final-pregame selection
-    semantics while refusing any board that could observe a game outcome.
+    Production refreshes can occur multiple times while a weekly slate is still
+    open. For each game independently, choose the latest successful native
+    selector-evidence snapshot captured strictly before that game kickoff.
+    Rows from that game chosen snapshot are assembled into one synthetic
+    settled-week board. The existing selector methodology remains unchanged:
+    advance_value_state still contributes at most one moneyline-family and one
+    spread-family frontier observation for the completed week.
     """
-    choices: list[tuple[datetime, str, list[dict[str, Any]]]] = []
-    replay_rejections: list[str] = []
+    latest_by_game: dict[str, tuple[datetime, str, list[dict[str, Any]]]] = {}
+
     for proof_path in sorted(run_root.glob("*/product/deterministic-proof.json")):
         status_path = proof_path.parents[1] / "run-status.json"
         if not status_path.is_file():
@@ -715,45 +605,72 @@ def _successful_pregame_selector_rows(
         status = json.loads(status_path.read_text(encoding="utf-8"))
         if status.get("outcome") != "SUCCESS":
             continue
+
         payload = json.loads(proof_path.read_text(encoding="utf-8"))
         selector = payload.get("selector_evidence")
         if not isinstance(selector, Mapping):
-            if repository_root is None:
-                continue
-            try:
-                selector = _legacy_selector_evidence_from_run(
-                    repository_root=repository_root,
-                    run_dir=proof_path.parents[1],
-                )
-            except Entering2026ProductStateError as exc:
-                replay_rejections.append(f"{proof_path.parents[1].name}: {exc}")
-                continue
+            # Selector trust begins prospectively in Week 2. Pre-PR131 Week 1
+            # products are intentionally not reconstructed or backfilled.
+            continue
         if selector.get("schema_version") != "NFL_EDGE_LIVE_SELECTOR_EVIDENCE_V1":
             continue
         if int(selector.get("week", -1)) != week:
             continue
+
         rows = selector.get("rows")
         games = selector.get("games")
-        if not isinstance(rows, list) or not rows or not isinstance(games, list) or not games:
+        if not isinstance(rows, list) or not isinstance(games, list) or not games:
             continue
-        if {int(row.get("week", -1)) for row in rows if isinstance(row, Mapping)} != {week}:
+        if any(not isinstance(row, Mapping) or _game_week(row) != week for row in rows):
             continue
+
         try:
             captured = _parse_utc(selector["captured_at_utc"])
-            earliest_kickoff = min(_parse_utc(row["kickoff_at_utc"]) for row in games if isinstance(row, Mapping))
         except (KeyError, TypeError, ValueError, Entering2026ProductStateError):
             continue
-        if captured >= earliest_kickoff:
-            continue
-        choices.append((captured, str(proof_path), [dict(row) for row in rows]))
-    if not choices:
-        detail = "; ".join(replay_rejections[-8:]) if replay_rejections else "no replay candidates"
-        raise Entering2026ProductStateError(
-            f"missing successful strictly pre-kickoff selector evidence for settled Week {week}; "
-            f"legacy replay rejections: {detail}"
-        )
-    return max(choices, key=lambda item: (item[0], item[1]))[2]
 
+        rows_by_game: dict[str, list[dict[str, Any]]] = {}
+        for row in rows:
+            gid = str(row.get("game_id") or "")
+            if gid:
+                rows_by_game.setdefault(gid, []).append(dict(row))
+
+        seen_games: set[str] = set()
+        valid_games = True
+        for game in games:
+            if not isinstance(game, Mapping):
+                valid_games = False
+                break
+            gid = str(game.get("game_id") or "")
+            if not gid or gid in seen_games:
+                valid_games = False
+                break
+            seen_games.add(gid)
+            try:
+                kickoff = _parse_utc(game["kickoff_at_utc"])
+            except (KeyError, TypeError, ValueError, Entering2026ProductStateError):
+                valid_games = False
+                break
+            if captured >= kickoff or gid not in required_game_ids:
+                continue
+            candidate = (captured, str(proof_path), rows_by_game.get(gid, []))
+            previous = latest_by_game.get(gid)
+            if previous is None or candidate[:2] > previous[:2]:
+                latest_by_game[gid] = candidate
+
+        if not valid_games:
+            continue
+
+    missing = sorted(required_game_ids.difference(latest_by_game))
+    if missing:
+        raise Entering2026ProductStateError(
+            f"missing successful final pre-kickoff selector evidence for settled Week {week}: {missing}"
+        )
+
+    assembled: list[dict[str, Any]] = []
+    for gid in sorted(required_game_ids):
+        assembled.extend(latest_by_game[gid][2])
+    return assembled
 
 def advance_live_value_state(
     *,
@@ -762,19 +679,36 @@ def advance_live_value_state(
     run_root: Path,
     repository_root: Path | None = None,
 ) -> ValueSelectorState:
-    """Advance frozen selector trust from completed prior weekly boards only."""
+    """Advance selector trust prospectively from Week 2 final pregame boards.
+
+    Week 1 is deliberately excluded because the governed native selector-evidence
+    contract did not yet exist. Football-model state still advances through Week 1
+    independently; only selector-family trust starts RESET/COLD in Week 2.
+    """
+    del repository_root  # retained for caller compatibility; legacy replay is forbidden.
     state = entering
-    games = {str(row["game_id"]): row for row in evidence.games.to_dicts()}
-    for week in range(1, int(evidence.through_week) + 1):
-        rows = _successful_pregame_selector_rows(
+    game_rows = {str(row["game_id"]): row for row in evidence.games.to_dicts()}
+
+    by_week: dict[int, set[str]] = {}
+    for gid, row in game_rows.items():
+        week = _game_week(row)
+        by_week.setdefault(week, set()).add(gid)
+
+    for week in range(SELECTOR_TRUST_START_WEEK, int(evidence.through_week) + 1):
+        required_game_ids = by_week.get(week, set())
+        if not required_game_ids:
+            raise Entering2026ProductStateError(
+                f"settled evidence has no games for selector trust Week {week}"
+            )
+        rows = _final_pregame_selector_rows(
             run_root=run_root,
             week=week,
-            repository_root=repository_root,
+            required_game_ids=required_game_ids,
         )
         settled_rows = []
         for source in rows:
             row = dict(source)
-            game = games.get(str(row.get("game_id")))
+            game = game_rows.get(str(row.get("game_id")))
             if game is None:
                 raise Entering2026ProductStateError("selector evidence references non-settled game")
             side = str(row.get("selected_side"))
