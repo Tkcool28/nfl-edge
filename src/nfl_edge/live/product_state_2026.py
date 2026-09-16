@@ -566,7 +566,72 @@ def _parse_utc(value: object) -> datetime:
     return datetime.fromisoformat(text[:-1] + "+00:00").astimezone(timezone.utc)
 
 
-def _successful_pregame_selector_rows(*, run_root: Path, week: int) -> list[dict[str, Any]]:
+def _legacy_selector_evidence_from_run(
+    *,
+    repository_root: Path,
+    run_dir: Path,
+) -> dict[str, Any]:
+    """Recover selector evidence from an old successful pre-PR131 run by exact replay.
+
+    The replay is allowed only from the run's immutable pregame football and market
+    artifacts plus the frozen entering-2026 product state. The rebuilt public
+    product must match the original candidate bytes and recorded SHA-256 exactly
+    before its newly exposed private selector evidence is accepted.
+    """
+    from nfl_edge.live.product_2026 import build_product_snapshot, product_snapshot_bytes
+
+    football_paths = sorted((run_dir / "football").glob("*.json"))
+    market_path = run_dir / "market" / "NFL_EDGE_LIVE_MARKET_V1.json"
+    product_path = run_dir / "product" / "NFL_EDGE_PRODUCT_API_V1.json"
+    status_path = run_dir / "run-status.json"
+    if len(football_paths) != 1 or not market_path.is_file() or not product_path.is_file() or not status_path.is_file():
+        raise Entering2026ProductStateError(
+            f"legacy selector replay artifacts incomplete for {run_dir}"
+        )
+
+    status = json.loads(status_path.read_text(encoding="utf-8"))
+    if status.get("outcome") != "SUCCESS":
+        raise Entering2026ProductStateError("legacy selector replay requires successful run")
+    original_bytes = product_path.read_bytes()
+    recorded_sha = str(status.get("product_sha256") or "")
+    observed_sha = hashlib.sha256(original_bytes).hexdigest()
+    if recorded_sha != observed_sha:
+        raise Entering2026ProductStateError(
+            f"legacy selector replay product SHA mismatch: recorded={recorded_sha} observed={observed_sha}"
+        )
+
+    football = json.loads(football_paths[0].read_text(encoding="utf-8"))
+    market = json.loads(market_path.read_text(encoding="utf-8"))
+    decision_state = load_entering_2026_product_state(
+        repository_root / "data/live/2026/entering_product_state_v1.json"
+    )
+    replay, proof = build_product_snapshot(
+        root=repository_root,
+        football_snapshot=football,
+        market_snapshot=market,
+        decision_state=decision_state,
+    )
+    replay_bytes = product_snapshot_bytes(replay)
+    if replay_bytes != original_bytes:
+        raise Entering2026ProductStateError(
+            "legacy selector replay public product differs from original immutable candidate"
+        )
+    if hashlib.sha256(replay_bytes).hexdigest() != recorded_sha:
+        raise Entering2026ProductStateError(
+            "legacy selector replay SHA differs from original recorded product SHA"
+        )
+    selector = proof.get("selector_evidence")
+    if not isinstance(selector, Mapping):
+        raise Entering2026ProductStateError("legacy selector replay did not expose selector evidence")
+    return dict(selector)
+
+
+def _successful_pregame_selector_rows(
+    *,
+    run_root: Path,
+    week: int,
+    repository_root: Path | None = None,
+) -> list[dict[str, Any]]:
     """Return the latest successful, strictly pre-kickoff board for ``week``.
 
     The runtime refreshes more than once each week.  Choosing the latest board
@@ -584,7 +649,15 @@ def _successful_pregame_selector_rows(*, run_root: Path, week: int) -> list[dict
         payload = json.loads(proof_path.read_text(encoding="utf-8"))
         selector = payload.get("selector_evidence")
         if not isinstance(selector, Mapping):
-            continue
+            if repository_root is None:
+                continue
+            try:
+                selector = _legacy_selector_evidence_from_run(
+                    repository_root=repository_root,
+                    run_dir=proof_path.parents[1],
+                )
+            except Entering2026ProductStateError:
+                continue
         if selector.get("schema_version") != "NFL_EDGE_LIVE_SELECTOR_EVIDENCE_V1":
             continue
         if int(selector.get("week", -1)) != week:
@@ -610,12 +683,22 @@ def _successful_pregame_selector_rows(*, run_root: Path, week: int) -> list[dict
     return max(choices, key=lambda item: (item[0], item[1]))[2]
 
 
-def advance_live_value_state(*, entering: ValueSelectorState, evidence, run_root: Path) -> ValueSelectorState:
+def advance_live_value_state(
+    *,
+    entering: ValueSelectorState,
+    evidence,
+    run_root: Path,
+    repository_root: Path | None = None,
+) -> ValueSelectorState:
     """Advance frozen selector trust from completed prior weekly boards only."""
     state = entering
     games = {str(row["game_id"]): row for row in evidence.games.to_dicts()}
     for week in range(1, int(evidence.through_week) + 1):
-        rows = _successful_pregame_selector_rows(run_root=run_root, week=week)
+        rows = _successful_pregame_selector_rows(
+            run_root=run_root,
+            week=week,
+            repository_root=repository_root,
+        )
         settled_rows = []
         for source in rows:
             row = dict(source)
