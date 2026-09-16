@@ -90,6 +90,7 @@ def main() -> int:
             entering=decision_state["value_state"],
             evidence=evidence,
             run_root=args.run_root,
+            repository_root=root,
         )
     value_state = decision_state["value_state"]
 
