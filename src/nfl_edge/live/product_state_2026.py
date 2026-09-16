@@ -662,6 +662,14 @@ def _legacy_selector_evidence_from_run(
         public_outputs = dict(product_game.get("football_outputs") or {})
         public_outputs.pop("prediction_as_of_utc", None)
         public_outputs.pop("provenance_id", None)
+        # Pending-roof downstream evaluation is attached only when the
+        # public product is built; it is not part of the upstream football
+        # snapshot and must not be mistaken for source drift.
+        public_xgb = public_outputs.get("xgboost_v2")
+        if isinstance(public_xgb, Mapping):
+            public_xgb = dict(public_xgb)
+            public_xgb.pop("roof_scenario_downstream", None)
+            public_outputs["xgboost_v2"] = public_xgb
         if public_outputs != dict(football_game.get("football_outputs") or {}):
             raise Entering2026ProductStateError(
                 f"legacy selector replay {gid} football outputs differ from preserved football artifact"
