@@ -358,7 +358,10 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                 if active_schedule.week > 1:
                     assert evidence is not None
                     decision_state["value_state"] = advance_live_value_state(
-                        entering=decision_state["value_state"], evidence=evidence, run_root=config.run_root
+                        entering=decision_state["value_state"],
+                        evidence=evidence,
+                        run_root=config.run_root,
+                        repository_root=config.repository_root,
                     )
                     summary["selector_state_observations"] = {
                         "moneyline": len(decision_state["value_state"].ml_observations),
