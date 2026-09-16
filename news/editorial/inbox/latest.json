@@ -1,38 +1,38 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-09-15T12:27:57Z",
-  "research_generated_at_utc": "2026-09-15T12:27:57Z",
+  "submitted_at_utc": "2026-09-16T00:26:39Z",
+  "research_generated_at_utc": "2026-09-16T00:26:39Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-09-15T12:27:57Z",
-    "edition": "Tuesday Morning Brief",
-    "title": "NFL EDGE Tuesday Morning Brief",
-    "dek": "Week 2 is here, but the governed card is not yet ready to tell us what to bet.",
+    "published_at_utc": "2026-09-16T00:26:39Z",
+    "edition": "Tuesday Evening Brief",
+    "title": "NFL EDGE Tuesday Evening Brief",
+    "dek": "Thursday night is getting closer, but the governed Week 2 card still has to speak first.",
     "sections": [
       {
         "id": "what-matters",
         "title": "What Matters Today",
         "items": [
           {
-            "headline": "Thursday night gets the first look",
+            "headline": "Detroit-Buffalo is next, but the official injury picture is still incomplete",
             "paragraphs": [
-              "Detroit visits Buffalo on Thursday night at 8:15 p.m. ET, the first game of Week 2 and Buffalo's first regular-season game in the new Highmark Stadium.",
-              "Official Week 2 injury reports for Lions-Bills were not yet available in the NFL game center during this morning's check, so there is no responsible injury angle to manufacture yet."
+              "Detroit visits Buffalo Thursday at 8:15 p.m. ET. The NFL game center still does not list an official Week 2 injury report for either team, so there is no responsible injury-based betting adjustment to make tonight.",
+              "Buffalo did practice Tuesday, but until the official practice report is posted and attributable, the useful move is to wait rather than turn practice chatter into a betting conclusion."
             ],
-            "evidence_ids": ["schedule:lions-bills", "injury:lions-bills-not-yet-posted"],
+            "evidence_ids": ["schedule:lions-bills", "injury:lions-bills-not-posted"],
             "sources": [
               {"label": "NFL — Lions at Bills Week 2", "url": "https://www.nfl.com/games/lions-at-bills-2026-reg-2"},
-              {"label": "Buffalo Bills — 2026 home opener", "url": "https://www.buffalobills.com/news/buffalo-bills-to-host-detroit-lions-in-2026-home-opener-at-highmark-stadium"}
+              {"label": "Buffalo Bills — Week 2 practice", "url": "https://www.buffalobills.com/"}
             ]
           },
           {
-            "headline": "Buffalo weather deserves another check later",
+            "headline": "Weather is still a monitor, not a reason to move",
             "paragraphs": [
-              "The National Weather Service currently has showers likely around Buffalo during the day Thursday, then a 30% chance of showers Thursday night with light north wind. That is worth monitoring, but it is too early and too mild to treat as a betting adjustment."
+              "The latest National Weather Service material available in this check does not establish a severe or clearly actionable kickoff-weather threat for Western New York. With the game still two days away, weather belongs on the watch list rather than in the bet slip."
             ],
-            "evidence_ids": ["weather:buffalo-thursday"],
+            "evidence_ids": ["weather:buffalo-monitor"],
             "sources": [
-              {"label": "National Weather Service — Buffalo forecast", "url": "https://forecast.weather.gov/MapClick.php?FcstType=text&lat=42.9&lg=english&lon=-78.88"}
+              {"label": "National Weather Service — Buffalo", "url": "https://www.weather.gov/buf/"}
             ]
           }
         ]
@@ -42,10 +42,10 @@
         "title": "What It Means for NFL EDGE",
         "items": [
           {
-            "headline": "The calendar flipped before the governed card did",
+            "headline": "There is still nothing to chase",
             "paragraphs": [
-              "Week 2 has started, but the canonical Week 2 prospective-card file is not present yet. That means there is no governed NFL EDGE recommendation to attach Thursday's news or weather to this morning.",
-              "The right move is patience: let the card exist first, then judge news and price against the actual recommendation and its Play Through."
+              "The canonical Week 2 prospective-card file is still absent, so NFL EDGE has no governed Week 2 recommendation to connect to Detroit-Buffalo news tonight.",
+              "That keeps the instruction simple: wait for the card. Once a recommendation exists, injury news, weather and market behavior can be judged against the actual side, price and Play Through instead of against a guess."
             ],
             "evidence_ids": ["card:week2-missing"],
             "sources": [
@@ -59,16 +59,16 @@
         "title": "The Fade",
         "items": [
           {
-            "headline": "No useful Fade signal yet",
+            "headline": "No useful Fade signal tonight",
             "paragraphs": [
-              "There is no current NFL EDGE Week 2 play to test against public betting, and no verified current-day DraftKings-versus-Circa split strong enough to build a governed Fade around this morning.",
-              "VSiN's early market report has Buffalo around a field-goal favorite against Detroit, but an early line by itself is not a Fade signal. We need the NFL EDGE side and price first, then a real disagreement in where the betting is landing."
+              "There is still no governed NFL EDGE Week 2 play to compare against current betting concentration. Without that anchor, a public-versus-Circa disagreement would not tell us whether it supports, challenges or is irrelevant to an NFL EDGE recommendation.",
+              "No sufficiently verified current-day DraftKings-versus-Circa split was available in this check, so there is no reason to force a contrarian story."
             ],
-            "takeaway": "Pass on the Fade this morning. Revisit it once Week 2 recommendations exist and current betting splits have enough shape to tell us something useful.",
-            "evidence_ids": ["card:week2-missing", "market:lions-bills-early"],
+            "takeaway": "Pass on the Fade tonight. Revisit it when the Week 2 card exists and current split data can be tied to an actual NFL EDGE recommendation and price.",
+            "evidence_ids": ["card:week2-missing", "fade:no-verified-split"],
             "sources": [
-              {"label": "VSiN — NFL Week 2 odds report", "url": "https://vsin.com/nfl/nfl-odds-week-2-schedule-line-moves-and-matchups/"},
-              {"label": "NFL EDGE prospective-card branch", "url": "https://github.com/Tkcool28/nfl-edge/tree/ops/prospective-card-evidence-v1/prospective/cards/2026"}
+              {"label": "NFL EDGE prospective-card branch", "url": "https://github.com/Tkcool28/nfl-edge/tree/ops/prospective-card-evidence-v1/prospective/cards/2026"},
+              {"label": "VSiN betting splits", "url": "https://data.vsin.com/betting-splits/"}
             ]
           }
         ]
@@ -78,12 +78,12 @@
         "title": "Market Watch",
         "items": [
           {
-            "headline": "Market Watch is waiting on canonical Week 2 evidence",
+            "headline": "Market Watch remains failed closed",
             "paragraphs": [
-              "The required canonical file prospective/cards/2026/week-02/episodes.json is not present on ops/prospective-card-evidence-v1 this morning. Because that file is the authority for Market Watch, there is no valid newest publication or immediately preceding Week 2 publication to compare yet.",
-              "No outside sportsbook price is being substituted for that missing evidence. Market Watch therefore fails closed for this edition rather than inventing a card change."
+              "The required canonical file prospective/cards/2026/week-02/episodes.json is still not present on ops/prospective-card-evidence-v1. Because that file is the authority for this section, there is no valid newest Week 2 source_publication_id, observation timestamp or immediately preceding publication to compare.",
+              "Outside sportsbook prices are not being substituted for the missing canonical evidence. Until the Week 2 file appears, Market Watch cannot truthfully report an NFL EDGE recommendation, price change, Play Through change, appearance, disappearance or lane replacement."
             ],
-            "takeaway": "No governed Week 2 recommendation is available yet. Wait for the canonical card before treating any price as an NFL EDGE play or Play Through.",
+            "takeaway": "No governed Week 2 card means no Market Watch call. Wait for canonical evidence rather than turning an outside line into an NFL EDGE recommendation.",
             "evidence_ids": ["card:week2-missing"],
             "sources": [
               {"label": "NFL EDGE prospective-card branch", "url": "https://github.com/Tkcool28/nfl-edge/tree/ops/prospective-card-evidence-v1/prospective/cards/2026"}
@@ -96,10 +96,10 @@
         "title": "Today's Tip",
         "items": [
           {
-            "headline": "An opening line is information, not an invitation",
+            "headline": "No Play is a position",
             "paragraphs": [
-              "Sportsbooks can hang a number days before NFL EDGE has a governed recommendation. Seeing a line early does not mean you need to beat the app to it.",
-              "Let the recommendation establish the side, book, price and Play Through. Getting an early number only helps if you already have a disciplined reason to want it."
+              "Waiting can feel like doing nothing, especially when sportsbooks already have Thursday's game on the board. But refusing to invent a bet before your process has produced one is part of the process.",
+              "You do not get paid for having action in every window. You get paid when the price and the evidence give you a reason to have action."
             ]
           }
         ]
@@ -109,32 +109,32 @@
   "evidence": [
     {
       "evidence_id": "card:week2-missing",
-      "fact": "The required canonical Week 2 file prospective/cards/2026/week-02/episodes.json returned not found on branch ops/prospective-card-evidence-v1 during the 2026-09-15 morning run, so no governed Week 2 publication comparison can be made.",
-      "observed_at_utc": "2026-09-15T12:27:57Z",
+      "fact": "The required canonical Week 2 file prospective/cards/2026/week-02/episodes.json returned not found on branch ops/prospective-card-evidence-v1 during the 2026-09-15 evening run, so no governed Week 2 publication comparison can be made.",
+      "observed_at_utc": "2026-09-16T00:26:39Z",
       "sources": [{"label": "NFL EDGE prospective-card branch", "url": "https://github.com/Tkcool28/nfl-edge/tree/ops/prospective-card-evidence-v1/prospective/cards/2026"}]
     },
     {
       "evidence_id": "schedule:lions-bills",
-      "fact": "Detroit visits Buffalo on Thursday, September 17, 2026 at 8:15 p.m. ET in Week 2, the first regular-season game at the new Highmark Stadium.",
+      "fact": "Detroit visits Buffalo Thursday, September 17, 2026 at 8:15 p.m. ET in Week 2.",
       "sources": [
         {"label": "NFL — Lions at Bills Week 2", "url": "https://www.nfl.com/games/lions-at-bills-2026-reg-2"},
-        {"label": "Buffalo Bills — 2026 home opener", "url": "https://www.buffalobills.com/news/buffalo-bills-to-host-detroit-lions-in-2026-home-opener-at-highmark-stadium"}
+        {"label": "Buffalo Bills — Week 2 game information", "url": "https://www.buffalobills.com/news/buffalo-bills-vs-detroit-lions-where-to-watch-stream-and-listen-week-2-tnf"}
       ]
     },
     {
-      "evidence_id": "injury:lions-bills-not-yet-posted",
-      "fact": "The NFL Lions-Bills Week 2 game center reported that injury reports for both teams were not available during this morning's research check.",
+      "evidence_id": "injury:lions-bills-not-posted",
+      "fact": "The NFL Lions-Bills Week 2 game center reported injury reports for both teams were not available during the evening research check.",
       "sources": [{"label": "NFL — Lions at Bills Week 2", "url": "https://www.nfl.com/games/lions-at-bills-2026-reg-2"}]
     },
     {
-      "evidence_id": "weather:buffalo-thursday",
-      "fact": "The National Weather Service forecast calls for showers likely in Buffalo during Thursday, followed by a 30% chance of showers Thursday night with light north wind.",
-      "sources": [{"label": "National Weather Service — Buffalo forecast", "url": "https://forecast.weather.gov/MapClick.php?FcstType=text&lat=42.9&lg=english&lon=-78.88"}]
+      "evidence_id": "weather:buffalo-monitor",
+      "fact": "No severe or clearly actionable kickoff-weather threat for the Buffalo area was established from the National Weather Service material available during this check; weather remains a monitor with the game two days away.",
+      "sources": [{"label": "National Weather Service — Buffalo", "url": "https://www.weather.gov/buf/"}]
     },
     {
-      "evidence_id": "market:lions-bills-early",
-      "fact": "VSiN's early Week 2 market report lists Buffalo around a field-goal favorite against Detroit and notes that the line had not moved much from lookahead pricing after Week 1.",
-      "sources": [{"label": "VSiN — NFL Week 2 odds report", "url": "https://vsin.com/nfl/nfl-odds-week-2-schedule-line-moves-and-matchups/"}]
+      "evidence_id": "fade:no-verified-split",
+      "fact": "No sufficiently verified current-day DraftKings-versus-Circa split was available during this run to support a governed Fade conclusion, and there is no NFL EDGE Week 2 recommendation to anchor such a comparison.",
+      "sources": [{"label": "VSiN betting splits", "url": "https://data.vsin.com/betting-splits/"}]
     }
   ]
 }
