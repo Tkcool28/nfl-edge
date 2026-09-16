@@ -121,7 +121,17 @@ class RoofResolver:
         record = self._overrides.get(game_id) or self._statuses.get(game_id)
         override_applied = game_id in self._overrides
         if record is None:
-            raise LiveRoofError(f"{game_id}: retractable roof status is missing")
+            # Missing live evidence for a known retractable venue is an explicit
+            # unresolved state, not a scoring blocker. The scorer preserves both
+            # frozen OPEN/CLOSED XGBoost scenarios and makes no selection.
+            record = {
+                "status": "PENDING",
+                "source": "no current roof-status evidence",
+                "source_at_utc": _required_text(
+                    game.get("context_source_at_utc"),
+                    f"{game_id}.context_source_at_utc",
+                ),
+            }
         status = str(record.get("status") or "").upper()
         if status not in ROOF_STATUSES:
             raise LiveRoofError(f"{game_id}: unsupported roof status {status!r}")
