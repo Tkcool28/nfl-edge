@@ -6,6 +6,7 @@ from types import SimpleNamespace
 import polars as pl
 import pytest
 
+from nfl_edge.live import product_state_2026 as product_state
 from nfl_edge.live.product_state_2026 import (
     Entering2026ProductStateError,
     advance_live_value_state,
@@ -91,3 +92,54 @@ def test_selector_state_requires_successful_pregame_evidence(tmp_path):
 
     with pytest.raises(Entering2026ProductStateError, match="strictly pre-kickoff"):
         advance_live_value_state(entering=ValueSelectorState(), evidence=_evidence(), run_root=tmp_path)
+
+
+def test_selector_state_can_recover_legacy_pregame_proof_via_governed_replay(
+    tmp_path, monkeypatch
+):
+    captured_at = "2026-09-09T18:00:00Z"
+    run = tmp_path / "legacy-week1"
+    (run / "product").mkdir(parents=True)
+    (run / "run-status.json").write_text(
+        json.dumps({"outcome": "SUCCESS"}), encoding="utf-8"
+    )
+    # Pre-PR131 proof: successful product proof exists, but no selector_evidence.
+    (run / "product" / "deterministic-proof.json").write_text(
+        json.dumps({"schema_validation": "PASS"}), encoding="utf-8"
+    )
+
+    calls = []
+
+    def legacy_replay(*, repository_root, run_dir):
+        calls.append((repository_root, run_dir))
+        return {
+            "schema_version": "NFL_EDGE_LIVE_SELECTOR_EVIDENCE_V1",
+            "season": 2026,
+            "week": 1,
+            "captured_at_utc": captured_at,
+            "games": [{
+                "game_id": "2026_01_A_B",
+                "kickoff_at_utc": "2026-09-10T00:20:00Z",
+            }],
+            "rows": [
+                _selector_row(market="moneyline"),
+                _selector_row(market="spread"),
+            ],
+        }
+
+    monkeypatch.setattr(
+        product_state,
+        "_legacy_selector_evidence_from_run",
+        legacy_replay,
+    )
+    repo_root = tmp_path / "repo"
+    state = advance_live_value_state(
+        entering=ValueSelectorState(),
+        evidence=_evidence(),
+        run_root=tmp_path,
+        repository_root=repo_root,
+    )
+
+    assert calls == [(repo_root, run)]
+    assert len(state.ml_observations) == 1
+    assert len(state.spread_observations) == 1
