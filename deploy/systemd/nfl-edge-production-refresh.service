@@ -20,7 +20,10 @@ UMask=0077
 NoNewPrivileges=true
 ProtectSystem=strict
 ProtectHome=read-only
-ReadWritePaths=/var/lib/nfl-edge/production_refresh_v1 /var/lib/nfl-edge/product_v1 /var/lib/nfl-edge/prospective_card_log_v1
+# The settled-evidence lock (.live-inputs.lock) lives inside the season
+# evidence root and is opened "a+" by load_settled_evidence() (shared/fcntl).
+# Grant read-write on exactly that governed lock directory, not the whole tree.
+ReadWritePaths=/var/lib/nfl-edge/production_refresh_v1 /var/lib/nfl-edge/product_v1 /var/lib/nfl-edge/prospective_card_log_v1 /var/lib/nfl-edge/live_inputs_v1/2026
 PrivateDevices=true
 ProtectKernelTunables=true
 ProtectKernelModules=true
