@@ -157,7 +157,17 @@ def test_legacy_selector_replay_accepts_semantic_source_parity_without_whole_pro
     prediction_as_of = "2026-09-09T15:30:00Z"
     acquired_at = "2026-09-09T15:34:00Z"
     game_id = "2026_01_A_B"
-    outputs = {"qb_elo": {"status": "AVAILABLE", "home_win_probability": 0.61}}
+    outputs = {
+        "qb_elo": {"status": "AVAILABLE", "home_win_probability": 0.61},
+        "xgboost_v2": {
+            "status": "AVAILABLE_WITH_ROOF_SCENARIOS",
+            "home_win_probability": None,
+            "roof_scenarios": {
+                "open": {"home_win_probability": 0.58},
+                "closed": {"home_win_probability": 0.62},
+            },
+        },
+    }
 
     football = {
         "season": 2026,
@@ -200,7 +210,11 @@ def test_legacy_selector_replay_accepts_semantic_source_parity_without_whole_pro
             "football_outputs": {
                 "prediction_as_of_utc": prediction_as_of,
                 "provenance_id": "football:test",
-                **outputs,
+                "qb_elo": outputs["qb_elo"],
+                "xgboost_v2": {
+                    **outputs["xgboost_v2"],
+                    "roof_scenario_downstream": {"status": "AGREE"},
+                },
             },
         }],
     }
