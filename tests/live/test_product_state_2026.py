@@ -172,7 +172,15 @@ def test_pick_that_disappears_before_kickoff_is_not_graded(tmp_path):
         name="final",
         captured_at="2026-09-20T16:00:00Z",
         games=games,
-        rows=[],
+        rows=[
+            # The offer still exists on the evaluator board, but it is no longer
+            # a Value candidate. The earlier Value state must not be graded.
+            _selector_row(
+                market="moneyline",
+                game_id="2026_02_A_B",
+                value=False,
+            )
+        ],
     )
 
     rows = product_state._final_pregame_selector_rows(
@@ -180,7 +188,18 @@ def test_pick_that_disappears_before_kickoff_is_not_graded(tmp_path):
         week=2,
         required_game_ids={"2026_02_A_B"},
     )
-    assert rows == []
+    assert len(rows) == 1
+    assert rows[0]["price_status"] == "NO_VALUE"
+
+    state = advance_live_value_state(
+        entering=ValueSelectorState(),
+        evidence=_evidence(
+            through_week=2,
+            games=[{"game_id": "2026_02_A_B", "home_score": 24, "away_score": 17}],
+        ),
+        run_root=tmp_path,
+    )
+    assert state.ml_observations == ()
 
 
 def test_selector_trust_advances_from_week2_final_game_states_only(tmp_path):
