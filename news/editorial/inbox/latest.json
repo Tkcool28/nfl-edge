@@ -1,29 +1,29 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-09-16T12:25:33Z",
-  "research_generated_at_utc": "2026-09-16T12:25:33Z",
+  "submitted_at_utc": "2026-09-16T15:01:00Z",
+  "research_generated_at_utc": "2026-09-16T15:01:00Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-09-16T12:25:33Z",
+    "published_at_utc": "2026-09-16T15:01:00Z",
     "edition": "Wednesday Morning Brief",
     "title": "NFL EDGE Wednesday Morning Brief",
-    "dek": "Thursday night is getting closer, but the governed Week 2 card still has to speak first.",
+    "dek": "Week 2 is live: three governed plays, one brand-new baseline, and no reason to invent movement that has not happened yet.",
     "sections": [
       {
         "id": "what-matters",
         "title": "What Matters Today",
         "items": [
           {
-            "headline": "Detroit's offensive line is the injury story to watch",
-            "paragraphs": ["Detroit listed guard Christian Mahogany (hip) and tackle Blake Miller (knee) as non-participants again Tuesday, while corner D.J. Reed (foot) was added as limited. Buffalo linebacker Terrel Bernard (calf) and running back Ty Johnson (hamstring) remained limited, while defensive lineman T.J. Sanders (knee/illness) moved to non-participant."],
-            "evidence_ids": ["injury:det-buf-tuesday"],
-            "sources": [{"label": "Buffalo Bills — Week 2 Injury Report", "url": "https://www.buffalobills.com/team/injury-report/"}, {"label": "Detroit Lions — Sept. 15 Practice Report", "url": "https://www.detroitlions.com/news/lions-at-bills-practice-report-sept-15-reed-miller-scruggs"}]
+            "headline": "Thursday's Detroit offensive line remains the immediate injury watch",
+            "paragraphs": ["Detroit guard Christian Mahogany and tackle Blake Miller remain non-participants on the official Week 2 injury report, while D.J. Reed and Juice Scruggs are limited. Buffalo lists Terrel Bernard and Cole Bishop limited. For Sunday's three NFL EDGE games, the official league report does not yet list injuries for Washington-Dallas, Seattle-Arizona or Indianapolis-Kansas City."],
+            "evidence_ids": ["injury:week02-official"],
+            "sources": [{"label": "NFL — Official Week 2 Injury Report", "url": "https://www.nfl.com/injuries/"}]
           },
           {
-            "headline": "Thursday's rain chance may clear before kickoff",
-            "paragraphs": ["The National Weather Service gives Buffalo a 50% chance of showers and thunderstorms Thursday, but Thursday night is currently forecast mostly cloudy with calm wind. That makes weather worth rechecking closer to kickoff, not a reason to move a bet now."],
-            "evidence_ids": ["weather:buf-thursday"],
-            "sources": [{"label": "National Weather Service — Buffalo forecast", "url": "https://forecast.weather.gov/MapClick.php?FcstType=text&TextType=1&lat=42.89&lg=english&lon=-78.86&unit=1"}]
+            "headline": "Kansas City weather deserves a weekend recheck",
+            "paragraphs": ["The National Weather Service currently has showers and thunderstorms likely in Kansas City on Sunday with a 70% precipitation chance. That is early enough to monitor rather than overreact to, but it is relevant to the current Kansas City moneyline recommendation and worth checking again closer to kickoff."],
+            "evidence_ids": ["weather:kc-sunday"],
+            "sources": [{"label": "National Weather Service — Kansas City", "url": "https://beta.weather.gov/place/MO/Kansas_City/"}]
           }
         ]
       },
@@ -31,64 +31,71 @@
         "id": "what-it-means",
         "title": "What It Means for NFL EDGE",
         "items": [{
-          "headline": "Useful news, but still no governed Week 2 instruction",
-          "paragraphs": ["Detroit's offensive-line situation is exactly the kind of news that can matter once NFL EDGE has a current recommendation and price. Right now it does not. The canonical Week 2 evidence file is still absent, so there is no governed side, book, price or Play Through to connect this news to."],
-          "evidence_ids": ["injury:det-buf-tuesday", "card:week02-missing"],
-          "sources": [{"label": "Detroit Lions — Sept. 15 Practice Report", "url": "https://www.detroitlions.com/news/lions-at-bills-practice-report-sept-15-reed-miller-scruggs"}, {"label": "NFL EDGE canonical Week 2 evidence path", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]
+          "headline": "Now the news has a real card to connect to",
+          "paragraphs": ["Week 2 has established its first governed NFL EDGE baseline: Kansas City moneyline in Hit Rate, Washington +4.5 in Balanced, and Arizona +4.5 in Value. That changes how we use the news. Kansas City's weather is worth monitoring because there is an actual recommendation attached to that game; early injury headlines elsewhere should matter only if they affect one of the current plays or its price."],
+          "evidence_ids": ["card:week02-baseline", "weather:kc-sunday"],
+          "sources": [{"label": "NFL EDGE canonical Week 2 evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}, {"label": "National Weather Service — Kansas City", "url": "https://beta.weather.gov/place/MO/Kansas_City/"}]
         }]
       },
       {
         "id": "fade",
         "title": "The Fade",
         "items": [{
-          "headline": "No useful Fade signal yet",
-          "paragraphs": ["DraftKings' current VSiN display shows Buffalo drawing 64% of spread bets and 86% of spread money against Detroit. That is notable concentration, but concentration alone is not a Fade. I could not verify a current Circa split that creates a clean retail-versus-sharper-market disagreement, and NFL EDGE still has no governed Week 2 play to anchor the decision."],
-          "takeaway": "Pass on the Fade for now. Revisit it only after the Week 2 card publishes and a credible sharper-market comparison gives us something real to compare with the DraftKings concentration.",
-          "evidence_ids": ["splits:dk-det-buf", "card:week02-missing"],
-          "sources": [{"label": "VSiN — Detroit Lions team betting data", "url": "https://data.vsin.com/nfl/teams/detroit-lions"}, {"label": "NFL EDGE canonical Week 2 evidence path", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]
+          "headline": "Washington has support on both sides of the counter — not a clean Fade",
+          "paragraphs": ["NFL EDGE's Balanced play is Washington +4.5 at DraftKings. VSiN's current DraftKings splits also lean Washington, with 52% of spread bets and 55% of spread money on the Commanders +4.5. Circa is showing Washington +4 with 67% of spread bets and 53% of the money.", "That is not the retail-versus-sharper-market disagreement we look for in The Fade. Both books currently lean toward Washington, even though the exact line differs. There is no reason to turn that into a contrarian warning just for the sake of having one."],
+          "takeaway": "No useful Fade signal on Washington right now. The governed play is +4.5 at -115 with Play Through -118. Stay inside that Play Through and do not chase a worse number. Revisit if DraftKings public concentration grows while Circa meaningfully moves the other way.",
+          "evidence_ids": ["card:week02-baseline", "splits:was-dal"],
+          "sources": [{"label": "NFL EDGE canonical Week 2 evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}, {"label": "VSiN — DraftKings NFL Betting Splits", "url": "https://data.vsin.com/betting-splits/?display=card&source=DK&view=updated"}, {"label": "VSiN — Circa NFL Betting Splits", "url": "https://data.vsin.com/betting-splits/?display=card&source=CIRCA&sport=NFL"}]
         }]
       },
       {
         "id": "market-watch",
         "title": "Market Watch",
         "items": [{
-          "headline": "Market Watch fails closed: Week 2 evidence is not published yet",
-          "paragraphs": ["The required canonical file prospective/cards/2026/week-02/episodes.json is still missing from ops/prospective-card-evidence-v1. Because there is no canonical Week 2 publication, there is no valid newest source_publication_id, observation timestamp or immediately preceding publication to compare.", "That means there is no governed recommendation appearance, disappearance, return, lane replacement, book/price change or Play Through change to report. Outside sportsbook prices are not being substituted for the missing NFL EDGE evidence."],
-          "takeaway": "No canonical Week 2 card means no Market Watch claim. Wait for the governed publication.",
-          "evidence_ids": ["card:week02-missing"],
-          "sources": [{"label": "NFL EDGE canonical Week 2 evidence path", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]
+          "headline": "Week 2 finally has its first governed card",
+          "paragraphs": ["The first canonical Week 2 publication is publication-372069786e9c813fa913ff8e, observed at 2026-09-16T14:33:02.151729Z. Because this is the first Week 2 publication, there is no immediately preceding Week 2 publication to compare against yet, so this is a baseline — not a price-movement claim.", "Balanced opens with Washington +4.5 at DraftKings -115, Play Through -118, for 0.75 units. Hit Rate opens with Kansas City moneyline at DraftKings -285, Play Through -296, for 0.5 units. Value opens with Arizona +4.5 at FanDuel -115, Play Through -118, for 0.75 units."],
+          "takeaway": "The important change from this morning is that Week 2 evidence now exists and all three lanes have governed recommendations. With only one publication, there is not yet enough canonical history to call anything better, worse, returned or replaced. The next publication gives Market Watch its first true comparison.",
+          "evidence_ids": ["card:week02-baseline"],
+          "sources": [{"label": "NFL EDGE canonical Week 2 evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]
         }]
       },
       {
         "id": "today-tip",
         "title": "Today's Tip",
         "items": [{
-          "headline": "Separate news from price",
-          "paragraphs": ["An injury can make you like one side more without making the current sportsbook price a good bet. Let the news tell you what deserves attention; let the recommendation and Play Through tell you whether the price is still worth paying."]
+          "headline": "The first card is a baseline, not a trend",
+          "paragraphs": ["When a new week's first card appears, it tells you what NFL EDGE recommends now. It does not tell you whether the market has improved or worsened for that play yet. That takes another governed observation. Treat the first snapshot as your starting line; let later snapshots tell the movement story."]
         }]
       }
     ]
   },
   "evidence": [
     {
-      "evidence_id": "card:week02-missing",
-      "fact": "At the scheduled run, prospective/cards/2026/week-02/episodes.json returned 404 on branch ops/prospective-card-evidence-v1, so no canonical Week 2 publication comparison was possible.",
-      "sources": [{"label": "NFL EDGE canonical Week 2 evidence path", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]
+      "evidence_id": "card:week02-baseline",
+      "fact": "The first canonical Week 2 publication is publication-372069786e9c813fa913ff8e at 2026-09-16T14:33:02.151729Z. It contains Balanced Washington +4.5 at DraftKings -115 with Play Through -118 and 0.75u; Hit Rate Kansas City moneyline at DraftKings -285 with Play Through -296 and 0.5u; and Value Arizona +4.5 at FanDuel -115 with Play Through -118 and 0.75u. There is no preceding Week 2 publication, so no within-week movement comparison is yet possible.",
+      "source_publication_id": "publication-372069786e9c813fa913ff8e",
+      "observed_at_utc": "2026-09-16T14:33:02.151729Z",
+      "sources": [{"label": "NFL EDGE canonical Week 2 evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]
     },
     {
-      "evidence_id": "injury:det-buf-tuesday",
-      "fact": "Detroit listed Christian Mahogany and Blake Miller as non-participants Tuesday, D.J. Reed limited, Juice Scruggs limited and Christian Izien full. Buffalo listed Terrel Bernard and Ty Johnson limited, Cole Bishop limited, and T.J. Sanders as a non-participant Tuesday.",
-      "sources": [{"label": "Buffalo Bills — Week 2 Injury Report", "url": "https://www.buffalobills.com/team/injury-report/"}, {"label": "Detroit Lions — Sept. 15 Practice Report", "url": "https://www.detroitlions.com/news/lions-at-bills-practice-report-sept-15-reed-miller-scruggs"}]
+      "evidence_id": "injury:week02-official",
+      "fact": "The NFL's official Week 2 report lists Detroit Christian Mahogany and Blake Miller as non-participants, D.J. Reed and Juice Scruggs limited, and Buffalo Terrel Bernard and Cole Bishop limited. The league page currently lists no injuries reported for Washington-Dallas, Seattle-Arizona or Indianapolis-Kansas City.",
+      "sources": [{"label": "NFL — Official Week 2 Injury Report", "url": "https://www.nfl.com/injuries/"}]
     },
     {
-      "evidence_id": "weather:buf-thursday",
-      "fact": "NWS Buffalo forecasts a 50% chance of showers and thunderstorms Thursday, followed by mostly cloudy conditions and calm wind Thursday night.",
-      "sources": [{"label": "National Weather Service — Buffalo forecast", "url": "https://forecast.weather.gov/MapClick.php?FcstType=text&TextType=1&lat=42.89&lg=english&lon=-78.86&unit=1"}]
+      "evidence_id": "weather:kc-sunday",
+      "fact": "The National Weather Service currently forecasts showers and thunderstorms likely in Kansas City Sunday with a 70% precipitation chance.",
+      "sources": [{"label": "National Weather Service — Kansas City", "url": "https://beta.weather.gov/place/MO/Kansas_City/"}]
     },
     {
-      "evidence_id": "splits:dk-det-buf",
-      "fact": "VSiN's current Detroit team page shows Detroit +4.5 receiving 36% of spread bets and 14% of spread money, implying Buffalo -4.5 receives 64% of spread bets and 86% of spread money at DraftKings.",
-      "sources": [{"label": "VSiN — Detroit Lions team betting data", "url": "https://data.vsin.com/nfl/teams/detroit-lions"}]
+      "evidence_id": "splits:was-dal",
+      "fact": "VSiN's current DraftKings display shows Washington +4.5 with 55% of spread money and 52% of spread bets. Its current Circa display shows Washington +4 with 53% of spread money and 67% of spread bets. Both currently lean Washington rather than showing a clean retail-versus-sharper disagreement.",
+      "sources": [{"label": "VSiN — DraftKings NFL Betting Splits", "url": "https://data.vsin.com/betting-splits/?display=card&source=DK&view=updated"}, {"label": "VSiN — Circa NFL Betting Splits", "url": "https://data.vsin.com/betting-splits/?display=card&source=CIRCA&sport=NFL"}]
+    },
+    {
+      "evidence_id": "crosscheck:production-app",
+      "fact": "The production app was requested as a cross-check, but its dynamic card could not be independently retrieved through the available web reader during this run. The canonical Week 2 prospective evidence is therefore the authoritative card source for this brief.",
+      "sources": [{"label": "NFL EDGE production app", "url": "https://nfl.tkhermes.duckdns.org/"}]
     }
   ]
 }
