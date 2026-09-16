@@ -582,9 +582,9 @@ def _legacy_selector_evidence_from_run(
 
     football_paths = sorted((run_dir / "football").glob("*.json"))
     market_path = run_dir / "market" / "NFL_EDGE_LIVE_MARKET_V1.json"
-    product_path = run_dir / "product" / "NFL_EDGE_PRODUCT_API_V1.json"
+    candidate_path = run_dir / "product" / "NFL_EDGE_PRODUCT_API_V1.json"
     status_path = run_dir / "run-status.json"
-    if len(football_paths) != 1 or not market_path.is_file() or not product_path.is_file() or not status_path.is_file():
+    if len(football_paths) != 1 or not market_path.is_file() or not status_path.is_file():
         raise Entering2026ProductStateError(
             f"legacy selector replay artifacts incomplete for {run_dir}"
         )
@@ -592,6 +592,19 @@ def _legacy_selector_evidence_from_run(
     status = json.loads(status_path.read_text(encoding="utf-8"))
     if status.get("outcome") != "SUCCESS":
         raise Entering2026ProductStateError("legacy selector replay requires successful run")
+    immutable_value = status.get("immutable_snapshot")
+    immutable_path = Path(str(immutable_value)) if immutable_value else None
+    product_path = (
+        candidate_path
+        if candidate_path.is_file()
+        else immutable_path
+        if immutable_path is not None and immutable_path.is_file()
+        else None
+    )
+    if product_path is None:
+        raise Entering2026ProductStateError(
+            f"legacy selector replay original product is unavailable for {run_dir}"
+        )
     original_bytes = product_path.read_bytes()
     recorded_sha = str(status.get("product_sha256") or "")
     observed_sha = hashlib.sha256(original_bytes).hexdigest()
