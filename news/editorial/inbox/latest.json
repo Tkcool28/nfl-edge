@@ -1,53 +1,53 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-09-19T12:23:22Z",
-  "research_generated_at_utc": "2026-09-19T12:23:22Z",
+  "submitted_at_utc": "2026-09-20T00:24:13Z",
+  "research_generated_at_utc": "2026-09-20T00:24:13Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-09-19T12:23:22Z",
-    "edition": "Saturday Morning Brief",
-    "title": "NFL EDGE Saturday Morning Brief",
-    "dek": "Cincinnati holds its +2.5 while the wider market sits closer to +1.5, and Kansas City gets a little cheaper again with Sunday-night rain still worth watching.",
+    "published_at_utc": "2026-09-20T00:24:13Z",
+    "edition": "Saturday Evening Brief",
+    "title": "NFL EDGE Saturday Evening Brief",
+    "dek": "Sunday is close enough that final injuries and weather matter across the board, while Cincinnati holds and Kansas City changes books at a slightly better price.",
     "sections": [
       {
         "id": "what-matters",
         "title": "What Matters Today",
         "items": [{
-          "headline": "The final injury picture is clearer; Kansas City weather still needs a gameday check",
-          "paragraphs": ["Cincinnati quarterback Joe Burrow finished Friday as a full participant after two limited practices and is officially questionable, with Zac Taylor saying he feels good about Burrow playing Sunday. Houston receiver Nico Collins and defensive end Jadeveon Clowney are out.", "For Kansas City, tackle Josh Simmons and defensive back Chamarri Conner are out. Chris Jones is questionable with a calf injury, while Patrick Mahomes practiced fully all week. The National Weather Service currently calls for showers likely and possibly a thunderstorm Sunday night in Kansas City, with a 60% precipitation chance and northeast winds around 5 to 8 mph."],
-          "evidence_ids": ["injury:cin-hou-final", "injury:ind-kc-final", "weather:kc-sunday-night"],
-          "sources": [{"label":"Cincinnati Bengals Week 2 Injury Report","url":"https://www.bengals.com/news/texans-bengals-injury-report-week-2-2026"},{"label":"Bengals Quick Hits — Burrow","url":"https://www.bengals.com/news/quick-hits-zac-taylor-feels-good-about-joe-burrow-as-bengals-eye-texans"},{"label":"Kansas City Chiefs Week 2 Injury Report","url":"https://www.chiefs.com/news/2026-week-2-injury-report-colts-vs-chiefs"},{"label":"National Weather Service — Kansas City","url":"https://forecast.weather.gov/MapClick.php?FcstType=text&lat=39.099&lg=english&lon=-94.578"}]
+          "headline": "Sunday's biggest injury and weather flags are spread across the slate",
+          "paragraphs": ["Minnesota will be without quarterback Kyler Murray at Chicago, while Baltimore has ruled out receiver Zay Flowers. Seattle quarterback Sam Darnold is out at Arizona, and Raiders tight end Brock Bowers is doubtful against the Chargers. Houston receiver Nico Collins remains out against Cincinnati, while Joe Burrow is questionable after finishing Friday with a full practice. Green Bay also ruled out defensive tackle Javon Hargrave on Saturday.", "Weather deserves more attention than it did earlier in the week. Chicago is the standout: thunderstorms and roughly 20 mph wind are forecast around Vikings-Bears. Rain is also expected around Packers-Jets, Steelers-Patriots and Saints-Ravens, while thunderstorms remain possible throughout Colts-Chiefs Sunday night. Nashville could approach triple-digit heat late in Eagles-Titans."],
+          "evidence_ids": ["injury:week02-slate-final", "weather:week02-sunday"],
+          "sources": [{"label":"NFL Week 2 injury report","url":"https://www.nfl.com/news/nfl-week-2-injury-report-player-statuses-for-all-16-games"},{"label":"DraftKings Network Week 2 weather","url":"https://dknetwork.draftkings.com/2026/09/18/nfl-week-2-weather-forecast/"}]
         }]
       },
       {
         "id": "what-it-means",
         "title": "What It Means for NFL EDGE",
         "items": [{
-          "headline": "The card is stable; the information around Cincinnati is getting firmer",
-          "paragraphs": ["Balanced remains Cincinnati +2.5 at DraftKings -102 with Play Through -105 for 1.0 unit. Value still lands on the same Cincinnati offer, so it is not an extra portfolio bet. Burrow's full Friday practice and Houston's confirmed absences reduce uncertainty, but they do not change the price rule: +2.5 at -105 or better is the card; a worse offer is a different decision.", "Kansas City remains Hit Rate and improved from -290 last night to -285 this morning, with Play Through improving from -301 to -296. Sunday-night rain is worth checking again closer to kickoff, but the current forecast does not justify inventing a weather adjustment to the recommendation."],
-          "evidence_ids": ["card:week02-saturday-am", "injury:cin-hou-final", "weather:kc-sunday-night"],
-          "sources": [{"label":"NFL EDGE canonical Week 2 evidence","url":"https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"},{"label":"Cincinnati Bengals Week 2 Injury Report","url":"https://www.bengals.com/news/texans-bengals-injury-report-week-2-2026"},{"label":"National Weather Service — Kansas City","url":"https://forecast.weather.gov/MapClick.php?FcstType=text&lat=39.099&lg=english&lon=-94.578"}]
+          "headline": "Use the whole app Sunday morning, not just the headline bets",
+          "paragraphs": ["The injury and weather board now reaches well beyond Cincinnati and Kansas City. Games such as Vikings-Bears, Packers-Jets, Saints-Ravens and Seattle-Arizona deserve a fresh look in the app before kickoff because the information around them has materially changed or the weather could affect how the game is played.", "For the headline recommendations, Cincinnati still has the same +2.5 offer and Kansas City remains the moneyline play. The Sunday-night storm risk is a reason to recheck conditions and price near kickoff, not a reason to invent a change to the recommendation tonight."],
+          "evidence_ids": ["card:week02-saturday-pm", "injury:week02-slate-final", "weather:week02-sunday"],
+          "sources": [{"label":"NFL EDGE canonical Week 2 evidence","url":"https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"},{"label":"NFL Week 2 injury report","url":"https://www.nfl.com/news/nfl-week-2-injury-report-player-statuses-for-all-16-games"},{"label":"DraftKings Network Week 2 weather","url":"https://dknetwork.draftkings.com/2026/09/18/nfl-week-2-weather-forecast/"}]
         }]
       },
       {
         "id": "fade",
         "title": "The Fade",
         "items": [{
-          "headline": "Cincinnati still has a real ticket-versus-money disagreement",
-          "paragraphs": ["Fresh DraftKings data displayed by VSiN shows Cincinnati taking 51% of spread bets but only 26% of spread money. In plain English, slightly more individual tickets are on the Bengals, while most of the dollars are on Houston.", "At the same time, VSiN's current multi-book tracker has Cincinnati around +1.5 at several books, while NFL EDGE's canonical offer remains +2.5 at DraftKings. That is useful price context, but without a fresh verified Circa split it is not enough to call this a clean sharp-versus-public Fade."],
-          "takeaway": "Action: do not chase the wider market down to +1.5. If DraftKings still gives you Cincinnati +2.5 at -105 or better, stay inside the NFL EDGE Play Through. If that number is gone, pass rather than forcing the bet.",
-          "evidence_ids": ["fade:cin-hou-saturday-am", "market:cin-hou-saturday-am", "card:week02-saturday-am"],
-          "sources": [{"label":"VSiN Cincinnati Bengals betting data","url":"https://data.vsin.com/nfl/teams/cincinnati-bengals?view=gamelogs"},{"label":"VSiN NFL Line Tracker","url":"https://data.vsin.com/vegas-odds-linetracker/?lineperiod=1h&linetype=moneyline&sportid=nfl"},{"label":"NFL EDGE canonical Week 2 evidence","url":"https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]
+          "headline": "Cincinnati still shows disagreement, but not enough to manufacture a sharp-money story",
+          "paragraphs": ["VSiN's current DraftKings data shows 51% of Cincinnati spread tickets but only 26% of the spread money on the Bengals. That means the ticket count is nearly even while the larger share of dollars sits on Houston.", "VSiN explicitly provides both DraftKings and Circa Week 2 split feeds, but the accessible Circa page did not expose a game-level Cincinnati-Houston percentage that could be independently verified in this run. So the DraftKings disagreement is real, but calling it a clean public-versus-sharp split would go beyond the evidence."],
+          "takeaway": "Cincinnati +2.5 remains playable only through -105. Do not chase a worse number because of the split, and do not fade the NFL EDGE play solely because Houston has more DraftKings money. A verified Circa lean or meaningful late line move would make the disagreement more useful Sunday morning.",
+          "evidence_ids": ["fade:cin-hou-saturday-pm", "circa:verification-saturday-pm", "card:week02-saturday-pm"],
+          "sources": [{"label":"VSiN Cincinnati Bengals betting data","url":"https://data.vsin.com/nfl/teams/cincinnati-bengals?view=gamelogs"},{"label":"VSiN Week 2 betting hub","url":"https://vsin.com/nfl/nfl-week-2-betting-hub-picks-odds-and-previews/"},{"label":"NFL EDGE canonical Week 2 evidence","url":"https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]
         }]
       },
       {
         "id": "market-watch",
         "title": "Market Watch",
         "items": [{
-          "headline": "Cincinnati holds; Kansas City gets cheaper again",
-          "paragraphs": ["The newest canonical publication is publication-0bab07dec6767d45c5e7e6c1, observed at 2026-09-19T12:08:03.730278Z. Compared with the immediately preceding publication-b18b295053bd7d7a3ee9f186 from 2026-09-19T00:08:04.409713Z, Balanced remains Cincinnati +2.5 at DraftKings -102 with Play Through -105 for 1.0 unit. Value remains the same Cincinnati +2.5 exact offer and does not create an additional portfolio stake.", "Hit Rate remains Kansas City moneyline, but the price improved from -290 with Play Through -301 to -285 with Play Through -296. No selector or lane changed, and no recommendation appeared, disappeared, or returned in this refresh."],
-          "takeaway": "The Saturday-morning card is stable. Cincinnati is unchanged. Kansas City is the same recommendation at a slightly better price than last night, and the current -296 Play Through is the guardrail that matters now.",
-          "evidence_ids": ["card:week02-saturday-am"],
+          "headline": "Cincinnati holds; Kansas City gets a new book and a slightly better price",
+          "paragraphs": ["Cincinnati is still +2.5 at DraftKings -102, playable through -105. Nothing changed there tonight.", "Kansas City remains the Hit Rate moneyline, but the best offer moved from DraftKings -285 to FanDuel -280. The new Play Through is -290. Same team, slightly cheaper price, different sportsbook."],
+          "takeaway": "If you are taking Kansas City, use the current FanDuel offer and the current -290 limit rather than yesterday's DraftKings number. Cincinnati remains unchanged.",
+          "evidence_ids": ["card:week02-saturday-pm"],
           "sources": [{"label":"NFL EDGE canonical Week 2 evidence","url":"https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]
         }]
       },
@@ -55,19 +55,18 @@
         "id": "today-tip",
         "title": "Today's Tip",
         "items": [{
-          "headline": "The market moving away from your number can be a reason to shop, not a reason to panic",
-          "paragraphs": ["If NFL EDGE captured +2.5 and the wider market is showing +1.5, first check whether the recommended book still has the better number. One sportsbook can lag the market for a while. The useful move is to shop for the exact approved offer—not to assume the model is wrong, and not to accept a worse line just to get a bet down."]
+          "headline": "A sportsbook change is part of the recommendation",
+          "paragraphs": ["If NFL EDGE moves the same bet from DraftKings to FanDuel, that is not cosmetic. The app is telling you where the better approved price is right now. A moneyline at -280 costs less than the same team at -285, so check both the sportsbook and the number before placing the bet."]
         }]
       }
     ]
   },
   "evidence": [
-    {"evidence_id":"card:week02-saturday-am","fact":"Newest canonical Week 2 publication is publication-0bab07dec6767d45c5e7e6c1 at 2026-09-19T12:08:03.730278Z. Balanced and Value remain Cincinnati +2.5 at DraftKings -102 with Play Through -105; Hit Rate remains Kansas City moneyline and improves from -290 / Play Through -301 in the preceding publication to -285 / -296.","source_publication_id":"publication-0bab07dec6767d45c5e7e6c1","observed_at_utc":"2026-09-19T12:08:03.730278Z","preceding_source_publication_id":"publication-b18b295053bd7d7a3ee9f186","preceding_observed_at_utc":"2026-09-19T00:08:04.409713Z","sources":[{"label":"NFL EDGE canonical Week 2 prospective evidence","url":"https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]},
-    {"evidence_id":"injury:cin-hou-final","fact":"Joe Burrow was a full participant Friday and is questionable; Zac Taylor said he feels good about Burrow playing Sunday. Nico Collins and Jadeveon Clowney are out for Houston.","sources":[{"label":"Cincinnati Bengals Week 2 Injury Report","url":"https://www.bengals.com/news/texans-bengals-injury-report-week-2-2026"},{"label":"Bengals Quick Hits — Burrow","url":"https://www.bengals.com/news/quick-hits-zac-taylor-feels-good-about-joe-burrow-as-bengals-eye-texans"}]},
-    {"evidence_id":"injury:ind-kc-final","fact":"Josh Simmons and Chamarri Conner are out for Kansas City; Chris Jones is questionable; Patrick Mahomes practiced fully Friday.","sources":[{"label":"Kansas City Chiefs Week 2 Injury Report","url":"https://www.chiefs.com/news/2026-week-2-injury-report-colts-vs-chiefs"}]},
-    {"evidence_id":"weather:kc-sunday-night","fact":"The National Weather Service forecast for Kansas City calls for showers likely and possibly a thunderstorm Sunday night, a 60% precipitation chance, and northeast winds around 5 to 8 mph.","sources":[{"label":"National Weather Service — Kansas City","url":"https://forecast.weather.gov/MapClick.php?FcstType=text&lat=39.099&lg=english&lon=-94.578"}]},
-    {"evidence_id":"fade:cin-hou-saturday-am","fact":"Fresh VSiN DraftKings data shows Cincinnati receiving 51% of spread bets but 26% of spread money for the Sept. 20 game at Houston.","sources":[{"label":"VSiN Cincinnati Bengals betting data","url":"https://data.vsin.com/nfl/teams/cincinnati-bengals?view=gamelogs"}]},
-    {"evidence_id":"market:cin-hou-saturday-am","fact":"VSiN's current multi-book tracker shows Cincinnati around +1.5 at several books, used only as external movement context and not as a replacement for canonical NFL EDGE Market Watch evidence.","sources":[{"label":"VSiN NFL Line Tracker","url":"https://data.vsin.com/vegas-odds-linetracker/?lineperiod=1h&linetype=moneyline&sportid=nfl"}]},
+    {"evidence_id":"card:week02-saturday-pm","fact":"Newest canonical Week 2 publication is publication-43697e36a08b04c57bdd8ec7 at 2026-09-20T00:08:04.823506Z. Compared with publication-0bab07dec6767d45c5e7e6c1 at 2026-09-19T12:08:03.730278Z, Cincinnati remains +2.5 at DraftKings -102 with Play Through -105. Kansas City moneyline changes from DraftKings -285 / Play Through -296 to FanDuel -280 / Play Through -290.","source_publication_id":"publication-43697e36a08b04c57bdd8ec7","observed_at_utc":"2026-09-20T00:08:04.823506Z","preceding_source_publication_id":"publication-0bab07dec6767d45c5e7e6c1","preceding_observed_at_utc":"2026-09-19T12:08:03.730278Z","sources":[{"label":"NFL EDGE canonical Week 2 prospective evidence","url":"https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]},
+    {"evidence_id":"injury:week02-slate-final","fact":"NFL.com's final Week 2 status board lists Kyler Murray, Zay Flowers, Sam Darnold and Nico Collins out; Brock Bowers doubtful; Joe Burrow questionable; and Kansas City tackle Josh Simmons out, among other slate-wide designations. Green Bay also ruled Javon Hargrave out Saturday.","sources":[{"label":"NFL Week 2 injury report","url":"https://www.nfl.com/news/nfl-week-2-injury-report-player-statuses-for-all-16-games"}]},
+    {"evidence_id":"weather:week02-sunday","fact":"DraftKings Network's Sept. 18 Week 2 weather forecast flags Vikings-Bears for thunderstorms and 20 mph wind, rain risk for Packers-Jets, Steelers-Patriots and Saints-Ravens, persistent thunderstorm risk for Colts-Chiefs, and extreme late-game heat for Eagles-Titans.","sources":[{"label":"DraftKings Network Week 2 weather","url":"https://dknetwork.draftkings.com/2026/09/18/nfl-week-2-weather-forecast/"}]},
+    {"evidence_id":"fade:cin-hou-saturday-pm","fact":"Current VSiN DraftKings data shows Cincinnati receiving 51% of spread bets and 26% of spread money against Houston.","sources":[{"label":"VSiN Cincinnati Bengals betting data","url":"https://data.vsin.com/nfl/teams/cincinnati-bengals?view=gamelogs"}]},
+    {"evidence_id":"circa:verification-saturday-pm","fact":"VSiN's Week 2 hub confirms dedicated DraftKings and Circa NFL betting-split feeds, but the accessible Circa surface did not expose a verifiable game-level Cincinnati-Houston percentage in this run; no Circa percentage was inferred or invented.","sources":[{"label":"VSiN Week 2 betting hub","url":"https://vsin.com/nfl/nfl-week-2-betting-hub-picks-odds-and-previews/"}]},
     {"evidence_id":"crosscheck:production-app","fact":"The production app could not be independently fetched through the available web reader during this run. Canonical prospective-card evidence remained authoritative for Market Watch.","sources":[{"label":"NFL EDGE production app","url":"https://nfl.tkhermes.duckdns.org/"}]}
   ]
 }
