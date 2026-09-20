@@ -1,0 +1,236 @@
+name: Authorized 2025 Holdout Product Test V3
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  execute-holdout:
+    if: >-
+      github.event.pull_request.head.ref == 'run/2025-holdout-product-test-v3' &&
+      github.event.pull_request.base.ref == 'main' &&
+      github.event.pull_request.user.login == 'Tkcool28'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      PYTHONHASHSEED: "0"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OPENBLAS_CORETYPE: "HASWELL"
+      MKL_NUM_THREADS: "1"
+      MKL_CBWR: "COMPATIBLE"
+      NUMEXPR_NUM_THREADS: "1"
+      NFL_EDGE_2025_AUTHORIZATION: ${{ github.event.pull_request.body }}
+      EXECUTION_HEAD: c61666684b4d40e20817d01d15fb87b352fac8ba
+      CARRIER_BRANCH: run/2025-holdout-product-test-v3
+      OUTPUT_REL: artifacts/task05g_2025_holdout_v1
+      TASK05F_BOARD_SHA256: 58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8
+      PBP_ROOT: /artifacts/raw/task05c_pbp_v1
+
+    steps:
+      - name: Checkout exact frozen execution head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_HEAD }}
+          fetch-depth: 0
+          path: source
+
+      - name: Checkout persistent carrier branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CARRIER_BRANCH }}
+          fetch-depth: 0
+          path: carrier
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: source/pyproject.toml
+
+      - name: Install frozen runtime dependencies
+        run: |
+          cd source
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[model-development]' pyyaml pytest
+
+      - name: Verify exact head, freeze audit, authorization, and unspent carrier
+        run: |
+          set -euo pipefail
+          test "$(git -C source rev-parse HEAD)" = "$EXECUTION_HEAD"
+          test ! -e "source/${OUTPUT_REL}/HOLDOUT_SPENT.json"
+          test ! -e "carrier/${OUTPUT_REL}/HOLDOUT_SPENT.json"
+          git -C carrier fetch origin "$CARRIER_BRANCH"
+          if git -C carrier cat-file -e "origin/${CARRIER_BRANCH}:${OUTPUT_REL}/HOLDOUT_SPENT.json" 2>/dev/null; then
+            echo 'HOLDOUT_ALREADY_SPENT_ON_CARRIER' >&2
+            exit 2
+          fi
+          (
+            cd source
+            python scripts/task05g_successor_executor_contract_audit_v1.py --quiet
+            python scripts/task05g_2025_holdout_one_shot_v1.py --preflight
+          )
+          python - <<'PY'
+          import hashlib, os
+          expected = 'f32f7b3a4316dc2f1154bb531b1c496b9958b33291e9e95a95b99767a1190f0a'
+          got = hashlib.sha256(os.environ['NFL_EDGE_2025_AUTHORIZATION'].encode()).hexdigest()
+          if got != expected:
+              raise SystemExit('authorization mismatch; holdout remains sealed')
+          print('OUT_OF_BAND_AUTHORIZATION_HASH=PASS')
+          PY
+
+      - name: Rematerialize exact promoted Task05C PBP bytes and verify frozen identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo rm -rf "$PBP_ROOT"
+          sudo mkdir -p "$PBP_ROOT"
+          sudo chown "$(id -u):$(id -g)" "$PBP_ROOT"
+
+          fetch_exact() {
+            local year="$1" size="$2" sha="$3"
+            local name="play_by_play_${year}.parquet"
+            local url="https://github.com/nflverse/nflverse-data/releases/download/pbp/${name}"
+            local tmp="${PBP_ROOT}/${name}.tmp"
+            local dst="${PBP_ROOT}/${name}"
+            curl -fL --retry 3 --retry-delay 2 --connect-timeout 30 "$url" -o "$tmp"
+            local got_size got_sha
+            got_size="$(stat -c %s "$tmp")"
+            got_sha="$(sha256sum "$tmp" | awk '{print $1}')"
+            test "$got_size" = "$size"
+            test "$got_sha" = "$sha"
+            mv "$tmp" "$dst"
+          }
+
+          fetch_exact 2018 19072097 2e6f2dce7c7ebd46e985cabe0c17eb72b39a77f98cb4478409294f50b5820150
+          fetch_exact 2019 19119729 60c3067017db2d28a78f66a79b657268be8578d9a5288e6a827efdcd7fe42540
+          fetch_exact 2020 19311336 73b7dbf66fa8cb9356f58bf6b1f15a0fee197ecc10cf4983b640cb9679b15cb4
+          fetch_exact 2021 20249925 333ad34378e5339d5172717cc83378e908daf02c8699416ab3e17c2ec10f78d8
+          fetch_exact 2022 20426548 931121d8897779d7944e2a293e92ed8799c8e5cceef84096ac42339003fedc09
+          fetch_exact 2023 20534088 bd3484731408def6b0ec93225bba2bd7b2c65769ca707a2b9444d891abdc6776
+          fetch_exact 2024 20576368 6d432dd4308329bfddaef633309ea119f9ca46d52cbb3c09f47172a2e8efcd01
+
+          cd source
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from nfl_edge.features.totals_v1.manifest import (
+              CANONICAL_PBP_MANIFEST,
+              resolve_artifact_root,
+              verify_pbp_artifacts,
+          )
+          root = Path(os.environ['PBP_ROOT'])
+          verified = verify_pbp_artifacts(root)
+          resolved = resolve_artifact_root()
+          assert resolved == root, (resolved, root)
+          payload = {
+              'schema_version': 'task05c_pbp_environmental_rematerialization_v1',
+              'classification': 'BYTE_IDENTICAL_REMATERIALIZATION_OF_FROZEN_PROMOTED_INPUTS',
+              'source_release': 'nflverse/nflverse-data tag pbp',
+              'root': str(root),
+              'resolved_root': str(resolved),
+              'new_dataset_or_methodology': False,
+              'files': [
+                  {'season': a.season, 'filename': a.filename, 'byte_size': a.byte_size, 'sha256': a.sha256}
+                  for a in verified
+              ],
+          }
+          Path('../pbp_rematerialization.json').write_text(
+              json.dumps(payload, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          print('TASK05C_PROMOTED_PBP_IDENTITY=PASS')
+          PY
+
+      - name: Materialize and verify accepted frozen Task05F board
+        run: |
+          set -euo pipefail
+          cd source
+          python scripts/task05f_evaluator_final_runner.py \
+            --out artifacts/task05f/evaluator_final_v1 \
+            > ../task05f_materialization.log
+          python - <<'PY'
+          import hashlib, os
+          from pathlib import Path
+          p = Path('artifacts/task05f/evaluator_final_v1/historical_evaluator_board.parquet')
+          got = hashlib.sha256(p.read_bytes()).hexdigest()
+          want = os.environ['TASK05F_BOARD_SHA256']
+          assert got == want, (got, want)
+          print('TASK05F_HISTORICAL_BOARD_SHA=PASS')
+          PY
+
+      - name: Download already-certified 2025 market artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: task05g-2025-market-canonicalization-33288564115
+          path: /tmp/nfl-edge-2025-market
+          github-token: ${{ github.token }}
+          repository: Tkcool28/nfl-edge
+          run-id: 33288564115
+
+      - name: Execute one-shot holdout and persist all weekly product evidence
+        shell: bash
+        run: |
+          set -uo pipefail
+          rm -f holdout_execution.log
+          set +e
+          (
+            cd source
+            python scripts/task05g_2025_holdout_one_shot_v1.py \
+              --authorization "$NFL_EDGE_2025_AUTHORIZATION" \
+              --market-root /tmp/nfl-edge-2025-market \
+              2>&1 | tee ../holdout_execution.log
+            exit ${PIPESTATUS[0]}
+          )
+          rc=$?
+          set -e
+
+          mkdir -p "carrier/${OUTPUT_REL}"
+          if [[ -d "source/${OUTPUT_REL}" ]]; then
+            cp -a "source/${OUTPUT_REL}/." "carrier/${OUTPUT_REL}/"
+          fi
+          cp holdout_execution.log "carrier/${OUTPUT_REL}/execution.log"
+          cp task05f_materialization.log "carrier/${OUTPUT_REL}/task05f_materialization.log"
+          cp pbp_rematerialization.json "carrier/${OUTPUT_REL}/pbp_rematerialization.json"
+
+          EXECUTION_RC="$rc" python - <<'PY'
+          import json, os
+          from pathlib import Path
+          out = Path('carrier') / os.environ['OUTPUT_REL'] / 'execution_metadata.json'
+          payload = {
+              'schema_version': 'authorized_2025_holdout_execution_carrier_v3',
+              'execution_git_head': os.environ['EXECUTION_HEAD'],
+              'carrier_branch': os.environ['CARRIER_BRANCH'],
+              'task05f_historical_board_sha256': os.environ['TASK05F_BOARD_SHA256'],
+              'task05c_pbp_classification': 'BYTE_IDENTICAL_REMATERIALIZATION_OF_FROZEN_PROMOTED_INPUTS',
+              'market_artifact_run_id': 33288564115,
+              'market_artifact_id': 9725230097,
+              'exit_code': int(os.environ['EXECUTION_RC']),
+              'holdout_spent_marker_present': (out.parent / 'HOLDOUT_SPENT.json').exists(),
+          }
+          out.write_text(json.dumps(payload, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+          PY
+
+          cd carrier
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$OUTPUT_REL"
+          if ! git diff --cached --quiet; then
+            git commit -m 'data: persist authorized 2025 holdout product test'
+            git push origin "HEAD:${CARRIER_BRANCH}"
+          fi
+          cd ..
+
+          exit "$rc"
+
+      - name: Upload immutable execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: authorized-2025-holdout-product-test-${{ github.run_id }}
+          path: carrier/artifacts/task05g_2025_holdout_v1/
+          if-no-files-found: error
