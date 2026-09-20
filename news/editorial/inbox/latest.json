@@ -1,10 +1,10 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-09-20T12:22:53Z",
-  "research_generated_at_utc": "2026-09-20T12:22:53Z",
+  "submitted_at_utc": "2026-09-20T17:24:00Z",
+  "research_generated_at_utc": "2026-09-20T17:24:00Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-09-20T12:22:53Z",
+    "published_at_utc": "2026-09-20T17:24:00Z",
     "edition": "Sunday Morning Brief",
     "title": "NFL EDGE Sunday Morning Brief",
     "dek": "Game day brings a new Minnesota recommendation, a much cheaper Kansas City price, and injury and weather decisions across the full Sunday slate.",
@@ -12,60 +12,209 @@
       {
         "id": "what-matters",
         "title": "What Matters Today",
-        "items": [{
-          "headline": "Quarterbacks and weather headline the Sunday board",
-          "paragraphs": ["Minnesota will start Carson Wentz at Chicago with Kyler Murray out, while Seattle will start Drew Lock at Arizona with Sam Darnold out. Atlanta is also dealing with a major quarterback situation: Michael Penix Jr. is out and Tua Tagovailoa is doubtful, leaving Cooper Rush set to start. Baltimore receiver Zay Flowers is doubtful, Raiders tight end Brock Bowers is doubtful, and Houston receiver Nico Collins remains out against Cincinnati.", "Weather is worth a final check in several outdoor games. Vikings-Bears has rain in the forecast, Packers-Jets is expected to be wet, rain chances build during Steelers-Patriots and Saints-Ravens, and Colts-Chiefs still carries a meaningful rain risk Sunday night. Eagles-Titans is the opposite problem: Nashville is expected to be extremely hot."],
-          "evidence_ids": ["injury:week02-sunday-am", "weather:week02-sunday-am"],
-          "sources": [{"label":"NFL Week 2 injury report","url":"https://www.nfl.com/news/nfl-week-2-injury-report-player-statuses-for-all-16-games"},{"label":"NFL Seahawks-Darnold update","url":"https://www.nfl.com/news/seahawks-sam-darnold-out-week-2-drew-lock-cardinals"},{"label":"NFL Friday news roundup","url":"https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-friday-sept-18"},{"label":"Week 2 weather report","url":"https://www.fantasyalarm.com/articles/nfl/nfl-weather/nfl-week-2-weather-report-fantasy-football-dfs-impact/195642"}]
-        }]
+        "items": [
+          {
+            "headline": "Quarterbacks and weather headline the Sunday board",
+            "paragraphs": [
+              "Minnesota will start Carson Wentz at Chicago with Kyler Murray out, while Seattle will start Drew Lock at Arizona with Sam Darnold out. Atlanta is also dealing with a major quarterback situation: Michael Penix Jr. is out and Tua Tagovailoa is doubtful, leaving Cooper Rush set to start. Baltimore receiver Zay Flowers is doubtful, Raiders tight end Brock Bowers is doubtful, and Houston receiver Nico Collins remains out against Cincinnati.",
+              "Weather is worth a final check in several outdoor games. Vikings-Bears has rain in the forecast, Packers-Jets is expected to be wet, rain chances build during Steelers-Patriots and Saints-Ravens, and Colts-Chiefs still carries a meaningful rain risk Sunday night. Eagles-Titans is the opposite problem: Nashville is expected to be extremely hot."
+            ],
+            "evidence_ids": [
+              "injury:week02-sunday-am",
+              "weather:week02-sunday-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL Week 2 injury report",
+                "url": "https://www.nfl.com/news/nfl-week-2-injury-report-player-statuses-for-all-16-games"
+              },
+              {
+                "label": "NFL Seahawks-Darnold update",
+                "url": "https://www.nfl.com/news/seahawks-sam-darnold-out-week-2-drew-lock-cardinals"
+              },
+              {
+                "label": "NFL Friday news roundup",
+                "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-friday-sept-18"
+              },
+              {
+                "label": "Week 2 weather report",
+                "url": "https://www.fantasyalarm.com/articles/nfl/nfl-weather/nfl-week-2-weather-report-fantasy-football-dfs-impact/195642"
+              }
+            ]
+          }
+        ]
       },
       {
         "id": "what-it-means",
         "title": "What It Means for NFL EDGE",
-        "items": [{
-          "headline": "Game-day information finally moved the card",
-          "paragraphs": ["Minnesota is now one of the headline plays at +4.5, so the Wentz start and Chicago weather deserve attention before kickoff. Cincinnati is still on the card at +2.5, with Houston missing Collins. Kansas City remains the moneyline play for Sunday night, but the price has improved enough to matter.", "The rest of the app still matters too. Seattle-Arizona, Atlanta-Carolina, Baltimore-New Orleans and the wet outdoor games all have meaningful game-day context that should be checked against the live matchup view rather than ignored because they are not headline bets."],
-          "evidence_ids": ["card:week02-sunday-am", "injury:week02-sunday-am", "weather:week02-sunday-am"],
-          "sources": [{"label":"NFL EDGE canonical Week 2 evidence","url":"https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"},{"label":"NFL Week 2 injury report","url":"https://www.nfl.com/news/nfl-week-2-injury-report-player-statuses-for-all-16-games"},{"label":"Week 2 weather report","url":"https://www.fantasyalarm.com/articles/nfl/nfl-weather/nfl-week-2-weather-report-fantasy-football-dfs-impact/195642"}]
-        }]
+        "items": [
+          {
+            "headline": "Game-day information finally moved the card",
+            "paragraphs": [
+              "Minnesota is now one of the headline plays at +4.5, so the Wentz start and Chicago weather deserve attention before kickoff. Cincinnati is still on the card at +2.5, with Houston missing Collins. Kansas City remains the moneyline play for Sunday night, but the price has improved enough to matter.",
+              "The rest of the app still matters too. Seattle-Arizona, Atlanta-Carolina, Baltimore-New Orleans and the wet outdoor games all have meaningful game-day context that should be checked against the live matchup view rather than ignored because they are not headline bets."
+            ],
+            "evidence_ids": [
+              "card:week02-sunday-am",
+              "injury:week02-sunday-am",
+              "weather:week02-sunday-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE canonical Week 2 evidence",
+                "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"
+              },
+              {
+                "label": "NFL Week 2 injury report",
+                "url": "https://www.nfl.com/news/nfl-week-2-injury-report-player-statuses-for-all-16-games"
+              },
+              {
+                "label": "Week 2 weather report",
+                "url": "https://www.fantasyalarm.com/articles/nfl/nfl-weather/nfl-week-2-weather-report-fantasy-football-dfs-impact/195642"
+              }
+            ]
+          }
+        ]
       },
       {
         "id": "fade",
         "title": "The Fade",
-        "items": [{
-          "headline": "No clean Fade signal on the new headline plays yet",
-          "paragraphs": ["VSiN is exposing separate DraftKings and Circa NFL split feeds this morning, and the feeds are updating as game-day money arrives. But the accessible tables do not expose a directly verifiable game-level DraftKings-versus-Circa comparison for Minnesota, Cincinnati or Kansas City in this run. That means there is no responsible reason to manufacture a public-versus-sharp story around any of the three NFL EDGE plays.", "The broader market does show Minnesota +4.5, Cincinnati around +3 and Kansas City around -6 on the spread, but those prices alone do not tell us who is driving the money."],
-          "takeaway": "Follow the NFL EDGE prices, not a guessed betting-split narrative. Minnesota +4.5 and Cincinnati +2.5 are both playable only through their current limits, and Kansas City should be bought at the current approved moneyline rather than chased if it gets more expensive. A verified late Circa-versus-DraftKings disagreement would be the reason to revisit The Fade closer to kickoff.",
-          "evidence_ids": ["fade:week02-sunday-am", "card:week02-sunday-am"],
-          "sources": [{"label":"VSiN DraftKings NFL splits","url":"https://data.vsin.com/betting-splits/?source=DK&sport=NFL"},{"label":"VSiN Circa NFL splits","url":"https://data.vsin.com/betting-splits/?source=CIRCA&sport=NFL"},{"label":"VSiN Week 2 games","url":"https://data.vsin.com/nfl/games/"}]
-        }]
+        "items": [
+          {
+            "headline": "Kansas City is popular, but the line is moving the other way",
+            "paragraphs": [
+              "Kansas City is drawing the crowd Sunday night. Action Network's current board shows roughly 78% of spread bets on the Chiefs, yet the market has moved from Kansas City -6.5 to around -5.5. That's the disagreement worth watching: bettors are piling onto Kansas City while the spread has become a little easier for Chiefs backers rather than more expensive.",
+              "That does not automatically mean the Colts are the right side, and NFL EDGE's recommendation is the Kansas City moneyline rather than the spread. But it is a good reason not to chase the Chiefs if the moneyline gets worse before kickoff."
+            ],
+            "takeaway": "Kansas City remains playable at the NFL EDGE-approved moneyline through -259. If that price disappears, wait rather than following the crowd at a worse number. If the spread keeps moving toward Indianapolis while Chiefs betting stays heavily concentrated, that disagreement becomes even more meaningful.",
+            "evidence_ids": [
+              "fade:week02-sunday-am",
+              "card:week02-sunday-am"
+            ],
+            "sources": [
+              {
+                "label": "Action Network NFL public betting",
+                "url": "https://www.actionnetwork.com/nfl/public-betting"
+              },
+              {
+                "label": "VSiN DraftKings NFL splits",
+                "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"
+              },
+              {
+                "label": "VSiN Circa NFL splits",
+                "url": "https://data.vsin.com/betting-splits/?source=CIRCA&sport=NFL"
+              }
+            ]
+          }
+        ]
       },
       {
         "id": "market-watch",
         "title": "Market Watch",
-        "items": [{
-          "headline": "Minnesota arrives, Cincinnati changes roles, and Kansas City gets much cheaper",
-          "paragraphs": ["Minnesota +4.5 at -102 is the new spread headline this morning, playable through -105. Cincinnati +2.5 at -102 is still recommended through -105, but it is now the value play rather than the primary spread headline.", "Kansas City remains the moneyline recommendation, and this is the biggest price improvement of the morning: DraftKings is now -250, playable through -259. The recommended stake also rises to 0.75 units. Last night the best approved Chiefs price was FanDuel -280, so this is a materially better deal on the same team."],
-          "takeaway": "Use the Sunday-morning card, not Saturday night's screenshot. Minnesota is new, Cincinnati is still alive in a different role, and Kansas City is substantially cheaper at DraftKings.",
-          "evidence_ids": ["card:week02-sunday-am"],
-          "sources": [{"label":"NFL EDGE canonical Week 2 evidence","url":"https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]
-        }]
+        "items": [
+          {
+            "headline": "Minnesota arrives, Cincinnati changes roles, and Kansas City gets much cheaper",
+            "paragraphs": [
+              "Minnesota +4.5 at -102 is the new spread headline this morning, playable through -105. Cincinnati +2.5 at -102 is still recommended through -105, but it is now the value play rather than the primary spread headline.",
+              "Kansas City remains the moneyline recommendation, and this is the biggest price improvement of the morning: DraftKings is now -250, playable through -259. The recommended stake also rises to 0.75 units. Last night the best approved Chiefs price was FanDuel -280, so this is a materially better deal on the same team."
+            ],
+            "takeaway": "Use the Sunday-morning card, not Saturday night's screenshot. Minnesota is new, Cincinnati is still alive in a different role, and Kansas City is substantially cheaper at DraftKings.",
+            "evidence_ids": [
+              "card:week02-sunday-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE canonical Week 2 evidence",
+                "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"
+              }
+            ]
+          }
+        ]
       },
       {
         "id": "today-tip",
         "title": "Today's Tip",
-        "items": [{
-          "headline": "Game day is when stale screenshots get expensive",
-          "paragraphs": ["A bet you saved last night may not be the bet NFL EDGE wants this morning. Books change, prices move and recommendations can rotate as new information arrives. Before placing anything on Sunday, reopen the current card and verify the team, sportsbook, line, price and Play Through. Thirty seconds of checking can keep you from betting yesterday's version of today's game."]
-        }]
+        "items": [
+          {
+            "headline": "Game day is when stale screenshots get expensive",
+            "paragraphs": [
+              "A bet you saved last night may not be the bet NFL EDGE wants this morning. Books change, prices move and recommendations can rotate as new information arrives. Before placing anything on Sunday, reopen the current card and verify the team, sportsbook, line, price and Play Through. Thirty seconds of checking can keep you from betting yesterday's version of today's game."
+            ]
+          }
+        ]
       }
     ]
   },
   "evidence": [
-    {"evidence_id":"card:week02-sunday-am","fact":"Newest canonical Week 2 publication is publication-f54fd87988be801f11c11c63 at 2026-09-20T12:08:10.777360Z, following publication-43697e36a08b04c57bdd8ec7 at 2026-09-20T00:08:04.823506Z. Balanced changes to Minnesota +4.5 at -102 with Play Through -105 for 0.75u. Value is Cincinnati +2.5 at -102 with Play Through -105 for 0.75u. Hit Rate remains Kansas City moneyline but improves from FanDuel -280 / Play Through -290 / 0.5u to DraftKings -250 / Play Through -259 / 0.75u.","source_publication_id":"publication-f54fd87988be801f11c11c63","observed_at_utc":"2026-09-20T12:08:10.777360Z","preceding_source_publication_id":"publication-43697e36a08b04c57bdd8ec7","preceding_observed_at_utc":"2026-09-20T00:08:04.823506Z","sources":[{"label":"NFL EDGE canonical Week 2 prospective evidence","url":"https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]},
-    {"evidence_id":"injury:week02-sunday-am","fact":"NFL.com's current Week 2 status board lists Kyler Murray out for Minnesota, Sam Darnold out for Seattle, Michael Penix Jr. out and Tua Tagovailoa doubtful for Atlanta, Zay Flowers doubtful for Baltimore, Brock Bowers doubtful for Las Vegas, and Nico Collins out for Houston. Carson Wentz will start for Minnesota, Drew Lock will start for Seattle, and Cooper Rush is set to start for Atlanta.","sources":[{"label":"NFL Week 2 injury report","url":"https://www.nfl.com/news/nfl-week-2-injury-report-player-statuses-for-all-16-games"},{"label":"NFL Seahawks-Darnold update","url":"https://www.nfl.com/news/seahawks-sam-darnold-out-week-2-drew-lock-cardinals"},{"label":"NFL Friday news roundup","url":"https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-friday-sept-18"}]},
-    {"evidence_id":"weather:week02-sunday-am","fact":"Current Week 2 weather reporting flags rain for Vikings-Bears and Packers-Jets, building rain risk for Steelers-Patriots and Saints-Ravens, meaningful rain risk for Colts-Chiefs, and extreme heat for Eagles-Titans.","sources":[{"label":"Week 2 weather report","url":"https://www.fantasyalarm.com/articles/nfl/nfl-weather/nfl-week-2-weather-report-fantasy-football-dfs-impact/195642"}]},
-    {"evidence_id":"fade:week02-sunday-am","fact":"VSiN exposes separate DraftKings and Circa NFL betting-split feeds and says the data update every five minutes, but the accessible tables in this run did not expose a directly verifiable game-level DK-versus-Circa comparison for Minnesota-Chicago, Cincinnati-Houston or Indianapolis-Kansas City. No sharp-versus-public claim was inferred.","sources":[{"label":"VSiN DraftKings NFL splits","url":"https://data.vsin.com/betting-splits/?source=DK&sport=NFL"},{"label":"VSiN Circa NFL splits","url":"https://data.vsin.com/betting-splits/?source=CIRCA&sport=NFL"}]},
-    {"evidence_id":"crosscheck:production-app","fact":"The production app could not be independently fetched through the available web reader during this run. Canonical prospective-card evidence remained authoritative for Market Watch.","sources":[{"label":"NFL EDGE production app","url":"https://nfl.tkhermes.duckdns.org/"}]}
+    {
+      "evidence_id": "card:week02-sunday-am",
+      "fact": "Newest canonical Week 2 publication is publication-f54fd87988be801f11c11c63 at 2026-09-20T12:08:10.777360Z, following publication-43697e36a08b04c57bdd8ec7 at 2026-09-20T00:08:04.823506Z. Balanced changes to Minnesota +4.5 at -102 with Play Through -105 for 0.75u. Value is Cincinnati +2.5 at -102 with Play Through -105 for 0.75u. Hit Rate remains Kansas City moneyline but improves from FanDuel -280 / Play Through -290 / 0.5u to DraftKings -250 / Play Through -259 / 0.75u.",
+      "source_publication_id": "publication-f54fd87988be801f11c11c63",
+      "observed_at_utc": "2026-09-20T12:08:10.777360Z",
+      "preceding_source_publication_id": "publication-43697e36a08b04c57bdd8ec7",
+      "preceding_observed_at_utc": "2026-09-20T00:08:04.823506Z",
+      "sources": [
+        {
+          "label": "NFL EDGE canonical Week 2 prospective evidence",
+          "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"
+        }
+      ]
+    },
+    {
+      "evidence_id": "injury:week02-sunday-am",
+      "fact": "NFL.com's current Week 2 status board lists Kyler Murray out for Minnesota, Sam Darnold out for Seattle, Michael Penix Jr. out and Tua Tagovailoa doubtful for Atlanta, Zay Flowers doubtful for Baltimore, Brock Bowers doubtful for Las Vegas, and Nico Collins out for Houston. Carson Wentz will start for Minnesota, Drew Lock will start for Seattle, and Cooper Rush is set to start for Atlanta.",
+      "sources": [
+        {
+          "label": "NFL Week 2 injury report",
+          "url": "https://www.nfl.com/news/nfl-week-2-injury-report-player-statuses-for-all-16-games"
+        },
+        {
+          "label": "NFL Seahawks-Darnold update",
+          "url": "https://www.nfl.com/news/seahawks-sam-darnold-out-week-2-drew-lock-cardinals"
+        },
+        {
+          "label": "NFL Friday news roundup",
+          "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-friday-sept-18"
+        }
+      ]
+    },
+    {
+      "evidence_id": "weather:week02-sunday-am",
+      "fact": "Current Week 2 weather reporting flags rain for Vikings-Bears and Packers-Jets, building rain risk for Steelers-Patriots and Saints-Ravens, meaningful rain risk for Colts-Chiefs, and extreme heat for Eagles-Titans.",
+      "sources": [
+        {
+          "label": "Week 2 weather report",
+          "url": "https://www.fantasyalarm.com/articles/nfl/nfl-weather/nfl-week-2-weather-report-fantasy-football-dfs-impact/195642"
+        }
+      ]
+    },
+    {
+      "evidence_id": "fade:week02-sunday-am",
+      "fact": "Action Network's current NFL public-betting board shows approximately 78% of spread bets on Kansas City while its listed spread has moved from Kansas City -6.5 at open to about -5.5. VSiN's dedicated DraftKings and Circa NFL split pages were also checked as primary split surfaces; no unsupported game-level Circa percentage is asserted.",
+      "sources": [
+        {
+          "label": "Action Network NFL public betting",
+          "url": "https://www.actionnetwork.com/nfl/public-betting"
+        },
+        {
+          "label": "VSiN DraftKings NFL splits",
+          "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"
+        },
+        {
+          "label": "VSiN Circa NFL splits",
+          "url": "https://data.vsin.com/betting-splits/?source=CIRCA&sport=NFL"
+        }
+      ]
+    },
+    {
+      "evidence_id": "crosscheck:production-app",
+      "fact": "The production app could not be independently fetched through the available web reader during this run. Canonical prospective-card evidence remained authoritative for Market Watch.",
+      "sources": [
+        {
+          "label": "NFL EDGE production app",
+          "url": "https://nfl.tkhermes.duckdns.org/"
+        }
+      ]
+    }
   ]
 }
