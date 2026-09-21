@@ -13,9 +13,9 @@
       "lane": "HIT_RATE",
       "lane_key": "hit_rate",
       "last_line": null,
-      "last_price": -250,
-      "last_publication_id": "publication-f54fd87988be801f11c11c63",
-      "last_seen_at_utc": "2026-09-20T12:08:10.777360Z",
+      "last_price": -265,
+      "last_publication_id": "publication-598f782fd7dbfbccead107c6",
+      "last_seen_at_utc": "2026-09-21T00:08:26.352931Z",
       "logical_recommendation_id": "logical-934872948b97cd3956a77cfb",
       "market": "MONEYLINE",
       "normalized_selection": "KC",
@@ -173,9 +173,26 @@
           "state": "BET",
           "value_at": null,
           "wager_identity_id": "wager-a96040d97f445df63232a60f"
+        },
+        {
+          "american_odds": -265,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-b98657bff33ab58f24072d73",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -274
+          },
+          "publication_id": "publication-598f782fd7dbfbccead107c6",
+          "published_at_utc": "2026-09-21T00:08:26.352931Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "598f782fd7dbfbccead107c6a74d94320a60eebecd985520fb8143bb6840b34c",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-a96040d97f445df63232a60f"
         }
       ],
-      "publication_count": 9,
+      "publication_count": 10,
       "returned_after_gap": false,
       "selection": "KC",
       "terminal_reason": "WEEK_HISTORY_END",
@@ -601,7 +618,7 @@
       "publication_count": 2,
       "returned_after_gap": false,
       "selection": "MIN",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "REPLACED",
       "worst_line": 4.5,
       "worst_price": -102
     },
@@ -691,9 +708,54 @@
       "publication_count": 1,
       "returned_after_gap": true,
       "selection": "CIN",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "DISAPPEARED",
       "worst_line": 2.5,
       "worst_price": -102
+    },
+    {
+      "best_line": -6.0,
+      "best_price": -108,
+      "episode_id": "episode-5d1613d6f5ea8d155441bd03",
+      "first_line": -6.0,
+      "first_price": -108,
+      "first_publication_id": "publication-598f782fd7dbfbccead107c6",
+      "first_seen_at_utc": "2026-09-21T00:08:26.352931Z",
+      "game_id": "2026_02_IND_KC",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "last_line": -6.0,
+      "last_price": -108,
+      "last_publication_id": "publication-598f782fd7dbfbccead107c6",
+      "last_seen_at_utc": "2026-09-21T00:08:26.352931Z",
+      "logical_recommendation_id": "logical-27f8ee076a4ed8f89ef49187",
+      "market": "SPREAD",
+      "normalized_selection": "KC",
+      "normalized_side": "home",
+      "observations": [
+        {
+          "american_odds": -108,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-bbf6f102d59028337e299458",
+          "line": -6.0,
+          "play_through": {
+            "line": -6.0,
+            "price_american": -111
+          },
+          "publication_id": "publication-598f782fd7dbfbccead107c6",
+          "published_at_utc": "2026-09-21T00:08:26.352931Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "598f782fd7dbfbccead107c6a74d94320a60eebecd985520fb8143bb6840b34c",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-c41e4f52932e376d98e1398c"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "KC",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": -6.0,
+      "worst_price": -108
     }
   ],
   "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1",
@@ -707,7 +769,8 @@
     "publication-b18b295053bd7d7a3ee9f186",
     "publication-0bab07dec6767d45c5e7e6c1",
     "publication-43697e36a08b04c57bdd8ec7",
-    "publication-f54fd87988be801f11c11c63"
+    "publication-f54fd87988be801f11c11c63",
+    "publication-598f782fd7dbfbccead107c6"
   ],
   "week": 2
 }
