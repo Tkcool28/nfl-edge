@@ -1,10 +1,10 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-09-23T13:03:00Z",
-  "research_generated_at_utc": "2026-09-23T13:03:00Z",
+  "submitted_at_utc": "2026-09-23T14:32:00Z",
+  "research_generated_at_utc": "2026-09-23T14:32:00Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-09-23T13:03:00Z",
+    "published_at_utc": "2026-09-23T14:32:00Z",
     "edition": "Wednesday Morning Brief",
     "title": "NFL EDGE Wednesday Morning Brief",
     "dek": "Quarterback changes are defining Week 3, while the newest NFL EDGE card keeps three plays in place and raises Seattle's recommended stake.",
@@ -150,7 +150,7 @@
   "evidence": [
     {
       "evidence_id": "card:week03-wednesday-am",
-      "fact": "The newest canonical Week 3 publication is publication-bc8206a351122bbf030b3b15 observed at 2026-09-23T12:08:28.280247Z, immediately following publication-ede9a33522245052782cfc03 observed at 2026-09-23T00:08:20.317107Z. Seattle moneyline remained DraftKings -298 with Play Through -309 while recommended units increased from 0.5 to 0.75. Minnesota moneyline remained DraftKings -120 with Play Through -123 for 0.75u. Las Vegas +3 remained DraftKings +102 with Play Through -101 for 0.75u.",
+      "fact": "Fresh canonical re-check at 2026-09-23T14:32:00Z found no publication newer than publication-bc8206a351122bbf030b3b15 (observed 2026-09-23T12:08:28.280247Z), immediately following publication-ede9a33522245052782cfc03 (2026-09-23T00:08:20.317107Z). Seattle moneyline remained DraftKings -298 with Play Through -309 while recommended units increased from 0.5 to 0.75. Minnesota moneyline remained DraftKings -120 with Play Through -123 for 0.75u. Las Vegas +3 remained DraftKings +102 with Play Through -101 for 0.75u.",
       "source_publication_id": "publication-bc8206a351122bbf030b3b15",
       "observed_at_utc": "2026-09-23T12:08:28.280247Z",
       "preceding_source_publication_id": "publication-ede9a33522245052782cfc03",
@@ -164,7 +164,7 @@
     },
     {
       "evidence_id": "injury:week03-wednesday-am",
-      "fact": "Washington will start Marcus Mariota in Week 3 after Jayden Daniels dislocated his left elbow. Kyler Murray cleared concussion protocol and will start for Minnesota. Atlanta named Michael Penix Jr. its Week 3 starter against Green Bay. Colts receiver Alec Pierce is expected to miss several weeks with a heel injury. Rams coach Sean McVay said Puka Nacua's Week 3 status remained to be determined after he missed Monday with a hip injury.",
+      "fact": "Current NFL reporting continues to support the Wednesday-morning quarterback context: Washington is proceeding with Marcus Mariota after Jayden Daniels' dislocated left elbow; Minnesota has Kyler Murray cleared for Week 3; Atlanta named Michael Penix Jr. its Week 3 starter. NFL's Sep. 22 roundup also remains the source for the Puka Nacua status noted in the article.",
       "sources": [
         {
           "label": "NFL — Marcus Mariota to start Week 3",
