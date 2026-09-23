@@ -1,72 +1,127 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-09-21T12:25:26Z",
-  "research_generated_at_utc": "2026-09-21T12:25:26Z",
+  "submitted_at_utc": "2026-09-24T00:25:00Z",
+  "research_generated_at_utc": "2026-09-24T00:25:00Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-09-21T12:25:26Z",
-    "edition": "Monday Morning Brief",
-    "title": "NFL EDGE Monday Morning Brief",
-    "dek": "Monday night closes Week 2 with Puka Nacua's status in focus, while several Sunday injuries already matter for the next board.",
+    "published_at_utc": "2026-09-24T00:25:00Z",
+    "edition": "Wednesday Evening Brief",
+    "title": "NFL EDGE Wednesday Evening Brief",
+    "dek": "Week 3 injury news is getting real, but the official NFL EDGE card evidence has not refreshed since Tuesday evening.",
     "sections": [
       {
         "id": "what-matters",
         "title": "What Matters Today",
         "items": [{
-          "headline": "Puka is the Monday-night name to watch — and Sunday left some big injuries behind",
-          "paragraphs": ["Rams receiver Puka Nacua is questionable tonight with a hip injury after missing Friday practice. Los Angeles has already ruled out safety Kamren Kinchens, while receiver and returner Jordan Whittington is doubtful. The Giants list cornerback Deonte Banks and linebacker Micah McFadden as questionable.", "Sunday also left injuries that matter beyond tonight: Washington quarterback Jayden Daniels dislocated his left elbow, Bears quarterback Caleb Williams left with a hamstring injury, and Colts receiver Alec Pierce exited with a heel injury and was later seen in a boot and on crutches. Those are Week 3 situations worth following as the new board develops.", "Weather should not be a factor for Giants-Rams. The current Inglewood forecast around kickoff is in the low 70s with light wind and no meaningful rain concern."],
-          "evidence_ids": ["injury:mnf-week02-monday-am", "injury:week02-carryover-monday-am", "weather:mnf-week02-monday-am"],
-          "sources": [{"label":"Giants Week 2 tracker and final injury report","url":"https://www.giants.com/news/week-2-tracker-latest-news-notes-roster-moves-los-angeles-rams"},{"label":"Reuters NFL Week 2 roundup","url":"https://www.reuters.com/sports/nfl-roundup-dak-prescott-stars-jayden-daniels-injured-cowboys-win--flm-2026-09-21/"},{"label":"Reuters Alec Pierce injury update","url":"https://www.reuters.com/sports/colts-wr-alec-pierce-heel-ruled-out-after-early-exit-vs-chiefs--flm-2026-09-21/"},{"label":"Giants-Rams game-day weather and information","url":"https://www.bigblueview.com/new-york-giants-game-information/171806/monday-night-football-giants-rams-game-time-tv-channel-odds-streaming-radio"}]
+          "headline": "Quarterback uncertainty is still the biggest Week 3 story",
+          "paragraphs": [
+            "Washington will start Marcus Mariota against Seattle with Jayden Daniels sidelined by his dislocated left elbow. Seattle expects Sam Darnold to return to practice as he works back from the glute injury that kept him out of Week 2.",
+            "The Giants have ruled Jaxson Dart out with an MCL injury. Chicago is also dealing with a two-quarterback problem: Caleb Williams is week-to-week with a hamstring injury and Tyson Bagent is in concussion protocol, putting Case Keenum in line if neither is available.",
+            "Elsewhere, Houston receiver Nico Collins remains out with a hamstring injury, while Raiders tight end Brock Bowers is expected to practice as he works toward his season debut."
+          ],
+          "evidence_ids": ["injury:week03-wednesday-pm"],
+          "sources": [
+            {"label": "DraftKings Network Week 3 injury report", "url": "https://dknetwork.draftkings.com/2026/09/22/nfl-injury-report-week-3/"},
+            {"label": "Reuters Sam Darnold update", "url": "https://www.reuters.com/sports/seahawks-plan-sam-darnold-return-practice-wednesday--flm-2026-09-22/"}
+          ]
         }]
       },
       {
         "id": "what-it-means",
         "title": "What It Means for NFL EDGE",
         "items": [{
-          "headline": "Do not turn Monday's matchup into an NFL EDGE play before the card does",
-          "paragraphs": ["The official NFL EDGE card evidence has not posted a fresh Monday-morning update yet, so there is no new approved Giants-Rams recommendation to act on from this brief. Nacua's status is important game information, but injury news by itself is not a substitute for the card.", "For the next slate, the Daniels, Williams and Pierce injuries are exactly the kind of changes that deserve attention when Week 3 prices and recommendations begin to settle."],
-          "evidence_ids": ["card:week02-monday-am-stale", "injury:mnf-week02-monday-am", "injury:week02-carryover-monday-am"],
-          "sources": [{"label":"NFL EDGE canonical Week 2 evidence","url":"https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"},{"label":"Giants Week 2 tracker and final injury report","url":"https://www.giants.com/news/week-2-tracker-latest-news-notes-roster-moves-los-angeles-rams"},{"label":"Reuters NFL Week 2 roundup","url":"https://www.reuters.com/sports/nfl-roundup-dak-prescott-stars-jayden-daniels-injured-cowboys-win--flm-2026-09-21/"}]
+          "headline": "Seattle's quarterback picture matters, but the card itself needs a refresh",
+          "paragraphs": [
+            "The last official NFL EDGE evidence still had Seattle as the moneyline recommendation, so Darnold's practice progress and Washington's move to Mariota are directly relevant. But that evidence is now too old to treat as a fresh Wednesday-evening price.",
+            "The same applies to Minnesota and Las Vegas, which appeared on the last recorded card. Injury news can tell us what to watch; only a fresh NFL EDGE publication can tell us whether the recommendation and Play Through are still current."
+          ],
+          "evidence_ids": ["card:week03-wednesday-pm-stale", "injury:week03-wednesday-pm"],
+          "sources": [
+            {"label": "NFL EDGE canonical Week 3 evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-03/episodes.json"},
+            {"label": "Reuters Sam Darnold update", "url": "https://www.reuters.com/sports/seahawks-plan-sam-darnold-return-practice-wednesday--flm-2026-09-22/"}
+          ]
         }]
       },
       {
         "id": "fade",
         "title": "The Fade",
         "items": [{
-          "headline": "Specific Circa split: bettors liked the Over, but the total moved down",
-          "paragraphs": ["This is a specific Circa betting-split signal, not a broad public-market read. VSiN reported Sunday night that a heavy majority of tickets were on the Giants-Rams Over, yet the Circa total had moved down from 48.5 to 47.5. When lots of bets point one way but the price moves the other way, it tells us the market is not simply following the crowd.", "That disagreement is worth watching today, but it is about the game total — not an NFL EDGE side recommendation — and it was captured Sunday night. The useful question Monday is whether the same pattern survives as more game-day money arrives."],
-          "takeaway": "Wait. Do not turn this split into an NFL EDGE bet. If the Over remains heavily popular while the total stays at 47.5 or falls again, the disagreement becomes more meaningful. If the total climbs back toward 48.5 with the public money, the signal has weakened.",
-          "evidence_ids": ["fade:mnf-week02-monday-am"],
-          "sources": [{"label":"VSiN Giants-Rams Monday Night Football analysis","url":"https://vsin.com/nfl/giants-vs-rams-predictions-week-2-monday-night-football-odds-picks-and-player-props/"}]
+          "headline": "No useful Fade signal tonight",
+          "paragraphs": [
+            "There is no verified current-day DraftKings-vs-Circa disagreement for the last recorded NFL EDGE teams that is strong enough to use tonight. That means no pretending a generic public percentage is a sharper-book signal and no forcing a Fade just to fill the section.",
+            "A useful signal would be something concrete: heavy betting concentration on Seattle, Minnesota or Las Vegas while a credible market moves the other way, or a clear DraftKings-versus-Circa split that survives closer to kickoff."
+          ],
+          "takeaway": "Pass on The Fade tonight. Wait for a verified disagreement and a fresh NFL EDGE card before using it as a decision layer.",
+          "evidence_ids": ["fade:week03-wednesday-pm-none"],
+          "sources": [
+            {"label": "VSiN DraftKings NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"},
+            {"label": "VSiN Circa NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=CIRCA&sport=NFL"}
+          ]
         }]
       },
       {
         "id": "market-watch",
         "title": "Market Watch",
         "items": [{
-          "headline": "Market Watch is waiting on a fresh NFL EDGE card",
-          "paragraphs": ["There is no fresh Monday-morning NFL EDGE publication to compare with Sunday night's card. The latest official card evidence is still the Sunday-night update that carried Kansas City before that game was played."],
-          "takeaway": "No Monday recommendation or price change is being reported here. Outside sportsbook lines are not a replacement for NFL EDGE's official card; Market Watch will resume when fresh canonical evidence is available.",
-          "evidence_ids": ["card:week02-monday-am-stale"],
-          "sources": [{"label":"NFL EDGE canonical Week 2 evidence","url":"https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]
+          "headline": "Market Watch is stale — wait for the next official card",
+          "paragraphs": [
+            "The most recent canonical NFL EDGE evidence is still Tuesday evening's update. In that last recorded change, Minnesota replaced Indianapolis as the featured recommendation at DraftKings -120, playable through -123 for 0.75u, while Las Vegas +3 at DraftKings +102 appeared as the value play, playable through -101 for 0.75u. Seattle's moneyline stayed unchanged at DraftKings -298, playable through -309 for 0.5u.",
+            "Because there is no newer canonical publication, those are historical last-recorded prices — not a fresh Wednesday-evening card. Market Watch fails closed tonight rather than substituting outside sportsbook prices."
+          ],
+          "takeaway": "Wait for the next NFL EDGE publication before treating any of those prices as actionable.",
+          "evidence_ids": ["card:week03-wednesday-pm-stale"],
+          "sources": [
+            {"label": "NFL EDGE canonical Week 3 evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-03/episodes.json"}
+          ]
         }]
       },
       {
         "id": "today-tip",
         "title": "Today's Tip",
         "items": [{
-          "headline": "An injury report is information, not a bet",
-          "paragraphs": ["A star being questionable can absolutely change a game, but it does not tell you whether the sportsbook has already priced that information correctly. Use injury news to know what deserves another look. Use the current NFL EDGE card and its Play Through price to decide whether there is actually a bet." ]
+          "headline": "A stale price is not a bargain",
+          "paragraphs": [
+            "Seeing a number you liked yesterday does not mean that number still exists today. Before acting on an old recommendation, confirm the current book, price and Play Through. If the official card has not refreshed, waiting is better than treating yesterday's screenshot like today's market."
+          ]
         }]
       }
     ]
   },
   "evidence": [
-    {"evidence_id":"card:week02-monday-am-stale","fact":"At 2026-09-21T12:25:26Z, the canonical Week 2 prospective-card evidence had not posted a fresh Monday-morning publication. Its newest source publication remained publication-598f782fd7dbfbccead107c6 observed at 2026-09-21T00:08:26.352931Z, following publication-f54fd87988be801f11c11c63 at 2026-09-20T12:08:10.777360Z. Because the newest evidence still represented the Sunday-night Kansas City card before that game, Market Watch is explicitly failed stale rather than substituting outside sportsbook prices.","source_publication_id":"publication-598f782fd7dbfbccead107c6","observed_at_utc":"2026-09-21T00:08:26.352931Z","preceding_source_publication_id":"publication-f54fd87988be801f11c11c63","preceding_observed_at_utc":"2026-09-20T12:08:10.777360Z","sources":[{"label":"NFL EDGE canonical Week 2 prospective evidence","url":"https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-02/episodes.json"}]},
-    {"evidence_id":"injury:mnf-week02-monday-am","fact":"The Giants' official Week 2 tracker reports Rams WR Puka Nacua questionable with a hip injury, S Kamren Kinchens out, and WR Jordan Whittington doubtful. Giants CB Deonte Banks and LB Micah McFadden are questionable.","sources":[{"label":"Giants Week 2 tracker and final injury report","url":"https://www.giants.com/news/week-2-tracker-latest-news-notes-roster-moves-los-angeles-rams"}]},
-    {"evidence_id":"injury:week02-carryover-monday-am","fact":"Reuters reports Washington QB Jayden Daniels suffered a dislocated left elbow Sunday. Bears QB Caleb Williams left with a hamstring injury. Colts WR Alec Pierce suffered a left heel injury, was ruled out, and was later seen in a boot and on crutches with further testing planned Monday.","sources":[{"label":"Reuters NFL Week 2 roundup","url":"https://www.reuters.com/sports/nfl-roundup-dak-prescott-stars-jayden-daniels-injured-cowboys-win--flm-2026-09-21/"},{"label":"Reuters Alec Pierce injury update","url":"https://www.reuters.com/sports/colts-wr-alec-pierce-heel-ruled-out-after-early-exit-vs-chiefs--flm-2026-09-21/"}]},
-    {"evidence_id":"weather:mnf-week02-monday-am","fact":"Current Giants-Rams game-day information lists approximately 74 degrees, patchy fog and 7 mph wind around the Inglewood game window, with no material weather threat identified.","sources":[{"label":"Giants-Rams game-day weather and information","url":"https://www.bigblueview.com/new-york-giants-game-information/171806/monday-night-football-giants-rams-game-time-tv-channel-odds-streaming-radio"}]},
-    {"evidence_id":"fade:mnf-week02-monday-am","fact":"This is explicitly a specific Circa split snapshot, not a broad public-line-movement signal. VSiN reported Sunday night that Circa's Giants-Rams total moved from 48.5 to 47.5 despite a heavy majority of tickets being on the Over. The article identifies that disagreement as evidence of larger or sharper money leaning Under at that snapshot; the submission does not claim the split is a fresh Monday percentage.","sources":[{"label":"VSiN Giants-Rams Monday Night Football analysis","url":"https://vsin.com/nfl/giants-vs-rams-predictions-week-2-monday-night-football-odds-picks-and-player-props/"}]},
-    {"evidence_id":"crosscheck:production-app","fact":"The production app could not be independently fetched through the available web reader during this run. Canonical prospective-card evidence remained authoritative for Market Watch.","sources":[{"label":"NFL EDGE production app","url":"https://nfl.tkhermes.duckdns.org/"}]}
+    {
+      "evidence_id": "card:week03-wednesday-pm-stale",
+      "fact": "At the Wednesday evening editorial run, canonical Week 3 evidence still ended with publication-ede9a33522245052782cfc03 observed at 2026-09-23T00:08:20.317107Z, immediately following publication-66b6650505ee2a57b5d13db7 observed at 2026-09-22T12:08:21.988334Z. The newer publication replaced Indianapolis +2.5 at FanDuel +100 / Play Through -103 in BALANCED with Minnesota moneyline at DraftKings -120 / Play Through -123 for 0.75u; replaced the duplicate Indianapolis VALUE offer with Las Vegas +3 at DraftKings +102 / Play Through -101 for 0.75u; and left Seattle moneyline unchanged at DraftKings -298 / Play Through -309 for 0.5u. Because no newer publication was present, Market Watch is failed stale rather than treating these as current Wednesday-evening prices.",
+      "source_publication_id": "publication-ede9a33522245052782cfc03",
+      "observed_at_utc": "2026-09-23T00:08:20.317107Z",
+      "preceding_source_publication_id": "publication-66b6650505ee2a57b5d13db7",
+      "preceding_observed_at_utc": "2026-09-22T12:08:21.988334Z",
+      "sources": [{"label": "NFL EDGE canonical Week 3 prospective evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-03/episodes.json"}]
+    },
+    {
+      "evidence_id": "injury:week03-wednesday-pm",
+      "fact": "Current Week 3 injury reporting lists Jayden Daniels unavailable with a dislocated left elbow and Marcus Mariota expected to start; Sam Darnold is working back from a glute injury with Seattle planning a return to practice; Jaxson Dart is out with an MCL knee injury; Caleb Williams is week-to-week with a hamstring injury and Tyson Bagent is in concussion protocol; Nico Collins is out with a hamstring injury; and Brock Bowers is expected to practice while working toward his season debut.",
+      "sources": [
+        {"label": "DraftKings Network Week 3 injury report", "url": "https://dknetwork.draftkings.com/2026/09/22/nfl-injury-report-week-3/"},
+        {"label": "Reuters Sam Darnold update", "url": "https://www.reuters.com/sports/seahawks-plan-sam-darnold-return-practice-wednesday--flm-2026-09-22/"}
+      ]
+    },
+    {
+      "evidence_id": "fade:week03-wednesday-pm-none",
+      "fact": "Dedicated VSiN DraftKings and Circa NFL split surfaces were checked for the last recorded NFL EDGE teams, but no verified game-specific current-day disagreement strong enough for a reader-facing Fade was established. The article therefore reports no useful Fade signal rather than substituting or overstating broad betting data.",
+      "sources": [
+        {"label": "VSiN DraftKings NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"},
+        {"label": "VSiN Circa NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=CIRCA&sport=NFL"}
+      ]
+    },
+    {
+      "evidence_id": "weather:week03-wednesday-pm",
+      "fact": "No kickoff-window weather claim is included because a sufficiently reliable game-specific forecast was not established for the relevant Sunday outdoor games during this run.",
+      "sources": []
+    },
+    {
+      "evidence_id": "crosscheck:production-app",
+      "fact": "The production app could not be independently fetched through the available web reader during this run. Canonical prospective-card evidence remained authoritative for Market Watch.",
+      "sources": [{"label": "NFL EDGE production app", "url": "https://nfl.tkhermes.duckdns.org/"}]
+    }
   ]
 }
