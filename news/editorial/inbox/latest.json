@@ -7,22 +7,25 @@
     "published_at_utc": "2026-09-24T00:25:00Z",
     "edition": "Wednesday Evening Brief",
     "title": "NFL EDGE Wednesday Evening Brief",
-    "dek": "Week 3 injury news is getting real, but the official NFL EDGE card evidence has not refreshed since Tuesday evening.",
+    "dek": "Quarterback injuries are reshaping Week 3, while the latest NFL EDGE evidence shows one sizing change but no fresh evening card.",
     "sections": [
       {
         "id": "what-matters",
         "title": "What Matters Today",
         "items": [{
-          "headline": "Quarterback uncertainty is still the biggest Week 3 story",
+          "headline": "Quarterback uncertainty is spreading across Week 3",
           "paragraphs": [
-            "Washington will start Marcus Mariota against Seattle with Jayden Daniels sidelined by his dislocated left elbow. Seattle expects Sam Darnold to return to practice as he works back from the glute injury that kept him out of Week 2.",
-            "The Giants have ruled Jaxson Dart out with an MCL injury. Chicago is also dealing with a two-quarterback problem: Caleb Williams is week-to-week with a hamstring injury and Tyson Bagent is in concussion protocol, putting Case Keenum in line if neither is available.",
-            "Elsewhere, Houston receiver Nico Collins remains out with a hamstring injury, while Raiders tight end Brock Bowers is expected to practice as he works toward his season debut."
+            "Washington will start Marcus Mariota against Seattle with Jayden Daniels sidelined by a dislocated left elbow. Minnesota gets Kyler Murray back after he cleared concussion protocol and was named the Week 3 starter against Tampa Bay.",
+            "Chicago now has two quarterback problems: Caleb Williams is week-to-week with a hamstring injury, and backup Tyson Bagent entered concussion protocol Tuesday. Case Keenum could be next up if neither is available Monday night. The Giants' outlook also worsened after additional testing showed Jaxson Dart's knee injury could require season-ending surgery.",
+            "The Rams are still waiting on Puka Nacua for Sunday at Denver after he missed Monday night with a hip injury. Sean McVay said Tuesday that Nacua's Week 3 status remained to be determined, though the team was hopeful he could play."
           ],
           "evidence_ids": ["injury:week03-wednesday-pm"],
           "sources": [
-            {"label": "DraftKings Network Week 3 injury report", "url": "https://dknetwork.draftkings.com/2026/09/22/nfl-injury-report-week-3/"},
-            {"label": "Reuters Sam Darnold update", "url": "https://www.reuters.com/sports/seahawks-plan-sam-darnold-return-practice-wednesday--flm-2026-09-22/"}
+            {"label": "NFL — Marcus Mariota to start Week 3", "url": "https://amp.nfl.com/news/marcus-mariota-commanders-week-3-qb-jayden-daniels-elbow"},
+            {"label": "NFL — Kyler Murray cleared for Week 3", "url": "https://fantasy-www.nfl.com/news/kyler-murray-clears-concussion-protocol-will-start-vikings-bears"},
+            {"label": "NFL — Bears quarterback update", "url": "https://amp.nfl.com/news/nfl-network-bears-qb-tyson-bagent-in-concussion-protocol-case-keenum-could-start-week-3"},
+            {"label": "NFL — Jaxson Dart knee update", "url": "https://amp.nfl.com/news/nfl-network-giants-jaxson-dart-potentially-out-for-season-after-testing-shows-worse-knee-injury"},
+            {"label": "NFL Tuesday news roundup", "url": "https://amp.nfl.com/news/nfl-news-roundup-latest-league-updates-from-tuesday-sept-22"}
           ]
         }]
       },
@@ -30,15 +33,16 @@
         "id": "what-it-means",
         "title": "What It Means for NFL EDGE",
         "items": [{
-          "headline": "Seattle's quarterback picture matters, but the card itself needs a refresh",
+          "headline": "Seattle and Minnesota now have clearer quarterback context",
           "paragraphs": [
-            "The last official NFL EDGE evidence still had Seattle as the moneyline recommendation, so Darnold's practice progress and Washington's move to Mariota are directly relevant. But that evidence is now too old to treat as a fresh Wednesday-evening price.",
-            "The same applies to Minnesota and Las Vegas, which appeared on the last recorded card. Injury news can tell us what to watch; only a fresh NFL EDGE publication can tell us whether the recommendation and Play Through are still current."
+            "Seattle remains the last recorded NFL EDGE moneyline recommendation, so Washington moving to Mariota is directly relevant. Minnesota also remains on the last recorded card, and Murray's return removes a major quarterback question from that matchup.",
+            "But the official card has not refreshed since Wednesday morning. The news helps explain what to watch; it does not give permission to use an old price after the market has moved."
           ],
           "evidence_ids": ["card:week03-wednesday-pm-stale", "injury:week03-wednesday-pm"],
           "sources": [
             {"label": "NFL EDGE canonical Week 3 evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-03/episodes.json"},
-            {"label": "Reuters Sam Darnold update", "url": "https://www.reuters.com/sports/seahawks-plan-sam-darnold-return-practice-wednesday--flm-2026-09-22/"}
+            {"label": "NFL — Marcus Mariota to start Week 3", "url": "https://amp.nfl.com/news/marcus-mariota-commanders-week-3-qb-jayden-daniels-elbow"},
+            {"label": "NFL — Kyler Murray cleared for Week 3", "url": "https://fantasy-www.nfl.com/news/kyler-murray-clears-concussion-protocol-will-start-vikings-bears"}
           ]
         }]
       },
@@ -48,12 +52,13 @@
         "items": [{
           "headline": "No useful Fade signal tonight",
           "paragraphs": [
-            "There is no verified current-day DraftKings-vs-Circa disagreement for the last recorded NFL EDGE teams that is strong enough to use tonight. That means no pretending a generic public percentage is a sharper-book signal and no forcing a Fade just to fill the section.",
-            "A useful signal would be something concrete: heavy betting concentration on Seattle, Minnesota or Las Vegas while a credible market moves the other way, or a clear DraftKings-versus-Circa split that survives closer to kickoff."
+            "This is a broad public-betting/line-movement check, not a DraftKings-vs-Circa split. Action Network currently shows heavy public support for Seattle, with the Seahawks drawing about 85% of spread bets while the listed line has moved from Seattle -3.5 at open to around -7.5. Minnesota is also drawing roughly 65% of spread bets while moving from a small underdog at open to a small favorite. Those moves are going with the betting concentration, not fighting it.",
+            "Las Vegas is similar: the Raiders are getting a modest majority of spread bets and the number has moved slightly toward them. None of those three NFL EDGE teams currently shows the kind of public-versus-price disagreement that makes The Fade useful."
           ],
-          "takeaway": "Pass on The Fade tonight. Wait for a verified disagreement and a fresh NFL EDGE card before using it as a decision layer.",
-          "evidence_ids": ["fade:week03-wednesday-pm-none"],
+          "takeaway": "Pass on The Fade tonight. A useful signal would be heavy betting on one of these NFL EDGE sides while the market moves meaningfully the other way. Until that happens, use the card and Play Through rather than inventing a contrarian angle.",
+          "evidence_ids": ["fade:week03-wednesday-pm-none", "card:week03-wednesday-pm-stale"],
           "sources": [
+            {"label": "Action Network NFL public betting", "url": "https://www.actionnetwork.com/nfl/public-betting"},
             {"label": "VSiN DraftKings NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"},
             {"label": "VSiN Circa NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=CIRCA&sport=NFL"}
           ]
@@ -63,12 +68,12 @@
         "id": "market-watch",
         "title": "Market Watch",
         "items": [{
-          "headline": "Market Watch is stale — wait for the next official card",
+          "headline": "Seattle's stake increased; the rest of the card held",
           "paragraphs": [
-            "The most recent canonical NFL EDGE evidence is still Tuesday evening's update. In that last recorded change, Minnesota replaced Indianapolis as the featured recommendation at DraftKings -120, playable through -123 for 0.75u, while Las Vegas +3 at DraftKings +102 appeared as the value play, playable through -101 for 0.75u. Seattle's moneyline stayed unchanged at DraftKings -298, playable through -309 for 0.5u.",
-            "Because there is no newer canonical publication, those are historical last-recorded prices — not a fresh Wednesday-evening card. Market Watch fails closed tonight rather than substituting outside sportsbook prices."
+            "The newest verified NFL EDGE card kept Seattle moneyline at DraftKings -298, playable through -309, but increased the recommended stake from 0.5u to 0.75u. Minnesota moneyline held at DraftKings -120, playable through -123 for 0.75u. Las Vegas +3 also held at DraftKings +102, playable through -101 for 0.75u.",
+            "That is the only real change from the immediately preceding card. Because the canonical evidence has not refreshed again for Wednesday evening, these are the last verified card terms rather than fresh evening prices. Market Watch fails closed beyond that point instead of substituting outside sportsbook numbers."
           ],
-          "takeaway": "Wait for the next NFL EDGE publication before treating any of those prices as actionable.",
+          "takeaway": "The verified change is sizing, not price: Seattle moved to 0.75u. Confirm a fresh card before acting on any of these last-recorded numbers tonight.",
           "evidence_ids": ["card:week03-wednesday-pm-stale"],
           "sources": [
             {"label": "NFL EDGE canonical Week 3 evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-03/episodes.json"}
@@ -79,9 +84,9 @@
         "id": "today-tip",
         "title": "Today's Tip",
         "items": [{
-          "headline": "A stale price is not a bargain",
+          "headline": "Stake size is part of the recommendation",
           "paragraphs": [
-            "Seeing a number you liked yesterday does not mean that number still exists today. Before acting on an old recommendation, confirm the current book, price and Play Through. If the official card has not refreshed, waiting is better than treating yesterday's screenshot like today's market."
+            "When NFL EDGE changes a play from 0.5u to 0.75u without changing the book or price, that is still a real card update. The side did not change, but the recommended exposure did. Use the current stake with the current Play Through; do not mix today's sizing with yesterday's price."
           ]
         }]
       }
@@ -90,32 +95,36 @@
   "evidence": [
     {
       "evidence_id": "card:week03-wednesday-pm-stale",
-      "fact": "At the Wednesday evening editorial run, canonical Week 3 evidence still ended with publication-ede9a33522245052782cfc03 observed at 2026-09-23T00:08:20.317107Z, immediately following publication-66b6650505ee2a57b5d13db7 observed at 2026-09-22T12:08:21.988334Z. The newer publication replaced Indianapolis +2.5 at FanDuel +100 / Play Through -103 in BALANCED with Minnesota moneyline at DraftKings -120 / Play Through -123 for 0.75u; replaced the duplicate Indianapolis VALUE offer with Las Vegas +3 at DraftKings +102 / Play Through -101 for 0.75u; and left Seattle moneyline unchanged at DraftKings -298 / Play Through -309 for 0.5u. Because no newer publication was present, Market Watch is failed stale rather than treating these as current Wednesday-evening prices.",
-      "source_publication_id": "publication-ede9a33522245052782cfc03",
-      "observed_at_utc": "2026-09-23T00:08:20.317107Z",
-      "preceding_source_publication_id": "publication-66b6650505ee2a57b5d13db7",
-      "preceding_observed_at_utc": "2026-09-22T12:08:21.988334Z",
+      "fact": "Canonical Week 3 evidence currently ends with publication-bc8206a351122bbf030b3b15 observed at 2026-09-23T12:08:28.280247Z, immediately following publication-ede9a33522245052782cfc03 observed at 2026-09-23T00:08:20.317107Z. Between those publications, Seattle moneyline remained DraftKings -298 with Play Through -309 but recommended units increased from 0.5 to 0.75. Minnesota moneyline remained DraftKings -120 with Play Through -123 for 0.75u. Las Vegas +3 remained DraftKings +102 with Play Through -101 for 0.75u. No later canonical publication was available for the Wednesday evening editorial run, so Market Watch fails closed beyond the last verified terms.",
+      "source_publication_id": "publication-bc8206a351122bbf030b3b15",
+      "observed_at_utc": "2026-09-23T12:08:28.280247Z",
+      "preceding_source_publication_id": "publication-ede9a33522245052782cfc03",
+      "preceding_observed_at_utc": "2026-09-23T00:08:20.317107Z",
       "sources": [{"label": "NFL EDGE canonical Week 3 prospective evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-03/episodes.json"}]
     },
     {
       "evidence_id": "injury:week03-wednesday-pm",
-      "fact": "Current Week 3 injury reporting lists Jayden Daniels unavailable with a dislocated left elbow and Marcus Mariota expected to start; Sam Darnold is working back from a glute injury with Seattle planning a return to practice; Jaxson Dart is out with an MCL knee injury; Caleb Williams is week-to-week with a hamstring injury and Tyson Bagent is in concussion protocol; Nico Collins is out with a hamstring injury; and Brock Bowers is expected to practice while working toward his season debut.",
+      "fact": "Washington will start Marcus Mariota in Week 3 with Jayden Daniels sidelined by a dislocated left elbow. Minnesota quarterback Kyler Murray cleared concussion protocol and was named the Week 3 starter. Chicago's Caleb Williams is week-to-week with a hamstring injury and Tyson Bagent entered concussion protocol, making Case Keenum a possible Week 3 starter. Additional testing showed Giants quarterback Jaxson Dart's knee injury could require season-ending surgery. Rams coach Sean McVay said Puka Nacua's Week 3 status remained to be determined after he missed Monday with a hip injury, though the team was hopeful he could play.",
       "sources": [
-        {"label": "DraftKings Network Week 3 injury report", "url": "https://dknetwork.draftkings.com/2026/09/22/nfl-injury-report-week-3/"},
-        {"label": "Reuters Sam Darnold update", "url": "https://www.reuters.com/sports/seahawks-plan-sam-darnold-return-practice-wednesday--flm-2026-09-22/"}
+        {"label": "NFL — Marcus Mariota to start Week 3", "url": "https://amp.nfl.com/news/marcus-mariota-commanders-week-3-qb-jayden-daniels-elbow"},
+        {"label": "NFL — Kyler Murray cleared for Week 3", "url": "https://fantasy-www.nfl.com/news/kyler-murray-clears-concussion-protocol-will-start-vikings-bears"},
+        {"label": "NFL — Bears quarterback update", "url": "https://amp.nfl.com/news/nfl-network-bears-qb-tyson-bagent-in-concussion-protocol-case-keenum-could-start-week-3"},
+        {"label": "NFL — Jaxson Dart knee update", "url": "https://amp.nfl.com/news/nfl-network-giants-jaxson-dart-potentially-out-for-season-after-testing-shows-worse-knee-injury"},
+        {"label": "NFL Tuesday news roundup", "url": "https://amp.nfl.com/news/nfl-news-roundup-latest-league-updates-from-tuesday-sept-22"}
       ]
     },
     {
       "evidence_id": "fade:week03-wednesday-pm-none",
-      "fact": "Dedicated VSiN DraftKings and Circa NFL split surfaces were checked for the last recorded NFL EDGE teams, but no verified game-specific current-day disagreement strong enough for a reader-facing Fade was established. The article therefore reports no useful Fade signal rather than substituting or overstating broad betting data.",
+      "fact": "Dedicated VSiN DraftKings and Circa NFL split surfaces were checked first, but a reliable current game-specific DK-vs-Circa comparison for the NFL EDGE teams was not established from the accessible tables. Action Network's current public-betting board shows approximately 85% of spread bets on Seattle with the listed line moving from Seattle -3.5 to about -7.5; approximately 65% on Minnesota with the line moving from Minnesota +1.5 to -1.5; and approximately 57% on Las Vegas with the line moving from +3.5 to +3. These are moves broadly aligned with public concentration, not meaningful opposite-direction disagreements. The article therefore reports no useful Fade signal and explicitly labels the check as broad public betting plus line movement, not a DK-vs-Circa split.",
       "sources": [
+        {"label": "Action Network NFL public betting", "url": "https://www.actionnetwork.com/nfl/public-betting"},
         {"label": "VSiN DraftKings NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"},
         {"label": "VSiN Circa NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=CIRCA&sport=NFL"}
       ]
     },
     {
       "evidence_id": "weather:week03-wednesday-pm",
-      "fact": "No kickoff-window weather claim is included because a sufficiently reliable game-specific forecast was not established for the relevant Sunday outdoor games during this run.",
+      "fact": "No reader-facing weather claim is included. No sufficiently reliable kickoff-window forecast for a relevant Week 3 outdoor game was established strongly enough to affect the brief during this run.",
       "sources": []
     },
     {
