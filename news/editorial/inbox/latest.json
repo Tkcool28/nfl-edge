@@ -1,145 +1,123 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-09-24T00:24:00Z",
-  "research_generated_at_utc": "2026-09-24T00:24:00Z",
+  "submitted_at_utc": "2026-09-24T12:25:42Z",
+  "research_generated_at_utc": "2026-09-24T12:25:42Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-09-24T00:24:00Z",
-    "edition": "Wednesday Evening Brief",
-    "title": "NFL EDGE Wednesday Evening Brief",
-    "dek": "The Week 3 card changed shape tonight: the Giants and Colts are in, Seattle and Las Vegas are out, and Minnesota got slightly more expensive.",
+    "published_at_utc": "2026-09-24T12:25:42Z",
+    "edition": "Thursday Morning Brief",
+    "title": "NFL EDGE Thursday Morning Brief",
+    "dek": "The Giants price improved overnight, Minnesota and Indianapolis held steady, and Thursday night brings a quarterback return plus a short-handed Packers offense.",
     "sections": [
       {
         "id": "what-matters",
         "title": "What Matters Today",
-        "items": [
-          {
-            "headline": "The Giants change quarterbacks, and Indianapolis loses a starting receiver",
-            "paragraphs": [
-              "The biggest update is in New York. Jaxson Dart is expected to undergo season-ending knee surgery, and Jameis Winston will start Sunday against Tennessee. The Giants also had Malik Nabers limited Wednesday, while left tackle Andrew Thomas missed practice but still has a chance to return.",
-              "Indianapolis is putting Alec Pierce on injured reserve after he aggravated his heel injury. Across the rest of the slate, Seattle quarterback Sam Darnold returned to practice on a limited basis with his glute injury, Baltimore receiver Zay Flowers missed Wednesday's practice with a hamstring injury, and Puka Nacua did not practice for the Rams because of his hip."
-            ],
-            "evidence_ids": ["injury:week03-wednesday-pm"],
-            "sources": [
-              {"label": "NFL — Wednesday Week 3 news roundup", "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-wednesday-sept-23"},
-              {"label": "NFL — Week 3 injury report", "url": "https://www.nfl.com/news/nfl-week-3-injury-report-player-statuses-for-all-16-games"}
-            ]
-          }
-        ]
+        "items": [{
+          "headline": "Penix returns tonight, while Green Bay is missing pieces",
+          "paragraphs": [
+            "Michael Penix Jr. is set to make his first start since last season's knee injury when Atlanta visits Green Bay tonight. The Packers will be without receiver Jayden Reed and guard Aaron Banks, while defensive linemen Anthony Campbell and Javon Hargrave are questionable.",
+            "The other quarterback change that matters to the NFL EDGE card is in New York. Jaxson Dart is headed for season-ending knee surgery, leaving Jameis Winston to start Sunday against Tennessee."
+          ],
+          "evidence_ids": ["news:week03-thursday-am"],
+          "sources": [
+            {"label": "NFL — Week 3 injury report", "url": "https://www.nfl.com/news/nfl-week-3-injury-report-player-statuses-for-all-16-games"},
+            {"label": "NFL — Michael Penix Jr. returns", "url": "https://amp.nfl.com/news/michael-penix-jr-set-to-return-to-the-field-for-falcons-i-m-where-i-want-to-be"},
+            {"label": "NFL — Jaxson Dart knee surgery", "url": "https://amp.nfl.com/news/giants-qb-jaxson-dart-season-ending-knee-surgery"}
+          ]
+        }]
       },
       {
         "id": "what-it-means",
         "title": "What It Means for NFL EDGE",
-        "items": [
-          {
-            "headline": "Two of tonight's card changes land directly on the injury news",
-            "paragraphs": [
-              "The Giants are now an NFL EDGE moneyline play at DraftKings -148, playable through -150, with Winston taking over for Dart. That quarterback change is real context, but it is already known information; it is not a reason to pay past the Play Through.",
-              "Indianapolis also returned to the card at +2.5 (-104), playable through -107, on the same day Pierce moved to injured reserve. The recommendation already exists with that news in the market. Treat the current number as the decision point rather than trying to outguess the injury headline."
-            ],
-            "evidence_ids": ["card:week03-wednesday-pm", "injury:week03-wednesday-pm"],
-            "sources": [
-              {"label": "NFL EDGE canonical Week 3 evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-03/episodes.json"},
-              {"label": "NFL — Wednesday Week 3 news roundup", "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-wednesday-sept-23"}
-            ]
-          }
-        ]
+        "items": [{
+          "headline": "The Giants number improved without changing the quarterback reality",
+          "paragraphs": [
+            "New York remains the NFL EDGE moneyline play against Tennessee with Winston replacing Dart, but the price is better this morning. That is useful because the known quarterback downgrade did not force bettors to pay more for the recommendation.",
+            "Minnesota and Indianapolis are unchanged on the newest verified card. Keep treating their Play Through numbers as hard price limits rather than invitations to chase later movement."
+          ],
+          "evidence_ids": ["card:week03-thursday-am", "news:week03-thursday-am"],
+          "sources": [
+            {"label": "NFL EDGE canonical Week 3 evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-03/episodes.json"},
+            {"label": "NFL — Jaxson Dart knee surgery", "url": "https://amp.nfl.com/news/giants-qb-jaxson-dart-season-ending-knee-surgery"}
+          ]
+        }]
       },
       {
         "id": "fade",
         "title": "The Fade",
-        "items": [
-          {
-            "headline": "Indianapolis has the useful disagreement tonight",
-            "paragraphs": [
-              "This is a broad public-betting/line-movement signal, not a DraftKings-vs-Circa split. Action Network currently shows 58% of spread bets on Indianapolis, yet its board has moved from Colts +1.5 at open to +2.5. In plain English: more tickets are on Indianapolis, but the market has still given Colts bettors an extra point.",
-              "That disagreement is worth noticing because NFL EDGE also has Indianapolis +2.5. It is not proof that the Colts are wrong or that the other side is smarter; it simply means the price movement is not following the majority of tickets."
-            ],
-            "takeaway": "Stay disciplined rather than automatically fading Indianapolis. The verified NFL EDGE play is Colts +2.5 (-104) at DraftKings, playable through -107. Take the recommendation only inside that limit; if the price gets worse, do not chase it.",
-            "evidence_ids": ["fade:week03-wednesday-pm", "card:week03-wednesday-pm"],
-            "sources": [
-              {"label": "Action Network NFL public betting", "url": "https://www.actionnetwork.com/nfl/public-betting"},
-              {"label": "VSiN DraftKings NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"},
-              {"label": "VSiN Circa NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=CIRCA&sport=NFL"}
-            ]
-          }
-        ]
+        "items": [{
+          "headline": "No verified Fade signal this morning",
+          "paragraphs": [
+            "The dedicated VSiN DraftKings and Circa NFL split pages were checked first, but the accessible tables still did not expose a reliable game-specific comparison for the current NFL EDGE plays. Action Network's public-betting page was also checked as the backup, but its accessible page did not expose current game rows strongly enough to support a fresh split claim.",
+            "So there is no useful Fade signal to force this morning. That is better than turning an incomplete split into a story it cannot support."
+          ],
+          "takeaway": "Use the verified NFL EDGE prices instead. A Fade becomes useful only if a current play attracts a clear betting concentration while its market price moves meaningfully the other way.",
+          "evidence_ids": ["fade:week03-thursday-am"],
+          "sources": [
+            {"label": "VSiN DraftKings NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"},
+            {"label": "VSiN Circa NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=CIRCA&sport=NFL"},
+            {"label": "Action Network NFL public betting", "url": "https://www.actionnetwork.com/nfl/public-betting"}
+          ]
+        }]
       },
       {
         "id": "market-watch",
         "title": "Market Watch",
-        "items": [
-          {
-            "headline": "Giants and Colts arrive as Seattle and Las Vegas roll off",
-            "paragraphs": [
-              "The newest NFL EDGE card replaces Seattle moneyline with the Giants moneyline at DraftKings -148, playable through -150 for 1.0u. Indianapolis +2.5 returns at DraftKings -104, playable through -107 for 1.0u, replacing Las Vegas +3.",
-              "Minnesota moneyline stays on the card but got a little more expensive: DraftKings moved from -120 to -122, and the Play Through moved from -123 to -125. The recommended stake remains 0.75u."
-            ],
-            "takeaway": "This is a real card reshuffle, not a cosmetic price refresh. Use the Giants, Colts and Minnesota terms shown now; the old Seattle and Las Vegas recommendations are no longer current plays.",
-            "evidence_ids": ["card:week03-wednesday-pm"],
-            "sources": [
-              {"label": "NFL EDGE canonical Week 3 evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-03/episodes.json"}
-            ]
-          }
-        ]
+        "items": [{
+          "headline": "The Giants got cheaper; Minnesota and Indianapolis held",
+          "paragraphs": [
+            "The Giants moneyline improved from DraftKings -148 to -142, and the Play Through improved with it from -150 to -144. The recommended stake remains 1.0u.",
+            "Minnesota moneyline is holding at DraftKings -122, playable through -125 for 0.75u. Indianapolis +2.5 is also unchanged at DraftKings -104, playable through -107 for 1.0u. No side was added or removed on the newest card."
+          ],
+          "takeaway": "New York is the only meaningful morning change, and it moved in the bettor's favor. Use -142 if it is still available and do not pay past -144.",
+          "evidence_ids": ["card:week03-thursday-am"],
+          "sources": [{"label": "NFL EDGE canonical Week 3 evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-03/episodes.json"}]
+        }]
       },
       {
         "id": "today-tip",
         "title": "Today's Tip",
-        "items": [
-          {
-            "headline": "A returning play gets a fresh price limit",
-            "paragraphs": [
-              "Indianapolis was on the opening Week 3 card, disappeared, and is back tonight. Do not revive the old ticket terms from memory. When a recommendation returns, use the book, price and Play Through attached to the new appearance; the old version is history."
-            ]
-          }
-        ]
+        "items": [{
+          "headline": "When your price improves, reset the decision",
+          "paragraphs": [
+            "If a recommended favorite moves from -148 to -142, the bet has become cheaper, not stronger. Take the better price if it is still inside Play Through, but do not increase your stake just because the sportsbook gave you a discount. Price and bet size are separate decisions."
+          ]
+        }]
       }
     ]
   },
   "evidence": [
     {
-      "evidence_id": "card:week03-wednesday-pm",
-      "fact": "Canonical Week 3 evidence was read before external research. The newest source publication is publication-1c0f9018af70dce331832ffb observed at 2026-09-24T00:08:25.190317Z; the immediately preceding publication is publication-bc8206a351122bbf030b3b15 observed at 2026-09-23T12:08:28.280247Z. The newest publication introduces New York Giants moneyline at DraftKings -148 with Play Through -150 for 1.0u in place of Seattle moneyline; Indianapolis +2.5 returns at DraftKings -104 with Play Through -107 for 1.0u in place of Las Vegas +3; Minnesota moneyline remains but worsens from DraftKings -120 / Play Through -123 to -122 / Play Through -125, with stake unchanged at 0.75u.",
-      "source_publication_id": "publication-1c0f9018af70dce331832ffb",
-      "observed_at_utc": "2026-09-24T00:08:25.190317Z",
-      "preceding_source_publication_id": "publication-bc8206a351122bbf030b3b15",
-      "preceding_observed_at_utc": "2026-09-23T12:08:28.280247Z",
+      "evidence_id": "card:week03-thursday-am",
+      "fact": "Canonical Week 3 evidence was read before external research. The newest source publication is publication-dc93a5e5619be66aec3c9869 observed at 2026-09-24T12:08:28.787690Z; the immediately preceding publication is publication-1c0f9018af70dce331832ffb observed at 2026-09-24T00:08:25.190317Z. New York Giants moneyline improved from DraftKings -148 with Play Through -150 to -142 with Play Through -144, stake unchanged at 1.0u. Minnesota moneyline remained DraftKings -122 with Play Through -125 for 0.75u. Indianapolis +2.5 remained DraftKings -104 with Play Through -107 for 1.0u. No current recommendation was added or removed between those two publications.",
+      "source_publication_id": "publication-dc93a5e5619be66aec3c9869",
+      "observed_at_utc": "2026-09-24T12:08:28.787690Z",
+      "preceding_source_publication_id": "publication-1c0f9018af70dce331832ffb",
+      "preceding_observed_at_utc": "2026-09-24T00:08:25.190317Z",
+      "sources": [{"label": "NFL EDGE canonical Week 3 prospective evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-03/episodes.json"}]
+    },
+    {
+      "evidence_id": "news:week03-thursday-am",
+      "fact": "NFL reporting confirms Michael Penix Jr. is returning to start for Atlanta on Thursday night after last season's knee injury. Green Bay lists Jayden Reed and Aaron Banks out, with Anthony Campbell and Javon Hargrave questionable. NFL Network reports Giants quarterback Jaxson Dart is expected to undergo season-ending knee surgery, leaving Jameis Winston to start against Tennessee.",
       "sources": [
-        {"label": "NFL EDGE canonical Week 3 prospective evidence", "url": "https://github.com/Tkcool28/nfl-edge/blob/ops/prospective-card-evidence-v1/prospective/cards/2026/week-03/episodes.json"}
+        {"label": "NFL — Week 3 injury report", "url": "https://www.nfl.com/news/nfl-week-3-injury-report-player-statuses-for-all-16-games"},
+        {"label": "NFL — Michael Penix Jr. returns", "url": "https://amp.nfl.com/news/michael-penix-jr-set-to-return-to-the-field-for-falcons-i-m-where-i-want-to-be"},
+        {"label": "NFL — Jaxson Dart knee surgery", "url": "https://amp.nfl.com/news/giants-qb-jaxson-dart-season-ending-knee-surgery"}
       ]
     },
     {
-      "evidence_id": "injury:week03-wednesday-pm",
-      "fact": "NFL.com's Wednesday roundup reports that Jaxson Dart is expected to undergo season-ending knee surgery and Jameis Winston will start for the Giants against Tennessee; Malik Nabers was limited and Andrew Thomas did not practice but has a chance to return. Indianapolis will place Alec Pierce on injured reserve with a heel injury. Sam Darnold was limited in his return to Seattle practice, Zay Flowers did not practice for Baltimore with a hamstring injury, and Puka Nacua did not practice for the Rams with a hip injury.",
+      "evidence_id": "fade:week03-thursday-am",
+      "fact": "The dedicated VSiN DraftKings and Circa NFL betting-split surfaces were deliberately checked first. Their accessible rendered tables did not expose reliable current game-specific rows for the NFL EDGE plays. Action Network's NFL public-betting page was checked as a backup, but its accessible rendering likewise did not expose current game rows sufficient to support a fresh public-betting or line-movement claim. The article therefore reports no verified Fade signal rather than inferring one.",
       "sources": [
-        {"label": "NFL — Wednesday Week 3 news roundup", "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-wednesday-sept-23"},
-        {"label": "NFL — Week 3 injury report", "url": "https://www.nfl.com/news/nfl-week-3-injury-report-player-statuses-for-all-16-games"}
-      ]
-    },
-    {
-      "evidence_id": "fade:week03-wednesday-pm",
-      "fact": "The dedicated VSiN DraftKings and Circa NFL split pages were deliberately checked first, but their accessible rendered tables did not expose reliable game-specific rows for the NFL EDGE plays. Action Network was therefore used as the backup public-betting source. Its current board shows Indianapolis receiving 58% of spread bets while the listed spread moved from Colts +1.5 at open to +2.5, an opposite-direction public-betting/line-movement signal. The article explicitly labels this as broad public betting plus line movement, not a DraftKings-vs-Circa split, and does not characterize it as sharp money.",
-      "sources": [
-        {"label": "Action Network NFL public betting", "url": "https://www.actionnetwork.com/nfl/public-betting"},
         {"label": "VSiN DraftKings NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=DK&sport=NFL"},
-        {"label": "VSiN Circa NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=CIRCA&sport=NFL"}
-      ]
-    },
-    {
-      "evidence_id": "weather:week03-wednesday-pm",
-      "fact": "Kickoff-window weather was checked for the relevant outdoor Giants-Titans and Vikings-Buccaneers games. Available forecasts did not establish a sufficiently material weather issue for the reader-facing brief: Tampa was forecast hot but with light wind and low precipitation risk, while MetLife forecasts varied on wind and precipitation. No weather claim was included in the article.",
-      "sources": [
-        {"label": "MetLife Stadium weather forecast", "url": "https://www.weatherworld.com/14dayweather/nj/metlife%2Bstadium.html"},
-        {"label": "Tampa Bay Buccaneers weather forecast", "url": "https://www.weatherworld.com/14dayweather/fl/tampa%2Bbay%2Bbuccaneers.html"}
+        {"label": "VSiN Circa NFL betting splits", "url": "https://data.vsin.com/betting-splits/?source=CIRCA&sport=NFL"},
+        {"label": "Action Network NFL public betting", "url": "https://www.actionnetwork.com/nfl/public-betting"}
       ]
     },
     {
       "evidence_id": "crosscheck:production-app",
       "fact": "The production NFL EDGE app was attempted as a cross-check but was not accessible through the available web reader during this run. Canonical prospective-card evidence remained authoritative for Market Watch.",
-      "sources": [
-        {"label": "NFL EDGE production app", "url": "https://nfl.tkhermes.duckdns.org/"}
-      ]
+      "sources": [{"label": "NFL EDGE production app", "url": "https://nfl.tkhermes.duckdns.org/"}]
     }
   ]
 }
