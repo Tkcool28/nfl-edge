@@ -1,9 +1,9 @@
 {
   "article": {
-    "dek": "The Falcons blew up Thursday night, rain is the story at MetLife, two backup quarterbacks start Sunday, and the app already has the news in its numbers.",
+    "dek": "Friday's final injury reports are in \u2014 Darnold is cleared, Stanley is out, Flowers is a game-time call \u2014 and all three of the app's headline cards shuffled overnight.",
     "edition": "Morning Brief",
-    "published_at_utc": "2026-09-26T05:04:51Z",
-    "research_generated_at_utc": "2026-09-26T05:04:51Z",
+    "published_at_utc": "2026-09-26T11:53:15Z",
+    "research_generated_at_utc": "2026-09-26T11:53:15Z",
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
     "sections": [
       {
@@ -11,65 +11,50 @@
         "id": "what-matters",
         "items": [
           {
-            "evidence_ids": [
-              "ev-tnf-final",
-              "ev-tnf-lines",
-              "ev-gb-tnf"
-            ],
-            "headline": "Falcons 35, Packers 14: Michael Penix is back, and Atlanta just got interesting",
-            "paragraphs": [
-              "Atlanta walked into Lambeau and stomped Green Bay 35-14 on Thursday night. It was 17-7 at halftime, then the Falcons ripped off 18 unanswered points in the third and early fourth quarters.",
-              "Michael Penix Jr. made his first start in almost a year after his third ACL surgery. He shook off an early interception and went 18-for-25 for 256 yards and a touchdown. Bijan Robinson ran for 194 yards and two scores. Drake London set a career high with 194 receiving yards.",
-              "For bettors: Green Bay closed -5.5 and the total closed 42.5. Atlanta covered easily as the underdog and won outright at +205. The game sailed over with 49 total points. The Falcons are 1-2; the Packers fall to 1-2 and have lost seven of their last eight."
-            ],
-            "sources": [
-              {
-                "label": "USA Today live page",
-                "url": "https://www.usatoday.com/story/sports/nfl/2026/09/24/packers-falcons-score-updates-highlights-stats-thursday-night-football--live/91914133007/"
-              }
-            ],
-            "takeaway": "Thursday game? Thursday check \u2014 the books reopen Sunday pricing with this result baked in."
-          },
-          {
             "bullets": [
-              "Commanders: Marcus Mariota starts vs. Seattle. Jayden Daniels is out with a dislocated elbow.",
-              "Giants: Jameis Winston starts vs. Tennessee. Jaxson Dart is on IR and out for the season after knee surgery. John Harbaugh left a quarterback trade open \u2014 Joe Flacco shut the rumor down himself: 'not real and not true.'",
-              "Seahawks: Sam Darnold practiced fully Thursday and is on track to start. The app already lists Darnold as the expected starter, so its number for this game has the news baked in.",
-              "Ravens: Zay Flowers (hamstring) and Ronnie Stanley (toe) missed practice Wednesday and Thursday. No Friday game designations are out yet \u2014 the team flew to Brazil overnight Thursday. Nnamdi Madubuike practiced fully twice and is expected to be cleared.",
-              "Cowboys: four players aren't traveling to Rio and are ruled out \u2014 Cobie Durant, Malik Hooker, P.J. Locke, Demarvion Overshown.",
-              "Rams: Myles Garrett is on injured reserve after knee surgery and misses Sunday's game at Denver (out at least four games).",
-              "Bears: Tyson Bagent is in the concussion protocol and Caleb Williams is still out \u2014 Monday night could mean third-stringer Case Keenum. The app still shows Bagent, so wait for it to catch up before trusting its number for the Eagles-Bears game."
+              "Seahawks: Sam Darnold (glute) was cleared Friday and WILL start at Washington \u2014 no game designation. But both starting safeties are out: Julian Love (calf) and Ty Okada (hamstring). The app already lists Darnold as Seattle's expected starter, so its number has the quarterback news baked in.",
+              "Commanders: Marcus Mariota starts for Jayden Daniels, who is out with a dislocated elbow.",
+              "Giants: Jameis Winston starts; Jaxson Dart is on injured reserve and out for the season after knee surgery.",
+              "Titans: Cam Ward is Tennessee's starting quarterback \u2014 not a backup. No change there.",
+              "Ravens: left tackle Ronnie Stanley (toe) is ruled OUT \u2014 rookie Carson Vinson makes his first NFL start. Wide receiver Zay Flowers (hamstring) is questionable after practicing limited Friday. Defensive tackle Nnamdi Madubuike and linebacker Teddye Buchanan practiced fully all week with no designation and are set for their season debuts.",
+              "Cowboys: Cobie Durant, Malik Hooker, P.J. Locke and Demarvion Overshown are all out \u2014 none of them traveled to Rio.",
+              "Rams: Myles Garrett is on injured reserve after knee surgery and misses the Denver game.",
+              "Bears: Case Keenum is in line to start Monday night against Philadelphia. Caleb Williams (hamstring) is week-to-week and Tyson Bagent is still in the concussion protocol. The app caught up Friday night \u2014 it now shows Keenum, so its number for this game finally matches the news."
             ],
             "evidence_ids": [
-              "ev-inj-was",
-              "ev-inj-nyg",
-              "ev-inj-sea",
-              "ev-inj-bal",
-              "ev-inj-dal",
-              "ev-inj-chi",
-              "ev-inj-lar"
+              "ev-darnold-cleared",
+              "ev-qb-board",
+              "ev-ravens-final",
+              "ev-cowboys-out",
+              "ev-bears-qb",
+              "ev-app-board"
             ],
             "headline": "Every injury that matters, in one place",
             "paragraphs": [
-              "That's the whole injury board. Nothing is scattered anywhere else in this brief \u2014 if a player is hurt, he's above."
+              "That's the whole board \u2014 nothing scattered anywhere else in this brief. Read it once and you're caught up on who's in and who's out."
             ],
             "sources": [
               {
-                "label": "Ravens Wire",
-                "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/09/24/zay-flowers-ravens-practice-hamstring-cowboys-brazil-week-3/91921920007/"
+                "label": "Reuters (Darnold cleared)",
+                "url": "https://www.reuters.com/sports/seahawks-qb-sam-darnold-glute-cleared-week-3-return--flm-2026-09-26/"
+              },
+              {
+                "label": "SI (Ravens final report)",
+                "url": "https://www.si.com/nfl/ravens/onsi/ravens-rule-out-stanley-on-injury-report-flowers-questionable-everyone-else-playing-01m3d27xcvsz"
               }
             ],
-            "takeaway": "Injuries get priced into the line within hours. If the news isn't in the number yet, it soon will be."
+            "takeaway": "News gets priced into the line within hours. The edge is knowing which news the line already ate."
           },
           {
             "evidence_ids": [
-              "ev-weather",
+              "ev-weather-metlife",
+              "ev-weather-rest",
               "ev-ten-total-move"
             ],
-            "headline": "Rain at MetLife \u2014 and not much weather trouble anywhere else",
+            "headline": "Rain at MetLife is the only real weather problem",
             "paragraphs": [
-              "The weather game is Titans at Giants, 1 p.m. ET at MetLife. A Nor'easter is brushing the area: rain through the game, mid-60s temps, and wind around 18 mph with gusts up to 30.",
-              "Everything else is manageable. Slight shower chance after 2 p.m. in Landover for Seahawks-Commanders, with wind around 12-14 mph. Hot and humid but dry in Jacksonville (85) and Miami (87). Sunny and calm in Buffalo, Cleveland, Cincinnati, Santa Clara and Tampa. Cool, clear evening in Denver for Sunday night."
+              "Titans at Giants, 1 p.m. ET Sunday: rain showers through the game, temperatures near 68, wind 16 to 23 mph, and a 97% chance of rain. It's the wettest, windiest game on the board by a mile.",
+              "Everywhere else is fine. Friday's National Weather Service sweep found no other trouble spots: hot and humid but dry in Jacksonville and Miami, calm and sunny in Buffalo, Cleveland, Cincinnati, Santa Clara and Tampa, and a cool, clear evening in Denver for Sunday night football."
             ],
             "sources": [
               {
@@ -81,22 +66,23 @@
           },
           {
             "evidence_ids": [
-              "ev-brazil",
-              "ev-inj-bal",
-              "ev-app-board"
+              "ev-brazil-field",
+              "ev-app-board",
+              "ev-ravens-final"
             ],
-            "headline": "The NFL's first game in Brazil is Sunday",
+            "headline": "The NFL's first Brazil game is Sunday",
             "paragraphs": [
-              "Ravens vs. Cowboys, 4:25 p.m. ET from Maracan\u00e3 Stadium in Rio de Janeiro. It's the first regular-season NFL game ever played in Brazil.",
-              "Baltimore flew overnight Thursday and won't step on the Maracan\u00e3 field until Saturday \u2014 traveling while likely missing its top receiver and left tackle. The app has Baltimore -3.5 with a total of 52.5, the highest total on the board."
+              "Ravens vs. Cowboys, 4:25 p.m. ET from Maracan\u00e3 Stadium in Rio de Janeiro \u2014 the first regular-season NFL game ever played in Brazil.",
+              "Baltimore landed Friday morning and gets its first look at the stadium Saturday. On the field questions: the players' union chief said Friday that union and league field experts have monitored the surface all week and are working to make it as safe and playable as possible.",
+              "The app's board has Baltimore -3.5 at DraftKings with the total at 53.5 (52.5 at FanDuel) \u2014 the highest total on the Sunday board."
             ],
             "sources": [
               {
-                "label": "Fox Sports",
-                "url": "https://foxsports.com/stories/nfl/cowboys-ravens-set-square-off-nfls-inaugural-rio-de-janeiro-game"
+                "label": "The Banner (Rio)",
+                "url": "https://www.thebanner.com/sports/ravens-nfl/ravens-ronnie-stanley-cowboys-field-maracana-stadium-grass-playing-condition-6GYXBNQKIRGBBCTMFGH54CUINA/"
               }
             ],
-            "takeaway": "International games are weird environments. Don't overreact to one data point."
+            "takeaway": "New stadium, long flight, rookie left tackle making his first start. Weird games deserve smaller bets, not bigger opinions."
           }
         ],
         "title": "What Matters Today"
@@ -107,33 +93,13 @@
         "items": [
           {
             "evidence_ids": [
-              "ev-sea-line-move",
-              "ev-app-board",
-              "ev-inj-sea"
-            ],
-            "headline": "A line move is the market's price tag for the news",
-            "paragraphs": [
-              "Here's how to actually use news. Seattle opened the week as a 5.5-point favorite at Washington. As word spread that Sam Darnold would practice and probably start, the line climbed to -7.5 at DraftKings. That two-point move is the market's price tag for the Darnold news.",
-              "Now look at the app's number for the same game: NFL EDGE's model has Seattle by 7.74. The market's price (-7.5) and the app's number (-7.74) say basically the same thing. The news is fully priced in \u2014 there's nothing left to chase.",
-              "The steps: (1) note how far the line moved on the news \u2014 here, 2 points; (2) look at NFL EDGE's actual number \u2014 7.74; (3) ask whether the market moved too far or not far enough. Here it looks about right. If Darnold were suddenly scratched on Sunday, expect the line to slide back toward -5.5 \u2014 the market taking the price tag back."
-            ],
-            "sources": [
-              {
-                "label": "Sports Illustrated (betting)",
-                "url": "https://www.si.com/betting/latest-sam-darnold-injury-update-boosts-seahawks-odds-vs-commanders-in-nfl-week-3"
-              }
-            ],
-            "takeaway": "The move IS the news, priced in points. Compare it to the app's number before you do anything."
-          },
-          {
-            "evidence_ids": [
               "ev-app-cards"
             ],
-            "headline": "What today's three cards are actually saying",
+            "headline": "What today's three cards actually say",
             "paragraphs": [
-              "The app's Balanced card is Giants moneyline at -130: risk $130 to win $100. The app's number says New York wins about 73 times out of 100; the price implies about 56. That's a real gap \u2014 and the app marks this card low-confidence, so size it accordingly.",
-              "The Hit Rate card is Detroit moneyline at -298: risk $298 to win $100. The app says the Lions win about 68 of 100; the price implies about 72. Also low confidence.",
-              "The Value card is Raiders +3 at even money (+100) at DraftKings: risk $100 to win $100 if the Raiders cover. The app's number says that happens about half the time \u2014 just ahead of what the price implies. This one carries medium confidence, the strongest of the three."
+              "The Balanced card is Vikings moneyline at -120 on DraftKings: risk $120 to win $100. The app's model says Minnesota wins about 59 times out of 100; the -120 price implies about 55. Small gap, medium confidence, 0.75 units.",
+              "The Hit Rate card is Giants moneyline at -135 on DraftKings: risk $135 to win $100. The model says the Giants win about 73 times out of 100; the price implies about 56. That's the biggest model-vs-price gap on the screen \u2014 but the app grades this one low confidence and prices it at negative expected value. A big gap alone is not a bet.",
+              "The Value card is Raiders +3 at +102 on DraftKings: risk $100 to win $102 if Las Vegas stays within a field goal or wins outright. The model says that happens about 50.5 times out of 100; the price implies about 47. This is the only one of the three the app prices as positive expected value (+3.6%), with medium confidence and 0.75 units."
             ],
             "sources": [
               {
@@ -141,25 +107,46 @@
                 "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
               }
             ],
-            "takeaway": "Every card shows you the price AND the app's number. The gap between them is the whole story."
+            "takeaway": "Every card shows the price AND the app's number. The gap between them \u2014 plus the app's own confidence grade \u2014 is the whole story."
           },
           {
             "evidence_ids": [
-              "ev-weather",
-              "ev-inj-nyg"
+              "ev-sea-line-move",
+              "ev-app-board",
+              "ev-darnold-cleared"
             ],
-            "headline": "Rain doesn't pick a winner \u2014 it changes the game shape",
+            "headline": "A line move is the market's price tag for the news",
             "paragraphs": [
-              "MetLife on Sunday: rain, 18 mph wind, gusts to 30. That means more running, shorter passes, slippery footing, and more turnovers. It does not mean 'bet the under' \u2014 the total has already fallen into the 30s because the books saw the same forecast you did.",
-              "What to actually do: expect ugly football. Two backup quarterbacks \u2014 Winston and Cam Ward \u2014 in bad conditions. If you're playing anything in this game, favor simple outcomes (the team you think is better) over clever ones, and re-check the app Sunday morning in case the forecast shifts."
+              "Seattle opened the week as a 5.5-point favorite at Washington. As the Darnold practice news spread, the line climbed to -7.5 at DraftKings. That two-point move is the market's price tag for the Darnold news \u2014 and on Friday the news became official: Darnold is cleared and will start.",
+              "Now check the app's number for the same game: the model has Seattle by 7.74. The market (-7.5) and the app (-7.74) agree. The Darnold news is fully priced \u2014 there is nothing left to chase there.",
+              "But Friday evening brought NEW news: both of Seattle's starting safeties, Julian Love and Ty Okada, were ruled out \u2014 after the app's last board snapshot. So the steps are: (1) the Darnold move already happened \u2014 don't pay for it twice; (2) the app's number matches the market, so the old news is done; (3) watch whether the line drifts back toward -7 before Sunday on the safeties news \u2014 that's the live question."
             ],
             "sources": [
               {
-                "label": "NWS forecast (OKX grid, MetLife)",
-                "url": "https://api.weather.gov/gridpoints/OKX/30,46/forecast"
+                "label": "NFL EDGE product view",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
               }
             ],
-            "takeaway": "Weather tells you what the game will look like, not who wins it."
+            "takeaway": "The move IS the news, priced in points. Old news is priced. Only new news can move the number again."
+          },
+          {
+            "evidence_ids": [
+              "ev-app-board",
+              "ev-ravens-final"
+            ],
+            "headline": "The biggest model-vs-market gap on the board is in Rio",
+            "paragraphs": [
+              "The market has Baltimore -3.5 in Rio. The app's model says Dallas by 1.5. That's about five points of disagreement \u2014 wider than any other Sunday game.",
+              "The market has had since Friday afternoon to digest the Ravens' news: Stanley ruled out, a rookie making his first start at left tackle, Flowers a game-time call, a strange field, a long flight. It still says Baltimore by more than a field goal.",
+              "What to do with a gap like this: it's a reason to look closer, not a reason to bet Dallas. A five-point disagreement in a weird environment means stay small or stay away \u2014 not \u201cthe model says bet the Cowboys.\u201d"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE product view",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ],
+            "takeaway": "When the app and the market disagree by five points, that's the game to study \u2014 carefully."
           }
         ],
         "title": "What It Means for NFL EDGE"
@@ -170,37 +157,48 @@
         "items": [
           {
             "evidence_ids": [
-              "ev-ten-total-move",
-              "ev-app-board"
+              "ev-app-cards",
+              "ev-app-board",
+              "ev-bears-qb"
             ],
-            "headline": "Titans-Giants total fell into the 30s",
+            "headline": "The app's three cards shuffled overnight",
             "paragraphs": [
-              "The MetLife total kept sliding as the rain forecast hardened \u2014 it's 38.5 on the app now (both DraftKings and FanDuel), the lowest total on the Week 3 board. That's the market pricing the weather, not new football information."
+              "Balanced was Giants moneyline -130 on Friday; now it's Vikings moneyline -120. Hit Rate was Lions moneyline -298; now it's Giants moneyline -135. Value stayed on the Raiders +3 (now +102 at DraftKings).",
+              "The app also caught up on Chicago's quarterback: it flipped the Bears' expected starter from Bagent to Keenum on Friday night, so its Monday-night number finally matches the news."
             ],
             "sources": [
               {
-                "label": "VSiN (Nor'easter weather impact)",
-                "url": "https://vsin.com/mlb/mlb-college-football-nfl-games-impacted-by-noreaster-this-weekend/"
+                "label": "NFL EDGE product view",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              },
+              {
+                "label": "USA Today News (Bears QB)",
+                "url": "https://usa-today-news.com/news/bears-still-proceeding-with-case-keenum-as-starting-qb-vs-eagles-as-caleb-williams-tyson-bagent-remain-out/"
               }
             ],
-            "takeaway": "The weather money is already spent. Don't pay yesterday's price."
+            "takeaway": "When the app's picks move, the news moved first. Read the move."
           },
           {
             "evidence_ids": [
-              "ev-sea-line-move",
-              "ev-app-board"
+              "ev-app-board",
+              "ev-kc-line-wed"
             ],
-            "headline": "Seattle steamed from -5.5 to -7.5 on the Darnold news",
+            "headline": "Kansas City drifted toward Miami",
             "paragraphs": [
-              "The Seahawks opened -5.5 and are now -7.5 at DraftKings, a two-point move tied to Darnold's return to practice. The app's model sits at -7.74 \u2014 right on top of the market. No daylight left between the news and the number."
+              "The Chiefs were -11.5 on Wednesday. Friday evening's board has them -10 at DraftKings (-10.5 at FanDuel) \u2014 a point to a point-and-a-half of quiet drift toward the Dolphins, with no single headline behind it.",
+              "The app's model has Kansas City by only about 4, so the market and the model aren't close on this one either."
             ],
             "sources": [
               {
-                "label": "Sports Illustrated (betting)",
-                "url": "https://www.si.com/betting/latest-sam-darnold-injury-update-boosts-seahawks-odds-vs-commanders-in-nfl-week-3"
+                "label": "NFL EDGE product view",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              },
+              {
+                "label": "VSiN (Week 3 package)",
+                "url": "https://vsin.com/nfl/nfl-top-plays-based-on-betting-splits-power-ratings-and-trends-for-week-3/"
               }
             ],
-            "takeaway": "When the app and the market agree after a move, the move is done."
+            "takeaway": "Quiet moves without news are the ones to ask about \u2014 not chase."
           }
         ],
         "title": "Market Watch"
@@ -212,180 +210,108 @@
           {
             "editorial_only": true,
             "evidence_ids": [
-              "ev-weather",
+              "ev-weather-metlife",
               "ev-app-board"
             ],
-            "headline": "Check the board Sunday morning, not Friday night",
+            "headline": "Check the board Sunday morning, not Saturday night",
             "paragraphs": [
-              "Lines are still moving. The MetLife forecast gets finalized Sunday morning, and any surprise inactives drop 90 minutes before kickoff. If you like something tonight, write down the number \u2014 then compare it to Sunday's price before you bet. A half-point on a spread or five cents on a moneyline is real money over a season."
+              "Three live things to re-check: the final MetLife forecast (rain timing decides how ugly that game gets), whether Seattle's line drifts on the safeties news, and the inactive lists 90 minutes before kickoff. If you like a number tonight, write it down \u2014 then compare it to Sunday's price before you bet."
+            ],
+            "sources": [
+              {
+                "label": "NWS forecast (OKX grid, MetLife)",
+                "url": "https://api.weather.gov/gridpoints/OKX/30,46/forecast"
+              },
+              {
+                "label": "NFL EDGE product view",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
             ],
             "takeaway": "The best bet is often the same bet at a better price."
           },
           {
             "editorial_only": true,
             "evidence_ids": [
-              "ev-sea-line-move"
+              "ev-sea-line-move",
+              "ev-app-board"
             ],
-            "headline": "Betting term of the day: closing line",
+            "headline": "Betting term of the day: steam",
             "paragraphs": [
-              "The closing line is the last price before kickoff \u2014 the final answer from the whole market. Pros use it to grade themselves: if you bet Seattle -5.5 on Wednesday and the game closes -7.5, you beat the closing line by 2 points. Over hundreds of bets, consistently beating the close means you're getting good prices."
+              "Steam is the word for a line moving fast across the sportsbooks \u2014 the market repricing in a hurry. Example: Seattle went from -5.5 to -7.5 in about a day after the Darnold practice news. That's steam.",
+              "Steam tells you the market moved. It doesn't tell you who moved it, or whether the new number is right. That's what the app's number is for \u2014 compare the steamed price against it before you decide anything."
             ],
-            "takeaway": "You don't need to beat the book every Sunday. You need to beat the close over the season."
+            "sources": [
+              {
+                "label": "SI (betting)",
+                "url": "https://www.si.com/betting/latest-sam-darnold-injury-update-boosts-seahawks-odds-vs-commanders-in-nfl-week-3"
+              },
+              {
+                "label": "NFL EDGE product view",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ],
+            "takeaway": "Steam is the market shouting. The app's number is the conversation."
           }
         ],
         "title": "Today's Tip"
       }
     ],
-    "title": "NFL EDGE Friday Morning Brief"
+    "title": "NFL EDGE Saturday Morning Brief"
   },
   "evidence": [
     {
-      "category": "result",
-      "evidence_id": "ev-tnf-final",
-      "fact": "Falcons 35, Packers 14 on Thursday Night Football at Lambeau (Week 3). Michael Penix Jr. 18/25, 256 yds, 1 TD, 1 INT in his first start in nearly a year; Bijan Robinson 194 rush yds + 2 TD (213 total yds); Drake London 9 catches, 194 yds (career high). Jordan Love completed under 60% for the third straight game.",
-      "interpretation": "Atlanta's offense looked transformed with Penix; Green Bay falls to 1-2 with serious questions at QB.",
+      "category": "injury",
+      "evidence_id": "ev-darnold-cleared",
+      "fact": "Seahawks QB Sam Darnold (glute) was cleared Friday and will start Sunday at Washington; coach Mike Macdonald confirmed it and Darnold carries no game designation after full practices Thursday and Friday. Starting safeties Julian Love (calf, hurt in Thursday practice) and Ty Okada (hamstring) were both ruled out.",
+      "interpretation": "Seattle gets its starting QB back but loses both starting safeties against a Washington offense starting a backup QB.",
       "sources": [
         {
-          "label": "USA Today live page",
-          "url": "https://www.usatoday.com/story/sports/nfl/2026/09/24/packers-falcons-score-updates-highlights-stats-thursday-night-football--live/91914133007/"
-        },
-        {
-          "label": "Packers Wire live updates",
-          "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/09/24/packers-vs-falcons-live-updates-score-and-highlights-from-week-3--live/91928404007/"
-        },
-        {
-          "label": "Falcons Wire recap",
-          "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/09/25/falcons-packers-week-3-recap/91931035007/"
-        }
-      ],
-      "verification": "REPORTED"
-    },
-    {
-      "category": "lines",
-      "evidence_id": "ev-tnf-lines",
-      "fact": "Falcons-Packers closed with Green Bay -5.5, total 42.5 (steamed down from 44.5 earlier in the week), moneyline GB -250 / ATL +205. Final total was 49 points (over). Atlanta covered and won outright as the underdog.",
-      "interpretation": "The closing number said a close Packers win; the game was an Atlanta blowout. Big gaps between the number and the result are normal one-game noise.",
-      "sources": [
-        {
-          "label": "USA Today live page (pregame lines)",
-          "url": "https://www.usatoday.com/story/sports/nfl/2026/09/24/packers-falcons-score-updates-highlights-stats-thursday-night-football--live/91914133007/"
+          "label": "Reuters",
+          "url": "https://www.reuters.com/sports/seahawks-qb-sam-darnold-glute-cleared-week-3-return--flm-2026-09-26/"
         }
       ],
       "verification": "REPORTED"
     },
     {
       "category": "injury",
-      "evidence_id": "ev-gb-tnf",
-      "fact": "Packers RT Zach Bako-Bewele suffered a season-ending knee injury; WR Jayden Reed (neck) was also out. RB Josh Jacobs remains on the commissioner's exempt list (3rd game) with a minimum six-game suspension expected, making Week 7 (Oct 25 at Detroit) his earliest possible return.",
-      "interpretation": "Green Bay's line and receiving corps stay thin; Jacobs is no factor for weeks.",
+      "evidence_id": "ev-ravens-final",
+      "fact": "Ravens final designations for Sunday in Brazil: LT Ronnie Stanley (toe) is OUT; WR Zay Flowers (hamstring) was limited Friday and is QUESTIONABLE; DT Nnamdi Madubuike and LB Teddye Buchanan practiced fully all week with no game designation and are set for their season debuts. Rookie fifth-round pick Carson Vinson is expected to make his first NFL start at left tackle. Both teams held walkthroughs Friday, so the Friday report is an estimation.",
+      "interpretation": "Baltimore's offensive line gets weaker while its defense gets two starters back; Flowers remains a game-time decision.",
       "sources": [
         {
-          "label": "USA Today live page",
-          "url": "https://www.usatoday.com/story/sports/nfl/2026/09/24/packers-falcons-score-updates-highlights-stats-thursday-night-football--live/91914133007/"
+          "label": "SI (Ravens final report)",
+          "url": "https://www.si.com/nfl/ravens/onsi/ravens-rule-out-stanley-on-injury-report-flowers-questionable-everyone-else-playing-01m3d27xcvsz"
         }
       ],
       "verification": "REPORTED"
     },
     {
       "category": "injury",
-      "evidence_id": "ev-inj-was",
-      "fact": "Commanders QB Jayden Daniels is out with a dislocated left elbow; veteran Marcus Mariota starts vs. Seattle on Sunday.",
-      "interpretation": "Washington goes from a young starter to a veteran backup against a top defense.",
+      "evidence_id": "ev-bears-qb",
+      "fact": "The Bears are proceeding with third-stringer Case Keenum as the expected starter for Monday night vs. Philadelphia. Starter Caleb Williams (hamstring strain) is week-to-week and backup Tyson Bagent remains in the concussion protocol \u2014 he was back at the team facility Friday but did not practice. Keenum, 38, has not thrown a regular-season pass since 2023.",
+      "interpretation": "Chicago is down to its third quarterback for a Monday night game against an undefeated Eagles team.",
+      "sources": [
+        {
+          "label": "USA Today News (Bears QB)",
+          "url": "https://usa-today-news.com/news/bears-still-proceeding-with-case-keenum-as-starting-qb-vs-eagles-as-caleb-williams-tyson-bagent-remain-out/"
+        }
+      ],
+      "verification": "REPORTED"
+    },
+    {
+      "category": "injury",
+      "evidence_id": "ev-qb-board",
+      "fact": "Commanders QB Jayden Daniels is out (dislocated left elbow); Marcus Mariota starts vs. Seattle. Giants QB Jaxson Dart was placed on IR and will miss the rest of the season after knee surgery; Jameis Winston starts vs. Tennessee. The Rams placed edge rusher Myles Garrett on injured reserve after knee surgery; he misses Sunday's game at Denver and is out a minimum of four games.",
+      "interpretation": "Two Sunday games feature backup quarterbacks; Denver's offense faces a Rams pass rush missing its best player.",
       "sources": [
         {
           "label": "Commanders Wire",
           "url": "https://commanderswire.usatoday.com/story/sports/nfl/commanders/2026/09/23/commanders-latest-update-injured-jayden-daniels/91914550007/"
         },
         {
-          "label": "SportsNewsReport",
-          "url": "https://sportsnewsreport.com/stories/seahawks-prepare-for-sam-darnolds-potential-return-against-commanders-muc0hw25-k41i"
-        }
-      ],
-      "verification": "REPORTED"
-    },
-    {
-      "category": "injury",
-      "evidence_id": "ev-inj-nyg",
-      "fact": "Giants QB Jaxson Dart was placed on IR and will miss the rest of the season after knee surgery (meniscus and MCL damage; ACL intact). Jameis Winston starts vs. Tennessee. Head coach John Harbaugh left a QB trade open; Joe Flacco personally shot down the trade rumor: 'not real and not true.'",
-      "interpretation": "The Giants are Winston's team now, for better (ceiling) and worse (turnovers).",
-      "sources": [
-        {
-          "label": "Ahn Fire Digital",
-          "url": "https://ahnfiredigital.com/nfl/new-york-giants/new-york-giants-leave-qb-trade-open-after-jaxson-dart-injury/"
+          "label": "USA Today (Dart to IR)",
+          "url": "https://www.usatoday.com/story/sports/fantasy/player-updates/2026/09/24/fantasy-giants-qb-jaxson-dart-moved-to-ir-after-knee-injury/91927458007/"
         },
-        {
-          "label": "Cincinnati Enquirer (Flacco denial)",
-          "url": "https://www.cincinnati.com/story/sports/nfl/bengals/2026/09/24/bengals-quarterback-joe-flacco-not-giving-much-thought-to-trade-talk/91926757007/"
-        }
-      ],
-      "verification": "REPORTED"
-    },
-    {
-      "category": "injury",
-      "evidence_id": "ev-inj-sea",
-      "fact": "Seahawks QB Sam Darnold (glute) practiced fully on Thursday after being limited Wednesday and is 'on a good track' to start vs. Washington; head coach Mike Macdonald expected a final decision by Friday. Backup Drew Lock went 2-0 with 4 TDs and 0 INTs in Darnold's place.",
-      "interpretation": "Seattle likely gets its starter back, but Lock's play means the drop-off was never steep.",
-      "sources": [
-        {
-          "label": "NBC Sports (full participation)",
-          "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-09-24/sam-darnold-glute-upgrades-to-full-participation"
-        },
-        {
-          "label": "SportsNewsReport",
-          "url": "https://sportsnewsreport.com/stories/seahawks-prepare-for-sam-darnolds-potential-return-against-commanders-muc0hw25-k41i"
-        }
-      ],
-      "verification": "REPORTED"
-    },
-    {
-      "category": "injury",
-      "evidence_id": "ev-inj-bal",
-      "fact": "Ravens WR Zay Flowers (hamstring) and LT Ronnie Stanley (toe) did not practice Wednesday or Thursday; no Friday game designations had been published as of this writing (the team flew to Brazil overnight Thursday, its last real practice). DT Nnamdi Madubuike was a full participant for the second straight day and is expected to be cleared.",
-      "interpretation": "Baltimore is likely without two key offensive starters in Rio; its defense gets a boost back.",
-      "sources": [
-        {
-          "label": "Ravens Wire",
-          "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/09/24/zay-flowers-ravens-practice-hamstring-cowboys-brazil-week-3/91921920007/"
-        },
-        {
-          "label": "Russell Street Report (Thursday report)",
-          "url": "https://russellstreetreport.com/2026/09/24/injury-report/injury-report-ravens-at-cowboys-thursday/"
-        }
-      ],
-      "verification": "REPORTED"
-    },
-    {
-      "category": "injury",
-      "evidence_id": "ev-inj-dal",
-      "fact": "Four Cowboys did not travel to Rio and are ruled out for Sunday: CB Cobie Durant (hamstring), S Malik Hooker (forearm), S P.J. Locke (foot), LB Demarvion Overshown (hamstring).",
-      "interpretation": "Dallas's secondary is notably shorthanded for the Brazil game.",
-      "sources": [
-        {
-          "label": "Russell Street Report (Thursday report)",
-          "url": "https://russellstreetreport.com/2026/09/24/injury-report/injury-report-ravens-at-cowboys-thursday/"
-        }
-      ],
-      "verification": "REPORTED"
-    },
-    {
-      "category": "injury",
-      "evidence_id": "ev-inj-chi",
-      "fact": "Bears starter Caleb Williams remains sidelined (hamstring, week-to-week) and backup Tyson Bagent entered the concussion protocol this week, which could force third-stringer Case Keenum to start Monday night vs. Philadelphia. The NFL EDGE app still shows Bagent as Chicago's expected starter.",
-      "interpretation": "The app's number for the Monday night game may be built on a quarterback who doesn't play \u2014 wait for it to update.",
-      "sources": [
-        {
-          "label": "Fantasy Nerds injury report",
-          "url": "https://www.fantasynerds.com/news/story/2026/09/21/nfl-injury-report-key-quarterbacks-and-receivers-sidelined-after-week-2-1631168"
-        }
-      ],
-      "verification": "REPORTED"
-    },
-    {
-      "category": "injury",
-      "evidence_id": "ev-inj-lar",
-      "fact": "The Rams officially placed edge rusher Myles Garrett on injured reserve after knee surgery; he misses Sunday's game at Denver and is out a minimum of four games.",
-      "interpretation": "Denver's offense catches a break against a Rams pass rush missing its best player.",
-      "sources": [
         {
           "label": "Rams.com",
           "url": "https://www.therams.com/news/mcvay-myles-garrett-knee-feeling-good-post-surgery-but-rams-not-going-to-rush-him-back-from-injured-reserve"
@@ -394,15 +320,37 @@
       "verification": "REPORTED"
     },
     {
+      "category": "injury",
+      "evidence_id": "ev-cowboys-out",
+      "fact": "Four Cowboys did not travel to Rio and are ruled out for Sunday: CB Cobie Durant (hamstring), S Malik Hooker (forearm), S P.J. Locke (foot), LB Demarvion Overshown (hamstring). Both teams held walkthroughs Friday, so the Friday report is an estimation.",
+      "interpretation": "Dallas's secondary is notably shorthanded for the Brazil game.",
+      "sources": [
+        {
+          "label": "Russell Street Report (game status)",
+          "url": "https://russellstreetreport.com/2026/09/25/injury-report/ravens-at-cowboys-game-status/"
+        }
+      ],
+      "verification": "REPORTED"
+    },
+    {
       "category": "weather",
-      "evidence_id": "ev-weather",
-      "fact": "Titans at Giants (MetLife, 1 p.m. ET): a Nor'easter brings rain through the game, temps in the mid-60s, wind ~18 mph with gusts up to 30. Seahawks at Commanders (1 p.m. ET): slight chance of showers after 2 p.m., wind 12-14 mph. Everywhere else is manageable: sunny and dry in Buffalo (68), Cleveland (70), Cincinnati (69), Santa Clara (69); hot and humid but dry in Jacksonville (85) and Miami (87); cool clear evening in Denver (58 at kickoff).",
-      "interpretation": "MetLife is the only game where weather genuinely changes how football gets played. The rest are fine.",
+      "evidence_id": "ev-weather-metlife",
+      "fact": "Titans at Giants (MetLife, 1 p.m. ET Sunday): rain showers through the game, temperature near 68\u00b0F, wind 16 to 23 mph, chance of rain 97%. Rain runs from Saturday through Sunday night.",
+      "interpretation": "MetLife is the only game where weather genuinely changes how football gets played.",
       "sources": [
         {
           "label": "NWS forecast (OKX grid, MetLife)",
           "url": "https://api.weather.gov/gridpoints/OKX/30,46/forecast"
-        },
+        }
+      ],
+      "verification": "OFFICIAL"
+    },
+    {
+      "category": "weather",
+      "evidence_id": "ev-weather-rest",
+      "fact": "Friday's National Weather Service sweep of the other outdoor games found no trouble spots: hot and humid but dry in Jacksonville (85\u00b0F) and Miami (87\u00b0F); sunny and calm in Buffalo (68\u00b0F), Cleveland (70\u00b0F), Cincinnati (69\u00b0F) and Santa Clara (69\u00b0F); slight shower chance after 2 p.m. in Landover with wind 12-14 mph; cool and clear in Denver by the 8:20 p.m. ET kickoff (about 58\u00b0F).",
+      "interpretation": "Weather is a non-factor everywhere except MetLife.",
+      "sources": [
         {
           "label": "NWS forecast (LWX grid, Landover)",
           "url": "https://api.weather.gov/gridpoints/LWX/102,73/forecast"
@@ -416,13 +364,13 @@
     },
     {
       "category": "logistics",
-      "evidence_id": "ev-brazil",
-      "fact": "Ravens vs. Cowboys kicks off Sunday at 4:25 p.m. ET from Maracan\u00e3 Stadium in Rio de Janeiro \u2014 the first regular-season NFL game ever played in Brazil. Baltimore flew overnight Thursday and will not see the Maracan\u00e3 surface until Saturday.",
+      "evidence_id": "ev-brazil-field",
+      "fact": "Ravens vs. Cowboys kicks off Sunday at 4:25 p.m. ET from Maracan\u00e3 Stadium in Rio de Janeiro \u2014 the first regular-season NFL game ever played in Brazil. The Ravens arrived Friday morning and will visit the stadium for the first time on Saturday. NFLPA executive director JC Tretter said Friday that field experts from the union and the league monitored the surface all week and are working to make it as safe and playable as possible for Sunday.",
       "interpretation": "Unfamiliar surface, long travel, no practice time on the field \u2014 an unusual environment for both teams.",
       "sources": [
         {
-          "label": "Fox Sports",
-          "url": "https://foxsports.com/stories/nfl/cowboys-ravens-set-square-off-nfls-inaugural-rio-de-janeiro-game"
+          "label": "The Banner (Rio)",
+          "url": "https://www.thebanner.com/sports/ravens-nfl/ravens-ronnie-stanley-cowboys-field-maracana-stadium-grass-playing-condition-6GYXBNQKIRGBBCTMFGH54CUINA/"
         }
       ],
       "verification": "REPORTED"
@@ -430,8 +378,8 @@
     {
       "category": "app",
       "evidence_id": "ev-app-cards",
-      "fact": "NFL EDGE Week 3 headline cards (product view, generated 2026-09-25T00:08:24Z): BALANCED \u2014 Giants moneyline -130 at DraftKings, app win probability ~73.4% vs. price-implied ~55.8%, reliability LOW, 0.75 units; HIT_RATE \u2014 Lions moneyline -298 at DraftKings, app ~68.0% vs. price-implied ~72.0%, reliability LOW, 0.5 units; VALUE \u2014 Raiders +3 at +100 at DraftKings, app cover probability ~50.5% vs. price-implied ~47.2%, reliability MEDIUM, 0.75 units.",
-      "interpretation": "The biggest app-vs-price gap is on the Giants; the most trusted card is the Raiders.",
+      "fact": "NFL EDGE Week 3 headline cards (product view, board snapshot 2026-09-26T00:08Z): BALANCED \u2014 Vikings moneyline -120 at DraftKings, model win probability ~59.1% vs. price-implied ~55%, reliability MEDIUM, 0.75 units, evaluator EV about -0.2%. HIT_RATE \u2014 Giants moneyline -135 at DraftKings, model win probability ~73.4% vs. price-implied ~56%, reliability LOW, 0.75 units, evaluator EV about -4.2%. VALUE \u2014 Raiders +3 at +102 at DraftKings, model cover probability ~50.5% vs. price-implied ~47.2%, reliability MEDIUM, 0.75 units, evaluator EV about +3.6% (the only positive-EV card). Friday's cards were Giants ML -130 (Balanced), Lions ML -298 (Hit Rate), Raiders +3 +100 (Value).",
+      "interpretation": "Two of the three cards rotated overnight; the Value card stayed on the Raiders and remains the app's most trusted.",
       "sources": [
         {
           "label": "NFL EDGE product view",
@@ -443,8 +391,8 @@
     {
       "category": "app",
       "evidence_id": "ev-app-board",
-      "fact": "NFL EDGE product view market board (snapshot ~2026-09-25T00:07Z): Seahawks -7.5 at DraftKings; Giants -2.5, total 38.5 (both books); Ravens -3.5, total 52.5; Lions -298 ML at DraftKings; Raiders +3 at +100 at DraftKings. Model expected margin: Seattle -7.74 vs. market -7.5. Expected QBs in the app: Darnold (SEA), Mariota (WAS), Winston (NYG), Bagent (CHI).",
-      "interpretation": "The app's current numbers and expected starters are the baseline for comparing news-driven moves.",
+      "fact": "NFL EDGE product view market board (snapshot 2026-09-26T00:08Z): Seahawks -7.5 at DraftKings with model expected margin Seattle by 7.74; Ravens -3.5 (-115) at DraftKings with model expected margin Dallas by 1.52, total 53.5 DK / 52.5 FD; Chiefs -10 at DraftKings (-10.5 FD) with model expected margin KC by 3.87; Giants -2.5 with total 38.5 at both books and Giants ML -135 DK / -138 FD; Vikings -1.5 (Buccaneers +1.5) with Vikings ML -120 DK; Eagles -4.5 with total 41.5. Expected starters in the app: Darnold (SEA), Mariota (WAS), Winston (NYG), Cam Ward (TEN), Keenum (CHI \u2014 flipped from Bagent on Friday night).",
+      "interpretation": "The app's current numbers, lines and expected starters are the baseline for comparing news-driven moves.",
       "sources": [
         {
           "label": "NFL EDGE product view",
@@ -460,8 +408,21 @@
       "interpretation": "The two-point climb is the market's price tag for the Darnold news.",
       "sources": [
         {
-          "label": "Sports Illustrated (betting)",
+          "label": "SI (betting)",
           "url": "https://www.si.com/betting/latest-sam-darnold-injury-update-boosts-seahawks-odds-vs-commanders-in-nfl-week-3"
+        }
+      ],
+      "verification": "REPORTED"
+    },
+    {
+      "category": "lines",
+      "evidence_id": "ev-kc-line-wed",
+      "fact": "Kansas City was a 11.5-point favorite at Miami in Wednesday's market snapshot (VSiN Week 3 package); Friday evening's app board shows the Chiefs at -10 (DraftKings) and -10.5 (FanDuel).",
+      "interpretation": "A point to a point-and-a-half of quiet drift toward Miami with no single headline behind it.",
+      "sources": [
+        {
+          "label": "VSiN (Week 3 package)",
+          "url": "https://vsin.com/nfl/nfl-top-plays-based-on-betting-splits-power-ratings-and-trends-for-week-3/"
         }
       ],
       "verification": "REPORTED"
@@ -480,7 +441,7 @@
       "verification": "REPORTED"
     }
   ],
-  "research_generated_at_utc": "2026-09-26T05:04:51Z",
+  "research_generated_at_utc": "2026-09-26T11:53:15Z",
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-09-26T05:04:51Z"
+  "submitted_at_utc": "2026-09-26T11:53:15Z"
 }
