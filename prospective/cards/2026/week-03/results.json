@@ -1,0 +1,136 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "lane_results": [
+    {
+      "correction": null,
+      "game_id": "2026_03_TEN_NYG",
+      "grade": "PENDING",
+      "lane_key": "hit_rate",
+      "official_score": null,
+      "official_source_product_sha256": "2ab0c9c65b9a034c26aa61337d4b465c2f3110545f3a65f155d5be2dbbddc6a5",
+      "official_source_publication_id": "publication-2ab0c9c65b9a034c26aa6133",
+      "price_used_for_scoring": -130,
+      "realized_units": null,
+      "result_id": "result-fc1ff669628f0793c6cb9b65",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    },
+    {
+      "correction": null,
+      "game_id": "2026_03_TEN_NYG",
+      "grade": "PENDING",
+      "lane_key": "balanced",
+      "official_score": null,
+      "official_source_product_sha256": "2ab0c9c65b9a034c26aa61337d4b465c2f3110545f3a65f155d5be2dbbddc6a5",
+      "official_source_publication_id": "publication-2ab0c9c65b9a034c26aa6133",
+      "price_used_for_scoring": -130,
+      "realized_units": null,
+      "result_id": "result-c8ac254c213e0366c1379d9d",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    },
+    {
+      "correction": null,
+      "game_id": "2026_03_LV_NO",
+      "grade": "PENDING",
+      "lane_key": "value",
+      "official_score": null,
+      "official_source_product_sha256": "2ab0c9c65b9a034c26aa61337d4b465c2f3110545f3a65f155d5be2dbbddc6a5",
+      "official_source_publication_id": "publication-2ab0c9c65b9a034c26aa6133",
+      "price_used_for_scoring": 164,
+      "realized_units": null,
+      "result_id": "result-7bf440ce0ea05e276c3bb8c6",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    },
+    {
+      "correction": null,
+      "game_id": "2026_03_LAR_DEN",
+      "grade": "PENDING",
+      "lane_key": "balanced",
+      "official_score": null,
+      "official_source_product_sha256": "ace615f7a62f50c2067839ef1cc06395ba2a198a2a6a5c49fceb90b23c6283ef",
+      "official_source_publication_id": "publication-ace615f7a62f50c2067839ef",
+      "price_used_for_scoring": -102,
+      "realized_units": null,
+      "result_id": "result-45c36e90489aef3d24f197ba",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    },
+    {
+      "correction": null,
+      "game_id": "2026_03_LAR_DEN",
+      "grade": "PENDING",
+      "lane_key": "value",
+      "official_score": null,
+      "official_source_product_sha256": "ace615f7a62f50c2067839ef1cc06395ba2a198a2a6a5c49fceb90b23c6283ef",
+      "official_source_publication_id": "publication-ace615f7a62f50c2067839ef",
+      "price_used_for_scoring": -120,
+      "realized_units": null,
+      "result_id": "result-f2d1a8938833841facfb93ef",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    }
+  ],
+  "portfolio_results": [
+    {
+      "game_id": "2026_03_TEN_NYG",
+      "grade": "PENDING",
+      "lane_keys": [
+        "hit_rate",
+        "balanced"
+      ],
+      "portfolio_entry_id": "portfolio-76568c4e3225789a9d569bdd",
+      "price_used_for_scoring": -130,
+      "realized_units": null,
+      "units_risked": 0.75
+    },
+    {
+      "game_id": "2026_03_LV_NO",
+      "grade": "PENDING",
+      "lane_keys": [
+        "value"
+      ],
+      "portfolio_entry_id": "portfolio-805f9b0c8b3fa611545687bf",
+      "price_used_for_scoring": 164,
+      "realized_units": null,
+      "units_risked": 0.75
+    },
+    {
+      "game_id": "2026_03_LAR_DEN",
+      "grade": "PENDING",
+      "lane_keys": [
+        "balanced"
+      ],
+      "portfolio_entry_id": "portfolio-c024d98a45d5a0de83a53ab7",
+      "price_used_for_scoring": -102,
+      "realized_units": null,
+      "units_risked": 0.75
+    },
+    {
+      "game_id": "2026_03_LAR_DEN",
+      "grade": "PENDING",
+      "lane_keys": [
+        "value"
+      ],
+      "portfolio_entry_id": "portfolio-fc874fe3170eaa5e617de844",
+      "price_used_for_scoring": -120,
+      "realized_units": null,
+      "units_risked": 0.75
+    }
+  ],
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_RESULT_V1",
+  "season": 2026,
+  "settlement_status": "PENDING",
+  "week": 3
+}
