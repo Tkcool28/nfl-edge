@@ -1,336 +1,238 @@
 {
- "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-09-28T12:18:40Z",
- "research_generated_at_utc": "2026-09-28T12:18:40Z",
- "article": {
-  "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-09-28T12:18:40Z",
-  "research_generated_at_utc": "2026-09-28T12:18:40Z",
-  "edition": "Morning Brief",
-  "title": "NFL EDGE Monday Morning Brief",
-  "dek": "No cards on the board for Monday night, a third-string quarterback in Chicago, and the Sunday plays both cashed.",
-  "sections": [
-   {
-    "id": "what-matters",
-    "icon": "\ud83d\udcf0",
-    "title": "What Matters Today",
-    "items": [
-     {
-      "headline": "Monday night: Eagles at Bears, no cards on the board",
-      "paragraphs": [
-       "Eagles at Bears kicks off at 8:15 p.m. ET (6:15 p.m. MDT) on ESPN and ABC. The 6 a.m. board has no plays: Hit Rate, Balanced, and Value are all NO_PLAY.",
-       "The personnel news is settled, not suspense: the Bears are starting third-string quarterback Case Keenum. Caleb Williams is out with a Grade 2 hamstring strain (3 to 4 weeks), and Tyson Bagent, who cleared concussion protocol, missed too much practice to start and will back up Keenum. Jalen Hurts goes for Philadelphia.",
-       "Inactive lists land about 90 minutes before kickoff. If a surprise name shows up on one, the morning board won't have it \u2014 Check the game again before you decide anything."
-      ],
-      "evidence_ids": [
-       "app-board-2026-09-28-am",
-       "qb-chi-keenum"
-      ],
-      "takeaway": "No plays tonight. Watch the inactive lists at 6:45 ET."
-     },
-     {
-      "headline": "Sunday's injury and quarterback news, all in one place",
-      "paragraphs": [
-       "De'Von Achane: hurt his right knee on Miami's opening drive against Kansas City and was ruled out. After the 24-10 loss, coach Jeff Hafley said the prognosis 'does not sound optimistic.' Miami is 0-3 and goes to Minnesota next week.",
-       "Baker Mayfield: dislocated his right throwing thumb late in Tampa's 23-16 loss to Minnesota. MRI today, likely to miss time. The backup is undrafted rookie Jalon Daniels, and the 0-3 Bucs host Green Bay next Sunday.",
-       "Justin Jefferson: left the Minnesota game with a left ankle injury in the first quarter and did not return. Evaluated today. Breece Hall (thigh) and Tampa receiver Jalen McMillan (knee) also left Sunday's games and are being evaluated today.",
-       "Marcus Mariota: started for the injured Jayden Daniels (elbow) and threw three touchdowns in Washington's 33-31 stunner over the defending champion Seahawks. Daniels doesn't need surgery and could be back in about three weeks."
-      ],
-      "evidence_ids": [
-       "inj-achane-2026-09-27",
-       "inj-sunday-qbs",
-       "inj-hall",
-       "result-mariota-was"
-      ],
-      "takeaway": "Achane's knee is the new worry. MRI day for Mayfield, Jefferson, and Hall."
-     },
-     {
-      "headline": "Sunday night: the Broncos' two plays both cashed",
-      "paragraphs": [
-       "Denver beat the Rams 30-26, coming back from 16-0 down at halftime. Bo Nix scored with 47 seconds left, and safety Talanoa Hufanga intercepted Matthew Stafford twice in the second half, including the game-ender. The pick-six was Stafford's 33rd, an NFL record.",
-       "Both cards on the game cashed: Balanced had Broncos moneyline at -102 on FanDuel, and Value had Broncos +1.5 at -120 on DraftKings. Denver won outright, so both cleared. That's four for four across the weekend's cards."
-      ],
-      "evidence_ids": [
-       "result-den-lar"
-      ],
-      "takeaway": "A comeback win, and two more winning cards."
-     },
-     {
-      "headline": "Weather: Monday night is clean",
-      "paragraphs": [
-       "Soldier Field tonight: around 64 degrees at kickoff, light northeast wind near 5 mph, zero chance of rain. Nothing that should touch the kicking game or either passing attack.",
-       "This is a report-the-weather item, not an edge item. Chicago's offense can run and Philadelphia wants its run game going \u2014 that's matchup, not sky."
-      ],
-      "evidence_ids": [
-       "wx-mnf-2026-09-28"
-      ],
-      "takeaway": "No weather edge on Monday."
-     },
-     {
-      "headline": "Around the league Sunday",
-      "paragraphs": [
-       "Chiefs 24, Dolphins 10: Kansas City moves to 3-0; Miami falls to 0-3 and lost Achane. Jaguars 35, Patriots 6. Ravens 34, Cowboys 31 in Rio, on a 56-yard Tyler Loop field goal. Vikings 23, Buccaneers 16: Minnesota is 3-0; Tampa is 0-3 and may be without Mayfield. Raiders 35, Saints 27: Las Vegas is 3-0. 49ers 36, Cardinals 30: San Francisco is 3-0. Bills 24, Chargers 16; Lions 31, Jets 24; Colts 19, Texans 17; Steelers 30, Bengals 27; Browns 21, Panthers 18. Thursday: Falcons 35, Packers 14."
-      ],
-      "evidence_ids": [
-       "result-sunday-board"
-      ],
-      "takeaway": "Four 3-0 teams. Two 0-3 teams with quarterback problems."
-     }
+  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+  "submitted_at_utc": "2026-09-29T00:18:54Z",
+  "research_generated_at_utc": "2026-09-29T00:18:54Z",
+  "article": {
+    "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+    "published_at_utc": "2026-09-29T00:18:54Z",
+    "research_generated_at_utc": "2026-09-29T00:18:54Z",
+    "edition": "Evening Brief",
+    "title": "NFL EDGE Monday Evening Brief",
+    "dek": "Kickoff for Eagles-Bears with the board quiet, Achane is done for the year, Mayfield's MRI came back clean, and the spread never budged.",
+    "sections": [
+      {
+        "id": "what-matters",
+        "icon": "📰",
+        "title": "What Matters Today",
+        "items": [
+          {
+            "headline": "Kickoff: Eagles at Bears, and the board stays quiet",
+            "paragraphs": [
+              "The game is kicking off as you read this — 6:15 p.m. MDT on ESPN and ABC. The evening board checked every offer again: Hit Rate, Balanced, and Value are all NO_PLAY. No card fired.",
+              "The inactives confirmed what the morning brief expected. Caleb Williams is officially out for Chicago, so 38-year-old Case Keenum starts with Tyson Bagent backing him up. For Philadelphia, tight end Dallas Goedert is out as expected, and veteran Zach Ertz — signed off the street last week — was elevated from the practice squad and is active. Receiver Hollywood Brown (ankle) is out, and edge rusher Jonathan Greenard is active for his season debut after missing two weeks.",
+              "Soldier Field at kickoff: around 64 degrees, light wind, no rain. This is a report-the-weather item, not an edge item — nothing in the sky touches the kicking game or either passing attack tonight."
+            ],
+            "evidence_ids": [
+              "app-board-evening",
+              "mnf-inactives",
+              "wx-mnf-evening"
+            ],
+            "takeaway": "No cards tonight. The personnel news is settled — Keenum starts, Goedert sits, Ertz is back in midnight green."
+          },
+          {
+            "headline": "The injury news, all in one place",
+            "paragraphs": [
+              "De'Von Achane's knee is the worst of it. Monday's MRI confirmed a torn ACL — his season is over, per ESPN's Adam Schefter. Miami is 0-3 and visits Minnesota next week with its backfield gutted.",
+              "The best news of the day belongs to Tampa Bay. Baker Mayfield's MRI showed no ligament or tendon damage and no fracture in his dislocated thumb. He is out a minimum of three weeks — targeting Week 7 against Carolina — and undrafted rookie Jalon Daniels starts Sunday at home against Green Bay.",
+              "The rest of Sunday's fallout: Justin Jefferson reportedly nearly came back into the game, so his ankle may be less serious than it looked. Breece Hall (thigh) and Tampa receiver Jalen McMillan (knee) are being evaluated. San Francisco's Mike Evans (oblique) could miss a few weeks, Travis Etienne re-aggravated his hamstring and may miss a couple weeks, and the Rams' Terrance Ferguson (ankle) is likely out for Week 4.",
+              "All of this lands between the app's 6 a.m. and 6 p.m. boards. Tomorrow morning's board will be the first one with a full read on a Jalon Daniels-led Tampa — and on whether Jefferson practices."
+            ],
+            "evidence_ids": [
+              "inj-achane-evening",
+              "inj-mayfield-evening",
+              "inj-sunday-followup"
+            ],
+            "takeaway": "Achane is done for the year. Mayfield dodged the worst of it. Everything else sorts itself out in practice reports."
+          }
+        ]
+      },
+      {
+        "id": "what-it-means",
+        "icon": "💡",
+        "title": "What It Means for NFL EDGE",
+        "items": [
+          {
+            "headline": "Same disagreement, same verdict: no play",
+            "paragraphs": [
+              "Nothing changed in the app's math tonight. The model still has Chicago by about 1.8. The market still has Philadelphia -3.5 on all three books — a five-point gap, with a 38-year-old third-string quarterback on the Bears' side. And the evening board still produced no cards.",
+              "This is the cards doing their job, not failing it. A card is a contract: it fires only when a specific offer clears the frozen gates on price, support, and reliability. A loud disagreement between the model and the market is interesting. A loud disagreement plus a qualifying offer is a play. Tonight, there is no play — so forcing one would be the opposite of what the cards are for.",
+              "One honest use of a quiet board: if YOUR book shows a different number — say your Eagles line is -4.5 or your total is 41.5 instead of 42.5 — open Check, type in your book's line and price, and the app runs it back through the model and the evaluator for a bet/no-bet verdict on YOUR number. That's a full re-evaluation, not a blind override."
+            ],
+            "evidence_ids": [
+              "app-board-evening",
+              "board-lines-evening"
+            ],
+            "takeaway": "Five-point gap, zero cards. That's the filter, not a malfunction."
+          },
+          {
+            "headline": "What 'no cards' does not mean",
+            "paragraphs": [
+              "Hit Rate asks which supported pick looks most likely to win. Balanced asks for a strong pick without paying too much. Tonight neither lane found an offer that met its standard. That is not a knock on the cards — and it is not because the plays weren't +EV enough. These lanes are not supposed to be +EV plays. Hit Rate trades value for win probability, and Balanced trades some upside for a fair price. They stayed quiet because the offers didn't clear their own bars.",
+              "The Value lane is always the +EV play — and it stayed quiet too. Three lanes, three different questions, one answer tonight: nothing qualified."
+            ],
+            "evidence_ids": [
+              "app-board-evening"
+            ],
+            "takeaway": "Empty cards are the standard working, not the app sleeping."
+          }
+        ]
+      },
+      {
+        "id": "market-watch",
+        "icon": "📈",
+        "title": "Line Movement",
+        "items": [
+          {
+            "headline": "Spread frozen, total drifted back up",
+            "paragraphs": [
+              "The spread never moved today. Philadelphia -3.5 on DraftKings, FanDuel, and Pinnacle — same as the morning board, and the same number the sharper book has been sitting on since Sunday's steam died. Pinnacle prices the Eagles side of -3.5 at +105, which is the sharp book whispering that -3.5 is about right.",
+              "The total did move: 41.5 this morning, back to 42.5 by the evening on all three books. DK has it at -108 over / -112 under, FanDuel -114 / -106, Pinnacle -108 / -104. The moneyline reads DK -198 / +164, FanDuel -190 / +160, Pinnacle -177 / +158.",
+              "Here is the HOW in plain language. When a line jumps on retail books but the sharper book holds its number, the market is voting against the move — and Sunday's Eagles steam to -4.5 came back to -3.5 within hours. A total drifting back up half a point at kickoff is the market pricing in the settled personnel news: both offenses are who we thought they were.",
+              "None of this produced a card. The lines are about to go in-play, and in-play prices move on every snap — that is exactly the situation Check exists for. One price at a time, run through the model, bet or no bet."
+            ],
+            "evidence_ids": [
+              "board-lines-evening",
+              "app-board-evening"
+            ],
+            "takeaway": "Steam died at -3.5. Total back to 42.5. The market and the sharper book agree — and still no card."
+          }
+        ]
+      },
+      {
+        "id": "today-tip",
+        "icon": "✅",
+        "title": "Today's Tip",
+        "items": [
+          {
+            "headline": "The board's done for tonight — the next one is 6 a.m.",
+            "paragraphs": [
+              "Kickoff means the pre-game prices are gone. The twice-daily board is done for tonight, and the next one lands at 6 a.m. Denver — the first board with a read on Jalon Daniels starting for Tampa and on whatever practice reports say about Jefferson, Hall, and the rest of Sunday's wounded.",
+              "Monday game? Monday check. If you put a bet down on this one, log it tonight — wins and losers both."
+            ],
+            "evidence_ids": [
+              "inj-mayfield-evening",
+              "inj-sunday-followup"
+            ],
+            "takeaway": "6 a.m. board carries tomorrow's injury picture. Log tonight's bets either way."
+          },
+          {
+            "headline": "Betting term of the day: steam move",
+            "paragraphs": [
+              "A steam move is a sudden, fast line move when a wave of bets hits one side at multiple books at once. Sunday's Eagles jump from -3.5 to -4.5 on DraftKings and FanDuel was one.",
+              "The trick is telling a steam move from a real price change: watch the sharper book. Pinnacle never left -3.5, and the number came back within hours. Steam shows the move; the sharper book shows whether the move gets to stay. We ran the Fade check tonight too — the only public splits are one book's numbers, which is not enough for a verified split. So no Fade, and that is the honest answer instead of a forced one."
+            ],
+            "evidence_ids": [
+              "board-lines-evening",
+              "fade-attempt-evening"
+            ],
+            "takeaway": "Steam is speed. The sharper book decides whether the move sticks."
+          }
+        ]
+      }
     ]
-   },
-   {
-    "id": "what-it-means",
-    "icon": "\ud83d\udca1",
-    "title": "What It Means for NFL EDGE",
-    "items": [
-     {
-      "headline": "The model disagrees with the market \u2014 and still produced no play",
-      "paragraphs": [
-       "The app has Chicago by about 1.8. The market has Philadelphia -3.5 across all three books. That is a five-point gap, and on a night when the Bears are starting their third-string quarterback. When the numbers disagree that loudly, it is fair to wonder why there is no card.",
-       "Because the cards are contracts, not opinions. Each lane only fires when a specific offer clears its frozen gates \u2014 price, support, reliability. A loud disagreement is interesting. A loud disagreement plus a qualifying offer is a card. Tonight the board checked every offer and found none.",
-       "This is the honest use of a quiet board: no play is information. Forcing a bet on a model-vs-market gap would be the opposite of what the cards are for. If your book shows a different number \u2014 say your Eagles are -3 instead of -3.5 \u2014 type it into Check. The app runs your price back through the model and the evaluator and gives you a bet/no-bet verdict on YOUR number. That is a full re-evaluation, not a blind override of the quiet board."
-      ],
-      "evidence_ids": [
-       "app-board-2026-09-28-am"
-      ],
-      "takeaway": "A five-point disagreement, zero qualifying offers. The quiet board is the signal."
-     },
-     {
-      "headline": "What 'no cards' does not mean",
-      "paragraphs": [
-       "Hit Rate asks which supported pick looks most likely to win. Balanced asks for a strong pick without paying too much. Tonight neither lane found an offer that met its standard, so both stayed quiet. That is not a failure of the cards \u2014 it is the cards doing their job on a night with a third-string quarterback and a moving line.",
-       "New bettors sometimes read a quiet night as the app being broken. It is the opposite: a card that fires only when the standard is met is the one you can trust when it does fire."
-      ],
-      "evidence_ids": [
-       "app-board-2026-09-28-am"
-      ],
-      "takeaway": "Empty cards are the filter working."
-     }
-    ]
-   },
-   {
-    "id": "market-watch",
-    "icon": "\ud83d\udcc8",
-    "title": "Line Movement",
-    "items": [
-     {
-      "headline": "The Eagles' steam didn't hold",
-      "paragraphs": [
-       "Eagles at Bears moved twice. On Sunday, Philadelphia steamed from -3.5 to -4.5 on DraftKings and FanDuel. Pinnacle \u2014 the benchmark the app colors its market rows against \u2014 never left -3.5. By this morning's 6 a.m. board, the line was back to -3.5 everywhere. The total ticked from 42.5 to 41.5.",
-       "Here is the HOW, in plain language: when a line jumps on the retail books but the sharper book holds, the market is voting against the move. Pinnacle sat at -3.5 the whole time, and the number came back. The steam showed the move; Pinnacle showed the disagreement.",
-       "None of it produced a card. If your book is still hanging -4.5 or has moved to -3, that is exactly the situation Check exists for: type in your book's line and price, and the app runs it through the model and evaluator for a verdict on your number."
-      ],
-      "evidence_ids": [
-       "movement-phi-chi",
-       "app-board-2026-09-28-am"
-      ],
-      "takeaway": "Retail steamed to -4.5. The sharper book held -3.5. This morning, -3.5 won."
-     }
-    ]
-   },
-   {
-    "id": "today-tip",
-    "icon": "\u2705",
-    "title": "Today's Tip",
-    "items": [
-     {
-      "headline": "Tonight's routine",
-      "paragraphs": [
-       "Inactive lists post about 90 minutes before kickoff (6:45 p.m. ET). If a skill player shows up as inactive, the 6 a.m. board does not know. Monday game? Monday check.",
-       "And the ledger: four winning cards this weekend, zero cards tonight. Settlement is manual \u2014 the tracker has no auto-settle. It only works if you are honest with yourself, so log the losers too."
-      ],
-      "evidence_ids": [
-       "result-den-lar",
-       "app-board-2026-09-28-am"
-      ],
-      "takeaway": "Check before kickoff. Log your bets, wins AND losers."
-     },
-     {
-      "headline": "Betting term of the day: handle vs. tickets",
-      "paragraphs": [
-       "Handle is dollars. Tickets is bets. When 70% of the tickets are on the Eagles but only 40% of the dollars are, the crowd loves Philadelphia but the bigger money doesn't \u2014 that is the split the Fade looks for.",
-       "We ran the Fade check this morning: the only splits published for tonight's game are DraftKings-only numbers, and one book's handle is not enough to call it sharp money. So there is no Fade tonight, and that is the honest answer instead of a forced one."
-      ],
-      "evidence_ids": [
-       "fade-attempt-2026-09-28-am"
-      ],
-      "takeaway": "Handle is money. Tickets is people. Tonight the evidence isn't there."
-     }
-    ]
-   }
+  },
+  "evidence": [
+    {
+      "evidence_id": "app-board-evening",
+      "category": "app",
+      "fact": "Evening board: PHI @ CHI (kickoff 6:15pm MDT). Expected margin 1.8038 (app has Chicago by ~1.8). All three cards NO_PLAY.",
+      "verification": "INTERNAL_CANONICAL",
+      "sources": [
+        {
+          "label": "NFL EDGE product view (public)",
+          "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+        }
+      ]
+    },
+    {
+      "evidence_id": "board-lines-evening",
+      "category": "app",
+      "fact": "Evening lines PHI @ CHI: spread -3.5 on DK/FD/Pinnacle (Pinnacle prices PHI -3.5 at +105); total back to 42.5 on all three (morning was 41.5); ML DK -198/+164, FD -190/+160, Pinnacle -177/+158.",
+      "verification": "INTERNAL_CANONICAL",
+      "sources": [
+        {
+          "label": "NFL EDGE product view (public)",
+          "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+        }
+      ]
+    },
+    {
+      "evidence_id": "mnf-inactives",
+      "category": "news",
+      "fact": "Caleb Williams officially inactive (hamstring); Case Keenum starts, Tyson Bagent backs up. Eagles: Goedert (knee), Hollywood Brown (ankle), Fred Johnson (knee), Epenesa, McKee (emergency), Payton inactive; Greenard active for season debut; Ertz elevated from practice squad and active.",
+      "sources": [
+        {
+          "label": "NBC Sports: Greenard to make debut, inactives",
+          "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-eagles-olb-jonathan-greenard-will-make-his-2026-debut"
+        },
+        {
+          "label": "Eagles Wire: inactives, Greenard debut",
+          "url": "https://theeagleswire.usatoday.com/story/sports/nfl/eagles/2026/09/28/eagles-bears-inactives-jonathan-greenard-debut-week-3/91995982007/"
+        },
+        {
+          "label": "USA Today: Bears-Eagles live updates, inactives",
+          "url": "https://www.usatoday.com/story/sports/nfl/2026/09/28/bears-eagles-score-highlights-monday-night-football--live/91977389007/"
+        }
+      ]
+    },
+    {
+      "evidence_id": "inj-achane-evening",
+      "category": "news",
+      "fact": "Monday MRI confirmed De'Von Achane tore his ACL; he is out for the 2026 season (per ESPN's Adam Schefter).",
+      "sources": [
+        {
+          "label": "Fantasy Injury News: Achane out for season (via Schefter)",
+          "url": "https://fantasy-injury-news.com/devon-achane-out-for-season-with-torn-acl/"
+        }
+      ]
+    },
+    {
+      "evidence_id": "inj-mayfield-evening",
+      "category": "news",
+      "fact": "Mayfield MRI: no ligament or tendon damage, no fracture. Minimum three-week absence, targets Week 7 vs Panthers. Rookie Jalon Daniels starts Week 4 vs Packers.",
+      "sources": [
+        {
+          "label": "NBC Sports: Mayfield MRI results, timeline",
+          "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-09-28/rap-no-ligament-damage-to-mayfields-thumb"
+        }
+      ]
+    },
+    {
+      "evidence_id": "inj-sunday-followup",
+      "category": "news",
+      "fact": "Jefferson reportedly nearly returned (ankle); Breece Hall (thigh) being evaluated; Mike Evans (49ers, oblique) could miss a few weeks; Travis Etienne re-aggravated hamstring, may miss a couple weeks; Terrance Ferguson (ankle) likely out Week 4.",
+      "sources": [
+        {
+          "label": "PhillyVoice: Week 3 injury updates",
+          "url": "https://www.phillyvoice.com:443/fantasy-football-injuries-updates-justin-jefferson-baker-mayfield-devon-achane-mike-evans-breece-hall/"
+        }
+      ]
+    },
+    {
+      "evidence_id": "wx-mnf-evening",
+      "category": "weather",
+      "fact": "Soldier Field at kickoff: around 64 degrees, light northeast wind near 5 mph, zero chance of rain. No weather edge.",
+      "sources": [
+        {
+          "label": "DK Network: Eagles-Bears weather forecast",
+          "url": "https://dknetwork.draftkings.com/2026/09/27/eagles-vs-bears-weather-forecast-mnf/"
+        },
+        {
+          "label": "USA Today: NFL Week 3 weather updates (NWS)",
+          "url": "https://www.usatoday.com/story/sports/nfl/2026/09/26/nfl-week-3-weather-updates-forecast-noreaster/91955429007/"
+        }
+      ]
+    },
+    {
+      "evidence_id": "fade-attempt-evening",
+      "category": "fade",
+      "fact": "Checked VSiN NFL betting splits hub on 2026-09-28 evening: per-game ticket%/handle% splits from multiple books are not publicly accessible; only DK-sourced system articles are public. No verified public-vs-sharper split for tonight's game (kicking off). No Fade.",
+      "sources": [
+        {
+          "label": "VSiN: NFL betting splits hub",
+          "url": "https://www.vsin.com/betting-splits/nfl/"
+        }
+      ]
+    }
   ]
- },
- "evidence": [
-  {
-   "evidence_id": "app-board-2026-09-28-am",
-   "category": "app",
-   "fact": "NFL EDGE 6:00am Denver board: Eagles at Bears Monday night, spread Philadelphia -3.5 on DraftKings (-112), FanDuel (-115) and Pinnacle (-109); total 41.5; moneyline Philadelphia -198 (DK/FD) vs Chicago +164/+166; model expected margin has Chicago by 1.8; all three headline cards (Hit Rate, Balanced, Value) are NO_PLAY.",
-   "interpretation": "A ~5-point gap between the model and the market produced no qualifying offer tonight.",
-   "verification": "INTERNAL_CANONICAL",
-   "sources": [
-    {
-     "label": "NFL EDGE product view (public)",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-    }
-   ]
-  },
-  {
-   "evidence_id": "qb-chi-keenum",
-   "category": "injury",
-   "fact": "The Bears will start third-string quarterback Case Keenum against the Eagles on Monday night. Caleb Williams is out with a Grade 2 hamstring strain, expected to miss 3 to 4 weeks; Tyson Bagent cleared concussion protocol but will serve as backup because he missed most of the week's practice.",
-   "interpretation": "Keenum's first NFL start since December 2023, against Vic Fangio's Eagles defense.",
-   "verification": "REPORTED",
-   "sources": [
-    {
-     "label": "Reuters: Case Keenum to start for Bears on MNF",
-     "url": "https://www.reuters.com/sports/reports-case-keenum-start-bears-mnf-tyson-bagent-be-qb2--flm-2026-09-28/"
-    },
-    {
-     "label": "NY Post: Bears make starting QB decision",
-     "url": "https://nypost.com/2026/09/27/sports/bears-make-starting-qb-decision-for-eagles-game/"
-    },
-    {
-     "label": "On Tap Sports Net: Keenum vs Fangio's Eagles defense",
-     "url": "https://ontapsportsnet.com/nfl/chicago-bears/bears-qb-musical-chairs-keenum-starts-eagles/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "inj-achane-2026-09-27",
-   "category": "injury",
-   "fact": "Dolphins running back De'Von Achane injured his right knee on the opening drive of Sunday's 24-10 loss to the Chiefs and was ruled out. After the game, coach Jeff Hafley said Achane's prognosis 'does not sound optimistic.'",
-   "interpretation": "Miami is 0-3 and travels to Minnesota next week with its backfield in doubt.",
-   "verification": "REPORTED",
-   "sources": [
-    {
-     "label": "Palm Beach Post: Achane injury update",
-     "url": "https://www.palmbeachpost.com/story/sports/nfl/dolphins/2026/09/27/devon-achane-injury-update-dolphins-chiefs/91973386007/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "inj-sunday-qbs",
-   "category": "injury",
-   "fact": "Baker Mayfield dislocated his right thumb late in Tampa Bay's 23-16 loss to Minnesota; he gets an MRI Monday and is likely to miss time, with undrafted rookie Jalon Daniels next up. Vikings star Justin Jefferson left with a left ankle injury in the first quarter and did not return; he is evaluated Monday.",
-   "interpretation": "Two 0-3 teams (Tampa, Miami) and a 3-0 team (Minnesota) carry injury questions into Monday.",
-   "verification": "REPORTED",
-   "sources": [
-    {
-     "label": "Reuters: Mayfield dislocates thumb",
-     "url": "https://www.reuters.com/sports/buccaneers-qb-baker-mayfield-dislocates-thumb-vs-vikings--flm-2026-09-28/"
-    },
-    {
-     "label": "Reuters: NFL injury roundup (Jefferson, Hall)",
-     "url": "https://www.reuters.com/sports/nfl-injury-roundup-baker-mayfield-breece-hall-knocked-out-late-losses--flm-2026-09-28/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "inj-hall",
-   "category": "injury",
-   "fact": "Jets running back Breece Hall sustained a thigh injury in the fourth quarter of Sunday's 31-24 loss at Detroit and is likely headed for an MRI Monday. Buccaneers receiver Jalen McMillan also left the first quarter of the Tampa-Minnesota game with a knee injury.",
-   "interpretation": "Both teams wait on imaging Monday.",
-   "verification": "REPORTED",
-   "sources": [
-    {
-     "label": "Reuters: NFL injury roundup (Jefferson, Hall)",
-     "url": "https://www.reuters.com/sports/nfl-injury-roundup-baker-mayfield-breece-hall-knocked-out-late-losses--flm-2026-09-28/"
-    },
-    {
-     "label": "ClutchPoints: Mayfield update (McMillan knee)",
-     "url": "https://clutchpoints.com/nfl/tampa-bay-buccaneers/buccaneers-news-todd-bowles-baker-mayfield-injury-update-vikings"
-    }
-   ]
-  },
-  {
-   "evidence_id": "result-den-lar",
-   "category": "result",
-   "fact": "The Broncos beat the Rams 30-26 on Sunday Night Football, rallying from a 16-0 halftime deficit. Both NFL EDGE card plays on the game cashed: Balanced (Broncos moneyline -102 on FanDuel) and Value (Broncos +1.5 at -120 on DraftKings).",
-   "interpretation": "Four for four across the weekend's cards after the morning's two winners.",
-   "verification": "OFFICIAL",
-   "sources": [
-    {
-     "label": "Reuters: Broncos dig out of 16-0 hole",
-     "url": "https://www.reuters.com/sports/nfl/broncos-dig-out-16-0-hole-beat-rams-bo-nixs-td-final-minute--flm-2026-09-28/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "result-sunday-board",
-   "category": "result",
-   "fact": "Sunday's Week 3 finals: Chiefs 24, Dolphins 10; Browns 21, Panthers 18; Jaguars 35, Patriots 6; Bills 24, Chargers 16; Lions 31, Jets 24; Colts 19, Texans 17; Commanders 33, Seahawks 31; Steelers 30, Bengals 27; 49ers 36, Cardinals 30; Vikings 23, Buccaneers 16; Raiders 35, Saints 27; Ravens 34, Cowboys 31; Broncos 30, Rams 26. Thursday: Falcons 35, Packers 14.",
-   "interpretation": "Kansas City, San Francisco, Minnesota and Las Vegas are all 3-0; Tampa Bay and Miami are 0-3.",
-   "verification": "REPORTED",
-   "sources": [
-    {
-     "label": "DAZN: NFL Week 3 late game results",
-     "url": "https://www.dazn.com/en-US/news/american-football/nfl-week-3-late-game-results-ravens-raiders-vikings/f5e13gf7tev314ykcp79mykds"
-    },
-    {
-     "label": "The Chairshot: NFL News 9/28 (scoreboard)",
-     "url": "https://thechairshot.com/2026/09/chairshot-nfl-news-report-9-28-2026-ravens-win-in-rio-mariota-stuns-seattle-mayfield-hurt/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "result-mariota-was",
-   "category": "result",
-   "fact": "Marcus Mariota started in place of the injured Jayden Daniels (elbow) and threw three touchdown passes as Washington beat the defending champion Seahawks 33-31. Daniels is not expected to need surgery and could return in about three weeks.",
-   "interpretation": "One of the week's two big backup-QB stories; the other is tonight in Chicago.",
-   "verification": "REPORTED",
-   "sources": [
-    {
-     "label": "Reuters: Mariota helps Commanders stun Seahawks",
-     "url": "https://www.reuters.com/sports/nfl/marcus-mariota-helps-commanders-chop-down-seahawks--flm-2026-09-27/"
-    },
-    {
-     "label": "Particle News: Daniels no surgery, ~3 weeks (via Rapoport)",
-     "url": "https://particle.news/story/commanders-upset-seahawks-33-31-after-mariota-starts-medrano-pick-six"
-    }
-   ]
-  },
-  {
-   "evidence_id": "wx-mnf-2026-09-28",
-   "category": "weather",
-   "fact": "Soldier Field on Monday night: kickoff temperature near 64 degrees, light northeast wind around 5 mph, and zero chance of precipitation through the game, per the National Weather Service and hourly forecasts.",
-   "interpretation": "Nothing in the sky that should touch the game plan.",
-   "verification": "OFFICIAL",
-   "sources": [
-    {
-     "label": "DK Network: Eagles-Bears weather forecast",
-     "url": "https://dknetwork.draftkings.com/2026/09/27/eagles-vs-bears-weather-forecast-mnf/"
-    },
-    {
-     "label": "USA Today: NFL Week 3 weather updates (NWS)",
-     "url": "https://www.usatoday.com/story/sports/nfl/2026/09/26/nfl-week-3-weather-updates-forecast-noreaster/91955429007/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "movement-phi-chi",
-   "category": "market",
-   "fact": "Eagles at Bears moved twice this week: on Sunday, Philadelphia steamed from -3.5 to -4.5 on DraftKings and FanDuel while Pinnacle never left -3.5; by this morning's 6am board the line was back to Philadelphia -3.5 across all three books. The total ticked from 42.5 to 41.5.",
-   "interpretation": "The sharper book held -3.5 the whole time; the retail steam to -4.5 did not hold.",
-   "verification": "INTERNAL_CANONICAL",
-   "sources": [
-    {
-     "label": "NFL EDGE product view (public)",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-    }
-   ]
-  },
-  {
-   "evidence_id": "fade-attempt-2026-09-28-am",
-   "category": "fade",
-   "fact": "Fade check for Monday night: VSiN's published splits are DraftKings-only numbers, and DraftKings handle alone does not meet the Fade standard; no verified tickets-vs-handle split and no sharp-book divergence were available for Eagles at Bears this morning. No Fade qualifies.",
-   "interpretation": "Logged attempt with no qualifying split, per the every-run rule.",
-   "verification": "REPORTED",
-   "sources": [
-    {
-     "label": "VSiN: Let's talk about betting splits (DK-sourced)",
-     "url": "https://vsin.com/how-to-bet/burke-lets-talk-about-betting-splits/"
-    }
-   ]
-  }
- ]
 }
