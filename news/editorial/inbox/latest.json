@@ -1,14 +1,14 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-09-30T12:18:51Z",
-  "research_generated_at_utc": "2026-09-30T12:18:51Z",
+  "submitted_at_utc": "2026-10-01T00:19:10Z",
+  "research_generated_at_utc": "2026-10-01T00:19:10Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-09-30T12:18:51Z",
-    "research_generated_at_utc": "2026-09-30T12:18:51Z",
-    "edition": "Morning Brief",
-    "title": "NFL EDGE Wednesday Morning Brief",
-    "dek": "The morning board kept the Bears on two cards and the Bills on one, Chicago's quarterback decision rolls into Wednesday's practice, and Thursday night in Cleveland gets a weather watch.",
+    "published_at_utc": "2026-10-01T00:19:10Z",
+    "research_generated_at_utc": "2026-10-01T00:19:10Z",
+    "edition": "Evening Brief",
+    "title": "NFL EDGE Wednesday Evening Brief",
+    "dek": "The evening board moved the middle card off the Bears and onto the Patriots, Chicago still hasn't named a starting quarterback, and Thursday night in Cleveland looks dry and calm.",
     "sections": [
       {
         "id": "what-matters",
@@ -16,55 +16,49 @@
         "icon": "📰",
         "items": [
           {
-            "headline": "Morning board: the Bears hold two cards, and the Value read got warmer",
+            "headline": "The middle card moved off the Bears and onto the Patriots",
             "paragraphs": [
-              "The 6 a.m. refresh is in, and the shape is the same as last night: Hit Rate on Bills moneyline (-290 at DraftKings; the app gives Buffalo a 71.2% chance to win, MEDIUM reliability), Balanced and Value both on Bears -3.5 (-102 at both books; the app's cover probability 50.5%, MEDIUM reliability).",
-              "The one overnight change is in the Value card's read: the expected return on Chicago -3.5 climbed from +0.6% last night to +2.7% this morning — same line, warmer read."
+              "The 6 p.m. board is out, and it shuffles the deck. The Bears held two cards on the morning board; tonight they hold one. The Balanced card now reads Patriots +6.5 at even money (+100) on DraftKings.",
+              "The other two cards stayed put. The Value card is still Bears -3.5 at -102 on FanDuel, and its read got warmer — +3.2% expected value, up from +2.7% this morning. The Hit Rate card is still the Bills on the moneyline at -290.",
+              "Three cards, three different teams tonight."
             ],
             "evidence_ids": [
-              "app-board-morning"
+              "app-board-evening"
             ],
-            "takeaway": "Bears -3.5 carries two cards this morning; the Value read strengthened overnight."
+            "takeaway": "The Balanced card is a different team tonight. If you liked the morning's middle lane, re-read it — it changed."
           },
           {
-            "headline": "Still no Bears quarterback announcement",
+            "headline": "Still no Bears quarterback decision — Wednesday came and went",
             "paragraphs": [
-              "Ben Johnson stayed non-committal on the Week 4 starter: \"We'll have a discussion as a coaching staff and we'll see where we need to go from here\" — but reminded everyone that \"there was a reason why Tyson ended training camp as our No. 2 quarterback.\"",
-              "The app still projects Tyson Bagent, which matches where the winds are leaning. Case Keenum started Monday's 27-7 win over Philadelphia; Caleb Williams' Grade 2 hamstring strain is a three-to-four-week absence (Adam Schefter).",
-              "If Johnson names a starter at Wednesday's practice, the app's number was priced for the other guy. Tap Check, type in your book's line and price, and the app re-runs the model and the evaluator and returns a bet/no-bet verdict on YOUR price. Full re-evaluation, not a blind override."
+              "Chicago has not named its Week 4 starter. Ben Johnson was non-committal Monday and again Tuesday, and reporting Tuesday framed it as a bit of a mind game to keep the Jets preparing for two quarterbacks.",
+              "The facts in the room: Caleb Williams is out three to four weeks with a Grade 2 hamstring strain. Tyson Bagent has cleared the concussion protocol. The app projects Bagent as Chicago's expected starter — but that is the app's read, not an announcement.",
+              "If Johnson names the starter after the 6 p.m. board, the board won't know it."
             ],
             "evidence_ids": [
-              "app-board-morning",
-              "inj-bears-qb-morning",
-              "inj-williams-morning"
+              "app-board-evening",
+              "bears-qb-evening"
             ],
             "sources": [
               {
+                "label": "Heavy: Bears QB mind game ahead of Jets matchup",
+                "url": "https://heavy.com/sports/nfl/chicago-bears/ben-johnson-case-keenum-tyson-bagent-qb-jets/"
+              },
+              {
                 "label": "Bears Wire: Johnson non-committal on Week 4 QB",
                 "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/09/29/bears-ben-johnson-qb-decision-week-4-tyson-bagent-case-keenum/91998681007/"
-              },
-              {
-                "label": "NBC Sports: Johnson non-committal on Week 4 quarterback",
-                "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-09-29/ben-johnson-non-committal-on-week-4-quarterback"
-              },
-              {
-                "label": "SI: Bagent injury update, Williams 3-4 week timeline",
-                "url": "https://www.si.com/betting/tyson-bagent-injury-update-betting-impact-for-eagles-vs-bears-in-nfl-week-3"
               }
             ],
-            "takeaway": "No Bears QB announcement yet; the app projects Bagent. A Wednesday announcement makes Check the move."
+            "takeaway": "No announcement yet; the app projects Bagent. If the news lands after 6 p.m., type your book's line into Check for a fresh verdict."
           },
           {
             "headline": "The injury news, all in one place",
             "paragraphs": [
-              "Washington: Jayden Daniels practiced in some form and flew with the team to London, but he's still unlikely to play Sunday — Marcus Mariota is expected to start against Indianapolis (London, 7:30 a.m. Denver kickoff). RG Sam Cosmi (concussion) and S Nick Cross (illness) didn't make the trip and are ruled out. Frankie Luvu (groin) and Chig Okonkwo (hamstring) traveled and could practice.",
-              "Tampa Bay: Baker Mayfield's dislocated throwing thumb costs him at least three weeks; undrafted rookie Jalon Daniels starts — which is what the app already reflects. Green Bay is -3.5 at Tampa.",
-              "Elsewhere: Miami's De'Von Achane tore his ACL and is done for the season. The Jets' Breece Hall is week-to-week (quad). New Orleans' Travis Etienne Jr. (hamstring) won't play in Week 4. Day-to-day: Mike Evans (rib), Justin Jefferson (ankle)."
+              "Washington: Marcus Mariota is expected to start again against Indianapolis, with Jayden Daniels pushing to return. But the Commanders ruled out two starters for the London game — Cosmi and Cross.",
+              "Tampa Bay: the app still shows Jalon Daniels as the expected starter against Green Bay.",
+              "Miami: De'Von Achane is done for the year."
             ],
             "evidence_ids": [
-              "inj-was-morning",
-              "inj-tb-morning",
-              "inj-misc-morning"
+              "inj-misc-evening"
             ],
             "sources": [
               {
@@ -84,16 +78,16 @@
                 "url": "https://www.thehuddle.com/story/sports/fantasy/football/inseason-advice/2026/09/29/2026-week-4-waiver-wire/92008953007/"
               }
             ],
-            "takeaway": "Mariota expected again for Washington; Tampa rolls with Jalon Daniels; Achane done for the year."
+            "takeaway": "Three quarterback situations, two ruled-out starters, one season-ending injury — all above, no digging."
           },
           {
-            "headline": "Weather: Thursday night in Cleveland is watchable, for now",
+            "headline": "Thursday night in Cleveland: dry, calm, and mild",
             "paragraphs": [
-              "NWS hourly for the Steelers-Browns kickoff (8:15 p.m. ET): around 75 degrees, mostly cloudy, a slight chance of rain showers — about a 1-in-4 chance — with light southerly wind near 7 mph.",
-              "Rain showers get more likely later overnight (80% chance over the night window, per the daily forecast), so the wet part may arrive after the final whistle. Sunday's kickoff windows are still five days out; those forecasts get real Thursday or Friday."
+              "The final forecast for kickoff (6:15 p.m. Denver time): around 78 degrees, mostly cloudy, a light southwest wind under 10 mph, and a 4% chance of rain.",
+              "Nothing here changes how a football game gets played. Sunday's outdoor games get their firm forecast Thursday or Friday."
             ],
             "evidence_ids": [
-              "wx-cle-thu-morning"
+              "wx-cle-evening"
             ],
             "sources": [
               {
@@ -101,7 +95,7 @@
                 "url": "https://api.weather.gov/gridpoints/CLE/83,65/forecast/hourly"
               }
             ],
-            "takeaway": "Cleveland Thursday: ~75°F at kickoff, slight shower chance, light wind. Sunday windows firm up Thu/Fri."
+            "takeaway": "No weather worry for Steelers-Browns."
           }
         ]
       },
@@ -111,28 +105,27 @@
         "icon": "💡",
         "items": [
           {
-            "headline": "When two cards agree, the app is saying the same thing two ways",
+            "headline": "The Balanced card changed teams — here's how to read that",
             "paragraphs": [
-              "Balanced and Value both landed on Bears -3.5 at -102. Balanced is the app's \"strong pick without paying too much\" — its starting point for a newer bettor. Value is always the model's +EV play. When the middle-ground pick and the +EV pick are the same ticket, two different grading systems arrived at the same answer.",
-              "Read the price tag: the app's fair price for this play is -105. You can buy it at -102 — three cents better than fair. That gap is what a +2.7% edge looks like: a small price difference, not a hunch. The book's -102 says Chicago needs to cover just over half the time to break even; the app's number lands a shade above that.",
-              "The reason, not the guarantee: the app expects Chicago to win by about 5.7 points on the field against a -3.5 line — a little over two points of cushion between the forecast and the number."
+              "Balanced is the middle lane: a strong pick without paying too much. A good starting point if you're new to this. It is not the +EV play — the Value card is the only one that claims positive expected value.",
+              "Tonight that lane reads Patriots +6.5 at +100 on DraftKings. Even money means every $1 you risk wins $1. The app gives it a 50.5% win probability, minus-1.1% expected value, MEDIUM reliability.",
+              "When the board refreshes and a card swaps teams, don't ask what went wrong — ask what the app is saying now. Read the new card on its own terms. The app sizes your stake from your bankroll and its staking setting; don't free-style it."
             ],
             "evidence_ids": [
-              "app-board-morning"
+              "app-board-evening"
             ],
-            "takeaway": "Two cards, one Bears play. -102 is three cents better than the app's -105 fair price."
+            "takeaway": "Balanced is not Value. Read the Patriots card for what it is: the app's middle-ground pick tonight."
           },
           {
-            "headline": "Read the Hit Rate card for what it is",
+            "headline": "Check exists for exactly this week",
             "paragraphs": [
-              "Bills moneyline -290, and the app gives Buffalo a 71.2% chance to win. The Hit Rate card answers one question: which supported pick looks most likely to win. The app's own tutorial says it plainly — Hit Rate ≠ Profit Rate. That's a description of the card's job, not a knock on it.",
-              "Read the overnight price move as a price tag: -298 last night, -290 this morning. Buffalo got a few cents cheaper. That's the market nudging the sticker price, not a verdict on the Bills.",
-              "Price mechanics: -290 means every $2.90 you risk wins $1. And the app sets your stake from your bankroll plus a deliberately conservative aggressiveness — for the actual number, look at the app, not this page."
+              "The board refreshes at 6 a.m. and 6 p.m. Denver. News doesn't wait for the board. If Johnson names the Bears' starter at 7 p.m., or your book's line isn't DK's or FanDuel's, the board you're looking at is already behind.",
+              "Tap Check, type in your book's line and price. The app runs it back through NFL EDGE's model and the evaluator and returns a bet-or-no-bet verdict on YOUR price. That's a full re-evaluation — not a blind override of what the board says."
             ],
             "evidence_ids": [
-              "app-board-morning"
+              "app-board-evening"
             ],
-            "takeaway": "Hit Rate = most likely to win. Bills got a few cents cheaper overnight; the app sets your stake."
+            "takeaway": "Board stale, or a different book? Check, don't guess."
           }
         ]
       },
@@ -142,26 +135,38 @@
         "icon": "👀",
         "items": [
           {
-            "headline": "Bills moneyline: -298 to -290 overnight",
+            "headline": "Bills moneyline: the overnight drift held",
             "paragraphs": [
-              "Between the 6 p.m. and 6 a.m. boards, Buffalo's moneyline price eased from -298 to -290 on DraftKings while the app held the Bills at a 71.2% win chance. The morning board caught the move — it was already at -290 by 6:08 a.m.",
-              "If your book shows anything off -290, this is the textbook Check moment: type in your number and the app re-runs the model and the evaluator on YOUR price and returns a bet/no-bet verdict. Full re-evaluation, not a blind override."
+              "The Bills drifted from -298 to -290 overnight, per the morning edition. The evening board still shows -290 on DraftKings — no daytime move.",
+              "Price mechanics: -290 means every $2.90 you risk wins $1. The app's read sits at 71.2% win probability, close to the market's number — that's why this card is Hit Rate (most likely to win), not Value."
             ],
             "evidence_ids": [
-              "app-board-morning"
+              "app-board-evening"
             ],
-            "takeaway": "Bills drifted a few cents cheaper overnight; the morning board has it. Check any price that isn't the board's."
+            "takeaway": "Same -290 the morning board had. If your book shows something else, run it through Check."
           },
           {
-            "headline": "Bears -3.5: steady on both books, warmer read",
+            "headline": "Bears -3.5: steady line, warmer read",
             "paragraphs": [
-              "Chicago -3.5 sat at -102 on DraftKings and FanDuel through the whole evening-to-morning window — no movement. But the Value edge went from +0.6% to +2.7% on the same line. Lines sleep; the app's read doesn't have to.",
-              "Giants +1.5 (-110) and Packers -3.5 (-120) also held overnight. The Giants edge that died last night stays dead."
+              "No line movement on the Bears — still -3.5 on both books. But the Value read warmed from +2.7% to +3.2% on the same -102 at FanDuel.",
+              "Three cents matter here: -102 is better than the app's -105 fair price. That small price edge is exactly what the Value card hunts.",
+              "If your book posts a different number, the app's read doesn't apply to it — Check will run your price instead."
             ],
             "evidence_ids": [
-              "app-board-morning"
+              "app-board-evening"
             ],
-            "takeaway": "No line movement on the Bears — but the Value read warmed from +0.6% to +2.7% on the same -102."
+            "takeaway": "Same line, better edge. Bears -3.5 at -102 is the evening's only +EV card."
+          },
+          {
+            "headline": "Recommendation replacement: Patriots in on Balanced, Bears out",
+            "paragraphs": [
+              "The morning board had the Bears on two cards. The 6 p.m. refresh moved the Balanced card to the Patriots. The Bears are down to the Value card alone.",
+              "A replacement is not a downgrade and not an upgrade — it's the app's latest read on the same slate. Read the new card as the app's current middle lane."
+            ],
+            "evidence_ids": [
+              "app-board-evening"
+            ],
+            "takeaway": "One card changed teams. Re-read Balanced before using it."
           }
         ]
       },
@@ -171,30 +176,23 @@
         "icon": "✅",
         "items": [
           {
-            "headline": "Wednesday is practice-report day — Thursday game gets a Thursday check",
+            "headline": "Thursday game? Thursday check.",
             "paragraphs": [
-              "Week 4's first full practice day is today. Watch whether Bagent takes first-team reps (or Johnson finally names a guy) and whether Daniels practices fully in London. Thursday's inactives post about 90 minutes before the Steelers-Browns kickoff at 6:15 p.m. Denver.",
-              "Thursday game? Thursday check. And the recurring honesty nudge: settlement is manual, no auto-settle — the tracker only works if you're honest with yourself. Log the losers too."
+              "Steelers at Browns kicks off Thursday at 6:15 p.m. Denver. Inactive lists land about 90 minutes before kickoff.",
+              "If the line moves on Thursday — or your book isn't showing the board's number — tap Check and type in what you can actually bet. The app re-runs it through the model and the evaluator and gives you a bet-or-no-bet on your price."
             ],
             "evidence_ids": [
-              "app-board-morning",
-              "inj-bears-qb-morning"
+              "app-board-evening"
             ],
-            "sources": [
-              {
-                "label": "Bears Wire: Johnson non-committal on Week 4 QB",
-                "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/09/29/bears-ben-johnson-qb-decision-week-4-tyson-bagent-case-keenum/91998681007/"
-              }
-            ],
-            "takeaway": "Watch Wednesday's practice reports. Inactives 90 min before Thursday's 6:15 p.m. kickoff; log every bet honestly."
+            "takeaway": "Thursday game? Thursday check."
           },
           {
-            "headline": "Betting term of the day: lay",
+            "headline": "Betting term of the day: steam",
             "paragraphs": [
-              "When you bet a favorite, you \"lay\" the points or the price — you give the spread. Taking the Bills moneyline at -290 means laying -290: you risk the bigger number to win the smaller one. Taking Chicago -3.5 means laying 3.5 points: the Bears have to win by more than a field goal."
+              "Steam is a sudden, big line move when a wave of bets hits all at once. Example: a spread jumping from -3 to -5 in an hour — the book got steamed and moved the number fast.",
+              "Seeing steam doesn't tell you who was right. It tells you the price changed, and the old price is gone. Respect the new number; don't chase the old one."
             ],
-            "editorial_only": true,
-            "takeaway": "Lay = bet a favorite, giving the points or the price."
+            "takeaway": "Steam = a fast, big line move on heavy action. Tonight's board showed none — these were drifts and refreshes, not steam."
           }
         ]
       }
@@ -202,47 +200,36 @@
   },
   "evidence": [
     {
-      "evidence_id": "app-board-morning",
-      "category": "app",
+      "evidence_id": "app-board-evening",
+      "category": "app-board",
       "verification": "INTERNAL_CANONICAL",
-      "fact": "6:00am Denver board refresh (Week 4, 16 games, all PREGAME; board generated 2026-09-30T12:08:18Z, FRESH). Three headline cards fired. Hit Rate: BUF ML -290 (DK), model win probability 71.2%, evaluator EV -1.4%, reliability MEDIUM. Balanced: CHI -3.5 -102 (DK), model cover probability 50.5%, evaluator EV +2.7%, reliability MEDIUM. Value: CHI -3.5 -102 (DK), evaluator EV +2.7%, reliability MEDIUM (evening Value EV was +0.6% on the same line). QB projection: CHI expected starter Tyson Bagent (unchanged overnight); MIA Malik Willis @ MIN Kyler Murray; TB Jalon Daniels; PIT Rodgers @ CLE Deshaun Watson.",
+      "fact": "6pm Denver board (observed 2026-10-01T00:08:33Z): HIT_RATE BUF ML -290 DK (model 71.2%, ev -1.2%, MEDIUM, 1.0u); BALANCED NE +6.5 @ +100 DK (model 50.5%, ev -1.1%, MEDIUM, 0.75u); VALUE CHI -3.5 @ -102 FD (model 50.5%, ev +3.2%, MEDIUM, 1.0u). App projects Tyson Bagent as CHI expected starter; Mariota (WAS) and Jalon Daniels (TB) unchanged.",
       "sources": [
         {
-          "label": "NFL EDGE product view (public)",
+          "label": "NFL EDGE product API, latest board",
           "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
         }
       ]
     },
     {
-      "evidence_id": "inj-bears-qb-morning",
-      "category": "news",
-      "fact": "Bears coach Ben Johnson remained non-committal on the Week 4 starter after Case Keenum's 27-7 Monday night win over Philadelphia (\"We'll have a discussion as a coaching staff and we'll see where we need to go from here,\" adding \"there was a reason why Tyson [Bagent] ended training camp as our No. 2 quarterback\"). Bagent cleared concussion protocol Saturday but dressed as QB2 on Monday because Keenum had taken the first-team reps. Johnson has not named a Week 4 starter against the Jets.",
+      "evidence_id": "bears-qb-evening",
+      "category": "quarterback",
+      "fact": "No announced Bears Week 4 starter as of Wednesday evening. Johnson non-committal Monday and Tuesday; reporting describes QB uncertainty as a possible mind game vs the Jets. Williams out 3-4 weeks (Grade 2 hamstring); Bagent cleared concussion protocol.",
       "sources": [
+        {
+          "label": "Heavy: Bears QB mind game ahead of Jets matchup",
+          "url": "https://heavy.com/sports/nfl/chicago-bears/ben-johnson-case-keenum-tyson-bagent-qb-jets/"
+        },
         {
           "label": "Bears Wire: Johnson non-committal on Week 4 QB",
           "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/09/29/bears-ben-johnson-qb-decision-week-4-tyson-bagent-case-keenum/91998681007/"
-        },
-        {
-          "label": "NBC Sports: Johnson non-committal on Week 4 quarterback",
-          "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-09-29/ben-johnson-non-committal-on-week-4-quarterback"
         }
       ]
     },
     {
-      "evidence_id": "inj-williams-morning",
-      "category": "news",
-      "fact": "Caleb Williams' Grade 2 hamstring strain is expected to sideline him three to four weeks per Adam Schefter; Williams is already ruled out for Week 4. Bagent was Chicago's projected starter per the NFL EDGE app's QB snapshot.",
-      "sources": [
-        {
-          "label": "SI: Bagent injury update, Williams 3-4 week timeline",
-          "url": "https://www.si.com/betting/tyson-bagent-injury-update-betting-impact-for-eagles-vs-bears-in-nfl-week-3"
-        }
-      ]
-    },
-    {
-      "evidence_id": "inj-was-morning",
-      "category": "news",
-      "fact": "Jayden Daniels (dislocated left/non-throwing elbow, Week 2) returned to practice in some form this week and traveled with Washington to London, but remains unlikely to play Sunday; Marcus Mariota is expected to start against Indianapolis (London, 7:30am Denver kickoff). RG Sam Cosmi (concussion) and S Nick Cross (illness) did not make the trip and are ruled out for Week 4. LB Frankie Luvu (groin) and TE Chig Okonkwo (hamstring) traveled and could practice this week.",
+      "evidence_id": "inj-misc-evening",
+      "category": "injury",
+      "fact": "Mariota expected to start for Washington vs IND; Jayden Daniels pushing to return; Cosmi and Cross ruled out for London; Jalon Daniels expected for Tampa Bay; De'Von Achane done for the year.",
       "sources": [
         {
           "label": "Commanders Wire: Daniels pushing to return",
@@ -251,25 +238,11 @@
         {
           "label": "Commanders Wire: Cosmi, Cross ruled out for London",
           "url": "https://commanderswire.usatoday.com/story/sports/nfl/commanders/2026/09/29/commanders-injury-updates-two-starters-ruled-out-week-4-london/92015711007/"
-        }
-      ]
-    },
-    {
-      "evidence_id": "inj-tb-morning",
-      "category": "news",
-      "fact": "Baker Mayfield's dislocated throwing thumb is expected to cost him at least three weeks; undrafted rookie Jalon Daniels starts for Tampa Bay against Green Bay on Sunday — matching the NFL EDGE app's expected-starter projection. GB is -3.5 at Tampa Bay (DK -3.5 -120).",
-      "sources": [
+        },
         {
           "label": "FantasyAlarm: Week 4 injury report",
           "url": "https://www.fantasyalarm.com/articles/nfl/injury-report/nfl-injury-report-2026-fantasy-football-week-4/196182"
-        }
-      ]
-    },
-    {
-      "evidence_id": "inj-misc-morning",
-      "category": "news",
-      "fact": "Dolphins RB De'Von Achane suffered a torn ACL and is out for the season. Jets RB Breece Hall is week-to-week (quadriceps). Saints RB Travis Etienne Jr. (hamstring) will not play in Week 4. Day-to-day: Buccaneers WR Mike Evans (rib), Vikings WR Justin Jefferson (ankle).",
-      "sources": [
+        },
         {
           "label": "The Huddle: Waiver Wired Week 4",
           "url": "https://www.thehuddle.com/story/sports/fantasy/football/inseason-advice/2026/09/29/2026-week-4-waiver-wire/92008953007/"
@@ -277,9 +250,9 @@
       ]
     },
     {
-      "evidence_id": "wx-cle-thu-morning",
+      "evidence_id": "wx-cle-evening",
       "category": "weather",
-      "fact": "NWS hourly forecast for Cleveland (Huntington Bank Field) Thursday evening: ~75F at the 8:15pm ET kickoff, mostly cloudy, a slight chance of rain showers (about 1-in-4) through the evening, light southerly wind around 7 mph. The daily forecast has rain showers more likely later overnight (80% chance over the night window, showers after 8pm) — the wet part may arrive after the final whistle. Reported factually; not framed as a totals edge. Sunday Week 4 kickoff windows are still five days out — those forecasts firm up Thursday/Friday.",
+      "fact": "NWS Cleveland: Thursday kickoff window ~78F mostly cloudy, SW wind under 10 mph, 4% precipitation chance; ~76F by 8pm ET.",
       "sources": [
         {
           "label": "NWS hourly forecast, Cleveland",
@@ -288,13 +261,13 @@
       ]
     },
     {
-      "evidence_id": "fade-attempt-morning",
-      "category": "research",
-      "fact": "Fade attempt (logged every run): checked VSiN's NFL betting splits page for current Week 4 ticket% vs handle% data. The page documents DK-based public percentages but the per-game live splits are behind VSiN Pro; no verified public-vs-sharper divergence could be observed. No Fade qualifies this morning.",
+      "evidence_id": "fade-attempt-evening",
+      "category": "fade-attempt",
+      "fact": "Attempted VSiN NFL betting splits check for a public-vs-sharper split on Thursday/week-4 games. VSiN ticket%/handle% splits sit behind the VSiN Pro paywall; no verified split available. No Fade this edition; jargon-definition item used instead.",
       "sources": [
         {
-          "label": "VSiN betting splits page",
-          "url": "https://vsin.com/odds/betting-splits/"
+          "label": "VSiN NFL betting splits page",
+          "url": "https://www.vsin.com/betting-splits/nfl/"
         }
       ]
     }
