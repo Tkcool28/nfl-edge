@@ -1,317 +1,321 @@
 {
- "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-10-03T00:21:06Z",
- "research_generated_at_utc": "2026-10-03T00:21:06Z",
- "article": {
-  "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "edition": "Evening Brief",
-  "title": "NFL EDGE Friday Evening Brief",
-  "dek": "Justin Jefferson is out for Sunday, Friday's final injury designations are in, and the evening cards rotate back to Chicago — with the Value lane finding plus-EV on the Dolphins.",
-  "published_at_utc": "2026-10-03T00:21:06Z",
-  "sections": [
-   {
-    "id": "what-matters",
-    "icon": "📰",
-    "title": "What Matters Today",
-    "items": [
-     {
-      "evidence_ids": [
-       "inj-jefferson-evening"
-      ],
-      "headline": "Justin Jefferson is officially out Sunday",
-      "paragraphs": [
-       "The morning question got its answer. Vikings coach Kevin O'Connell announced Friday that Justin Jefferson is OUT for Sunday's home game against the Dolphins (4:05 p.m. ET). The star receiver sprained his left ankle in last week's win over Tampa Bay, missed practice all week, and couldn't get there in time. O'Connell says Jefferson is 'definitely feeling better' and the goal is to have him practicing next week ahead of Week 5 at New Orleans.",
-       "With Jefferson sidelined, Jordan Addison becomes Minnesota's top target after catching five passes for 90 yards and a touchdown in relief last week, and Jauan Jennings moves up a rung. Cornerback Charles Demmings (hamstring) and punter Brett Thorson (hamstring) are out too."
-      ],
-      "takeaway": "The morning's big tell resolved — plan Sunday without Jefferson.",
-      "sources": [
-       {
-        "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/justin-jefferson-ruled-out-for-vikings-dolphins"
-       }
-      ]
-     },
-     {
-      "evidence_ids": [
-       "inj-misc-evening",
-       "app-board-evening"
-      ],
-      "headline": "The injury news, all in one place",
-      "paragraphs": [
-       "Bears: Caleb Williams (hamstring) and left tackle Braxton Jones are officially OUT, so Case Keenum starts against the Jets on Sunday — the app already projects him, so this is confirmation, not a surprise. D'Andre Swift practiced Friday and carries no designation.",
-       "49ers: Nick Bosa (knee/calf) is out, along with two more defensive linemen. Mike Evans (ribs), Dre Greenlaw, Keion White, and Jaden Dugger are questionable. Trent Williams was cleared. Ravens: Zay Flowers (hamstring) and Ronnie Stanley (toe) are questionable; Trey Hendrickson is out for finger surgery; Lamar Jackson has no designation. Patriots: Christian Gonzalez and Christian Barmore are OUT in Buffalo. Packers: Aaron Banks, Jacob Monk, Warren Brinson, and Anthony Campbell are out; Edgerrin Cooper (concussion) practiced fully Friday and is questionable. Cardinals: Josh Sweat (groin) is questionable after a new Friday injury. Dolphins: Caleb Douglas, Robert Beal Jr., and Storm Duck are out; Jaylen Wright will play. Giants: nobody questionable, nobody out."
-      ],
-      "takeaway": "Friday's designations are the last full picture — the only thing left is the inactive lists, about 90 minutes before kickoff.",
-      "sources": [
-       {
-        "label": "Bears Wire",
-        "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/10/02/bears-jets-injury-report-friday-dandre-swift/92060899007/"
-       }
-      ]
-     },
-     {
-      "evidence_ids": [
-       "weather-evening"
-      ],
-      "headline": "Sunday weather: an early look",
-      "paragraphs": [
-       "Rain looks likely around kickoff in Philadelphia (Rams at Eagles, mid-60s) and Baltimore (Titans at Ravens, mid-60s). There's a chance of showers at MetLife (Cardinals at Giants) and in Charlotte for the Sunday night game (Lions at Panthers). Tampa will be hot and humid near 90 with storms possible in the afternoon. Buffalo, Chicago, Cincinnati, Seattle, and Santa Clara look calm and dry. London (Colts at Commanders, 9:30 a.m. ET) is partly cloudy in the upper 60s. The dome and roofed games are unaffected.",
-       "These are Friday forecasts — the final kickoff-window numbers land in Saturday's editions. And a reminder: weather is a fact, not an edge. Totals are the app's weakest lane."
-      ],
-      "takeaway": "Wettest windows: Philadelphia and Baltimore. Everything else is manageable.",
-      "sources": [
-       {
-        "label": "DraftKings Network",
-        "url": "https://dknetwork.draftkings.com/2026/10/02/nfl-week-4-weather-forecast/"
-       }
-      ]
-     }
+  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+  "submitted_at_utc": "2026-10-03T12:19:09Z",
+  "research_generated_at_utc": "2026-10-03T12:19:09Z",
+  "article": {
+    "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+    "edition": "Morning Brief",
+    "title": "NFL EDGE Saturday Morning Brief",
+    "dek": "Overnight the market moved — Chicago's moneyline drifted to -184, the plus-EV Dolphins read from last night is off the board, and Breece Hall is out for Sunday.",
+    "published_at_utc": "2026-10-03T12:19:09Z",
+    "sections": [
+      {
+        "id": "what-matters",
+        "icon": "📰",
+        "title": "What Matters Today",
+        "items": [
+          {
+            "headline": "The Value lane is empty this morning",
+            "paragraphs": [
+              "The overnight market moved, and the board followed. The Dolphins +10.5 at -110 that the model priced plus-EV last night now costs -120 at FanDuel for the same 10.5 points, and the edge is gone. No other offer clears the Value lane's frozen contract, so the lane reads NO_PLAY.",
+              "Chicago's moneyline drifted too — from -176 to -184 at FanDuel (DraftKings -185, Pinnacle -192) — and the Balanced lane rotated off the Bears' spread onto the Eagles getting 3.5 points at home against the Rams. If you grabbed the Dolphins number last night, it's in your pocket. Don't chase a new one this morning."
+            ],
+            "takeaway": "Overnight juice killed last night's plus-EV read; the Value lane is empty and the board's two plays both cost more than yesterday.",
+            "evidence_ids": [
+              "app-board-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE product",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          },
+          {
+            "headline": "The injury news, all in one place",
+            "paragraphs": [
+              "The biggest new development: the Jets ruled out running back Breece Hall (quad) for Sunday at Chicago — the Jets lose their lead back. Also out for the Jets: Kiko Mauigoa, AD Mitchell, Dylan Parham and Mason Taylor, with Kenyon Sadiq and Kingsley Enagbare questionable. On the Bears' side, Caleb Williams and Braxton Jones stay out (Case Keenum starts), joined by Kyler Gordon, Noah Swell and Shemar Turner; Cam Lewis is doubtful. D'Andre Swift will play.",
+              "Elsewhere: Patriots quarterback Drake Maye (right shoulder) will play, and Morgan Moses is questionable after returning to practice; Gonzalez, Barmore and Schooler are out. For Buffalo, Keon Coleman is expected to play while Christian Benford (DNP Friday) is questionable. Denver is thin at edge rusher with Dondrea Tillman out and Jonathon Cooper on the exempt list; Mims, Waddle and Dobbins are cleared. The 49ers' Nick Bosa has conflicting late-week reports — one lists him questionable, another says the Niners expect to be without him, so watch the inactive list. Houston loses Pro Bowl linebacker Azeez Al-Shaair (groin); Nico Collins practiced fully Friday. Green Bay's Edgerrin Cooper (concussion) was a full Friday participant and is trending toward playing, while rookie Jager Burton is newly questionable. Justin Jefferson stays out for Minnesota; Baker Mayfield is out several weeks in Tampa, where Jalon Daniels starts. The app's expected starters match all of Friday's reporting — no new quarterback changes overnight."
+            ],
+            "takeaway": "Hall out is the headline; Bosa's status is genuinely uncertain; everything else is Friday's designations standing.",
+            "evidence_ids": [
+              "inj-news-am",
+              "app-board-am"
+            ],
+            "sources": [
+              {
+                "label": "Jets Wire",
+                "url": "https://jetswire.usatoday.com/story/sports/nfl/jets/2026/10/03/new-york-jets-bears-final-injury-report-week-4-nfl/92067764007/"
+              },
+              {
+                "label": "Bills Wire",
+                "url": "https://billswire.usatoday.com/story/sports/nfl/bills/2026/10/03/buffalo-bills-patriots-final-injury-report-keon-coleman-josh-allen-deone-walker-nfl/92067575007/"
+              },
+              {
+                "label": "Broncos Wire",
+                "url": "https://broncoswire.usatoday.com/story/sports/nfl/broncos/2026/10/02/denver-broncos-injury-report-vs-49ers-nfl-week-4/92045109007/"
+              }
+            ]
+          },
+          {
+            "headline": "Sunday weather: the final look",
+            "paragraphs": [
+              "Two games carry a real chance of rain at kickoff: Philadelphia (Rams at Eagles, 1 p.m. ET — 56%) and Baltimore (Titans at Ravens, 1 p.m. ET — 55%), both in the mid-60s. MetLife (Cardinals at Giants) and Charlotte for Sunday night (Lions at Panthers) each sit at a chance of showers.",
+              "The heat games: Tampa hits 88 with scattered storms possible after 2 p.m., and Santa Clara carries a National Weather Service heat warning — 92 to 94 at kickoff for Broncos at 49ers, one of the hottest games in Broncos history. Houston's roof game is unaffected with storms outside. London (Colts at Commanders, 9:30 a.m. ET) is 67 and partly cloudy; Buffalo, Chicago, Cincinnati and Seattle are all calm and clear. The two domes are weather-proof."
+            ],
+            "takeaway": "Rain is likely in Philadelphia and Baltimore; Tampa and Santa Clara are the heat games; everything else is manageable.",
+            "evidence_ids": [
+              "weather-am"
+            ],
+            "sources": [
+              {
+                "label": "DraftKings Network",
+                "url": "https://dknetwork.draftkings.com/2026/10/02/nfl-week-4-weather-forecast/"
+              },
+              {
+                "label": "Denver Sports (NWS heat warning)",
+                "url": "https://denversports.com/nfl/denver-broncos/sean-payton-prep-for-heat-49ers"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "what-it-means",
+        "icon": "💡",
+        "title": "What It Means for NFL EDGE",
+        "items": [
+          {
+            "headline": "Hit Rate: still Chicago, at a thinner price",
+            "paragraphs": [
+              "The Hit Rate card answers one question: which supported pick looks most likely to win. This morning it still says Chicago's moneyline — model 70.07%, trust 66.89%. The price moved against us overnight (-176 to -184 at FanDuel), and the EV sits at -1.78%.",
+              "That negative number is not a flaw in the card. The app's own tutorial says Hit Rate ≠ Profit Rate: this lane forgoes value for win probability on purpose. The market drifting Chicago's way is information — the board agrees with the model more than it did yesterday — not an instruction to bet bigger. The app sizes the stake from your bankroll, deliberately conservative."
+            ],
+            "takeaway": "Chicago is the most-likely-to-win supported read; the thinner price doesn't change the card's job.",
+            "evidence_ids": [
+              "app-board-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE product",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          },
+          {
+            "headline": "Balanced: the middle lane moved to Philadelphia",
+            "paragraphs": [
+              "Balanced is the middle ground — a strong pick without paying too much, and a good starting point for a new bettor. This morning it reads the Eagles +3.5 at -105 at FanDuel (model 50.52%, play-through -108): Philadelphia getting points at home in likely rain against the Rams.",
+              "The lane rotated off the Bears' spread overnight as the numbers shifted. The card follows the price — when the market reprices the slate, the middle-ground read moves with it."
+            ],
+            "takeaway": "The middle lane is Eagles +3.5 at home; the card follows the price.",
+            "evidence_ids": [
+              "app-board-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE product",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          },
+          {
+            "headline": "Value: empty is a read",
+            "paragraphs": [
+              "Value is always the model's plus-EV play — the price-beats-market read. This morning no offer clears the frozen contract, so the lane is empty. The market is simply priced too tight for the model's edge bar.",
+              "An empty lane is the model saying 'not today.' The disciplined move is patience, not pressing the other two cards harder to fill the gap."
+            ],
+            "takeaway": "No plus-EV offer this morning — patience is the read, not forcing a bet.",
+            "evidence_ids": [
+              "app-board-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE product",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "market-watch",
+        "icon": "📈",
+        "title": "Line Movement",
+        "items": [
+          {
+            "headline": "Overnight: the market moved, the board followed",
+            "paragraphs": [
+              "Chicago's moneyline went from -176 to -184 at FanDuel overnight (DraftKings -185, Pinnacle -192), with the app's play-through at -189 — the price got worse for bettors and the card's EV slid from -0.22% to -1.78%. The Dolphins' 10.5 points went from -110 to -120 at FanDuel for the identical line, and that juice is what killed last night's plus-EV Value read; DraftKings moved the Dolphins to 10.0 outright.",
+              "The Balanced lane's recommendation was replaced: Chicago -3.5 at -104 is out, Philadelphia +3.5 at -105 is in (play-through -108). The 6:00 board has all of it. But the board's prices are FanDuel and DraftKings — your book's number is what you're actually betting. Tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator for a bet-or-no-bet verdict on your price. Full re-evaluation, not a blind override."
+            ],
+            "takeaway": "The moves are in the board — bet your book's number, not the board's; Check prices your actual ticket.",
+            "evidence_ids": [
+              "app-board-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE product",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "today-tip",
+        "icon": "✅",
+        "title": "Today's Tip",
+        "items": [
+          {
+            "headline": "Inactives land about 90 minutes before kickoff",
+            "paragraphs": [
+              "The morning brief can't have the inactive lists — they drop about 90 minutes before each kickoff, and the first one comes early with the London game at 9:30 a.m. ET. The questionable tags worth watching: Bosa (conflicting reports), Cooper (concussion, trending the right way), Benford (DNP Friday), Moses (foot), and Sadiq and Enagbare for the Jets.",
+              "The board refreshes every morning and evening. If a designation flips after the board, don't guess — type your book's line into Check and let the app re-price the ticket at your number."
+            ],
+            "takeaway": "Watch the 90-minute lists, starting early for London; Check re-prices anything that flips.",
+            "evidence_ids": [
+              "inj-news-am",
+              "app-board-am"
+            ],
+            "sources": [
+              {
+                "label": "Packers Wire",
+                "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/10/02/packers-injury-report-final-week-4-buccaneers-questionable-out/92060558007/"
+              },
+              {
+                "label": "Broncos Wire",
+                "url": "https://broncoswire.usatoday.com/story/sports/nfl/broncos/2026/10/02/denver-broncos-injury-report-vs-49ers-nfl-week-4/92045109007/"
+              }
+            ]
+          },
+          {
+            "headline": "Betting term of the day: juice",
+            "paragraphs": [
+              "Juice is the book's fee baked into the price — the -120 in Dolphins +10.5 -120. Last night the same 10.5 points cost -110; this morning they cost -120. Same points, higher fee. That juice movement is exactly what killed the Value lane's plus-EV read overnight.",
+              "Odds are just price mechanics: -120 means every $1.20 you risk wins $1. When the points stay put and the price climbs, you're paying more for the same ticket — and the app's math notices before your eyes do."
+            ],
+            "takeaway": "Same points, higher fee — juice movement is what emptied the Value lane.",
+            "evidence_ids": [
+              "app-board-am",
+              "fade-attempt-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE product",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          }
+        ]
+      }
     ]
-   },
-   {
-    "id": "what-it-means",
-    "icon": "💡",
-    "title": "What It Means for NFL EDGE",
-    "items": [
-     {
-      "evidence_ids": [
-       "app-board-evening"
-      ],
-      "headline": "The cards rotated back to Chicago",
-      "paragraphs": [
-       "Hit Rate is Bears moneyline at -176 on FanDuel. The app gives Chicago about a 70% chance to beat the Jets — that's what Hit Rate is: which supported pick looks most likely to win. It gives up value to buy win probability, and the app's own tutorial says Hit Rate is not Profit Rate. That's not a flaw. It's the job.",
-       "Balanced is Bears -3.5 at -104, also FanDuel. The app puts Chicago covering at about 50.5%. That's the middle ground: a strong pick without paying too much. If you're new, Balanced is the good starting point. Two Chicago cards, two different jobs — pick the job you want."
-      ],
-      "takeaway": "The card follows the price — tonight the most-likely-to-win read is Chicago again.",
+  },
+  "evidence": [
+    {
+      "evidence_id": "app-board-am",
+      "category": "model_board",
+      "verification": "INTERNAL_CANONICAL",
+      "fact": "Morning board (observed 2026-10-03T12:08:18Z, 6:00am Denver refresh): HIT_RATE = CHI ML -184 FANDUEL (model 70.07%, trust 66.89%, ev -1.78%, MEDIUM, 1.0u, play_through -189); BALANCED = PHI +3.5 @ -105 FANDUEL (model 50.52%, trust 50.52%, ev -3.13%, MEDIUM, 0.75u, play_through -108); VALUE = NO_PLAY (\"No offer currently satisfies the frozen VALUE lane contract\"). vs Friday evening board (2026-10-03T00:08:26Z): HIT_RATE was CHI ML -176 FD (ev -0.22%); BALANCED was CHI -3.5 @ -104 FD (ev -1.29%); VALUE was MIA +10.5 @ -110 FD (ev +1.48%). QB projections: Case Keenum (CHI), Jameis Winston (NYG), Marcus Mariota (WAS), Cam Ward starter (TEN), Jalon Daniels (TB), Kirk Cousins (LV), Jacoby Brissett (ARI), Kyler Murray (MIN), Malik Willis (MIA) — all match Friday's reporting; no new QB changes overnight.",
+      "interpretation": "The market moved overnight against the board's two plays: Chicago's moneyline drifted -176 to -184 at FanDuel, and the juice on MIA +10.5 rose -110 to -120, which killed the Value lane's plus-EV read. Balanced rotated off the Bears spread onto the Eagles.",
+      "app_guidance": "Use the real board numbers; if your book's price differs from the board's FanDuel/DraftKings price, use Check to re-price the pick at your number.",
       "sources": [
-       {
-        "label": "NFL EDGE product",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
+        {
+          "label": "NFL EDGE product",
+          "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest",
+          "published_at_utc": "2026-10-03T12:08:18Z"
+        }
       ]
-     },
-     {
-      "evidence_ids": [
-       "app-board-evening"
-      ],
-      "headline": "The Value lane found its plus-EV play",
-      "paragraphs": [
-       "Value is Dolphins +10.5 at -110 on FanDuel, and it's the only card on the board the app grades plus-EV (+1.48%). The app gives Miami about a 50.6% chance to cover in Minnesota.",
-       "Plus-EV means the price is better than the app's fair number — it does not mean Miami is more likely to win, or even more likely to cover than the other cards. An edge is a price thing, not a prediction thing. -110 means every $1.10 you risk wins $1. That's the whole mechanic. Your actual stake comes from your bankroll and the app's staking settings, which are deliberately conservative."
-      ],
-      "takeaway": "Value is the model's price-beats-market read — it promises an edge, not a win.",
+    },
+    {
+      "evidence_id": "inj-news-am",
+      "category": "injury",
+      "verification": "REPORTED",
+      "fact": "Saturday morning injury updates (final Friday designations): Jets rule OUT RB Breece Hall (quad) for Sunday at Chicago; also OUT: LB Kiko Mauigoa, WR AD Mitchell, OL Dylan Parham, TE Mason Taylor; TE Kenyon Sadiq (back) and ED Kingsley Enagbare (knee) questionable. Bears: QB Caleb Williams (hamstring) and LT Braxton Jones (knee) OUT (Case Keenum starts); new outs: DB Kyler Gordon (calf), LB Noah Swell (Achilles), DL Shemar Turner (knee); DB Cam Lewis (hip) doubtful; RB D'Andre Swift (knee) will play. Patriots: QB Drake Maye (right shoulder) will play; RT Morgan Moses (foot) questionable after returning to practice Friday; CB Christian Gonzalez, DT Christian Barmore, S Brenden Schooler OUT. Bills: WR Keon Coleman (ankle) expected to play; CB Christian Benford (toe) DNP Friday, questionable; DL TJ Sanders (illness) doubtful; S Sam Franklin (personal) out. Broncos: edge Dondrea Tillman (hamstring) OUT; Jonathon Cooper on the commissioner's exempt list — Denver thin at outside linebacker; WRs Marvin Mims and Jaylen Waddle, RB J.K. Dobbins cleared. 49ers: DE Nick Bosa's status has conflicting late-week reporting — Broncos Wire lists him questionable (calf); SI reports the Niners expect to be without him; DE Mykel Williams and DL James Thompson Jr. remain out. Texans: LB Azeez Al-Shaair (groin) OUT; DB M.J. Stewart OUT; DE Jadeveon Clowney (knee) questionable; WR Nico Collins (hamstring) full Friday with no designation. Cowboys: CB Cobie Durant (hamstring) OUT, LB DeMarvion Overshown (hamstring) OUT. Packers: LB Edgerrin Cooper (concussion) a full Friday participant, trending toward playing; rookie OL Jager Burton (groin) new questionable; G Aaron Banks, G Jacob Monk, DL Warren Brinson, DT Anthony Campbell OUT. Dolphins: LB Chop Robinson popped up with a foot injury but practiced; C Aaron Brewer (hand) full go; RB Jaylen Wright (foot) will play; WR Caleb Douglas, DE Robert Beal Jr., CB Storm Duck OUT. Vikings: WR Justin Jefferson (ankle) officially OUT; CB Charles Demmings and P Brett Thorson OUT; LB Blake Cashman (elbow) expected available. Buccaneers: QB Baker Mayfield out several weeks (dislocated thumb) — Jalon Daniels starts; the app already prices him.",
+      "interpretation": "The biggest new development is Breece Hall being ruled out — the Jets lose their lead back against Chicago. Bosa's true status is uncertain with conflicting reports; everything else is Friday's final designations standing as reported.",
+      "app_guidance": "Questionable tags resolve in the inactive lists about 90 minutes before kickoff — the morning brief can't have them, so watch the list, and use Check to re-price any pick if a designation flips after the board.",
       "sources": [
-       {
-        "label": "NFL EDGE product",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
+        {
+          "label": "Jets Wire",
+          "url": "https://jetswire.usatoday.com/story/sports/nfl/jets/2026/10/03/new-york-jets-bears-final-injury-report-week-4-nfl/92067764007/",
+          "published_at_utc": "2026-10-03T11:00:00Z"
+        },
+        {
+          "label": "Bills Wire",
+          "url": "https://billswire.usatoday.com/story/sports/nfl/bills/2026/10/03/buffalo-bills-patriots-final-injury-report-keon-coleman-josh-allen-deone-walker-nfl/92067575007/",
+          "published_at_utc": "2026-10-03T11:00:00Z"
+        },
+        {
+          "label": "Broncos Wire",
+          "url": "https://broncoswire.usatoday.com/story/sports/nfl/broncos/2026/10/02/denver-broncos-injury-report-vs-49ers-nfl-week-4/92045109007/",
+          "published_at_utc": "2026-10-02T22:00:00Z"
+        },
+        {
+          "label": "Sports Illustrated",
+          "url": "https://www.si.com/nfl/broncos/onsi/final-injury-report-several-49ers-starters-in-jeopardy-broncos",
+          "published_at_utc": "2026-10-03T00:00:00Z"
+        },
+        {
+          "label": "Texans Wire",
+          "url": "https://texanswire.usatoday.com/story/sports/nfl/texans/2026/10/02/final-injury-report-texans-pro-bowl-lb-azeez-al-shaair-status-for-cowboys-game-revealed/92062187007/",
+          "published_at_utc": "2026-10-02T20:00:00Z"
+        },
+        {
+          "label": "Packers Wire",
+          "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/10/02/packers-injury-report-final-week-4-buccaneers-questionable-out/92060558007/",
+          "published_at_utc": "2026-10-02T21:00:00Z"
+        },
+        {
+          "label": "Dolphins Wire",
+          "url": "https://dolphinswire.usatoday.com/story/sports/nfl/dolphins/2026/10/02/dolphins-chop-robinson-injury-report-week-4/92062312007/",
+          "published_at_utc": "2026-10-02T21:00:00Z"
+        },
+        {
+          "label": "Vikings.com",
+          "url": "https://www.vikings.com/news/dolphins-injury-report-week-4-2026-nfl-season",
+          "published_at_utc": "2026-10-03T02:00:00Z"
+        }
       ]
-     },
-     {
-      "evidence_ids": [
-       "app-board-evening"
-      ],
-      "headline": "Quarterback check: the app is current",
-      "paragraphs": [
-       "Before tonight's write-up, the board's expected starters were checked against Friday's news: Case Keenum (Bears), Jameis Winston (Giants), Marcus Mariota (Commanders), and Cam Ward (Titans, the starter) all match. No QB surprise is hiding off the board tonight.",
-       "If your book's line has moved off the board's number — or your book isn't DraftKings or FanDuel — tap Check in the app. Type in your book's line and price. The app runs it back through the model and the evaluator and returns a bet/no-bet verdict on YOUR price. Full re-evaluation, not a blind override."
-      ],
-      "takeaway": "Your book's number, not the board's — Check prices your actual ticket.",
+    },
+    {
+      "evidence_id": "weather-am",
+      "category": "weather",
+      "verification": "REPORTED",
+      "fact": "Saturday kickoff-window look for Sunday's outdoor games (DraftKings Network Friday table; NWS via Denver Sports and Green Bay Press-Gazette): Philadelphia (Rams at Eagles, 1 p.m. ET): rain showers likely, 66F, 56% chance. Baltimore (Titans at Ravens, 1 p.m. ET): rain showers likely, 64F, 55%. MetLife (Cardinals at Giants, 1 p.m. ET): chance of showers, 66F, 36%. Charlotte (Lions at Panthers, 8:20 p.m. ET): chance of showers, 66F, 45%. Tampa (Packers at Buccaneers, 1 p.m. ET): 88F (NWS high 90), scattered storms possible after 2 p.m. (NWS 40%). Santa Clara (Broncos at 49ers, 4:25 p.m. ET): NWS heat warning, 92-94F at kickoff — one of the five hottest games in Broncos history. Houston (Cowboys at Texans, 1 p.m. ET): retractable roof; showers and thunderstorms likely outside (70%) — roof expected closed. London (Colts at Commanders, 9:30 a.m. ET): 67F, partly cloudy. Buffalo (Patriots at Bills, 1 p.m. ET): 68F, mostly sunny, no rain. Chicago (Jets at Bears, 1 p.m. ET): 69F, sunny. Cincinnati (Jaguars at Bengals, 1 p.m. ET): 74F, mostly sunny. Seattle (Chargers at Seahawks, 4:25 p.m. ET): 69F, sunny. Domes (Dolphins at Vikings; Chiefs at Raiders): no weather impact.",
+      "interpretation": "Two games carry a real chance of rain at kickoff (Philadelphia, Baltimore); Tampa and Santa Clara are the heat games. Everything else is manageable or indoors.",
+      "app_guidance": "Weather is a fact about the game, not a reason to bet a total — the app's model already prices conditions into its number.",
       "sources": [
-       {
-        "label": "NFL EDGE product",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
+        {
+          "label": "DraftKings Network",
+          "url": "https://dknetwork.draftkings.com/2026/10/02/nfl-week-4-weather-forecast/",
+          "published_at_utc": "2026-10-02T16:00:00Z"
+        },
+        {
+          "label": "Denver Sports (NWS heat warning)",
+          "url": "https://denversports.com/nfl/denver-broncos/sean-payton-prep-for-heat-49ers",
+          "published_at_utc": "2026-10-02T16:00:00Z"
+        },
+        {
+          "label": "Democrat and Chronicle (Buffalo)",
+          "url": "https://www.democratandchronicle.com/story/sports/football/nfl/bills/2026/10/03/bills-patriots-weather-forecast-orchard-park-sunday/92061977007/",
+          "published_at_utc": "2026-10-03T10:00:00Z"
+        }
       ]
-     }
-    ]
-   },
-   {
-    "id": "market-watch",
-    "icon": "📈",
-    "title": "Line Movement",
-    "items": [
-     {
-      "evidence_ids": [
-       "app-board-evening"
-      ],
-      "headline": "What moved since the morning board",
-      "paragraphs": [
-       "Hit Rate rotated: the morning read was Bills moneyline at -298 on DraftKings; tonight it's Bears moneyline at -176 on FanDuel. The most-likely-to-win card moved teams and books.",
-       "Balanced held: Bears -3.5 at -104 on FanDuel, same number, same price as the morning — though the evaluator's EV slipped a touch on the identical read. Value rotated off the Bears spread entirely and onto Dolphins +10.5 at -110, the board's plus-EV play. All three cards changed or moved. The board is alive, not sticky."
-      ],
-      "takeaway": "The moves are in the board — bet your book's number, not the board's.",
+    },
+    {
+      "evidence_id": "fade-attempt-am",
+      "category": "betting_splits",
+      "verification": "REPORTED",
+      "fact": "Attempted VSiN betting-splits check for a verified public-vs-sharper split on Week 4 NFL games, Saturday ~6:20am Denver. The free featured-game row on data.vsin.com/betting-splits is still Friday's college game (Pittsburgh +1.5 vs Virginia Tech -1.5): spread splits show Virginia Tech with 63% of handle and 70% of tickets — handle and tickets agree on the same side, which is NOT a disagreement. No free NFL tickets/handle row is visible; the full board is VSiN Pro paid. No Fade qualifies on NFL games this morning.",
+      "interpretation": "Agreement between tickets and handle is popularity, not a signal. Without a verified disagreement plus corroborating movement, there is no Fade — the jargon item runs in today's tip instead.",
+      "app_guidance": "The Fade is a decision layer, not a command to fade the public or override the app's cards.",
       "sources": [
-       {
-        "label": "NFL EDGE product",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
+        {
+          "label": "VSiN",
+          "url": "https://data.vsin.com/betting-splits/",
+          "published_at_utc": "2026-10-03T12:20:00Z"
+        }
       ]
-     }
-    ]
-   },
-   {
-    "id": "today-tip",
-    "icon": "✅",
-    "title": "Today's Tip",
-    "items": [
-     {
-      "evidence_ids": [
-       "inj-misc-evening"
-      ],
-      "headline": "Questionable is not out",
-      "paragraphs": [
-       "Friday's designations are labels, not lineups. Questionable players suit up all the time — Edgerrin Cooper went from concussion protocol to a full Friday practice. The final word is the inactive list, about 90 minutes before kickoff. That's when Sunday's real lineup locks."
-      ],
-      "takeaway": "Designations Friday, decisions Sunday.",
-      "sources": [
-       {
-        "label": "Packers Wire",
-        "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/10/02/packers-injury-report-final-week-4-buccaneers-questionable-out/92060558007/"
-       }
-      ]
-     },
-     {
-      "evidence_ids": [
-       "fade-attempt-evening"
-      ],
-      "headline": "Betting term of the day: handle vs. tickets",
-      "paragraphs": [
-       "No verified public-vs-sharper split surfaced on NFL games tonight, so here's the vocabulary for when one does. Handle (HND) is the share of MONEY on a side. Tickets (BET) is the share of BETS. When they point at opposite sides — lots of small bets one way, most of the money the other — that's a disagreement worth watching. When they agree, like tonight's free featured college row where both favor Virginia Tech, it's just popularity. Popularity is not information."
-      ],
-      "takeaway": "Agreement is popularity. Disagreement is the thing to watch.",
-      "sources": [
-       {
-        "label": "VSiN",
-        "url": "https://data.vsin.com/betting-splits/"
-       }
-      ]
-     },
-     {
-      "evidence_ids": [
-       "app-board-evening"
-      ],
-      "headline": "The tracker only works if you're honest",
-      "paragraphs": [
-       "Settlement is manual — nothing auto-grades your tickets. Log tonight's bets win or lose, including the ones you'd rather forget. A tracker with only winners in it is a diary, not a record."
-      ],
-      "takeaway": "Log the losers too.",
-      "sources": [
-       {
-        "label": "NFL EDGE product",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     }
-    ]
-   }
+    }
   ]
- },
- "evidence": [
-  {
-   "evidence_id": "app-board-evening",
-   "category": "app_board",
-   "verification": "INTERNAL_CANONICAL",
-   "fact": "Evening board (observed 2026-10-03T00:08:26Z): HIT_RATE = CHI ML -176 FANDUEL (model 70.07%, trust 66.89%, ev -0.22%, MEDIUM, 1.0u); BALANCED = CHI -3.5 @ -104 FANDUEL (model 50.53%, ev -1.29%, MEDIUM, 0.75u, play_through -3.5 @ -107); VALUE = MIA +10.5 @ -110 FANDUEL (model 50.56%, ev +1.48%, MEDIUM, 0.75u, play_through +10.5 @ -113). vs morning board: HIT_RATE was BUF ML -298 DRAFTKINGS; BALANCED was CHI -3.5 @ -104 FD (ev +2.19%); VALUE was CHI -3.5 @ -104 FD (identical to Balanced). QB projections: Case Keenum (CHI), Jameis Winston (NYG), Marcus Mariota (WAS), Cam Ward starter (TEN) — all match Friday's reporting.",
-   "interpretation": "The Hit Rate card rotated back from the Bills to the Bears; the Balanced Bears -3.5 read held at the same price; the Value lane split off the Bears onto Dolphins +10.5, the board's plus-EV read.",
-   "app_guidance": "Cards follow the price. Use the board's numbers, or run Check on your book's line.",
-   "sources": [
-    {
-     "label": "NFL EDGE product",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest",
-     "published_at_utc": "2026-10-03T00:08:26Z"
-    }
-   ]
-  },
-  {
-   "evidence_id": "inj-jefferson-evening",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Vikings coach Kevin O'Connell announced Friday that WR Justin Jefferson (left ankle sprain, suffered in the Week 3 win over Tampa Bay) is officially OUT for Sunday's home game vs the Dolphins (4:05 p.m. ET). Jefferson did not practice Wednesday, Thursday, or Friday. O'Connell said Jefferson is 'definitely feeling better' and the goal is to have him practicing next week ahead of Week 5 at New Orleans. Jordan Addison becomes Minnesota's top target; Jauan Jennings moves up. CB Charles Demmings (hamstring) and P Brett Thorson (right hamstring) also ruled out.",
-   "interpretation": "The morning's big question is answered: Minnesota goes without its top receiver Sunday. The offense funnels through Addison, Jennings, and Kyler Murray.",
-   "app_guidance": "The injury sits inside the model's inputs; the card you see already accounts for it. Don't double-count it.",
-   "sources": [
-    {
-     "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/justin-jefferson-ruled-out-for-vikings-dolphins",
-     "published_at_utc": "2026-10-02T14:32:00Z"
-    },
-    {
-     "label": "ESPN",
-     "url": "https://www.espn.ph/nfl/story/_/id/50086081/vikings-justin-jefferson-vs-dolphins-ankle-injury",
-     "published_at_utc": "2026-10-03T03:33:00Z"
-    }
-   ]
-  },
-  {
-   "evidence_id": "inj-misc-evening",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Friday's final designations: Bears — QB Caleb Williams (hamstring) and LT Braxton Jones (knee) officially OUT; Case Keenum starts vs the Jets on Sunday; RB D'Andre Swift (knee) back at practice Friday with no game designation. 49ers — DE Nick Bosa (knee/calf), DL James Thompson Jr. (ankle), DE Mykel Williams (knee) OUT; WR Mike Evans (ribs), LB Dre Greenlaw (quadricep), DE Keion White (hamstring), LB Jaden Dugger (shoulder) questionable; LT Trent Williams (neck) and DE Romello Height (hand) cleared. Ravens — WR Zay Flowers (hamstring) and LT Ronnie Stanley (toe) questionable; LB Trey Hendrickson (finger surgery), C Jovaughn Gwyn (ankle), C Ethan Pocic (knee) OUT; QB Lamar Jackson (back) has no designation. Patriots — CB Christian Gonzalez and DT Christian Barmore OUT vs the Bills; RT Morgan Moses (questionable) returned to practice Friday. Packers — G Aaron Banks (knee/toe), G Jacob Monk (quadriceps), DT Warren Brinson (calf/groin), DT Anthony Campbell (ankle) OUT; LB Edgerrin Cooper (concussion/shoulder) questionable after a full Friday practice. Cardinals — OLB Josh Sweat (groin) questionable after a new Friday injury; S Dadrion Taylor-Demerson (back) OUT. Dolphins — WR Caleb Douglas (ankle), DE Robert Beal Jr. (hamstring), CB Storm Duck (knee/Achilles) OUT; RB Jaylen Wright (foot) a full participant and will play Sunday; C Aaron Brewer (hand) full go; LB Chop Robinson popped up with a foot injury but practiced. Giants — no player questionable or out; LT Andrew Thomas (groin) limited Friday and trending the right way.",
-   "interpretation": "Friday's designations are the last full injury picture before Sunday. The only thing left is the inactive lists, about 90 minutes before kickoff.",
-   "app_guidance": "Questionable is not out. The board's lines already absorb the known outs; run Check on your book's number if a late surprise moves it.",
-   "sources": [
-    {
-     "label": "Bears Wire",
-     "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/10/02/bears-jets-injury-report-friday-dandre-swift/92060899007/"
-    },
-    {
-     "label": "Niners Wire",
-     "url": "https://ninerswire.usatoday.com/story/sports/nfl/niners/2026/10/02/mike-evans-dre-greenlaw-and-other-49ers-questionable-for-week-4/92063499007/"
-    },
-    {
-     "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/ravens-list-zay-flowers-ronnie-stanley-as-questionable"
-    },
-    {
-     "label": "Patriots Wire",
-     "url": "https://patriotswire.usatoday.com/story/sports/nfl/patriots/2026/10/02/patriots-final-week-4-injury-report-bills/92062041007/"
-    },
-    {
-     "label": "Packers Wire",
-     "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/10/02/packers-injury-report-final-week-4-buccaneers-questionable-out/92060558007/"
-    },
-    {
-     "label": "Cards Wire",
-     "url": "https://cardswire.usatoday.com/story/sports/nfl/cardinals/2026/10/02/arizona-cardinals-injury-report-pass-rusher-josh-sweat-injures-groin/92064840007/"
-    },
-    {
-     "label": "Dolphins Wire",
-     "url": "https://dolphinswire.usatoday.com/story/sports/nfl/dolphins/2026/10/02/dolphins-chop-robinson-injury-report-week-4/92062312007/"
-    },
-    {
-     "label": "Giants Wire",
-     "url": "https://cardswire.usatoday.com/story/sports/nfl/cardinals/2026/10/02/new-york-giants-final-injury-report-nobody-questionable-out/92064911007/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "weather-evening",
-   "category": "weather",
-   "verification": "REPORTED",
-   "fact": "Early Sunday forecast (DraftKings Network, published Friday): rain showers likely around kickoff in Philadelphia (Rams at Eagles, 66°F, 56% chance) and Baltimore (Titans at Ravens, 64°F, 55% chance); a chance of showers at MetLife (Cardinals at Giants, 66°F, 36%) and in Charlotte for Sunday night (Lions at Panthers, 66°F, 45%); hot and humid in Tampa (Packers at Buccaneers, 88°F, scattered storms possible after 2 p.m.); mostly sunny and calm in Buffalo, Chicago, Cincinnati, Seattle, and Santa Clara. London (Colts at Commanders, 9:30 a.m. ET): 67°F, partly cloudy. Domes (Minnesota, Las Vegas) and the retractable-roof game in Houston are unaffected. Final kickoff-window numbers land in Saturday's editions.",
-   "interpretation": "Nothing extreme: the wettest windows are Philadelphia and Baltimore. Weather is a fact about playing conditions, not a totals edge — totals are the app's weakest lane.",
-   "app_guidance": "If rain shows up in a box score narrative, check the actual kickoff window first — forecasts move.",
-   "sources": [
-    {
-     "label": "DraftKings Network",
-     "url": "https://dknetwork.draftkings.com/2026/10/02/nfl-week-4-weather-forecast/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "fade-attempt-evening",
-   "category": "fade_attempt",
-   "verification": "REPORTED",
-   "fact": "Attempted VSiN betting-splits check for a verified public-vs-sharper split on Week 4 NFL games. The free featured-game row on data.vsin.com/betting-splits tonight is a college game (Pittsburgh +1.5 vs Virginia Tech -1.5, Friday Oct 2): spread splits show Virginia Tech with 63% of handle and 70% of tickets — handle and tickets agree on the same side, which is NOT a disagreement. No free NFL tickets/handle row is visible; the full board is VSiN Pro paid. No Fade qualifies on NFL games tonight.",
-   "interpretation": "No verified public-vs-sharper disagreement available on NFL games this evening. Jargon-definition item used in today-tip instead.",
-   "app_guidance": "Without a verified split, there is no Fade layer tonight — the card stands on its own.",
-   "sources": [
-    {
-     "label": "VSiN",
-     "url": "https://data.vsin.com/betting-splits/"
-    }
-   ]
-  }
- ]
 }
