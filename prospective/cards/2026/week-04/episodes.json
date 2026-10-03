@@ -578,7 +578,7 @@
       "publication_count": 3,
       "returned_after_gap": true,
       "selection": "CHI",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "REPLACED",
       "worst_line": -3.5,
       "worst_price": -104
     },
@@ -639,9 +639,9 @@
       "lane": "HIT_RATE",
       "lane_key": "hit_rate",
       "last_line": null,
-      "last_price": -176,
-      "last_publication_id": "publication-f77cebbd7c0117b358acdc79",
-      "last_seen_at_utc": "2026-10-03T00:08:26.753413Z",
+      "last_price": -184,
+      "last_publication_id": "publication-752bdbaf187c6afa7c70ab67",
+      "last_seen_at_utc": "2026-10-03T12:08:19.014309Z",
       "logical_recommendation_id": "logical-227b86a64a8fc999620d8f1f",
       "market": "MONEYLINE",
       "normalized_selection": "CHI",
@@ -663,14 +663,31 @@
           "state": "BET",
           "value_at": null,
           "wager_identity_id": "wager-4591c40e99a46cc160939c46"
+        },
+        {
+          "american_odds": -184,
+          "book": "FANDUEL",
+          "exact_offer_identity_id": "offer-1a1680a2bc7d8f2b563c1140",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -189
+          },
+          "publication_id": "publication-752bdbaf187c6afa7c70ab67",
+          "published_at_utc": "2026-10-03T12:08:19.014309Z",
+          "recommended_units": 1.0,
+          "source_product_sha256": "752bdbaf187c6afa7c70ab676da9ac3b0e2f1b1d84a8d5cff196f06d544bdc34",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-4591c40e99a46cc160939c46"
         }
       ],
-      "publication_count": 1,
+      "publication_count": 2,
       "returned_after_gap": true,
       "selection": "CHI",
       "terminal_reason": "WEEK_HISTORY_END",
       "worst_line": null,
-      "worst_price": -176
+      "worst_price": -184
     },
     {
       "best_line": 10.5,
@@ -713,9 +730,54 @@
       "publication_count": 1,
       "returned_after_gap": false,
       "selection": "MIA",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "DISAPPEARED",
       "worst_line": 10.5,
       "worst_price": -110
+    },
+    {
+      "best_line": 3.5,
+      "best_price": -105,
+      "episode_id": "episode-1cea95b6b64602b9f8c6d32a",
+      "first_line": 3.5,
+      "first_price": -105,
+      "first_publication_id": "publication-752bdbaf187c6afa7c70ab67",
+      "first_seen_at_utc": "2026-10-03T12:08:19.014309Z",
+      "game_id": "2026_04_LAR_PHI",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "last_line": 3.5,
+      "last_price": -105,
+      "last_publication_id": "publication-752bdbaf187c6afa7c70ab67",
+      "last_seen_at_utc": "2026-10-03T12:08:19.014309Z",
+      "logical_recommendation_id": "logical-8098e400a29de10d99c15884",
+      "market": "SPREAD",
+      "normalized_selection": "PHI",
+      "normalized_side": "home",
+      "observations": [
+        {
+          "american_odds": -105,
+          "book": "FANDUEL",
+          "exact_offer_identity_id": "offer-40b6727be655c1c04e626197",
+          "line": 3.5,
+          "play_through": {
+            "line": 3.5,
+            "price_american": -108
+          },
+          "publication_id": "publication-752bdbaf187c6afa7c70ab67",
+          "published_at_utc": "2026-10-03T12:08:19.014309Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "752bdbaf187c6afa7c70ab676da9ac3b0e2f1b1d84a8d5cff196f06d544bdc34",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-b86a0adc52eb26295a999740"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "PHI",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": 3.5,
+      "worst_price": -105
     }
   ],
   "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1",
@@ -728,7 +790,8 @@
     "publication-502ab733ab1dd341f159baf8",
     "publication-e825124572d646d07fc6f628",
     "publication-42fe8f70e86ca957f5302796",
-    "publication-f77cebbd7c0117b358acdc79"
+    "publication-f77cebbd7c0117b358acdc79",
+    "publication-752bdbaf187c6afa7c70ab67"
   ],
   "week": 4
 }

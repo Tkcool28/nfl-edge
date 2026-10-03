@@ -1,0 +1,247 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "capture_mode": "NATIVE_PROSPECTIVE",
+  "creation_provenance": {
+    "provider_calls": 0,
+    "source": "CANONICAL_PUBLISHED_PRODUCT",
+    "user_specific_data_included": false
+  },
+  "field_availability": {
+    "backend_user_overlay": "EXCLUDED_USER_SPECIFIC_DATA",
+    "evaluator_probability": "NOT_EXPOSED_BY_CANONICAL_PRODUCT_V1"
+  },
+  "lanes": {
+    "balanced": {
+      "american_odds": -105,
+      "away_team": "LAR",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": -105,
+        "book": "FANDUEL",
+        "ev": -0.031300950132118976,
+        "game_id": "2026_04_LAR_PHI",
+        "lane": "BALANCED",
+        "line": 3.5,
+        "market": "SPREAD",
+        "market_probability": 0.4977100984657659,
+        "matchup": {
+          "away_team": "LAR",
+          "home_team": "PHI"
+        },
+        "model_probability": 0.5051648792924172,
+        "play_through": {
+          "line": 3.5,
+          "price_american": -108
+        },
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "selection": "PHI",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5051648792924172,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": -0.031300950132118976,
+      "exact_offer_identity_id": "offer-40b6727be655c1c04e626197",
+      "game_id": "2026_04_LAR_PHI",
+      "home_team": "PHI",
+      "kickoff_at_utc": "2026-10-04T17:00:00Z",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "line": 3.5,
+      "logical_recommendation_id": "logical-8098e400a29de10d99c15884",
+      "market": "SPREAD",
+      "market_probability": 0.4977100984657659,
+      "model_probability": 0.5051648792924172,
+      "normalized_selection": "PHI",
+      "normalized_side": "home",
+      "play_through": {
+        "line": 3.5,
+        "price_american": -108
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.75,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "PHI",
+      "selector_version": "balanced-price-bounded-v2",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5051648792924172,
+      "value_at": null,
+      "wager_identity_id": "wager-b86a0adc52eb26295a999740",
+      "warnings": []
+    },
+    "hit_rate": {
+      "american_odds": -184,
+      "away_team": "NYJ",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": -184,
+        "book": "FANDUEL",
+        "ev": -0.017848030244746182,
+        "game_id": "2026_04_NYJ_CHI",
+        "lane": "HIT_RATE",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.6371047922052098,
+        "matchup": {
+          "away_team": "NYJ",
+          "home_team": "CHI"
+        },
+        "model_probability": 0.7007434821840651,
+        "play_through": {
+          "line": null,
+          "price_american": -189
+        },
+        "recommended_units": 1.0,
+        "reliability": "MEDIUM",
+        "selection": "CHI",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.6689241371946375,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": -0.017848030244746182,
+      "exact_offer_identity_id": "offer-1a1680a2bc7d8f2b563c1140",
+      "game_id": "2026_04_NYJ_CHI",
+      "home_team": "CHI",
+      "kickoff_at_utc": "2026-10-04T17:00:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "line": null,
+      "logical_recommendation_id": "logical-227b86a64a8fc999620d8f1f",
+      "market": "MONEYLINE",
+      "market_probability": 0.6371047922052098,
+      "model_probability": 0.7007434821840651,
+      "normalized_selection": "CHI",
+      "normalized_side": "home",
+      "play_through": {
+        "line": null,
+        "price_american": -189
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 1.0,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "CHI",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.6689241371946375,
+      "value_at": null,
+      "wager_identity_id": "wager-4591c40e99a46cc160939c46",
+      "warnings": []
+    },
+    "value": {
+      "american_odds": null,
+      "away_team": null,
+      "book": null,
+      "canonical_headline": {
+        "american_odds": null,
+        "book": null,
+        "ev": null,
+        "game_id": null,
+        "lane": "VALUE",
+        "line": null,
+        "market": null,
+        "market_probability": null,
+        "matchup": null,
+        "model_probability": null,
+        "play_through": null,
+        "recommended_units": 0.0,
+        "reliability": null,
+        "selection": null,
+        "state": "NO_PLAY",
+        "support": "SUPPORTED",
+        "trust_probability": null,
+        "value_at": null,
+        "warnings": [
+          "No offer currently satisfies the frozen VALUE lane contract."
+        ]
+      },
+      "ev": null,
+      "exact_offer_identity_id": null,
+      "game_id": null,
+      "home_team": null,
+      "kickoff_at_utc": null,
+      "lane": "VALUE",
+      "lane_key": "value",
+      "line": null,
+      "logical_recommendation_id": null,
+      "market": null,
+      "market_probability": null,
+      "model_probability": null,
+      "normalized_selection": null,
+      "normalized_side": null,
+      "play_through": null,
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.0,
+      "reliability": null,
+      "roof_state": null,
+      "selection": null,
+      "selector_version": "v1",
+      "state": "NO_PLAY",
+      "support": "SUPPORTED",
+      "trust_probability": null,
+      "value_at": null,
+      "wager_identity_id": null,
+      "warnings": [
+        "No offer currently satisfies the frozen VALUE lane contract."
+      ]
+    }
+  },
+  "product_freshness": {
+    "age_seconds": 0.0,
+    "observed_at_utc": "2026-10-03T12:08:18Z",
+    "state": "FRESH",
+    "threshold_seconds": 43200.0
+  },
+  "product_generated_at_utc": "2026-10-03T12:08:18Z",
+  "product_stale": false,
+  "product_warnings": [
+    "1 canonical Week 4 game(s) lack a provider event."
+  ],
+  "publication_id": "publication-752bdbaf187c6afa7c70ab67",
+  "published_at_utc": "2026-10-03T12:08:19.014309Z",
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1",
+  "season": 2026,
+  "source_commit_sha": null,
+  "source_product_sha256": "752bdbaf187c6afa7c70ab676da9ac3b0e2f1b1d84a8d5cff196f06d544bdc34",
+  "source_product_version": "live-2026-week4-product-v1",
+  "source_provenance": {
+    "evaluator_versions": {
+      "moneyline": "ml_v4",
+      "spread": "spread_v3",
+      "total": "total_v3"
+    },
+    "football_data_version": "live-2026-state:3c4b12c282572090e950b993",
+    "market_snapshot_version": "live-market:df94e13ca70d6d350620654a",
+    "model_versions": {
+      "expected_margin": "expected-margin-v1-stable",
+      "qb_elo": "qb-elo-v1.0.0",
+      "ridge_totals_r4": "ridge-totals-r4-alpha100",
+      "xgboost_v2": "post-v5-v2-conservative-adaptive-tail"
+    },
+    "prediction_as_of_utc": "2026-10-03T12:05:05.464883Z",
+    "qb_snapshot_version": "sleeper-scheduled-20261003T120001Z-67e9dc6f",
+    "selector_versions": {
+      "balanced": "balanced-price-bounded-v2",
+      "hit_rate": "v1",
+      "value": "v1"
+    }
+  },
+  "source_week_last_kickoff_at_utc": "2026-10-06T00:15:00Z",
+  "week": 4
+}
