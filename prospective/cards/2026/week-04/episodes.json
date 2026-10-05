@@ -826,7 +826,7 @@
       "publication_count": 3,
       "returned_after_gap": false,
       "selection": "PHI",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "REPLACED",
       "worst_line": 3.5,
       "worst_price": -105
     },
@@ -885,7 +885,7 @@
       "publication_count": 2,
       "returned_after_gap": false,
       "selection": "LAC",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "DISAPPEARED",
       "worst_line": 7.0,
       "worst_price": -105
     },
@@ -930,9 +930,99 @@
       "publication_count": 1,
       "returned_after_gap": true,
       "selection": "BUF",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "REPLACED",
       "worst_line": null,
       "worst_price": -298
+    },
+    {
+      "best_line": null,
+      "best_price": -215,
+      "episode_id": "episode-ff7e39d69014ccba7436a019",
+      "first_line": null,
+      "first_price": -215,
+      "first_publication_id": "publication-c1749862408c968506309cbe",
+      "first_seen_at_utc": "2026-10-05T00:08:31.900533Z",
+      "game_id": "2026_04_DET_CAR",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "last_line": null,
+      "last_price": -215,
+      "last_publication_id": "publication-c1749862408c968506309cbe",
+      "last_seen_at_utc": "2026-10-05T00:08:31.900533Z",
+      "logical_recommendation_id": "logical-a4ff57f002e834c52df2b08e",
+      "market": "MONEYLINE",
+      "normalized_selection": "DET",
+      "normalized_side": "away",
+      "observations": [
+        {
+          "american_odds": -215,
+          "book": "FANDUEL",
+          "exact_offer_identity_id": "offer-fec598c87acc5ed45b51c03a",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -218
+          },
+          "publication_id": "publication-c1749862408c968506309cbe",
+          "published_at_utc": "2026-10-05T00:08:31.900533Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "c1749862408c968506309cbe67c5d6ec388835417f01011da496df94c3583cfe",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-435c99ee47f9713e60fe099a"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "DET",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": null,
+      "worst_price": -215
+    },
+    {
+      "best_line": 1.5,
+      "best_price": -105,
+      "episode_id": "episode-4d5a0819967495099255af99",
+      "first_line": 1.5,
+      "first_price": -105,
+      "first_publication_id": "publication-c1749862408c968506309cbe",
+      "first_seen_at_utc": "2026-10-05T00:08:31.900533Z",
+      "game_id": "2026_04_ATL_NO",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "last_line": 1.5,
+      "last_price": -105,
+      "last_publication_id": "publication-c1749862408c968506309cbe",
+      "last_seen_at_utc": "2026-10-05T00:08:31.900533Z",
+      "logical_recommendation_id": "logical-d12184e6501f7e3d4c2eb6d2",
+      "market": "SPREAD",
+      "normalized_selection": "ATL",
+      "normalized_side": "away",
+      "observations": [
+        {
+          "american_odds": -105,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-7784543b9c5e9c199461182a",
+          "line": 1.5,
+          "play_through": {
+            "line": 1.5,
+            "price_american": -108
+          },
+          "publication_id": "publication-c1749862408c968506309cbe",
+          "published_at_utc": "2026-10-05T00:08:31.900533Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "c1749862408c968506309cbe67c5d6ec388835417f01011da496df94c3583cfe",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-b979716189218f731a2e656c"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "ATL",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": 1.5,
+      "worst_price": -105
     }
   ],
   "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1",
@@ -948,7 +1038,8 @@
     "publication-f77cebbd7c0117b358acdc79",
     "publication-752bdbaf187c6afa7c70ab67",
     "publication-1067fb98d5ff139db0f80c89",
-    "publication-b8983d4ddc9fb703fc3627c0"
+    "publication-b8983d4ddc9fb703fc3627c0",
+    "publication-c1749862408c968506309cbe"
   ],
   "week": 4
 }
