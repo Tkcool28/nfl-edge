@@ -1,0 +1,190 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "lane_results": [
+    {
+      "correction": null,
+      "game_id": "2026_04_NE_BUF",
+      "grade": "PENDING",
+      "lane_key": "hit_rate",
+      "official_score": null,
+      "official_source_product_sha256": "b8983d4ddc9fb703fc3627c0f5f35a43ee3dee751d60531321d0d08aa339e322",
+      "official_source_publication_id": "publication-b8983d4ddc9fb703fc3627c0",
+      "price_used_for_scoring": -298,
+      "realized_units": null,
+      "result_id": "result-94e575e9141c7fbeac5e2df9",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 1.0
+    },
+    {
+      "correction": null,
+      "game_id": "2026_04_LAR_PHI",
+      "grade": "PENDING",
+      "lane_key": "balanced",
+      "official_score": null,
+      "official_source_product_sha256": "b8983d4ddc9fb703fc3627c0f5f35a43ee3dee751d60531321d0d08aa339e322",
+      "official_source_publication_id": "publication-b8983d4ddc9fb703fc3627c0",
+      "price_used_for_scoring": -105,
+      "realized_units": null,
+      "result_id": "result-9f3ad802d325bf49ae92b5fe",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    },
+    {
+      "correction": null,
+      "game_id": "2026_04_LAC_SEA",
+      "grade": "PENDING",
+      "lane_key": "value",
+      "official_score": null,
+      "official_source_product_sha256": "b8983d4ddc9fb703fc3627c0f5f35a43ee3dee751d60531321d0d08aa339e322",
+      "official_source_publication_id": "publication-b8983d4ddc9fb703fc3627c0",
+      "price_used_for_scoring": -105,
+      "realized_units": null,
+      "result_id": "result-28f575353084aa2749c92462",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    },
+    {
+      "correction": null,
+      "game_id": "2026_04_DET_CAR",
+      "grade": "PENDING",
+      "lane_key": "hit_rate",
+      "official_score": null,
+      "official_source_product_sha256": "c1749862408c968506309cbe67c5d6ec388835417f01011da496df94c3583cfe",
+      "official_source_publication_id": "publication-c1749862408c968506309cbe",
+      "price_used_for_scoring": -215,
+      "realized_units": null,
+      "result_id": "result-34fdb5104b8f813f88ebc964",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    },
+    {
+      "correction": null,
+      "game_id": "2026_04_ATL_NO",
+      "grade": "PENDING",
+      "lane_key": "hit_rate",
+      "official_score": null,
+      "official_source_product_sha256": "6d41942a3402429a1cd856d0e4c8e66496a9136dc18a6f2ff652ea4f40022575",
+      "official_source_publication_id": "publication-6d41942a3402429a1cd856d0",
+      "price_used_for_scoring": -110,
+      "realized_units": null,
+      "result_id": "result-e0dd39eaadc2174c35b036a1",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.5
+    },
+    {
+      "correction": null,
+      "game_id": "2026_04_ATL_NO",
+      "grade": "PENDING",
+      "lane_key": "balanced",
+      "official_score": null,
+      "official_source_product_sha256": "6d41942a3402429a1cd856d0e4c8e66496a9136dc18a6f2ff652ea4f40022575",
+      "official_source_publication_id": "publication-6d41942a3402429a1cd856d0",
+      "price_used_for_scoring": -110,
+      "realized_units": null,
+      "result_id": "result-d34cbeb7da26459150d705d1",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    },
+    {
+      "correction": null,
+      "game_id": "2026_04_ATL_NO",
+      "grade": "PENDING",
+      "lane_key": "value",
+      "official_score": null,
+      "official_source_product_sha256": "6d41942a3402429a1cd856d0e4c8e66496a9136dc18a6f2ff652ea4f40022575",
+      "official_source_publication_id": "publication-6d41942a3402429a1cd856d0",
+      "price_used_for_scoring": -114,
+      "realized_units": null,
+      "result_id": "result-89c8db1036a8f303e24555ac",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    }
+  ],
+  "portfolio_results": [
+    {
+      "game_id": "2026_04_NE_BUF",
+      "grade": "PENDING",
+      "lane_keys": [
+        "hit_rate"
+      ],
+      "portfolio_entry_id": "portfolio-f403da1790bbe2f192002bb7",
+      "price_used_for_scoring": -298,
+      "realized_units": null,
+      "units_risked": 1.0
+    },
+    {
+      "game_id": "2026_04_LAR_PHI",
+      "grade": "PENDING",
+      "lane_keys": [
+        "balanced"
+      ],
+      "portfolio_entry_id": "portfolio-40b6727be655c1c04e626197",
+      "price_used_for_scoring": -105,
+      "realized_units": null,
+      "units_risked": 0.75
+    },
+    {
+      "game_id": "2026_04_LAC_SEA",
+      "grade": "PENDING",
+      "lane_keys": [
+        "value"
+      ],
+      "portfolio_entry_id": "portfolio-59d7fafca540f4c77dd1783c",
+      "price_used_for_scoring": -105,
+      "realized_units": null,
+      "units_risked": 0.75
+    },
+    {
+      "game_id": "2026_04_DET_CAR",
+      "grade": "PENDING",
+      "lane_keys": [
+        "hit_rate"
+      ],
+      "portfolio_entry_id": "portfolio-fec598c87acc5ed45b51c03a",
+      "price_used_for_scoring": -215,
+      "realized_units": null,
+      "units_risked": 0.75
+    },
+    {
+      "game_id": "2026_04_ATL_NO",
+      "grade": "PENDING",
+      "lane_keys": [
+        "hit_rate",
+        "balanced"
+      ],
+      "portfolio_entry_id": "portfolio-9e730cae27bdb23db0d27854",
+      "price_used_for_scoring": -110,
+      "realized_units": null,
+      "units_risked": 0.5
+    },
+    {
+      "game_id": "2026_04_ATL_NO",
+      "grade": "PENDING",
+      "lane_keys": [
+        "value"
+      ],
+      "portfolio_entry_id": "portfolio-90929085a3bc5e376dc24f93",
+      "price_used_for_scoring": -114,
+      "realized_units": null,
+      "units_risked": 0.75
+    }
+  ],
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_RESULT_V1",
+  "season": 2026,
+  "settlement_status": "PENDING",
+  "week": 4
+}
