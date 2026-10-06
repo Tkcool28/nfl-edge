@@ -1,274 +1,211 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-10-05T12:20:30Z",
- "research_generated_at_utc": "2026-10-05T12:20:30Z",
+ "submitted_at_utc": "2026-10-06T00:24:36Z",
+ "research_generated_at_utc": "2026-10-06T00:24:36Z",
  "article": {
-  "dek": "Sunday night went to Carolina 32-26; one game left on the Week 4 slate, and Monday night's Falcons-Saints is a thin-margin board with New Orleans down three front-seven starters.",
-  "edition": "Morning Brief",
-  "published_at_utc": "2026-10-05T12:20:30Z",
-  "research_generated_at_utc": "2026-10-05T12:20:30Z",
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Monday Evening Brief",
+  "dek": "Inactives are out, Pete Werner is playing, the line has slid toward Atlanta, and the one-game board has a new look.",
+  "published_at_utc": "2026-10-06T00:24:36Z",
+  "research_generated_at_utc": "2026-10-06T00:24:36Z",
   "sections": [
    {
-    "icon": "📰",
     "id": "what-matters",
+    "icon": "📰",
+    "title": "What Matters Today",
     "items": [
      {
-      "evidence_ids": [
-       "mnf-injuries",
-       "mnf-falcons-injuries",
-       "app-board-am"
-      ],
-      "headline": "Saints down three front-seven starters tonight; Werner is the game-time question",
+      "headline": "Pete Werner is playing — the game-time question has an answer",
       "paragraphs": [
-       "The final injury picture for Monday's 8:15 p.m. ET kickoff in New Orleans has not changed since Saturday: the Saints are out linebacker Kaden Elliss (calf), edge Carl Granderson (ankle), and edge Anfernee Jennings (knee). Linebacker Pete Werner (shoulder) missed all three practices and is officially questionable — Saints coach Kellen Moore called him a game-time decision who will be evaluated Monday. Tight end Noah Fant (abdomen) is also questionable after a limited week.",
-       "Atlanta ruled nobody out. Linebackers Divine Deablo (hamstring) and Yasir Abdullah (illness) and edge Samson Ebukam (hamstring) are questionable, though Ebukam was a full participant Saturday. The app's quarterback feed confirms the matchup it is pricing: Michael Penix Jr. for Atlanta, Tyler Shough for New Orleans. No QB change to price in.",
-       "Inactives land about 90 minutes before kickoff — that is where the Werner question gets answered. Anything after the board's morning refresh is Check territory."
+       "Inactives landed about 90 minutes before the 8:15 p.m. ET kickoff in New Orleans. Saints linebacker Pete Werner (shoulder) is ACTIVE after missing all three practices — the game-time question the morning brief flagged is answered. His fellow starter Kaden Elliss (calf) is out, along with edge rushers Carl Granderson (ankle) and Anfernee Jennings (knee). Tight end Noah Fant (abdomen) is out too, and Christen Miller joins the inactive list.",
+       "Atlanta ruled nobody out. The Falcons’ question marks were linebackers Divine Deablo (hamstring) and Yasir Abdullah (illness) and edge Samson Ebukam (hamstring), with Ebukam a full participant Saturday. The app’s quarterback feed confirms the matchup it is pricing: Michael Penix Jr. for Atlanta, Tyler Shough for New Orleans. No QB change to price in."
+      ],
+      "takeaway": "Werner plays, three front-seven starters don’t. The Saints’ run defense against Bijan Robinson is the live matchup.",
+      "evidence_ids": [
+       "mnf-inactives",
+       "app-board-pm"
       ],
       "sources": [
        {
-        "label": "Saints Wire (final injury breakdown)",
-        "url": "https://saintswire.usatoday.com/story/sports/nfl/saints/2026/10/04/saints-falcons-injury-report-breakdown-reaction/91974389007/"
+        "label": "Saints Wire (MNF inactives)",
+        "url": "https://saintswire.usatoday.com/story/sports/nfl/saints/2026/10/05/saints-falcons-inactive-players-monday-night-football/92109862007/"
        },
        {
-        "label": "TSN (Moore on Werner)",
-        "url": "https://www.tsn.ca/nfl/article/saints-rule-out-lb-elliss-de-granderson-for-mnf-tilt-vs-falcons-n1-50092081/"
-       },
-       {
-        "label": "Falcons Wire (final injury report)",
-        "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/10/03/falcons-vs-saints-injury-report-with-week-4-game-designations/92077555007/"
+        "label": "Louisiana Sports (Werner cleared)",
+        "url": "https://www.louisianasports.net/2026/10/05/saints-clear-werner-to-play/latest-stories/"
        },
        {
         "label": "NFL EDGE product",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
-      ],
-      "takeaway": "Three Saints front-seven starters are out; Werner is the one to watch at inactives. Penix and Shough are the app's confirmed starters."
+      ]
      },
      {
-      "evidence_ids": [
-       "snf-injuries"
-      ],
-      "headline": "Injury follow-up from Sunday night: Freeling, Phillips, Ya-Sin",
+      "headline": "No weather factor tonight — the game is in the dome",
       "paragraphs": [
-       "From last night's Panthers-Lions game: Carolina rookie right tackle Monroe Freeling exited with a knee injury and did not return; Panthers edge Jaelan Phillips exited with a hamstring injury. Detroit cornerback Rock Ya-Sin did not return with a hamstring injury.",
-       "All three matter for next week's lines, not tonight's. Note them and move on — the board will price them by the Week 5 refresh."
+       "Caesars Superdome. No wind, no rain, no number to price. Weather goes in the books as neutral."
       ],
-      "sources": [
-       {
-        "label": "NBC Sports (SNF recap)",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-tetairoa-mcmillans-big-night-powers-panthers-to-32-26-victory"
-       }
-      ],
-      "takeaway": "Freeling (knee), Phillips (hamstring), and Ya-Sin (hamstring) did not return Sunday night — Week 5 relevance, not tonight."
-     },
-     {
+      "takeaway": "Dome game — weather is a non-factor.",
       "evidence_ids": [
        "mnf-venue"
-      ],
-      "headline": "No weather factor tonight — the game is indoors",
-      "paragraphs": [
-       "Falcons-Saints kicks off at the Caesars Superdome in New Orleans. Indoors, so there is no weather to price. Stated as fact, nothing more: this is not a totals argument."
       ],
       "sources": [
        {
         "label": "SI (game preview)",
         "url": "https://www.si.com/nfl/falcons/onsi/falcons-vs-saints-odds-how-to-watch-injuries-for-nfl-week-4"
        }
-      ],
-      "takeaway": "Monday night is in the dome — no weather factor."
-     },
+      ]
+     }
+    ]
+   },
+   {
+    "id": "what-it-means",
+    "icon": "💡",
+    "title": "What It Means for NFL EDGE",
+    "items": [
      {
+      "headline": "Hit Rate: Saints moneyline, with a flag on it",
+      "paragraphs": [
+       "Hit Rate’s job is “which supported pick looks most likely to win” — win probability, not value. Tonight that lane points at the Saints moneyline at -110 on FanDuel. The app’s number says the Saints win 56.4% of the time; -110 means the market wants 52.4%. The model likes the Saints better than the market does, but the price is worse than what the model says is fair.",
+       "So the app rates the read -5.7% expected value, LOW reliability. That’s the lane doing its job honestly: naming the likeliest winner and flagging the price. The app’s own tutorial says it plainly — Hit Rate ≠ Profit Rate."
+      ],
+      "takeaway": "Hit Rate names the Saints as the likeliest winner and tells you the price is the problem — the lane is telling you to be careful, so be careful.",
       "evidence_ids": [
-       "snf-final",
        "app-board-pm"
       ],
-      "headline": "Sunday night final: Panthers 32, Lions 26 — the Hit Rate card lost",
-      "paragraphs": [
-       "Carolina won Sunday night in Charlotte, 32-26. Bryce Young threw for 329 yards and two touchdowns to Tetairoa McMillan (14 catches, 192 yards, two scores); Chuba Hubbard ran for 122 yards and two touchdowns. Jared Goff threw for a season-high 412 yards but Detroit settled for field goals too often and turned it over on downs twice in the fourth quarter. Both teams are 2-2.",
-       "The evening board's Hit Rate card was Detroit's moneyline at -215. It lost. The app settles manually — if you played it, log the loser. The tracker only works if you are honest with yourself, and a loss on a 66.4% card is exactly the kind of result the tutorial's line covers: Hit Rate ≠ Profit Rate."
-      ],
-      "sources": [
-       {
-        "label": "NBC Sports (SNF recap)",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-tetairoa-mcmillans-big-night-powers-panthers-to-32-26-victory"
-       },
-       {
-        "label": "USA Today (SNF live blog)",
-        "url": "https://www.usatoday.com/story/sports/nfl/2026/10/04/lions-panthers-score-highlights-sunday-night-football--live/92089783007/"
-       }
-      ],
-      "takeaway": "Panthers 32, Lions 26. The Hit Rate card took the loss — log it honestly."
-     }
-    ],
-    "title": "What Matters Today"
-   },
-   {
-    "icon": "💡",
-    "id": "what-it-means",
-    "items": [
-     {
-      "evidence_ids": [
-       "app-board-am"
-      ],
-      "headline": "Hit Rate: 51.1% and honest about it",
-      "paragraphs": [
-       "The morning Hit Rate card reads a 51.1% model chance against a 54.95% break-even — an expected value of minus 6.9%, with reliability flagged LOW. That is the lane doing its job: Hit Rate is the supported pick most likely to win, forgoing value for win probability, and this morning it is telling you the remaining slate is a coin flip, not hunting for a favorite to make itself look smart.",
-       "The lesson from last night carries over: the card was Detroit's moneyline at -215 with a 66.4% number and it lost anyway. Hit Rate ≠ Profit Rate is not a disclaimer, it is the lane's whole definition. When reliability reads LOW, the card is warning you its footing is shaky — size it like you believe the warning."
-      ],
       "sources": [
        {
         "label": "NFL EDGE product",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
-      ],
-      "takeaway": "Hit Rate is a 51.1% coin-flip read, -6.9% EV, LOW reliability — the lane is telling you to be careful, so be careful."
+      ]
      },
      {
-      "evidence_ids": [
-       "app-board-am"
-      ],
-      "headline": "Balanced: a small plus on the one-game slate",
+      "headline": "Balanced: the middle ground agrees with Hit Rate",
       "paragraphs": [
-       "The Balanced lane reads a 50.97% model chance against a 50.50% break-even — about +0.95% expected value, MEDIUM reliability. That is the middle lane: a strong pick without paying too much, a fair starting point if you are newer to this. A half-point margin between the app's number and the break-even is not a bargain claim. It is support at a reasonable price.",
-       "The football context behind the number: the app's expected margin for Falcons-Saints is Falcons by 0.99, with Penix and Shough confirmed as the starters — a near-pick'em game where the model's read sits just over the price. That is exactly the kind of thin-margin spot Balanced exists for."
+       "Balanced is “a strong pick without paying too much” — the middle ground, a good starting point for a new bettor. Tonight the middle ground lands on the same read: Saints moneyline at -110, -5.7% expected value, LOW reliability. Two lanes agreeing on the Saints moneyline is not two reasons to play it — it’s the same number.",
+       "Nothing about that is a deficiency of the card. Balanced isn’t supposed to find +EV — that’s the Value lane’s job."
+      ],
+      "takeaway": "Balanced lands on the same Saints moneyline — support at a fair price, with the app’s caution flag attached.",
+      "evidence_ids": [
+       "app-board-pm"
       ],
       "sources": [
        {
         "label": "NFL EDGE product",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
-      ],
-      "takeaway": "Balanced shows +0.95% EV on the one-game slate, MEDIUM reliability — support at a fair price, not a value claim."
+      ]
      },
      {
-      "evidence_ids": [
-       "app-board-am"
-      ],
-      "headline": "Value: the model's +EV read is a modest one",
+      "headline": "Value: Falcons +1.5 is the model’s +EV read — and it’s a thin one",
       "paragraphs": [
-       "Value is always the model's +EV play — the book's price cheaper than the app's price — and this morning it reads 50.97% against a 50.50% break-even: +0.95% expected value, MEDIUM reliability. The lane did not empty like it did last night on the two-game slate; it found a small plus and took it, without inflating it into a windfall.",
-       "Plus money is the wrong thing to hunt here regardless. When the edge is under a point, the discipline is the same as the stakes rule you already know: the app's price, your book's price, and a Check — not a bigger swing to make a small edge feel big."
+       "Value is always the model’s +EV play. Tonight: Falcons +1.5 at -114 on FanDuel. The app’s model gives Atlanta a 50.5% chance to cover; the market’s price implies 49.1%. Expected value: +0.12%. Reliability: MEDIUM. A hair above fair — take it as priced, not as a windfall.",
+       "The why is worth knowing: the model’s predicted margin is the Saints by about 1, so +1.5 gets a half-point of cushion. And -114 is just price mechanics: risk $1.14 to win $1. The app prices the pick from its own bankroll and staking settings — your number comes from your own."
+      ],
+      "takeaway": "Value’s read is Falcons +1.5 — a modest +EV on a one-game slate, priced like a fair fight.",
+      "evidence_ids": [
+       "app-board-pm"
       ],
       "sources": [
        {
         "label": "NFL EDGE product",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
-      ],
-      "takeaway": "Value found a modest +0.95% EV read, MEDIUM reliability — take it as priced, not as a windfall."
+      ]
      }
-    ],
-    "title": "What It Means for NFL EDGE"
+    ]
    },
    {
-    "icon": "📈",
     "id": "market-watch",
+    "icon": "📈",
+    "title": "Line Movement",
     "items": [
      {
-      "evidence_ids": [
-       "app-board-am",
-       "mnf-odds-am"
-      ],
-      "headline": "Down to one game; the board's market feed is dark this morning",
+      "headline": "Saints -2 became Saints -1.5; the moneyline moved the most",
       "paragraphs": [
-       "Fifteen of sixteen Week 4 games are done, so the 6:00 a.m. refresh re-ran on the one remaining game. The morning cards: Hit Rate 51.1% (-6.9% EV, LOW), Balanced 50.97% (+0.95% EV, MEDIUM), Value 50.97% (+0.95% EV, MEDIUM). The app rotated off Sunday night — the old cards (Detroit moneyline, Atlanta +1.5) are gone.",
-       "One honest flag: the app's market feed carried no current book observations this morning, so I cannot verify the exact pick and price each lane is evaluating — only the lane metrics above, which are real app numbers. External snapshots this morning show the MNF price floating around Saints -1.5/-2 (and Falcons +110 on the moneyline). Do not take any of that as your price. If your book is not the board's book, or the line moves between now and kickoff, tap Check in the app, type in your book's line and price, and the app runs it back through the model and the evaluator and returns a bet/no-bet verdict on YOUR price. Full re-evaluation, not a blind override."
+       "The board’s market feed was dark this morning, so here’s the move it caught since: Saints -2 (-110 at BetMGM, per Saturday’s odds snapshot) is now Saints -1.5 — +100 at DraftKings, -106 at FanDuel. The moneyline told the louder story: Saints -135 down to Saints -110 at FanDuel. The total never moved: 47.5 everywhere, all day.",
+       "What it means: the market bought Atlanta. A -2 to -1.5 move is the market’s price tag changing — the market now thinks Atlanta is more likely to keep it close. The app moved with it: the Value card flipped to Falcons +1.5, while Hit Rate and Balanced stayed on the Saints moneyline but now at -110 with the negative number and LOW reliability.",
+       "One honest caveat: the free splits read (DraftKings, both handle and tickets on the Saints) shows no public-vs-money disagreement — 61% of the tickets and 54% of the money are on New Orleans, and DraftKings-only splits can’t tell a sharp-money story anyway. So the move is just the market re-pricing, not a signal. And your book’s number may not match this board’s. That’s exactly what Check is for: type in your book’s line and price, and the app runs it back through the model and the evaluator and hands you a bet/no-bet on YOUR price. A full re-evaluation, not a blind override."
+      ],
+      "takeaway": "Saints -2 became Saints -1.5 and the board moved with it. Your book’s number may differ — run it through Check.",
+      "evidence_ids": [
+       "mnf-odds-pm",
+       "vsin-attempt-pm",
+       "app-board-pm"
       ],
       "sources": [
-       {
-        "label": "NFL EDGE product",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       },
        {
         "label": "SI (BetMGM odds)",
         "url": "https://www.si.com/nfl/falcons/onsi/falcons-vs-saints-odds-how-to-watch-injuries-for-nfl-week-4"
        },
        {
-        "label": "SportsbookWire (odds snapshot)",
-        "url": "https://sportsbookwire.usatoday.com/story/sports/nfl/2026/10/04/falcons-at-saints-odds-picks-and-predictions/92089949007/"
-       }
-      ],
-      "takeaway": "One game left, the app rotated cleanly, and its market feed is dark — so put your own book's line through Check."
-     }
-    ],
-    "title": "Line Movement"
-   },
-   {
-    "icon": "✅",
-    "id": "today-tip",
-    "items": [
-     {
-      "evidence_ids": [
-       "mnf-injuries",
-       "app-board-am"
-      ],
-      "headline": "Monday game? Monday check.",
-      "paragraphs": [
-       "Monday night's inactives land about 90 minutes before the 8:15 p.m. ET kickoff — that is where the Pete Werner questionable tag gets answered. Anything that lands after the board's morning refresh is exactly what Check is for: type in your book's line and price on Falcons-Saints, and the app runs it back through the model and the evaluator on YOUR price.",
-       "The board refreshes every morning and evening. Between refreshes, you are the fresh set of eyes — Check is how you put them to work."
-      ],
-      "sources": [
+        "label": "DraftKings Network betting splits",
+        "url": "https://dknetwork.draftkings.com/draftkings-sportsbook-betting-splits/"
+       },
        {
-        "label": "Saints Wire (final injury breakdown)",
-        "url": "https://saintswire.usatoday.com/story/sports/nfl/saints/2026/10/04/saints-falcons-injury-report-breakdown-reaction/91974389007/"
+        "label": "VSiN betting splits",
+        "url": "https://data.vsin.com/betting-splits/"
        },
        {
         "label": "NFL EDGE product",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
-      ],
-      "takeaway": "Werner's status lands at inactives, ~90 minutes before kickoff — run anything new through Check."
-     },
+      ]
+     }
+    ]
+   },
+   {
+    "id": "today-tip",
+    "icon": "✅",
+    "title": "Today’s Tip",
+    "items": [
      {
-      "evidence_ids": [
-       "vsin-attempt"
-      ],
-      "headline": "Betting term of the day: consensus",
+      "headline": "Monday game? Monday check.",
       "paragraphs": [
-       "Consensus is the share of bets or money on one side, usually shown as a percentage. When 70% of the tickets are on one side, that side is the public consensus — but consensus alone is not information. A side can hold most of the tickets while the money sits on the other side, and that disagreement between tickets and money is the raw material a Fade is built from.",
-       "On the Fade this morning: I checked the VSiN betting-splits free tier and the featured NFL row was Sunday’s Colts-Commanders — a game that is already played — and DraftKings-only splits alone are never enough to call a Fade. So there is no verified split to build a Fade from, and the jargon item stands in its place, as it should."
+       "Kickoff came and went at 8:15 p.m. ET — but the habit outlives the game. The board refreshes every morning and evening; anything that lands between refreshes — a late inactive, a late line move — is Check territory. Your book’s line is never exactly this board’s line, so make checking it a habit, not an errand."
+      ],
+      "takeaway": "The board refreshes every morning and evening — run your own book’s line through Check.",
+      "evidence_ids": [
+       "app-board-pm"
       ],
       "sources": [
+       {
+        "label": "NFL EDGE product",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       }
+      ]
+     },
+     {
+      "headline": "Betting term of the day: handle",
+      "paragraphs": [
+       "Tickets tell you how many bets were placed. Handle tells you how much money was bet. When both pile onto the same side — like tonight, 61% of the tickets and 54% of the money on the Saints at DraftKings — the book just has an opinion about who’s popular. The interesting thing, the thing price-sensitive bettors watch for, is when they split: lots of little tickets on one side, most of the money on the other. That’s when you ask why — not a bet signal by itself, just a question worth asking."
+      ],
+      "takeaway": "Tickets count the bets; handle counts the money. When they split, ask why — when they agree, it’s just popularity.",
+      "evidence_ids": [
+       "vsin-attempt-pm"
+      ],
+      "sources": [
+       {
+        "label": "DraftKings Network betting splits",
+        "url": "https://dknetwork.draftkings.com/draftkings-sportsbook-betting-splits/"
+       },
        {
         "label": "VSiN betting splits",
         "url": "https://data.vsin.com/betting-splits/"
        }
-      ],
-      "takeaway": "Consensus = the share on one side. No verified NFL split on the free tier this morning, so no Fade — the jargon item stands in."
-     },
-     {
-      "editorial_only": true,
-      "headline": "Log the losers too",
-      "paragraphs": [
-       "The settlement is manual — the tracker only knows what you tell it. Last night's Detroit moneyline loss stings, and that is exactly when honesty matters most. If you played the Hit Rate card, log it. A record with only wins in it is not a record, it is a story."
-      ],
-      "takeaway": "Manual settlement means honest settlement — log last night's loss with everything else."
+      ]
      }
-    ],
-    "title": "Today's Tip"
+    ]
    }
-  ],
-  "title": "NFL EDGE Monday Morning Brief"
+  ]
  },
  "evidence": [
   {
-   "evidence_id": "app-board-am",
-   "category": "app-board",
-   "verification": "INTERNAL_CANONICAL",
-   "fact": "Morning board (observed 2026-10-05T12:08:41Z, the 6:00am Denver refresh): HIT_RATE prob 0.51145, break-even 0.54955, EV -0.0691, LOW reliability. BALANCED prob 0.50974, break-even 0.50495, EV +0.00949, MEDIUM reliability. VALUE prob 0.50974, break-even 0.50495, EV +0.00949, MEDIUM reliability. Pick identities are not exposed in the product payload; market_board is empty for all 16 Week 4 games (no current book observations). QBs: Michael Penix Jr. (ATL) and Tyler Shough (NO) expected starters for the one remaining pregame game. Expected margin ATL @ NO: +0.99 (away).",
-   "sources": [
-    {
-     "label": "NFL EDGE product",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-    }
-   ]
-  },
-  {
    "evidence_id": "app-board-pm",
-   "category": "app-board",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "Evening board (observed 2026-10-05T00:08:31Z, from the previous edition): HIT_RATE = DET moneyline -215 FanDuel, model probability 66.4%, play-through -218, LOW reliability. BALANCED = ATL spread +1.5, -105 DraftKings, model probability 50.45%, MEDIUM.",
+   "fact": "NFL EDGE product board observed 2026-10-06T00:18Z: ATL@NO (kickoff 8:15 p.m. ET) one-game slate. Hit Rate/Balanced: NO ML -110 FD, EV -5.7%, LOW. Value: ATL +1.5 -114 FD, EV +0.12%, MEDIUM. QBs Penix/Shough confirmed.",
    "sources": [
     {
      "label": "NFL EDGE product",
@@ -277,82 +214,24 @@
    ]
   },
   {
-   "evidence_id": "snf-final",
-   "category": "news-result",
+   "evidence_id": "mnf-inactives",
    "verification": "EXTERNAL_VERIFIED",
-   "fact": "Panthers defeated Lions 32-26 on Sunday Night Football (Oct 4, Charlotte). Bryce Young 29/41, 329 yds, 2 TD, 0 INT; Tetairoa McMillan 14 catches, 192 yds, 2 TD; Chuba Hubbard 20 carries, 122 yds, 2 TD. Jared Goff 32/52, 412 yds, 1 TD, 0 INT; Detroit 0-for-2 on late 4th-down drives. Both teams 2-2.",
+   "fact": "Inactives ~90 min before MNF kickoff: Pete Werner (shoulder) ACTIVE. Out for Saints: Kaden Elliss (calf), Carl Granderson (ankle), Anfernee Jennings (knee), Noah Fant (abdomen), Christen Miller, Decamerion Richardson. Falcons ruled nobody out.",
    "sources": [
     {
-     "label": "NBC Sports (SNF recap)",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-tetairoa-mcmillans-big-night-powers-panthers-to-32-26-victory"
+     "label": "Saints Wire (MNF inactives)",
+     "url": "https://saintswire.usatoday.com/story/sports/nfl/saints/2026/10/05/saints-falcons-inactive-players-monday-night-football/92109862007/"
     },
     {
-     "label": "USA Today (SNF live blog)",
-     "url": "https://www.usatoday.com/story/sports/nfl/2026/10/04/lions-panthers-score-highlights-sunday-night-football--live/92089783007/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "snf-injuries",
-   "category": "injury",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "SNF injuries: Panthers rookie RT Monroe Freeling (knee) exited and did not return; Panthers edge Jaelan Phillips (hamstring) exited; Lions CB Rock Ya-Sin (hamstring) did not return.",
-   "sources": [
-    {
-     "label": "NBC Sports (SNF recap)",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-tetairoa-mcmillans-big-night-powers-panthers-to-32-26-victory"
-    }
-   ]
-  },
-  {
-   "evidence_id": "mnf-injuries",
-   "category": "injury",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "Saints final injury report for MNF vs Falcons (8:15 p.m. ET): LB Kaden Elliss (calf) OUT, EDGE Carl Granderson (ankle) OUT, EDGE Anfernee Jennings (knee) OUT; LB Pete Werner (shoulder) QUESTIONABLE (DNP all week, game-time decision per Kellen Moore); TE Noah Fant (abdomen) QUESTIONABLE.",
-   "sources": [
-    {
-     "label": "Saints Wire (final injury breakdown)",
-     "url": "https://saintswire.usatoday.com/story/sports/nfl/saints/2026/10/04/saints-falcons-injury-report-breakdown-reaction/91974389007/"
-    },
-    {
-     "label": "TSN (Moore on Werner)",
-     "url": "https://www.tsn.ca/nfl/article/saints-rule-out-lb-elliss-de-granderson-for-mnf-tilt-vs-falcons-n1-50092081/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "mnf-falcons-injuries",
-   "category": "injury",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "Falcons final injury report for MNF: LB Divine Deablo (hamstring) QUESTIONABLE, DE Samson Ebukam (hamstring) QUESTIONABLE (full participant Saturday), LB Yasir Abdullah (illness) QUESTIONABLE. No Falcons players ruled out.",
-   "sources": [
-    {
-     "label": "Falcons Wire (final injury report)",
-     "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/10/03/falcons-vs-saints-injury-report-with-week-4-game-designations/92077555007/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "mnf-odds-am",
-   "category": "market",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "MNF external price snapshots on the morning of Oct 5: BetMGM (via SI): Saints -2 (-110), Falcons +2 (-108), Saints ML -135 / Falcons ML +110, total 47.5. SportsbookWire snapshot: Falcons +1.5 (-108) / Saints -1.5 (-110), O/U 48.",
-   "sources": [
-    {
-     "label": "SI (BetMGM odds)",
-     "url": "https://www.si.com/nfl/falcons/onsi/falcons-vs-saints-odds-how-to-watch-injuries-for-nfl-week-4"
-    },
-    {
-     "label": "SportsbookWire (odds snapshot)",
-     "url": "https://sportsbookwire.usatoday.com/story/sports/nfl/2026/10/04/falcons-at-saints-odds-picks-and-predictions/92089949007/"
+     "label": "Louisiana Sports (Werner cleared)",
+     "url": "https://www.louisianasports.net/2026/10/05/saints-clear-werner-to-play/latest-stories/"
     }
    ]
   },
   {
    "evidence_id": "mnf-venue",
-   "category": "weather",
    "verification": "EXTERNAL_VERIFIED",
-   "fact": "Falcons-Saints plays at Caesars Superdome, New Orleans (indoor stadium). No weather factor.",
+   "fact": "Falcons at Saints, Monday Oct 5, 8:15 p.m. ET, Caesars Superdome in New Orleans — indoor, no weather factor.",
    "sources": [
     {
      "label": "SI (game preview)",
@@ -361,11 +240,25 @@
    ]
   },
   {
-   "evidence_id": "vsin-attempt",
-   "category": "splits",
+   "evidence_id": "mnf-odds-pm",
    "verification": "EXTERNAL_VERIFIED",
-   "fact": "VSiN betting-splits free tier checked the morning of Oct 5: featured NFL row was Sunday's Colts @ Commanders (already played) — DraftKings spread splits HND 74% IND / 26% WAS, BET 48% IND / 52% WAS. No current-game NFL split on the free tier; DraftKings-only splits are insufficient for a Fade.",
+   "fact": "Earlier BetMGM snapshot (via SI): Saints -2 (-110), ML NO -135 / ATL +110, total 47.5. Evening DK/FD: NO -1.5 (+100 DK / -106 FD), ML NO -110/-115, total 47.5.",
    "sources": [
+    {
+     "label": "SI (BetMGM odds)",
+     "url": "https://www.si.com/nfl/falcons/onsi/falcons-vs-saints-odds-how-to-watch-injuries-for-nfl-week-4"
+    }
+   ]
+  },
+  {
+   "evidence_id": "vsin-attempt-pm",
+   "verification": "EXTERNAL_VERIFIED",
+   "fact": "Free DK Network betting-splits table (NFL tab): ATL@NO 10/5. NO -1.5 (+100): handle 54%, bets 61%. ATL +1.5 (-120): handle 46%, bets 39%. Tickets and handle AGREE (both Saints) — no Fade. Page shows no line-movement history.",
+   "sources": [
+    {
+     "label": "DraftKings Network betting splits",
+     "url": "https://dknetwork.draftkings.com/draftkings-sportsbook-betting-splits/"
+    },
     {
      "label": "VSiN betting splits",
      "url": "https://data.vsin.com/betting-splits/"
