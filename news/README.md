@@ -72,3 +72,17 @@ A good Fade item should:
 5. explain how the user can apply that information inside NFL EDGE, including whether waiting could improve a price or whether Play Through is being approached or crossed.
 
 Do not tell users to blindly fade the public, blindly follow Circa, or bet against the model.
+
+## Writer/publication contract
+
+Use `WRITER_COMMAND_V1.md` for writing instructions. Both research and editorial
+publication packets use `pipeline_v1.writer_rules()`. Staging preflight and final
+publication share `verify_article()` and the article schema. Today's Tip is always
+required. Section IDs are unique and retain their canonical order.
+
+When no split can be verified, use the `fade` slot with `mode: "learning"` and
+title `Learn the Game` for a simple general educational substitute. Its items
+are explicitly editorial-only, without live evidence or sources, and include
+useful takeaways. Today's Tip remains a separate final section. Factual news and
+market items still require evidence. Writers must adopt this contract after sync;
+existing malformed briefs are not silently reordered or relabeled.

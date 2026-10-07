@@ -29,7 +29,8 @@ def _article() -> dict[str, object]:
                         "sources": [{"label": "NFL", "url": "https://www.nfl.com/example"}],
                     }
                 ],
-            }
+            },
+            {"id": "today-tip", "title": "Today's Tip", "items": [{"headline": "Price matters", "paragraphs": ["Use the current price."], "editorial_only": True, "evidence_ids": [], "sources": []}]}
         ],
     }
 
