@@ -1,14 +1,14 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-10-06T12:21:05Z",
- "research_generated_at_utc": "2026-10-06T12:21:05Z",
+ "submitted_at_utc": "2026-10-07T00:29:37Z",
+ "research_generated_at_utc": "2026-10-07T00:29:37Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "edition": "Morning Brief",
-  "title": "NFL EDGE Tuesday Morning Brief",
-  "dek": "The Falcons are the hottest team in football, Washington's quarterback is the week's biggest question, and the model's only +EV play comes with a catch.",
-  "published_at_utc": "2026-10-06T12:21:05Z",
-  "research_generated_at_utc": "2026-10-06T12:21:05Z",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Tuesday Evening Brief",
+  "dek": "Lamar Jackson is likely out Sunday night, the market flipped six points on Ravens–Falcons, and the evening refresh swapped two of the three headline cards.",
+  "published_at_utc": "2026-10-07T00:29:37Z",
+  "research_generated_at_utc": "2026-10-07T00:29:37Z",
   "sections": [
    {
     "id": "what-matters",
@@ -16,61 +16,85 @@
     "title": "What Matters Today",
     "items": [
      {
-      "headline": "The Falcons are the hottest team in football, and the market hasn't caught up yet",
+      "headline": "Lamar Jackson is likely out Sunday night — and the market already flipped",
       "paragraphs": [
-       "Atlanta hung 45 on the Saints in New Orleans on Monday night — 45-24, and it wasn't that close. Bijan Robinson took the third play from scrimmage 59 yards to the house and finished with 145 yards and two touchdowns. Brian Robinson Jr. added three short touchdowns. Michael Penix Jr. went 15-of-20 for 223 yards and a 127.7 passer rating.",
-       "Here's the number that matters: the Falcons scored 16 points total in their first two weeks. Since Penix came back, they've put up 80 in two games — the most in the NFL over that stretch. They're 2-2 and tied atop the NFC South. Tyler Shough called his own team's performance 'embarrassing.'",
-       "Why this is in a betting brief: Atlanta hosts Baltimore on Sunday night. The board has the Ravens -2.5 (-108 on DK) and the Falcons at +114 on the moneyline — but the app's football model has the Falcons about 2.9 points better. That's a real five-point disagreement between the model and the market. No card fired on that game, so it's information, not a recommendation — but it's the game to watch this week."
+       "The day's biggest news: Lamar Jackson has only an 'outside chance' to play Sunday night in Atlanta, per Ian Rapoport on Tuesday morning. The ankle sprain that knocked him out of the second half against Tennessee on Sunday could cost him multiple games. Tyler Huntley would start for the Ravens.",
+       "The market didn't wait. This morning the board had Baltimore -2.5. Tonight it's Atlanta -3.5 on DraftKings and -3.0 on FanDuel — about a six-point swing on one quarterback's ankle.",
+       "One catch: the app still lists Lamar Jackson as Baltimore's expected starter. The feed hasn't caught up to the Rapoport report. Don't bet a Ravens number the model priced with Lamar in it — run your book's price through Check first."
       ],
-      "takeaway": "The Falcons' offense is unrecognizable since Penix returned, and the model likes them more than the market does against Baltimore on Sunday night.",
+      "takeaway": "The news beat the feed on the day's biggest move. Use Check until the app knows who's starting.",
       "evidence_ids": [
-       "mnf-result",
-       "app-board-am"
+       "lamar-out-pm",
+       "app-board-pm",
+       "app-qb-pm"
       ],
       "sources": [
        {
-        "label": "Reuters (MNF recap)",
-        "url": "https://www.reuters.com/sports/nfl/bijan-robinson-2-tds-falcons-spoil-saints-homecoming-anniversary--flm-2026-10-06/"
+        "label": "NBC Sports (PFT, Rapoport report)",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/report-outside-chance-lamar-jackson-plays-in-week-5"
+       },
+       {
+        "label": "Fox Sports (Jackson injury update)",
+        "url": "https://foxsports.com/stories/nfl/lamar-jackson-injury-update-ravens-schedule-tyler-huntley"
        }
       ]
      },
      {
-      "headline": "The Commanders' quarterback room is down to its third string — or its starter is back",
+      "headline": "Washington: the plan is Jayden Daniels on Sunday — the app doesn't know yet",
       "paragraphs": [
-       "Both things are true at once, and that's the whole story of Giants at Commanders on Sunday. Jayden Daniels has been out since Week 2 with a dislocated left elbow, but NFL insider Jay Glazer reports the Commanders are planning for him to start this week after limited practices. Coach Dan Quinn wanted him through a full practice week once the team got back from London.",
-       "Meanwhile Marcus Mariota is done for now — his second MCL sprain of the season, suffered two drives into the London loss to the Colts. He lasted two drives, got ruled out after halftime, and is expected to miss time. If Daniels can't go Sunday, it's seventh-round rookie Athan Kaliakmanis, who was 15-of-33 for 186 yards with a touchdown and a pick in relief.",
-       "One honest flag: the app's quarterback feed, updated this morning, still names Kaliakmanis as Washington's expected starter. It hasn't caught the Daniels report yet. If the starter news lands mid-week, the app's numbers will move — that's exactly what the Check function is for.",
-       "Elsewhere on the QB board: Jameis Winston starts for the 3-1 Giants (Jaxson Dart is out for the season with a knee injury). The app's feed confirms Winston, plus Tyson Bagent for Chicago and Jalon Daniels for Tampa Bay ahead of Thursday night in Dallas. The Saints come out of Monday night banged up too — Chris Olave took a hard hit to the knee late, and Tyler Shough played through a banged-up left hand."
+       "Jayden Daniels is on track to start against the Giants on Sunday. Dan Quinn said Monday the goal is a full week of practice and a start, after Daniels sat out since dislocating his elbow in Week 2.",
+       "The rest of the room: Marcus Mariota sprained his MCL again in London and is expected to miss time. If Daniels can't go, it's rookie Athan Kaliakmanis — 186 yards and a pick in relief on Sunday.",
+       "The line has come back to Washington -3.5 at both books, in line with the market expecting Daniels. But the app still shows Kaliakmanis as the expected starter. Same rule as Baltimore: the news beat the feed, so run your price through Check."
       ],
-      "takeaway": "Washington's starter is the single biggest unknown on Sunday's board — watch the practice reports, then run your price through Check before betting it.",
+      "takeaway": "Washington's quarterback picture is clearing up — the app just hasn't heard yet.",
       "evidence_ids": [
-       "was-daniels-return",
-       "was-mariota",
-       "dart-out",
-       "app-qb-feed"
+       "daniels-plan-pm",
+       "app-board-pm",
+       "app-qb-pm"
       ],
       "sources": [
        {
-        "label": "SI (Daniels return report)",
-        "url": "https://www.si.com/betting/positive-jayden-daniels-injury-update-boosts-commanders-odds-vs-giants-in-nfl-week-5"
+        "label": "Reuters (Daniels practice, Mariota hurt)",
+        "url": "https://www.reuters.com/sports/commanders-qb-shuffle-jayden-daniels-practice-marcus-mariota-hurt--flm-2026-10-06/"
        },
        {
-        "label": "SI (Mariota MCL)",
-        "url": "https://www.si.com/nfl/commanders/onsi/commanders-marcus-mariota-mcl-sprain-jayden-daniels-quarterback"
-       },
+        "label": "Commanders Wire (Quinn update)",
+        "url": "https://commanderswire.usatoday.com/story/sports/nfl/commanders/2026/10/05/commanders-dan-quinn-update-jayden-daniels/92099629007/"
+       }
+      ]
+     },
+     {
+      "headline": "Giants: Dart is done for the season — it's Winston's team now",
+      "paragraphs": [
+       "Jaxson Dart is out for the season with a knee injury. Jameis Winston starts for the 3-1 Giants in Washington on Sunday.",
+       "No mystery left here: the app has Winston locked in, and the -3.5 line already assumes Daniels on the other side."
+      ],
+      "takeaway": "Winston vs. (probably) Daniels on Sunday afternoon.",
+      "evidence_ids": [
+       "dart-out-pm"
+      ],
+      "sources": [
        {
-        "label": "Hogs Haven (Dart out for season)",
+        "label": "Hogs Haven (Week 5 odds)",
         "url": "https://www.hogshaven.com/washington-commanders-odds/446160/commanders-vs-giants-odds-week-5-opening-lines-point-spread-total"
        }
       ]
      },
      {
-      "headline": "No weather to handicap yet",
+      "headline": "No weather to handicap",
       "paragraphs": [
-       "No games today, and Thursday night is indoors at AT&T Stadium. Sunday's outdoor games are five days out — too early for final kickoff-window numbers. The evening editions will carry the real weather as the window tightens."
+       "Thursday night's game is at AT&T Stadium in Arlington — a dome, so the weather does nothing. Sunday kickoff-window weather gets a proper look in the morning brief."
       ],
-      "editorial_only": true,
-      "evidence_ids": []
+      "takeaway": "Weather is a non-factor for Thursday; Sunday's outdoor games get checked in the morning.",
+      "evidence_ids": [
+       "tnf-facts-pm"
+      ],
+      "sources": [
+       {
+        "label": "FanDuel Research (Cowboys vs Buccaneers odds)",
+        "url": "https://www.fanduel.com/research/cowboys-vs-buccaneers-predictions-odds-picks-best-bets-for-nfl-week-5-thursday-night-football-2026"
+       }
+      ]
      }
     ]
    },
@@ -80,51 +104,36 @@
     "title": "What It Means for NFL EDGE",
     "items": [
      {
-      "headline": "The Hit Rate card is Jacksonville — and that's by design, not by accident",
+      "headline": "The Hit Rate card is Denver now — likeliest winner, not best price",
       "paragraphs": [
-       "This week's most-likely-winner card is the Jaguars on the moneyline at -285 (DraftKings), Sunday morning in London against Philadelphia (9:30 a.m. ET kickoff). The app gives Jacksonville a 69.5% chance to win. That's the highest win probability on the card.",
-       "A -285 price means you risk $2.85 to win $1. At 69.5%, that price is actually a touch worse than fair — the card's expected value is -1.2%. That's not a flaw. The Hit Rate card forgoes value for win probability; the app's own tutorial says Hit Rate is not Profit Rate. It's the 'which supported pick looks most likely to win' card, and it answers that question honestly."
+       "The evening refresh swapped the Hit Rate card: Jacksonville is out, Denver moneyline at -185 on DraftKings is in. The model gives the Broncos a 62.4% chance at the Chargers, 0.5 units, medium reliability.",
+       "Remember what this card is: the pick the app thinks is most likely to win — the app's own tutorial says Hit Rate is not Profit Rate. The expected value here is slightly negative. That's by design, not a flaw."
       ],
-      "takeaway": "Play the Hit Rate card for what it is: the likeliest winner, not the best price. Jacksonville at home in London.",
+      "takeaway": "Play the Hit Rate card for what it is: the likeliest winner on the board, not the best price.",
       "evidence_ids": [
-       "app-board-am"
+       "app-board-pm"
       ]
      },
      {
-      "headline": "The Value card found the Raiders — and then refused to bet them",
+      "headline": "The Balanced card is Minnesota — strong pick, reasonable price",
       "paragraphs": [
-       "Here's the most interesting card on the board. The Value lane likes the Raiders on the moneyline at +176 (FanDuel) at New England: the app gives Las Vegas a 46.5% chance against a market price that implies 36.4%. That's a genuine +0.8% edge — the model's only +EV play this week.",
-       "But look at the fine print: the card is marked TARGET_ONLY, reliability LOW, and 0.0 units. The model's actual buy price is +184 — it wants eight more cents before it stamps a bet. Value doesn't always mean bet. Sometimes it means watch the number and pounce if it drifts.",
-       "The Balanced card sits in the middle as always: Buffalo +2.5 at even money (FanDuel) on Monday night against the Rams — a 50.5% proposition against a 50% market price. The middle ground, and a fine starting point if you're new."
+       "Also new tonight: Minnesota moneyline at -130 on DraftKings replaces Buffalo +2.5. The model has the Vikings at 69.4% against the Saints, 0.75 units, low reliability.",
+       "Balanced is the middle lane: a strong pick without paying too much. If you're new, this is the sensible starting point — good win probability, sane price."
       ],
-      "takeaway": "The model's only +EV play is the Raiders — but only at +184 or better. At +176 it's a watch, not a bet. That's the Value lane doing its job.",
+      "takeaway": "Balanced means what it says: strong pick, fair price. Minnesota -130.",
       "evidence_ids": [
-       "app-board-am"
+       "app-board-pm"
       ]
      },
      {
-      "headline": "When the news beats the feed, Check is the whole game",
+      "headline": "The Value card still found the Raiders — and still refuses to bet them",
       "paragraphs": [
-       "The board refreshes every morning and evening, but news doesn't wait for the refresh. Right now the market has Washington -3.0 and -170 on the moneyline against the Giants — a line that, as the odds pages note, already implies Jayden Daniels is back. The app's quarterback feed still says Kaliakmanis.",
-       "So the app's current numbers and the market's current numbers are pricing two different quarterbacks. When the starter is confirmed one way or the other, don't guess what the app would say — tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator and gives you a bet/no-bet verdict on YOUR price. Full re-evaluation, not a blind override.",
-       "Same idea Thursday night: Dallas is -9.5 at home against a rookie making a short-week start, but the app's model has the Cowboys by only about 3.4 points. It doesn't buy the blowout. If your book hangs a different number, Check it before you touch it."
+       "The model's only +EV play is unchanged: Raiders moneyline at +176 on FanDuel. Model 46.5%, market 36.7%, expected value +1.7%, low reliability. It's still a watch, not a bet — the card only fires at +184 or better.",
+       "That's the Value lane doing its job: it's the always-+EV play, and right now +176 isn't the number. If the price drifts to +184, it becomes a bet. Until then, it waits."
       ],
-      "takeaway": "The board prices what the feed knows. When you know something the feed doesn't, Check turns your book's price into a real verdict.",
+      "takeaway": "The only +EV play on the board is the Raiders — at +184, not +176.",
       "evidence_ids": [
-       "app-board-am",
-       "app-qb-feed",
-       "was-daniels-return",
-       "nyw-vsin"
-      ],
-      "sources": [
-       {
-        "label": "SI (Daniels return report)",
-        "url": "https://www.si.com/betting/positive-jayden-daniels-injury-update-boosts-commanders-odds-vs-giants-in-nfl-week-5"
-       },
-       {
-        "label": "VSiN (Week 5 odds)",
-        "url": "https://vsin.com/nfl/nfl-odds-week-5-schedule-line-moves-and-matchups/"
-       }
+       "app-board-pm"
       ]
      }
     ]
@@ -135,27 +144,83 @@
     "title": "Line Movement",
     "items": [
      {
-      "headline": "Giants–Commanders drifting toward New York as the QB question hangs",
+      "headline": "Baltimore–Atlanta flipped six points on the Lamar news",
       "paragraphs": [
-       "The whole week's movement story is one game. Giants at Commanders opened Monday morning at Washington -3.5 (-118) with a 44.5 total. The current board: Washington -3.0 (-115 on DraftKings), total down to 43.5, moneyline Washington -170 / Giants +142.",
-       "That's a half-point move toward the Giants since the openers — the market pricing in real doubt about who starts for Washington. The app caught the move; its board shows the -3.0. Note the tension: the odds pages say the current line still implies a Daniels return, so if he's confirmed, expect this to move back the other way. If he's ruled out, the rookie starts and the Giants could go off favored.",
-       "One honest note on scope: the board flipped to the new Week 5 slate overnight, so this is the only game where I have a clean opener-to-now comparison. Everything else below is the current number, not a move: Cowboys -9.5 Thursday night, Ravens -2.5 Sunday night, Jaguars -6.5 in London."
+       "Morning: Ravens -2.5 on DraftKings. Tonight: Falcons -3.5 on DraftKings, -3.0 on FanDuel. That's the market pricing in Tyler Huntley instead of Lamar Jackson.",
+       "The model's own number has Atlanta by about 2.9 — a touch below the -3.5 market price. But the model was built on its quarterback feed, which still says Lamar Jackson. When the news beats the feed, the model number is stale too. Tap Check, type in your book's line, and get a verdict on your actual price."
       ],
-      "takeaway": "The only real move on the board is Washington shrinking from -3.5 to -3.0. The direction of the next move depends entirely on the QB announcement.",
+      "takeaway": "The biggest move of the day is fully explained by one ankle. Check is how you bet it cleanly.",
       "evidence_ids": [
-       "nyw-openers",
-       "nyw-vsin",
-       "app-board-am"
+       "lamar-out-pm",
+       "app-board-pm",
+       "app-qb-pm"
       ],
       "sources": [
        {
-        "label": "Giants Wire (openers)",
-        "url": "https://giantswire.usatoday.com/story/sports/nfl/giants/2026/10/05/new-york-giants-open-3-5-point-underdogs-commanders-week-5/92097570007/"
+        "label": "NBC Sports (PFT, Rapoport report)",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/report-outside-chance-lamar-jackson-plays-in-week-5"
        },
        {
-        "label": "VSiN (Week 5 odds)",
-        "url": "https://vsin.com/nfl/nfl-odds-week-5-schedule-line-moves-and-matchups/"
+        "label": "Fox Sports (Jackson injury update)",
+        "url": "https://foxsports.com/stories/nfl/lamar-jackson-injury-update-ravens-schedule-tyler-huntley"
        }
+      ]
+     },
+     {
+      "headline": "Washington back to -3.5 as the Daniels plan firms up",
+      "paragraphs": [
+       "The Commanders drifted to -3.0 this morning on quarterback uncertainty. Tonight they're back at -3.5 at both books — the market believes Daniels starts.",
+       "Direction of the next move depends on the practice reports. If Daniels is full-go all week, this number holds. Any setback and it slides back."
+      ],
+      "takeaway": "The market has priced in the Daniels return. Practice reports move this next.",
+      "evidence_ids": [
+       "daniels-plan-pm",
+       "app-board-pm"
+      ],
+      "sources": [
+       {
+        "label": "Reuters (Daniels practice, Mariota hurt)",
+        "url": "https://www.reuters.com/sports/commanders-qb-shuffle-jayden-daniels-practice-marcus-mariota-hurt--flm-2026-10-06/"
+       }
+      ]
+     },
+     {
+      "headline": "Dallas–Tampa moved toward the Bucs ahead of Thursday night",
+      "paragraphs": [
+       "Cowboys -9.5 this morning, -8.5 tonight at both books, total steady at 47.5. A full point toward Tampa Bay with the undrafted rookie Jalon Daniels starting for the Bucs.",
+       "Kickoff is Thursday at 8:15 p.m. ET in Arlington. If your book isn't showing -8.5, run your number through Check — it re-runs the model and the evaluator on your price and gives you a bet or no-bet verdict."
+      ],
+      "takeaway": "A point of movement toward Tampa Bay before Thursday night.",
+      "evidence_ids": [
+       "app-board-pm",
+       "tnf-facts-pm"
+      ],
+      "sources": [
+       {
+        "label": "FanDuel Research (Cowboys vs Buccaneers odds)",
+        "url": "https://www.fanduel.com/research/cowboys-vs-buccaneers-predictions-odds-picks-best-bets-for-nfl-week-5-thursday-night-football-2026"
+       }
+      ]
+     },
+     {
+      "headline": "Jacksonville -6.5 to -7 against the Eagles",
+      "paragraphs": [
+       "A quiet half-point toward the Jaguars in the London game. Small move, no news attached — the kind of drift that usually just means money, not information."
+      ],
+      "takeaway": "Half a point to Jacksonville, nothing more to read into.",
+      "evidence_ids": [
+       "app-board-pm"
+      ]
+     },
+     {
+      "headline": "Two card swaps on the evening refresh",
+      "paragraphs": [
+       "The 6:00 p.m. refresh replaced two of the three headline cards: Hit Rate went from Jacksonville moneyline to Denver moneyline (-185), and Balanced went from Buffalo +2.5 to Minnesota moneyline (-130). The Value card is unchanged — still the Raiders at +176, still waiting on +184.",
+       "These aren't market moves; they're the board updating its own recommendations on fresh prices. Tonight's cards are tonight's numbers, not this morning's."
+      ],
+      "takeaway": "The board refreshes every morning and evening — tonight's picks replaced this morning's.",
+      "evidence_ids": [
+       "app-board-pm"
       ]
      }
     ]
@@ -166,23 +231,32 @@
     "title": "Today's Tip",
     "items": [
      {
-      "headline": "Practical tip: bet the number, not the team — and Thursday is the trap game",
+      "headline": "Practical tip: Thursday game? Thursday check.",
       "paragraphs": [
-       "The biggest number on the board is also the week's biggest disagreement: Dallas -9.5 at home Thursday night, while the app's model has the Cowboys by about 3.4. Double-digit-ish home favorites against rookie quarterbacks on short weeks are where public money loves to lay it. If you like Dallas, the model says make the market prove the price — and if your book shows anything other than -9.5, run it through Check first."
+       "Buccaneers at Cowboys kicks off Thursday at 8:15 p.m. ET. Before you bet it, open the app, tap Check, and type in your book's line and price. The app runs it back through the model and the evaluator and hands you a bet or no-bet verdict on your price — a full re-evaluation, not a guess.",
+       "Read the odds as price mechanics: -110 means every $1.10 you risk wins $1. Your actual stake lives in the app, sized from your bankroll and your staking setting."
       ],
+      "takeaway": "Thursday game? Thursday check. Bet your book's number, not the board's.",
       "evidence_ids": [
-       "app-board-am"
+       "app-board-pm",
+       "tnf-facts-pm"
+      ],
+      "sources": [
+       {
+        "label": "FanDuel Research (Cowboys vs Buccaneers odds)",
+        "url": "https://www.fanduel.com/research/cowboys-vs-buccaneers-predictions-odds-picks-best-bets-for-nfl-week-5-thursday-night-football-2026"
+       }
       ]
      },
      {
-      "headline": "Jargon: handle vs. bets (why there's no Fade today)",
+      "headline": "Jargon: reverse line movement (and why there's no Fade tonight)",
       "paragraphs": [
-       "Two numbers make up a betting split. 'Bets' (or tickets) is the COUNT of wagers — how many people bet a side. 'Handle' is the MONEY — how many dollars. When 70% of the bets are on one team but 70% of the money is on the other, that's a disagreement worth investigating: the public is on one side, bigger money on the other.",
-       "No Fade today because there's nothing verified to fade: the free splits page showed only baseball this morning, with no NFL ticket/handle row publicly visible. Agreement between tickets and handle isn't a Fade either — a Fade needs a real, verified disagreement plus confirming line movement."
+       "Reverse line movement is when the line moves toward one team while most of the bets pile onto the other side — the classic shape a Fade watches for. A real Fade needs that split verified: tickets on one side, money on the other, plus a line move to back it up.",
+       "Tonight the free VSiN tier only showed college football splits — no NFL row to read. No verified split, no Fade. That's the rule working as designed."
       ],
-      "takeaway": "Bets = how many people. Handle = how much money. A Fade needs them pointing opposite ways — verified, not vibes.",
+      "takeaway": "A Fade needs tickets and money pointing opposite ways, verified — not vibes. Tonight: no split, no Fade.",
       "evidence_ids": [
-       "vsin-fade-attempt-am"
+       "vsin-fade-attempt-pm"
       ],
       "sources": [
        {
@@ -190,14 +264,6 @@
         "url": "https://data.vsin.com/betting-splits/"
        }
       ]
-     },
-     {
-      "headline": "The tracker only works if you're honest with it",
-      "paragraphs": [
-       "Settlement is manual — nobody's grading your bets but you. Log the losers too. A tracker that only holds winners is a highlight reel, not a record."
-      ],
-      "editorial_only": true,
-      "evidence_ids": []
      }
     ]
    }
@@ -205,54 +271,39 @@
  },
  "evidence": [
   {
-   "evidence_id": "mnf-result",
+   "evidence_id": "lamar-out-pm",
    "verification": "EXTERNAL_VERIFIED",
-   "fact": "Falcons beat the Saints 45-24 on MNF (Oct 5). Bijan Robinson: 19 carries, 145 yds, 2 TDs (59-yard TD on the 3rd play). Brian Robinson Jr.: 14 carries, 62 yds, 3 TDs. Michael Penix Jr.: 15/20, 223 yds, 1 TD, 127.7 rating. Tyler Shough: 30/48, 286 yds, 1 TD; called it 'embarrassing'. Falcons 2-2 (tied atop NFC South), Saints 1-3. Atlanta has 80 points in two games since Penix returned (16 in first two weeks).",
+   "fact": "Lamar Jackson (ankle sprain, sat out the 2nd half of Baltimore's Week 4 win over Tennessee) has only an 'outside chance' to play Sunday night at Atlanta, per Ian Rapoport (NFL Network, reported Tuesday morning Oct 6). Rapoport adds Jackson could miss multiple games depending on rehab; the injury is not considered long-term or surgical. Tyler Huntley would start for the Ravens if Jackson sits. Ravens coach Jesse Minter would not estimate Jackson's chances Monday.",
    "sources": [
     {
-     "label": "Reuters (MNF recap)",
-     "url": "https://www.reuters.com/sports/nfl/bijan-robinson-2-tds-falcons-spoil-saints-homecoming-anniversary--flm-2026-10-06/"
+     "label": "NBC Sports (PFT, Rapoport report)",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/report-outside-chance-lamar-jackson-plays-in-week-5"
     },
     {
-     "label": "NBC Sports (MNF recap)",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-falcons-run-over-saints-45-24-to-ruin-new-orleans-celebration"
+     "label": "Fox Sports (Jackson injury update)",
+     "url": "https://foxsports.com/stories/nfl/lamar-jackson-injury-update-ravens-schedule-tyler-huntley"
     }
    ]
   },
   {
-   "evidence_id": "was-mariota",
+   "evidence_id": "daniels-plan-pm",
    "verification": "EXTERNAL_VERIFIED",
-   "fact": "Marcus Mariota suffered his 2nd MCL sprain of the season (first was preseason) in the Week 4 London loss to the Colts (30-13, Oct 4). He lasted two drives, was ruled out after halftime, and is expected to miss time (ESPN's Jeremy Fowler).",
+   "fact": "Commanders coach Dan Quinn said Monday (Oct 5) the goal is for Jayden Daniels (dislocated left elbow, out since Week 2) to practice all week and start Sunday vs the Giants. Marcus Mariota sprained his MCL (the same knee injured in the preseason opener) in the first quarter of the Week 4 London loss to the Colts and is expected to miss time; rookie Athan Kaliakmanis (7th round, Rutgers) is the fallback — 15-of-33, 186 yds, 1 TD, 1 INT in relief Sunday. Gary Myers reports Daniels is expected to start vs the Giants.",
    "sources": [
     {
-     "label": "SI (Mariota MCL)",
-     "url": "https://www.si.com/nfl/commanders/onsi/commanders-marcus-mariota-mcl-sprain-jayden-daniels-quarterback"
+     "label": "Reuters (Daniels practice, Mariota hurt)",
+     "url": "https://www.reuters.com/sports/commanders-qb-shuffle-jayden-daniels-practice-marcus-mariota-hurt--flm-2026-10-06/"
     },
     {
-     "label": "USA Today (Mariota exits London game)",
-     "url": "https://www.usatoday.com/story/sports/nfl/commanders/2026/10/04/marcus-mariota-injury-commanders-quarterback/92090054007/"
+     "label": "Commanders Wire (Quinn update)",
+     "url": "https://commanderswire.usatoday.com/story/sports/nfl/commanders/2026/10/05/commanders-dan-quinn-update-jayden-daniels/92099629007/"
     }
    ]
   },
   {
-   "evidence_id": "was-daniels-return",
+   "evidence_id": "dart-out-pm",
    "verification": "EXTERNAL_VERIFIED",
-   "fact": "Jayden Daniels (dislocated left elbow, out since Week 2) was limited in practice last week. Per NFL insider Jay Glazer (reported Oct 4), the Commanders are planning for Daniels to start Week 5 vs the Giants after logging limited sessions; Quinn planned a full practice week on the team's return from London. If Daniels can't go, rookie Athan Kaliakmanis (15/33, 186 yds, 1 TD, 1 INT in relief) starts.",
-   "sources": [
-    {
-     "label": "SI (Daniels return report)",
-     "url": "https://www.si.com/betting/positive-jayden-daniels-injury-update-boosts-commanders-odds-vs-giants-in-nfl-week-5"
-    },
-    {
-     "label": "NY Post (Mariota out, Kaliakmanis in)",
-     "url": "https://nypost.com/2026/10/04/sports/marcus-mariota-out-after-injury-as-commanders-turn-to-athan-kaliakmanis/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "dart-out",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "Jaxson Dart (NYG) is out for the season with a knee injury; Jameis Winston starts for the 3-1 Giants.",
+   "fact": "Jaxson Dart (NYG) is out for the season with a knee injury; veteran Jameis Winston starts for the 3-1 Giants.",
    "sources": [
     {
      "label": "Hogs Haven (Week 5 odds)",
@@ -261,31 +312,9 @@
    ]
   },
   {
-   "evidence_id": "nyw-openers",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "NYG@WAS openers (Monday): Commanders -3.5 (-118) at BetRivers/DK-side books, total 44.5, WAS ML -175/-196. Current DK board: WAS -3.0 (-115), total 43.5, WAS ML -170 / NYG +142. Half-point drift toward the Giants since openers.",
-   "sources": [
-    {
-     "label": "Giants Wire (openers)",
-     "url": "https://giantswire.usatoday.com/story/sports/nfl/giants/2026/10/05/new-york-giants-open-3-5-point-underdogs-commanders-week-5/92097570007/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "nyw-vsin",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "VSiN Week 5 odds page lists Giants at Commanders (-3, 43.5) Sunday 1 p.m. ET (FOX), noting the line (3 to 3.5 by book) implies the market expects Jayden Daniels back, and flags Washington's London return without a bye as a readiness question.",
-   "sources": [
-    {
-     "label": "VSiN (Week 5 odds)",
-     "url": "https://vsin.com/nfl/nfl-odds-week-5-schedule-line-moves-and-matchups/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "app-board-am",
+   "evidence_id": "app-board-pm",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "NFL EDGE product observed 2026-10-06T12:08Z, FRESH, Week 5 15-game slate. Headline cards: Hit Rate JAX ML -285 DK (model 69.5%, market 72.5%, EV -1.2%, 0.5u, MEDIUM); Balanced BUF +2.5 at 100 FD (model 50.5%, market 50.0%, 0.75u, MEDIUM); Value LV ML +176 FD (model 46.5%, market 36.4%, EV +0.8%, TARGET_ONLY, value at +184, LOW, 0.0u). Spreads DK: NYG@WAS WAS -3.0 (-115); TB@DAL DAL -9.5 (-105), total 47.5; BAL@ATL BAL -2.5 (-108), ATL ML +114; PHI@JAX JAX -6.5 (-115). Model expected_margin (home-away): NYG@WAS -1.69 (Giants by ~1.7); BAL@ATL +2.88 (Falcons by ~2.9); TB@DAL +3.35 (Cowboys by ~3.4). Kickoffs ET: TNF TB@DAL Thu 10/8 8:15 p.m.; PHI@JAX Sun 10/11 9:30 a.m. (London); BAL@ATL Sun 8:20 p.m.; BUF@LAR Mon 10/12 8:15 p.m.",
+   "fact": "NFL EDGE product observed 2026-10-07T00:08Z, FRESH, Week 5 slate. Headline cards: Hit Rate DEN ML -185 DK (model 62.4%, market 62.0%, EV -1.0%, 0.5u, MEDIUM) — replaced JAX ML -285 this morning; Balanced MIN ML -130 DK (model 69.4%, market 54.6%, EV -0.3%, 0.75u, LOW) — replaced BUF +2.5 at 100 FD this morning; Value LV ML +176 FD (model 46.5%, market 36.7%, EV +1.7%, TARGET_ONLY, value at +184, 0.0u, LOW) — unchanged from morning. Board spreads DK: NYG@WAS WAS -3.5 (was -3.0 this morning); BAL@ATL ATL -3.5 DK / -3.0 FD (was BAL -2.5 this morning); TB@DAL DAL -8.5 (was -9.5 this morning); PHI@JAX JAX -7.0 (was -6.5 this morning). Model expected_margin (home-away): BAL@ATL +2.88 (Falcons by ~2.9); NYG@WAS -1.69 (Giants by ~1.7); TB@DAL +3.35 (Cowboys by ~3.4).",
    "sources": [
     {
      "label": "NFL EDGE product",
@@ -294,9 +323,9 @@
    ]
   },
   {
-   "evidence_id": "app-qb-feed",
+   "evidence_id": "app-qb-pm",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "App QB feed (snapshot 2026-10-06T12:00Z): WAS expected starter Athan Kaliakmanis (changed this morning 12:00:01Z, depth QB:4, warning DEPTH1_UNAVAILABLE_BACKUP_PROMOTION) — does NOT yet reflect the Glazer Daniels-return report. NYG Jameis Winston, CHI Tyson Bagent, TB Jalon Daniels confirmed.",
+   "fact": "App QB feed (snapshot 2026-10-07T00:00Z): BAL still lists Lamar Jackson as expected starter (Questionable, last changed Oct 5) — does NOT yet reflect the Rapoport 'outside chance' report. WAS still lists rookie Athan Kaliakmanis (changed this morning 12:00Z, depth QB:4, warning DEPTH1_UNAVAILABLE_BACKUP_PROMOTION) — does NOT yet reflect the Daniels-return plan. NYG Jameis Winston, TB Jalon Daniels confirmed.",
    "sources": [
     {
      "label": "NFL EDGE product",
@@ -305,9 +334,20 @@
    ]
   },
   {
-   "evidence_id": "vsin-fade-attempt-am",
+   "evidence_id": "tnf-facts-pm",
    "verification": "EXTERNAL_VERIFIED",
-   "fact": "Checked VSiN betting-splits page 2026-10-06 ~06:20 MDT: free page displayed MLB Monday Oct 5 splits only; no NFL ticket%/handle% row publicly visible today. No verified public-vs-sharper split available -> no Fade qualifies.",
+   "fact": "Thursday Night Football, Week 5: Buccaneers at Cowboys, Thursday Oct 8, 8:15 p.m. ET, AT&T Stadium (Arlington, Texas), streaming on Prime Video. FanDuel Sportsbook (Tue): Cowboys -8.5 (-110), total 47.5 (over -112/under -108), DAL ML -510, TB ML +390. AT&T Stadium is a domed/retractable-roof stadium.",
+   "sources": [
+    {
+     "label": "FanDuel Research (Cowboys vs Buccaneers odds)",
+     "url": "https://www.fanduel.com/research/cowboys-vs-buccaneers-predictions-odds-picks-best-bets-for-nfl-week-5-thursday-night-football-2026"
+    }
+   ]
+  },
+  {
+   "evidence_id": "vsin-fade-attempt-pm",
+   "verification": "EXTERNAL_VERIFIED",
+   "fact": "Checked VSiN betting-splits page 2026-10-07 ~00:24Z: the free tier displayed only a college-football Tuesday Oct 6 row (Southern Miss vs Troy) with DraftKings spread/handle/bets splits; no NFL ticket%/handle% row was publicly visible. No verified public-vs-sharper NFL split available -> no Fade qualifies this evening.",
    "sources": [
     {
      "label": "VSiN betting splits",
