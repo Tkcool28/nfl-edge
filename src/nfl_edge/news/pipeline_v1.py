@@ -27,6 +27,29 @@ SECTION_ORDER = (
     "market-watch",
     "today-tip",
 )
+
+
+def writer_rules() -> dict[str, Any]:
+    """Authoritative rules shared by research and editorial publication packets."""
+    return {
+        "section_order": list(SECTION_ORDER),
+        "required_sections": ["today-tip"],
+        "editorial_only_sections": ["today-tip"],
+        "fade_learning_fallback": {
+            "section_id": "fade", "mode": "learning", "title": "Learn the Game",
+            "editorial_only": True, "general_education_only": True,
+            "evidence_ids": [], "sources": [], "takeaway_min_characters": 40,
+            "only_when_no_verified_split": True,
+        },
+        "plain_language": True,
+        "no_new_catchphrases": True,
+        "approved_catchphrases": ["Monday game? Monday check.", "Thursday game? Thursday check."],
+        "fade_must_explain_usage": True,
+        "no_blind_fade_signal": True,
+        "news_cannot_change_model": True,
+    }
+
+
 _SCHEMA_ROOT = Path(__file__).resolve().parents[3] / "schemas"
 
 
@@ -290,15 +313,7 @@ def build_research_packet(
         "audience": "Football fans who bet, including casual and newer bettors.",
         "card_context": dict(card_context),
         "evidence": normalized,
-        "writer_rules": {
-            "section_order": list(SECTION_ORDER),
-            "plain_language": True,
-            "no_new_catchphrases": True,
-            "approved_catchphrases": ["Monday game? Monday check.", "Thursday game? Thursday check."],
-            "fade_must_explain_usage": True,
-            "no_blind_fade_signal": True,
-            "news_cannot_change_model": True,
-        },
+        "writer_rules": writer_rules(),
     }
     _validate_schema_file("NFL_EDGE_DAILY_NEWS_RESEARCH_V1.schema.json", packet)
     return packet
@@ -335,10 +350,18 @@ def verify_article(article: Mapping[str, Any], packet: Mapping[str, Any]) -> Non
     if expected_positions != sorted(expected_positions) or len(expected_positions) != len(order):
         raise NewsPipelineError("article sections are unknown or out of order")
 
+    if len(order) != len(set(order)):
+        raise NewsPipelineError("article sections must have unique IDs")
+    if "today-tip" not in order:
+        raise NewsPipelineError("Today's Tip is required")
+
     for section in sections:
         if not isinstance(section, dict):
             raise NewsPipelineError("article section must be an object")
         sid = str(section.get("id") or "")
+        learning = section.get("mode") == "learning"
+        if learning and (sid != "fade" or section.get("title") != "Learn the Game"):
+            raise NewsPipelineError("learning mode requires the fade slot titled Learn the Game")
         items = section.get("items")
         if not isinstance(items, list) or not items:
             raise NewsPipelineError(f"section {sid} must contain at least one item")
@@ -352,9 +375,11 @@ def verify_article(article: Mapping[str, Any], packet: Mapping[str, Any]) -> Non
                 raise NewsPipelineError(f"section {sid} item missing paragraphs")
             evidence_ids = item.get("evidence_ids", [])
             editorial_only = bool(item.get("editorial_only"))
-            if editorial_only and sid != "today-tip":
-                raise NewsPipelineError("editorial_only is permitted only in Today's Tip")
-            if sid != "today-tip" and not evidence_ids:
+            if learning and (not editorial_only or evidence_ids or item.get("sources")):
+                raise NewsPipelineError("learning fallback must be editorial-only general education without live evidence")
+            if editorial_only and sid != "today-tip" and not learning:
+                raise NewsPipelineError("editorial_only is permitted only in Today's Tip or the learning fallback")
+            if sid != "today-tip" and not learning and not evidence_ids:
                 raise NewsPipelineError(f"section {sid} item must cite evidence_ids")
             if not isinstance(evidence_ids, list) or any(str(x) not in evidence_by_id for x in evidence_ids):
                 raise NewsPipelineError(f"section {sid} item cites unknown evidence")

@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from nfl_edge.backend.news_editorial import validate_editorial_submission
-from nfl_edge.news.pipeline_v1 import NewsPipelineError, _atomic_json, _load_object, _parse_utc, verify_article
+from nfl_edge.news.pipeline_v1 import NewsPipelineError, _atomic_json, _load_object, _parse_utc, verify_article, writer_rules
 
 FRESHNESS_LIMIT = timedelta(minutes=45)
 
@@ -41,7 +41,7 @@ def _packet(submission: Mapping[str, Any], previous_article: Mapping[str, Any] |
         "audience": "NFL EDGE users",
         "card_context": {},
         "evidence": submission["evidence"],
-        "writer_rules": {},
+        "writer_rules": writer_rules(),
         "previous_article": previous_article,
     }
 

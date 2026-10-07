@@ -4,7 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
     "nflreadpy==0.1.5",
-    "polars>=1.0",
+    "polars==1.44.2",
     "requests==2.33.0",
     "fastapi>=0.116,<1",
     "uvicorn>=0.35,<1",

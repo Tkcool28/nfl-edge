@@ -39,7 +39,8 @@ def _submission(now: datetime) -> dict[str, object]:
                             "sources": [{"label": "NFL", "url": "https://www.nfl.com/example"}],
                         }
                     ],
-                }
+                },
+                {"id": "today-tip", "title": "Today's Tip", "items": [{"headline": "Price matters", "paragraphs": ["Use the current price."], "editorial_only": True, "evidence_ids": [], "sources": []}]}
             ],
         },
         "evidence": [
@@ -140,3 +141,57 @@ def test_publisher_rejects_external_evidence_without_sources(tmp_path: Path) -> 
 
     assert json.loads((tmp_path / "latest.json").read_text(encoding="utf-8")) == old
     assert not (tmp_path / "candidate.json").exists()
+
+
+def _learning() -> dict:
+    return {"id": "fade", "title": "Learn the Game", "mode": "learning", "items": [{
+        "headline": "What is implied probability?", "paragraphs": [
+            "Implied probability translates a price into a chance. Hypothetically, even money implies 50%."],
+        "takeaway": "Compare the chance implied by a price with your estimate before deciding to bet.",
+        "editorial_only": True, "evidence_ids": [], "sources": []}]}
+
+
+def test_learning_fallback_publishes_in_fade_slot_with_separate_tip(tmp_path: Path) -> None:
+    now = datetime(2026, 9, 13, 6, 30, tzinfo=timezone.utc)
+    submission = _submission(now)
+    submission["article"]["sections"].insert(1, _learning())
+    _stage(tmp_path, submission)
+    result = publisher.publish_editorial_submission(runtime_root=tmp_path, now_utc=now)
+    assert result["status"] == "PUBLISHED"
+    article = json.loads((tmp_path / "latest.json").read_text())
+    assert [s["id"] for s in article["sections"]] == ["what-matters", "fade", "today-tip"]
+    assert publisher._packet(submission, None)["writer_rules"] == publisher.writer_rules()
+
+
+@pytest.mark.parametrize("defect", ["missing-tip", "duplicate", "order", "unmarked-editorial", "learning-evidence", "learning-source", "learning-title", "learning-slot", "thin-takeaway"])
+def test_contract_defects_preserve_last_good(tmp_path: Path, defect: str) -> None:
+    now = datetime(2026, 9, 13, 6, 30, tzinfo=timezone.utc)
+    submission = _submission(now)
+    sections = submission["article"]["sections"]
+    learning = _learning()
+    sections.insert(1, learning)
+    if defect == "missing-tip":
+        sections.pop()
+    elif defect == "duplicate":
+        sections.append(sections[-1])
+    elif defect == "order":
+        sections.reverse()
+    elif defect == "unmarked-editorial":
+        learning.pop("mode")
+    elif defect == "learning-evidence":
+        learning["items"][0]["evidence_ids"] = ["official:1"]
+    elif defect == "learning-source":
+        learning["items"][0]["sources"] = [{"url": "https://www.nfl.com/example"}]
+    elif defect == "learning-title":
+        learning["title"] = "The Fade"
+    elif defect == "learning-slot":
+        learning["id"] = "market-watch"
+    else:
+        learning["items"][0]["takeaway"] = "Bet wisely."
+    old = {"published_at_utc": "2026-09-13T06:00:00Z", "title": "Last good"}
+    (tmp_path / "latest.json").write_text(json.dumps(old))
+    _stage(tmp_path, submission)
+    with pytest.raises(NewsPipelineError):
+        publisher.publish_editorial_submission(runtime_root=tmp_path, now_utc=now)
+    assert json.loads((tmp_path / "latest.json").read_text()) == old
+    assert not (tmp_path / "archive").exists()

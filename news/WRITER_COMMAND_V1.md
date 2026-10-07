@@ -33,7 +33,9 @@ Use this order:
 4. `market-watch` — Market Watch
 5. `today-tip` — Today's Tip
 
-Quiet sections may be omitted. Never invent content to fill space.
+Today's Tip is required in every brief and must contain at least one useful item. Other quiet sections may be omitted. Never invent content to fill space. Section IDs must be unique; preserve the order above.
+
+`editorial_only=true` is allowed only in Today's Tip or the explicitly marked learning fallback below. All current news, team, price, and split claims require packet evidence.
 
 Every factual/non-editorial item must include `evidence_ids` from the packet. Source links may only be copied from those evidence records.
 
@@ -55,6 +57,12 @@ Good usage language:
 Then tie it back to the current NFL EDGE card / Play Through when relevant.
 
 The Fade is another decision layer. It is not a command to fade the public or override NFL EDGE.
+
+## Learning substitute when no Fade split can be verified
+
+Use the existing `fade` slot (third in the order) with `mode: "learning"` and title `"Learn the Game"`. Explain one simple betting vocabulary term or general concept, with a concrete example and useful takeaway of at least 40 characters. Each item must have `editorial_only: true`, empty `evidence_ids`, and empty `sources`. Use hypothetical examples clearly labeled as such. Do not include current team/news/price claims or imply verified public/sharp activity. Do not manufacture a Fade or relabel a factual market item as education. Today's Tip still appears separately at the end.
+
+For a real Fade, omit `mode` (or use `"standard"`), cite verified packet evidence, and follow the guidance above.
 
 ## Market Watch
 

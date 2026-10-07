@@ -12,6 +12,8 @@ from typing import Any, Mapping
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
 
+from nfl_edge.news.pipeline_v1 import NewsPipelineError, verify_article, writer_rules
+
 SUBMISSION_SCHEMA_VERSION = "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1"
 MAX_SUBMISSION_BYTES = 1_500_000
 _ROOT = Path(__file__).resolve().parents[3]
@@ -60,6 +62,17 @@ def validate_editorial_submission(payload: Mapping[str, Any]) -> dict[str, Any]:
                 raise ValueError(
                     "article items citing external evidence must include at least one cited source"
                 )
+
+    # The staging preflight uses the same semantic contract as final publication.
+    # Publication additionally checks freshness and advancement beyond last-good.
+    try:
+        verify_article(value["article"], {
+            "generated_at_utc": value["research_generated_at_utc"],
+            "evidence": value["evidence"],
+            "writer_rules": writer_rules(),
+        })
+    except NewsPipelineError as exc:
+        raise ValueError(f"editorial submission contract validation failed: {exc}") from exc
 
     raw = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
     if len(raw) > MAX_SUBMISSION_BYTES:
