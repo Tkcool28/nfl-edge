@@ -1,369 +1,350 @@
 {
- "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-10-08T00:54:27Z",
- "research_generated_at_utc": "2026-10-08T00:54:27Z",
- "article": {
-  "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-10-08T00:54:27Z",
-  "research_generated_at_utc": "2026-10-08T00:22:55Z",
-  "edition": "Evening Brief",
-  "title": "NFL EDGE Wednesday Evening Brief",
-  "dek": "Lamar Jackson sat out Wednesday's practice, Jayden Daniels went full and is expected to start, and Thursday night's tickets-vs-money split is holding its shape.",
-  "sections": [
-   {
-    "id": "what-matters",
-    "title": "What Matters Tonight",
-    "icon": "📰",
-    "items": [
-     {
-      "headline": "Lamar sat out Wednesday — and the feed still hasn't caught up",
-      "evidence_ids": [
-       "lamar-pm",
-       "jurgens-pm",
-       "app-qb-pm",
-       "app-board-pm",
-       "prior-edition-pm"
-      ],
-      "paragraphs": [
-       "No practice Wednesday for Lamar Jackson. The ankle kept him off the field as Baltimore opened Week 5 prep for Sunday night in Atlanta, and coach Jesse Minter wouldn't estimate his chances — only that it would become clearer later in the week. The Ravens are getting Tyler Huntley ready to start if Jackson can't go.",
-       "Baltimore did add help elsewhere: they traded for two-time Pro Bowl center Cam Jurgens from the Eagles on Wednesday afternoon, sending a 2027 fifth and a 2028 second back. That's a real upgrade in the middle before facing a strong Falcons front.",
-       "Here's the catch: the app still lists Lamar Jackson as Baltimore's expected starter. The quarterback feed hasn't caught up to the DNP. The model's own number — Atlanta by about 2.9 this morning — was built with Lamar in it. So don't bet a Ravens number off this board as-is. Run your book's price through Check first."
-      ],
-      "takeaway": "The news beat the feed again. Use Check on this game until the app knows who's starting.",
-      "sources": [
-       {
-        "label": "Ravens Wire (injury report)",
-        "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/10/07/ravens-falcons-injury-report-lamar-jackson-zay-flowers-week-5/92141090007/"
-       },
-       {
-        "label": "Falcons Wire (Jurgens trade)",
-        "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/10/07/ravens-trade-for-eagles-c-cam-jurgens-ahead-of-falcons-matchup/92139206007/"
-       },
-       {
-        "label": "NFL EDGE product board (live)",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     },
-     {
-      "headline": "Daniels practiced in full — and the app finally caught up",
-      "evidence_ids": [
-       "daniels-pm",
-       "app-qb-pm",
-       "app-board-pm"
-      ],
-      "paragraphs": [
-       "First full practice since the Week 2 elbow dislocation. Jayden Daniels worked Wednesday with a brace on his left elbow — a brace he plans to wear on game day — and coach Dan Quinn said the plan is for him to start Sunday against the visiting Giants, barring any setback.",
-       "And this time the feed agrees: the app now lists Jayden Daniels as Washington's expected starter. The board caught up. Commanders -3.5 at both books, unchanged — the market believes he plays.",
-       "One thing to watch behind him: Marcus Mariota (knee), Stefon Diggs (hamstring) and Terry McLaurin (hamstring) all sat out Wednesday. If Daniels takes a setback, the next man up is a rookie."
-      ],
-      "takeaway": "News and feed agree on this one — the first quarterback question of the week is answered.",
-      "sources": [
-       {
-        "label": "Reuters (Daniels full practice, expected to start)",
-        "url": "https://www.reuters.com/sports/commanders-qb-jayden-daniels-embrace-brace-play-vs-giants--flm-2026-10-07/"
-       },
-       {
-        "label": "NFL EDGE product board (live)",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     },
-     {
-      "headline": "Tomorrow night: Buccaneers at Cowboys, 8:15 p.m. ET",
-      "evidence_ids": [
-       "tnf-pm",
-       "app-board-pm"
-      ],
-      "paragraphs": [
-       "The injury sheet is final for Thursday night. Baker Mayfield (thumb) is out, so rookie Jalon Daniels starts his second straight. Tampa is also down safety Antoine Winfield Jr. (rib fracture, out 2–4 weeks), corner Benjamin Morrison and linebacker SirVocea Dennis. The good news for the Bucs: kicker Chase McLaughlin (groin/hip) will play.",
-       "The line is holding: Dallas -8.5 at both books, total 47.5 — unchanged since last night. Yesterday's full point of movement toward Tampa is still sitting there, and the game is indoors, so there's no weather to handicap."
-      ],
-      "takeaway": "One sleep until kickoff. The number hasn't moved since last night — check your book against -8.5.",
-      "sources": [
-       {
-        "label": "USA Today (Bucs Week 5 injury report)",
-        "url": "https://www.usatoday.com/story/sports/fantasy/player-updates/2026/10/07/bucs-week-5-injury-report-ahead-of-matchup-with-the-cowboys/92141177007/"
-       },
-       {
-        "label": "NFL EDGE product board (live)",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     },
-     {
-      "headline": "Sunday weather: too early to handicap",
-      "evidence_ids": [
-       "app-board-pm"
-      ],
-      "paragraphs": [
-       "Tomorrow's only game is under a roof, so weather is a non-factor. For Sunday's outdoor games, kickoff-window forecasts aren't final yet — the real numbers come closer to the weekend. Nothing to handicap today."
-      ],
-      "takeaway": "Check back tomorrow morning's brief for the first real Sunday weather read.",
-      "sources": [
-       {
-        "label": "NFL EDGE product board (live)",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     }
-    ]
-   },
-   {
-    "id": "what-it-means",
-    "title": "What It Means for NFL EDGE",
-    "icon": "💡",
-    "items": [
-     {
-      "headline": "The Hit Rate card is Cincinnati now — likeliest winner, not best price",
-      "evidence_ids": [
-       "app-board-pm",
-       "prior-edition-pm"
-      ],
-      "paragraphs": [
-       "The evening refresh moved the Hit Rate card from Minnesota to the Bengals: Cincinnati moneyline, -300 on FanDuel, with the app's trust number at 0.68.",
-       "Remember what this lane is: 'which supported pick looks most likely to win' — it forgoes value for win probability. The app's own tutorial says Hit Rate ≠ Profit Rate. Card swaps like this aren't market moves; they're the board updating its own recommendations on fresh prices.",
-       "The board refreshes every morning and evening — tonight's cards are tonight's numbers."
-      ],
-      "takeaway": "Hit Rate picks the likeliest winner, not the best price.",
-      "sources": [
-       {
-        "label": "NFL EDGE product board (live)",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     },
-     {
-      "headline": "The Balanced card is Minnesota again — check the reliability tag",
-      "evidence_ids": [
-       "app-board-pm"
-      ],
-      "paragraphs": [
-       "Minnesota moneyline held the Balanced card at -130 on DraftKings, with a trust number of 0.62 — but the app tags this one LOW reliability.",
-       "Balanced is the middle ground: a strong pick without paying too much, a good starting point for a new bettor. The reliability tag is part of the read, not a footnote — look at the trust readout on the card before you size it."
-      ],
-      "takeaway": "Balanced = strong pick, fair price. Read the reliability tag with the pick.",
-      "sources": [
-       {
-        "label": "NFL EDGE product board (live)",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     },
-     {
-      "headline": "The Value card is the Chargers — still a bet",
-      "evidence_ids": [
-       "app-board-pm",
-       "prior-edition-pm"
-      ],
-      "paragraphs": [
-       "The Chargers held the Value card from this morning: +3.5 at -110 on DraftKings, 0.75 units, medium reliability. The Value lane is always the model's +EV play — the one where the model's number beats the market's number.",
-       "Denver is -3.5 on the other side, so if your book shows a different number than +3.5, run it through Check and let the evaluator give you the verdict on your price."
-      ],
-      "takeaway": "Value is the model's +EV lane. The Chargers held it all day.",
-      "sources": [
-       {
-        "label": "NFL EDGE product board (live)",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     }
-    ]
-   },
-   {
-    "id": "fade",
-    "title": "The Fade",
-    "icon": "⚖️",
-    "items": [
-     {
-      "headline": "Thursday night's moneyline: tickets say Cowboys, money says Bucs — again",
-      "evidence_ids": [
-       "vsin-fade-pm",
-       "app-board-pm",
-       "prior-edition-pm"
-      ],
-      "paragraphs": [
-       "Tonight's free VSiN row shows the same shape as this morning, on tomorrow night's game. On the moneyline: 80% of the tickets are on Dallas at -470, but 58% of the money is on Tampa Bay at +360. Tickets and handle point opposite ways. (For the record, they agree on the spread — both sides lean Dallas -8.5 — and both lean the Over on 47.5.)",
-       "What could that mean? Somebody with size likes the underdog at +360 while the public's tickets ride the favorite. And there's a line move backing it up: the spread already moved a full point toward Tampa Bay, from -9.5 to -8.5. That's the shape a Fade watches for — a verified split, plus movement in the money's direction. One honest caveat: the Bucs' handle share slipped from 60% to 58% this evening, so the split is real but not getting stronger.",
-       "What to watch next: if the Bucs' moneyline price drifts up — say +360 toward +375 — or the spread ticks to +9 without any new bad Cowboys news, that's the same football opinion at a better price. Price-sensitive bettors wait for the number; they don't chase it.",
-       "How to use it: this is a decision layer, not a command to fade the public or override the app. If you like Tampa Bay, run your book's moneyline price through Check — the app re-runs the model and the evaluator and gives you a bet or no-bet verdict on your number."
-      ],
-      "takeaway": "A real split on Thursday night: tickets on Dallas, money on Tampa Bay. Watch the price, then Check it.",
-      "sources": [
-       {
-        "label": "VSiN betting splits (free NFL row)",
-        "url": "https://data.vsin.com/betting-splits/"
-       },
-       {
-        "label": "NFL EDGE product board (live)",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     }
-    ]
-   },
-   {
-    "id": "market-watch",
-    "title": "Line Movement",
-    "icon": "👀",
-    "items": [
-     {
-      "headline": "Everything that moved — and one line that didn't",
-      "evidence_ids": [
-       "app-board-pm",
-       "prior-edition-pm",
-       "lamar-pm"
-      ],
-      "paragraphs": [
-       "Baltimore–Atlanta: FanDuel joined DraftKings at Atlanta -3.5. It was -3.0 on FanDuel this morning; the Wednesday DNP moved the other book into line. Total 43.5, unchanged. This line is still living and dying on one ankle.",
-       "Tampa–Dallas: holding at Dallas -8.5 and 47.5 at both books, unchanged since last night. Yesterday's full point toward Tampa is baked in — nothing new today.",
-       "Washington: Commanders -3.5 at both books, steady — the market believes Daniels starts, and now the feed does too. Philadelphia–Jacksonville: a half point apart between books, -7.0 on DraftKings and -7.5 on FanDuel.",
-       "One habit worth building: the board refreshes every morning and evening, but the market moves all day. When you see a move the board hasn't picked up — or your book isn't DraftKings or FanDuel — tap Check, type in your book's line and price. The app runs it back through the model and the evaluator and returns a bet or no-bet verdict on your price. Full re-evaluation, not a blind override."
-      ],
-      "takeaway": "The market moved on the Lamar DNP; the board catches up at the refresh. Check covers the gap.",
-      "sources": [
-       {
-        "label": "Ravens Wire (injury report)",
-        "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/10/07/ravens-falcons-injury-report-lamar-jackson-zay-flowers-week-5/92141090007/"
-       },
-       {
-        "label": "NFL EDGE product board (live)",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     }
-    ]
-   },
-   {
-    "id": "today-tip",
-    "title": "Today's Tip",
-    "icon": "✅",
-    "items": [
-     {
-      "headline": "Practical tip: Thursday game? Thursday check.",
-      "evidence_ids": [
-       "tnf-pm",
-       "app-board-pm"
-      ],
-      "paragraphs": [
-       "Kickoff is tomorrow at 8:15 p.m. ET, and the line is -8.5 with a 47.5 total at both books. If your book shows anything else — a -8, a -9, a different total — don't eyeball it. Tap Check in the app, type in your book's line and price, and get the bet or no-bet verdict on your actual number. That's what the function is for."
-      ],
-      "takeaway": "Thursday game? Thursday check.",
-      "sources": [
-       {
-        "label": "USA Today (Bucs Week 5 injury report)",
-        "url": "https://www.usatoday.com/story/sports/fantasy/player-updates/2026/10/07/bucs-week-5-injury-report-ahead-of-matchup-with-the-cowboys/92141177007/"
-       },
-       {
-        "label": "NFL EDGE product board (live)",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     }
-    ]
-   }
-  ]
- },
- "evidence": [
-  {
-   "evidence_id": "lamar-pm",
-   "fact": "Lamar Jackson (ankle) did not practice Wednesday as Baltimore began Week 5 prep for Sunday night at Atlanta. Coach Jesse Minter was noncommittal on his availability, saying it would become clearer later in the week. Tyler Huntley is preparing to start if Jackson can't go. Jackson left last Sunday's win over Tennessee at halftime wearing a walking boot; the injury is considered day-to-day, not long-term.",
-   "verification": "EXTERNAL_VERIFIED",
-   "sources": [
+  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+  "submitted_at_utc": "2026-10-08T12:20:57Z",
+  "research_generated_at_utc": "2026-10-08T12:20:57Z",
+  "evidence": [
     {
-     "label": "Ravens Wire (injury report)",
-     "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/10/07/ravens-falcons-injury-report-lamar-jackson-zay-flowers-week-5/92141090007/"
+      "evidence_id": "tnf-am",
+      "category": "injury",
+      "verification": "EXTERNAL_VERIFIED",
+      "fact": "Tampa Bay ruled out QB Baker Mayfield (right thumb), S Antoine Winfield Jr. (rib), CB Benjamin Morrison (quad) and LB SirVocea Dennis (ankle/foot) for Thursday night at Dallas; rookie Jalon Daniels makes his second straight start. Dallas ruled out CB Cobie Durant, LB DeMarvion Overshown and T Drew Shelton (hamstrings); G Tyler Smith (thumb) and WR Johnathan Mingo (illness) are questionable. Kickoff 8:15 p.m. ET at AT&T Stadium, indoors.",
+      "sources": [
+        {
+          "label": "Bucs Wire (four ruled out, Daniels starts)",
+          "url": "https://bucswire.usatoday.com/story/sports/nfl/buccaneers/2026/10/07/buccaneers-rule-out-four-players-for-thursday-night-vs-cowboys/92138324007/"
+        },
+        {
+          "label": "Cowboys Wire (Mayfield out, Dallas injuries)",
+          "url": "https://cowboyswire.usatoday.com/story/sports/nfl/cowboys/2026/10/08/baker-mayfield-buccaneers-cowboys-injury-update/92147629007/"
+        }
+      ]
     },
     {
-     "label": "Reuters (Huntley preparing to start)",
-     "url": "https://www.reuters.com/sports/ravens-rest-lamar-jackson-prepare-tyler-huntley-falcons--flm-2026-10-07/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "jurgens-pm",
-   "fact": "The Ravens acquired two-time Pro Bowl center Cam Jurgens from the Philadelphia Eagles on Wednesday afternoon, sending a 2027 5th-round pick and a 2028 2nd-round pick back, to stabilize the line ahead of the Atlanta trip.",
-   "verification": "EXTERNAL_VERIFIED",
-   "sources": [
-    {
-     "label": "Falcons Wire (Jurgens trade)",
-     "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/10/07/ravens-trade-for-eagles-c-cam-jurgens-ahead-of-falcons-matchup/92139206007/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "daniels-pm",
-   "fact": "Jayden Daniels was a full practice participant Wednesday for the first time since dislocating his left elbow in Week 2, working with a brace he plans to keep on for game day. Coach Dan Quinn said the plan is for Daniels to start Sunday against the visiting Giants, barring setbacks. Marcus Mariota (knee), Stefon Diggs (hamstring) and Terry McLaurin (hamstring) did not practice.",
-   "verification": "EXTERNAL_VERIFIED",
-   "sources": [
-    {
-     "label": "Reuters (Daniels full practice, expected to start)",
-     "url": "https://www.reuters.com/sports/commanders-qb-jayden-daniels-embrace-brace-play-vs-giants--flm-2026-10-07/"
+      "evidence_id": "lamar-am",
+      "category": "injury",
+      "verification": "EXTERNAL_VERIFIED",
+      "fact": "Lamar Jackson (ankle) did not practice Wednesday as Baltimore prepped for Sunday night at Atlanta; NFL Network's Ian Rapoport reports Jackson has 'just an outside chance' to play, and the Ravens are preparing Tyler Huntley to start. Coach Jesse Minter was noncommittal, calling the injury day-to-day, not long-term. The app's morning QB feed now lists Tyler Huntley as Baltimore's expected starter.",
+      "sources": [
+        {
+          "label": "Reuters (Jackson out of practice, Huntley preps)",
+          "url": "https://www.reuters.com/sports/ravens-rest-lamar-jackson-prepare-tyler-huntley-falcons--flm-2026-10-07/"
+        },
+        {
+          "label": "USA Today (Week 5 injury report, Rapoport on Jackson)",
+          "url": "https://www.usatoday.com/story/sports/fantasy/football/2026/10/07/week-5-fantasy-football-injury-report-updates/92135869007/"
+        }
+      ]
     },
     {
-     "label": "NBC Sports (full participant Wednesday)",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/jayden-daniels-up-to-full-practice-on-wednesday"
-    }
-   ]
-  },
-  {
-   "evidence_id": "tnf-pm",
-   "fact": "Baker Mayfield (thumb) was ruled out for Thursday night at Dallas; rookie Jalon Daniels makes his second consecutive start. Antoine Winfield Jr. (rib fracture) is out 2-4 weeks; SirVocea Dennis and Benjamin Morrison are also out. Kicker Chase McLaughlin (groin/hip) will play. Kickoff 8:15 p.m. ET Thursday at AT&T Stadium (indoor).",
-   "verification": "EXTERNAL_VERIFIED",
-   "sources": [
-    {
-     "label": "USA Today (Bucs Week 5 injury report)",
-     "url": "https://www.usatoday.com/story/sports/fantasy/player-updates/2026/10/07/bucs-week-5-injury-report-ahead-of-matchup-with-the-cowboys/92141177007/"
+      "evidence_id": "qbs-am",
+      "category": "injury",
+      "verification": "EXTERNAL_VERIFIED",
+      "fact": "Tyson Bagent starts for Chicago at Green Bay on Sunday; Caleb Williams (hamstring) misses a third straight game. Jameis Winston starts for the Giants at Washington; Jaxson Dart is out for the season with a knee injury. Jayden Daniels (elbow) practiced in full and starts for Washington. The app's morning QB feed matches these reported starters.",
+      "sources": [
+        {
+          "label": "Packers Wire (Bagent starts, Williams out)",
+          "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/10/05/packers-bears-tyson-bagent-caleb-williams-quarterback-week-5/92105443007/"
+        },
+        {
+          "label": "Athlon (Winston starting, Dart out for season)",
+          "url": "https://athlonsports.com/nfl/arizona-cardinals/jameis-winston-j-j-mccarthys-arrival-and-brian-burns-injury-4-things-cardinals-should-know-about-giants"
+        }
+      ]
     },
     {
-     "label": "NBC Sports (Mayfield out, McLaughlin plays)",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/buccaneers-k-chase-mclaughlin-set-to-play-thursday-after-landing-on-injury-report"
-    }
-   ]
-  },
-  {
-   "evidence_id": "vsin-fade-pm",
-   "fact": "VSiN betting-splits NFL tab, free featured row (DraftKings source), checked 2026-10-08T00:53Z (~6:53 p.m. Denver). Featured game: Buccaneers at Cowboys (Thursday, Oct 8). Spread (TB +8.5 / DAL -8.5): TB 8% handle, 29% tickets; DAL 92% handle, 71% tickets. Moneyline (TB +360 / DAL -470): TB 58% handle, 20% tickets; DAL 42% handle, 80% tickets — TB handle down from 60% earlier. Total (47.5): Over 81% handle, 80% tickets; Under 19% handle, 20% tickets.",
-   "verification": "EXTERNAL_VERIFIED",
-   "sources": [
+      "evidence_id": "weather-am",
+      "category": "weather",
+      "verification": "EXTERNAL_VERIFIED",
+      "fact": "First Sunday weather read (3 days out, will move): Pittsburgh (Colts at Steelers, 1:00 p.m. ET) - rain expected, high ~64F, ~100% rain chance. Green Bay (Bears at Packers, noon ET) - unseasonably warm near 77F and windy per NWS Green Bay. London (Eagles at Jaguars, 9:30 a.m. ET) - cool, upper 50s, light west breeze, low rain chance. Seattle (49ers at Seahawks, 4:25 p.m. ET) - sunny, low 60s, light wind. Thursday night in Dallas is indoors at AT&T Stadium - no weather factor. Other outdoor venues too early to handicap.",
+      "sources": [
+        {
+          "label": "weather.com (Pittsburgh 10-day)",
+          "url": "https://weather.com/us/pennsylvania/city/pittsburgh/tenday"
+        },
+        {
+          "label": "Green Bay Press-Gazette (NWS: warm and windy at Lambeau)",
+          "url": "https://www.greenbaypressgazette.com/story/sports/nfl/packers/2026/10/08/packers-bears-at-lambeau-game-day-guide-green-bay-weather-forecast/91710847007/"
+        },
+        {
+          "label": "Sharp Football Analysis (Week 5 weather, updated Oct 8)",
+          "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/"
+        },
+        {
+          "label": "weather.com (Seattle 10-day)",
+          "url": "https://weather.com/us/wa/city/seattle/tenday"
+        }
+      ]
+    },
     {
-     "label": "VSiN betting splits (free NFL row)",
-     "url": "https://data.vsin.com/betting-splits/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "prior-edition-pm",
-   "fact": "Evening edition (submitted 2026-10-08T00:22:55Z) — this run re-publishes its content with the contract-correct section order (fade moved to third slot, ahead of market-watch). Lines and cards verified unchanged since: DAL -8.5 / total 47.5 at both books; ATL -3.5 at both books; WAS -3.5 steady; JAX -7.0 DK / -7.5 FD; cards Hit Rate CIN ML -300 FD, Balanced MIN ML -130 DK, Value LAC +3.5 -110 DK; Thursday moneyline split per VSiN free row: 80% of tickets on Dallas, 60% of handle on Tampa Bay.",
-   "verification": "INTERNAL_CANONICAL",
-   "sources": [
+      "evidence_id": "vsin-fade-am",
+      "category": "splits",
+      "verification": "EXTERNAL_VERIFIED",
+      "fact": "Free VSiN row (DraftKings data) for Buccaneers at Cowboys, read ~6:20 a.m. Denver: spread - Buccaneers +8.5 HND 12% / BET 30%, Cowboys -8.5 HND 88% / BET 70% (tickets and handle both on Dallas - agreeing, not a Fade). Moneyline - TB +360 HND 50% / BET 18%, DAL -470 HND 50% / BET 82% (tickets heavy Dallas, handle even - no longer majority-Tampa; was 58% TB handle last evening). Total 47.5: 90% handle / 81% bets on one side (agreeing). No corroborating line movement tonight; DK-only data. No qualifying Fade split.",
+      "sources": [
+        {
+          "label": "VSiN betting splits (free NFL row)",
+          "url": "https://data.vsin.com/betting-splits/"
+        }
+      ]
+    },
     {
-     "label": "NFL EDGE product board (live)",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-    }
-   ]
-  },
-  {
-   "evidence_id": "app-board-pm",
-   "fact": "NFL EDGE product observed 2026-10-08T00:08Z, FRESH, Week 5. Headline cards: Hit Rate CIN moneyline -300 FanDuel (BET, MEDIUM reliability, model/trust probability 0.68, 0.5 units, EV +0.015); Balanced MIN moneyline -130 DraftKings (BET, LOW reliability, trust 0.62, 0.75 units, EV +0.012); Value LAC +3.5 -110 DraftKings (BET, MEDIUM reliability, trust 0.51, 0.75 units, EV +0.005). Board: TB@DAL DAL -8.5 / total 47.5 both books; BAL@ATL ATL -3.5 both books, total 43.5; NYG@WAS WAS -3.5 both books; PHI@JAX JAX -7.0 DK / -7.5 FD.",
-   "verification": "INTERNAL_CANONICAL",
-   "sources": [
+      "evidence_id": "prior-edition-am",
+      "category": "internal",
+      "verification": "INTERNAL_CANONICAL",
+      "fact": "Previous edition: Wednesday Evening Brief, submitted 2026-10-08T00:54:27Z. Cards: Hit Rate Cincinnati moneyline -300 (FanDuel), Balanced Minnesota moneyline -130 (DraftKings, LOW reliability), Value Chargers +3.5 -110 (DraftKings). Board lines: Atlanta -3.5, Dallas -8.5 (total 47.5), Washington -3.5, Jacksonville -7.0/-7.5. Real Fade ran on the TNF moneyline split.",
+      "sources": []
+    },
     {
-     "label": "NFL EDGE product board (live)",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-    }
-   ]
-  },
-  {
-   "evidence_id": "app-qb-pm",
-   "fact": "App QB feed observed 2026-10-08T00:08Z: BAL still lists Lamar Jackson as expected starter (feed has not caught up to Wednesday's DNP and the Huntley reports); WAS now lists Jayden Daniels (feed caught up); NYG Jameis Winston; TB Jalon Daniels; DAL Dak Prescott; TEN Cam Ward; CIN Joe Burrow.",
-   "verification": "INTERNAL_CANONICAL",
-   "sources": [
+      "evidence_id": "app-board-am",
+      "category": "internal",
+      "verification": "INTERNAL_CANONICAL",
+      "fact": "Morning board refresh, generated 2026-10-08T12:08:24Z. Cards: Hit Rate - Cincinnati moneyline -300 (FanDuel), trust 0.68, MEDIUM reliability, 0.5 units. Balanced - Indianapolis +2.5 spread -102 (DraftKings), trust 0.51, MEDIUM reliability, 0.75 units. Value - LA Chargers +3.5 spread -110 (DraftKings), trust 0.51, MEDIUM reliability, 0.75 units, evaluator EV +0.0047, state BET. Lines: Atlanta -3.5 (both books), Dallas -8.5 (both books, total 47.5), Washington -3.5 (both books), Jacksonville -7.0 DK / -7.5 FD.",
+      "sources": []
+    },
     {
-     "label": "NFL EDGE product board (live)",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+      "evidence_id": "app-qb-am",
+      "category": "internal",
+      "verification": "INTERNAL_CANONICAL",
+      "fact": "Morning QB feed snapshot: Tyler Huntley (BAL), Michael Penix (ATL), Jalon Daniels (TB), Dak Prescott (DAL), Tyson Bagent (CHI), Jordan Love (GB), Joe Burrow (CIN), Malik Willis (MIA), Jameis Winston (NYG), Jayden Daniels (WAS), Bo Nix (DEN), Justin Herbert (LAC), Jared Goff (DET), Jacoby Brissett (ARI), Kyler Murray (MIN), Tyler Shough (NO, Questionable), Daniel Jones (IND), Aaron Rodgers (PIT), C.J. Stroud (HOU), Cam Ward (TEN), Kirk Cousins (LV), Drake Maye (NE), Deshaun Watson (CLE), Geno Smith (NYJ), Jalen Hurts (PHI), Trevor Lawrence (JAX), Brock Purdy (SF), Sam Darnold (SEA), Josh Allen (BUF), Matthew Stafford (LAR). Feed state FRESH.",
+      "sources": []
     }
-   ]
+  ],
+  "article": {
+    "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+    "published_at_utc": "2026-10-08T12:20:57Z",
+    "research_generated_at_utc": "2026-10-08T12:20:57Z",
+    "edition": "Morning Brief",
+    "title": "NFL EDGE Thursday Morning Brief",
+    "dek": "Tonight's Buccaneers–Cowboys game leads a short morning: the feed caught up on Lamar Jackson, the Balanced card changed hands, and Sunday's weather is starting to come into view.",
+    "sections": [
+      {
+        "id": "what-matters",
+        "title": "What Matters Today",
+        "icon": "📰",
+        "items": [
+          {
+            "headline": "Tonight: Buccaneers at Cowboys, 8:15 p.m. ET — the line is holding at -8.5",
+            "paragraphs": [
+              "Jalon Daniels gets his second straight start for Tampa Bay. The Bucs ruled out Baker Mayfield (thumb) on Wednesday, along with safety Antoine Winfield Jr., cornerback Benjamin Morrison and linebacker SirVocea Dennis. Dallas counters with three outs of its own — cornerback Cobie Durant, linebacker DeMarvion Overshown and tackle Drew Shelton — while guard Tyler Smith is questionable.",
+              "The number has not blinked: Dallas -8.5 with a 47.5 total at both books, the same as last night. The game is indoors at AT&T Stadium, so the warm evening in Arlington never touches the field. Final inactives land about 90 minutes before kickoff — that is the last real news before the ball goes up."
+            ],
+            "takeaway": "Line steady at -8.5. The last surprises come with the inactive lists, about 90 minutes before kickoff.",
+            "evidence_ids": [
+              "tnf-am",
+              "app-board-am"
+            ],
+            "sources": [
+              {
+                "label": "Bucs Wire (four ruled out, Daniels starts)",
+                "url": "https://bucswire.usatoday.com/story/sports/nfl/buccaneers/2026/10/07/buccaneers-rule-out-four-players-for-thursday-night-vs-cowboys/92138324007/"
+              },
+              {
+                "label": "NFL EDGE product board (live)",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          },
+          {
+            "headline": "The feed caught up: Huntley is the starter in the app",
+            "paragraphs": [
+              "Lamar Jackson sat out Wednesday's practice with the ankle injury, and Ian Rapoport reports he has 'just an outside chance' of playing Sunday night in Atlanta. The Ravens are getting Tyler Huntley ready, and this morning the app's quarterback feed lists Huntley as the expected starter — the overnight refresh caught up to the news.",
+              "The morning number: the model has Atlanta by 2.9, and the market still sits at Atlanta -3.5 on both books. That is yesterday's price surviving the quarterback change. If your book shows something different, run it through Check before you touch it."
+            ],
+            "takeaway": "News and feed agree now: Huntley starts unless Lamar beats the odds. Check your book's price first.",
+            "evidence_ids": [
+              "lamar-am",
+              "app-qb-am",
+              "app-board-am"
+            ],
+            "sources": [
+              {
+                "label": "Reuters (Jackson out of practice, Huntley preps)",
+                "url": "https://www.reuters.com/sports/ravens-rest-lamar-jackson-prepare-tyler-huntley-falcons--flm-2026-10-07/"
+              },
+              {
+                "label": "NFL EDGE product board (live)",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          },
+          {
+            "headline": "Sunday weather: the first real read",
+            "paragraphs": [
+              "Three days out, so this will move — but here is the first read. Pittsburgh (Colts at Steelers, 1:00 p.m. ET): rain expected, around 64 degrees, a high chance of a wet afternoon. Green Bay (Bears at Packers, noon ET): unseasonably warm near 77 and windy, says the National Weather Service office there. London (Eagles at Jaguars, 9:30 a.m. ET): cool and dry, upper 50s, light wind. Seattle (49ers at Seahawks, 4:25 p.m. ET): sunny, low 60s, light wind.",
+              "The rest of the outdoor slate — Miami, New Jersey, Nashville, New England, Washington — is still too early to handicap. Check back tomorrow morning's brief for the update."
+            ],
+            "takeaway": "Rain in Pittsburgh is the one Sunday flag so far. Forecasts move — recheck tomorrow.",
+            "evidence_ids": [
+              "weather-am"
+            ],
+            "sources": [
+              {
+                "label": "weather.com (Pittsburgh 10-day)",
+                "url": "https://weather.com/us/pennsylvania/city/pittsburgh/tenday"
+              },
+              {
+                "label": "Green Bay Press-Gazette (NWS: warm and windy at Lambeau)",
+                "url": "https://www.greenbaypressgazette.com/story/sports/nfl/packers/2026/10/08/packers-bears-at-lambeau-game-day-guide-green-bay-weather-forecast/91710847007/"
+              },
+              {
+                "label": "Sharp Football Analysis (Week 5 weather, updated Oct 8)",
+                "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/"
+              }
+            ]
+          },
+          {
+            "headline": "Quarterback room notes, all in one place",
+            "paragraphs": [
+              "Tyson Bagent starts for Chicago at Lambeau — Caleb Williams (hamstring) misses a third straight game. Jameis Winston starts for the Giants at Washington; Jaxson Dart is done for the season with the knee injury. Jayden Daniels practiced in full on the elbow and starts for Washington.",
+              "The app's quarterback feed matches the reported starters everywhere on the Sunday slate. No new surprises this morning."
+            ],
+            "takeaway": "The reported starters and the app agree across the board. Nothing new to chase.",
+            "evidence_ids": [
+              "qbs-am",
+              "app-qb-am"
+            ],
+            "sources": [
+              {
+                "label": "Packers Wire (Bagent starts, Williams out)",
+                "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/10/05/packers-bears-tyson-bagent-caleb-williams-quarterback-week-5/92105443007/"
+              },
+              {
+                "label": "NFL EDGE product board (live)",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "what-it-means",
+        "title": "What It Means for NFL EDGE",
+        "icon": "💡",
+        "items": [
+          {
+            "headline": "The Hit Rate card is still Cincinnati — likeliest winner, not best price",
+            "paragraphs": [
+              "Cincinnati moneyline, -300 on FanDuel, with the app's trust number at 0.68. Same card as last night — the board didn't move it.",
+              "Remember what this lane is: 'which supported pick looks most likely to win' — it forgoes value for win probability. The app's own tutorial says Hit Rate ≠ Profit Rate. At -300 the price is the whole story: every $3 you risk wins $1. This lane pays for certainty, not for a bargain."
+            ],
+            "takeaway": "Hit Rate picks the likeliest winner, not the best price.",
+            "evidence_ids": [
+              "app-board-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE product board (live)",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          },
+          {
+            "headline": "The Balanced card changed hands overnight: Indianapolis +2.5",
+            "paragraphs": [
+              "The morning refresh moved the Balanced card from Minnesota's moneyline to the Colts +2.5 at -102 on DraftKings, 0.75 units, medium reliability. Card swaps like this are not market moves — they are the board updating its own recommendations on fresh prices.",
+              "Balanced is the middle ground: a strong pick without paying too much, a good starting point for a new bettor. The reliability tag is part of the read, not a footnote — medium here, the app's honest middle of the road."
+            ],
+            "takeaway": "Balanced = strong pick, fair price. Overnight the lane moved from Minnesota to Indy.",
+            "evidence_ids": [
+              "app-board-am",
+              "prior-edition-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE product board (live)",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          },
+          {
+            "headline": "The Value card is the Chargers again — +3.5 at -110",
+            "paragraphs": [
+              "Los Angeles +3.5 on DraftKings, 0.75 units, medium reliability. The Value lane held this one from last night — the model's +EV play, the one where the model's number beats the market's number.",
+              "Denver is -3.5 on the other side, so if your book shows a different number than +3.5, run it through Check and let the evaluator give you the verdict on your price."
+            ],
+            "takeaway": "Value is the model's +EV lane. The Chargers held it overnight.",
+            "evidence_ids": [
+              "app-board-am",
+              "prior-edition-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE product board (live)",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "fade",
+        "title": "Learn the Game",
+        "icon": "⚖️",
+        "items": [
+          {
+            "headline": "Learn the Game: handle vs. tickets",
+            "mode": "learning",
+            "editorial_only": true,
+            "evidence_ids": [],
+            "sources": [],
+            "paragraphs": [
+              "Every splits page shows two numbers. BET (tickets) is how many bets are on a side. HND (handle) is how much money is on it. When most of the tickets are on one side but most of the money is on the other, somebody betting bigger disagrees with the crowd.",
+              "A clearly hypothetical example to make it concrete: say 80% of the tickets are on the favorite, but only 45% of the money is. That does not mean the underdog wins — it means the average underdog bet is much bigger. Sharper, price-sensitive bettors wait for the number they want instead of chasing, so a split like that is a reason to watch the price, not a reason to bet."
+            ],
+            "takeaway": "Tickets count the crowd; handle weighs the wallets. Disagreement is the signal — agreement is not a Fade."
+          }
+        ]
+      },
+      {
+        "id": "market-watch",
+        "title": "Line Movement",
+        "icon": "👀",
+        "items": [
+          {
+            "headline": "Overnight: quiet boards, one card swap",
+            "paragraphs": [
+              "Baltimore–Atlanta: Atlanta -3.5 at both books, steady — the line did not move on the quarterback change, and the morning board now has Huntley in it. Tampa–Dallas: Dallas -8.5 and 47.5 at both books, unchanged since last night. Washington: Commanders -3.5 at both books, steady — the market believes Daniels starts, and now the feed does too. Philadelphia–Jacksonville: -7.0 on DraftKings, -7.5 on FanDuel, a half point apart.",
+              "The one real overnight change is on the board, not in the market: the Balanced card moved from Minnesota's moneyline to Indianapolis +2.5.",
+              "One habit worth building: the board refreshes every morning and evening, but the market moves all day. When you see a move the board has not picked up — or your book is not DraftKings or FanDuel — tap Check, type in your book's line and price. The app runs it back through the model and the evaluator and returns a bet or no-bet verdict on your price. Full re-evaluation, not a blind override."
+            ],
+            "takeaway": "No overnight market moves of note. Check covers anything the board has not picked up yet.",
+            "evidence_ids": [
+              "app-board-am",
+              "prior-edition-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE product board (live)",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "today-tip",
+        "title": "Today's Tip",
+        "icon": "✅",
+        "items": [
+          {
+            "headline": "Practical tip: inactives are the last news of the day",
+            "paragraphs": [
+              "Thursday game? Thursday check. Tonight's inactives come out about 90 minutes before the 8:15 p.m. ET kickoff — that is when the last surprises land. If a name you care about shows up there, re-run your number through Check before kickoff.",
+              "And the honest bit: the tracker only works if you are honest with yourself. Settlement is manual — log the losers too."
+            ],
+            "takeaway": "Watch the inactive lists before kickoff — and log every bet, winners and losers.",
+            "evidence_ids": [
+              "tnf-am"
+            ],
+            "sources": [
+              {
+                "label": "Bucs Wire (four ruled out, Daniels starts)",
+                "url": "https://bucswire.usatoday.com/story/sports/nfl/buccaneers/2026/10/07/buccaneers-rule-out-four-players-for-thursday-night-vs-cowboys/92138324007/"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
- ]
 }
