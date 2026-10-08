@@ -1,10 +1,10 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-10-08T00:22:55Z",
- "research_generated_at_utc": "2026-10-08T00:22:55Z",
+ "submitted_at_utc": "2026-10-08T00:54:27Z",
+ "research_generated_at_utc": "2026-10-08T00:54:27Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-10-08T00:22:55Z",
+  "published_at_utc": "2026-10-08T00:54:27Z",
   "research_generated_at_utc": "2026-10-08T00:22:55Z",
   "edition": "Evening Brief",
   "title": "NFL EDGE Wednesday Evening Brief",
@@ -171,9 +171,41 @@
     ]
    },
    {
+    "id": "fade",
+    "title": "The Fade",
+    "icon": "⚖️",
+    "items": [
+     {
+      "headline": "Thursday night's moneyline: tickets say Cowboys, money says Bucs — again",
+      "evidence_ids": [
+       "vsin-fade-pm",
+       "app-board-pm",
+       "prior-edition-pm"
+      ],
+      "paragraphs": [
+       "Tonight's free VSiN row shows the same shape as this morning, on tomorrow night's game. On the moneyline: 80% of the tickets are on Dallas at -470, but 58% of the money is on Tampa Bay at +360. Tickets and handle point opposite ways. (For the record, they agree on the spread — both sides lean Dallas -8.5 — and both lean the Over on 47.5.)",
+       "What could that mean? Somebody with size likes the underdog at +360 while the public's tickets ride the favorite. And there's a line move backing it up: the spread already moved a full point toward Tampa Bay, from -9.5 to -8.5. That's the shape a Fade watches for — a verified split, plus movement in the money's direction. One honest caveat: the Bucs' handle share slipped from 60% to 58% this evening, so the split is real but not getting stronger.",
+       "What to watch next: if the Bucs' moneyline price drifts up — say +360 toward +375 — or the spread ticks to +9 without any new bad Cowboys news, that's the same football opinion at a better price. Price-sensitive bettors wait for the number; they don't chase it.",
+       "How to use it: this is a decision layer, not a command to fade the public or override the app. If you like Tampa Bay, run your book's moneyline price through Check — the app re-runs the model and the evaluator and gives you a bet or no-bet verdict on your number."
+      ],
+      "takeaway": "A real split on Thursday night: tickets on Dallas, money on Tampa Bay. Watch the price, then Check it.",
+      "sources": [
+       {
+        "label": "VSiN betting splits (free NFL row)",
+        "url": "https://data.vsin.com/betting-splits/"
+       },
+       {
+        "label": "NFL EDGE product board (live)",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       }
+      ]
+     }
+    ]
+   },
+   {
     "id": "market-watch",
     "title": "Line Movement",
-    "icon": "📈",
+    "icon": "👀",
     "items": [
      {
       "headline": "Everything that moved — and one line that didn't",
@@ -193,38 +225,6 @@
        {
         "label": "Ravens Wire (injury report)",
         "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/10/07/ravens-falcons-injury-report-lamar-jackson-zay-flowers-week-5/92141090007/"
-       },
-       {
-        "label": "NFL EDGE product board (live)",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     }
-    ]
-   },
-   {
-    "id": "fade",
-    "title": "The Fade",
-    "icon": "⚖️",
-    "items": [
-     {
-      "headline": "Thursday night's moneyline: tickets say Cowboys, money says Bucs — again",
-      "evidence_ids": [
-       "vsin-fade-pm",
-       "app-board-pm",
-       "prior-edition-pm"
-      ],
-      "paragraphs": [
-       "Tonight's free VSiN row shows the same shape as this morning, on tomorrow night's game. On the moneyline: 80% of the tickets are on Dallas at -470, but 60% of the money is on Tampa Bay at +360. Tickets and handle point opposite ways. (For the record, they agree on the spread — both sides lean Dallas -8.5 — and both lean the Over on 47.5.)",
-       "What could that mean? Somebody with size likes the underdog at +360 while the public's tickets ride the favorite. And there's a line move backing it up: the spread already moved a full point toward Tampa Bay, from -9.5 to -8.5. That's the shape a Fade watches for — a verified split, plus movement in the money's direction. One honest caveat: the Bucs' handle share was trending down this afternoon, so the split is real but not getting stronger.",
-       "What to watch next: if the Bucs' moneyline price drifts up — say +360 toward +375 — or the spread ticks to +9 without any new bad Cowboys news, that's the same football opinion at a better price. Price-sensitive bettors wait for the number; they don't chase it.",
-       "How to use it: this is a decision layer, not a command to fade the public or override the app. If you like Tampa Bay, run your book's moneyline price through Check — the app re-runs the model and the evaluator and gives you a bet or no-bet verdict on your number."
-      ],
-      "takeaway": "A real split on Thursday night: tickets on Dallas, money on Tampa Bay. Watch the price, then Check it.",
-      "sources": [
-       {
-        "label": "VSiN betting splits (free NFL row)",
-        "url": "https://data.vsin.com/betting-splits/"
        },
        {
         "label": "NFL EDGE product board (live)",
@@ -323,7 +323,7 @@
   },
   {
    "evidence_id": "vsin-fade-pm",
-   "fact": "VSiN betting-splits NFL tab, free featured row (DraftKings source), checked ~6:15 p.m. Denver Wednesday Oct 7. Featured game: Buccaneers at Cowboys (Thursday, Oct 8). Spread: TB +8.5 — 8% of handle, 29% of tickets; DAL -8.5 — 92% of handle, 71% of tickets (agreement). Moneyline: TB +360 — 60% of handle, 20% of tickets; DAL -470 — 40% of handle, 80% of tickets (disagreement; Bucs handle share trending down). Total 47.5: ~80% of both tickets and handle on the Over side (agreement).",
+   "fact": "VSiN betting-splits NFL tab, free featured row (DraftKings source), checked 2026-10-08T00:53Z (~6:53 p.m. Denver). Featured game: Buccaneers at Cowboys (Thursday, Oct 8). Spread (TB +8.5 / DAL -8.5): TB 8% handle, 29% tickets; DAL 92% handle, 71% tickets. Moneyline (TB +360 / DAL -470): TB 58% handle, 20% tickets; DAL 42% handle, 80% tickets — TB handle down from 60% earlier. Total (47.5): Over 81% handle, 80% tickets; Under 19% handle, 20% tickets.",
    "verification": "EXTERNAL_VERIFIED",
    "sources": [
     {
@@ -334,7 +334,7 @@
   },
   {
    "evidence_id": "prior-edition-pm",
-   "fact": "Morning edition (submitted 2026-10-07T12:22Z): DAL -8.5 / total 47.5 holding since last night (a point toward Tampa from -9.5); ATL -3.5 DK / -3.0 FD; WAS -3.5 steady at both books; JAX -7; Thursday moneyline split was 78% of tickets on Dallas, 72% of handle on Tampa Bay; headline cards were Hit Rate MIN ML (-125), Balanced MIN ML (-125), Value LAC +3.5; model's Baltimore-Atlanta number was Atlanta by about 2.9, built with Lamar Jackson in the QB feed.",
+   "fact": "Evening edition (submitted 2026-10-08T00:22:55Z) — this run re-publishes its content with the contract-correct section order (fade moved to third slot, ahead of market-watch). Lines and cards verified unchanged since: DAL -8.5 / total 47.5 at both books; ATL -3.5 at both books; WAS -3.5 steady; JAX -7.0 DK / -7.5 FD; cards Hit Rate CIN ML -300 FD, Balanced MIN ML -130 DK, Value LAC +3.5 -110 DK; Thursday moneyline split per VSiN free row: 80% of tickets on Dallas, 60% of handle on Tampa Bay.",
    "verification": "INTERNAL_CANONICAL",
    "sources": [
     {
