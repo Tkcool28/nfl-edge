@@ -1,0 +1,249 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "capture_mode": "NATIVE_PROSPECTIVE",
+  "creation_provenance": {
+    "provider_calls": 0,
+    "source": "CANONICAL_PUBLISHED_PRODUCT",
+    "user_specific_data_included": false
+  },
+  "field_availability": {
+    "backend_user_overlay": "EXCLUDED_USER_SPECIFIC_DATA",
+    "evaluator_probability": "NOT_EXPOSED_BY_CANONICAL_PRODUCT_V1"
+  },
+  "lanes": {
+    "balanced": {
+      "american_odds": -122,
+      "away_team": "CHI",
+      "book": "DRAFTKINGS",
+      "canonical_headline": {
+        "american_odds": -122,
+        "book": "DRAFTKINGS",
+        "ev": -0.006356375042259943,
+        "game_id": "2026_05_CHI_GB",
+        "lane": "BALANCED",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.5297606439313705,
+        "matchup": {
+          "away_team": "CHI",
+          "home_team": "GB"
+        },
+        "model_probability": 0.5702419408089366,
+        "play_through": {
+          "line": null,
+          "price_american": -123
+        },
+        "recommended_units": 0.75,
+        "reliability": "LOW",
+        "selection": "CHI",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5500012923701536,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": -0.006356375042259943,
+      "exact_offer_identity_id": "offer-95b47a3d0101147e03d60638",
+      "game_id": "2026_05_CHI_GB",
+      "home_team": "GB",
+      "kickoff_at_utc": "2026-10-11T17:00:00Z",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "line": null,
+      "logical_recommendation_id": "logical-bbb9b42d9e7a677742bf0994",
+      "market": "MONEYLINE",
+      "market_probability": 0.5297606439313705,
+      "model_probability": 0.5702419408089366,
+      "normalized_selection": "CHI",
+      "normalized_side": "away",
+      "play_through": {
+        "line": null,
+        "price_american": -123
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.75,
+      "reliability": "LOW",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "CHI",
+      "selector_version": "balanced-price-bounded-v2",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5500012923701536,
+      "value_at": null,
+      "wager_identity_id": "wager-6a06455ab17d225603de3ee3",
+      "warnings": []
+    },
+    "hit_rate": {
+      "american_odds": -134,
+      "away_team": "MIN",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": -134,
+        "book": "FANDUEL",
+        "ev": 0.021445625682356195,
+        "game_id": "2026_05_MIN_NO",
+        "lane": "HIT_RATE",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.5657387891561887,
+        "matchup": {
+          "away_team": "MIN",
+          "home_team": "NO"
+        },
+        "model_probability": 0.6941128187741982,
+        "play_through": {
+          "line": null,
+          "price_american": -135
+        },
+        "recommended_units": 0.75,
+        "reliability": "LOW",
+        "selection": "MIN",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.6299258039651934,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.021445625682356195,
+      "exact_offer_identity_id": "offer-971eae8b599e9fe24d6291f9",
+      "game_id": "2026_05_MIN_NO",
+      "home_team": "NO",
+      "kickoff_at_utc": "2026-10-11T17:00:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "line": null,
+      "logical_recommendation_id": "logical-11fc6f503dc48dd17e5655e3",
+      "market": "MONEYLINE",
+      "market_probability": 0.5657387891561887,
+      "model_probability": 0.6941128187741982,
+      "normalized_selection": "MIN",
+      "normalized_side": "away",
+      "play_through": {
+        "line": null,
+        "price_american": -135
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.75,
+      "reliability": "LOW",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "MIN",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.6299258039651934,
+      "value_at": null,
+      "wager_identity_id": "wager-5420742b8c6b68809cb57921",
+      "warnings": []
+    },
+    "value": {
+      "american_odds": -104,
+      "away_team": "SF",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": -104,
+        "book": "FANDUEL",
+        "ev": 0.0013278253172027688,
+        "game_id": "2026_05_SF_SEA",
+        "lane": "VALUE",
+        "line": 3.0,
+        "market": "SPREAD",
+        "market_probability": 0.47621137640449435,
+        "matchup": {
+          "away_team": "SF",
+          "home_team": "SEA"
+        },
+        "model_probability": 0.5050873958770162,
+        "play_through": null,
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "selection": "SF",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5050873958770162,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.0013278253172027688,
+      "exact_offer_identity_id": "offer-aebbd6f15a85de7e936735c3",
+      "game_id": "2026_05_SF_SEA",
+      "home_team": "SEA",
+      "kickoff_at_utc": "2026-10-11T20:25:00Z",
+      "lane": "VALUE",
+      "lane_key": "value",
+      "line": 3.0,
+      "logical_recommendation_id": "logical-cbe85229acea62696edd2f95",
+      "market": "SPREAD",
+      "market_probability": 0.47621137640449435,
+      "model_probability": 0.5050873958770162,
+      "normalized_selection": "SF",
+      "normalized_side": "away",
+      "play_through": null,
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.75,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "SF",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5050873958770162,
+      "value_at": null,
+      "wager_identity_id": "wager-a03e920e43ba5649edaee42f",
+      "warnings": []
+    }
+  },
+  "product_freshness": {
+    "age_seconds": 0.0,
+    "observed_at_utc": "2026-10-10T00:08:39Z",
+    "state": "FRESH",
+    "threshold_seconds": 43200.0
+  },
+  "product_generated_at_utc": "2026-10-10T00:08:39Z",
+  "product_stale": false,
+  "product_warnings": [
+    "1 canonical Week 5 game(s) lack a provider event."
+  ],
+  "publication_id": "publication-e7be85b1b66aa4be6988d5c5",
+  "published_at_utc": "2026-10-10T00:08:39.519971Z",
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1",
+  "season": 2026,
+  "source_commit_sha": null,
+  "source_product_sha256": "e7be85b1b66aa4be6988d5c578f74002d49079c2c772ea6ccb1c7a15e5645729",
+  "source_product_version": "live-2026-week5-product-v1",
+  "source_provenance": {
+    "evaluator_versions": {
+      "moneyline": "ml_v4",
+      "spread": "spread_v3",
+      "total": "total_v3"
+    },
+    "football_data_version": "live-2026-state:c6f7cbf1467fc93ebdf1f282",
+    "market_snapshot_version": "live-market:46eaf72b31c09b739f856df2",
+    "model_versions": {
+      "expected_margin": "expected-margin-v1-stable",
+      "qb_elo": "qb-elo-v1.0.0",
+      "ridge_totals_r4": "ridge-totals-r4-alpha100",
+      "xgboost_v2": "post-v5-v2-conservative-adaptive-tail"
+    },
+    "prediction_as_of_utc": "2026-10-10T00:05:04.645072Z",
+    "qb_snapshot_version": "sleeper-scheduled-20261010T000001Z-6cf339b4",
+    "selector_versions": {
+      "balanced": "balanced-price-bounded-v2",
+      "hit_rate": "v1",
+      "value": "v1"
+    }
+  },
+  "source_week_last_kickoff_at_utc": "2026-10-13T00:15:00Z",
+  "week": 5
+}
