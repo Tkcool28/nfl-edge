@@ -1,219 +1,222 @@
 {
- "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-10-12T00:20:59Z",
- "research_generated_at_utc": "2026-10-12T00:20:59Z",
- "article": {
-  "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-10-12T00:20:59Z",
-  "edition": "Evening Brief",
-  "title": "NFL EDGE Sunday Evening Brief",
-  "dek": "The Sunday-night inactives are in, Atlanta moved to -3.5, and all three cards re-dealt onto Monday night — with the Value lane empty.",
-  "research_generated_at_utc": "2026-10-12T00:20:59Z",
-  "sections": [
-   {
-    "id": "what-matters",
-    "title": "What Matters Today",
-    "icon": "📰",
-    "items": [
-     {
-      "headline": "Sunday-night inactives: Flowers and Humphrey play, Vorhees is out",
-      "paragraphs": [
-       "The inactive lists are in for Sunday night in Atlanta, and the questionable tags broke both ways. Ravens guard Andrew Vorhees (foot) went from questionable to OUT, so Baltimore starts without both its center Cam Jurgens (concussion) and a starting guard in front of Tyler Huntley. Already ruled out: Lamar Jackson (ankle), Trey Hendrickson, plus Elijah Sarratt and Aeneas Peebles.",
-       "The good news for Baltimore: wide receiver Zay Flowers (foot) and cornerback Marlon Humphrey are both ACTIVE after limited practices all week. Huntley starts at quarterback. For Atlanta: edge rusher Za'Darius Smith (concussion) and linebacker Christian Harris are out, while left tackle Jake Matthews (groin) is active for his 200th consecutive start, along with Divine Deablo and Samson Ebukam.",
-       "The market has fully digested the Huntley news. Atlanta is -3.5 on both DraftKings and FanDuel now, with the Falcons -172 on the moneyline at FanDuel. If your book is still hanging a different number on this game, tap Check: type in the line and price you can actually bet and the app runs it back through the model and the evaluator for a verdict on YOUR number."
-      ],
-      "takeaway": "The news is in the price. Your edge is the number in front of you.",
-      "evidence_ids": [
-       "ev-inj-inactives-pm",
-       "ev-app-board-pm"
-      ],
-      "sources": [
-       {
-        "label": "NBC Sports PFT: Zay Flowers active for Ravens-Falcons",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-zay-flowers-active-for-ravens-falcons"
-       },
-       {
-        "label": "Falcons Wire: Falcons vs. Ravens inactives",
-        "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/10/11/falcons-vs-ravens-inactives/92209439007"
-       }
-      ]
-     },
-     {
-      "headline": "Quarterback check: the board matches the news",
-      "paragraphs": [
-       "The app's quarterback feed is fresh and matches the news. Tyler Huntley is listed as Baltimore's expected starter for Sunday night. Michael Penix starts for Atlanta. Tomorrow night it's Josh Allen for Buffalo and Matthew Stafford for the Rams.",
-       "That's the check that matters on a Sunday evening: when the board agrees with the news, there's no stale number to fade and no rumor to chase. Bet the slate, not the rumor."
-      ],
-      "takeaway": "The board's quarterbacks match the news. Nothing to fade, nothing to chase.",
-      "evidence_ids": [
-       "ev-app-qb-pm"
-      ],
-      "sources": []
-     }
+  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+  "submitted_at_utc": "2026-10-12T12:24:09Z",
+  "research_generated_at_utc": "2026-10-12T12:24:09Z",
+  "article": {
+    "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+    "published_at_utc": "2026-10-12T12:24:09Z",
+    "edition": "Morning Brief",
+    "title": "NFL EDGE Monday Morning Brief",
+    "dek": "Monday night is the whole slate: the Bills-Rams injury report, both cards on Buffalo, and a quiet board around them.",
+    "research_generated_at_utc": "2026-10-12T12:24:09Z",
+    "sections": [
+      {
+        "id": "what-matters",
+        "title": "What Matters Today",
+        "icon": "📰",
+        "items": [
+          {
+            "headline": "Monday night injury report: Bills down two starters, three game-time calls",
+            "paragraphs": [
+              "The final injury reports are in for tonight's 8:15 p.m. ET kickoff at SoFi Stadium, and Buffalo is the banged-up side. The Bills ruled OUT defensive tackle Ed Oliver (knee) and wide receiver Joshua Palmer (shoulder) — Palmer got hurt in Friday's practice and the team is still running tests. Three more are questionable and will be game-time calls: wide receiver DJ Moore (shoulder), cornerback Dee Alford (ankle), and defensive lineman Landon Jackson (knee). Head coach Joe Brady said Moore, who was limited Saturday, will get the full 48 hours before a decision.",
+              "The counterweight for Buffalo: cornerback Christian Benford (toe) is 'good to go' after missing last week, and rookie receiver Skyler Bell will be active for his NFL debut with Palmer out. For the Rams, the only questionable tag is safety Quentin Lake (hip), and Sean McVay called it minor and expects him to play. Aaron Donald (back), Colby Parkinson, and Jaylen Watson are all good to go after missing time. Myles Garrett (knee, injured reserve) is progressing but the Rams are unlikely to open his practice window next week.",
+              "The official inactive lists land about 90 minutes before kickoff — that's when the Moore, Alford, Jackson, and Lake tags resolve. Until then, treat the questionable names as live uncertainty, not priced-in fact."
+            ],
+            "takeaway": "Buffalo's receiver room is the swing factor — inactives resolve 90 minutes before kickoff.",
+            "evidence_ids": [
+              "ev-inj-mnf"
+            ],
+            "sources": [
+              {
+                "label": "Bills Wire: Bills at Rams final injury reports",
+                "url": "https://billswire.usatoday.com/story/sports/nfl/bills/2026/10/11/buffalo-bills-la-rams-final-injury-report-dh-moore-ed-oliver-nfl/92205145007/"
+              },
+              {
+                "label": "Reuters: Bills WR DJ Moore questionable, DT Ed Oliver out",
+                "url": "https://www.reuters.com/sports/bills-wr-dj-moore-questionable-dt-ed-oliver-out-vs-rams--flm-2026-10-11/"
+              },
+              {
+                "label": "BuffaloBills.com: official Week 5 injury report",
+                "url": "https://www.buffalobills.com/news/buffalo-bills-injury-report-vs-rams-week-5"
+              },
+              {
+                "label": "Rams Wire: final updates on Aaron Donald and others",
+                "url": "https://theramswire.usatoday.com/story/sports/nfl/rams/2026/10/10/rams-bills-injury-report-aaron-donald-quentin-lake/92194340007/"
+              }
+            ]
+          },
+          {
+            "headline": "Quarterback check: the board matches the news",
+            "paragraphs": [
+              "The app's quarterback feed is fresh this morning and matches the reporting. Josh Allen is Buffalo's expected starter, Matthew Stafford is the Rams' expected starter, and neither carries an injury flag on the board.",
+              "That's the check that matters on a game day morning: Stafford's back was last week's story and the Rams say he's good to go; the board agrees. No stale number to fade, no rumor to chase."
+            ],
+            "takeaway": "Allen vs. Stafford, confirmed on both sides. Bet the game, not the rumor.",
+            "evidence_ids": [
+              "ev-app-qb-am"
+            ],
+            "sources": []
+          }
+        ]
+      },
+      {
+        "id": "what-it-means",
+        "title": "What It Means for NFL EDGE",
+        "icon": "💡",
+        "items": [
+          {
+            "headline": "Hit Rate is on Buffalo — and it's a dog",
+            "paragraphs": [
+              "Hit Rate means the supported pick the app thinks is most likely to win — win probability first, value second. The app's own tutorial says Hit Rate ≠ Profit Rate. Tonight it's Buffalo on the moneyline at +150 on DraftKings, visiting the Rams at 8:15 p.m. ET.",
+              "The honest number: the app evaluates Buffalo's chance at 37.2% against a 40.0% breakeven at +150 — just short, reliability MEDIUM. The model's raw read likes Buffalo better than the market does (it has the Bills about two points better than the spread implies), but liking a team and the price paying you are two different things. The card chases the win, not the value; tonight the win is a dog and the price barely misses.",
+              "If your book has Buffalo better than +150, that's a better number than the card; if it's worse, tap Check and run your price before you decide."
+            ],
+            "takeaway": "Hit Rate chases the win, not the value. Tonight the win is a dog.",
+            "evidence_ids": [
+              "ev-app-board-am"
+            ],
+            "sources": []
+          },
+          {
+            "headline": "Balanced stays with Buffalo; Value finds nothing",
+            "paragraphs": [
+              "Balanced is the middle ground — a strong pick without paying too much, a good starting point for a new bettor. It's Buffalo +3.5 at -118 on DraftKings. The app's evaluated chance is 47.4% against a 54.1% breakeven — short, reliability MEDIUM.",
+              "Value is always the model's +EV play, and tonight the Value lane is empty again: no offer on the board satisfies the lane's contract. Some mornings the board's honest answer is nothing. That's the report, not a failure — a quiet board is information too."
+            ],
+            "takeaway": "Two cards on Buffalo, both thin; the honest third card is empty.",
+            "evidence_ids": [
+              "ev-app-board-am"
+            ],
+            "sources": []
+          },
+          {
+            "headline": "How to use this before kickoff",
+            "paragraphs": [
+              "Every news item above closes the loop the same way. The board refreshes every morning and evening. When your book isn't DraftKings or FanDuel, or the line moved since the board last refreshed, tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator and returns a bet/no-bet verdict on your price. Full re-evaluation, not a blind override.",
+              "One mechanics note: +150 means every $1 you risk wins $1.50; -118 means every $1.18 you risk wins $1. That's price mechanics, not a stake — the app sizes your actual stake from your bankroll and your staking setting, which is deliberately conservative."
+            ],
+            "takeaway": "Report the news first, then use it: Check is how news becomes a number.",
+            "evidence_ids": [
+              "ev-app-board-am"
+            ],
+            "sources": []
+          }
+        ]
+      },
+      {
+        "id": "fade",
+        "title": "Learn the Game",
+        "icon": "⚖️",
+        "mode": "learning",
+        "items": [
+          {
+            "headline": "Learn the Game: key numbers",
+            "paragraphs": [
+              "Hypothetical example, clearly labeled as hypothetical: imagine a team is favored by 3.5 points. In the NFL, games land on a 3-point margin more than any other number — field goals are the unit of the sport. That's why 3 (and 7) are called key numbers: the most common final margins, and the numbers every spread is measured against.",
+              "When a spread crosses a key number — say from -3 to -3.5 — the favorite now has to win by more than a field goal instead of exactly one. That half-point is a bigger ask than it looks, which is why books charge heavier juice around key numbers. Watching where a line sits relative to 3 and 7 tells you more than watching whether it moved a point.",
+              "Our Fade rule needs a verified public-vs-sharper split plus corroboration before it becomes a play. I checked the free VSiN splits row this morning: it showed Sunday's already-played Eagles-Jaguars game, not tonight's, so no split qualified. When a real one does, this section will say so plainly."
+            ],
+            "takeaway": "The half-point that crosses a key number is worth more than any other half-point — price it like it matters.",
+            "editorial_only": true,
+            "evidence_ids": [],
+            "sources": []
+          }
+        ]
+      },
+      {
+        "id": "market-watch",
+        "title": "Line Movement",
+        "icon": "👀",
+        "items": [
+          {
+            "headline": "Buffalo's price barely moved — 3.5 stands",
+            "paragraphs": [
+              "Overnight the Monday-night number did almost nothing. DraftKings had Buffalo +3.5 at -115 last evening; this morning it's +3.5 at -118, and FanDuel matches at +3.5 -118. The moneyline is steady at Buffalo +150 on both books, and the DraftKings total sits at 54.5. The board caught it all — the market snapshot was fresh when we read it.",
+              "That's a juice nudge toward Buffalo, not a line move: 3.5 hasn't budged. One shopping note from the same board: Pinnacle is dealing Buffalo +162 on the moneyline, a better price than the +150 on DraftKings and FanDuel. If your book beats the card's number on either side, run it through Check — your price gets its own verdict."
+            ],
+            "takeaway": "The line stood still; the juice leaned Buffalo. Shop the number.",
+            "evidence_ids": [
+              "ev-app-board-am",
+              "ev-prior-edition-am"
+            ],
+            "sources": []
+          }
+        ]
+      },
+      {
+        "id": "today-tip",
+        "title": "Today's Tip",
+        "icon": "✅",
+        "items": [
+          {
+            "headline": "One game, one number, one Check",
+            "paragraphs": [
+              "Tonight's prices: Buffalo +150 on the moneyline and +3.5 at -118 on the spread at DraftKings. The questionable tags — Moore, Alford, Jackson, Lake — resolve when inactives land about 90 minutes before the 8:15 p.m. ET kickoff. Until then, your book's line is the only line that matters — run it through Check.",
+              "And the occasional honest nudge: settlement is manual, no auto-settle. The tracker only works if you're honest with yourself — log the losers too."
+            ],
+            "takeaway": "Check the price you can actually bet, then be honest about the result.",
+            "evidence_ids": [
+              "ev-app-board-am"
+            ],
+            "sources": []
+          }
+        ]
+      }
     ]
-   },
-   {
-    "id": "what-it-means",
-    "title": "What It Means for NFL EDGE",
-    "icon": "💡",
-    "items": [
-     {
-      "headline": "Hit Rate is on Buffalo — and it's a dog",
-      "paragraphs": [
-       "Hit Rate means the supported pick the app thinks is most likely to win — win probability first, value second. The app's own tutorial says Hit Rate ≠ Profit Rate. Tonight it's Buffalo on the moneyline at +150 on DraftKings, visiting the Rams on Monday night at 8:15 p.m. ET.",
-       "The honest number: the app evaluates Buffalo's chance at 38.6% against a 40.0% breakeven at +150 — just short, reliability MEDIUM. The app's raw read likes Buffalo better than the market does, but liking a team and the price paying you are two different things. The card chases the win, not the value; tonight the win is a dog and the price barely misses.",
-       "If your book has Buffalo better than +150, that's a better number than the card; if it's worse, tap Check and run your price before you decide."
-      ],
-      "takeaway": "Hit Rate chases the win, not the value. Tonight the win is a dog.",
-      "evidence_ids": [
-       "ev-app-board-pm"
-      ],
-      "sources": []
-     },
-     {
-      "headline": "Balanced stays with Buffalo; Value finds nothing",
-      "paragraphs": [
-       "Balanced is the middle ground — a strong pick without paying too much, a good starting point for a new bettor. It's Buffalo +3.5 at -115 on DraftKings. The app's evaluated chance is 49.8% against a 53.5% breakeven — short, reliability MEDIUM.",
-       "Value is always the model's +EV play, and tonight the Value lane is empty: no offer on the board satisfies the lane's contract. Some evenings the board's honest answer is nothing. That's the report, not a failure — a quiet board is information too."
-      ],
-      "takeaway": "Two cards on Buffalo, both thin; the honest third card is empty.",
-      "evidence_ids": [
-       "ev-app-board-pm"
-      ],
-      "sources": []
-     },
-     {
-      "headline": "How to use this before Monday night",
-      "paragraphs": [
-       "Every news item above closes the loop the same way. The board refreshes every morning and evening. When your book isn't DraftKings or FanDuel, or the line moved since the board last refreshed, tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator and returns a bet/no-bet verdict on your price. Full re-evaluation, not a blind override.",
-       "One mechanics note: +150 means every $1 you risk wins $1.50; -115 means every $1.15 you risk wins $1. That's price mechanics, not a stake — the app sizes your actual stake from your bankroll and your staking setting, which is deliberately conservative."
-      ],
-      "takeaway": "Report the news first, then use it: Check is how news becomes a number.",
-      "evidence_ids": [
-       "ev-app-board-pm"
-      ],
-      "sources": []
-     }
-    ]
-   },
-   {
-    "id": "fade",
-    "title": "Learn the Game",
-    "icon": "⚖️",
-    "mode": "learning",
-    "items": [
-     {
-      "headline": "Closing line value — beating the close",
-      "paragraphs": [
-       "Hypothetical example, clearly labeled as hypothetical: imagine you bet a team at -2.5 on Tuesday, and by kickoff the line has moved to -4.5. You 'beat the close' by 2 points — you got a better price than the final market. That's called closing line value, or CLV.",
-       "Beating the close doesn't mean the bet wins — the game still has to be played. But over dozens of bets, consistently beating the close is the sharpest track record there is, because the closing line is the market's best guess after all the information is in. Losing bets that beat the close are usually good bets; winning bets that got the worst of the number are usually lucky ones. Our Fade rule needs a real split plus corroboration before it becomes a play; when a real one qualifies, this section will say so plainly."
-      ],
-      "takeaway": "You can't control the bounce, but you can control the price — beating the close is the number that follows you.",
-      "editorial_only": true,
-      "evidence_ids": [],
-      "sources": []
-     }
-    ]
-   },
-   {
-    "id": "market-watch",
-    "title": "Line Movement",
-    "icon": "👀",
-    "items": [
-     {
-      "headline": "Atlanta moved to -3.5 on both books",
-      "paragraphs": [
-       "This morning DraftKings had Atlanta at -3.0 while FanDuel sat at -3.5. During the day DraftKings joined FanDuel: both books now show Falcons -3.5, with the moneyline around -172 to -175 and the DraftKings total at 44.5. The board caught the move — the market snapshot was fresh when we read it.",
-       "The Huntley news is fully priced now. If your book is still hanging Falcons -3.0, that's a stale number in your favor; if it's past -3.5, the value went the other way. Either way, tap Check with the line you can actually bet."
-      ],
-      "takeaway": "The price moved, the news didn't. Shop it.",
-      "evidence_ids": [
-       "ev-app-board-pm",
-       "ev-prior-edition-pm"
-      ],
-      "sources": []
-     },
-     {
-      "headline": "All three cards re-dealt onto Monday night",
-      "paragraphs": [
-       "This morning's cards — Denver, Minnesota, San Francisco — were today's games and are off the board now. All three evening cards sit on Monday night's Bills-Rams game: Hit Rate and Balanced both on Buffalo, and the Value lane empty.",
-       "When the card changes, the play changes — yesterday's numbers are yesterday's. The model's raw read leans Buffalo by about two points while the market has the Rams -3.5, yet the evaluator's final numbers still land short of breakeven on both cards. Check your book's number against tonight's card, not this morning's."
-      ],
-      "takeaway": "When the card changes, the play changes. Check your book's number.",
-      "evidence_ids": [
-       "ev-app-board-pm",
-       "ev-prior-edition-pm"
-      ],
-      "sources": []
-     }
-    ]
-   },
-   {
-    "id": "today-tip",
-    "title": "Today's Tip",
-    "icon": "✅",
-    "items": [
-     {
-      "headline": "Shop the Monday-night number tonight",
-      "paragraphs": [
-       "Sunday night kicks off in minutes, so the next prices that matter are Monday night's: Buffalo +150 on the moneyline and +3.5 on the spread at DraftKings. Lines for tomorrow's game can move overnight — if you like the Bills side of either card, shop it tonight rather than at kickoff.",
-       "Monday-night inactives land about 90 minutes before the 8:15 p.m. ET kickoff, and tomorrow's briefs will have them. Until then, your book's line is the only line that matters — run it through Check."
-      ],
-      "takeaway": "Shop the price before the game, not during it.",
-      "evidence_ids": [
-       "ev-app-board-pm"
-      ],
-      "sources": []
-     }
-    ]
-   }
-  ]
- },
- "evidence": [
-  {
-   "evidence_id": "ev-app-board-pm",
-   "category": "app_board",
-   "verification": "INTERNAL_CANONICAL",
-   "fact": "Evening board observed 2026-10-12T00:08:23Z (FRESH, Week 5 UPCOMING; market snapshot and QB feed FRESH, observed ~2026-10-12T00:07:36Z / 00:00:01Z). Cards, all on Monday-night BUF @ LAR: Hit Rate = BUF moneyline +150 (DraftKings): evaluator prob 38.64% vs breakeven 40.0%, EV -0.0339, reliability MEDIUM. Balanced = BUF +3.5 spread at -115 (DraftKings): evaluator prob 49.79% vs breakeven 53.49%, EV -0.0691, reliability MEDIUM. Value = NO_PLAY: no offer satisfies the frozen VALUE lane contract (warning: 'No offer currently satisfies the frozen VALUE lane contract.'). Model expected margin BUF @ LAR: BUF +1.91. BAL @ ATL (kickoff 2026-10-12T00:20:00Z): DK spread ATL -3.5 at +105, FD spread ATL -3.5 at 100; DK moneyline ATL -175; FD moneyline ATL -172 / BAL +144; DK total 44.5 at -102. Expected starters per app QB feed: BAL Tyler Huntley, ATL Michael Penix, BUF Josh Allen, LAR Matthew Stafford.",
-   "interpretation": "All three morning cards (DEN, MIN, SF) were today's games and are off the board. Both evening cards sit slightly below breakeven; Value is empty.",
-   "app_guidance": "Check function re-evaluates the reader's own book line and price through the model and evaluator.",
-   "sources": []
   },
-  {
-   "evidence_id": "ev-app-qb-pm",
-   "category": "app_qb",
-   "verification": "INTERNAL_CANONICAL",
-   "fact": "App QB feed FRESH (observed 2026-10-12T00:00:01Z): BAL expected starter Tyler Huntley; ATL Michael Penix; BUF Josh Allen; LAR Matthew Stafford. Matches the evening news.",
-   "interpretation": "No stale quarterback numbers on the board.",
-   "app_guidance": "None needed.",
-   "sources": []
-  },
-  {
-   "evidence_id": "ev-prior-edition-pm",
-   "category": "prior_edition",
-   "verification": "INTERNAL_CANONICAL",
-   "fact": "Morning edition (published 2026-10-11T12:20:30Z): Hit Rate = DEN moneyline -180 (FD); Balanced = MIN moneyline -130 (DK); Value = SF -3 (FD). BAL @ ATL market: DK spread ATL -3.0, FD spread ATL -3.5. ATL -3.0 moved to -3.5 on DK during the day; both books now -3.5.",
-   "interpretation": "All three cards rotated onto Monday night; the Huntley news is fully priced.",
-   "app_guidance": "Yesterday's numbers are yesterday's; check the current card.",
-   "sources": []
-  },
-  {
-   "evidence_id": "ev-inj-inactives-pm",
-   "category": "injury",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "Sunday-night inactives, BAL @ ATL (kickoff 8:20 p.m. ET, 2026-10-11). Ravens inactive: QB Lamar Jackson (ankle), C Cam Jurgens (concussion), G Andrew Vorhees (foot; was questionable), OLB Trey Hendrickson (finger), WR Elijah Sarratt, DT Aeneas Peebles. Ravens active after questionable tags: WR Zay Flowers (foot), CB Marlon Humphrey. Tyler Huntley starts at QB. Falcons inactive: DE Za'Darius Smith (concussion), LB Christian Harris, QB Cooper Rush (emergency third), QB Jack Strand, OL Ethan Onianwa, DB Malcolm DeWalt IV, DB Robert Longerbeam. Falcons active after questionable tags: OT Jake Matthews (groin; 200th consecutive start), LB Divine Deablo, DE Samson Ebukam.",
-   "interpretation": "Vorhees downgraded from questionable to out; Flowers and Humphrey upgraded to active; Matthews plays.",
-   "app_guidance": "No stale QB number: app lists Huntley as BAL starter.",
-   "sources": [
+  "evidence": [
     {
-     "label": "NBC Sports PFT: Zay Flowers active for Ravens-Falcons",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-zay-flowers-active-for-ravens-falcons"
+      "evidence_id": "ev-app-board-am",
+      "category": "app_board",
+      "verification": "INTERNAL_CANONICAL",
+      "fact": "Morning board observed 2026-10-12T12:08:30Z (FRESH, Week 5 UPCOMING; market snapshot FRESH, observed ~2026-10-12T12:07:42Z). Cards, all on Monday-night BUF @ LAR (kickoff 2026-10-13T00:15:00Z = 8:15 p.m. ET): Hit Rate = BUF moneyline +150 (DraftKings): evaluator prob 37.18% vs breakeven 40.0%, EV -0.0703, reliability MEDIUM, state BET, 0.5 units; model prob 57.27% vs market prob 37.03%; play-through price 146. Balanced = BUF +3.5 spread at -118 (DraftKings): evaluator prob 47.43% vs breakeven 54.13%, EV -0.1237, reliability MEDIUM, state BET, 0.75 units; model prob 50.50% vs market prob 53.76%; play-through line 3.5 at -121. Value = NO_PLAY: no offer satisfies the frozen VALUE lane contract. Market: DK spread BUF +3.5 -118 / LAR -3.5 -102; FD spread BUF +3.5 -118 / LAR -3.5 -104; DK ML BUF +150 / LAR -180; FD ML BUF +150 / LAR -178; Pinnacle ML BUF +162 / LAR -185; DK total 54.5 (-118/-102). Model expected margin BUF @ LAR: BUF +1.91.",
+      "interpretation": "Cards unchanged since the evening edition; both evening cards sit below breakeven; Value still empty. Only movement: Balanced juice -115 to -118 on DK.",
+      "app_guidance": "Check function re-evaluates the reader's own book line and price through the model and evaluator.",
+      "sources": []
     },
     {
-     "label": "Falcons Wire: Falcons vs. Ravens inactives",
-     "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/10/11/falcons-vs-ravens-inactives/92209439007"
+      "evidence_id": "ev-app-qb-am",
+      "category": "app_qb",
+      "verification": "INTERNAL_CANONICAL",
+      "fact": "App QB feed FRESH (observed 2026-10-12T12:00:01Z, source sleeper_qb_audit_v1): BUF expected starter Josh Allen (QB:1, no injury flag); LAR expected starter Matthew Stafford (QB:1, no injury flag). Matches the morning news.",
+      "interpretation": "No stale quarterback numbers on the board.",
+      "app_guidance": "None needed.",
+      "sources": []
+    },
+    {
+      "evidence_id": "ev-prior-edition-am",
+      "category": "prior_edition",
+      "verification": "INTERNAL_CANONICAL",
+      "fact": "Evening edition (published 2026-10-12T00:20:59Z): Hit Rate = BUF moneyline +150 (DraftKings), evaluator prob 38.64% vs breakeven 40.0%, EV -0.0339, reliability MEDIUM. Balanced = BUF +3.5 spread at -115 (DraftKings), evaluator prob 49.79% vs breakeven 53.49%, EV -0.0691, reliability MEDIUM. Value = NO_PLAY. Model expected margin BUF @ LAR: BUF +1.91.",
+      "interpretation": "Overnight delta: Balanced juice moved -115 to -118 on DK; everything else (lines, moneyline, cards, model read) unchanged.",
+      "app_guidance": "Yesterday's numbers are yesterday's; check the current card.",
+      "sources": []
+    },
+    {
+      "evidence_id": "ev-inj-mnf",
+      "category": "injury",
+      "verification": "EXTERNAL_VERIFIED",
+      "fact": "Final injury reports for BUF @ LAR, Monday 2026-10-12, 8:15 p.m. ET at SoFi Stadium. Buffalo OUT: DT Ed Oliver (knee), WR Joshua Palmer (shoulder; hurt in Friday practice, still being tested). Buffalo QUESTIONABLE: WR DJ Moore (shoulder; limited Saturday, game-time call per coach Joe Brady), CB Dee Alford (ankle), DL Landon Jackson (knee). Buffalo expected to play: CB Christian Benford (toe; 'good to go'), rookie WR Skyler Bell active for NFL debut. Rams QUESTIONABLE: S Quentin Lake (hip; McVay expects him to play, called minor). Rams good to go: DT Aaron Donald (back), TE Colby Parkinson, CB Jaylen Watson. Rams: DE Myles Garrett (knee, IR) progressing but unlikely to open 21-day practice window next week. Official inactives land ~90 minutes before kickoff.",
+      "interpretation": "Buffalo is the injury-hit side, concentrated at receiver; the Rams are nearly whole.",
+      "app_guidance": "QB feed matches: Allen and Stafford expected starters with no injury flags.",
+      "sources": [
+        {
+          "label": "Bills Wire: Bills at Rams final injury reports",
+          "url": "https://billswire.usatoday.com/story/sports/nfl/bills/2026/10/11/buffalo-bills-la-rams-final-injury-report-dh-moore-ed-oliver-nfl/92205145007/"
+        },
+        {
+          "label": "Reuters: Bills WR DJ Moore questionable, DT Ed Oliver out",
+          "url": "https://www.reuters.com/sports/bills-wr-dj-moore-questionable-dt-ed-oliver-out-vs-rams--flm-2026-10-11/"
+        },
+        {
+          "label": "BuffaloBills.com: official Week 5 injury report",
+          "url": "https://www.buffalobills.com/news/buffalo-bills-injury-report-vs-rams-week-5"
+        },
+        {
+          "label": "Rams Wire: final updates on Aaron Donald and others",
+          "url": "https://theramswire.usatoday.com/story/sports/nfl/rams/2026/10/10/rams-bills-injury-report-aaron-donald-quentin-lake/92194340007/"
+        }
+      ]
     }
-   ]
-  }
- ]
+  ]
 }
