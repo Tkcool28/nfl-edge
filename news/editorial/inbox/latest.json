@@ -1,14 +1,14 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-10-13T12:20:29Z",
- "research_generated_at_utc": "2026-10-13T12:20:29Z",
+ "submitted_at_utc": "2026-10-14T00:20:15Z",
+ "research_generated_at_utc": "2026-10-14T00:20:15Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "edition": "Morning Brief",
-  "title": "NFL EDGE Tuesday Morning Brief",
-  "dek": "Buffalo stole Monday night in overtime, the Hit Rate card cashed, and Week 6 opens with three quarterback questions.",
-  "published_at_utc": "2026-10-13T12:20:29Z",
-  "research_generated_at_utc": "2026-10-13T12:20:29Z",
+  "published_at_utc": "2026-10-14T00:20:15Z",
+  "research_generated_at_utc": "2026-10-14T00:20:15Z",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Tuesday Evening Brief",
+  "dek": "Caleb Williams is trending toward a Sunday return, the Ravens wait on Lamar, and Thursday's total is drifting down ahead of kickoff.",
   "sections": [
    {
     "id": "what-matters",
@@ -16,76 +16,73 @@
     "icon": "📰",
     "items": [
      {
-      "headline": "Bills 37, Rams 34 — an overtime instant classic",
+      "headline": "Caleb Williams trending toward a Sunday return",
       "paragraphs": [
-       "Buffalo is 4-1, the Rams are 2-3, and Monday night delivered the game of the season so far. Josh Allen threw for 210 yards and ran for 121 more; Matthew Stafford threw for 383 yards and three scores. Puka Nacua caught 17 passes for 138 yards and a touchdown — a Monday Night Football receptions record.",
-       "The fourth quarter alone had 35 points. Kyren Williams tied it at 34-34 on a one-yard run with five seconds left. In overtime the Rams won the toss, Harrison Mevis missed a potential game-winner that Greg Rousseau blocked — his second miss of the night — and Tyler Bass drilled a 45-yarder with 1:55 left to win it.",
-       "The Hit Rate card was on Buffalo at +154 on the moneyline. The underdog won outright."
+       "The biggest quarterback story of the day is in Chicago. Ian Rapoport reported Monday that all signs point to Caleb Williams being back on the field this week for the Bears' trip to Atlanta. Head coach Ben Johnson called Williams 'on track' — then hedged, adding he thinks it's going to be close.",
+       "The market heard the optimistic part. Chicago flipped from a 1.5-point underdog at open to a 3-point favorite, now -120 to cover the spread. That's a 4.5-point swing on one quarterback's hamstring.",
+       "One honest flag: the app's quarterback feed still lists Tyson Bagent as Chicago's expected starter. The optimism hasn't reached the board yet. Until it does, the app is pricing a different game — which is exactly when you run Check with your book's line instead of trusting a stale number."
       ],
-      "takeaway": "The card chased the win and found it — an outright dog winner in overtime.",
+      "takeaway": "Williams is trending yes, not official yet — bet the practice reports, not the rumor.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-mnf-result"
+       "ev-williams-return",
+       "ev-app-board-pm"
       ],
       "sources": [
        {
-        "label": "NBC Sports: Bills beat Rams 37-34 in OT",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-bills-beat-rams-37-34-in-overtime-in-instant-classic"
+        "label": "For The Win: Rapoport 'all signs point' to Williams Week 6",
+        "url": "https://ftw.usatoday.com/story/sports/nfl/2026/10/12/caleb-williams-week-6-injury-update-nfl-insider-drops-major-hint/92217000007/"
        },
        {
-        "label": "Rams.com: game recap, Bills 37-34 OT",
-        "url": "https://www.therams.com/news/game-recap-rams-fall-to-bills-37-34-in-overtime-on-monday-night-football"
+        "label": "SI Betting: Bears flip to -3 favorites on Williams optimism",
+        "url": "https://www.si.com/betting/optimistic-caleb-williams-injury-update-boosts-bears-odds-vs-falcons-in-nfl-week-6"
        }
       ]
      },
      {
-      "headline": "Three quarterback questions open Week 6",
+      "headline": "Two more QB watches: Penix and Lamar",
       "paragraphs": [
-       "Chicago: Caleb Williams (hamstring) has missed three games, but Ian Rapoport says all signs point to him returning Sunday at Atlanta. Coach Ben Johnson calls him on track — while refusing to name a backup order between Tyson Bagent and Case Keenum. The Bears are 3-2 after a 31-7 loss to Green Bay.",
-       "Atlanta: Michael Penix Jr.'s rib injury is not serious, and he could play Sunday against Chicago, per multiple Monday reports. He missed one snap Sunday night and sat out overtime. Imaging results are expected Wednesday.",
-       "Baltimore: Lamar Jackson (ankle) missed Sunday night's 30-23 overtime win at Atlanta. Coach Jesse Minter says he is definitely doing better, with clarity expected mid-week. Tyler Huntley started and threw for 201 yards and two scores in the win.",
-       "One honest caveat: the app's board hasn't flipped to Week 6 yet this morning, so these are the news, not the app's read. Check the card as practice reports land — and tap Check with your book's line before you decide anything."
+       "Michael Penix Jr.'s rib injury is not considered serious, per Adam Schefter. He might play Sunday against the Bears, but Atlanta wants to see him practice this week before deciding. If he can't go, it's Tua Tagovailoa again.",
+       "Lamar Jackson is 'definitely doing better,' per head coach Jesse Minter — but Minter couldn't guarantee anything for Sunday in Cleveland, not even Wednesday practice. Still no official word.",
+       "The app feed still shows Tyler Huntley as Baltimore's expected starter. Same deal as Chicago: the board is pricing the backup until the starter is official. Watch Wednesday and Thursday practice participation — that's the real signal. Final inactive lists land about 90 minutes before kickoff."
       ],
-      "takeaway": "No official word on any of the three — bet the practice reports, not the rumors.",
+      "takeaway": "Penix a maybe, Lamar still a mystery — the app hasn't flipped on either.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-injury-qb"
+       "ev-penix-lamar",
+       "ev-app-board-pm"
       ],
       "sources": [
        {
-        "label": "USA Today FTW: Ben Johnson on Caleb Williams return",
-        "url": "https://ftw.usatoday.com/story/sports/nfl/2026/10/12/ben-johnson-optimistic-caleb-williams-return-still-hedging/92223565007/"
+        "label": "SI: Schefter — Penix rib not serious, could play Week 6",
+        "url": "https://www.si.com/nfl/falcons/onsi/michael-penix-jr-injury-update-adam-schefter-provides-latest-on-falcons-qb"
        },
        {
-        "label": "Reuters: Penix rib injury not serious",
-        "url": "https://www.reuters.com/sports/reports-michael-penix-jrs-rib-injury-not-serious--flm-2026-10-12/"
-       },
-       {
-        "label": "SI: Lamar Jackson injury update, Ravens-Browns line",
-        "url": "https://www.si.com/betting/lamar-jackson-injury-update-causes-major-shift-to-ravens-vs-browns-odds-in-nfl-week-6"
+        "label": "Bolavip: Minter positive on Lamar, can't guarantee Browns game",
+        "url": "https://bolavip.com/en/nfl/ravens-jesse-minter-gives-positive-injury-update-on-lamar-jackson-still-cant-guarantee-availability-vs-browns"
        }
       ]
      },
      {
       "headline": "Thursday: Seahawks at Broncos kicks off Week 6",
       "paragraphs": [
-       "Seattle (3-2) visits Denver (3-2) Thursday, 8:15 p.m. ET on Prime Video from Empower Field at Mile High. The Seahawks are coming off a 32-29 loss to San Francisco; Denver beat the Chargers on Sunday. The opening line: Seahawks -2.5, total 42.5.",
-       "Sunday's slate: Bills at Raiders, Chargers at Chiefs, Texans vs. Jaguars in London at 9:30 a.m. ET, Cowboys at Packers on Sunday night, and the Commanders at the undefeated 49ers on Monday night. On bye: the Bengals, Lions, Dolphins, and Vikings.",
-       "Short week for both Thursday teams — and Seattle loses a travel day. Thursday game? Thursday check."
+       "Seattle visits Denver on Thursday night — 8:15 p.m. ET kickoff at Empower Field at Mile High, on Prime Video. The Seahawks are 2.5-point favorites at DraftKings (-118), with Denver +2.5 (-102).",
+       "Denver weather Thursday: morning rain, then clearing by evening. Low around 34 degrees, wind out of the southwest near 8 mph at kickoff time. That's the forecast, plain and simple — not an edge, just the conditions.",
+       "Thursday game? Thursday check. The Week 6 card lands when the board flips, and this is the first game on it."
       ],
       "takeaway": "Week 6 starts Thursday in Denver. Thursday game? Thursday check.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-week6-tnf"
+       "ev-tnf"
       ],
       "sources": [
        {
-        "label": "SI: Week 6 opening odds, every game",
-        "url": "https://www.si.com/betting/nfl-week-6-opening-odds-for-every-game-seahawks-packers-49ers-favored-in-primetime-2026"
+        "label": "SI Betting: Seahawks-Broncos odds, spread, trends",
+        "url": "https://www.si.com/betting/seahawks-vs-broncos-prediction-odds-spread-injuries-trends-for-nfl-week-6-2026"
        },
        {
-        "label": "USA Today: Week 6 announcer assignments",
-        "url": "https://thelistwire.usatoday.com/story/sports/2026/10/12/nfl-week-6-broadcast-teams-for-every-game/92213218007/"
+        "label": "Weather.com: Denver 10-day forecast",
+        "url": "https://weather.com/us/colorado/city/denver/tenday"
        }
       ]
      }
@@ -97,30 +94,30 @@
     "icon": "💡",
     "items": [
      {
-      "headline": "Hit Rate cashed the dog — here's what that means",
+      "headline": "Both Week 5 cards cashed — here's the read",
       "paragraphs": [
-       "Hit Rate means the supported pick the app thinks is most likely to win — win probability first, value second. The app's own tutorial says Hit Rate is not Profit Rate. Last night it was the Buffalo moneyline at +154.",
-       "The app evaluated Buffalo's chance at 37.7% against a 39.4% breakeven — a close call the card still played as BET, reliability MEDIUM. Then Buffalo went out and won the game outright. Both things are true: the lane chased the win, and it got the win.",
-       "Balanced was Buffalo +3.5 at -115 — an outright win covers the spread easily. Value had nothing, same as every card this week: no offer satisfied the lane's contract. Some evenings the board's honest answer is nothing."
+       "The Hit Rate card was on Buffalo's moneyline at +154. The app's model gave the Bills a 57.3% chance against the market's 37.5%. The underdog won outright in overtime. That's what the Hit Rate lane is for — it chases the win, not the value. The app's own tutorial says Hit Rate is not Profit Rate, and that's not a knock. Last night it did exactly its job.",
+       "The Balanced card took Buffalo +3.5 at -115, the middle ground: a strong pick without paying too much. The model had it at 50.5% against the market's 48.6%. It cashed with room to spare.",
+       "The Value lane sat the week out — no offer met its contract. Some weeks the disciplined move is no move at all."
       ],
-      "takeaway": "The Hit Rate lane chases wins, not value — last night it got the win.",
+      "takeaway": "Hit Rate chased the win and found it; Balanced took the points and covered.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-app-board-final"
+       "ev-app-board-pm"
       ],
       "sources": []
      },
      {
-      "headline": "The board hasn't flipped to Week 6 yet — here's the plan",
+      "headline": "The Week 6 card isn't on the board yet — here's the plan",
       "paragraphs": [
-       "Honest state of the board: as of this push, the app still shows the Monday-night card — the morning refresh to Week 6 hadn't landed. The numbers above are last night's final card, not a preview of Thursday.",
-       "When the board flips — every morning and evening — the Thursday card gets its prices. Your book's line is the only one that matters: tap Check, type in your line and price, and the app runs it back through the model and the evaluator and returns a bet/no-bet verdict on your price. Full re-evaluation, not a blind override.",
-       "One mechanics note: +154 means every $1 you risk wins $1.54. That's price mechanics, not a stake — the app sizes your actual stake from your bankroll and your staking setting, which is deliberately conservative."
+       "The app refreshed this evening and it's still showing Week 5. The Week 6 slate — Thursday night first — lands when the board flips, and the card re-runs on the new numbers then.",
+       "Until then, don't bet Monday's numbers blind. And if your book isn't showing DK or FD prices, that's what Check is for: type in your book's line and price, and the app runs it back through the model and the evaluator and gives you a bet-or-no-bet verdict on your price. Full re-evaluation, not a blind override.",
+       "The board refreshes every morning and evening. When it flips to Week 6, the Thursday card will be waiting."
       ],
-      "takeaway": "Report the news first, then use it: the Week 6 card lands this morning — Check is how it becomes your number.",
+      "takeaway": "Report the news first, then use it: the Week 6 card lands on the flip — Check makes it your number.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-app-board-final"
+       "ev-app-board-pm"
       ],
       "sources": []
      }
@@ -133,13 +130,13 @@
     "mode": "learning",
     "items": [
      {
-      "headline": "Learn the Game: handle vs. tickets",
+      "headline": "Learn the Game: steam move",
       "paragraphs": [
-       "Hypothetical example, clearly labeled as hypothetical: imagine a game where 80% of the bets (tickets) are on the favorite, but 60% of the money (handle) is on the underdog. Lots of small bets one way, fewer bigger bets the other.",
-       "Why it matters: tickets count heads, handle counts dollars. When they disagree, the dollars are telling a different story than the crowd — sometimes that's sharper money waiting, sometimes it's just a few big public bets. The split is a clue, not a verdict.",
-       "Our Fade rule needs a verified public-vs-sharper split plus corroboration before it becomes a play. I checked the free VSiN splits row this morning: it showed a CFL game, not an NFL game. No split qualified, so this section stays in the classroom."
+       "Hypothetical example, clearly labeled as hypothetical: imagine a team's line opens at -3 on Monday morning. By Thursday it's -5, and there's been no injury news at all. Bettors call that a steam move — the market sprinting one direction on heavy, respected action.",
+       "Why it matters: steam usually means sharp money hit the same side at multiple books, fast. But here's the catch — the price you get after the steam is not the price the steam got. Chasing a move after it's already run is paying retail for someone else's wholesale ticket.",
+       "Our Fade rule needs a verified tickets-vs-handle split plus corroboration before it becomes a real play. I checked the free splits row tonight: tickets and handle were on the same side in every market, so no split qualified — the classroom stays open."
       ],
-      "takeaway": "Tickets count heads, handle counts dollars — when they disagree, ask why before you decide what it means.",
+      "takeaway": "Steam tells you where the money went, not where the value is — the number you can actually bet is the only one that matters.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -152,21 +149,61 @@
     "icon": "👀",
     "items": [
      {
-      "headline": "Ravens -3.5 to -4.5 on Lamar optimism",
+      "headline": "Bears swing 4.5 points on Williams optimism",
       "paragraphs": [
-       "The one verified move: Baltimore opened as a 3.5-point home favorite against Cleveland on Sunday, and the line is already Ravens -4.5 at DraftKings. The driver is Lamar Jackson's ankle trending the right way.",
-       "The betting is piling on: per DraftKings, 87% of the moneyline bets and 70% of the spread bets are on Baltimore. That's agreement, not a split — no Fade here.",
-       "The app's board hasn't flipped to Week 6, so I can't confirm whether the card agrees with the move. If your book still shows -3.5 or -4, that's your number to Check — not mine to call."
+       "This is the move of the day. Chicago opened as a 1.5-point underdog at Atlanta and is now a 3-point favorite, -120 to cover. The entire swing is Caleb Williams optimism — Rapoport's 'all signs point' report plus Johnson's 'on track.'",
+       "The app hasn't caught it: the board is still Week 5 and the quarterback feed still shows Bagent. If you like Chicago at the new number, run it through Check with your book's actual line and price — the app re-evaluates at your number, not Monday's."
       ],
-      "takeaway": "A full point of Lamar-driven movement. Shop the number you can actually bet.",
+      "takeaway": "A 4.5-point quarterback swing the app hasn't priced yet. Shop the number you can actually bet.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-ravens-line"
+       "ev-williams-return"
       ],
       "sources": [
        {
-        "label": "SI: Lamar Jackson injury update, Ravens-Browns line move",
-        "url": "https://www.si.com/betting/lamar-jackson-injury-update-causes-major-shift-to-ravens-vs-browns-odds-in-nfl-week-6"
+        "label": "SI Betting: Bears flip to -3 favorites on Williams optimism",
+        "url": "https://www.si.com/betting/optimistic-caleb-williams-injury-update-boosts-bears-odds-vs-falcons-in-nfl-week-6"
+       }
+      ]
+     },
+     {
+      "headline": "Thursday total drifting down",
+      "paragraphs": [
+       "Seahawks-Broncos opened 42.5 and the total is sliding — 41.5 at some books now. The spread is steadier: Seattle -2.5 (-118 at DraftKings), with -3 available elsewhere. Denver's Thursday forecast shows morning rain clearing by evening, low in the mid-30s.",
+       "When the board flips to Week 6, the app prices the Thursday game at whatever the lines are then — not where they opened. That's the number that counts."
+      ],
+      "takeaway": "Total sliding, spread steady. The flip prices the current number, not the opener.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-tnf"
+      ],
+      "sources": [
+       {
+        "label": "Covers: Seahawks-Broncos early total lean, 42.5 to 41.5",
+        "url": "https://www.covers.com/nfl/seahawks-vs-broncos-prediction-picks-odds-early-leans-week-6-2026"
+       },
+       {
+        "label": "SI Betting: Seahawks-Broncos odds, spread, trends",
+        "url": "https://www.si.com/betting/seahawks-vs-broncos-prediction-odds-spread-injuries-trends-for-nfl-week-6-2026"
+       }
+      ]
+     },
+     {
+      "headline": "Ravens holding -4.5",
+      "paragraphs": [
+       "Baltimore moved from -3.5 to -4.5 on Monday's Lamar optimism and it's holding there at -110. But the optimism is still just optimism — Minter wouldn't confirm anything for Sunday, and the app still prices the game with Huntley.",
+       "If Lamar is confirmed, that number won't sit still. If he's out, -4.5 with Huntley off an overtime road win is a different conversation. Either way, Check re-runs it at your price."
+      ],
+      "takeaway": "Holding -4.5 on hope, not confirmation. News moves this one next.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-ravens-hold",
+       "ev-penix-lamar"
+      ],
+      "sources": [
+       {
+        "label": "SI Betting: Ravens vs Browns prediction, pick Ravens -4.5",
+        "url": "https://www.si.com/betting/ravens-vs-browns-prediction-odds-spread-injuries-trends-for-nfl-week-6-2026"
        }
       ]
      }
@@ -178,12 +215,12 @@
     "icon": "✅",
     "items": [
      {
-      "headline": "Log last night before you look at Thursday",
+      "headline": "Thursday game? Thursday check.",
       "paragraphs": [
-       "If you bet Buffalo at +154, log the win. If you bet the Rams, log the loss. Settlement is manual — no auto-settle — and the tracker only works if you're honest with yourself. Log the losers too.",
-       "Then reset. Week 6's card lands this morning, Thursday's game is two days out, and yesterday's price is gone. Bet the slate in front of you."
+       "The Week 6 card isn't on the board yet, so tonight's move is preparation, not action. When the board flips, open the Thursday game, and if your book's line differs from what the app shows, type yours into Check. The app runs your price back through the model and the evaluator and hands you a bet-or-no-bet verdict on the number you can actually get.",
+       "And the occasional honest nudge: settlement is manual — the tracker only works if you're honest with yourself. Log the losers too."
       ],
-      "takeaway": "Honest logging tonight, fresh eyes Thursday.",
+      "takeaway": "Prep tonight, decide Thursday — and keep the tracker honest.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -194,89 +231,75 @@
  },
  "evidence": [
   {
-   "evidence_id": "ev-mnf-result",
-   "category": "game_result",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "Monday Night Football, Week 5 (SoFi Stadium, Oct 12): Buffalo Bills 37, Los Angeles Rams 34 in overtime. Bills move to 4-1, Rams to 2-3. Josh Allen: 12/19 for 210 yards, 1 TD, 1 INT, plus 121 rushing yards and 1 TD on 10 carries. Matthew Stafford: 40/54 for 383 yards, 3 TD. Puka Nacua: 17 catches for 138 yards and 1 TD, a Monday Night Football receptions record. Kyren Williams tied it at 34-34 with a 1-yard run with 5 seconds left in regulation. In overtime the Rams won the toss; Harrison Mevis missed a potential game-winning field goal (blocked by Greg Rousseau, his second miss of the night); Tyler Bass hit a 45-yarder with 1:55 left in OT for the win. James Cook: 108+ rushing yards, 2 TD, lost one fumble.",
-   "interpretation": "The Hit Rate card (BUF moneyline +154) and the Balanced card (BUF +3.5 -115) both won outright. Value had no play. Week 5 is closed.",
-   "app_guidance": "Log the result honestly in the tracker, then move on to the Week 6 card when the board flips.",
-   "sources": [
-    {
-     "label": "NBC Sports: Bills beat Rams 37-34 in OT",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-bills-beat-rams-37-34-in-overtime-in-instant-classic"
-    },
-    {
-     "label": "Rams.com: game recap, Bills 37-34 OT",
-     "url": "https://www.therams.com/news/game-recap-rams-fall-to-bills-37-34-in-overtime-on-monday-night-football"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-injury-qb",
+   "evidence_id": "ev-williams-return",
    "category": "injury",
+   "fact": "Caleb Williams (hamstring, out since Week 2) is trending toward a Week 6 return at Atlanta: Ian Rapoport reported Monday 10/12 that 'all signs point to Caleb Williams being back on the field this week for Chicago'; Ben Johnson said Williams is 'on track' adding 'I think it's going to be close.' The betting line flipped from Falcons -1.5 at open to Bears -3 (-120 to cover) on the optimism.",
    "verification": "EXTERNAL_VERIFIED",
-   "fact": "Three quarterback situations shape Week 6. (1) Chicago: Caleb Williams (hamstring) has missed three games; NFL Network's Ian Rapoport reports 'all signs point to' Williams returning Sunday at Atlanta; coach Ben Johnson calls him 'on track' but declined to name a backup order between Tyson Bagent and Case Keenum. Bears are 3-2 after a 31-7 loss to Green Bay. (2) Atlanta: Michael Penix Jr.'s rib injury is 'not serious' per multiple Monday reports; he could return Sunday vs Chicago; he missed one snap Sunday night and sat out overtime; imaging results expected Wednesday. (3) Baltimore: Lamar Jackson (ankle) missed Sunday night's 30-23 OT win at Atlanta; coach Jesse Minter says he is 'definitely doing better' with clarity expected mid-week. Tyler Huntley started and threw for 201 yards and 2 TDs in the win.",
-   "interpretation": "All three starters are genuinely questionable for Week 6; practice reports Wednesday/Thursday decide them. The app board had not flipped to Week 6 at push time, so the app's QB read is not yet available.",
-   "app_guidance": "Watch practice reports; tap Check with your book's line once the Week 6 card is live.",
    "sources": [
     {
-     "label": "USA Today FTW: Ben Johnson on Caleb Williams return",
-     "url": "https://ftw.usatoday.com/story/sports/nfl/2026/10/12/ben-johnson-optimistic-caleb-williams-return-still-hedging/92223565007/"
-    },
-    {
-     "label": "USA Today FTW: Rapoport on Williams Week 6",
+     "label": "For The Win: Rapoport 'all signs point' to Williams Week 6",
      "url": "https://ftw.usatoday.com/story/sports/nfl/2026/10/12/caleb-williams-week-6-injury-update-nfl-insider-drops-major-hint/92217000007/"
     },
     {
-     "label": "Reuters: Penix rib injury not serious",
-     "url": "https://www.reuters.com/sports/reports-michael-penix-jrs-rib-injury-not-serious--flm-2026-10-12/"
-    },
-    {
-     "label": "SI: Lamar Jackson injury update, Ravens-Browns line",
-     "url": "https://www.si.com/betting/lamar-jackson-injury-update-causes-major-shift-to-ravens-vs-browns-odds-in-nfl-week-6"
+     "label": "SI Betting: Bears flip to -3 favorites on Williams optimism",
+     "url": "https://www.si.com/betting/optimistic-caleb-williams-injury-update-boosts-bears-odds-vs-falcons-in-nfl-week-6"
     }
    ]
   },
   {
-   "evidence_id": "ev-week6-tnf",
-   "category": "schedule",
+   "evidence_id": "ev-penix-lamar",
+   "category": "injury",
+   "fact": "Michael Penix Jr.'s rib injury is not considered serious (Adam Schefter, Monday 10/12); he 'might' play Sunday vs the Bears but Atlanta wants to see him practice this week, with Tua Tagovailoa the backup if not. Lamar Jackson: head coach Jesse Minter says he is 'definitely doing better' but could not guarantee availability vs the Browns or confirm Wednesday practice; still no official word.",
    "verification": "EXTERNAL_VERIFIED",
-   "fact": "Week 6 opens Thursday, Oct 15: Seattle Seahawks (3-2) at Denver Broncos (3-2), 8:15 p.m. ET on Prime Video from Empower Field at Mile High. Seattle lost 32-29 to San Francisco on Sunday; Denver beat the Chargers. Opening lines (DraftKings, via SI, Oct 11): Seahawks -2.5, total 42.5. Sunday Oct 18 slate includes Bills at Raiders, Chargers at Chiefs, Texans vs Jaguars in London (9:30 a.m. ET), Cowboys at Packers on Sunday Night Football, and Commanders at the undefeated 49ers on Monday Night Football. Bye weeks: Bengals, Lions, Dolphins, Vikings.",
-   "interpretation": "Short week for both Thursday teams, and Seattle loses a travel day. The Week 6 board had not yet refreshed at push time.",
-   "app_guidance": "Wait for the Week 6 card on the morning board; Thursday game means Thursday check.",
    "sources": [
     {
-     "label": "SI: Week 6 opening odds, every game",
-     "url": "https://www.si.com/betting/nfl-week-6-opening-odds-for-every-game-seahawks-packers-49ers-favored-in-primetime-2026"
+     "label": "SI: Schefter — Penix rib not serious, could play Week 6",
+     "url": "https://www.si.com/nfl/falcons/onsi/michael-penix-jr-injury-update-adam-schefter-provides-latest-on-falcons-qb"
     },
     {
-     "label": "USA Today: Week 6 announcer assignments",
-     "url": "https://thelistwire.usatoday.com/story/sports/2026/10/12/nfl-week-6-broadcast-teams-for-every-game/92213218007/"
+     "label": "Bolavip: Minter positive on Lamar, can't guarantee Browns game",
+     "url": "https://bolavip.com/en/nfl/ravens-jesse-minter-gives-positive-injury-update-on-lamar-jackson-still-cant-guarantee-availability-vs-browns"
     }
    ]
   },
   {
-   "evidence_id": "ev-app-board-final",
-   "category": "app_board",
+   "evidence_id": "ev-tnf",
+   "category": "market",
+   "fact": "Thursday Night Football Week 6: Seahawks at Broncos, Empower Field at Mile High, Denver, kickoff 8:15 p.m. ET Thursday Oct 15 (Prime Video). DraftKings: Seahawks -2.5 (-118), Broncos +2.5 (-102); total opened 42.5, now 41.5 at some books. Denver forecast Thursday: morning rain (70%, ~0.12 in), clearing by evening, low 34F, wind SW ~8 mph.",
+   "verification": "EXTERNAL_VERIFIED",
+   "sources": [
+    {
+     "label": "SI Betting: Seahawks-Broncos odds, spread, trends",
+     "url": "https://www.si.com/betting/seahawks-vs-broncos-prediction-odds-spread-injuries-trends-for-nfl-week-6-2026"
+    },
+    {
+     "label": "Covers: Seahawks-Broncos early total lean, 42.5 to 41.5",
+     "url": "https://www.covers.com/nfl/seahawks-vs-broncos-prediction-picks-odds-early-leans-week-6-2026"
+    },
+    {
+     "label": "Weather.com: Denver 10-day forecast",
+     "url": "https://weather.com/us/colorado/city/denver/tenday"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-ravens-hold",
+   "category": "market",
+   "fact": "Ravens -4.5 (-110, FanDuel) at the Browns is holding after Monday's move from -3.5; Jackson still has no official Week 6 word.",
+   "verification": "EXTERNAL_VERIFIED",
+   "sources": [
+    {
+     "label": "SI Betting: Ravens vs Browns prediction, pick Ravens -4.5",
+     "url": "https://www.si.com/betting/ravens-vs-browns-prediction-odds-spread-injuries-trends-for-nfl-week-6-2026"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-app-board-pm",
+   "category": "app",
+   "fact": "App board refreshed 2026-10-13T00:08:39Z (6:08 p.m. Denver), FRESH, still Week 5. Hit Rate: Bills ML +154 (DK), model 57.27% vs market 37.53%, EV -0.042, 0.5u, MEDIUM — cashed (Bills 37, Rams 34 OT). Balanced: Bills +3.5 -115 (DK), model 50.50% vs market 48.61%, EV -0.037, 0.75u, MEDIUM — cashed. Value: NO_PLAY. QB feed expected starters still Tyson Bagent (CHI) and Tyler Huntley (BAL); Jameis Winston (NYG).",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "Final Monday-night card (board observed 2026-10-13T00:08:39Z; still the live board at push, Week 6 refresh not yet landed). BUF @ LAR, final BUF 37-34 OT. Hit Rate = BUF moneyline +154 (DraftKings): evaluator prob 37.72% vs breakeven 39.37%, EV -0.0417, reliability MEDIUM, state BET. Balanced = BUF +3.5 spread at -115 (DraftKings): evaluator prob 51.51% vs breakeven 53.49%, EV -0.0371, reliability MEDIUM, state BET. Value = NO_PLAY: no offer satisfied the frozen VALUE lane contract. QB feed: Allen and Stafford expected starters, no injury flags.",
-   "interpretation": "Both supported cards won outright; the Hit Rate lane chased the win and got it. Value empty again — a quiet board is information too.",
-   "app_guidance": "The Week 6 card replaces these numbers when the morning board flips; run your own book's price through Check.",
    "sources": []
-  },
-  {
-   "evidence_id": "ev-ravens-line",
-   "category": "line_movement",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "Ravens vs Browns, Week 6 (Sunday, Baltimore): Baltimore opened as a 3.5-point favorite; the line has moved a full point to Ravens -4.5 at DraftKings on Lamar Jackson return optimism. Per DraftKings, 87% of the moneyline bets and 70% of the spread bets are on Baltimore.",
-   "interpretation": "Bets are piling on Baltimore on both the moneyline and the spread — that is agreement, not a public/sharper split, so no Fade qualifies. The app board had not flipped to Week 6 at push, so the card's read on the move is not yet available.",
-   "app_guidance": "If your book still shows -3.5 or -4, tap Check and run your number against the Week 6 card when it lands.",
-   "sources": [
-    {
-     "label": "SI: Lamar Jackson injury update, Ravens-Browns line move",
-     "url": "https://www.si.com/betting/lamar-jackson-injury-update-causes-major-shift-to-ravens-vs-browns-odds-in-nfl-week-6"
-    }
-   ]
   }
  ]
 }
