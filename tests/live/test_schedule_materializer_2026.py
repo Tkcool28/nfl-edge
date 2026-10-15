@@ -6,6 +6,7 @@ from nfl_edge.live.schedule_2026 import LiveScheduleError, validate_schedule
 from nfl_edge.live.schedule_materializer_2026 import (
     ScheduleMaterializationError,
     build_week_schedule,
+    choose_active_schedule,
 )
 
 
@@ -114,3 +115,50 @@ def test_explicit_retractable_roof_preserves_live_resolution_boundary(raw_roof: 
 
     assert game["roof_structure"] == "RETRACTABLE"
     assert game["roof_type"] is None
+
+
+def test_incomplete_future_week_does_not_block_current_week() -> None:
+    future = _row(away_team="BUF", home_team="MIA")
+    future.update(week="3", gameday="2026-09-24", surface="")
+    schedule = choose_active_schedule(
+        [_row(), future],
+        season=2026,
+        active_as_of_utc="2026-09-16T12:00:00Z",
+        observed_at_utc="2026-09-16T12:00:00Z",
+    )
+    assert schedule["week"] == 2
+    assert schedule["games"][0]["game_id"] == "2026_02_SF_LAR"
+
+
+def test_missing_surface_in_active_week_fails_closed_with_game_identity() -> None:
+    future = _row(away_team="BUF", home_team="MIA")
+    future.update(week="3", gameday="2026-09-24", surface="")
+    with pytest.raises(
+        ScheduleMaterializationError,
+        match=r"missing required surface .*week='3'.*away='BUF'.*home='MIA'",
+    ):
+        choose_active_schedule(
+            [_row(), future],
+            season=2026,
+            active_as_of_utc="2026-09-22T12:00:00Z",
+            observed_at_utc="2026-09-22T12:00:00Z",
+        )
+
+
+def test_tuesday_denver_rollover_selects_new_week_at_exact_boundary() -> None:
+    later = _row(away_team="BUF", home_team="MIA")
+    later.update(week="3", gameday="2026-09-24")
+    before = choose_active_schedule(
+        [_row(), later],
+        season=2026,
+        active_as_of_utc="2026-09-22T11:59:59Z",
+        observed_at_utc="2026-09-22T11:59:59Z",
+    )
+    after = choose_active_schedule(
+        [_row(), later],
+        season=2026,
+        active_as_of_utc="2026-09-22T12:00:00Z",
+        observed_at_utc="2026-09-22T12:00:00Z",
+    )
+    assert before["week"] == 2
+    assert after["week"] == 3
