@@ -109,9 +109,11 @@ def test_unknown_game_stays_blocked():
         build_week_schedule([r], season=2026, week=5, observed_at_utc="2026-10-15T04:00:00Z")
 
 
-@pytest.mark.parametrize("change", ["unsupported", "no_sources", "no_date", "missing_game"])
+@pytest.mark.parametrize("change", ["unsupported", "no_sources", "no_date", "missing_game", "class_mismatch"])
 def test_invalid_evidence(tmp_path, monkeypatch, change):
     p = json.loads(EVIDENCE_PATH.read_text())
+    if change == "class_mismatch":
+        p["games"][0]["surface"] = "grass"
     if change == "unsupported":
         p["games"][1]["surface"] = "unverified-turf"
     if change == "no_sources":

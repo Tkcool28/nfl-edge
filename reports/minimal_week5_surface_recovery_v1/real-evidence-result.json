@@ -1,0 +1,49 @@
+{
+  "verdict": "SETTLED_EVIDENCE_READY_PREPROVIDER_PENDING",
+  "provider_request_count": 0,
+  "odds_api_called": false,
+  "market_data_read": false,
+  "active_as_of_utc": "2026-10-13T12:00:00Z",
+  "week6_schedule": {
+    "season": 2026,
+    "week": 6,
+    "game_count": 14,
+    "sha256": "b5582a2e400930e59977b9b4bfdc3139160a677d1d11b2c3ad933a4249f70e81"
+  },
+  "settled_through_week": 5,
+  "settled_row_counts": {
+    "games": 79,
+    "pbp": 13842,
+    "qb_stats": 182,
+    "team_stats": 158
+  },
+  "surface_recovery_count": 14,
+  "offline_replay": "PASS",
+  "free_source_requests": [
+    {
+      "url": "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv",
+      "status_code": 200,
+      "bytes": 2184486,
+      "sha256": "cabed5e312707f28813a023d541ab500df9d52e1f8e502d20cf7e24d37ed971d"
+    },
+    {
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_team/stats_team_week_2026.parquet",
+      "status_code": 200,
+      "bytes": 78813,
+      "sha256": "86ae1a398e76226b8d89d137f0fc327b2a0d10ed7f3f74de02f02c24e2edea82"
+    },
+    {
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2026.parquet",
+      "status_code": 200,
+      "bytes": 349587,
+      "sha256": "8da79a965941a62ea3244a262fffd39b8ee2af172fedf9758a079d8e81ae6a26"
+    },
+    {
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.parquet",
+      "status_code": 200,
+      "bytes": 5961006,
+      "sha256": "2aff6b6bb43a70099653fefe2a8050c1d05454d3b4a20f001211854da71f08f5"
+    }
+  ],
+  "observed_at_utc": "2026-10-15T15:18:41.780938+00:00"
+}

@@ -113,7 +113,9 @@ def main():
                 active_as_of_utc=result["active_as_of_utc"],
                 session=OfflineSession(),
             )
-        assert evidence.games.equals(replay.games) and evidence.pbp.equals(replay.pbp)
+        assert all(
+            getattr(evidence, name).equals(getattr(replay, name)) for name in ("games", "team_stats", "qb_stats", "pbp")
+        )
         result["offline_replay"] = "PASS"
         result["verdict"] = "SETTLED_EVIDENCE_READY_PREPROVIDER_PENDING"
     except Exception as exc:

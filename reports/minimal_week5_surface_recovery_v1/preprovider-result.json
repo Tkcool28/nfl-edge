@@ -1,0 +1,41 @@
+{
+  "command_args": [
+    "scripts/verify_live_2026_preprovider_v1.py",
+    "--repository-root",
+    "/workspace/scratch/bd9c423b9e9d/nfl-recovery",
+    "--schedule-root",
+    "/workspace/scratch/bd9c423b9e9d/recovery-validation/offline-replay",
+    "--evidence-root",
+    "/workspace/scratch/bd9c423b9e9d/recovery-validation/offline-replay",
+    "--run-root",
+    "/workspace/scratch/bd9c423b9e9d/recovery-validation/authentic-prior-runs",
+    "--prediction-as-of-utc",
+    "2026-10-15T15:26:00Z"
+  ],
+  "prediction_as_of_utc": "2026-10-15T15:26:00Z",
+  "stages": {
+    "football_state": {
+      "completed_2026_blocks": [
+        "2026_REG_W01",
+        "2026_REG_W02",
+        "2026_REG_W03",
+        "2026_REG_W04",
+        "2026_REG_W05"
+      ],
+      "state_version": "live-2026-state:731cd471c74c7dec56a052d4"
+    },
+    "football_scoring": {
+      "game_count": 14,
+      "sha256": "1f78d681263c0b712f46520dd337941c3d35fcef2ef4407b10c07874a6b21f65"
+    }
+  },
+  "provider_request_count": 0,
+  "odds_api_called": false,
+  "market_data_read": false,
+  "exit_code": 1,
+  "verdict": "BLOCKED_NFL_EDGE_WEEK6_RECOVERY",
+  "error_type": "Entering2026ProductStateError",
+  "error": "missing successful final pre-kickoff selector evidence for settled Week 2: ['2026_02_CAR_ATL', '2026_02_CIN_HOU', '2026_02_CLE_TB', '2026_02_DET_BUF', '2026_02_GB_NYJ', '2026_02_IND_KC', '2026_02_JAX_DEN', '2026_02_LV_LAC', '2026_02_MIA_SF', '2026_02_MIN_CHI', '2026_02_NO_BAL', '2026_02_NYG_LAR', '2026_02_PHI_TEN', '2026_02_PIT_NE', '2026_02_SEA_ARI', '2026_02_WAS_DAL']",
+  "traceback": "Traceback (most recent call last):\n  File \"/workspace/scratch/bd9c423b9e9d/run_offline_preflight.py\", line 43, in <module>\n    runpy.run_path(str(root/args[0]),run_name='__main__')\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/workspace/scratch/bd9c423b9e9d/nfl-recovery/scripts/verify_live_2026_preprovider_v1.py\", line 123, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/workspace/scratch/bd9c423b9e9d/nfl-recovery/scripts/verify_live_2026_preprovider_v1.py\", line 89, in main\n    decision_state[\"value_state\"] = advance_live_value_state(\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/bd9c423b9e9d/nfl-recovery/src/nfl_edge/live/product_state_2026.py\", line 703, in advance_live_value_state\n    rows = _final_pregame_selector_rows(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/bd9c423b9e9d/nfl-recovery/src/nfl_edge/live/product_state_2026.py\", line 666, in _final_pregame_selector_rows\n    raise Entering2026ProductStateError(\nnfl_edge.live.product_state_2026.Entering2026ProductStateError: missing successful final pre-kickoff selector evidence for settled Week 2: ['2026_02_CAR_ATL', '2026_02_CIN_HOU', '2026_02_CLE_TB', '2026_02_DET_BUF', '2026_02_GB_NYJ', '2026_02_IND_KC', '2026_02_JAX_DEN', '2026_02_LV_LAC', '2026_02_MIA_SF', '2026_02_MIN_CHI', '2026_02_NO_BAL', '2026_02_NYG_LAR', '2026_02_PHI_TEN', '2026_02_PIT_NE', '2026_02_SEA_ARI', '2026_02_WAS_DAL']\n",
+  "network_attempts": 0
+}

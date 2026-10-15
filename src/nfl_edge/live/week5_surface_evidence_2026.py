@@ -55,6 +55,9 @@ def load_surface_evidence() -> dict[str, dict[str, Any]]:
             or record["stadium"] != "Tottenham Hotspur Stadium"
         ):
             raise Week5SurfaceEvidenceError("Tottenham unknown-subtype provenance drift")
+        surface_class = record.get("verified_surface_class")
+        if surface_class not in {"grass", "artificial"} or (surface == "grass") != (surface_class == "grass"):
+            raise Week5SurfaceEvidenceError(f"surface class conflicts with recovery token: {gid}")
         urls = record.get("source_urls")
         if not isinstance(urls, list) or not urls or any(not str(u).startswith("https://") for u in urls):
             raise Week5SurfaceEvidenceError(f"missing surface provenance: {gid}")

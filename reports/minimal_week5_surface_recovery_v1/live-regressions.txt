@@ -1,0 +1,331 @@
+............FFF.........FFF............................................. [ 65%]
+......................................                                   [100%]
+=================================== FAILURES ===================================
+______ test_real_week1_schedule_scores_available_models_deterministically ______
+
+entering_state = Entering2026FootballState(qb_state=EloState(teams={'PHI': TeamState(team='PHI', rating=1605.9538590186023, last_season...ng-2026:ab8458a6da5955481c1fae11', completed_2026_blocks=(), schema_version='nfl-edge-entering-2026-football-state-v1')
+
+    def test_real_week1_schedule_scores_available_models_deterministically(entering_state):
+        resolver = SleeperExpectedQBResolver(_synthetic_source())
+>       first = score_week1(
+            repository_root=ROOT,
+            prediction_as_of_utc=AS_OF,
+            resolver=resolver,
+            entering_state=entering_state,
+        )
+
+tests/live/test_live_2026_scoring.py:123: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/nfl_edge/live/scorer_2026.py:630: in score_week1
+    return score_week(
+src/nfl_edge/live/scorer_2026.py:327: in score_week
+    totals_result = predict_ridge_totals_r4_block(
+src/nfl_edge/live/model_adapters.py:467: in predict_ridge_totals_r4_block
+    training_x = _pandas_predictors(prior_history.select(list(EXACT_90_COLUMNS)), "ridge")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/nfl_edge/backtest/totals_bake_off.py:211: in _pandas_predictors
+    result = frame.to_pandas().loc[:, list(EXACT_90_COLUMNS)].copy()
+             ^^^^^^^^^^^^^^^^^
+../recovery-venv/lib/python3.12/site-packages/polars/dataframe/frame.py:2631: in to_pandas
+    return self._to_pandas_without_object_columns(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = shape: (2_227, 90)
+┌───────────┬───────────┬───────────┬───────────┬───┬───────────┬───────────┬───────────┬──────────...5725  ┆ 0        │
+└───────────┴───────────┴───────────┴───────────┴───┴───────────┴───────────┴───────────┴──────────┘
+df = shape: (2_227, 90)
+┌───────────┬───────────┬───────────┬───────────┬───┬───────────┬───────────┬───────────┬──────────...5725  ┆ 0        │
+└───────────┴───────────┴───────────┴───────────┴───┴───────────┴───────────┴───────────┴──────────┘
+use_pyarrow_extension_array = False, kwargs = {}
+
+    def _to_pandas_without_object_columns(
+        self,
+        df: DataFrame,
+        *,
+        use_pyarrow_extension_array: bool,
+        **kwargs: Any,
+    ) -> pd.DataFrame:
+        if not df.width:  # Empty dataframe, cannot infer schema from batches
+            return pd.DataFrame()
+    
+>       record_batches = df._df.to_pandas()
+                         ^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'pyarrow'
+
+../recovery-venv/lib/python3.12/site-packages/polars/dataframe/frame.py:2682: ModuleNotFoundError
+______ test_resolved_retractable_roof_selects_frozen_scenario[OPEN-open] _______
+
+entering_state = Entering2026FootballState(qb_state=EloState(teams={'PHI': TeamState(team='PHI', rating=1605.9538590186023, last_season...ng-2026:ab8458a6da5955481c1fae11', completed_2026_blocks=(), schema_version='nfl-edge-entering-2026-football-state-v1')
+status = 'OPEN', selected = 'open'
+
+    @pytest.mark.parametrize(("status", "selected"), (("OPEN", "open"), ("CLOSED", "closed")))
+    def test_resolved_retractable_roof_selects_frozen_scenario(
+        entering_state, status, selected
+    ):
+>       snapshot = score_week1(
+            repository_root=ROOT,
+            prediction_as_of_utc=AS_OF,
+            resolver=SleeperExpectedQBResolver(_synthetic_source()),
+            entering_state=entering_state,
+            roof_resolver=_roof_resolver(status),
+        )
+
+tests/live/test_live_2026_scoring.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/nfl_edge/live/scorer_2026.py:630: in score_week1
+    return score_week(
+src/nfl_edge/live/scorer_2026.py:327: in score_week
+    totals_result = predict_ridge_totals_r4_block(
+src/nfl_edge/live/model_adapters.py:467: in predict_ridge_totals_r4_block
+    training_x = _pandas_predictors(prior_history.select(list(EXACT_90_COLUMNS)), "ridge")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/nfl_edge/backtest/totals_bake_off.py:211: in _pandas_predictors
+    result = frame.to_pandas().loc[:, list(EXACT_90_COLUMNS)].copy()
+             ^^^^^^^^^^^^^^^^^
+../recovery-venv/lib/python3.12/site-packages/polars/dataframe/frame.py:2631: in to_pandas
+    return self._to_pandas_without_object_columns(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = shape: (2_227, 90)
+┌───────────┬───────────┬───────────┬───────────┬───┬───────────┬───────────┬───────────┬──────────...5725  ┆ 0        │
+└───────────┴───────────┴───────────┴───────────┴───┴───────────┴───────────┴───────────┴──────────┘
+df = shape: (2_227, 90)
+┌───────────┬───────────┬───────────┬───────────┬───┬───────────┬───────────┬───────────┬──────────...5725  ┆ 0        │
+└───────────┴───────────┴───────────┴───────────┴───┴───────────┴───────────┴───────────┴──────────┘
+use_pyarrow_extension_array = False, kwargs = {}
+
+    def _to_pandas_without_object_columns(
+        self,
+        df: DataFrame,
+        *,
+        use_pyarrow_extension_array: bool,
+        **kwargs: Any,
+    ) -> pd.DataFrame:
+        if not df.width:  # Empty dataframe, cannot infer schema from batches
+            return pd.DataFrame()
+    
+>       record_batches = df._df.to_pandas()
+                         ^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'pyarrow'
+
+../recovery-venv/lib/python3.12/site-packages/polars/dataframe/frame.py:2682: ModuleNotFoundError
+____ test_resolved_retractable_roof_selects_frozen_scenario[CLOSED-closed] _____
+
+entering_state = Entering2026FootballState(qb_state=EloState(teams={'PHI': TeamState(team='PHI', rating=1605.9538590186023, last_season...ng-2026:ab8458a6da5955481c1fae11', completed_2026_blocks=(), schema_version='nfl-edge-entering-2026-football-state-v1')
+status = 'CLOSED', selected = 'closed'
+
+    @pytest.mark.parametrize(("status", "selected"), (("OPEN", "open"), ("CLOSED", "closed")))
+    def test_resolved_retractable_roof_selects_frozen_scenario(
+        entering_state, status, selected
+    ):
+>       snapshot = score_week1(
+            repository_root=ROOT,
+            prediction_as_of_utc=AS_OF,
+            resolver=SleeperExpectedQBResolver(_synthetic_source()),
+            entering_state=entering_state,
+            roof_resolver=_roof_resolver(status),
+        )
+
+tests/live/test_live_2026_scoring.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/nfl_edge/live/scorer_2026.py:630: in score_week1
+    return score_week(
+src/nfl_edge/live/scorer_2026.py:327: in score_week
+    totals_result = predict_ridge_totals_r4_block(
+src/nfl_edge/live/model_adapters.py:467: in predict_ridge_totals_r4_block
+    training_x = _pandas_predictors(prior_history.select(list(EXACT_90_COLUMNS)), "ridge")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/nfl_edge/backtest/totals_bake_off.py:211: in _pandas_predictors
+    result = frame.to_pandas().loc[:, list(EXACT_90_COLUMNS)].copy()
+             ^^^^^^^^^^^^^^^^^
+../recovery-venv/lib/python3.12/site-packages/polars/dataframe/frame.py:2631: in to_pandas
+    return self._to_pandas_without_object_columns(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = shape: (2_227, 90)
+┌───────────┬───────────┬───────────┬───────────┬───┬───────────┬───────────┬───────────┬──────────...5725  ┆ 0        │
+└───────────┴───────────┴───────────┴───────────┴───┴───────────┴───────────┴───────────┴──────────┘
+df = shape: (2_227, 90)
+┌───────────┬───────────┬───────────┬───────────┬───┬───────────┬───────────┬───────────┬──────────...5725  ┆ 0        │
+└───────────┴───────────┴───────────┴───────────┴───┴───────────┴───────────┴───────────┴──────────┘
+use_pyarrow_extension_array = False, kwargs = {}
+
+    def _to_pandas_without_object_columns(
+        self,
+        df: DataFrame,
+        *,
+        use_pyarrow_extension_array: bool,
+        **kwargs: Any,
+    ) -> pd.DataFrame:
+        if not df.width:  # Empty dataframe, cannot infer schema from batches
+            return pd.DataFrame()
+    
+>       record_batches = df._df.to_pandas()
+                         ^^^^^^^^^^^^^^^^^^
+E       ModuleNotFoundError: No module named 'pyarrow'
+
+../recovery-venv/lib/python3.12/site-packages/polars/dataframe/frame.py:2682: ModuleNotFoundError
+_ test_entering_2026_state_reconstructs_accepted_2024_parity_and_resets_value __
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2/test_entering_2026_state_recon0')
+
+    def test_entering_2026_state_reconstructs_accepted_2024_parity_and_resets_value(tmp_path):
+>       payload = materialize_entering_2026_product_state(ROOT)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/live/test_live_product_2026.py:152: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/nfl_edge/live/product_state_2026.py:381: in materialize_entering_2026_product_state
+    historical_board, frozen_2024 = _materialize_task05f_starting_evidence(root, task05f)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/workspace/scratch/bd9c423b9e9d/nfl-recovery')
+task05f = <module 'live_2026_task05f' from '/workspace/scratch/bd9c423b9e9d/nfl-recovery/scripts/task05f_evaluator_final_runner.py'>
+
+    def _materialize_task05f_starting_evidence(
+        root: Path, task05f: Any
+    ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+        """Reproduce the exact Task05F state/board used to open standard 2025."""
+        with tempfile.TemporaryDirectory(prefix="nfl-edge-task05f-start-") as tmp:
+            out = Path(tmp)
+            # The accepted standard 2025 workflow performs this same materialization
+            # before execution. Suppress the runner scorecard here so this one-time
+            # state materializer emits only its own bounded status output.
+            with contextlib.redirect_stdout(io.StringIO()):
+                task05f.run(
+                    root,
+                    root / "config/task05f_evaluator_final_v1.yaml",
+                    out,
+                )
+            board_path = out / "historical_evaluator_board.parquet"
+            state_path = out / "frozen_evaluator_state.json"
+            board_sha = _sha256(board_path)
+            state_sha = _sha256(state_path)
+            if board_sha != EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256:
+>               raise Entering2026ProductStateError(
+                    "accepted Task05F historical board SHA drift: "
+                    f"{board_sha} != {EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256}"
+                )
+E               nfl_edge.live.product_state_2026.Entering2026ProductStateError: accepted Task05F historical board SHA drift: befd4a1b8a3c41790f10410f4e5ef798e4d3aa979b2331874aece64acd78f6e3 != 58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8
+
+src/nfl_edge/live/product_state_2026.py:153: Entering2026ProductStateError
+_________ test_full_fixture_product_validates_and_replays_identically __________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2/test_full_fixture_product_vali0')
+
+    def test_full_fixture_product_validates_and_replays_identically(tmp_path):
+>       state_payload = materialize_entering_2026_product_state(ROOT)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/live/test_live_product_2026.py:183: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/nfl_edge/live/product_state_2026.py:381: in materialize_entering_2026_product_state
+    historical_board, frozen_2024 = _materialize_task05f_starting_evidence(root, task05f)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/workspace/scratch/bd9c423b9e9d/nfl-recovery')
+task05f = <module 'live_2026_task05f' from '/workspace/scratch/bd9c423b9e9d/nfl-recovery/scripts/task05f_evaluator_final_runner.py'>
+
+    def _materialize_task05f_starting_evidence(
+        root: Path, task05f: Any
+    ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+        """Reproduce the exact Task05F state/board used to open standard 2025."""
+        with tempfile.TemporaryDirectory(prefix="nfl-edge-task05f-start-") as tmp:
+            out = Path(tmp)
+            # The accepted standard 2025 workflow performs this same materialization
+            # before execution. Suppress the runner scorecard here so this one-time
+            # state materializer emits only its own bounded status output.
+            with contextlib.redirect_stdout(io.StringIO()):
+                task05f.run(
+                    root,
+                    root / "config/task05f_evaluator_final_v1.yaml",
+                    out,
+                )
+            board_path = out / "historical_evaluator_board.parquet"
+            state_path = out / "frozen_evaluator_state.json"
+            board_sha = _sha256(board_path)
+            state_sha = _sha256(state_path)
+            if board_sha != EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256:
+>               raise Entering2026ProductStateError(
+                    "accepted Task05F historical board SHA drift: "
+                    f"{board_sha} != {EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256}"
+                )
+E               nfl_edge.live.product_state_2026.Entering2026ProductStateError: accepted Task05F historical board SHA drift: befd4a1b8a3c41790f10410f4e5ef798e4d3aa979b2331874aece64acd78f6e3 != 58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8
+
+src/nfl_edge/live/product_state_2026.py:153: Entering2026ProductStateError
+______ test_week2_product_uses_week2_identity_and_preserves_pending_roof _______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-2/test_week2_product_uses_week2_0')
+
+    def test_week2_product_uses_week2_identity_and_preserves_pending_roof(tmp_path):
+        schedule = json.loads(SCHEDULE.read_text())
+        schedule["week"] = 2
+        schedule["schedule_version"] = "synthetic-week2"
+        for row in schedule["games"]:
+            row["week"] = 2
+            row["game_id"] = str(row["game_id"]).replace("2026_01_", "2026_02_", 1)
+    
+>       state_payload = materialize_entering_2026_product_state(ROOT)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/live/test_live_product_2026.py:237: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/nfl_edge/live/product_state_2026.py:381: in materialize_entering_2026_product_state
+    historical_board, frozen_2024 = _materialize_task05f_starting_evidence(root, task05f)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+root = PosixPath('/workspace/scratch/bd9c423b9e9d/nfl-recovery')
+task05f = <module 'live_2026_task05f' from '/workspace/scratch/bd9c423b9e9d/nfl-recovery/scripts/task05f_evaluator_final_runner.py'>
+
+    def _materialize_task05f_starting_evidence(
+        root: Path, task05f: Any
+    ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+        """Reproduce the exact Task05F state/board used to open standard 2025."""
+        with tempfile.TemporaryDirectory(prefix="nfl-edge-task05f-start-") as tmp:
+            out = Path(tmp)
+            # The accepted standard 2025 workflow performs this same materialization
+            # before execution. Suppress the runner scorecard here so this one-time
+            # state materializer emits only its own bounded status output.
+            with contextlib.redirect_stdout(io.StringIO()):
+                task05f.run(
+                    root,
+                    root / "config/task05f_evaluator_final_v1.yaml",
+                    out,
+                )
+            board_path = out / "historical_evaluator_board.parquet"
+            state_path = out / "frozen_evaluator_state.json"
+            board_sha = _sha256(board_path)
+            state_sha = _sha256(state_path)
+            if board_sha != EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256:
+>               raise Entering2026ProductStateError(
+                    "accepted Task05F historical board SHA drift: "
+                    f"{board_sha} != {EXPECTED_TASK05F_HISTORICAL_BOARD_SHA256}"
+                )
+E               nfl_edge.live.product_state_2026.Entering2026ProductStateError: accepted Task05F historical board SHA drift: befd4a1b8a3c41790f10410f4e5ef798e4d3aa979b2331874aece64acd78f6e3 != 58302290e4dc98d6db13e8e8a46c148e8c58533b2c9930370262982be06ce2a8
+
+src/nfl_edge/live/product_state_2026.py:153: Entering2026ProductStateError
+=============================== warnings summary ===============================
+tests/live/test_live_2026_scoring.py: 22 warnings
+  /workspace/scratch/bd9c423b9e9d/nfl-recovery/src/nfl_edge/holdout/totals_features_2025.py:241: DeprecationWarning: the default behavior of `how='horizontal'` for `concat` is deprecated and will require equal heights in the next breaking release. Use `how='horizontal_extend'` to keep the current behavior.
+  (Deprecated in version 1.42.1)
+    model_frame = pl.concat([identity, features], how="horizontal").with_columns(
+
+tests/live/test_live_2026_scoring.py::test_real_week1_schedule_scores_available_models_deterministically
+tests/live/test_live_2026_scoring.py::test_resolved_retractable_roof_selects_frozen_scenario[OPEN-open]
+tests/live/test_live_2026_scoring.py::test_resolved_retractable_roof_selects_frozen_scenario[CLOSED-closed]
+  /workspace/scratch/bd9c423b9e9d/nfl-recovery/src/nfl_edge/live/totals_features.py:86: DeprecationWarning: the default behavior of `how='horizontal'` for `concat` is deprecated and will require equal heights in the next breaking release. Use `how='horizontal_extend'` to keep the current behavior.
+  (Deprecated in version 1.42.1)
+    model_frame = pl.concat([identity, features], how="horizontal").with_columns(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/live/test_live_2026_scoring.py::test_real_week1_schedule_scores_available_models_deterministically
+FAILED tests/live/test_live_2026_scoring.py::test_resolved_retractable_roof_selects_frozen_scenario[OPEN-open]
+FAILED tests/live/test_live_2026_scoring.py::test_resolved_retractable_roof_selects_frozen_scenario[CLOSED-closed]
+FAILED tests/live/test_live_product_2026.py::test_entering_2026_state_reconstructs_accepted_2024_parity_and_resets_value
+FAILED tests/live/test_live_product_2026.py::test_full_fixture_product_validates_and_replays_identically
+FAILED tests/live/test_live_product_2026.py::test_week2_product_uses_week2_identity_and_preserves_pending_roof
+6 failed, 104 passed, 25 warnings in 214.05s (0:03:34)
