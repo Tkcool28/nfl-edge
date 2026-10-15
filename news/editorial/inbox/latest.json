@@ -1,14 +1,14 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-10-14T00:20:15Z",
- "research_generated_at_utc": "2026-10-14T00:20:15Z",
+ "submitted_at_utc": "2026-10-15T00:28:31Z",
+ "research_generated_at_utc": "2026-10-15T00:28:31Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-10-14T00:20:15Z",
-  "research_generated_at_utc": "2026-10-14T00:20:15Z",
+  "published_at_utc": "2026-10-15T00:28:31Z",
   "edition": "Evening Brief",
-  "title": "NFL EDGE Tuesday Evening Brief",
-  "dek": "Caleb Williams is trending toward a Sunday return, the Ravens wait on Lamar, and Thursday's total is drifting down ahead of kickoff.",
+  "title": "NFL EDGE Wednesday Evening Brief",
+  "dek": "The Week 6 board still hasn't landed, Thursday night's number keeps moving, and the quarterback picture cleared in Chicago while staying murky in Baltimore.",
+  "research_generated_at_utc": "2026-10-15T00:28:31Z",
   "sections": [
    {
     "id": "what-matters",
@@ -16,73 +16,101 @@
     "icon": "📰",
     "items": [
      {
-      "headline": "Caleb Williams trending toward a Sunday return",
+      "headline": "The Week 6 board still hasn't landed",
       "paragraphs": [
-       "The biggest quarterback story of the day is in Chicago. Ian Rapoport reported Monday that all signs point to Caleb Williams being back on the field this week for the Bears' trip to Atlanta. Head coach Ben Johnson called Williams 'on track' — then hedged, adding he thinks it's going to be close.",
-       "The market heard the optimistic part. Chicago flipped from a 1.5-point underdog at open to a 3-point favorite, now -120 to cover the spread. That's a 4.5-point swing on one quarterback's hamstring.",
-       "One honest flag: the app's quarterback feed still lists Tyson Bagent as Chicago's expected starter. The optimism hasn't reached the board yet. Until it does, the app is pricing a different game — which is exactly when you run Check with your book's line instead of trusting a stale number."
+       "The app is still serving Monday's final Week 5 board. The board refreshes every morning and evening, but as of this evening's check the Week 6 card, Week 6 lines, and the Week 6 quarterback snapshot are all still missing.",
+       "That matters tonight because Week 6 kicks off tomorrow. The news below is current; the app's Week 6 numbers are not. Do not read Monday's card as advice for tomorrow's game."
       ],
-      "takeaway": "Williams is trending yes, not official yet — bet the practice reports, not the rumor.",
+      "takeaway": "Board is stale, news is fresh — use the news to get ready, then wait for the flip before you touch a price.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-williams-return",
-       "ev-app-board-pm"
+       "ev-board-stale"
       ],
       "sources": [
        {
-        "label": "For The Win: Rapoport 'all signs point' to Williams Week 6",
-        "url": "https://ftw.usatoday.com/story/sports/nfl/2026/10/12/caleb-williams-week-6-injury-update-nfl-insider-drops-major-hint/92217000007/"
-       },
-       {
-        "label": "SI Betting: Bears flip to -3 favorites on Williams optimism",
-        "url": "https://www.si.com/betting/optimistic-caleb-williams-injury-update-boosts-bears-odds-vs-falcons-in-nfl-week-6"
+        "label": "NFL EDGE product API (live)",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
       ]
      },
      {
-      "headline": "Two more QB watches: Penix and Lamar",
+      "headline": "Williams practices in full; Penix good to go for Chicago-Atlanta",
       "paragraphs": [
-       "Michael Penix Jr.'s rib injury is not considered serious, per Adam Schefter. He might play Sunday against the Bears, but Atlanta wants to see him practice this week before deciding. If he can't go, it's Tua Tagovailoa again.",
-       "Lamar Jackson is 'definitely doing better,' per head coach Jesse Minter — but Minter couldn't guarantee anything for Sunday in Cleveland, not even Wednesday practice. Still no official word.",
-       "The app feed still shows Tyler Huntley as Baltimore's expected starter. Same deal as Chicago: the board is pricing the backup until the starter is official. Watch Wednesday and Thursday practice participation — that's the real signal. Final inactive lists land about 90 minutes before kickoff."
+       "Caleb Williams was a full participant on Wednesday's estimated report. The Bears held a walkthrough, so the listing is an estimate — but it's a strong sign he starts Sunday in Atlanta after missing three games with a hamstring strain.",
+       "On the other sideline, Michael Penix Jr. practiced in full and says he's good to go after leaving last week with a rib injury. Both starting quarterbacks trending yes for Sunday's 1 p.m. ET kickoff."
       ],
-      "takeaway": "Penix a maybe, Lamar still a mystery — the app hasn't flipped on either.",
+      "takeaway": "Two starting QBs trending yes — bet the practice reports, not the rumor, and re-check Friday's designations.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-penix-lamar",
-       "ev-app-board-pm"
+       "ev-williams-fp"
       ],
       "sources": [
        {
-        "label": "SI: Schefter — Penix rib not serious, could play Week 6",
-        "url": "https://www.si.com/nfl/falcons/onsi/michael-penix-jr-injury-update-adam-schefter-provides-latest-on-falcons-qb"
+        "label": "Covers: Caleb Williams full practice Wednesday",
+        "url": "https://www.covers.com/nfl/when-will-caleb-williams-return-2026"
        },
        {
-        "label": "Bolavip: Minter positive on Lamar, can't guarantee Browns game",
-        "url": "https://bolavip.com/en/nfl/ravens-jesse-minter-gives-positive-injury-update-on-lamar-jackson-still-cant-guarantee-availability-vs-browns"
+        "label": "Falcons Wire: Penix full, good to go; Williams full",
+        "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/10/14/falcons-bears-michael-penix-caleb-williams-week-6/92252457007/"
        }
       ]
      },
      {
-      "headline": "Thursday: Seahawks at Broncos kicks off Week 6",
+      "headline": "Lamar sits out Wednesday; Ravens get bodies back elsewhere",
       "paragraphs": [
-       "Seattle visits Denver on Thursday night — 8:15 p.m. ET kickoff at Empower Field at Mile High, on Prime Video. The Seahawks are 2.5-point favorites at DraftKings (-118), with Denver +2.5 (-102).",
-       "Denver weather Thursday: morning rain, then clearing by evening. Low around 34 degrees, wind out of the southwest near 8 mph at kickoff time. That's the forecast, plain and simple — not an edge, just the conditions.",
-       "Thursday game? Thursday check. The Week 6 card lands when the board flips, and this is the first game on it."
+       "Lamar Jackson officially did not practice Wednesday with the ankle injury. Coach Jesse Minter called him day-to-day and wouldn't guess on Sunday; Schefter reports a 'realistic chance' he plays at Cleveland. Tyler Huntley starts again if he can't.",
+       "Elsewhere in Baltimore: Trey Hendrickson practiced in full, rookie receiver Ja'Kobi Lane was activated from injured reserve, new center Cam Jurgens was limited while finishing concussion protocol, and Rashod Bateman was limited with a shoulder but is expected to play."
       ],
-      "takeaway": "Week 6 starts Thursday in Denver. Thursday game? Thursday check.",
+      "takeaway": "Lamar is the swing piece — everything else in Baltimore is trending toward available.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-lamar-dnp",
+       "ev-ravens-practice"
+      ],
+      "sources": [
+       {
+        "label": "NBC Sports/PFT: Lamar remains out Wednesday",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/lamar-jackson-remains-out-of-practice-wednesday"
+       },
+       {
+        "label": "Ravens Wire: practice report Wednesday",
+        "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/10/14/ravens-browns-injury-update-lamar-jackson-hendrickson-lane-jurgens-week-6/92251126007/"
+       }
+      ]
+     },
+     {
+      "headline": "Thursday night: cold and clear",
+      "paragraphs": [
+       "Thursday night at the stadium looks like football weather with a coat: mostly clear skies, a low around 35 degrees, a light northeast wind, and no precipitation in the forecast. The daytime rain clears out well before kickoff.",
+       "Just facts — cold and clear is a long way from a weather edge."
+      ],
+      "takeaway": "No weather excuse at kickoff tomorrow — dress warm, bet the number.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-denver-weather"
+      ],
+      "sources": [
+       {
+        "label": "weather.com: game-day forecast",
+        "url": "https://weather.com/us/co/city/denver/tenday"
+       }
+      ]
+     },
+     {
+      "headline": "Week 6 starts tomorrow: Seahawks at Broncos",
+      "paragraphs": [
+       "Thursday Night Football: Seattle visits the Broncos for the 8:15 p.m. ET kickoff. The Seahawks sit 3-2 after the San Francisco shootout; the Broncos are 3-2 after an ugly win over the Chargers.",
+       "Thursday game? Thursday check — prep tonight, decide tomorrow when the number is final."
+      ],
+      "takeaway": "One game tomorrow, the whole slate Sunday — tonight is for prep, not for picking.",
       "editorial_only": false,
       "evidence_ids": [
        "ev-tnf"
       ],
       "sources": [
        {
-        "label": "SI Betting: Seahawks-Broncos odds, spread, trends",
-        "url": "https://www.si.com/betting/seahawks-vs-broncos-prediction-odds-spread-injuries-trends-for-nfl-week-6-2026"
-       },
-       {
-        "label": "Weather.com: Denver 10-day forecast",
-        "url": "https://weather.com/us/colorado/city/denver/tenday"
+        "label": "Covers: Seahawks vs Broncos prediction",
+        "url": "https://www.covers.com/nfl/seahawks-vs-broncos-prediction-picks-oct-15-2026"
        }
       ]
      }
@@ -94,49 +122,57 @@
     "icon": "💡",
     "items": [
      {
-      "headline": "Both Week 5 cards cashed — here's the read",
+      "headline": "No Week 6 card yet — here's the play",
       "paragraphs": [
-       "The Hit Rate card was on Buffalo's moneyline at +154. The app's model gave the Bills a 57.3% chance against the market's 37.5%. The underdog won outright in overtime. That's what the Hit Rate lane is for — it chases the win, not the value. The app's own tutorial says Hit Rate is not Profit Rate, and that's not a knock. Last night it did exactly its job.",
-       "The Balanced card took Buffalo +3.5 at -115, the middle ground: a strong pick without paying too much. The model had it at 50.5% against the market's 48.6%. It cashed with room to spare.",
-       "The Value lane sat the week out — no offer met its contract. Some weeks the disciplined move is no move at all."
+       "The app's card, the Hit Rate pick, the Balanced pick, the Value play — none of them exist for Week 6 yet, because the board hasn't flipped. When it does, the model's Week 6 probabilities land with it.",
+       "Until then, the Check function is your card. Tap Check, type in the live line and price at your book, and the app runs it back through the model and the evaluator and gives you a bet-or-no-bet verdict on YOUR price. Full re-evaluation, not a blind override."
       ],
-      "takeaway": "Hit Rate chased the win and found it; Balanced took the points and covered.",
+      "takeaway": "Stale board? Don't sit out — Check the live number and let the app price it fresh.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-app-board-pm"
+       "ev-board-stale"
       ],
-      "sources": []
+      "sources": [
+       {
+        "label": "NFL EDGE product API (live)",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       }
+      ]
      },
      {
-      "headline": "The Week 6 card isn't on the board yet — here's the plan",
+      "headline": "How to use a move the app hasn't seen",
       "paragraphs": [
-       "The app refreshed this evening and it's still showing Week 5. The Week 6 slate — Thursday night first — lands when the board flips, and the card re-runs on the new numbers then.",
-       "Until then, don't bet Monday's numbers blind. And if your book isn't showing DK or FD prices, that's what Check is for: type in your book's line and price, and the app runs it back through the model and the evaluator and gives you a bet-or-no-bet verdict on your price. Full re-evaluation, not a blind override.",
-       "The board refreshes every morning and evening. When it flips to Week 6, the Thursday card will be waiting."
+       "Seattle opened -1.5 and is -2.5 to -3 now. That move happened while the app was asleep — it's the market's early opinion, not the model's. When the Week 6 card lands, the first thing to do is compare: did the model agree with the move, or did the market run past it?",
+       "That's the whole game on a stale board: the news and the moves are tonight's information, the card is tomorrow's judge. Let each do its job."
       ],
-      "takeaway": "Report the news first, then use it: the Week 6 card lands on the flip — Check makes it your number.",
+      "takeaway": "Moves are information, the card is the judge — compare the two when the board flips.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-app-board-pm"
+       "ev-tnf-moves"
       ],
-      "sources": []
+      "sources": [
+       {
+        "label": "RotoWire: Week 6 biggest line moves",
+        "url": "https://www.rotowire.com/football/article/nfl-week-6-odds-biggest-line-moves-betting-splits-and-key-injuries-140948"
+       }
+      ]
      }
     ]
    },
    {
     "id": "fade",
     "title": "Learn the Game",
-    "icon": "⚖️",
     "mode": "learning",
+    "icon": "⚖️",
     "items": [
      {
-      "headline": "Learn the Game: steam move",
+      "headline": "Learn the Game: reverse line movement",
       "paragraphs": [
-       "Hypothetical example, clearly labeled as hypothetical: imagine a team's line opens at -3 on Monday morning. By Thursday it's -5, and there's been no injury news at all. Bettors call that a steam move — the market sprinting one direction on heavy, respected action.",
-       "Why it matters: steam usually means sharp money hit the same side at multiple books, fast. But here's the catch — the price you get after the steam is not the price the steam got. Chasing a move after it's already run is paying retail for someone else's wholesale ticket.",
-       "Our Fade rule needs a verified tickets-vs-handle split plus corroboration before it becomes a real play. I checked the free splits row tonight: tickets and handle were on the same side in every market, so no split qualified — the classroom stays open."
+       "Some bettors watch the line, not just the price. A reverse line move is when the line moves the opposite way from the betting: most of the bets land on one side, but the number drifts toward the other.",
+       "Clearly labeled hypothetical: say 70 out of 100 bets are on the Falcons -3, yet the line drops to Falcons -2.5. The crowd picked Atlanta, but the line moved Carolina's way — a hint that the money disagreed with the crowd.",
+       "It's a clue, not a pick. Books move lines for lots of reasons, and a move alone never tells you the right side. Pair it with the app's number before you touch it."
       ],
-      "takeaway": "Steam tells you where the money went, not where the value is — the number you can actually bet is the only one that matters.",
+      "takeaway": "A line moving against the bet count is a clue about the money, not a command — always check it against the app's number.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -149,61 +185,88 @@
     "icon": "👀",
     "items": [
      {
-      "headline": "Bears swing 4.5 points on Williams optimism",
+      "headline": "Seattle steaming toward -3, Thursday total sliding",
       "paragraphs": [
-       "This is the move of the day. Chicago opened as a 1.5-point underdog at Atlanta and is now a 3-point favorite, -120 to cover. The entire swing is Caleb Williams optimism — Rapoport's 'all signs point' report plus Johnson's 'on track.'",
-       "The app hasn't caught it: the board is still Week 5 and the quarterback feed still shows Bagent. If you like Chicago at the new number, run it through Check with your book's actual line and price — the app re-evaluates at your number, not Monday's."
+       "The Seahawks opened -1.5 on the road and are now -2.5 to -3, sitting on the most important number in spread betting. The total fell from 43 to 40.5 — a meaningful slide for a Thursday game.",
+       "The app hasn't priced any of this yet; the Week 6 board is still missing. If your book is hanging something different from -2.5 or 40.5, run it through Check — that's exactly the spot the function was built for."
       ],
-      "takeaway": "A 4.5-point quarterback swing the app hasn't priced yet. Shop the number you can actually bet.",
+      "takeaway": "Steam toward Seattle, total sliding — but the app hasn't weighed in yet, so Check the number you can actually bet.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-williams-return"
+       "ev-tnf-moves"
       ],
       "sources": [
        {
-        "label": "SI Betting: Bears flip to -3 favorites on Williams optimism",
-        "url": "https://www.si.com/betting/optimistic-caleb-williams-injury-update-boosts-bears-odds-vs-falcons-in-nfl-week-6"
-       }
-      ]
-     },
-     {
-      "headline": "Thursday total drifting down",
-      "paragraphs": [
-       "Seahawks-Broncos opened 42.5 and the total is sliding — 41.5 at some books now. The spread is steadier: Seattle -2.5 (-118 at DraftKings), with -3 available elsewhere. Denver's Thursday forecast shows morning rain clearing by evening, low in the mid-30s.",
-       "When the board flips to Week 6, the app prices the Thursday game at whatever the lines are then — not where they opened. That's the number that counts."
-      ],
-      "takeaway": "Total sliding, spread steady. The flip prices the current number, not the opener.",
-      "editorial_only": false,
-      "evidence_ids": [
-       "ev-tnf"
-      ],
-      "sources": [
-       {
-        "label": "Covers: Seahawks-Broncos early total lean, 42.5 to 41.5",
-        "url": "https://www.covers.com/nfl/seahawks-vs-broncos-prediction-picks-odds-early-leans-week-6-2026"
+        "label": "RotoWire: Week 6 biggest line moves",
+        "url": "https://www.rotowire.com/football/article/nfl-week-6-odds-biggest-line-moves-betting-splits-and-key-injuries-140948"
        },
        {
-        "label": "SI Betting: Seahawks-Broncos odds, spread, trends",
-        "url": "https://www.si.com/betting/seahawks-vs-broncos-prediction-odds-spread-injuries-trends-for-nfl-week-6-2026"
+        "label": "Covers: Seahawks vs Broncos odds",
+        "url": "https://www.covers.com/nfl/seahawks-vs-broncos-prediction-picks-oct-15-2026"
        }
       ]
      },
      {
-      "headline": "Ravens holding -4.5",
+      "headline": "Bears -3.5 at Atlanta on the Williams news",
       "paragraphs": [
-       "Baltimore moved from -3.5 to -4.5 on Monday's Lamar optimism and it's holding there at -110. But the optimism is still just optimism — Minter wouldn't confirm anything for Sunday, and the app still prices the game with Huntley.",
-       "If Lamar is confirmed, that number won't sit still. If he's out, -4.5 with Huntley off an overtime road win is a different conversation. Either way, Check re-runs it at your price."
+       "Chicago is -2.5 to -3.5 at Atlanta, the number tracking Caleb Williams' expected return from the Bagent price. A full practice Wednesday has the market pricing the starter, not the backup.",
+       "This is the quarterback swing the board hasn't caught: the app's QB snapshot still reflects last week's starters. Watch Friday's designations before trusting the number."
       ],
-      "takeaway": "Holding -4.5 on hope, not confirmation. News moves this one next.",
+      "takeaway": "The market is pricing Williams back — the app's QB feed isn't. Mind the gap until the board flips.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-chi-line",
+       "ev-williams-fp"
+      ],
+      "sources": [
+       {
+        "label": "RG: Week 6 best available prices",
+        "url": "https://rg.org/news/football/cowboys-vs-packers-chargers-vs-chiefs-nfl-week-6-odds-and-best-bets"
+       },
+       {
+        "label": "Covers: Caleb Williams full practice Wednesday",
+        "url": "https://www.covers.com/nfl/when-will-caleb-williams-return-2026"
+       }
+      ]
+     },
+     {
+      "headline": "Jaguars flip to favorites over Houston in London",
+      "paragraphs": [
+       "One of the week's biggest reversals: Jacksonville opened +1.5 and is now -2.5 against the Texans in London — a four-point swing and a complete change in the market's read of the matchup.",
+       "London games add travel and routine wrinkles, which is exactly the kind of thing the model's Week 6 numbers will have a view on. Until the card lands, the move itself is the information."
+      ],
+      "takeaway": "A four-point flip is the market changing its mind — let the card tell you whether it changed too far.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-jax-flip"
+      ],
+      "sources": [
+       {
+        "label": "RotoWire: Week 6 biggest line moves",
+        "url": "https://www.rotowire.com/football/article/nfl-week-6-odds-biggest-line-moves-betting-splits-and-key-injuries-140948"
+       }
+      ]
+     },
+     {
+      "headline": "Ravens holding -4.5 while Lamar sits",
+      "paragraphs": [
+       "Baltimore is still -4.5 at Cleveland even with Jackson a DNP on Wednesday. The line is holding on the hope of a return, not the confirmation of one.",
+       "If Jackson practices Thursday or Friday, this number is fine. If Huntley is announced, it won't be -4.5 for long. News moves this one next."
+      ],
+      "takeaway": "Holding -4.5 on hope, not confirmation — the next practice report is the trigger.",
       "editorial_only": false,
       "evidence_ids": [
        "ev-ravens-hold",
-       "ev-penix-lamar"
+       "ev-lamar-dnp"
       ],
       "sources": [
        {
-        "label": "SI Betting: Ravens vs Browns prediction, pick Ravens -4.5",
-        "url": "https://www.si.com/betting/ravens-vs-browns-prediction-odds-spread-injuries-trends-for-nfl-week-6-2026"
+        "label": "RG: Week 6 best available prices",
+        "url": "https://rg.org/news/football/cowboys-vs-packers-chargers-vs-chiefs-nfl-week-6-odds-and-best-bets"
+       },
+       {
+        "label": "NBC Sports: Lamar officially DNP Wednesday",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/lamar-jackson-officially-dnp-s-kyle-hamilton-fully-participated-wednesday"
        }
       ]
      }
@@ -217,10 +280,10 @@
      {
       "headline": "Thursday game? Thursday check.",
       "paragraphs": [
-       "The Week 6 card isn't on the board yet, so tonight's move is preparation, not action. When the board flips, open the Thursday game, and if your book's line differs from what the app shows, type yours into Check. The app runs your price back through the model and the evaluator and hands you a bet-or-no-bet verdict on the number you can actually get.",
-       "And the occasional honest nudge: settlement is manual — the tracker only works if you're honest with yourself. Log the losers too."
+       "One game tomorrow, and the board may flip before kickoff. When it does, don't bet Thursday's number off this brief — tap Check, type the live line and price, and get the verdict on the actual number.",
+       "And the standing nudge: settlement is manual, no auto-settle. The tracker only works if you're honest with yourself — log the losers too."
       ],
-      "takeaway": "Prep tonight, decide Thursday — and keep the tracker honest.",
+      "takeaway": "Prep tonight, Check tomorrow, and keep the tracker honest.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -231,75 +294,140 @@
  },
  "evidence": [
   {
-   "evidence_id": "ev-williams-return",
-   "category": "injury",
-   "fact": "Caleb Williams (hamstring, out since Week 2) is trending toward a Week 6 return at Atlanta: Ian Rapoport reported Monday 10/12 that 'all signs point to Caleb Williams being back on the field this week for Chicago'; Ben Johnson said Williams is 'on track' adding 'I think it's going to be close.' The betting line flipped from Falcons -1.5 at open to Bears -3 (-120 to cover) on the optimism.",
+   "evidence_id": "ev-board-stale",
+   "category": "app",
    "verification": "EXTERNAL_VERIFIED",
+   "fact": "NFL EDGE product endpoint still serves the Week 5 final board as of the 6:15pm check: week=5, generated_at_utc 2026-10-13T00:08:39Z (Monday evening); no Week 6 card, no Week 6 market board or QB snapshot.",
    "sources": [
     {
-     "label": "For The Win: Rapoport 'all signs point' to Williams Week 6",
-     "url": "https://ftw.usatoday.com/story/sports/nfl/2026/10/12/caleb-williams-week-6-injury-update-nfl-insider-drops-major-hint/92217000007/"
-    },
-    {
-     "label": "SI Betting: Bears flip to -3 favorites on Williams optimism",
-     "url": "https://www.si.com/betting/optimistic-caleb-williams-injury-update-boosts-bears-odds-vs-falcons-in-nfl-week-6"
+     "label": "NFL EDGE product API (live)",
+     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
     }
    ]
   },
   {
-   "evidence_id": "ev-penix-lamar",
+   "evidence_id": "ev-williams-fp",
    "category": "injury",
-   "fact": "Michael Penix Jr.'s rib injury is not considered serious (Adam Schefter, Monday 10/12); he 'might' play Sunday vs the Bears but Atlanta wants to see him practice this week, with Tua Tagovailoa the backup if not. Lamar Jackson: head coach Jesse Minter says he is 'definitely doing better' but could not guarantee availability vs the Browns or confirm Wednesday practice; still no official word.",
    "verification": "EXTERNAL_VERIFIED",
+   "fact": "Bears QB Caleb Williams (hamstring) was a full participant on Wednesday's estimated injury report (team held a walkthrough) after practicing in limited fashion Friday; trending toward a Sunday start at Atlanta. Falcons QB Michael Penix Jr. (ribs) was a full participant Wednesday and says he is good to go vs Chicago.",
    "sources": [
     {
-     "label": "SI: Schefter — Penix rib not serious, could play Week 6",
-     "url": "https://www.si.com/nfl/falcons/onsi/michael-penix-jr-injury-update-adam-schefter-provides-latest-on-falcons-qb"
+     "label": "Covers: Caleb Williams full practice Wednesday",
+     "url": "https://www.covers.com/nfl/when-will-caleb-williams-return-2026"
     },
     {
-     "label": "Bolavip: Minter positive on Lamar, can't guarantee Browns game",
-     "url": "https://bolavip.com/en/nfl/ravens-jesse-minter-gives-positive-injury-update-on-lamar-jackson-still-cant-guarantee-availability-vs-browns"
+     "label": "Falcons Wire: Penix full, good to go; Williams full",
+     "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/10/14/falcons-bears-michael-penix-caleb-williams-week-6/92252457007/"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-lamar-dnp",
+   "category": "injury",
+   "verification": "EXTERNAL_VERIFIED",
+   "fact": "Ravens QB Lamar Jackson (ankle) officially did not practice Wednesday; head coach Jesse Minter called him day-to-day. ESPN's Adam Schefter reported a 'realistic chance' Jackson plays Sunday at Cleveland; Tyler Huntley would start again if he cannot.",
+   "sources": [
+    {
+     "label": "NBC Sports/PFT: Lamar remains out Wednesday",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/lamar-jackson-remains-out-of-practice-wednesday"
+    },
+    {
+     "label": "NBC Sports: Lamar officially DNP Wednesday",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/lamar-jackson-officially-dnp-s-kyle-hamilton-fully-participated-wednesday"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-ravens-practice",
+   "category": "injury",
+   "verification": "EXTERNAL_VERIFIED",
+   "fact": "Ravens Wednesday: edge rusher Trey Hendrickson (finger) full participant; rookie WR Ja'Kobi Lane activated from IR and full; newly acquired C Cam Jurgens (concussion protocol) limited; WR Rashod Bateman (shoulder) limited but Minter expects him to play Sunday at Cleveland.",
+   "sources": [
+    {
+     "label": "Ravens Wire: practice report Wednesday",
+     "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/10/14/ravens-browns-injury-update-lamar-jackson-hendrickson-lane-jurgens-week-6/92251126007/"
     }
    ]
   },
   {
    "evidence_id": "ev-tnf",
-   "category": "market",
-   "fact": "Thursday Night Football Week 6: Seahawks at Broncos, Empower Field at Mile High, Denver, kickoff 8:15 p.m. ET Thursday Oct 15 (Prime Video). DraftKings: Seahawks -2.5 (-118), Broncos +2.5 (-102); total opened 42.5, now 41.5 at some books. Denver forecast Thursday: morning rain (70%, ~0.12 in), clearing by evening, low 34F, wind SW ~8 mph.",
+   "category": "schedule",
    "verification": "EXTERNAL_VERIFIED",
+   "fact": "Week 6 kicks off Thursday night: Seahawks at Broncos, 8:15 p.m. ET kickoff.",
    "sources": [
     {
-     "label": "SI Betting: Seahawks-Broncos odds, spread, trends",
-     "url": "https://www.si.com/betting/seahawks-vs-broncos-prediction-odds-spread-injuries-trends-for-nfl-week-6-2026"
+     "label": "Covers: Seahawks vs Broncos prediction",
+     "url": "https://www.covers.com/nfl/seahawks-vs-broncos-prediction-picks-oct-15-2026"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-tnf-moves",
+   "category": "market",
+   "verification": "EXTERNAL_VERIFIED",
+   "fact": "SEA@DEN moved from Seahawks -1.5 at open to -2.5/-3; total fell from 43 to 40.5. Best current prices listed: DEN +2.5 -102 (FD), Under 40.5 -105 (FD).",
+   "sources": [
+    {
+     "label": "RotoWire: Week 6 biggest line moves",
+     "url": "https://www.rotowire.com/football/article/nfl-week-6-odds-biggest-line-moves-betting-splits-and-key-injuries-140948"
     },
     {
-     "label": "Covers: Seahawks-Broncos early total lean, 42.5 to 41.5",
-     "url": "https://www.covers.com/nfl/seahawks-vs-broncos-prediction-picks-odds-early-leans-week-6-2026"
+     "label": "Covers: Seahawks vs Broncos odds",
+     "url": "https://www.covers.com/nfl/seahawks-vs-broncos-prediction-picks-oct-15-2026"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-chi-line",
+   "category": "market",
+   "verification": "EXTERNAL_VERIFIED",
+   "fact": "Bears -2.5 to -3.5 at Falcons, the number tracking Williams' expected return from the Bagent price.",
+   "sources": [
+    {
+     "label": "RG: Week 6 best available prices",
+     "url": "https://rg.org/news/football/cowboys-vs-packers-chargers-vs-chiefs-nfl-week-6-odds-and-best-bets"
     },
     {
-     "label": "Weather.com: Denver 10-day forecast",
-     "url": "https://weather.com/us/colorado/city/denver/tenday"
+     "label": "Covers: Week 6 odds board",
+     "url": "https://www.covers.com/nfl/week-6-odds-opening-lines-2026"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-jax-flip",
+   "category": "market",
+   "verification": "EXTERNAL_VERIFIED",
+   "fact": "Jaguars flipped from +1.5 underdogs at open to -2.5 favorites vs Texans (London); a four-point market reversal.",
+   "sources": [
+    {
+     "label": "RotoWire: Week 6 biggest line moves",
+     "url": "https://www.rotowire.com/football/article/nfl-week-6-odds-biggest-line-moves-betting-splits-and-key-injuries-140948"
     }
    ]
   },
   {
    "evidence_id": "ev-ravens-hold",
    "category": "market",
-   "fact": "Ravens -4.5 (-110, FanDuel) at the Browns is holding after Monday's move from -3.5; Jackson still has no official Week 6 word.",
    "verification": "EXTERNAL_VERIFIED",
+   "fact": "Ravens -4.5 at Browns holding (best CLE +4.5 -108 DK) even with Jackson a DNP Wednesday.",
    "sources": [
     {
-     "label": "SI Betting: Ravens vs Browns prediction, pick Ravens -4.5",
-     "url": "https://www.si.com/betting/ravens-vs-browns-prediction-odds-spread-injuries-trends-for-nfl-week-6-2026"
+     "label": "RG: Week 6 best available prices",
+     "url": "https://rg.org/news/football/cowboys-vs-packers-chargers-vs-chiefs-nfl-week-6-odds-and-best-bets"
     }
    ]
   },
   {
-   "evidence_id": "ev-app-board-pm",
-   "category": "app",
-   "fact": "App board refreshed 2026-10-13T00:08:39Z (6:08 p.m. Denver), FRESH, still Week 5. Hit Rate: Bills ML +154 (DK), model 57.27% vs market 37.53%, EV -0.042, 0.5u, MEDIUM — cashed (Bills 37, Rams 34 OT). Balanced: Bills +3.5 -115 (DK), model 50.50% vs market 48.61%, EV -0.037, 0.75u, MEDIUM — cashed. Value: NO_PLAY. QB feed expected starters still Tyson Bagent (CHI) and Tyler Huntley (BAL); Jameis Winston (NYG).",
-   "verification": "INTERNAL_CANONICAL",
-   "sources": []
+   "evidence_id": "ev-denver-weather",
+   "category": "weather",
+   "verification": "EXTERNAL_VERIFIED",
+   "fact": "Thursday night: mostly clear, low around 35F, NE wind about 6 mph, zero wintry precipitation chance. Thursday daytime rain (AM, high 55F) clears before kickoff.",
+   "sources": [
+    {
+     "label": "weather.com: game-day forecast",
+     "url": "https://weather.com/us/co/city/denver/tenday"
+    }
+   ]
   }
  ]
 }
