@@ -7,7 +7,7 @@ import io
 import json
 import os
 import tempfile
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 from zoneinfo import ZoneInfo
@@ -15,7 +15,7 @@ from zoneinfo import ZoneInfo
 import requests
 
 from .nflverse_2026_identity import NFLVerse2026IdentityError, canonical_team
-from .schedule_2026 import LiveScheduleError, rollover_at_utc, validate_schedule
+from .schedule_2026 import DENVER, ROLLOVER_LOCAL_TIME, LiveScheduleError, validate_schedule
 from .venue_structure_2026 import VenueStructure2026Error, structure_for_blank_roof
 
 NFLVERSE_GAMES_URL = "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv"
@@ -40,7 +40,12 @@ def _utc(value: str) -> datetime:
 def _required(row: Mapping[str, Any], field: str) -> str:
     value = str(row.get(field) or "").strip()
     if not value:
-        raise ScheduleMaterializationError(f"nflverse row is missing required {field}")
+        raise ScheduleMaterializationError(
+            f"nflverse row is missing required {field} "
+            f"(season={row.get('season')!r}, week={row.get('week')!r}, "
+            f"away={row.get('away_team')!r}, home={row.get('home_team')!r}, "
+            f"stadium_id={row.get('stadium_id')!r})"
+        )
     return value
 
 
@@ -170,20 +175,52 @@ def choose_active_schedule(
     observed_at_utc: str,
 ) -> dict[str, Any]:
     now = _utc(active_as_of_utc)
-    candidates: list[dict[str, Any]] = []
-    for week in range(1, 19):
+    # Week selection needs only source identity and kickoff time. Requiring
+    # complete venue/context data for weeks we are not publishing lets a
+    # future incomplete nflverse row block the active betting product.
+    by_week: dict[int, list[Mapping[str, Any]]] = {}
+    for row in rows:
+        if str(row.get("season") or "") != str(season):
+            continue
+        if str(row.get("game_type") or "").upper() != "REG":
+            continue
+        raw_week = str(row.get("week") or "")
         try:
-            payload = build_week_schedule(rows, season=season, week=week, observed_at_utc=observed_at_utc)
-        except ScheduleMaterializationError as exc:
-            if "has no" in str(exc):
-                continue
-            raise
-        if rollover_at_utc(payload) <= now:
-            candidates.append(payload)
-    if not candidates:
-        raise ScheduleMaterializationError(f"no {season} regular-season week is active at {active_as_of_utc}")
-    return max(candidates, key=lambda payload: int(payload["week"]))
+            week = int(raw_week)
+        except ValueError as exc:
+            raise ScheduleMaterializationError(
+                f"invalid {season} REG week {raw_week!r}"
+            ) from exc
+        if not 1 <= week <= 18:
+            raise ScheduleMaterializationError(f"invalid {season} REG week {week}")
+        by_week.setdefault(week, []).append(row)
 
+    eligible: list[int] = []
+    for week, week_rows in by_week.items():
+        # Only kickoff coordinates are needed to locate the Tuesday boundary.
+        # Surface, rest, roof and venue are validated for the selected week.
+        first_kickoff = min(_utc(_kickoff_utc(row)) for row in week_rows)
+        local = first_kickoff.astimezone(DENVER)
+        days_since_tuesday = (local.weekday() - 1) % 7
+        rollover_date = (local - timedelta(days=days_since_tuesday)).date()
+        rollover = datetime.combine(
+            rollover_date, ROLLOVER_LOCAL_TIME, tzinfo=DENVER
+        ).astimezone(timezone.utc)
+        if rollover <= now:
+            eligible.append(week)
+
+    if not eligible:
+        raise ScheduleMaterializationError(
+            f"no {season} regular-season week is active at {active_as_of_utc}"
+        )
+    # Validate every required field of the *active* slate, and fail closed if
+    # it is incomplete. Never substitute surface, roof or other football data.
+    return build_week_schedule(
+        by_week[max(eligible)],
+        season=season,
+        week=max(eligible),
+        observed_at_utc=observed_at_utc,
+    )
 
 def fetch_nflverse_rows(*, session: requests.Session | None = None) -> list[dict[str, str]]:
     client = session or requests.Session()
