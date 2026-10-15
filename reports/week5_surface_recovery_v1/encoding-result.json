@@ -1,0 +1,162 @@
+{
+  "source_modeling_table_sha256": "c379e6a933054248f8da331839e619479a95e56003c27681370114abe353a4cc",
+  "accepted_candidate": "R4",
+  "predictor_count": 90,
+  "source_predictor_rows": 1942,
+  "target_columns_read": [],
+  "predictive_model_fit_calls": 0,
+  "network_requests": 0,
+  "surface_columns": [
+    "categorical__surface_category_",
+    "categorical__surface_category_a_turf",
+    "categorical__surface_category_astroturf",
+    "categorical__surface_category_fieldturf",
+    "categorical__surface_category_grass",
+    "categorical__surface_category_grass ",
+    "categorical__surface_category_matrixturf",
+    "categorical__surface_category_sportturf"
+  ],
+  "encoded_vectors": {
+    "grass": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "a_turf": [
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fieldturf": [
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "matrixturf": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    "sportturf": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "astroturf": [
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "artificial": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "pairwise_surface_L1_distance": {
+    "grass": {
+      "grass": 0.0,
+      "a_turf": 2.0,
+      "fieldturf": 2.0,
+      "matrixturf": 2.0,
+      "sportturf": 2.0,
+      "astroturf": 2.0,
+      "artificial": 1.0
+    },
+    "a_turf": {
+      "grass": 2.0,
+      "a_turf": 0.0,
+      "fieldturf": 2.0,
+      "matrixturf": 2.0,
+      "sportturf": 2.0,
+      "astroturf": 2.0,
+      "artificial": 1.0
+    },
+    "fieldturf": {
+      "grass": 2.0,
+      "a_turf": 2.0,
+      "fieldturf": 0.0,
+      "matrixturf": 2.0,
+      "sportturf": 2.0,
+      "astroturf": 2.0,
+      "artificial": 1.0
+    },
+    "matrixturf": {
+      "grass": 2.0,
+      "a_turf": 2.0,
+      "fieldturf": 2.0,
+      "matrixturf": 0.0,
+      "sportturf": 2.0,
+      "astroturf": 2.0,
+      "artificial": 1.0
+    },
+    "sportturf": {
+      "grass": 2.0,
+      "a_turf": 2.0,
+      "fieldturf": 2.0,
+      "matrixturf": 2.0,
+      "sportturf": 0.0,
+      "astroturf": 2.0,
+      "artificial": 1.0
+    },
+    "astroturf": {
+      "grass": 2.0,
+      "a_turf": 2.0,
+      "fieldturf": 2.0,
+      "matrixturf": 2.0,
+      "sportturf": 2.0,
+      "astroturf": 0.0,
+      "artificial": 1.0
+    },
+    "artificial": {
+      "grass": 1.0,
+      "a_turf": 1.0,
+      "fieldturf": 1.0,
+      "matrixturf": 1.0,
+      "sportturf": 1.0,
+      "astroturf": 1.0,
+      "artificial": 0.0
+    }
+  },
+  "point_prediction_delta_formula": "With all other inputs and fitted state held fixed, y(B)-y(A)=coefficient(B)-coefficient(A). No coefficient or point magnitude measured here.",
+  "numeric_point_effect_measured": false,
+  "conclusion": "Separate turf label columns, not a grass/artificial collapse. Distinct columns can affect fitted predictions; this audit does not establish nonzero or practically important coefficient differences.",
+  "paid_provider_requests": 0,
+  "odds_api_called": false,
+  "market_data_read": false
+}
