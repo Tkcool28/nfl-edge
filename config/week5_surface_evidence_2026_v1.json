@@ -1,0 +1,313 @@
+{
+  "schema_version": "NFL_EDGE_WEEK5_SURFACE_EVIDENCE_V1",
+  "scope": "2026 REG Week 5 exact fourteen missing-source-surface games",
+  "original_raw_csv_sha256": "8b455c694bd589d0c16644438cb7fa8b9f5bde88dcb8fa6721bea03e13c90c02",
+  "games": [
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_PHI_JAX",
+      "canonical_game_id": "2026_05_PHI_JAX",
+      "gameday": "2026-10-11",
+      "away_team": "PHI",
+      "home_team": "JAX",
+      "stadium": "Tottenham Hotspur Stadium",
+      "stadium_id": "JAX00",
+      "surface": "artificial",
+      "verified_surface_class": "artificial",
+      "surface_subtype_known": false,
+      "source_urls": [
+        "https://www.tottenhamhotspurstadium.com/events/nfl-london-games"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "OFFICIAL_CATEGORY_USER_ACCEPTED_UNKNOWN_SUBTYPE",
+      "note": "User authorized one-game artificial/unknown-subtype input. Frozen encoder unchanged; no inference from JAX00."
+    },
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_CHI_GB",
+      "canonical_game_id": "2026_05_CHI_GB",
+      "gameday": "2026-10-11",
+      "away_team": "CHI",
+      "home_team": "GB",
+      "stadium": "Lambeau Field",
+      "stadium_id": "GNB00",
+      "surface": "grass",
+      "verified_surface_class": "grass",
+      "surface_subtype_known": true,
+      "source_urls": [
+        "https://sports.yahoo.com/articles/nfl-stadiums-real-grass-vs-120001662.html",
+        "https://www.packers.com/news/new-turf-ready-to-welcome-packers-into-2018-season"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "CONTEMPORARY_CATEGORY_AND_CANONICAL_LABEL",
+      "note": "Verified 2026 venue surface and existing canonical token; no historical majority substitution."
+    },
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_CIN_MIA",
+      "canonical_game_id": "2026_05_CIN_MIA",
+      "gameday": "2026-10-11",
+      "away_team": "CIN",
+      "home_team": "MIA",
+      "stadium": "Hard Rock Stadium",
+      "stadium_id": "MIA00",
+      "surface": "grass",
+      "verified_surface_class": "grass",
+      "surface_subtype_known": true,
+      "source_urls": [
+        "https://sports.yahoo.com/articles/nfl-stadiums-real-grass-vs-120001662.html"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "CONTEMPORARY_CATEGORY_AND_CANONICAL_LABEL",
+      "note": "Verified 2026 venue surface and existing canonical token; no historical majority substitution."
+    },
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_LV_NE",
+      "canonical_game_id": "2026_05_LV_NE",
+      "gameday": "2026-10-11",
+      "away_team": "LV",
+      "home_team": "NE",
+      "stadium": "Gillette Stadium",
+      "stadium_id": "BOS00",
+      "surface": "fieldturf",
+      "verified_surface_class": "artificial",
+      "surface_subtype_known": true,
+      "source_urls": [
+        "https://www.cbsnews.com/boston/news/gillette-stadium-turf-replacement-new-england-patriots-revolution/",
+        "https://www.pro-football-reference.com/stadiums/BOS00.htm",
+        "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/turf-debacle-in-new-england-prompts-fieldturf-victory-lap"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "CONTEMPORARY_CATEGORY_AND_CANONICAL_LABEL",
+      "note": "2026 FieldTurf reinstatement following temporary World Cup grass."
+    },
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_MIN_NO",
+      "canonical_game_id": "2026_05_MIN_NO",
+      "gameday": "2026-10-11",
+      "away_team": "MIN",
+      "home_team": "NO",
+      "stadium": "Caesars Superdome",
+      "stadium_id": "NOR00",
+      "surface": "sportturf",
+      "verified_surface_class": "artificial",
+      "surface_subtype_known": true,
+      "source_urls": [
+        "https://sports.yahoo.com/articles/nfl-stadiums-real-grass-vs-120001662.html",
+        "https://www.pro-football-reference.com/stadiums/NOR00.htm"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "CONTEMPORARY_CATEGORY_AND_CANONICAL_LABEL",
+      "note": "Verified 2026 venue surface and existing canonical token; no historical majority substitution."
+    },
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_CLE_NYJ",
+      "canonical_game_id": "2026_05_CLE_NYJ",
+      "gameday": "2026-10-11",
+      "away_team": "CLE",
+      "home_team": "NYJ",
+      "stadium": "MetLife Stadium",
+      "stadium_id": "NYC01",
+      "surface": "fieldturf",
+      "verified_surface_class": "artificial",
+      "surface_subtype_known": true,
+      "source_urls": [
+        "https://sports.yahoo.com/articles/nfl-stadiums-real-grass-vs-120001662.html",
+        "https://www.pro-football-reference.com/stadiums/NYC01.htm"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "CONTEMPORARY_CATEGORY_AND_CANONICAL_LABEL",
+      "note": "Verified 2026 venue surface and existing canonical token; no historical majority substitution."
+    },
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_IND_PIT",
+      "canonical_game_id": "2026_05_IND_PIT",
+      "gameday": "2026-10-11",
+      "away_team": "IND",
+      "home_team": "PIT",
+      "stadium": "Acrisure Stadium",
+      "stadium_id": "PIT00",
+      "surface": "grass",
+      "verified_surface_class": "grass",
+      "surface_subtype_known": true,
+      "source_urls": [
+        "https://sports.yahoo.com/articles/nfl-stadiums-real-grass-vs-120001662.html"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "CONTEMPORARY_CATEGORY_AND_CANONICAL_LABEL",
+      "note": "Verified 2026 venue surface and existing canonical token; no historical majority substitution."
+    },
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_HOU_TEN",
+      "canonical_game_id": "2026_05_HOU_TEN",
+      "gameday": "2026-10-11",
+      "away_team": "HOU",
+      "home_team": "TEN",
+      "stadium": "Nissan Stadium",
+      "stadium_id": "NAS00",
+      "surface": "matrixturf",
+      "verified_surface_class": "artificial",
+      "surface_subtype_known": true,
+      "source_urls": [
+        "https://sports.yahoo.com/articles/nfl-stadiums-real-grass-vs-120001662.html",
+        "https://www.tennesseetitans.com/news/why-the-titans-are-switching-to-turf-at-nissan-stadium-starting-in-2023"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "CONTEMPORARY_CATEGORY_AND_CANONICAL_LABEL",
+      "note": "Existing Nissan Stadium converted to Matrix Helix in 2023. New stadium opens 2027; historical grass is inapplicable."
+    },
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_NYG_WAS",
+      "canonical_game_id": "2026_05_NYG_WAS",
+      "gameday": "2026-10-11",
+      "away_team": "NYG",
+      "home_team": "WAS",
+      "stadium": "Northwest Stadium",
+      "stadium_id": "WAS00",
+      "surface": "grass",
+      "verified_surface_class": "grass",
+      "surface_subtype_known": true,
+      "source_urls": [
+        "https://sports.yahoo.com/articles/nfl-stadiums-real-grass-vs-120001662.html",
+        "https://www.pro-football-reference.com/stadiums/WAS00.htm"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "CONTEMPORARY_CATEGORY_AND_CANONICAL_LABEL",
+      "note": "Verified 2026 venue surface and existing canonical token; no historical majority substitution."
+    },
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_DEN_LAC",
+      "canonical_game_id": "2026_05_DEN_LAC",
+      "gameday": "2026-10-11",
+      "away_team": "DEN",
+      "home_team": "LAC",
+      "stadium": "SoFi Stadium",
+      "stadium_id": "LAX01",
+      "surface": "matrixturf",
+      "verified_surface_class": "artificial",
+      "surface_subtype_known": true,
+      "source_urls": [
+        "https://sports.yahoo.com/articles/nfl-stadiums-real-grass-vs-120001662.html",
+        "https://www.pro-football-reference.com/stadiums/LAX96.htm"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "CONTEMPORARY_CATEGORY_AND_CANONICAL_LABEL",
+      "note": "Verified 2026 venue surface and existing canonical token; no historical majority substitution."
+    },
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_DET_ARI",
+      "canonical_game_id": "2026_05_DET_ARI",
+      "gameday": "2026-10-11",
+      "away_team": "DET",
+      "home_team": "ARI",
+      "stadium": "State Farm Stadium",
+      "stadium_id": "PHO00",
+      "surface": "grass",
+      "verified_surface_class": "grass",
+      "surface_subtype_known": true,
+      "source_urls": [
+        "https://sports.yahoo.com/articles/nfl-stadiums-real-grass-vs-120001662.html",
+        "https://www.statefarmstadium.com/stadium-info-2/about-2"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "CONTEMPORARY_CATEGORY_AND_CANONICAL_LABEL",
+      "note": "Verified 2026 venue surface and existing canonical token; no historical majority substitution."
+    },
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_SF_SEA",
+      "canonical_game_id": "2026_05_SF_SEA",
+      "gameday": "2026-10-11",
+      "away_team": "SF",
+      "home_team": "SEA",
+      "stadium": "Lumen Field",
+      "stadium_id": "SEA00",
+      "surface": "fieldturf",
+      "verified_surface_class": "artificial",
+      "surface_subtype_known": true,
+      "source_urls": [
+        "https://sports.yahoo.com/articles/nfl-stadiums-real-grass-vs-120001662.html",
+        "https://www.pro-football-reference.com/stadiums/SEA00.htm"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "CONTEMPORARY_CATEGORY_AND_CANONICAL_LABEL",
+      "note": "Verified 2026 venue surface and existing canonical token; no historical majority substitution."
+    },
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_BAL_ATL",
+      "canonical_game_id": "2026_05_BAL_ATL",
+      "gameday": "2026-10-11",
+      "away_team": "BAL",
+      "home_team": "ATL",
+      "stadium": "Mercedes-Benz Stadium",
+      "stadium_id": "ATL97",
+      "surface": "fieldturf",
+      "verified_surface_class": "artificial",
+      "surface_subtype_known": true,
+      "source_urls": [
+        "https://sports.yahoo.com/articles/nfl-stadiums-real-grass-vs-120001662.html",
+        "https://www.pro-football-reference.com/stadiums/ATL97.htm"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "CONTEMPORARY_CATEGORY_AND_CANONICAL_LABEL",
+      "note": "Verified 2026 venue surface and existing canonical token; no historical majority substitution."
+    },
+    {
+      "season": "2026",
+      "week": "5",
+      "game_type": "REG",
+      "game_id": "2026_05_BUF_LA",
+      "canonical_game_id": "2026_05_BUF_LAR",
+      "gameday": "2026-10-12",
+      "away_team": "BUF",
+      "home_team": "LA",
+      "stadium": "SoFi Stadium",
+      "stadium_id": "LAX01",
+      "surface": "matrixturf",
+      "verified_surface_class": "artificial",
+      "surface_subtype_known": true,
+      "source_urls": [
+        "https://sports.yahoo.com/articles/nfl-stadiums-real-grass-vs-120001662.html",
+        "https://www.pro-football-reference.com/stadiums/LAX96.htm"
+      ],
+      "retrieved_on": "2026-10-15",
+      "evidence_quality": "CONTEMPORARY_CATEGORY_AND_CANONICAL_LABEL",
+      "note": "Verified 2026 venue surface and existing canonical token; no historical majority substitution."
+    }
+  ]
+}

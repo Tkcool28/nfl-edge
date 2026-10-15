@@ -411,9 +411,11 @@ def _materialize_settled_evidence(
     through_week = active_week - 1
 
     root = Path(output_dir)
+    surface_recoveries = []
     # Preserve every schedule required for deterministic replay plus the active slate.
     for week in range(1, active_week + 1):
         payload = build_week_schedule(rows, season=2026, week=week, observed_at_utc=observed)
+        surface_recoveries.extend(payload.get("surface_recovery", []))
         _write_json_atomic(root / f"week{week}_schedule_v1.json", payload)
 
     games = _canonical_games(rows, through_week=through_week)
@@ -519,6 +521,8 @@ def _materialize_settled_evidence(
             "pbp": pbp.height,
         },
     }
+    if surface_recoveries:
+        manifest["surface_recovery"] = surface_recoveries
     _write_json_atomic(root / "settled_evidence_manifest.json", manifest)
     return _load_settled_evidence(root)
 
