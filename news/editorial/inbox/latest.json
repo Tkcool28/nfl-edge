@@ -1,77 +1,96 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-10-17T00:18:58Z",
-  "research_generated_at_utc": "2026-10-17T00:18:58Z",
+  "submitted_at_utc": "2026-10-17T12:18:41Z",
+  "research_generated_at_utc": "2026-10-17T12:18:41Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-10-17T00:18:58Z",
-    "research_generated_at_utc": "2026-10-17T00:18:58Z",
-    "edition": "Evening Brief",
-    "title": "NFL EDGE Friday Evening Brief",
-    "dek": "The board caught up on the Ravens' quarterback, two lines moved through Friday afternoon, and Sunday's forecast is clear and mild everywhere.",
+    "published_at_utc": "2026-10-17T12:18:41Z",
+    "research_generated_at_utc": "2026-10-17T12:18:41Z",
+    "edition": "Morning Brief",
+    "title": "NFL EDGE Saturday Morning Brief",
+    "dek": "London kicks Sunday off at 9:30 a.m. ET, Huntley's -3.0 is holding, and Caleb Williams is the one name to watch on the inactives list \u2014 plus the app's three cards with real numbers.",
     "sections": [
       {
         "id": "what-matters",
         "title": "What Matters Today",
-        "icon": "📰",
+        "icon": "\ud83d\udcf0",
         "items": [
           {
-            "headline": "Ravens confirm Huntley — and the board caught up",
+            "headline": "Sunday starts in London at 9:30 a.m. ET",
             "paragraphs": [
-              "The app now lists Tyler Huntley as Baltimore's expected starter for Sunday at Cleveland. This morning it still showed Lamar Jackson with a Questionable tag — it has caught up to Thursday's news.",
-              "The line followed the news: the Ravens moved from -3.5 to -3.0 on DraftKings this afternoon."
+              "Sunday's first kickoff isn't in the afternoon \u2014 it's at Wembley. The Texans face the Jaguars at 9:30 a.m. ET on NFL Network, the last of three straight London games.",
+              "Jacksonville is 4-1 after beating Philadelphia 19-17 in London last week. Houston is 1-4 but finally got its first win last week. The market has Jacksonville -2.5 on DraftKings with a 42.5 total.",
+              "If you're playing anything in this game, do it before the morning gets away from you. London inactives post about 90 minutes before kickoff \u2014 roughly 8:00 a.m. ET \u2014 and the app's board refreshes every morning and evening, so the card you see now is current."
             ],
-            "takeaway": "The app is current on the quarterback news now. If you want Baltimore, this morning's -3.5 is gone — tap Check on the -3.0 you can actually get before you decide.",
+            "takeaway": "London goes first, so plan it first: check the app's card and inactives before 9:30 a.m. ET.",
+            "editorial_only": false,
             "evidence_ids": [
-              "ev-qb-evening",
-              "ev-app-lines-evening"
+              "news-london-20261017",
+              "app-board-20261017-am"
             ],
             "sources": [
               {
-                "label": "NFL EDGE product endpoint",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+                "label": "Jacksonville Jaguars",
+                "url": "https://www.jaguars.com/news/where-to-watch-texans-vs-jaguars-week-6-of-2026-nfl-season"
               }
             ]
           },
           {
-            "headline": "Quarterback roundup: all eyes on Sunday inactives",
+            "headline": "Quarterback roundup: one game, two backups, one game-time question",
             "paragraphs": [
-              "The Eagles show Tanner McKee starting at home against Carolina — Jalen Hurts is out with the calf issue. Tampa Bay shows Jalon Daniels starting with Baker Mayfield out again. Caleb Williams is listed as Chicago's starter Sunday at Atlanta after two full practices.",
-              "Everything else on the slate holds: Josh Allen, C.J. Stroud, Patrick Mahomes, Justin Herbert, Jayden Daniels, and Cam Ward all listed as expected starters."
+              "Lamar Jackson is out for the second straight game. The Ravens ruled him out Friday with the ankle injury, so Tyler Huntley starts again at Cleveland. Huntley threw three touchdowns in last week's win at Atlanta, and the app already lists him as the expected starter \u2014 the board has fully caught up to this news.",
+              "Jalen Hurts is out indefinitely with a blood clot in his calf, so Tanner McKee starts for Philadelphia against Carolina. This morning brought one new detail: the Eagles are NOT putting Hurts on injured reserve, which keeps the door open for a return as soon as he's medically cleared. Saquon Barkley (hamstring) is on injured reserve, leaving the Eagles down to their fourth-string running back.",
+              "Patrick Mahomes is cleared. He practiced fully Friday and came off the injury report, so Kansas City is at full QB strength against the Chargers.",
+              "The one live question is Caleb Williams. He's questionable with the hamstring, practiced fully all week, but Chicago is still evaluating him. Michael Penix Jr. is good to go for Atlanta after last week's rib knock. The inactives list lands about 90 minutes before each kickoff \u2014 for the 1 p.m. ET games that's about 11:30 a.m. ET \u2014 and Sunday morning's edition will carry the final word."
             ],
-            "takeaway": "Facts only, nothing new to bet. Sunday's inactive lists land about 90 minutes before each kickoff — Sunday morning's brief will carry the final designations.",
+            "takeaway": "Huntley, McKee, and Mahomes are settled facts \u2014 the app has all three. Caleb Williams is the one name to watch on the inactives list.",
+            "editorial_only": false,
             "evidence_ids": [
-              "ev-qb-evening"
+              "news-lamar-out-20261017",
+              "news-hurts-20261017",
+              "news-mahomes-20261017",
+              "news-caleb-20261017",
+              "app-board-20261017-am"
             ],
             "sources": [
               {
-                "label": "NFL EDGE product endpoint",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+                "label": "Browns Wire",
+                "url": "https://brownswire.usatoday.com/story/sports/nfl/browns/2026/10/16/ravens-qb-lamar-jackson-ruled-out-vs-browns-in-week-6/92287415007/"
+              },
+              {
+                "label": "Wire Report",
+                "url": "https://wire.report/article/eagles-do-not-plan-to-place-jalen-hurts-on-injured-reserve-2026-10-17"
+              },
+              {
+                "label": "USA Today",
+                "url": "https://www.usatoday.com/story/sports/fantasy/player-updates/2026/10/16/fantasy-chiefs-qb-patrick-mahomes-ready-for-week-6/92290463007/"
+              },
+              {
+                "label": "Falcons Wire",
+                "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/10/17/falcons-bears-uniforms-nfl-week-6/92269850007/"
               }
             ]
           },
           {
-            "headline": "Sunday weather: clear and mild, confirmed",
+            "headline": "Sunday weather: nothing to worry about",
             "paragraphs": [
-              "The final NWS daytime forecasts for Sunday's outdoor venues: Cleveland sunny and 61, Philadelphia sunny and 57, Foxborough sunny and 51. Winds light everywhere.",
-              "Nothing changed through the day. There are no weather games on Sunday's slate."
+              "Quick check of the final kickoff-window forecasts, and there's nothing to fuss over. Foxborough is clear and sunny in the low 50s with barely any wind \u2014 the National Weather Service says sunny, high near 54, wind 3 to 5 mph. Kansas City is clear and 64 at kickoff with a light 13 mph breeze. The dome games in Atlanta, Indianapolis, and Las Vegas are unaffected by anything outside.",
+              "No rain, no wind, no cold anywhere on the slate. Weather doesn't change a single read this week."
             ],
-            "takeaway": "Nothing in the forecast changes how you read Sunday's games. File it as clear and move on.",
+            "takeaway": "File Sunday's weather as clear and mild and move on \u2014 it doesn't move any number.",
+            "editorial_only": false,
             "evidence_ids": [
-              "ev-weather-evening"
+              "news-weather-ne-20261017",
+              "news-weather-sun-20261017"
             ],
             "sources": [
               {
-                "label": "NWS Cleveland forecast point",
-                "url": "https://api.weather.gov/points/41.506,-81.699"
+                "label": "Pats Pulpit",
+                "url": "https://www.patspulpit.com/new-england-patriots-game-information/140870/patriots-vs-jets-weather-forecast-nfl-week-6"
               },
               {
-                "label": "NWS Philadelphia forecast point",
-                "url": "https://api.weather.gov/points/39.9008,-75.1675"
-              },
-              {
-                "label": "NWS Boston/Foxborough forecast point",
-                "url": "https://api.weather.gov/points/42.0909,-71.2643"
+                "label": "SharpShotPicks NFL Weather",
+                "url": "https://sharpshotpicks.com/nfl-weather/"
               }
             ]
           }
@@ -80,60 +99,59 @@
       {
         "id": "what-it-means",
         "title": "What It Means for NFL EDGE",
-        "icon": "💡",
+        "icon": "\ud83d\udca1",
         "items": [
           {
-            "headline": "Tonight's three cards, with real numbers",
+            "headline": "Today's three cards, with real numbers",
             "paragraphs": [
-              "Hit Rate: Bills moneyline -230 on DraftKings at the Raiders. The model gives Buffalo a 71.8% win chance (trust 69.2%), reliability MEDIUM, recommended 0.75 unit. This card picks the supported pick most likely to win — remember the app's own tutorial: Hit Rate is not Profit Rate.",
-              "Balanced: Giants moneyline -104 on FanDuel against the Saints. Model probability 65.3% against a market-implied 50.0% (trust 57.7%), MEDIUM, 0.75 unit. The middle ground — a strong pick without paying too much.",
-              "Value: Falcons +1.5 spread -115 on FanDuel against the Bears. The model's plus-EV play at +1.7% EV, MEDIUM, 0.75 unit."
+              "Hit Rate: Bills moneyline -230 (DraftKings) vs the Raiders. This is the app's most-likely-to-win pick \u2014 about a 69% chance on the app's read. Notice what it is and isn't: at -230 you need to win about 69.7% of the time just to break even, so Hit Rate buys you win probability, not profit. The app's own tutorial says it straight: Hit Rate is not Profit Rate.",
+              "Balanced: Giants moneyline -104 (FanDuel) vs the Saints. The middle ground \u2014 a strong pick without paying a big price. The app's read is roughly 65% on the Giants at near even money.",
+              "Value: Falcons +1.5 (-115, FanDuel) vs the Bears. This is the app's plus-EV play \u2014 a small edge on the model side. One catch: it's priced with Caleb Williams expected to start. If he's ruled out, the math changes.",
+              "None of these are orders. They're the app's read on the board as it stands this morning."
             ],
-            "takeaway": "Three cards, three different jobs. Hit Rate = most likely to win. Balanced = strong without paying too much. Value = the model's plus-EV play. Pick the job that fits your read.",
+            "takeaway": "Three cards, three jobs: most likely to win, strongest middle ground, and the model's plus-EV play \u2014 pick the job you actually want done.",
+            "editorial_only": false,
             "evidence_ids": [
-              "ev-app-board-evening"
+              "app-board-20261017-am",
+              "news-caleb-20261017"
             ],
             "sources": [
               {
-                "label": "NFL EDGE product endpoint",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+                "label": "Falcons Wire",
+                "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/10/17/falcons-bears-uniforms-nfl-week-6/92269850007/"
               }
             ]
           },
           {
-            "headline": "Your book doesn't match the card? Tap Check",
+            "headline": "Your book's number isn't the card's number? Tap Check",
             "paragraphs": [
-              "Lines moved this afternoon — the Ravens and Panthers each a half-point, and the Bills price drifted from -218 to -230. The board refreshes every morning and evening, but your book is your book.",
-              "Tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator. Full re-evaluation, not a blind override — a bet/no-bet verdict on YOUR price."
+              "The prices above are one snapshot \u2014 DraftKings here, FanDuel there. Your book probably shows something slightly different, and 'slightly different' is where bets are won or lost.",
+              "Here's the move: open the app, tap Check, and type in the line and price your book is actually offering. The app runs your number back through the model and the evaluator and hands you a bet or no-bet verdict on YOUR price. That's a full re-evaluation, not a rubber stamp.",
+              "The board refreshes every morning and evening, so if a line moves during the day, Check is how you stay current."
             ],
-            "takeaway": "Check turns any price you can actually get into a fresh verdict. Use it before you bet, not after.",
+            "takeaway": "Never bet the card's price blind \u2014 type your book's line into Check and get the verdict on your number.",
+            "editorial_only": false,
             "evidence_ids": [
-              "ev-app-board-evening",
-              "ev-app-lines-evening"
+              "app-board-20261017-am"
             ],
-            "sources": [
-              {
-                "label": "NFL EDGE product endpoint",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-              }
-            ]
+            "sources": []
           }
         ]
       },
       {
         "id": "fade",
         "title": "Learn the Game",
-        "icon": "⚖️",
+        "icon": "\u2696\ufe0f",
         "mode": "learning",
         "items": [
           {
-            "headline": "Learn the Game: the vig",
+            "headline": "Learn the Game: implied probability",
             "paragraphs": [
-              "The vig — short for vigorish, also called the juice — is the book's cut baked into every price you see.",
-              "Here's a clearly labeled hypothetical. Imagine a game where both sides are listed at -110. You risk $1.10 to win $1.00 — that extra ten cents is the vig. Now imagine you place ten of those $1.10 bets and split them five and five. You've staked $11.00 and you collect $10.00 back. A .500 record, and you're down a dollar.",
-              "That's the hill every bettor climbs: at -110 prices you need to win about 52.4% of your bets just to break even."
+              "Every price on the board is secretly a win-rate requirement. 'Implied probability' is just the fancy name for it: the percentage of the time a bet has to win for you to break even at that price.",
+              "A clearly-labeled hypothetical example: say a team is listed at -200 (this is made up, not a real pick). That price means you risk $2 to win $1, so it has to win 200 divided by (200 + 100) \u2014 about 66.7% of the time \u2014 to break even. At +150, the math is 100 divided by (150 + 100): the bet only needs to win 40% of the time.",
+              "Why it matters: the app's whole job is comparing its own probability against the price's implied probability. When the app's number is higher than the price demands, that's the edge \u2014 and that's exactly what the Check verdict is measuring."
             ],
-            "takeaway": "The vig is why a 50/50 record still loses money — and why the app's plus-EV check matters more than picking winners. (The example above is hypothetical, not real betting activity.)",
+            "takeaway": "Implied probability turns every price into a question: does the app think this wins MORE often than the price demands? That's the edge, and that's what Check measures.",
             "editorial_only": true,
             "evidence_ids": [],
             "sources": []
@@ -143,57 +161,39 @@
       {
         "id": "market-watch",
         "title": "Line Movement",
-        "icon": "👀",
+        "icon": "\ud83d\udc40",
         "items": [
           {
-            "headline": "Ravens -3.5 down to -3.0 with Huntley confirmed",
+            "headline": "Quiet overnight: -3.0, -3.0, -230, -115 all hold",
             "paragraphs": [
-              "The Ravens dropped a half-point on DraftKings this afternoon, and the app now lists Tyler Huntley as the expected starter — it caught up to Thursday's practice news.",
-              "This is a news move with the quarterback confirmation behind it, not mystery money."
+              "Nothing moved overnight. Ravens -3.0, Panthers -3.0, Bills -230, Falcons -115 \u2014 all exactly where Friday evening left them.",
+              "The moves that matter all happened Friday: Ravens -3.5 down to -3.0 once Huntley was confirmed, Panthers -3.5 down to -3.0, Bills -218 out to -230, Falcons -110 to -115. The app's morning board has picked up every one of them, so there are no stale numbers to trip over.",
+              "If your book still shows one of the old numbers, that's a gift worth Checking \u2014 or a stale screen worth refreshing."
             ],
-            "takeaway": "If you want the Ravens, the -3.0 is the number to price — and tap Check on your book's actual line before you do.",
+            "takeaway": "Friday did the moving, overnight did the sleeping: the board is current on every line that matters.",
+            "editorial_only": false,
             "evidence_ids": [
-              "ev-app-lines-evening",
-              "ev-qb-evening"
+              "app-board-20261017-am"
             ],
-            "sources": [
-              {
-                "label": "NFL EDGE product endpoint",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-              }
-            ]
+            "sources": []
           },
           {
-            "headline": "Panthers -3.5 down to -3.0, Packers price eased",
+            "headline": "The one thing worth waiting for: Caleb Williams' status",
             "paragraphs": [
-              "Carolina's line drifted a half-point toward Philadelphia on DraftKings through the day — the Eagles sit +3.0 at -118 odds now. Over in the NFC North, the Packers -1.5 price softened from -115 to -105.",
-              "Everything else parked: Chiefs -7.5, Steelers -2.5, Patriots -7.5, 49ers -7.5 all exactly where they were this morning."
+              "There's exactly one named unknown on Sunday's board: whether Caleb Williams (questionable, hamstring) suits up for Chicago. The Falcons +1.5 card is priced with him expected to play, so if he's ruled out, the value shifts.",
+              "The inactives list for the 1 p.m. ET games lands about 90 minutes before kickoff \u2014 roughly 11:30 a.m. ET. That's a real pending event with a real time attached, and it's the only one worth waiting for today.",
+              "For everything else, the rule stands: if your book has a good number right now and Check says bet, bet now. A good number today beats a hoped-for number tomorrow, because waiting lets the number drift the wrong way too."
             ],
-            "takeaway": "Nothing here to chase. Prices move, the model's read doesn't — until the news says otherwise.",
+            "takeaway": "Wait for 11:30 a.m. ET inactives only on Bears-Falcons \u2014 everywhere else, a good number now beats a hoped-for number later.",
+            "editorial_only": false,
             "evidence_ids": [
-              "ev-app-lines-evening"
+              "news-caleb-20261017",
+              "app-board-20261017-am"
             ],
             "sources": [
               {
-                "label": "NFL EDGE product endpoint",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-              }
-            ]
-          },
-          {
-            "headline": "The cards moved too: Bills -218 to -230, Falcons -110 to -115",
-            "paragraphs": [
-              "The Hit Rate card's Bills price drifted from -218 this morning to -230 tonight. The Value card's Falcons +1.5 ticked from -110 to -115 on FanDuel. The Balanced card's Giants -104 is unchanged.",
-              "Same picks, slightly worse prices than this morning's board."
-            ],
-            "takeaway": "Another reason to Check your book's number instead of trusting the card's price from this morning.",
-            "evidence_ids": [
-              "ev-app-board-evening"
-            ],
-            "sources": [
-              {
-                "label": "NFL EDGE product endpoint",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+                "label": "Falcons Wire",
+                "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/10/17/falcons-bears-uniforms-nfl-week-6/92269850007/"
               }
             ]
           }
@@ -202,42 +202,21 @@
       {
         "id": "today-tip",
         "title": "Today's Tip",
-        "icon": "✅",
+        "icon": "\u2705",
         "items": [
           {
-            "headline": "Tonight's job: lock the plan, not the bets",
+            "headline": "Sunday's plan: London at 9:30, then the full slate",
             "paragraphs": [
-              "The board is set for the evening and the big quarterback questions have answers. But lines can still move overnight, and nothing plays until Sunday.",
-              "If you've got a lean, write it down. Then re-check Sunday morning's edition before anything is final."
+              "The day runs itself if you set the order now: Texans-Jaguars at 9:30 a.m. ET from London, seven games at 1 p.m. ET, three in the late afternoon window, Cowboys-Packers at 8:20 p.m. ET, and Commanders-49ers on Monday night to close the week.",
+              "Tonight's job is to lock the plan, not the bets. Decide which games you're playing and at what prices, write the plan down, and let the inactives list do its talking in the morning.",
+              "And since settlement is manual \u2014 no auto-settle anywhere in this \u2014 the tracker only works if you're honest with yourself. Log every play you make, including the losers. Especially the losers."
             ],
-            "takeaway": "Plans are free. Bets are final. Keep it that way until Sunday.",
+            "takeaway": "Plan tonight, decide in the morning: lock your games and prices now, and log every play \u2014 winners and losers \u2014 or the tracker is just a diary.",
+            "editorial_only": false,
             "evidence_ids": [
-              "ev-app-board-evening"
+              "app-board-20261017-am"
             ],
-            "sources": [
-              {
-                "label": "NFL EDGE product endpoint",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-              }
-            ]
-          },
-          {
-            "headline": "Sunday's final answers arrive Sunday morning",
-            "paragraphs": [
-              "Inactive lists post about 90 minutes before each kickoff — that's when the Williams and Huntley designations become official.",
-              "The morning edition carries the final calls plus a fresh board. Read it before you touch anything."
-            ],
-            "takeaway": "No Sunday bet is final until the inactives and the morning board are in. Read Sunday's edition first.",
-            "evidence_ids": [
-              "ev-qb-evening",
-              "ev-app-board-evening"
-            ],
-            "sources": [
-              {
-                "label": "NFL EDGE product endpoint",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-              }
-            ]
+            "sources": []
           }
         ]
       }
@@ -245,66 +224,126 @@
   },
   "evidence": [
     {
-      "evidence_id": "ev-app-board-evening",
+      "evidence_id": "app-board-20261017-am",
       "category": "market",
-      "fact": "Evening Week 6 board from the NFL EDGE product endpoint (freshness FRESH, observed 2026-10-17T00:08:42Z). Headline cards: Hit Rate — Bills moneyline -230 (DraftKings) vs Raiders, model win probability 71.8% (trust 69.2%), reliability MEDIUM, recommended 0.75 unit; Balanced — Giants moneyline -104 (FanDuel) vs Saints, model probability 65.3% vs market 50.0% (trust 57.7%), reliability MEDIUM, recommended 0.75 unit; Value — Falcons +1.5 spread -115 (FanDuel) vs Bears, +1.7% EV, reliability MEDIUM, recommended 0.75 unit. Bills price drifted from -218 this morning; Falcons price from -110 to -115; Giants card unchanged since the morning edition.",
-      "interpretation": "Same three picks as the morning board; two of the three prices moved against the reader through the day.",
-      "app_guidance": "Readers should tap Check with the price their own book actually offers before betting any card.",
+      "fact": "Morning board (refreshed ~6:00 a.m. local, observed ~6:09 a.m. Denver / 12:09Z): DK Ravens -3.0, Panthers -3.0, Bills ML -230, Giants ML -104 (FD), Falcons +1.5 -115 (FD), London JAX -2.5 (-120) O/U 42.5. Cards: Hit Rate Bills ML -230 (app ~69%), Balanced Giants ML -104 (app model ~65% / trust ~58%), Value Falcons +1.5 -115 (+EV, small). BAL expected starter Tyler Huntley (resolved), PHI Tanner McKee, CHI Caleb Williams expected.",
+      "interpretation": "Board is current on Friday's news; no overnight line moves.",
+      "app_guidance": "Use these prices in Check for reader's own book.",
+      "verification": "INTERNAL_CANONICAL",
+      "sources": []
+    },
+    {
+      "evidence_id": "news-london-20261017",
+      "category": "news",
+      "fact": "Texans vs Jaguars at Wembley Stadium, London, Sunday 9:30 a.m. ET, on NFL Network (last of three straight London games). Jaguars are 4-1 after beating Philadelphia 19-17 in London last week; Texans are 1-4.",
+      "interpretation": "Earliest kickoff of the weekend; first division matchup for Jacksonville.",
+      "app_guidance": "Check the app's Sunday card before 9:30 a.m. ET; London inactives post ~8:00 a.m. ET.",
       "verification": "EXTERNAL_VERIFIED",
       "sources": [
         {
-          "label": "NFL EDGE product endpoint",
-          "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+          "label": "Jacksonville Jaguars",
+          "url": "https://www.jaguars.com/news/where-to-watch-texans-vs-jaguars-week-6-of-2026-nfl-season",
+          "published_at_utc": "2026-10-14T00:00:00Z"
         }
       ]
     },
     {
-      "evidence_id": "ev-app-lines-evening",
-      "category": "market",
-      "fact": "Evening DraftKings lines per the live app (FRESH, observed 2026-10-17T00:08:42Z): Ravens -3.0 (-112) at Browns (down from -3.5 (-115) this morning); Panthers -3.0 (-118) vs Eagles (down from -3.5 (-110)); Packers -1.5 (-105) vs Cowboys (price eased from -115); Chiefs -7.5 (-105) vs Chargers (unchanged); Steelers -2.5 (-115) at Buccaneers (unchanged); Rams -12.5 (-112) vs Cardinals; Colts -7.0 (-105) vs Titans; 49ers -7.5 (-108) vs Commanders; Patriots -7.5 (-105) vs Jets; Bills -4.5 (-118) at Raiders; Bears -1.5 (100) at Falcons; Texans +2.5 (100) at Jaguars; Saints -1.5 (102) at Giants. Seahawks-Broncos is final and its lines remain off the board.",
-      "interpretation": "Two half-point moves (Ravens, Panthers) plus a price ease (Packers) through Friday afternoon.",
-      "app_guidance": "All movement discussion belongs in the Line Movement section; remind readers the board refreshes every morning and evening.",
+      "evidence_id": "news-lamar-out-20261017",
+      "category": "injury",
+      "fact": "Lamar Jackson (BAL) ruled OUT vs Browns on Sunday for the second straight game (ankle). Tyler Huntley starts for Baltimore. Huntley led a 30-23 win at Atlanta in Week 5 with three TDs.",
+      "interpretation": "Market has known since Friday; DK Ravens -3.0 steady overnight.",
+      "app_guidance": "No action: the app already lists Huntley as expected starter and the -3.0 is priced in.",
       "verification": "EXTERNAL_VERIFIED",
       "sources": [
         {
-          "label": "NFL EDGE product endpoint",
-          "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+          "label": "Browns Wire",
+          "url": "https://brownswire.usatoday.com/story/sports/nfl/browns/2026/10/16/ravens-qb-lamar-jackson-ruled-out-vs-browns-in-week-6/92287415007/",
+          "published_at_utc": "2026-10-16T00:00:00Z"
+        },
+        {
+          "label": "The Chairshot NFL News 10/17",
+          "url": "https://thechairshot.com/2026/10/chairshot-nfl-news-report-10-17-2026-josh-jacobs-cleared-lamar-jackson-out-kellen-moore-faces-pressure/",
+          "published_at_utc": "2026-10-17T00:00:00Z"
         }
       ]
     },
     {
-      "evidence_id": "ev-qb-evening",
-      "category": "qb",
-      "fact": "Expected starters per the live app QB feed (FRESH, observed 2026-10-17T00:00:01Z): Ravens — Tyler Huntley (Lamar Jackson out); Eagles — Tanner McKee (Jalen Hurts out); Buccaneers — Jalon Daniels (Baker Mayfield out); Bears — Caleb Williams (expected back, full practice Wednesday and Thursday); plus Browns — Deshaun Watson, Panthers — Bryce Young, Falcons — Michael Penix, Jets — Geno Smith, Giants — Jameis Winston, Saints — Tyler Shough, Titans — Cam Ward. Sunday inactive lists post about 90 minutes before each kickoff.",
-      "interpretation": "The app has caught up to Thursday's quarterback news on the Ravens; no other evening QB changes vs the morning edition.",
-      "app_guidance": "QB facts stay grouped in the injury/QB section; readers confirm Sunday morning.",
+      "evidence_id": "news-hurts-20261017",
+      "category": "injury",
+      "fact": "Jalen Hurts (PHI) out indefinitely with a superficial blood clot in his calf; ruled out vs Panthers. Tanner McKee starts. Saturday morning, Schefter and Rapoport reported the Eagles do NOT plan to place Hurts on IR, preserving his eligibility to return once medically cleared. Saquon Barkley (hamstring) is on IR; Philadelphia is down to its fourth-string running back.",
+      "interpretation": "Eagles are severely shorthanded on offense; the return door stays open because Hurts avoids IR.",
+      "app_guidance": "App lists McKee as expected starter; Panthers -3.0 steady overnight. Check the app Sunday morning for any change.",
       "verification": "EXTERNAL_VERIFIED",
       "sources": [
         {
-          "label": "NFL EDGE product endpoint",
-          "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+          "label": "The Indian Post",
+          "url": "https://theindianpostlive.com/news/blood-clot-forces-jalen-hurts-out-against-panthers-eagles-go-to-tanner-mckee-as-team-continues-troubled-season-8b030a7c",
+          "published_at_utc": "2026-10-17T02:13:43Z"
+        },
+        {
+          "label": "Wire Report",
+          "url": "https://wire.report/article/eagles-do-not-plan-to-place-jalen-hurts-on-injured-reserve-2026-10-17",
+          "published_at_utc": "2026-10-17T11:41:00Z"
         }
       ]
     },
     {
-      "evidence_id": "ev-weather-evening",
+      "evidence_id": "news-mahomes-20261017",
+      "category": "injury",
+      "fact": "Patrick Mahomes (KC) was a full practice participant Friday and has been removed from the Week 6 injury report. He is cleared for Sunday's home game vs the Chargers.",
+      "interpretation": "No QB uncertainty in KC; the -7.5 prices a full-strength Mahomes.",
+      "app_guidance": "Treat KC as at full QB strength on the app's card.",
+      "verification": "EXTERNAL_VERIFIED",
+      "sources": [
+        {
+          "label": "USA Today",
+          "url": "https://www.usatoday.com/story/sports/fantasy/player-updates/2026/10/16/fantasy-chiefs-qb-patrick-mahomes-ready-for-week-6/92290463007/",
+          "published_at_utc": "2026-10-16T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "evidence_id": "news-caleb-20261017",
+      "category": "injury",
+      "fact": "Caleb Williams (CHI) is listed questionable (hamstring) for Sunday at Atlanta; he practiced fully all week but is still being evaluated. Michael Penix Jr. (ATL) was knocked out of Week 5 with a rib injury but is good to go for Week 6.",
+      "interpretation": "The one genuinely live QB question on Sunday's board; the Falcons +1.5 card is priced with Williams expected.",
+      "app_guidance": "Wait for the inactives list ~90 minutes before the 1 p.m. ET kickoff before pricing Bears-Falcons; re-run Check if Williams is ruled out.",
+      "verification": "EXTERNAL_VERIFIED",
+      "sources": [
+        {
+          "label": "Falcons Wire",
+          "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/10/17/falcons-bears-uniforms-nfl-week-6/92269850007/",
+          "published_at_utc": "2026-10-17T00:00:00Z"
+        }
+      ]
+    },
+    {
+      "evidence_id": "news-weather-ne-20261017",
       "category": "weather",
-      "fact": "NWS final Sunday daytime forecasts for outdoor Week 6 venues: Cleveland — sunny, high 61F, south wind ~7 mph; Philadelphia — sunny, high 57F, light wind; Foxborough — sunny, high 51F, light wind. Unchanged from the morning read; no weather games on the Sunday slate.",
-      "interpretation": "Nothing in the forecast changes how Sunday's games should be read.",
-      "app_guidance": "Report weather factually; never frame it as a totals edge.",
+      "fact": "Patriots vs Jets at Gillette Stadium, Sunday 1 p.m. ET: clear and sunny, temperatures in the low 50s, wind chill near 49, no rain, no significant wind bursts. The National Weather Service projects sunny with a high near 54 and west wind 3 to 5 mph.",
+      "interpretation": "Weather is a non-factor in Foxborough.",
+      "app_guidance": "No adjustment needed on the app.",
       "verification": "EXTERNAL_VERIFIED",
       "sources": [
         {
-          "label": "NWS Cleveland forecast point",
-          "url": "https://api.weather.gov/points/41.506,-81.699"
-        },
+          "label": "Pats Pulpit",
+          "url": "https://www.patspulpit.com/new-england-patriots-game-information/140870/patriots-vs-jets-weather-forecast-nfl-week-6",
+          "published_at_utc": "2026-10-16T10:00:34Z"
+        }
+      ]
+    },
+    {
+      "evidence_id": "news-weather-sun-20261017",
+      "category": "weather",
+      "fact": "Sunday outdoor games: Chargers at Chiefs (Arrowhead, 4:25 p.m. ET) \u2014 clear, 64 at kickoff, wind 13 mph gusting to 19, 0% rain. Bears at Falcons, Titans at Colts, Bills at Raiders play under closed roofs. No red-flag conditions (heavy rain, 20+ mph wind) anywhere on the Sunday slate.",
+      "interpretation": "Weather is a non-factor across the Sunday slate.",
+      "app_guidance": "No adjustment needed on the app.",
+      "verification": "EXTERNAL_VERIFIED",
+      "sources": [
         {
-          "label": "NWS Philadelphia forecast point",
-          "url": "https://api.weather.gov/points/39.9008,-75.1675"
-        },
-        {
-          "label": "NWS Boston/Foxborough forecast point",
-          "url": "https://api.weather.gov/points/42.0909,-71.2643"
+          "label": "SharpShotPicks NFL Weather",
+          "url": "https://sharpshotpicks.com/nfl-weather/",
+          "published_at_utc": "2026-10-16T00:00:00Z"
         }
       ]
     }
