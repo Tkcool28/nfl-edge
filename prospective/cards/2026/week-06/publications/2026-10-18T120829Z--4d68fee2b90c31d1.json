@@ -1,0 +1,255 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "capture_mode": "NATIVE_PROSPECTIVE",
+  "creation_provenance": {
+    "provider_calls": 0,
+    "source": "CANONICAL_PUBLISHED_PRODUCT",
+    "user_specific_data_included": false
+  },
+  "field_availability": {
+    "backend_user_overlay": "EXCLUDED_USER_SPECIFIC_DATA",
+    "evaluator_probability": "NOT_EXPOSED_BY_CANONICAL_PRODUCT_V1"
+  },
+  "lanes": {
+    "balanced": {
+      "american_odds": -115,
+      "away_team": "DAL",
+      "book": "DRAFTKINGS",
+      "canonical_headline": {
+        "american_odds": -115,
+        "book": "DRAFTKINGS",
+        "ev": -0.07157897729240215,
+        "game_id": "2026_06_DAL_GB",
+        "lane": "BALANCED",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.5092984332140034,
+        "matchup": {
+          "away_team": "DAL",
+          "home_team": "GB"
+        },
+        "model_probability": 0.5911953838547453,
+        "play_through": {
+          "line": null,
+          "price_american": -116
+        },
+        "recommended_units": 0.75,
+        "reliability": "LOW",
+        "selection": "GB",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5502469085343744,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": -0.07157897729240215,
+      "exact_offer_identity_id": "offer-3ef8caa64be7db86ce490367",
+      "game_id": "2026_06_DAL_GB",
+      "home_team": "GB",
+      "kickoff_at_utc": "2026-10-19T00:20:00Z",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "line": null,
+      "logical_recommendation_id": "logical-1198106575c57bdc7237f745",
+      "market": "MONEYLINE",
+      "market_probability": 0.5092984332140034,
+      "model_probability": 0.5911953838547453,
+      "normalized_selection": "GB",
+      "normalized_side": "home",
+      "play_through": {
+        "line": null,
+        "price_american": -116
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.75,
+      "reliability": "LOW",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "GB",
+      "selector_version": "balanced-price-bounded-v2",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5502469085343744,
+      "value_at": null,
+      "wager_identity_id": "wager-0e809ed9f11f74e9b31c5416",
+      "warnings": []
+    },
+    "hit_rate": {
+      "american_odds": -245,
+      "away_team": "BUF",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": -245,
+        "book": "FANDUEL",
+        "ev": -0.016976256906604648,
+        "game_id": "2026_06_BUF_LV",
+        "lane": "HIT_RATE",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.6721843886695558,
+        "matchup": {
+          "away_team": "BUF",
+          "home_team": "LV"
+        },
+        "model_probability": 0.7184134971170903,
+        "play_through": {
+          "line": null,
+          "price_american": -253
+        },
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "selection": "BUF",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.6952989428933231,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": -0.016976256906604648,
+      "exact_offer_identity_id": "offer-bbbcf98ec24fcae6d25d765e",
+      "game_id": "2026_06_BUF_LV",
+      "home_team": "LV",
+      "kickoff_at_utc": "2026-10-18T20:25:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "line": null,
+      "logical_recommendation_id": "logical-e3b44be7cd3b8ddc2796f324",
+      "market": "MONEYLINE",
+      "market_probability": 0.6721843886695558,
+      "model_probability": 0.7184134971170903,
+      "normalized_selection": "BUF",
+      "normalized_side": "away",
+      "play_through": {
+        "line": null,
+        "price_american": -253
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.75,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "BUF",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.6952989428933231,
+      "value_at": null,
+      "wager_identity_id": "wager-99c1fabbee88e4cb1586c3a4",
+      "warnings": []
+    },
+    "value": {
+      "american_odds": -110,
+      "away_team": "BUF",
+      "book": "DRAFTKINGS",
+      "canonical_headline": {
+        "american_odds": -110,
+        "book": "DRAFTKINGS",
+        "ev": 0.029489105935387006,
+        "game_id": "2026_06_BUF_LV",
+        "lane": "VALUE",
+        "line": 5.5,
+        "market": "SPREAD",
+        "market_probability": 0.4953533757725013,
+        "matchup": {
+          "away_team": "BUF",
+          "home_team": "LV"
+        },
+        "model_probability": 0.5052615308211988,
+        "play_through": {
+          "line": 5.5,
+          "price_american": -113
+        },
+        "recommended_units": 1.0,
+        "reliability": "MEDIUM",
+        "selection": "LV",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5052615308211988,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.029489105935387006,
+      "exact_offer_identity_id": "offer-6094de6701db574d1cbad0fa",
+      "game_id": "2026_06_BUF_LV",
+      "home_team": "LV",
+      "kickoff_at_utc": "2026-10-18T20:25:00Z",
+      "lane": "VALUE",
+      "lane_key": "value",
+      "line": 5.5,
+      "logical_recommendation_id": "logical-c825046d5f7bb53536ed5830",
+      "market": "SPREAD",
+      "market_probability": 0.4953533757725013,
+      "model_probability": 0.5052615308211988,
+      "normalized_selection": "LV",
+      "normalized_side": "home",
+      "play_through": {
+        "line": 5.5,
+        "price_american": -113
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 1.0,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "LV",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5052615308211988,
+      "value_at": null,
+      "wager_identity_id": "wager-4ba86968f56e56ab8c9a7d0b",
+      "warnings": []
+    }
+  },
+  "product_freshness": {
+    "age_seconds": 0.0,
+    "observed_at_utc": "2026-10-18T12:08:29Z",
+    "state": "FRESH",
+    "threshold_seconds": 43200.0
+  },
+  "product_generated_at_utc": "2026-10-18T12:08:29Z",
+  "product_stale": false,
+  "product_warnings": [
+    "1 canonical Week 6 game(s) lack a provider event."
+  ],
+  "publication_id": "publication-4d68fee2b90c31d13db86e68",
+  "published_at_utc": "2026-10-18T12:08:29.761196Z",
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1",
+  "season": 2026,
+  "source_commit_sha": null,
+  "source_product_sha256": "4d68fee2b90c31d13db86e68fb305106783747b4a56ee30c8e767cf76290b0f2",
+  "source_product_version": "live-2026-week6-product-v1",
+  "source_provenance": {
+    "evaluator_versions": {
+      "moneyline": "ml_v4",
+      "spread": "spread_v3",
+      "total": "total_v3"
+    },
+    "football_data_version": "live-2026-state:8f1df6269c5c97f50a88a096",
+    "market_snapshot_version": "live-market:1ef83c82d83fdc68dd1dbeef",
+    "model_versions": {
+      "expected_margin": "expected-margin-v1-stable",
+      "qb_elo": "qb-elo-v1.0.0",
+      "ridge_totals_r4": "ridge-totals-r4-alpha100",
+      "xgboost_v2": "post-v5-v2-conservative-adaptive-tail"
+    },
+    "prediction_as_of_utc": "2026-10-18T12:05:04.680255Z",
+    "qb_snapshot_version": "sleeper-scheduled-20261018T120001Z-367536ea",
+    "selector_versions": {
+      "balanced": "balanced-price-bounded-v2",
+      "hit_rate": "v1",
+      "value": "v1"
+    }
+  },
+  "source_week_last_kickoff_at_utc": "2026-10-20T00:15:00Z",
+  "week": 6
+}
