@@ -567,7 +567,7 @@
       "publication_count": 1,
       "returned_after_gap": false,
       "selection": "GB",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "DISAPPEARED",
       "worst_line": null,
       "worst_price": -104
     },
@@ -612,7 +612,7 @@
       "publication_count": 1,
       "returned_after_gap": false,
       "selection": "WAS",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "DISAPPEARED",
       "worst_line": 7.5,
       "worst_price": -110
     }
@@ -627,7 +627,8 @@
     "publication-2b428b90468588d2906353a4",
     "publication-76dcc65247ac1f3e96301f43",
     "publication-4d68fee2b90c31d13db86e68",
-    "publication-d5838ddf8e9d4a854cdc75c5"
+    "publication-d5838ddf8e9d4a854cdc75c5",
+    "publication-5df0a3f7d78c61cc187b93f4"
   ],
   "week": 6
 }
