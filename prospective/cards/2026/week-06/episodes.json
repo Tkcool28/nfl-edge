@@ -144,7 +144,7 @@
       "publication_count": 7,
       "returned_after_gap": false,
       "selection": "BUF",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "REPLACED",
       "worst_line": null,
       "worst_price": -250
     },
@@ -460,7 +460,7 @@
       "publication_count": 2,
       "returned_after_gap": true,
       "selection": "GB",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "REPLACED",
       "worst_line": null,
       "worst_price": -115
     },
@@ -522,8 +522,98 @@
       "publication_count": 2,
       "returned_after_gap": false,
       "selection": "LV",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "DISAPPEARED",
       "worst_line": 5.5,
+      "worst_price": -110
+    },
+    {
+      "best_line": null,
+      "best_price": -104,
+      "episode_id": "episode-84f53a31630d791a7559b950",
+      "first_line": null,
+      "first_price": -104,
+      "first_publication_id": "publication-d5838ddf8e9d4a854cdc75c5",
+      "first_seen_at_utc": "2026-10-19T00:08:28.057053Z",
+      "game_id": "2026_06_DAL_GB",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "last_line": null,
+      "last_price": -104,
+      "last_publication_id": "publication-d5838ddf8e9d4a854cdc75c5",
+      "last_seen_at_utc": "2026-10-19T00:08:28.057053Z",
+      "logical_recommendation_id": "logical-7c6a9801d693da7f48944898",
+      "market": "MONEYLINE",
+      "normalized_selection": "GB",
+      "normalized_side": "home",
+      "observations": [
+        {
+          "american_odds": -104,
+          "book": "FANDUEL",
+          "exact_offer_identity_id": "offer-cb3b8e98277eec23db9898b9",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -105
+          },
+          "publication_id": "publication-d5838ddf8e9d4a854cdc75c5",
+          "published_at_utc": "2026-10-19T00:08:28.057053Z",
+          "recommended_units": 0.5,
+          "source_product_sha256": "d5838ddf8e9d4a854cdc75c5fd6077f2bbd24e5965b025a0ad5df5b1271715bc",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-3d2c0bd70b855c1fe2422c60"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "GB",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": null,
+      "worst_price": -104
+    },
+    {
+      "best_line": 7.5,
+      "best_price": -110,
+      "episode_id": "episode-4a4252ffd68dbb75191d27ee",
+      "first_line": 7.5,
+      "first_price": -110,
+      "first_publication_id": "publication-d5838ddf8e9d4a854cdc75c5",
+      "first_seen_at_utc": "2026-10-19T00:08:28.057053Z",
+      "game_id": "2026_06_WAS_SF",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "last_line": 7.5,
+      "last_price": -110,
+      "last_publication_id": "publication-d5838ddf8e9d4a854cdc75c5",
+      "last_seen_at_utc": "2026-10-19T00:08:28.057053Z",
+      "logical_recommendation_id": "logical-61c57a5ae8f8e9a871f27508",
+      "market": "SPREAD",
+      "normalized_selection": "WAS",
+      "normalized_side": "away",
+      "observations": [
+        {
+          "american_odds": -110,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-92ec9a601473477856cb63f0",
+          "line": 7.5,
+          "play_through": {
+            "line": 7.5,
+            "price_american": -113
+          },
+          "publication_id": "publication-d5838ddf8e9d4a854cdc75c5",
+          "published_at_utc": "2026-10-19T00:08:28.057053Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "d5838ddf8e9d4a854cdc75c5fd6077f2bbd24e5965b025a0ad5df5b1271715bc",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-183be6575c2cad5f4e18dbf5"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "WAS",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": 7.5,
       "worst_price": -110
     }
   ],
@@ -536,7 +626,8 @@
     "publication-df330beb732cf78dab50dd21",
     "publication-2b428b90468588d2906353a4",
     "publication-76dcc65247ac1f3e96301f43",
-    "publication-4d68fee2b90c31d13db86e68"
+    "publication-4d68fee2b90c31d13db86e68",
+    "publication-d5838ddf8e9d4a854cdc75c5"
   ],
   "week": 6
 }
