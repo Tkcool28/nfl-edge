@@ -1,265 +1,274 @@
 {
-  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-10-20T00:13:39Z",
-  "research_generated_at_utc": "2026-10-20T00:13:39Z",
-  "article": {
-    "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-10-20T00:13:39Z",
-    "research_generated_at_utc": "2026-10-20T00:13:39Z",
-    "edition": "Evening Brief",
-    "title": "NFL EDGE Monday Evening Brief",
-    "dek": "The inactive lists are final for tonight's Commanders-49ers game, the total climbed back to 52.5, and the app's board still shows the morning snapshot — here is the evening delta.",
-    "sections": [
-      {
-        "id": "what-matters",
-        "title": "What Matters Today",
-        "icon": "📰",
-        "items": [
-          {
-            "headline": "Inactives are in: Evans and Diggs play, Deebo and Bosa sit",
-            "paragraphs": [
-              "The inactive lists landed about 90 minutes before kickoff, and both receivers who were questionable all week are playing. Mike Evans (ribs, Achilles) is active for the 49ers, and Stefon Diggs (hamstring) is active for the Commanders — he'll line up with Terry McLaurin.",
-              "The outs: 49ers DE Nick Bosa (knee, calf) and WR Deebo Samuel (hamstring) are inactive, along with S Marques Sigle and LB Garret Wallow. Christian Kirk was not activated off IR and stays out; Ricky Pearsall is on IR. For Washington, backup QB Marcus Mariota (knee) is out along with DE Charles Omenihu, and RB Jacory Croskey-Merritt and OLB Javontae Jean-Baptiste went to IR earlier today.",
-              "The returns: SF has DE Mykel Williams (knee), CB Upton Stout (shoulder) and DB Siran Neal (neck) active, and FB Kyle Juszczyk (knee) and DT James Thompson Jr. (ankle) are back. For Washington, CB Trey Amos (activated off IR) and S Nick Cross are active.",
-              "And no QB change: the app still shows Jayden Daniels and Brock Purdy as the expected starters."
-            ],
-            "takeaway": "Inactives are the final word, not Friday's report. If your book's price still looks good with the real lineups in, tap Check on your number.",
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-inactives-20261019-pm",
-              "ev-app-board-20261019-pm"
-            ],
-            "sources": [
-              {
-                "label": "Niners Wire live updates",
-                "url": "https://ninerswire.usatoday.com/story/sports/nfl/niners/2026/10/19/49ers-commanders-week-6-live-updates-final-score-highlights--live/92336234007/"
-              },
-              {
-                "label": "Commanders Wire inactives",
-                "url": "https://commanderswire.usatoday.com/story/sports/nfl/commanders/2026/10/19/commanders-nfl-49ers-week-6-inactives-whos-in-out/92337056007/"
-              },
-              {
-                "label": "Fantasy Injury News",
-                "url": "https://fantasy-injury-news.com/commanders-49ers-inactives-week-6/"
-              }
-            ]
-          },
-          {
-            "headline": "Weather: still fine football weather in Santa Clara",
-            "paragraphs": [
-              "Sunny with some cloud cover at kickoff, temperatures in the mid-to-high 60s, no rain, and only a light wind. Nothing in the forecast changes how this game gets played."
-            ],
-            "takeaway": "No weather angle tonight. Judge any number you like on the football, not the forecast.",
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-weather-20261019-pm"
-            ],
-            "sources": [
-              {
-                "label": "Niners Wire live updates",
-                "url": "https://ninerswire.usatoday.com/story/sports/nfl/niners/2026/10/19/49ers-commanders-week-6-live-updates-final-score-highlights--live/92336234007/"
-              }
-            ]
-          },
-          {
-            "headline": "The 5-0 49ers put the perfect record on the line",
-            "paragraphs": [
-              "San Francisco comes in atop the NFC West and as one of two unbeaten teams left in the NFC — the 5-0 Vikings are the other. The market has them favored by 7.5 tonight, unchanged through the day."
-            ],
-            "takeaway": "Big-name team, big spread, late Sunday rush money usually flows this way — but the number hasn't moved all day.",
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-standings-20261019-pm",
-              "ev-odds-evening-20261019-pm"
-            ],
-            "sources": [
-              {
-                "label": "USA Today MNF live updates",
-                "url": "https://www.usatoday.com/story/sports/nfl/2026/10/19/49ers-commanders-score-highlights-stats-monday-night-football--live/92271966007/"
-              },
-              {
-                "label": "USA Today MNF live updates",
-                "url": "https://www.usatoday.com/story/sports/nfl/2026/10/19/49ers-commanders-score-highlights-stats-monday-night-football--live/92271966007/"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "what-it-means",
-        "title": "What It Means for NFL EDGE",
-        "icon": "💡",
-        "items": [
-          {
-            "headline": "The app's card is still empty — here's how to read that",
-            "paragraphs": [
-              "All three headline cards — Hit Rate, Balanced, and Value — are still showing no play. That hasn't changed since the morning edition: no offer on tonight's board satisfied the frozen lane contracts.",
-              "Quick refresher. Hit Rate is the supported pick that looks most likely to win; it gives up value to chase win probability. Balanced is the middle ground, a strong pick without paying too much — a fine starting point if you're newer to this. Value is always the model's +EV play. Neither Hit Rate nor Balanced is deficient for not being +EV; they answer different questions.",
-              "An empty card isn't the app telling you the 49ers won't cover. It's the app saying nothing on this board cleared the bar at these prices. No card is a verdict too."
-            ],
-            "takeaway": "Empty card, full toolbox: if your book's price differs from the board's, tap Check and let the app re-run your number.",
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-app-board-20261019-pm"
-            ],
-            "sources": []
-          },
-          {
-            "headline": "Your book's number isn't the board's? Tap Check",
-            "paragraphs": [
-              "The board the app is reading from this evening still shows the morning snapshot: DraftKings with 49ers -7.5 and a 51.5 total. If your book shows something else — and tonight, on the total, it probably does — type your book's line and price into Check.",
-              "The app runs it back through NFL EDGE's model and the evaluator and returns a bet or no-bet verdict on YOUR price. That's a full re-evaluation of the actual number in front of you, not a blind override of the board."
-            ],
-            "takeaway": "Never bet the app's number at your book's worse number: Check your price first.",
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-app-board-20261019-pm",
-              "ev-odds-evening-20261019-pm"
-            ],
-            "sources": [
-              {
-                "label": "USA Today MNF live updates",
-                "url": "https://www.usatoday.com/story/sports/nfl/2026/10/19/49ers-commanders-score-highlights-stats-monday-night-football--live/92271966007/"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "fade",
-        "title": "Learn the Game",
-        "mode": "learning",
-        "icon": "⚖️",
-        "items": [
-          {
-            "headline": "Learn the Game: handle vs. tickets",
-            "paragraphs": [
-              "When you see a betting split, you'll usually see two columns: tickets (BET) and handle (HND). Tickets is the share of individual bets on a side. Handle is the share of the money wagered on that side.",
-              "Hypothetical example: say 70% of the tickets are on the favorite but only 40% of the money is. That means lots of smaller bets on the favorite and a few bigger ones on the underdog. Nobody can tell you for sure who placed the big ones — but a wide gap between tickets and handle is exactly what price-sensitive bettors watch, because sharper money tends to wait for the number it wants.",
-              "Tonight's honest note: the free VSiN row showed an MLB featured game, not an NFL split, so there was no verified public-vs-money disagreement to work with. When the data isn't there, the right move is to say so — not to invent a Fade."
-            ],
-            "takeaway": "Next time you see a split, compare the two columns: tickets tell you who's loudest, handle tells you where the money is.",
-            "editorial_only": true,
-            "evidence_ids": [],
-            "sources": []
-          }
-        ]
-      },
-      {
-        "id": "market-watch",
-        "title": "Line Movement",
-        "icon": "👀",
-        "items": [
-          {
-            "headline": "The total round-tripped: 52.5 to 51.5 and back to 52.5",
-            "paragraphs": [
-              "The full-day arc on the total is a clean round trip. Last night DraftKings was dealing 52.5; overnight it ticked down to 51.5, and that's where the app's morning board captured it. Through the day it climbed all the way back: this evening DraftKings is back at 52.5.",
-              "The spread hasn't budged: San Francisco -7.5 on the morning board, San Francisco -7.5 tonight, on both books. The moneyline drifted a touch toward San Francisco at DraftKings (from -410 this morning to -455 this evening), while FanDuel's morning -450 still lines up.",
-              "One honest note: the app's board has not refreshed since the morning edition — its snapshot is still stamped 6:08 a.m. Denver. So the app hasn't picked up today's move back up on the total. If your book shows 52.5 (or anything else), tap Check and let the app re-run YOUR number.",
-              "If Check gives you a bet on your book's number tonight, that's a bet-now spot. The inactives are final and the weather is settled, so there's no pending information coming before kickoff that would move your price your way — and waiting lets the number drift wrong too."
-            ],
-            "takeaway": "Total went 52.5 to 51.5 overnight and back to 52.5 today; spread steady at -7.5. The app hasn't caught the move yet — Check your price.",
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-app-board-20261019-pm",
-              "ev-odds-evening-20261019-pm"
-            ],
-            "sources": [
-              {
-                "label": "USA Today MNF live updates",
-                "url": "https://www.usatoday.com/story/sports/nfl/2026/10/19/49ers-commanders-score-highlights-stats-monday-night-football--live/92271966007/"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "today-tip",
-        "title": "Today's Tip",
-        "icon": "✅",
-        "items": [
-          {
-            "headline": "Questionable-to-active: the inactive list is the answer",
-            "paragraphs": [
-              "Evans and Diggs went from questionable all week to active in the last 90 minutes before kickoff. Friday's injury report is a forecast; the inactive list is the answer. If you ever have a prop or a side in mind tied to a player whose status was up in the air, wait for the inactive list before you bet it — not the practice report.",
-              "And the occasional honesty nudge: settlement is manual, no auto-settle. The tracker only works if you're honest with yourself — log the losers too."
-            ],
-            "takeaway": "Inactives about 90 minutes before kickoff are the final word. And write down every bet, win or lose.",
-            "editorial_only": true,
-            "evidence_ids": [],
-            "sources": []
-          }
-        ]
-      }
-    ]
-  },
-  "evidence": [
-    {
-      "evidence_id": "ev-inactives-20261019-pm",
-      "category": "injury",
-      "verification": "REPORTED",
-      "fact": "Week 6 Commanders at 49ers inactive lists, posted about 90 minutes before the 8:15 p.m. ET kickoff. ACTIVE: 49ers WR Mike Evans (ribs, Achilles), Commanders WR Stefon Diggs (hamstring); also active: 49ers DE Mykel Williams (knee), CB Upton Stout (shoulder), DB Siran Neal (neck), FB Kyle Juszczyk (knee), DT James Thompson Jr. (ankle); Commanders CB Trey Amos, S Nick Cross. OUT: 49ers DE Nick Bosa (knee, calf), WR Deebo Samuel (hamstring), S Marques Sigle (ankle), LB Garret Wallow (hamstring), QB Kurtis Rourke (3rd QB), OL Enrique Cruz Jr., DL Naquan Jones; WR Christian Kirk not activated off IR (stays out), WR Ricky Pearsall on IR. Commanders OUT: QB Marcus Mariota (knee), DE Charles Omenihu (groin, ankle), CB Fabian Moreau, CB Isaac Yiadom, DE T.J. Magunranyanga, G Tanoa Togiai; RB Jacory Croskey-Merritt and OLB Javontae Jean-Baptiste placed on IR earlier today.",
+ "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+ "submitted_at_utc": "2026-10-20T12:19:10Z",
+ "research_generated_at_utc": "2026-10-20T12:19:10Z",
+ "article": {
+  "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+  "published_at_utc": "2026-10-20T12:19:10Z",
+  "edition": "Morning Brief",
+  "title": "NFL EDGE Tuesday Morning Brief",
+  "dek": "The Hurts diagnosis, Monday night's final in Santa Clara, and what to watch as the board flips to Week 7.",
+  "research_generated_at_utc": "2026-10-20T12:19:10Z",
+  "sections": [
+   {
+    "id": "what-matters",
+    "title": "What Matters Today",
+    "icon": "📰",
+    "items": [
+     {
+      "headline": "Jalen Hurts is expected to miss the rest of the season",
+      "paragraphs": [
+       "Monday brought the biggest news of the week: the Eagles announced that further testing found deep vein thrombosis and blood clots in both of Jalen Hurts' lungs. He is clinically stable and expected to recover fully, but he is on blood thinners and cannot take part in contact activities.",
+       "That ends his season — and it reshapes Sunday's game in Philadelphia, where the Eagles host the Cowboys. The Week 7 board had not flipped to the new week at press time, so the app's expected starter for Philadelphia has not updated yet. Do not act on a stale board: once the morning refresh lands, run your book's number for Cowboys at Eagles through Check and let the model re-price it."
+      ],
+      "takeaway": "Quarterback out for the season = new team. Let the app re-price it before you price anything yourself.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-hurts-out-20261020",
+       "ev-app-board-20261020-am"
+      ],
       "sources": [
-        {
-          "label": "Niners Wire live updates",
-          "url": "https://ninerswire.usatoday.com/story/sports/nfl/niners/2026/10/19/49ers-commanders-week-6-live-updates-final-score-highlights--live/92336234007/"
-        },
-        {
-          "label": "Commanders Wire inactives",
-          "url": "https://commanderswire.usatoday.com/story/sports/nfl/commanders/2026/10/19/commanders-nfl-49ers-week-6-inactives-whos-in-out/92337056007/"
-        },
-        {
-          "label": "Fantasy Injury News",
-          "url": "https://fantasy-injury-news.com/commanders-49ers-inactives-week-6/"
-        }
+       {
+        "label": "CNN — blood clots sideline Jalen Hurts",
+        "url": "https://www.cnn.com/2026/10/20/health/blood-clots-jalen-hurts"
+       }
       ]
-    },
-    {
-      "evidence_id": "ev-weather-20261019-pm",
-      "category": "weather",
-      "verification": "REPORTED",
-      "fact": "Santa Clara forecast for Monday evening kickoff: sunny with some cloud cover, temperatures in the mid-to-high 60s at kickoff, no rain, light wind (about 7 MPH). Good football weather.",
+     },
+     {
+      "headline": "Monday night: 49ers hang on, 23-17, and stay perfect",
+      "paragraphs": [
+       "San Francisco is 6-0 after surviving Washington 23-17 in Santa Clara. The 49ers led 23-3 late in the third quarter, then watched the Commanders score 14 straight before a final-play sack ended it. Jayden Daniels threw for 300 yards and two scores in the rally.",
+       "The board's Monday cards settle now. Settlement is manual — the tracker only works if you are honest with yourself, so log last night's losers too, not just the winners."
+      ],
+      "takeaway": "49ers 6-0, the NFL's only unbeaten. Log the result honestly and move on to Week 7.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-mnf-result-20261020"
+      ],
       "sources": [
-        {
-          "label": "Niners Wire live updates",
-          "url": "https://ninerswire.usatoday.com/story/sports/nfl/niners/2026/10/19/49ers-commanders-week-6-live-updates-final-score-highlights--live/92336234007/"
-        },
-        {
-          "label": "Commanders Wire live updates",
-          "url": "https://commanderswire.usatoday.com/story/sports/nfl/commanders/2026/10/19/commanders-49ers-time-tv-score-live-updates--live/92336687007/"
-        }
+       {
+        "label": "NBC Sports — 49ers 23-17 over Commanders",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-49ers-hang-on-for-23-17-win-over-commanders"
+       }
       ]
-    },
-    {
-      "evidence_id": "ev-odds-evening-20261019-pm",
-      "category": "odds",
-      "verification": "REPORTED",
-      "fact": "Evening (about 5:30 p.m. ET) DraftKings lines for Commanders at 49ers: spread 49ers -7.5 (-110) / Commanders +7.5 (-110); total 52.5 (over -110 / under -110); moneyline 49ers -455 / Commanders +350 (vs the morning board's DK -410 / +320 and FanDuel -450 / +350). Spread unchanged through the day; total up a point from the morning's 51.5.",
+     },
+     {
+      "headline": "Injury report, all in one place",
+      "paragraphs": [
+       "Commanders receiver Terry McLaurin was carted off late in the first quarter with a knee injury. 49ers receiver Mike Evans, who played through a questionable tag, aggravated his Achilles before halftime and did not return.",
+       "Bears quarterback Caleb Williams is off the injury report after throwing for 305 yards in Sunday's win over Atlanta — good timing with the Patriots coming to Chicago Thursday night (8:15 p.m. ET kickoff). Chicago estimated linebacker T.J. Edwards, guard Jonah Jackson, running back Kyle Monangai, and linebacker Jack Sanborn as non-participants Monday."
+      ],
+      "takeaway": "Check back in the evening brief: Thursday teams report again, and inactives come about 90 minutes before kickoff.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-injuries-20261020",
+       "ev-caleb-williams-20261020"
+      ],
       "sources": [
-        {
-          "label": "USA Today MNF live updates",
-          "url": "https://www.usatoday.com/story/sports/nfl/2026/10/19/49ers-commanders-score-highlights-stats-monday-night-football--live/92271966007/"
-        }
+       {
+        "label": "Reuters — 49ers stave off Commanders",
+        "url": "https://www.reuters.com/sports/nfl/49ers-stave-off-commanders-comeback-bid-remain-unbeaten--flm-2026-10-20/"
+       },
+       {
+        "label": "NBC Sports — Caleb Williams off injury report",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/caleb-williams-off-bears-injury-report"
+       }
       ]
-    },
-    {
-      "evidence_id": "ev-standings-20261019-pm",
-      "category": "news",
-      "verification": "REPORTED",
-      "fact": "San Francisco enters tonight 5-0, atop the NFC West and one of two remaining undefeated teams in the NFC (the 5-0 Vikings are the other).",
-      "sources": [
-        {
-          "label": "USA Today MNF live updates",
-          "url": "https://www.usatoday.com/story/sports/nfl/2026/10/19/49ers-commanders-score-highlights-stats-monday-night-football--live/92271966007/"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-app-board-20261019-pm",
-      "category": "app",
-      "verification": "INTERNAL_CANONICAL",
-      "fact": "NFL EDGE product board generated_at_utc 2026-10-19T12:08:26Z (6:08 a.m. Denver; still the morning edition at evening read time). Game 2026_06_WAS_SF: quarterbacks expected starters Jayden Daniels (WAS) and Brock Purdy (SF). Market board: DraftKings spread SF -7.5 (-108) / WAS +7.5 (-112), total 51.5 (over -115 / under -105), moneyline SF -410 / WAS +320; FanDuel spread SF -7.5 (-108) / WAS +7.5 (-112), total 51.5. Headline cards hit_rate, balanced, value all NO_PLAY (no offer satisfied the frozen lane contracts). Model expected_margin prediction 3.991 (about 4 points); ridge totals prediction 47.58.",
+     },
+     {
+      "headline": "Weather: nothing to check today",
+      "paragraphs": [
+       "There are no games today, so no weather to worry about. The next outdoor kickoff is Thursday night in Chicago — Patriots at Bears — and kickoff-window weather for that one lands in tomorrow's briefs."
+      ],
+      "takeaway": "Weather only matters when there is a game. Next check: Thursday in Chicago.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-app-board-20261020-am"
+      ],
       "sources": []
-    }
+     }
+    ]
+   },
+   {
+    "id": "what-it-means",
+    "title": "What It Means for NFL EDGE",
+    "icon": "💡",
+    "items": [
+     {
+      "headline": "The board has not flipped to Week 7 yet — read this before you bet",
+      "paragraphs": [
+       "As of this morning's build, the app still shows last week's board. The morning refresh is landing the Week 7 slate — 14 games, with the Bills, Jaguars, Chargers, and Commanders on bye. Cards, expected margins, and headline overlays will fill in with the refresh.",
+       "Until then, treat any line you see in the app as last week's. The board refreshes every morning and evening — once Week 7 is live, that is your starting point, not your answer."
+      ],
+      "takeaway": "A stale board is a trap. Confirm the board says Week 7 before you read a single card.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-app-board-20261020-am"
+      ],
+      "sources": []
+     },
+     {
+      "headline": "When your book's number is not the board's number, tap Check",
+      "paragraphs": [
+       "The Hurts news broke Monday. Some books may still be repricing Cowboys at Eagles, and your book's price may not match the app's market board at all. That is exactly what Check is for: type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet/no-bet verdict on YOUR price. Full re-evaluation, not a blind override.",
+       "-120 means every $1.20 you risk wins $1. For your actual stake, use the app's staking guidance — it sizes from your bankroll and how aggressive you set it, and it stays deliberately conservative."
+      ],
+      "takeaway": "Good news plus a good number beats waiting. If Check says bet at your price, bet it.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-hurts-out-20261020",
+       "ev-app-board-20261020-am"
+      ],
+      "sources": [
+       {
+        "label": "CNN — blood clots sideline Jalen Hurts",
+        "url": "https://www.cnn.com/2026/10/20/health/blood-clots-jalen-hurts"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "fade",
+    "title": "Learn the Game",
+    "icon": "⚖️",
+    "mode": "learning",
+    "items": [
+     {
+      "headline": "Learn the Game: closing line value",
+      "paragraphs": [
+       "Closing line value — CLV for short — means you bet a better price than the price the line settles at right before kickoff. If you take a team at -3 on Tuesday and the line closes at -5 on Sunday, you got closing line value. You beat the market to the number.",
+       "Hypothetical example: say the Cowboys open at -1.5 in Philadelphia on Tuesday and you bet them, then the line moves to -3 by Sunday. Whether the Cowboys win or lose, your bet was the right side of the market move — you paid less for the same ticket. Over a season, consistently beating the close is the cleanest sign your process is finding real edges, because the closing line is usually the sharpest number of the week."
+      ],
+      "takeaway": "You cannot control wins and losses, but you can control the price you pay. Chasing closing line value keeps you on the right side of the market's best guess.",
+      "editorial_only": true,
+      "evidence_ids": [],
+      "sources": []
+     }
+    ]
+   },
+   {
+    "id": "market-watch",
+    "title": "Line Movement",
+    "icon": "👀",
+    "items": [
+     {
+      "headline": "Week 7 openers vs now: the biggest moves",
+      "paragraphs": [
+       "Week 7 lookahead lines have been out since last week, and the movers are the story. The Browns at Titans flipped 4.5 points — from Tennessee -3 at the open to the Titans +1.5 now. Buccaneers at Panthers swung the same amount, from Carolina +1.5 to Carolina -3.",
+       "Also moving: Colts at Vikings from Minnesota -2.5 to -5.5, Dolphins at Jets from the Jets -2.5 to -4.5, Broncos at Cardinals from Arizona +7.5 to +5.5, Packers at Lions from Detroit -1.5 to -3.0, and Giants at Texans from Houston -5.5 to -7.0. Totals dropped hard in three spots: Browns-Titans 41.5 to 37.5, Colts-Vikings 46.5 to 43.5, Dolphins-Jets 41.5 to 38.5.",
+       "No new movement since Sunday — the numbers match the weekend read exactly. Thursday's opener: Patriots at Bears, Chicago -1.5 with a 48.5 total. When the app's Week 7 board lands this morning, compare its market board against these numbers and run anything you like through Check at your book's price."
+      ],
+      "takeaway": "The market has spoken on seven games since the open. New information — Hurts, injuries, Thursday reports — is what moves these next.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-week7-lines-20261020",
+       "ev-app-board-20261020-am"
+      ],
+      "sources": [
+       {
+        "label": "4for4 — Week 7 Lookahead Lines Report",
+        "url": "https://www.4for4.com/2026/w6/week-7-nfl-odds-lookahead-lines-report"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "today-tip",
+    "title": "Today's Tip",
+    "icon": "✅",
+    "items": [
+     {
+      "headline": "Thursday game? Thursday check.",
+      "paragraphs": [
+       "Patriots at Bears is two days out (8:15 p.m. ET kickoff Thursday). Chicago's final injury report lands Wednesday, inactives come about 90 minutes before kickoff Thursday, and the board refreshes every morning — so check back in tomorrow's brief for the app's first real Week 7 cards.",
+       "One more thing: settlement is manual, and the tracker only works if you are honest with yourself. Log last night's Monday-night result — win or lose — before the Week 7 slate starts."
+      ],
+      "takeaway": "Two days to Thursday. Let the board refresh, let the reports land, then Check your price.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-app-board-20261020-am"
+      ],
+      "sources": []
+     }
+    ]
+   }
   ]
+ },
+ "evidence": [
+  {
+   "evidence_id": "ev-app-board-20261020-am",
+   "category": "app-board",
+   "fact": "App product/latest at 2026-10-20T00:08:28Z (checked 6:15-6:20am Denver) still shows Week 6 games; board refresh to Week 7 pending. 4for4 Week 7 lookahead: byes BUF, JAX, LAC, WAS; NE@CHI Thu -1.5/48.5.",
+   "interpretation": "The app's Week 7 cards are not live yet; readers must confirm the board says Week 7 before using it.",
+   "verification": "INTERNAL_CANONICAL",
+   "sources": []
+  },
+  {
+   "evidence_id": "ev-mnf-result-20261020",
+   "category": "result",
+   "fact": "49ers defeated Commanders 23-17 on Monday Night Football in Santa Clara (SF led 20-3 at half, 23-3 late 3Q; Washington rallied with 14 unanswered). SF 6-0, WAS 1-4-1.",
+   "interpretation": "Monday's cards settle; SF is the NFL's only unbeaten team.",
+   "verification": "NEWS_REPORT",
+   "sources": [
+    {
+     "label": "NBC Sports — 49ers 23-17 over Commanders",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-49ers-hang-on-for-23-17-win-over-commanders"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-hurts-out-20261020",
+   "category": "injury",
+   "fact": "Eagles announced Monday: further testing revealed deep vein thrombosis and bilateral pulmonary emboli in Jalen Hurts; clinically stable, expected full recovery, but on blood thinners and barred from contact activities — expected to miss the remainder of the 2026 season. Hurts was placed on IR Saturday and missed Sunday's loss to Carolina; Tanner McKee expected to start. Eagles host Cowboys Sunday.",
+   "interpretation": "Season-ending QB change for a Sunday home game; market may still be repricing.",
+   "verification": "NEWS_REPORT",
+   "sources": [
+    {
+     "label": "CNN — blood clots sideline Jalen Hurts",
+     "url": "https://www.cnn.com/2026/10/20/health/blood-clots-jalen-hurts"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-injuries-20261020",
+   "category": "injury",
+   "fact": "Commanders WR Terry McLaurin carted off late in the first quarter Monday with a knee injury. 49ers WR Mike Evans (questionable pre-game) aggravated his Achilles before halftime and did not return. CHI estimated non-participants Monday: T.J. Edwards (hamstring), Jonah Jackson (hip/quadriceps), Kyle Monangai, Jack Sanborn (concussion).",
+   "interpretation": "Monday-night injuries plus Thursday-game statuses to watch.",
+   "verification": "NEWS_REPORT",
+   "sources": [
+    {
+     "label": "Reuters — 49ers stave off Commanders",
+     "url": "https://www.reuters.com/sports/nfl/49ers-stave-off-commanders-comeback-bid-remain-unbeaten--flm-2026-10-20/"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-caleb-williams-20261020",
+   "category": "injury",
+   "fact": "Bears QB Caleb Williams is off the injury report after missing three games with a torn hamstring; threw 30-of-36 for 305 yards and a TD in Sunday's win over Atlanta. Bears host Patriots Thursday 8:15 p.m. ET.",
+   "interpretation": "QB news for Thursday's game — Williams healthy.",
+   "verification": "NEWS_REPORT",
+   "sources": [
+    {
+     "label": "NBC Sports — Caleb Williams off injury report",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/caleb-williams-off-bears-injury-report"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-week7-lines-20261020",
+   "category": "market",
+   "fact": "4for4 Week 7 lookahead lines (verified 2026-10-20 AM, unchanged since 10-19): CLE@TEN TEN -3 -> +1.5; TB@CAR CAR +1.5 -> -3; IND@MIN MIN -2.5 -> -5.5; MIA@NYJ NYJ -2.5 -> -4.5; DEN@ARI ARI +7.5 -> +5.5; GB@DET DET -1.5 -> -3.0; NYG@HOU HOU -5.5 -> -7.0; NE@CHI CHI -1.5/48.5; totals down: CLE@TEN 41.5->37.5, IND@MIN 46.5->43.5, MIA@NYJ 41.5->38.5.",
+   "interpretation": "Seven spreads and three totals have moved since the open; biggest flips are CLE@TEN and TB@CAR.",
+   "verification": "BOOK_COMPOSITE",
+   "sources": [
+    {
+     "label": "4for4 — Week 7 Lookahead Lines Report",
+     "url": "https://www.4for4.com/2026/w6/week-7-nfl-odds-lookahead-lines-report"
+    }
+   ]
+  }
+ ]
 }
