@@ -1,14 +1,14 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-10-19T12:18:44Z",
-  "research_generated_at_utc": "2026-10-19T12:18:44Z",
+  "submitted_at_utc": "2026-10-20T00:13:39Z",
+  "research_generated_at_utc": "2026-10-20T00:13:39Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-10-19T12:18:44Z",
-    "research_generated_at_utc": "2026-10-19T12:18:44Z",
-    "edition": "Morning Brief",
-    "title": "NFL EDGE Monday Morning Brief",
-    "dek": "One game closes Week 6: the 5-0 49ers host Jayden Daniels and the Commanders tonight. Here's the news, the one line left, and how to use the app on it.",
+    "published_at_utc": "2026-10-20T00:13:39Z",
+    "research_generated_at_utc": "2026-10-20T00:13:39Z",
+    "edition": "Evening Brief",
+    "title": "NFL EDGE Monday Evening Brief",
+    "dek": "The inactive lists are final for tonight's Commanders-49ers game, the total climbed back to 52.5, and the app's board still shows the morning snapshot — here is the evening delta.",
     "sections": [
       {
         "id": "what-matters",
@@ -16,78 +16,70 @@
         "icon": "📰",
         "items": [
           {
-            "headline": "One game left: Commanders at 49ers, tonight 8:15 p.m. ET",
+            "headline": "Inactives are in: Evans and Diggs play, Deebo and Bosa sit",
             "paragraphs": [
-              "Monday Night Football closes Week 6: the Washington Commanders (1-3-1) visit the unbeaten San Francisco 49ers (5-0) at Levi's Stadium, 8:15 p.m. ET on ESPN/ABC.",
-              "San Francisco has yet to lose, and Brock Purdy is playing like an early MVP candidate. Washington gets Jayden Daniels back from injury and is coming off a 27-27 tie with the Giants.",
-              "Both DraftKings and FanDuel are dealing San Francisco -7.5 with a 51.5 total. The app's QB board confirms Daniels and Purdy as the expected starters."
+              "The inactive lists landed about 90 minutes before kickoff, and both receivers who were questionable all week are playing. Mike Evans (ribs, Achilles) is active for the 49ers, and Stefon Diggs (hamstring) is active for the Commanders — he'll line up with Terry McLaurin.",
+              "The outs: 49ers DE Nick Bosa (knee, calf) and WR Deebo Samuel (hamstring) are inactive, along with S Marques Sigle and LB Garret Wallow. Christian Kirk was not activated off IR and stays out; Ricky Pearsall is on IR. For Washington, backup QB Marcus Mariota (knee) is out along with DE Charles Omenihu, and RB Jacory Croskey-Merritt and OLB Javontae Jean-Baptiste went to IR earlier today.",
+              "The returns: SF has DE Mykel Williams (knee), CB Upton Stout (shoulder) and DB Siran Neal (neck) active, and FB Kyle Juszczyk (knee) and DT James Thompson Jr. (ankle) are back. For Washington, CB Trey Amos (activated off IR) and S Nick Cross are active.",
+              "And no QB change: the app still shows Jayden Daniels and Brock Purdy as the expected starters."
             ],
-            "takeaway": "Tonight is the whole slate: run the app's process on this one before inactives post.",
+            "takeaway": "Inactives are the final word, not Friday's report. If your book's price still looks good with the real lineups in, tap Check on your number.",
             "editorial_only": false,
             "evidence_ids": [
-              "ev-mnf-info-20261019",
-              "ev-app-board-20261019-am"
+              "ev-inactives-20261019-pm",
+              "ev-app-board-20261019-pm"
             ],
             "sources": [
               {
-                "label": "USA Today MNF how-to-watch",
-                "url": "https://www.usatoday.com/story/sports/nfl/49ers/2026/10/19/san-francisco-49ers-vs-washington-commanders-time-tv-channel/92242895007/"
+                "label": "Niners Wire live updates",
+                "url": "https://ninerswire.usatoday.com/story/sports/nfl/niners/2026/10/19/49ers-commanders-week-6-live-updates-final-score-highlights--live/92336234007/"
+              },
+              {
+                "label": "Commanders Wire inactives",
+                "url": "https://commanderswire.usatoday.com/story/sports/nfl/commanders/2026/10/19/commanders-nfl-49ers-week-6-inactives-whos-in-out/92337056007/"
+              },
+              {
+                "label": "Fantasy Injury News",
+                "url": "https://fantasy-injury-news.com/commanders-49ers-inactives-week-6/"
               }
             ]
           },
           {
-            "headline": "Injury report, all in one place",
+            "headline": "Weather: still fine football weather in Santa Clara",
             "paragraphs": [
-              "Commanders: Jayden Daniels (left elbow) played last week and is expected to start. Marcus Mariota (MCL sprain) is out and didn't travel. Jacory Croskey-Merritt re-injured his groin, didn't practice all week, and was ruled out Friday. Rachaad White (shoulder) and Austin Ekeler (chest) are on the report. Stefon Diggs (hamstring) practiced Friday and could be active.",
-              "49ers: Deebo Samuel (hamstring) is out. Christian Kirk (calf) and Mike Evans (ribs) are questionable.",
-              "The app's quarterback board agrees with the reports: Daniels and Purdy are the expected starters, and it hasn't flagged any QB change."
+              "Sunny with some cloud cover at kickoff, temperatures in the mid-to-high 60s, no rain, and only a light wind. Nothing in the forecast changes how this game gets played."
             ],
-            "takeaway": "Biggest hit is Washington's backfield: the top rusher is out and the next two are banged up, so Daniels' legs carry more of the run game.",
+            "takeaway": "No weather angle tonight. Judge any number you like on the football, not the forecast.",
             "editorial_only": false,
             "evidence_ids": [
-              "ev-injury-20261019",
-              "ev-app-board-20261019-am"
+              "ev-weather-20261019-pm"
             ],
             "sources": [
               {
-                "label": "Bleacher Nation injury report",
-                "url": "https://www.bleachernation.com/stats-and-news/2026/10/18/49ers-vs-commanders-injury-report-inactives-week-6/"
+                "label": "Niners Wire live updates",
+                "url": "https://ninerswire.usatoday.com/story/sports/nfl/niners/2026/10/19/49ers-commanders-week-6-live-updates-final-score-highlights--live/92336234007/"
               }
             ]
           },
           {
-            "headline": "Weather: fine football weather in Santa Clara",
+            "headline": "The 5-0 49ers put the perfect record on the line",
             "paragraphs": [
-              "The National Weather Service forecast for Monday night is mostly cloudy, falling into the mid-40s, with a light south wind at 2 to 12 mph and gusts up to 20.",
-              "That's mild October football weather. Nothing here to worry about."
+              "San Francisco comes in atop the NFC West and as one of two unbeaten teams left in the NFC — the 5-0 Vikings are the other. The market has them favored by 7.5 tonight, unchanged through the day."
             ],
-            "takeaway": "Weather is a non-factor tonight; judge this game on the teams, not the sky.",
+            "takeaway": "Big-name team, big spread, late Sunday rush money usually flows this way — but the number hasn't moved all day.",
             "editorial_only": false,
             "evidence_ids": [
-              "ev-weather-20261019"
+              "ev-standings-20261019-pm",
+              "ev-odds-evening-20261019-pm"
             ],
             "sources": [
               {
-                "label": "NWS forecast Santa Clara",
-                "url": "https://api.weather.gov/gridpoints/MTR/97,86/forecast"
-              }
-            ]
-          },
-          {
-            "headline": "Inactives land about 90 minutes before kickoff",
-            "paragraphs": [
-              "The final inactive lists post about 90 minutes before the 8:15 p.m. ET kickoff, around 6:45 p.m. ET.",
-              "This morning's brief can't have them yet. The questionable tags to watch: Washington's Stefon Diggs, and San Francisco's Christian Kirk and Mike Evans."
-            ],
-            "takeaway": "That's tonight's one pending info event: check inactives before you lock anything in.",
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-injury-20261019"
-            ],
-            "sources": [
+                "label": "USA Today MNF live updates",
+                "url": "https://www.usatoday.com/story/sports/nfl/2026/10/19/49ers-commanders-score-highlights-stats-monday-night-football--live/92271966007/"
+              },
               {
-                "label": "Bleacher Nation injury report",
-                "url": "https://www.bleachernation.com/stats-and-news/2026/10/18/49ers-vs-commanders-injury-report-inactives-week-6/"
+                "label": "USA Today MNF live updates",
+                "url": "https://www.usatoday.com/story/sports/nfl/2026/10/19/49ers-commanders-score-highlights-stats-monday-night-football--live/92271966007/"
               }
             ]
           }
@@ -99,48 +91,54 @@
         "icon": "💡",
         "items": [
           {
-            "headline": "No cards tonight: here's what that means",
+            "headline": "The app's card is still empty — here's how to read that",
             "paragraphs": [
-              "All three of the app's headline lanes are empty this morning: Hit Rate, Balanced, and Value all show no play. No offer on the board satisfied the frozen lane contracts.",
-              "Quick refresher on the cards. Hit Rate is the supported pick that looks most likely to win; it gives up value to chase win probability. Balanced is a strong pick without paying too much; the middle ground, and a fine starting point if you're newer to this. Value is always the model's +EV play.",
-              "With only Monday night left and the board sitting at San Francisco -7.5 with a 51.5 total, no lane cleared its bar. The app's honest answer tonight is no play at these prices. That's the filter working, not a broken board."
+              "All three headline cards — Hit Rate, Balanced, and Value — are still showing no play. That hasn't changed since the morning edition: no offer on tonight's board satisfied the frozen lane contracts.",
+              "Quick refresher. Hit Rate is the supported pick that looks most likely to win; it gives up value to chase win probability. Balanced is the middle ground, a strong pick without paying too much — a fine starting point if you're newer to this. Value is always the model's +EV play. Neither Hit Rate nor Balanced is deficient for not being +EV; they answer different questions.",
+              "An empty card isn't the app telling you the 49ers won't cover. It's the app saying nothing on this board cleared the bar at these prices. No card is a verdict too."
             ],
-            "takeaway": "No card is a verdict too: the model doesn't have to like anything every night.",
+            "takeaway": "Empty card, full toolbox: if your book's price differs from the board's, tap Check and let the app re-run your number.",
             "editorial_only": false,
             "evidence_ids": [
-              "ev-app-board-20261019-am"
+              "ev-app-board-20261019-pm"
             ],
             "sources": []
           },
           {
-            "headline": "Your book's number isn't -7.5? Tap Check",
+            "headline": "Your book's number isn't the board's? Tap Check",
             "paragraphs": [
-              "The board refreshes every morning and evening, but your book is your book. If your number or price differs from what the app saw, tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator.",
-              "What you get is a bet or no-bet verdict on your price. That's a full re-evaluation of the actual number in front of you, not a blind override of the board."
+              "The board the app is reading from this evening still shows the morning snapshot: DraftKings with 49ers -7.5 and a 51.5 total. If your book shows something else — and tonight, on the total, it probably does — type your book's line and price into Check.",
+              "The app runs it back through NFL EDGE's model and the evaluator and returns a bet or no-bet verdict on YOUR price. That's a full re-evaluation of the actual number in front of you, not a blind override of the board."
             ],
             "takeaway": "Never bet the app's number at your book's worse number: Check your price first.",
             "editorial_only": false,
             "evidence_ids": [
-              "ev-app-board-20261019-am"
+              "ev-app-board-20261019-pm",
+              "ev-odds-evening-20261019-pm"
             ],
-            "sources": []
+            "sources": [
+              {
+                "label": "USA Today MNF live updates",
+                "url": "https://www.usatoday.com/story/sports/nfl/2026/10/19/49ers-commanders-score-highlights-stats-monday-night-football--live/92271966007/"
+              }
+            ]
           }
         ]
       },
       {
         "id": "fade",
         "title": "Learn the Game",
-        "icon": "⚖️",
         "mode": "learning",
+        "icon": "⚖️",
         "items": [
           {
-            "headline": "Learn the Game: the vig",
+            "headline": "Learn the Game: handle vs. tickets",
             "paragraphs": [
-              "Hypothetical example, clearly labeled: imagine a coin-flip bet where both sides pay -110. You risk $1.10 to win $1.",
-              "To break even at -110, you don't need to win half your bets. You need to win about 52.4%. That gap, between 50% and 52.4%, is the vig: the book's cut for taking the bet.",
-              "That's why price matters as much as picking winners. A bet at -110 needs 52.4% to break even, but the same bet at -105 only needs about 51.2%. The team didn't change; the price did, and the math got easier."
+              "When you see a betting split, you'll usually see two columns: tickets (BET) and handle (HND). Tickets is the share of individual bets on a side. Handle is the share of the money wagered on that side.",
+              "Hypothetical example: say 70% of the tickets are on the favorite but only 40% of the money is. That means lots of smaller bets on the favorite and a few bigger ones on the underdog. Nobody can tell you for sure who placed the big ones — but a wide gap between tickets and handle is exactly what price-sensitive bettors watch, because sharper money tends to wait for the number it wants.",
+              "Tonight's honest note: the free VSiN row showed an MLB featured game, not an NFL split, so there was no verified public-vs-money disagreement to work with. When the data isn't there, the right move is to say so — not to invent a Fade."
             ],
-            "takeaway": "Every time you shop a better price or skip a bad one, you're paying less vig. That's free edge, and it compounds.",
+            "takeaway": "Next time you see a split, compare the two columns: tickets tell you who's loudest, handle tells you where the money is.",
             "editorial_only": true,
             "evidence_ids": [],
             "sources": []
@@ -153,18 +151,25 @@
         "icon": "👀",
         "items": [
           {
-            "headline": "Overnight: the total ticked down to 51.5",
+            "headline": "The total round-tripped: 52.5 to 51.5 and back to 52.5",
             "paragraphs": [
-              "The only real movement overnight is on tonight's total. Last night DraftKings was dealing 52.5; this morning both DraftKings and FanDuel sit at 51.5.",
-              "The spread hasn't budged: San Francisco -7.5 on both books. DraftKings' juice shifted a touch (from -110 both ways last night to -108/-112), but the line itself is steady.",
-              "Every Sunday board is off now; those games played, so there's nothing left to move on them. All market discussion for today lives in this section."
+              "The full-day arc on the total is a clean round trip. Last night DraftKings was dealing 52.5; overnight it ticked down to 51.5, and that's where the app's morning board captured it. Through the day it climbed all the way back: this evening DraftKings is back at 52.5.",
+              "The spread hasn't budged: San Francisco -7.5 on the morning board, San Francisco -7.5 tonight, on both books. The moneyline drifted a touch toward San Francisco at DraftKings (from -410 this morning to -455 this evening), while FanDuel's morning -450 still lines up.",
+              "One honest note: the app's board has not refreshed since the morning edition — its snapshot is still stamped 6:08 a.m. Denver. So the app hasn't picked up today's move back up on the total. If your book shows 52.5 (or anything else), tap Check and let the app re-run YOUR number.",
+              "If Check gives you a bet on your book's number tonight, that's a bet-now spot. The inactives are final and the weather is settled, so there's no pending information coming before kickoff that would move your price your way — and waiting lets the number drift wrong too."
             ],
-            "takeaway": "Total down a point at DK to meet 51.5; spread steady at -7.5. If your book still shows 52.5, Check your price before assuming the move.",
+            "takeaway": "Total went 52.5 to 51.5 overnight and back to 52.5 today; spread steady at -7.5. The app hasn't caught the move yet — Check your price.",
             "editorial_only": false,
             "evidence_ids": [
-              "ev-app-board-20261019-am"
+              "ev-app-board-20261019-pm",
+              "ev-odds-evening-20261019-pm"
             ],
-            "sources": []
+            "sources": [
+              {
+                "label": "USA Today MNF live updates",
+                "url": "https://www.usatoday.com/story/sports/nfl/2026/10/19/49ers-commanders-score-highlights-stats-monday-night-football--live/92271966007/"
+              }
+            ]
           }
         ]
       },
@@ -174,12 +179,12 @@
         "icon": "✅",
         "items": [
           {
-            "headline": "Monday game? Monday check",
+            "headline": "Questionable-to-active: the inactive list is the answer",
             "paragraphs": [
-              "Tonight's order of operations. First, read the app's answer as it stands: no card at these prices is a real answer. Second, wait for inactives about 90 minutes before kickoff; that's the one pending event that can change the picture. Third, if your book still shows a good number after that and Check says bet, bet it. A good number tonight beats a hoped-for number that never comes.",
-              "And the occasional honesty nudge: settlement is manual, so the tracker only works if you're honest with yourself. Log the losers too."
+              "Evans and Diggs went from questionable all week to active in the last 90 minutes before kickoff. Friday's injury report is a forecast; the inactive list is the answer. If you ever have a prop or a side in mind tied to a player whose status was up in the air, wait for the inactive list before you bet it — not the practice report.",
+              "And the occasional honesty nudge: settlement is manual, no auto-settle. The tracker only works if you're honest with yourself — log the losers too."
             ],
-            "takeaway": "Check your price, wait for inactives, then trust the verdict. And write down every bet, win or lose.",
+            "takeaway": "Inactives about 90 minutes before kickoff are the final word. And write down every bet, win or lose.",
             "editorial_only": true,
             "evidence_ids": [],
             "sources": []
@@ -190,55 +195,71 @@
   },
   "evidence": [
     {
-      "evidence_id": "ev-app-board-20261019-am",
-      "category": "market",
-      "verification": "INTERNAL_CANONICAL",
-      "fact": "App board observed 2026-10-19T12:08Z: only WAS@SF still PREGAME (Mon 8:15 p.m. ET, ESPN/ABC, Levi's Stadium). DK and FD both: SF -7.5, total 51.5. QBs confirmed expected starters: Jayden Daniels (WAS) vs Brock Purdy (SF). All three headline lanes (Hit Rate, Balanced, Value) are NO_PLAY: no offer satisfied the frozen lane contract. All other Week 6 games have played; boards cleared.",
-      "sources": []
-    },
-    {
-      "evidence_id": "ev-mnf-info-20261019",
-      "category": "news",
-      "verification": "EXTERNAL_REPORT",
-      "fact": "MNF Week 6: Washington Commanders (1-3-1) at San Francisco 49ers (5-0), Monday Oct 19, 8:15 p.m. ET, ESPN/ABC, Levi's Stadium in Santa Clara. 49ers undefeated; Purdy described as early MVP candidate under Shanahan. Daniels back from injury; Commanders coming off a 27-27 tie with the Giants. Yardbarker/FanDuel had SF -7.5, total 50.5-51.5.",
-      "sources": [
-        {
-          "label": "USA Today MNF how-to-watch",
-          "url": "https://www.usatoday.com/story/sports/nfl/49ers/2026/10/19/san-francisco-49ers-vs-washington-commanders-time-tv-channel/92242895007/"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-injury-20261019",
+      "evidence_id": "ev-inactives-20261019-pm",
       "category": "injury",
-      "verification": "EXTERNAL_REPORT",
-      "fact": "Commanders: Jayden Daniels (left elbow) played last week and is expected to start Monday. Marcus Mariota (MCL sprain) ruled OUT, did not travel. Jacory Croskey-Merritt (groin re-injury) OUT, ruled out by Quinn Friday, did not practice all week. Rachaad White (shoulder) and Austin Ekeler (chest) on the report. Stefon Diggs (hamstring) practiced Friday and could be active. 49ers: Deebo Samuel (hamstring) OUT; Christian Kirk (calf) and Mike Evans (ribs) questionable.",
+      "verification": "REPORTED",
+      "fact": "Week 6 Commanders at 49ers inactive lists, posted about 90 minutes before the 8:15 p.m. ET kickoff. ACTIVE: 49ers WR Mike Evans (ribs, Achilles), Commanders WR Stefon Diggs (hamstring); also active: 49ers DE Mykel Williams (knee), CB Upton Stout (shoulder), DB Siran Neal (neck), FB Kyle Juszczyk (knee), DT James Thompson Jr. (ankle); Commanders CB Trey Amos, S Nick Cross. OUT: 49ers DE Nick Bosa (knee, calf), WR Deebo Samuel (hamstring), S Marques Sigle (ankle), LB Garret Wallow (hamstring), QB Kurtis Rourke (3rd QB), OL Enrique Cruz Jr., DL Naquan Jones; WR Christian Kirk not activated off IR (stays out), WR Ricky Pearsall on IR. Commanders OUT: QB Marcus Mariota (knee), DE Charles Omenihu (groin, ankle), CB Fabian Moreau, CB Isaac Yiadom, DE T.J. Magunranyanga, G Tanoa Togiai; RB Jacory Croskey-Merritt and OLB Javontae Jean-Baptiste placed on IR earlier today.",
       "sources": [
         {
-          "label": "Bleacher Nation injury report",
-          "url": "https://www.bleachernation.com/stats-and-news/2026/10/18/49ers-vs-commanders-injury-report-inactives-week-6/"
+          "label": "Niners Wire live updates",
+          "url": "https://ninerswire.usatoday.com/story/sports/nfl/niners/2026/10/19/49ers-commanders-week-6-live-updates-final-score-highlights--live/92336234007/"
         },
         {
-          "label": "Commanders Wire Daniels/Diggs",
-          "url": "https://commanderswire.usatoday.com/story/sports/nfl/commanders/2026/10/19/commanders-jayden-daniels-stefon-diggs-49ers/92323761007/"
+          "label": "Commanders Wire inactives",
+          "url": "https://commanderswire.usatoday.com/story/sports/nfl/commanders/2026/10/19/commanders-nfl-49ers-week-6-inactives-whos-in-out/92337056007/"
         },
         {
-          "label": "Hogs Haven Saturday report",
-          "url": "https://www.hogshaven.com/washington-commanders-game-information/449017/washington-commanders-san-francisco-49ers-2026-everything-need-know-week-6-game"
+          "label": "Fantasy Injury News",
+          "url": "https://fantasy-injury-news.com/commanders-49ers-inactives-week-6/"
         }
       ]
     },
     {
-      "evidence_id": "ev-weather-20261019",
+      "evidence_id": "ev-weather-20261019-pm",
       "category": "weather",
-      "verification": "EXTERNAL_REPORT",
-      "fact": "NWS forecast for Santa Clara (gridpoint MTR 97,86), Monday night: mostly cloudy, low around 47F, south wind 2-12 mph with gusts to 20 mph. Kickoff-window conditions are mild with light winds. Weather is not a factor.",
+      "verification": "REPORTED",
+      "fact": "Santa Clara forecast for Monday evening kickoff: sunny with some cloud cover, temperatures in the mid-to-high 60s at kickoff, no rain, light wind (about 7 MPH). Good football weather.",
       "sources": [
         {
-          "label": "NWS forecast Santa Clara",
-          "url": "https://api.weather.gov/gridpoints/MTR/97,86/forecast"
+          "label": "Niners Wire live updates",
+          "url": "https://ninerswire.usatoday.com/story/sports/nfl/niners/2026/10/19/49ers-commanders-week-6-live-updates-final-score-highlights--live/92336234007/"
+        },
+        {
+          "label": "Commanders Wire live updates",
+          "url": "https://commanderswire.usatoday.com/story/sports/nfl/commanders/2026/10/19/commanders-49ers-time-tv-score-live-updates--live/92336687007/"
         }
       ]
+    },
+    {
+      "evidence_id": "ev-odds-evening-20261019-pm",
+      "category": "odds",
+      "verification": "REPORTED",
+      "fact": "Evening (about 5:30 p.m. ET) DraftKings lines for Commanders at 49ers: spread 49ers -7.5 (-110) / Commanders +7.5 (-110); total 52.5 (over -110 / under -110); moneyline 49ers -455 / Commanders +350 (vs the morning board's DK -410 / +320 and FanDuel -450 / +350). Spread unchanged through the day; total up a point from the morning's 51.5.",
+      "sources": [
+        {
+          "label": "USA Today MNF live updates",
+          "url": "https://www.usatoday.com/story/sports/nfl/2026/10/19/49ers-commanders-score-highlights-stats-monday-night-football--live/92271966007/"
+        }
+      ]
+    },
+    {
+      "evidence_id": "ev-standings-20261019-pm",
+      "category": "news",
+      "verification": "REPORTED",
+      "fact": "San Francisco enters tonight 5-0, atop the NFC West and one of two remaining undefeated teams in the NFC (the 5-0 Vikings are the other).",
+      "sources": [
+        {
+          "label": "USA Today MNF live updates",
+          "url": "https://www.usatoday.com/story/sports/nfl/2026/10/19/49ers-commanders-score-highlights-stats-monday-night-football--live/92271966007/"
+        }
+      ]
+    },
+    {
+      "evidence_id": "ev-app-board-20261019-pm",
+      "category": "app",
+      "verification": "INTERNAL_CANONICAL",
+      "fact": "NFL EDGE product board generated_at_utc 2026-10-19T12:08:26Z (6:08 a.m. Denver; still the morning edition at evening read time). Game 2026_06_WAS_SF: quarterbacks expected starters Jayden Daniels (WAS) and Brock Purdy (SF). Market board: DraftKings spread SF -7.5 (-108) / WAS +7.5 (-112), total 51.5 (over -115 / under -105), moneyline SF -410 / WAS +320; FanDuel spread SF -7.5 (-108) / WAS +7.5 (-112), total 51.5. Headline cards hit_rate, balanced, value all NO_PLAY (no offer satisfied the frozen lane contracts). Model expected_margin prediction 3.991 (about 4 points); ridge totals prediction 47.58.",
+      "sources": []
     }
   ]
 }
