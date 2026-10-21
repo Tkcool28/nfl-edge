@@ -16,9 +16,8 @@ import requests
 
 from .nflverse_2026_identity import NFLVerse2026IdentityError, canonical_team
 from .schedule_2026 import DENVER, ROLLOVER_LOCAL_TIME, LiveScheduleError, validate_schedule
+from .surface_evidence_2026 import SurfaceEvidenceError, recover_missing_surface
 from .venue_structure_2026 import VenueStructure2026Error, structure_for_blank_roof
-
-from .week5_surface_evidence_2026 import Week5SurfaceEvidenceError, recover_missing_surface
 
 NFLVERSE_GAMES_URL = "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv"
 SOURCE_NAME = "nflverse/nfldata games.csv"
@@ -129,7 +128,7 @@ def build_week_schedule(
         home = _canonical_team(row, "home_team")
         try:
             recovered = recover_missing_surface(row, canonical_game_id=f"{season}_{week:02d}_{away}_{home}")
-        except Week5SurfaceEvidenceError as exc:
+        except SurfaceEvidenceError as exc:
             raise ScheduleMaterializationError(str(exc)) from exc
         if recovered is None:
             surface = _required(row, "surface").lower()

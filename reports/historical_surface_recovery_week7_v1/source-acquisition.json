@@ -1,0 +1,56 @@
+{
+  "free_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv",
+      "status": 200,
+      "retrieved_at_utc": "2026-10-21T13:24:43.834401+00:00",
+      "sha256": "9bb6b367298d17a106cc7a12e02b871f3a9f3ef93af5753194c66e546e200f71",
+      "bytes": 2185723
+    },
+    {
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_team/stats_team_week_2026.parquet",
+      "status": 200,
+      "retrieved_at_utc": "2026-10-21T13:24:51.936415+00:00",
+      "sha256": "5fb07a3954912e3fae0b31197f4fc0ddb952ef92e82bae49b3e11af07a860c61",
+      "bytes": 82683
+    },
+    {
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2026.parquet",
+      "status": 200,
+      "retrieved_at_utc": "2026-10-21T13:24:59.048489+00:00",
+      "sha256": "37e647d00aa5fc3c5ca4478c0e6926d3b3a5b68a0d58814e3d6318a85d42ead6",
+      "bytes": 386908
+    },
+    {
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.parquet",
+      "status": 200,
+      "retrieved_at_utc": "2026-10-21T13:25:06.003350+00:00",
+      "sha256": "cecf401352c490a26b910bdf1189c0b0cb896a44e05dfff92183cc9830643567",
+      "bytes": 6998248
+    }
+  ],
+  "paid_provider_requests": 0,
+  "active_schedule": {
+    "week": 7,
+    "game_count": 14,
+    "game_ids": [
+      "2026_07_NE_CHI",
+      "2026_07_PIT_NO",
+      "2026_07_CIN_BAL",
+      "2026_07_CLE_TEN",
+      "2026_07_IND_MIN",
+      "2026_07_MIA_NYJ",
+      "2026_07_NYG_HOU",
+      "2026_07_SF_ATL",
+      "2026_07_TB_CAR",
+      "2026_07_DEN_ARI",
+      "2026_07_GB_DET",
+      "2026_07_LAR_LV",
+      "2026_07_KC_SEA",
+      "2026_07_DAL_PHI"
+    ],
+    "sha256": "ec78a5eb76694a4d752d36ff6dfbd7e8a067ee8c0659f495d016e46281c2f5b2"
+  },
+  "archive_commit": "03c626d725fcead747f8ce2b2c86110c4d6ff1b7",
+  "archive_raw_sha256": "bef567a464e55c0ff0ba235a55763cbfdb480fa496860f076ed4a6f3f5383e93"
+}

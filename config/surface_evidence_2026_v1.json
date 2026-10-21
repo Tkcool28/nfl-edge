@@ -1,0 +1,31 @@
+{
+  "schema_version": "NFL_EDGE_SURFACE_EVIDENCE_2026_V1",
+  "games": [
+    {
+      "evidence_sha256": "bcccd64c46e1b855676a02354263f0638298ef794c7a3b92b4ca97af4e0bbeca",
+      "evidence": {
+        "season": "2026",
+        "week": "6",
+        "game_type": "REG",
+        "game_id": "2026_06_SEA_DEN",
+        "canonical_game_id": "2026_06_SEA_DEN",
+        "gameday": "2026-10-15",
+        "away_team": "SEA",
+        "home_team": "DEN",
+        "stadium": "Empower Field at Mile High",
+        "stadium_id": "DEN00",
+        "surface": "grass",
+        "verified_surface_class": "grass",
+        "surface_subtype_known": true,
+        "source_urls": [
+          "https://www.empowerfieldatmilehigh.com/events/detail/26-broncos-vs-seahawks",
+          "https://www.seahawks.com/schedule/event-calendar/2026-week-6-seahawks-at-denver-broncos-10-15-26",
+          "https://www.empowerfieldatmilehigh.com/host-an-event/event-spaces/field"
+        ],
+        "retrieved_on": "2026-10-21",
+        "evidence_quality": "OFFICIAL_GAME_VENUE_AND_CURRENT_VENUE_SURFACE",
+        "note": "Official Week 6 event and Seahawks calendar establish October 15 SEA at DEN at Empower Field. Current stadium operator field description explicitly identifies grass. Recover only grass class/canonical grass token; no grass cultivar claim, manufacturer inference, or stadium-ID lookup."
+      }
+    }
+  ]
+}

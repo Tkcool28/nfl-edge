@@ -1,0 +1,7 @@
+START_STAGE state
+COMPLETE_STAGE state
+START_STAGE football
+COMPLETE_STAGE football
+START_STAGE selector
+COMPLETE_STAGE selector
+{"completed_2026_blocks": ["2026_REG_W01", "2026_REG_W02", "2026_REG_W03", "2026_REG_W04", "2026_REG_W05", "2026_REG_W06"], "football_game_count": 14, "football_snapshot_sha256": "e1fd9c7c28e61d32e2834d7fa730db160a5c3a1b2171e09688928049038e7c6d", "football_state_version": "live-2026-state:08800be0513378de40bc1bc7", "market_data_read": false, "odds_api_called": false, "provider_request_count": 0, "schedule_path": "/workspace/scratch/c098ae86fbac/week7-offline-final/week7_schedule_v1.json", "schedule_version": "NFLVERSE_2026_REG_WEEK7_2026-10-21T13:26:33Z", "season": 2026, "selector_state_observations": {"moneyline": 1, "spread": 5}, "settled_through_week": 6, "sleeper_freshness": "FRESH", "sleeper_snapshot_id": "sleeper-scheduled-20261021T132540Z-3b5ba3f9", "verdict": "NFL_EDGE_PREPROVIDER_READY", "week": 7}

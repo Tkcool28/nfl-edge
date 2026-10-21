@@ -67,6 +67,9 @@ jobs:
             tests/live/test_sleeper_qb_live_resolver.py \
             tests/live/test_live_2026_scoring.py \
             tests/live/test_schedule_materializer_2026.py \
+            tests/live/test_historical_surface_recovery_2026.py \
+            tests/live/test_week5_surface_evidence_2026.py \
+            tests/live/test_evidence_2026.py \
             tests/live/test_settled_totals_semantics_2026.py \
             tests/live/test_product_state_2026.py
 
