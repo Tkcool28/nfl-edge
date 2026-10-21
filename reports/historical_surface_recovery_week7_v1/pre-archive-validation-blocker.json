@@ -1,0 +1,57 @@
+{
+  "verdict": "CODE_READY_VALIDATION_BLOCKED",
+  "provider_request_count": 0,
+  "odds_api_called": false,
+  "market_data_read": false,
+  "free_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv",
+      "status": 200,
+      "retrieved_at_utc": "2026-10-21T13:20:35.400333+00:00",
+      "sha256": "9bb6b367298d17a106cc7a12e02b871f3a9f3ef93af5753194c66e546e200f71",
+      "bytes": 2185723
+    }
+  ],
+  "prediction_as_of_utc": "2026-10-21T13:20:35Z",
+  "active_schedule": {
+    "week": 7,
+    "game_count": 14,
+    "game_ids": [
+      "2026_07_NE_CHI",
+      "2026_07_PIT_NO",
+      "2026_07_CIN_BAL",
+      "2026_07_CLE_TEN",
+      "2026_07_IND_MIN",
+      "2026_07_MIA_NYJ",
+      "2026_07_NYG_HOU",
+      "2026_07_SF_ATL",
+      "2026_07_TB_CAR",
+      "2026_07_DEN_ARI",
+      "2026_07_GB_DET",
+      "2026_07_LAR_LV",
+      "2026_07_KC_SEA",
+      "2026_07_DAL_PHI"
+    ],
+    "sha256": "18fd39001bf9ecdce5cd679fe737d3643e3190dc3316880d3775de18ce1ec549"
+  },
+  "week6_blank_surface_games": [
+    "2026_06_SEA_DEN",
+    "2026_06_HOU_JAX",
+    "2026_06_CHI_ATL",
+    "2026_06_BAL_CLE",
+    "2026_06_TEN_IND",
+    "2026_06_NYJ_NE",
+    "2026_06_NO_NYG",
+    "2026_06_CAR_PHI",
+    "2026_06_PIT_TB",
+    "2026_06_ARI_LA",
+    "2026_06_LAC_KC",
+    "2026_06_BUF_LV",
+    "2026_06_DAL_GB",
+    "2026_06_WAS_SF"
+  ],
+  "stage": "SETTLED_WEEK6_RECONSTRUCTION",
+  "error_type": "SettledEvidenceError",
+  "error": "stage=HISTORICAL_SCHEDULE_METADATA week=6 recovery=REJECTED blocked_stage=SETTLED_EVIDENCE_AND_FOOTBALL_STATE: nflverse row is missing required surface (season='2026', week='6', away='HOU', home='JAX', stadium_id='LON00')",
+  "traceback": "Traceback (most recent call last):\n  File \"/workspace/scratch/c098ae86fbac/nfl-edge/src/nfl_edge/live/evidence_2026.py\", line 438, in _materialize_settled_evidence\n    payload = build_week_schedule(rows, season=2026, week=week, observed_at_utc=observed)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/c098ae86fbac/nfl-edge/src/nfl_edge/live/schedule_materializer_2026.py\", line 135, in build_week_schedule\n    surface = _required(row, \"surface\").lower()\n              ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/c098ae86fbac/nfl-edge/src/nfl_edge/live/schedule_materializer_2026.py\", line 45, in _required\n    raise ScheduleMaterializationError(\nnfl_edge.live.schedule_materializer_2026.ScheduleMaterializationError: nflverse row is missing required surface (season='2026', week='6', away='HOU', home='JAX', stadium_id='LON00')\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/workspace/scratch/c098ae86fbac/nfl-edge/scripts/validate_historical_surface_recovery_week7_v1.py\", line 72, in main\n    evidence = materialize_settled_evidence(output_dir=root / 'evidence', schedule_rows=rows,\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/c098ae86fbac/nfl-edge/src/nfl_edge/live/evidence_2026.py\", line 583, in materialize_settled_evidence\n    return _materialize_settled_evidence(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/c098ae86fbac/nfl-edge/src/nfl_edge/live/evidence_2026.py\", line 445, in _materialize_settled_evidence\n    raise SettledEvidenceError(\nnfl_edge.live.evidence_2026.SettledEvidenceError: stage=HISTORICAL_SCHEDULE_METADATA week=6 recovery=REJECTED blocked_stage=SETTLED_EVIDENCE_AND_FOOTBALL_STATE: nflverse row is missing required surface (season='2026', week='6', away='HOU', home='JAX', stadium_id='LON00')\n"
+}

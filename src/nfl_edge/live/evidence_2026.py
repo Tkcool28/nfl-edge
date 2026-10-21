@@ -23,6 +23,14 @@ import requests
 from nfl_edge.contracts.runtime_interfaces_v1 import ExpectedQBResolution
 from nfl_edge.features.pipeline import FeatureInputs
 from nfl_edge.features.totals_v1.pbp_semantics import REQUIRED_PBP_COLUMNS
+from nfl_edge.live.historical_schedule_2026 import (
+    HistoricalScheduleError,
+    checkpoint,
+    reuse,
+)
+from nfl_edge.live.historical_schedule_2026 import (
+    sha as checkpoint_sha,
+)
 from nfl_edge.live.nflverse_2026_identity import (
     NFLVerse2026IdentityError,
     canonical_team,
@@ -30,6 +38,7 @@ from nfl_edge.live.nflverse_2026_identity import (
 )
 from nfl_edge.live.schedule_materializer_2026 import (
     NFLVERSE_GAMES_URL,
+    ScheduleMaterializationError,
     build_week_schedule,
     choose_active_schedule,
     fetch_nflverse_rows,
@@ -401,22 +410,58 @@ def _materialize_settled_evidence(
     observed = _now()
     active_as_of = active_as_of_utc or observed
     rows = list(schedule_rows) if schedule_rows is not None else fetch_nflverse_rows(session=session)
-    active = choose_active_schedule(
-        rows,
-        season=2026,
-        active_as_of_utc=active_as_of,
-        observed_at_utc=observed,
-    )
+    try:
+        active = choose_active_schedule(
+            rows,
+            season=2026,
+            active_as_of_utc=active_as_of,
+            observed_at_utc=observed,
+        )
+    except ScheduleMaterializationError as exc:
+        raise ScheduleMaterializationError(
+            f"stage=ACTIVE_WEEK_SCHEDULE recovery=REJECTED blocked_stage=PUBLICATION: {exc}"
+        ) from exc
     active_week = int(active["week"])
     through_week = active_week - 1
 
     root = Path(output_dir)
     surface_recoveries = []
-    # Preserve every schedule required for deterministic replay plus the active slate.
-    for week in range(1, active_week + 1):
-        payload = build_week_schedule(rows, season=2026, week=week, observed_at_utc=observed)
-        surface_recoveries.extend(payload.get("surface_recovery", []))
+    schedules = {}
+    bundles = {active_week: checkpoint(rows, active)}
+    decisions = []
+    # Publish the strictly validated active schedule independently. No evaluator
+    # may proceed without the separate complete settled-evidence/state gates.
+    _write_json_atomic(root / f"week{active_week}_schedule_v1.json", active)
+    schedules[active_week] = active
+    for week in range(1, active_week):
+        try:
+            bundle = reuse(root, rows, week)
+            if bundle is None:
+                try:
+                    payload = build_week_schedule(rows, season=2026, week=week, observed_at_utc=observed)
+                except ScheduleMaterializationError:
+                    bundle = reuse(root, rows, week, allow_reviewed=True)
+                    if bundle is None:
+                        raise
+                    payload = bundle["schedule"]
+                    decision = "REVIEWED_IMMUTABLE_ARCHIVE_REPLAY"
+                else:
+                    bundle = checkpoint(rows, payload)
+                    decision = "VERIFIED_SOURCE_REBUILD"
+            else:
+                payload = bundle["schedule"]
+                decision = "HASH_VALIDATED_IMMUTABLE_REPLAY"
+        except (ScheduleMaterializationError, HistoricalScheduleError, OSError, ValueError, KeyError) as exc:
+            raise SettledEvidenceError(
+                f"stage=HISTORICAL_SCHEDULE_METADATA week={week} recovery=REJECTED "
+                f"blocked_stage=SETTLED_EVIDENCE_AND_FOOTBALL_STATE: {exc}"
+            ) from exc
+        schedules[week] = payload
+        bundles[week] = bundle
+        decisions.append({"week": week, "decision": decision, "checkpoint_sha256": checkpoint_sha(bundle)})
         _write_json_atomic(root / f"week{week}_schedule_v1.json", payload)
+    for payload in schedules.values():
+        surface_recoveries.extend(payload.get("surface_recovery", []))
 
     games = _canonical_games(rows, through_week=through_week)
     if through_week == 0:
@@ -457,6 +502,10 @@ def _materialize_settled_evidence(
             "source_urls": {"schedule": NFLVERSE_GAMES_URL},
             "row_counts": {"games": 0, "team_stats": 0, "qb_stats": 0, "pbp": 0},
         }
+        manifest["schedule_checkpoints"] = {str(w): checkpoint_sha(b) for w, b in bundles.items()}
+        manifest["schedule_recovery_decisions"] = decisions
+        for bundle in bundles.values():
+            _write_json_atomic(root / "schedule_checkpoints" / f"{checkpoint_sha(bundle)}.json", bundle)
         for name, frame in empties.items():
             _write_parquet_atomic(root / f"settled_{name}.parquet", frame)
         _write_json_atomic(root / "settled_evidence_manifest.json", manifest)
@@ -467,7 +516,7 @@ def _materialize_settled_evidence(
     schedule_ids = {
         game["game_id"]
         for week in range(1, through_week + 1)
-        for game in build_week_schedule(rows, season=2026, week=week, observed_at_utc=observed)["games"]
+        for game in schedules[week]["games"]
     }
     game_ids = set(str(x) for x in games["game_id"].to_list())
     if game_ids != schedule_ids:
@@ -521,6 +570,15 @@ def _materialize_settled_evidence(
             "pbp": pbp.height,
         },
     }
+    # Checkpoints become eligible only after all results/stats/PBP checks pass.
+    manifest["schedule_checkpoints"] = {str(w): checkpoint_sha(b) for w, b in bundles.items()}
+    manifest["schedule_recovery_decisions"] = decisions
+    for bundle in bundles.values():
+        path = root / "schedule_checkpoints" / f"{checkpoint_sha(bundle)}.json"
+        if path.exists() and checkpoint_sha(json.loads(path.read_text())) != checkpoint_sha(bundle):
+            raise SettledEvidenceError(f"immutable checkpoint corruption: {path}")
+        if not path.exists():
+            _write_json_atomic(path, bundle)
     if surface_recoveries:
         manifest["surface_recovery"] = surface_recoveries
     _write_json_atomic(root / "settled_evidence_manifest.json", manifest)
@@ -555,6 +613,20 @@ def _load_settled_evidence(root: str | Path) -> SettledSeasonEvidence:
     through_week = int(manifest.get("through_week", -1))
     if not 0 <= through_week <= 17:
         raise SettledEvidenceError("settled evidence through_week is invalid")
+    for raw_week, ref in manifest.get("schedule_checkpoints", {}).items():
+        week = int(raw_week)
+        try:
+            bundle_path = base / "schedule_checkpoints" / f"{ref}.json"
+            # reuse() validates digest/path, identity and current replay contract.
+            if not isinstance(ref, str) or len(ref) != 64 or any(c not in "0123456789abcdef" for c in ref):
+                raise HistoricalScheduleError("invalid checkpoint digest")
+            bundle = json.loads(bundle_path.read_text())
+            checked = reuse(base, bundle["source_rows"], week)
+            actual = json.loads((base / f"week{week}_schedule_v1.json").read_text())
+            if checked is None or actual != checked["schedule"]:
+                raise HistoricalScheduleError("schedule differs from validated checkpoint")
+        except (HistoricalScheduleError, OSError, ValueError, KeyError) as exc:
+            raise SettledEvidenceError(f"stage=HISTORICAL_REPLAY_INTEGRITY week={week}: {exc}") from exc
     frames = {}
     for name in ("games", "team_stats", "qb_stats", "pbp"):
         path = base / f"settled_{name}.parquet"

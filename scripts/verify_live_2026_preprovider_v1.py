@@ -50,49 +50,64 @@ def main() -> int:
     args = _parser().parse_args()
     root = args.repository_root.resolve()
 
-    active = resolve_active_schedule(
-        root,
-        prediction_as_of_utc=args.prediction_as_of_utc,
-        schedule_root=args.schedule_root,
-    )
-    evidence = load_settled_evidence(args.evidence_root)
-    state = advance_entering_state_through_settled_weeks(
-        repository_root=root,
-        active_schedule_path=active.path,
-        evidence=evidence,
-    )
-    prior_live_inputs = evidence.feature_inputs()
-
-    sleeper = SleeperQBSource.load(root, prediction_as_of_utc=args.prediction_as_of_utc)
-    if sleeper.freshness_state != "FRESH" or sleeper.source_warning_state is not None:
-        raise RuntimeError(
-            "Sleeper source is not ready: "
-            f"freshness={sleeper.freshness_state} warning={sleeper.source_warning_state}"
+    stage = "PREPROVIDER_INITIALIZATION"
+    try:
+        stage = "ACTIVE_WEEK_SCHEDULE"
+        active = resolve_active_schedule(
+            root,
+            prediction_as_of_utc=args.prediction_as_of_utc,
+            schedule_root=args.schedule_root,
         )
-    resolver = SleeperExpectedQBResolver(
-        sleeper,
-        overrides=load_overrides(root / DEFAULT_OVERRIDES),
-    )
-    football = score_week(
-        repository_root=root,
-        prediction_as_of_utc=args.prediction_as_of_utc,
-        resolver=resolver,
-        schedule_path=active.path,
-        entering_state=state,
-        prior_live_inputs=prior_live_inputs,
-    )
-
-    decision_state = load_entering_2026_product_state(
-        root / "data/live/2026/entering_product_state_v1.json"
-    )
-    if active.week > 1:
-        decision_state["value_state"] = advance_live_value_state(
-            entering=decision_state["value_state"],
-            evidence=evidence,
-            run_root=args.run_root,
+        stage = "HISTORICAL_RESULTS_AND_REPLAY"
+        evidence = load_settled_evidence(args.evidence_root)
+        stage = "FOOTBALL_STATE_ADVANCEMENT"
+        state = advance_entering_state_through_settled_weeks(
             repository_root=root,
+            active_schedule_path=active.path,
+            evidence=evidence,
         )
-    value_state = decision_state["value_state"]
+        prior_live_inputs = evidence.feature_inputs()
+
+        stage = "SLEEPER_READINESS"
+        sleeper = SleeperQBSource.load(root, prediction_as_of_utc=args.prediction_as_of_utc)
+        if sleeper.freshness_state != "FRESH" or sleeper.source_warning_state is not None:
+            raise RuntimeError(
+                "Sleeper source is not ready: "
+                f"freshness={sleeper.freshness_state} warning={sleeper.source_warning_state}"
+            )
+        resolver = SleeperExpectedQBResolver(
+            sleeper,
+            overrides=load_overrides(root / DEFAULT_OVERRIDES),
+        )
+        stage = "ACTIVE_WEEK_FOOTBALL_SCORING"
+        football = score_week(
+            repository_root=root,
+            prediction_as_of_utc=args.prediction_as_of_utc,
+            resolver=resolver,
+            schedule_path=active.path,
+            entering_state=state,
+            prior_live_inputs=prior_live_inputs,
+        )
+
+        stage = "HISTORICAL_SELECTOR_EVIDENCE"
+        decision_state = load_entering_2026_product_state(
+            root / "data/live/2026/entering_product_state_v1.json"
+        )
+        if active.week > 1:
+            decision_state["value_state"] = advance_live_value_state(
+                entering=decision_state["value_state"],
+                evidence=evidence,
+                run_root=args.run_root,
+                repository_root=root,
+            )
+        value_state = decision_state["value_state"]
+    except Exception as exc:
+        print(json.dumps({
+            "verdict": "NFL_EDGE_PREPROVIDER_BLOCKED", "blocked_stage": stage,
+            "error_type": type(exc).__name__, "error": str(exc),
+            "provider_request_count": 0, "odds_api_called": False, "market_data_read": False,
+        }, sort_keys=True))
+        return 1
 
     proof = {
         "verdict": "NFL_EDGE_PREPROVIDER_READY",

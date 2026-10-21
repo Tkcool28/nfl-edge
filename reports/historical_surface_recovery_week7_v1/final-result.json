@@ -1,0 +1,31 @@
+{
+  "classification": "READY_FOR_REVIEW",
+  "starting_main_sha": "02c733017e8562265178c3ee377b2a0d784945f0",
+  "branch": "fix/historical-surface-recovery-week7-v1",
+  "regression_tests_passed": 113,
+  "compatibility_tests_passed": 20,
+  "ruff": "PASS",
+  "compile": "PASS",
+  "diff_check": "PASS",
+  "settled_through_week": 6,
+  "completed_blocks": [
+    "2026_REG_W01",
+    "2026_REG_W02",
+    "2026_REG_W03",
+    "2026_REG_W04",
+    "2026_REG_W05",
+    "2026_REG_W06"
+  ],
+  "week7_games": 14,
+  "preprovider_verdict": "NFL_EDGE_PREPROVIDER_READY",
+  "provider_request_count": 0,
+  "odds_api_called": false,
+  "market_data_read": false,
+  "production_changes": false,
+  "vps_access": "READ_ONLY_ORIGINAL_EVIDENCE",
+  "remaining_offline_blockers": [],
+  "github_exact_head_ci": "PR_TRIGGERED_STATUS_REPORTED_SEPARATELY",
+  "settled_manifest_sha256": "26982a93435c268033a12e1f7c271d88718a5adbfa4042f38902c02b4bc82583",
+  "week7_schedule_sha256": "f16fd21e15741d4e41b5fd7916331cfce7bd993e4a7eff70abf5b75b9c860a68",
+  "football_snapshot_sha256": "e1fd9c7c28e61d32e2834d7fa730db160a5c3a1b2171e09688928049038e7c6d"
+}

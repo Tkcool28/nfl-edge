@@ -1,0 +1,94 @@
+[
+  {
+    "name": "refresh-20261016T000503.505703Z",
+    "proof": {
+      "path": "/var/lib/nfl-edge/production_refresh_v1/refresh-20261016T000503.505703Z/product/deterministic-proof.json",
+      "type": "file",
+      "size": 240878,
+      "mtime_ns": 1792109306623916800,
+      "mode": "0o600",
+      "uid": 0,
+      "gid": 0,
+      "sha256": "aca98a0b04893951ae3a64be9690f781633252cd8eded942a1c29b4742924999"
+    },
+    "status": {
+      "path": "/var/lib/nfl-edge/production_refresh_v1/refresh-20261016T000503.505703Z/run-status.json",
+      "type": "file",
+      "size": 1989,
+      "mtime_ns": 1792109306710917000,
+      "mode": "0o600",
+      "uid": 0,
+      "gid": 0,
+      "sha256": "b5783e0b53d19f16fc1b5760075a605bd92b07b123ebd80a18d93ae556dfa428"
+    }
+  },
+  {
+    "name": "refresh-20261018T120504.680866Z",
+    "proof": {
+      "path": "/var/lib/nfl-edge/production_refresh_v1/refresh-20261018T120504.680866Z/product/deterministic-proof.json",
+      "type": "file",
+      "size": 223682,
+      "mtime_ns": 1792325309679421700,
+      "mode": "0o600",
+      "uid": 0,
+      "gid": 0,
+      "sha256": "f1899ac504dae519bd80dde046185a399457741d45cd6aafa1635ea8cbc2ed71"
+    },
+    "status": {
+      "path": "/var/lib/nfl-edge/production_refresh_v1/refresh-20261018T120504.680866Z/run-status.json",
+      "type": "file",
+      "size": 1989,
+      "mtime_ns": 1792325309785422300,
+      "mode": "0o600",
+      "uid": 0,
+      "gid": 0,
+      "sha256": "6977c090ae54c85486d0a964faf302820f30c8598c586f883527b3a88e669087"
+    }
+  },
+  {
+    "name": "refresh-20261019T000504.126105Z",
+    "proof": {
+      "path": "/var/lib/nfl-edge/production_refresh_v1/refresh-20261019T000504.126105Z/product/deterministic-proof.json",
+      "type": "file",
+      "size": 36493,
+      "mtime_ns": 1792368508017853700,
+      "mode": "0o600",
+      "uid": 0,
+      "gid": 0,
+      "sha256": "761e8f0e8d14a7a67430c426051782d055188de41701414fe8330a54567054d5"
+    },
+    "status": {
+      "path": "/var/lib/nfl-edge/production_refresh_v1/refresh-20261019T000504.126105Z/run-status.json",
+      "type": "file",
+      "size": 1989,
+      "mtime_ns": 1792368508071854000,
+      "mode": "0o600",
+      "uid": 0,
+      "gid": 0,
+      "sha256": "0c0818260074cb9c02f620851f468fe6aa2edd4e5aba92b87a261a0481f0a4fe"
+    }
+  },
+  {
+    "name": "refresh-20261020T000504.703740Z",
+    "proof": {
+      "path": "/var/lib/nfl-edge/production_refresh_v1/refresh-20261020T000504.703740Z/product/deterministic-proof.json",
+      "type": "file",
+      "size": 19392,
+      "mtime_ns": 1792454908396004900,
+      "mode": "0o600",
+      "uid": 0,
+      "gid": 0,
+      "sha256": "7e0956f6b83b4bd12dbe929e17a00992a42de2e305ee1340c862b6eb5395c4ed"
+    },
+    "status": {
+      "path": "/var/lib/nfl-edge/production_refresh_v1/refresh-20261020T000504.703740Z/run-status.json",
+      "type": "file",
+      "size": 1989,
+      "mtime_ns": 1792454908495005400,
+      "mode": "0o600",
+      "uid": 0,
+      "gid": 0,
+      "sha256": "80f442021c6529cfab9b8cfd43be4f03d82cc55c555340afa272a204aa0f5e1f"
+    }
+  }
+]
