@@ -1,128 +1,141 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-10-20T12:19:10Z",
- "research_generated_at_utc": "2026-10-20T12:19:10Z",
+ "submitted_at_utc": "2026-10-21T00:15:09Z",
+ "research_generated_at_utc": "2026-10-21T00:15:09Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-10-20T12:19:10Z",
-  "edition": "Morning Brief",
-  "title": "NFL EDGE Tuesday Morning Brief",
-  "dek": "The Hurts diagnosis, Monday night's final in Santa Clara, and what to watch as the board flips to Week 7.",
-  "research_generated_at_utc": "2026-10-20T12:19:10Z",
+  "published_at_utc": "2026-10-21T00:15:09Z",
+  "research_generated_at_utc": "2026-10-21T00:15:09Z",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Tuesday Evening Brief",
+  "dek": "Caleb Williams is full-go for Thursday, both teams are banged up on a short week, and the evening board hasn't flipped to Week 7 yet.",
   "sections": [
    {
     "id": "what-matters",
     "title": "What Matters Today",
-    "icon": "📰",
+    "icon": "\ud83d\udcf0",
     "items": [
      {
-      "headline": "Jalen Hurts is expected to miss the rest of the season",
+      "headline": "Thursday night: Patriots at Bears opens Week 7",
       "paragraphs": [
-       "Monday brought the biggest news of the week: the Eagles announced that further testing found deep vein thrombosis and blood clots in both of Jalen Hurts' lungs. He is clinically stable and expected to recover fully, but he is on blood thinners and cannot take part in contact activities.",
-       "That ends his season — and it reshapes Sunday's game in Philadelphia, where the Eagles host the Cowboys. The Week 7 board had not flipped to the new week at press time, so the app's expected starter for Philadelphia has not updated yet. Do not act on a stale board: once the morning refresh lands, run your book's number for Cowboys at Eagles through Check and let the model re-price it."
+       "The new week starts Thursday: the 4-2 Patriots visit the 4-2 Bears, 8:15 p.m. ET at Soldier Field, exclusively on Prime Video.",
+       "New England has won three straight, averaging 33.3 points a game on the streak. Chicago answered its 31-7 loss to Green Bay with a road win at Atlanta. Drake Maye and Caleb Williams \u2014 the No. 3 and No. 1 picks from the 2024 draft \u2014 meet again; New England won the first one 19-3 in 2024."
       ],
-      "takeaway": "Quarterback out for the season = new team. Let the app re-price it before you price anything yourself.",
+      "takeaway": "The only game inside this brief's window is Thursday. Everything else is preparation.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-hurts-out-20261020",
-       "ev-app-board-20261020-am"
+       "ev-tnf-kickoff-20261020",
+       "ev-pats-form-20261020"
       ],
       "sources": [
        {
-        "label": "CNN — blood clots sideline Jalen Hurts",
-        "url": "https://www.cnn.com/2026/10/20/health/blood-clots-jalen-hurts"
-       }
-      ]
-     },
-     {
-      "headline": "Monday night: 49ers hang on, 23-17, and stay perfect",
-      "paragraphs": [
-       "San Francisco is 6-0 after surviving Washington 23-17 in Santa Clara. The 49ers led 23-3 late in the third quarter, then watched the Commanders score 14 straight before a final-play sack ended it. Jayden Daniels threw for 300 yards and two scores in the rally.",
-       "The board's Monday cards settle now. Settlement is manual — the tracker only works if you are honest with yourself, so log last night's losers too, not just the winners."
-      ],
-      "takeaway": "49ers 6-0, the NFL's only unbeaten. Log the result honestly and move on to Week 7.",
-      "editorial_only": false,
-      "evidence_ids": [
-       "ev-mnf-result-20261020"
-      ],
-      "sources": [
+        "label": "Decider \u2014 TNF Week 7 schedule",
+        "url": "https://decider.com/2026/10/20/thursday-night-football-whos-playing-tnf-this-week-tnf-schedule-watch-free/"
+       },
        {
-        "label": "NBC Sports — 49ers 23-17 over Commanders",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-49ers-hang-on-for-23-17-win-over-commanders"
+        "label": "AZCentral \u2014 Patriots vs Bears picks/odds",
+        "url": "https://www.azcentral.com/story/sports/nfl/2026/10/19/new-england-patriots-chicago-bears-picks-predictions-odds-nfl-week-7/90426179007/"
        }
       ]
      },
      {
       "headline": "Injury report, all in one place",
       "paragraphs": [
-       "Commanders receiver Terry McLaurin was carted off late in the first quarter with a knee injury. 49ers receiver Mike Evans, who played through a questionable tag, aggravated his Achilles before halftime and did not return.",
-       "Bears quarterback Caleb Williams is off the injury report after throwing for 305 yards in Sunday's win over Atlanta — good timing with the Patriots coming to Chicago Thursday night (8:15 p.m. ET kickoff). Chicago estimated linebacker T.J. Edwards, guard Jonah Jackson, running back Kyle Monangai, and linebacker Jack Sanborn as non-participants Monday."
+       "The good news for Chicago: Caleb Williams is off the injury report entirely. The torn hamstring that cost him three games is behind him \u2014 he went 30-of-36 for 305 yards and a touchdown Sunday at Atlanta.",
+       "The concerns: running back Kyle Monangai (thumb/toe) sat out practice again Tuesday and looks doubtful for a third straight missed game. Guard Jonah Jackson (hip/quad), linebacker T.J. Edwards (hamstring), and linebacker Jack Sanborn (concussion) were all non-participants in Monday's walkthrough estimate. Tyrique Stevenson and Keyshaun Elliott were full.",
+       "For New England: lineman Ben Brown (knee), cornerback Carlton Davis III (neck), and guard Alijah Vera-Tucker (hamstring) did not practice, plus kicker Andy Borregales and tackle Joshua Farmer on personal days. A.J. Brown (ankle), Morgan Moses (foot), and corners Channing Canada and Karon Prunty were limited. The important ones were full: Drake Maye (right shoulder), Will Campbell, TreVeyon Henderson, and Kevin Byard III. Maye threw for 235 yards and three touchdowns against the Jets and was not sacked once.",
+       "Monday's designations were walkthrough estimates, not real practices. The final report lands Wednesday \u2014 that is the one that counts."
       ],
-      "takeaway": "Check back in the evening brief: Thursday teams report again, and inactives come about 90 minutes before kickoff.",
+      "takeaway": "Short weeks turn every name into a maybe. Wait for the final report, then let the app do the pricing.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-injuries-20261020",
-       "ev-caleb-williams-20261020"
+       "ev-bears-pats-injuries-20261020"
       ],
       "sources": [
        {
-        "label": "Reuters — 49ers stave off Commanders",
-        "url": "https://www.reuters.com/sports/nfl/49ers-stave-off-commanders-comeback-bid-remain-unbeaten--flm-2026-10-20/"
+        "label": "Bears Wire \u2014 Bears/Patriots Monday injury report",
+        "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/10/19/bears-patriots-injury-report-monday-kyle-monangai-jonah-jackson/92332627007/"
        },
        {
-        "label": "NBC Sports — Caleb Williams off injury report",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/caleb-williams-off-bears-injury-report"
+        "label": "Heavy \u2014 Monangai injury update (Tuesday)",
+        "url": "https://heavy.com/sports/nfl/chicago-bears/kyle-monangai-injury-update-patriots-game-2/"
        }
       ]
      },
      {
-      "headline": "Weather: nothing to check today",
+      "headline": "Hurts update: the NFL clears the Eagles, McKee starts Monday",
       "paragraphs": [
-       "There are no games today, so no weather to worry about. The next outdoor kickoff is Thursday night in Chicago — Patriots at Bears — and kickoff-window weather for that one lands in tomorrow's briefs."
+       "The league reviewed how the Eagles handled Jalen Hurts' blood-clot situation and ruled the clearance process was handled appropriately. No punishment for the team.",
+       "The medical side: Hurts is stable on blood thinners, expected to recover fully, and out for the season. Tanner McKee is expected to start again Monday night when the 2-4 Eagles host the 2-4 Cowboys.",
+       "The app's board had not flipped to Week 7 at press time, so its expected-starter read for Philadelphia has not updated to McKee yet. Do not act on the old card \u2014 once the refresh lands, run your book's number for Cowboys at Eagles through Check and let the app re-price the new quarterback."
       ],
-      "takeaway": "Weather only matters when there is a game. Next check: Thursday in Chicago.",
+      "takeaway": "Quarterback out for the season = new team. Let the app re-price it before you price anything yourself.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-app-board-20261020-am"
+       "ev-hurts-followup-20261020",
+       "ev-app-board-20261020-pm"
       ],
-      "sources": []
+      "sources": [
+       {
+        "label": "TSN \u2014 NFL: Hurts clearance handled appropriately",
+        "url": "https://www.tsn.ca/nfl/article/report-hurts-clearance-was-handled-appropriately-by-eagles/"
+       }
+      ]
+     },
+     {
+      "headline": "Weather: a clean Thursday night in Chicago",
+      "paragraphs": [
+       "Soldier Field on Thursday: about 59\u00b0F at kickoff, wind around 4 mph with gusts to 10, mostly clear. No rain in the window.",
+       "That is it. No weather factor for Thursday night."
+      ],
+      "takeaway": "Good football weather, nothing more. Weather only matters when there is a game, and Thursday's game has none.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-weather-20261020"
+      ],
+      "sources": [
+       {
+        "label": "Sharp Football Analysis \u2014 NFL weather (updated Tue)",
+        "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/"
+       }
+      ]
      }
     ]
    },
    {
     "id": "what-it-means",
     "title": "What It Means for NFL EDGE",
-    "icon": "💡",
+    "icon": "\ud83d\udca1",
     "items": [
      {
-      "headline": "The board has not flipped to Week 7 yet — read this before you bet",
+      "headline": "The evening board hasn't flipped to Week 7 yet",
       "paragraphs": [
-       "As of this morning's build, the app still shows last week's board. The morning refresh is landing the Week 7 slate — 14 games, with the Bills, Jaguars, Chargers, and Commanders on bye. Cards, expected margins, and headline overlays will fill in with the refresh.",
-       "Until then, treat any line you see in the app as last week's. The board refreshes every morning and evening — once Week 7 is live, that is your starting point, not your answer."
+       "Checked at 6:10pm: the app still shows Week 6. The 6:00pm refresh to the new week had not landed at press time.",
+       "That means tonight's cards are last week's. Do not read a Week 6 card and bet Thursday's game off it. The board refreshes every morning and evening \u2014 confirm it says Week 7 before you touch a single card, then look at the fresh Hit Rate, Balanced, and Value overlays."
       ],
-      "takeaway": "A stale board is a trap. Confirm the board says Week 7 before you read a single card.",
+      "takeaway": "A stale board is a trap. The week number is the first thing you read; everything else comes second.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-app-board-20261020-am"
+       "ev-app-board-20261020-pm"
       ],
       "sources": []
      },
      {
       "headline": "When your book's number is not the board's number, tap Check",
       "paragraphs": [
-       "The Hurts news broke Monday. Some books may still be repricing Cowboys at Eagles, and your book's price may not match the app's market board at all. That is exactly what Check is for: type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet/no-bet verdict on YOUR price. Full re-evaluation, not a blind override.",
-       "-120 means every $1.20 you risk wins $1. For your actual stake, use the app's staking guidance — it sizes from your bankroll and how aggressive you set it, and it stays deliberately conservative."
+       "The board shows the model's read at the DK/FD number. Your book might show something better \u2014 or worse. Do not guess whether it still works: tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator and returns a bet/no-bet verdict on YOUR price. Full re-evaluation, not a blind override.",
+       "One timing note, and only one: if your book has a good number on Thursday and Check says bet, bet it. Waiting until Thursday hoping for better lets the number drift the wrong way too \u2014 and on a short week, the final reports move prices fast."
       ],
-      "takeaway": "Good news plus a good number beats waiting. If Check says bet at your price, bet it.",
+      "takeaway": "A good number today beats a hoped-for number later. If Check says bet at your price, bet it.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-hurts-out-20261020",
-       "ev-app-board-20261020-am"
+       "ev-app-board-20261020-pm",
+       "ev-bears-pats-injuries-20261020"
       ],
       "sources": [
        {
-        "label": "CNN — blood clots sideline Jalen Hurts",
-        "url": "https://www.cnn.com/2026/10/20/health/blood-clots-jalen-hurts"
+        "label": "Bears Wire \u2014 Bears/Patriots Monday injury report",
+        "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/10/19/bears-patriots-injury-report-monday-kyle-monangai-jonah-jackson/92332627007/"
        }
       ]
      }
@@ -131,16 +144,17 @@
    {
     "id": "fade",
     "title": "Learn the Game",
-    "icon": "⚖️",
+    "icon": "\u2696\ufe0f",
     "mode": "learning",
     "items": [
      {
-      "headline": "Learn the Game: closing line value",
+      "headline": "Learn the Game: handle vs. tickets",
       "paragraphs": [
-       "Closing line value — CLV for short — means you bet a better price than the price the line settles at right before kickoff. If you take a team at -3 on Tuesday and the line closes at -5 on Sunday, you got closing line value. You beat the market to the number.",
-       "Hypothetical example: say the Cowboys open at -1.5 in Philadelphia on Tuesday and you bet them, then the line moves to -3 by Sunday. Whether the Cowboys win or lose, your bet was the right side of the market move — you paid less for the same ticket. Over a season, consistently beating the close is the cleanest sign your process is finding real edges, because the closing line is usually the sharpest number of the week."
+       "Sportsbooks publish two percentages for a game: the share of TICKETS (how many bets) on each side, and the share of HANDLE (how many dollars). They often disagree.",
+       "A clearly labeled hypothetical: say a sportsbook shows 70% of the tickets on the favorite but only 35% of the handle. That means lots of small bets on the favorite and a few much bigger bets on the underdog. The crowd is loud on one side; the money is heavier on the other.",
+       "What it could mean: big-bet money sometimes comes from bettors who shop prices carefully \u2014 but a handle-ticket split is not proof anyone knows something. A single large bet can tilt the handle all by itself. What to watch: if the line starts moving toward the money side with no new team news, the book may be adjusting to respected action. The NFL EDGE way to use it: treat the split as context, never as a pick \u2014 run the price you can actually get through Check and let the model decide."
       ],
-      "takeaway": "You cannot control wins and losses, but you can control the price you pay. Chasing closing line value keeps you on the right side of the market's best guess.",
+      "takeaway": "Tickets tell you who is loud. Handle tells you where the dollars are. Neither tells you who wins \u2014 watch the line, then Check the app.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -150,25 +164,28 @@
    {
     "id": "market-watch",
     "title": "Line Movement",
-    "icon": "👀",
+    "icon": "\ud83d\udc40",
     "items": [
      {
-      "headline": "Week 7 openers vs now: the biggest moves",
+      "headline": "Thursday moved toward Chicago",
       "paragraphs": [
-       "Week 7 lookahead lines have been out since last week, and the movers are the story. The Browns at Titans flipped 4.5 points — from Tennessee -3 at the open to the Titans +1.5 now. Buccaneers at Panthers swung the same amount, from Carolina +1.5 to Carolina -3.",
-       "Also moving: Colts at Vikings from Minnesota -2.5 to -5.5, Dolphins at Jets from the Jets -2.5 to -4.5, Broncos at Cardinals from Arizona +7.5 to +5.5, Packers at Lions from Detroit -1.5 to -3.0, and Giants at Texans from Houston -5.5 to -7.0. Totals dropped hard in three spots: Browns-Titans 41.5 to 37.5, Colts-Vikings 46.5 to 43.5, Dolphins-Jets 41.5 to 38.5.",
-       "No new movement since Sunday — the numbers match the weekend read exactly. Thursday's opener: Patriots at Bears, Chicago -1.5 with a 48.5 total. When the app's Week 7 board lands this morning, compare its market board against these numbers and run anything you like through Check at your book's price."
+       "Patriots at Bears opened at Bears -1.5 with a 48.5 total. The current number is Bears -3 with a 50 total \u2014 1.5 points toward Chicago on the spread, 1.5 points up on the total.",
+       "The likely driver is health news, not mystery money: Caleb Williams went from questionable to full-go and threw for 305 yards Sunday. The app has not picked this move up yet \u2014 the board is still on Week 6 \u2014 so if you like Thursday, type your book's current number into Check and let the app re-run it."
       ],
-      "takeaway": "The market has spoken on seven games since the open. New information — Hurts, injuries, Thursday reports — is what moves these next.",
+      "takeaway": "The market has spoken on Thursday: Chicago is healthier than the opener priced. New information \u2014 Wednesday's final report \u2014 is what moves it next.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-week7-lines-20261020",
-       "ev-app-board-20261020-am"
+       "ev-thu-lines-20261020",
+       "ev-app-board-20261020-pm"
       ],
       "sources": [
        {
-        "label": "4for4 — Week 7 Lookahead Lines Report",
+        "label": "4for4 \u2014 Week 7 Lookahead Lines Report",
         "url": "https://www.4for4.com/2026/w6/week-7-nfl-odds-lookahead-lines-report"
+       },
+       {
+        "label": "AZCentral \u2014 Patriots vs Bears picks/odds (BetMGM)",
+        "url": "https://www.azcentral.com/story/sports/nfl/2026/10/19/new-england-patriots-chicago-bears-picks-predictions-odds-nfl-week-7/90426179007/"
        }
       ]
      }
@@ -177,18 +194,18 @@
    {
     "id": "today-tip",
     "title": "Today's Tip",
-    "icon": "✅",
+    "icon": "\u2705",
     "items": [
      {
       "headline": "Thursday game? Thursday check.",
       "paragraphs": [
-       "Patriots at Bears is two days out (8:15 p.m. ET kickoff Thursday). Chicago's final injury report lands Wednesday, inactives come about 90 minutes before kickoff Thursday, and the board refreshes every morning — so check back in tomorrow's brief for the app's first real Week 7 cards.",
-       "One more thing: settlement is manual, and the tracker only works if you are honest with yourself. Log last night's Monday-night result — win or lose — before the Week 7 slate starts."
+       "Two days to Thursday. The final injury report lands Wednesday, the board refreshes morning and evening, and inactives come about 90 minutes before kickoff.",
+       "The routine: confirm the board says Week 7, find your game, type your book's line and price into Check, and take the verdict it gives you on YOUR price. And the tracker only works if you are honest with yourself \u2014 settlement is manual, so log the losers too."
       ],
-      "takeaway": "Two days to Thursday. Let the board refresh, let the reports land, then Check your price.",
+      "takeaway": "Check the board, Check the price, log the result \u2014 winners and losers alike.",
       "editorial_only": false,
       "evidence_ids": [
-       "ev-app-board-20261020-am"
+       "ev-app-board-20261020-pm"
       ],
       "sources": []
      }
@@ -198,75 +215,121 @@
  },
  "evidence": [
   {
-   "evidence_id": "ev-app-board-20261020-am",
+   "evidence_id": "ev-tnf-kickoff-20261020",
+   "category": "news",
+   "verification": "OFFICIAL",
+   "fact": "Week 7 opens Thursday, Oct 22 with the New England Patriots (4-2) at the Chicago Bears (4-2), 8:15 p.m. ET at Soldier Field, exclusively on Prime Video.",
+   "interpretation": "The first game of the new week kicks off Thursday; it is the only game inside the evening brief's actionable window.",
+   "app_guidance": "Readers betting Thursday should wait for the Week 7 board, then run their book's number through Check.",
+   "sources": [
+    {
+     "label": "Decider \u2014 TNF Week 7 schedule",
+     "url": "https://decider.com/2026/10/20/thursday-night-football-whos-playing-tnf-this-week-tnf-schedule-watch-free/",
+     "published_at_utc": "2026-10-20T22:00:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-bears-pats-injuries-20261020",
+   "category": "injury",
+   "verification": "OFFICIAL",
+   "fact": "Caleb Williams is off the Bears' injury report after returning from a torn hamstring (30-of-36, 305 yards, 1 TD, 111.2 rating Sunday vs Atlanta). Bears DNP (Monday walkthrough estimate): RB Kyle Monangai (thumb/toe, sat out again Tuesday), OL Jonah Jackson (hip/quad), LB T.J. Edwards (hamstring), LB Jack Sanborn (concussion). Full: CB Tyrique Stevenson, LB Keyshaun Elliott. Patriots DNP: OL Ben Brown (knee), CB Carlton Davis III (neck), G Alijah Vera-Tucker (hamstring), K Andy Borregales (personal), DT Joshua Farmer (personal). Limited: WR A.J. Brown (ankle), T Morgan Moses (foot), CBs Channing Canada and Karon Prunty (hamstrings). Full: QB Drake Maye (right shoulder), T Will Campbell, RB TreVeyon Henderson, S Kevin Byard III.",
+   "interpretation": "Both teams are banged up on a short week; the reports are estimates and the final designations land Wednesday.",
+   "app_guidance": "Group all of this in the injury read, then Check the app once the Week 7 board is live \u2014 the model reprices injuries, readers should not.",
+   "sources": [
+    {
+     "label": "Bears Wire \u2014 Bears/Patriots Monday injury report",
+     "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/10/19/bears-patriots-injury-report-monday-kyle-monangai-jonah-jackson/92332627007/",
+     "published_at_utc": "2026-10-19T17:00:00Z"
+    },
+    {
+     "label": "Heavy \u2014 Monangai injury update (Tuesday)",
+     "url": "https://heavy.com/sports/nfl/chicago-bears/kyle-monangai-injury-update-patriots-game-2/",
+     "published_at_utc": "2026-10-20T12:00:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-hurts-followup-20261020",
+   "category": "injury",
+   "verification": "OFFICIAL",
+   "fact": "The NFL reviewed the Eagles' handling of Jalen Hurts' blood-clot situation and ruled the clearance process was 'handled appropriately' (The Athletic's Jonathan Jones); no punishment. Hurts (DVT, bilateral pulmonary emboli) is stable on blood thinners, expected to recover fully, and will miss the rest of the season. Tanner McKee is expected to start again Monday when the 2-4 Eagles host the 2-4 Cowboys.",
+   "interpretation": "The Eagles' QB situation is settled: McKee starts until further notice, and the story now is medical, not disciplinary.",
+   "app_guidance": "QB out for the season = new team. Let the app re-price it; do not act on the board until it reflects McKee.",
+   "sources": [
+    {
+     "label": "TSN \u2014 NFL: Hurts clearance handled appropriately",
+     "url": "https://www.tsn.ca/nfl/article/report-hurts-clearance-was-handled-appropriately-by-eagles/",
+     "published_at_utc": "2026-10-20T18:58:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-weather-20261020",
+   "category": "weather",
+   "verification": "OFFICIAL",
+   "fact": "Soldier Field, Thursday kickoff window: about 59\u00b0F at kickoff, 4 mph wind with gusts to 10, mostly clear, low precipitation chance.",
+   "interpretation": "No meaningful weather factor for Thursday night.",
+   "app_guidance": "Report it factually; it is not a totals edge.",
+   "sources": [
+    {
+     "label": "Sharp Football Analysis \u2014 NFL weather (updated Tue)",
+     "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/",
+     "published_at_utc": "2026-10-20T06:08:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-pats-form-20261020",
+   "category": "news",
+   "verification": "OFFICIAL",
+   "fact": "New England has won three straight, averaging 33.3 points per game on the streak, including a 26-19 win over the Jets on Sunday. Drake Maye threw for 235 yards and three touchdowns against the Jets and was not sacked once. A.J. Brown played his first game back (3 catches, 27 yards). The Patriots won the first Maye-vs-Williams matchup 19-3 in 2024.",
+   "interpretation": "New England is the hotter team; Chicago's case is health and home field.",
+   "app_guidance": "Context for Thursday, not a pick \u2014 the app prices it.",
+   "sources": [
+    {
+     "label": "AZCentral \u2014 Patriots vs Bears picks/odds",
+     "url": "https://www.azcentral.com/story/sports/nfl/2026/10/19/new-england-patriots-chicago-bears-picks-predictions-odds-nfl-week-7/90426179007/",
+     "published_at_utc": "2026-10-19T12:00:00Z"
+    },
+    {
+     "label": "Heavy \u2014 Patriots averaging 33.3 on win streak",
+     "url": "https://heavy.com/sports/nfl/chicago-bears/kyle-monangai-injury-update-patriots-game-2/",
+     "published_at_utc": "2026-10-20T12:00:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-app-board-20261020-pm",
    "category": "app-board",
-   "fact": "App product/latest at 2026-10-20T00:08:28Z (checked 6:15-6:20am Denver) still shows Week 6 games; board refresh to Week 7 pending. 4for4 Week 7 lookahead: byes BUF, JAX, LAC, WAS; NE@CHI Thu -1.5/48.5.",
-   "interpretation": "The app's Week 7 cards are not live yet; readers must confirm the board says Week 7 before using it.",
    "verification": "INTERNAL_CANONICAL",
+   "fact": "App product/latest checked 6:09-6:10pm Denver still shows Week 6 (generated 2026-10-20T00:08:28Z); the 6:00pm refresh to Week 7 had not landed at press time.",
+   "interpretation": "Tonight's cards are the old week's. Readers must confirm the board says Week 7 before using it.",
    "sources": []
   },
   {
-   "evidence_id": "ev-mnf-result-20261020",
-   "category": "result",
-   "fact": "49ers defeated Commanders 23-17 on Monday Night Football in Santa Clara (SF led 20-3 at half, 23-3 late 3Q; Washington rallied with 14 unanswered). SF 6-0, WAS 1-4-1.",
-   "interpretation": "Monday's cards settle; SF is the NFL's only unbeaten team.",
-   "verification": "NEWS_REPORT",
-   "sources": [
-    {
-     "label": "NBC Sports — 49ers 23-17 over Commanders",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-49ers-hang-on-for-23-17-win-over-commanders"
-    }
-   ]
+   "evidence_id": "ev-vscheck-20261020",
+   "category": "splits",
+   "verification": "INTERNAL_CANONICAL",
+   "fact": "Checked data.vsin.com free tier ~6:00pm Denver: the featured free row was college football (Middle Tennessee St vs FIU); no NFL split was visible on the free tier (no NFL game tonight).",
+   "interpretation": "No verified public/sharp split to evaluate for Thursday \u2014 the Fade attempt finds nothing tonight.",
+   "sources": []
   },
   {
-   "evidence_id": "ev-hurts-out-20261020",
-   "category": "injury",
-   "fact": "Eagles announced Monday: further testing revealed deep vein thrombosis and bilateral pulmonary emboli in Jalen Hurts; clinically stable, expected full recovery, but on blood thinners and barred from contact activities — expected to miss the remainder of the 2026 season. Hurts was placed on IR Saturday and missed Sunday's loss to Carolina; Tanner McKee expected to start. Eagles host Cowboys Sunday.",
-   "interpretation": "Season-ending QB change for a Sunday home game; market may still be repricing.",
-   "verification": "NEWS_REPORT",
-   "sources": [
-    {
-     "label": "CNN — blood clots sideline Jalen Hurts",
-     "url": "https://www.cnn.com/2026/10/20/health/blood-clots-jalen-hurts"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-injuries-20261020",
-   "category": "injury",
-   "fact": "Commanders WR Terry McLaurin carted off late in the first quarter Monday with a knee injury. 49ers WR Mike Evans (questionable pre-game) aggravated his Achilles before halftime and did not return. CHI estimated non-participants Monday: T.J. Edwards (hamstring), Jonah Jackson (hip/quadriceps), Kyle Monangai, Jack Sanborn (concussion).",
-   "interpretation": "Monday-night injuries plus Thursday-game statuses to watch.",
-   "verification": "NEWS_REPORT",
-   "sources": [
-    {
-     "label": "Reuters — 49ers stave off Commanders",
-     "url": "https://www.reuters.com/sports/nfl/49ers-stave-off-commanders-comeback-bid-remain-unbeaten--flm-2026-10-20/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-caleb-williams-20261020",
-   "category": "injury",
-   "fact": "Bears QB Caleb Williams is off the injury report after missing three games with a torn hamstring; threw 30-of-36 for 305 yards and a TD in Sunday's win over Atlanta. Bears host Patriots Thursday 8:15 p.m. ET.",
-   "interpretation": "QB news for Thursday's game — Williams healthy.",
-   "verification": "NEWS_REPORT",
-   "sources": [
-    {
-     "label": "NBC Sports — Caleb Williams off injury report",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/caleb-williams-off-bears-injury-report"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-week7-lines-20261020",
+   "evidence_id": "ev-thu-lines-20261020",
    "category": "market",
-   "fact": "4for4 Week 7 lookahead lines (verified 2026-10-20 AM, unchanged since 10-19): CLE@TEN TEN -3 -> +1.5; TB@CAR CAR +1.5 -> -3; IND@MIN MIN -2.5 -> -5.5; MIA@NYJ NYJ -2.5 -> -4.5; DEN@ARI ARI +7.5 -> +5.5; GB@DET DET -1.5 -> -3.0; NYG@HOU HOU -5.5 -> -7.0; NE@CHI CHI -1.5/48.5; totals down: CLE@TEN 41.5->37.5, IND@MIN 46.5->43.5, MIA@NYJ 41.5->38.5.",
-   "interpretation": "Seven spreads and three totals have moved since the open; biggest flips are CLE@TEN and TB@CAR.",
    "verification": "BOOK_COMPOSITE",
+   "fact": "Patriots at Bears opened at Bears -1.5 with a 48.5 total (4for4 lookahead); current BetMGM price via AZCentral is Bears -3 with a 50 total \u2014 a move of 1.5 points toward Chicago on the spread and 1.5 points up on the total.",
+   "interpretation": "The market moved toward Chicago as Williams was confirmed healthy and full-go.",
    "sources": [
     {
-     "label": "4for4 — Week 7 Lookahead Lines Report",
+     "label": "4for4 \u2014 Week 7 Lookahead Lines Report",
      "url": "https://www.4for4.com/2026/w6/week-7-nfl-odds-lookahead-lines-report"
+    },
+    {
+     "label": "AZCentral \u2014 Patriots vs Bears picks/odds (BetMGM)",
+     "url": "https://www.azcentral.com/story/sports/nfl/2026/10/19/new-england-patriots-chicago-bears-picks-predictions-odds-nfl-week-7/90426179007/",
+     "published_at_utc": "2026-10-19T12:00:00Z"
     }
    ]
   }
