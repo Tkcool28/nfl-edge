@@ -1,0 +1,327 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "capture_mode": "NATIVE_PROSPECTIVE",
+  "creation_provenance": {
+    "provider_calls": 0,
+    "source": "CANONICAL_PUBLISHED_PRODUCT",
+    "user_specific_data_included": false
+  },
+  "field_availability": {
+    "backend_user_overlay": "EXCLUDED_USER_SPECIFIC_DATA",
+    "evaluator_probability": "NOT_EXPOSED_BY_CANONICAL_PRODUCT_V1"
+  },
+  "lanes": {
+    "balanced": {
+      "american_odds": -124,
+      "away_team": "CLE",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": -124,
+        "book": "FANDUEL",
+        "ev": 0.0057448317877966115,
+        "game_id": "2026_07_CLE_TEN",
+        "lane": "BALANCED",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.5396419437340154,
+        "matchup": {
+          "away_team": "CLE",
+          "home_team": "TEN"
+        },
+        "model_probability": 0.7187715678972165,
+        "play_through": {
+          "line": null,
+          "price_american": -127
+        },
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "selection": "CLE",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.629206755815616,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.0057448317877966115,
+      "exact_offer_identity_id": "offer-3f6eb238136f3f39ac01df66",
+      "game_id": "2026_07_CLE_TEN",
+      "home_team": "TEN",
+      "kickoff_at_utc": "2026-10-25T17:00:00Z",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "line": null,
+      "logical_recommendation_id": "logical-f861f9852736359c7e09d78a",
+      "market": "MONEYLINE",
+      "market_probability": 0.5396419437340154,
+      "model_probability": 0.7187715678972165,
+      "normalized_selection": "CLE",
+      "normalized_side": "away",
+      "play_through": {
+        "line": null,
+        "price_american": -127
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.75,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "CLE",
+      "selector_version": "balanced-price-bounded-v2",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.629206755815616,
+      "value_at": null,
+      "wager_identity_id": "wager-c8e9ff17fd9fea1a5ade621b",
+      "warnings": []
+    },
+    "hit_rate": {
+      "american_odds": -278,
+      "away_team": "IND",
+      "book": "DRAFTKINGS",
+      "canonical_headline": {
+        "american_odds": -278,
+        "book": "DRAFTKINGS",
+        "ev": -0.02140097113449696,
+        "game_id": "2026_07_IND_MIN",
+        "lane": "HIT_RATE",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.7138919680038347,
+        "matchup": {
+          "away_team": "IND",
+          "home_team": "MIN"
+        },
+        "model_probability": 0.7860327622954336,
+        "play_through": {
+          "line": null,
+          "price_american": -288
+        },
+        "recommended_units": 1.25,
+        "reliability": "MEDIUM",
+        "selection": "MIN",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.7499623651496341,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": -0.02140097113449696,
+      "exact_offer_identity_id": "offer-39cd950d6a4704ed326fb677",
+      "game_id": "2026_07_IND_MIN",
+      "home_team": "MIN",
+      "kickoff_at_utc": "2026-10-25T17:00:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "line": null,
+      "logical_recommendation_id": "logical-db41658125277b41bbbb731d",
+      "market": "MONEYLINE",
+      "market_probability": 0.7138919680038347,
+      "model_probability": 0.7860327622954336,
+      "normalized_selection": "MIN",
+      "normalized_side": "home",
+      "play_through": {
+        "line": null,
+        "price_american": -288
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 1.25,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "MIN",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.7499623651496341,
+      "value_at": null,
+      "wager_identity_id": "wager-7cb6933e3f1a653f317d8c0b",
+      "warnings": []
+    },
+    "value": {
+      "american_odds": -102,
+      "away_team": "SF",
+      "book": "DRAFTKINGS",
+      "canonical_headline": {
+        "american_odds": -102,
+        "book": "DRAFTKINGS",
+        "ev": 0.014161863092344407,
+        "game_id": "2026_07_SF_ATL",
+        "lane": "VALUE",
+        "line": 2.5,
+        "market": "SPREAD",
+        "market_probability": 0.5259839095455533,
+        "matchup": {
+          "away_team": "SF",
+          "home_team": "ATL"
+        },
+        "model_probability": 0.5043566119114354,
+        "play_through": {
+          "line": 2.5,
+          "price_american": -104
+        },
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "selection": "ATL",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5043566119114354,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.014161863092344407,
+      "exact_offer_identity_id": "offer-3db9eaf441e93cee5406e019",
+      "game_id": "2026_07_SF_ATL",
+      "home_team": "ATL",
+      "kickoff_at_utc": "2026-10-25T17:00:00Z",
+      "lane": "VALUE",
+      "lane_key": "value",
+      "line": 2.5,
+      "logical_recommendation_id": "logical-22443c650606596ed157044d",
+      "market": "SPREAD",
+      "market_probability": 0.5259839095455533,
+      "model_probability": 0.5043566119114354,
+      "normalized_selection": "ATL",
+      "normalized_side": "home",
+      "play_through": {
+        "line": 2.5,
+        "price_american": -104
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.75,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "roof_resolution_status": "PENDING",
+        "roof_scenario_downstream": {
+          "agreement_status": "ROOF_SENSITIVE",
+          "closed_state": {
+            "actionable_probability": 0.39700444165860166,
+            "break_even_probability": 0.4347826086956522,
+            "conditional_nonpush_probability": 0.3982976157356655,
+            "evaluated_edge_probability": -0.036484992959986695,
+            "evaluator_version": "ml_v4",
+            "evidence": {
+              "calibrated_market_probability": 0.3982976157356656,
+              "final_probability_conditional_nonpush": 0.3982976157356655,
+              "model_market_disagreement": -0.05425393626936603,
+              "model_pool_weight": 0.0,
+              "raw_exact_avg_probability": 0.34404367946629955,
+              "raw_pinnacle_no_vig_probability": 0.4187125849196206,
+              "raw_qbelo_probability": 0.28962393091212185,
+              "raw_xgb_probability": 0.3984634280204773
+            },
+            "expected_value": -0.08364303093846304,
+            "fair_price_american": 151,
+            "p_loss": 0.5997488050946451,
+            "p_push": 0.003246753246753247,
+            "p_win": 0.39700444165860166,
+            "reason": null,
+            "reliability": "MEDIUM",
+            "staking_anchor_probability": 0.3982976157356656,
+            "staking_edge_probability": -0.03648499295998664,
+            "staking_probability": 0.3982976157356656,
+            "strict_positive_value": false,
+            "support_distance": 0.0,
+            "support_n": 1514,
+            "supported": true,
+            "uncertainty": 0.03117036878408221
+          },
+          "open_state": {
+            "actionable_probability": 0.39700444165860166,
+            "break_even_probability": 0.4347826086956522,
+            "conditional_nonpush_probability": 0.3982976157356655,
+            "evaluated_edge_probability": -0.036484992959986695,
+            "evaluator_version": "ml_v4",
+            "evidence": {
+              "calibrated_market_probability": 0.3982976157356656,
+              "final_probability_conditional_nonpush": 0.3982976157356655,
+              "model_market_disagreement": -0.047949433782183415,
+              "model_pool_weight": 0.0,
+              "raw_exact_avg_probability": 0.35034818195348216,
+              "raw_pinnacle_no_vig_probability": 0.4187125849196206,
+              "raw_qbelo_probability": 0.28962393091212185,
+              "raw_xgb_probability": 0.41107243299484253
+            },
+            "expected_value": -0.08364303093846304,
+            "fair_price_american": 151,
+            "p_loss": 0.5997488050946451,
+            "p_push": 0.003246753246753247,
+            "p_win": 0.39700444165860166,
+            "reason": null,
+            "reliability": "MEDIUM",
+            "staking_anchor_probability": 0.3982976157356656,
+            "staking_edge_probability": -0.03648499295998664,
+            "staking_probability": 0.3982976157356656,
+            "strict_positive_value": false,
+            "support_distance": 0.0,
+            "support_n": 1514,
+            "supported": true,
+            "uncertainty": 0.03117036878408221
+          },
+          "shared_state": null,
+          "status": "ROOF_SENSITIVE"
+        },
+        "roof_selected_scenario": null,
+        "status": "AVAILABLE_WITH_ROOF_SCENARIOS",
+        "support": "PARTIAL",
+        "xgboost_closed_probability": 0.3984634280204773,
+        "xgboost_open_probability": 0.41107243299484253,
+        "xgboost_scenario_delta": -0.012609004974365234
+      },
+      "selection": "ATL",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5043566119114354,
+      "value_at": null,
+      "wager_identity_id": "wager-8c6bda10ab49a4c484ec8147",
+      "warnings": []
+    }
+  },
+  "product_freshness": {
+    "age_seconds": 0.0,
+    "observed_at_utc": "2026-10-22T12:08:35Z",
+    "state": "FRESH",
+    "threshold_seconds": 43200.0
+  },
+  "product_generated_at_utc": "2026-10-22T12:08:35Z",
+  "product_stale": false,
+  "product_warnings": [],
+  "publication_id": "publication-2b5b91180590320e24273075",
+  "published_at_utc": "2026-10-22T12:08:35.986832Z",
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1",
+  "season": 2026,
+  "source_commit_sha": null,
+  "source_product_sha256": "2b5b91180590320e242730759df70666fb1c0c7b338bee269078b9bf306a1833",
+  "source_product_version": "live-2026-week7-product-v1",
+  "source_provenance": {
+    "evaluator_versions": {
+      "moneyline": "ml_v4",
+      "spread": "spread_v3",
+      "total": "total_v3"
+    },
+    "football_data_version": "live-2026-state:ec5b473a29852dace18508c2",
+    "market_snapshot_version": "live-market:725fd917e8a002247f18dce8",
+    "model_versions": {
+      "expected_margin": "expected-margin-v1-stable",
+      "qb_elo": "qb-elo-v1.0.0",
+      "ridge_totals_r4": "ridge-totals-r4-alpha100",
+      "xgboost_v2": "post-v5-v2-conservative-adaptive-tail"
+    },
+    "prediction_as_of_utc": "2026-10-22T12:05:04.683819Z",
+    "qb_snapshot_version": "sleeper-scheduled-20261022T120001Z-cf234217",
+    "selector_versions": {
+      "balanced": "balanced-price-bounded-v2",
+      "hit_rate": "v1",
+      "value": "v1"
+    }
+  },
+  "source_week_last_kickoff_at_utc": "2026-10-27T00:15:00Z",
+  "week": 7
+}
