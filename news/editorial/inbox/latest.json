@@ -1,253 +1,277 @@
 {
-  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-10-21T12:18:52Z",
-  "research_generated_at_utc": "2026-10-21T12:18:52Z",
-  "article": {
-    "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-10-21T12:18:52Z",
-    "research_generated_at_utc": "2026-10-21T12:18:52Z",
-    "edition": "Morning Brief",
-    "title": "NFL EDGE Wednesday Morning Brief",
-    "dek": "Thursday night is almost here: Patriots at Bears is down to a field goal, the final injury report lands today, and the app still shows Week 6.",
-    "sections": [
-      {
-        "id": "what-matters",
-        "title": "What Matters Today",
-        "icon": "📰",
-        "items": [
-          {
-            "headline": "Thursday night: Patriots at Bears is the whole board this week",
-            "paragraphs": [
-              "The 4-2 Patriots visit the 4-2 Bears tomorrow: 8:15 p.m. ET at Soldier Field, exclusively on Prime Video.",
-              "The quarterbacks headline it. Drake Maye practiced in full (right shoulder) and Caleb Williams is off the injury report entirely after going 30-of-36 for 305 yards and a touchdown Sunday at Atlanta."
-            ],
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-tnf-info-20261021",
-              "ev-injury-20261021"
-            ],
-            "sources": [
-              {
-                "label": "NBC Sports",
-                "url": "https://www.nbcsports.com/betting/nfl/news/patriots-vs-bears-odds-expert-picks-team-and-player-news-betting-trends-and-stats"
-              },
-              {
-                "label": "Patriots.com",
-                "url": "https://www.patriots.com/news/week-7-injury-report-patriots-at-bears"
-              }
-            ],
-            "takeaway": "The only game inside this brief's window is Thursday. Everything else is preparation."
-          },
-          {
-            "headline": "Injury report, all in one place",
-            "paragraphs": [
-              "Tuesday's report moved a few names. For New England: cornerback Carlton Davis III (neck) went from out to limited, and kicker Andy Borregales is back to full. Still not practicing: linemen Ben Brown (knee) and Alijah Vera-Tucker (hamstring), plus Joshua Farmer on a personal day. A.J. Brown (ankle) and tackle Morgan Moses (foot) were limited; Drake Maye (right shoulder) was full.",
-              "For Chicago: guard Jonah Jackson (hip/quad) upgraded to limited. Still out: running back Kyle Monangai (thumb/toe), linebacker T.J. Edwards (hamstring), and linebacker Jack Sanborn (concussion).",
-              "One more hit for New England: wide receiver Romeo Doubs is on injured reserve with the shoulder injury from Sunday's Jets win, right when A.J. Brown is still shaking off the rust. The final report lands today — Monday and Tuesday were walkthrough estimates, and today is the one that counts."
-            ],
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-injury-20261021"
-            ],
-            "sources": [
-              {
-                "label": "Patriots.com",
-                "url": "https://www.patriots.com/news/week-7-injury-report-patriots-at-bears"
-              },
-              {
-                "label": "Yardbarker",
-                "url": "https://www.yardbarker.com/nfl/articles/chicago_bears_patriots_lose_key_weapon_ahead_of_thursday_night_football/s1_17081_44448400"
-              }
-            ],
-            "takeaway": "Short weeks turn every name into a maybe. Wait for the final report, then let the app do the pricing."
-          },
-          {
-            "headline": "Weather: no factor Thursday night",
-            "paragraphs": [
-              "Chicago on Thursday night: mostly clear, mid-50s near kickoff, wind around 4 mph, about a 10% chance of rain.",
-              "That is it. Nothing in the window that moves a football."
-            ],
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-weather-20261021"
-            ],
-            "sources": [
-              {
-                "label": "weather.com",
-                "url": "https://weather.com/us/il/city/chicago/tenday"
-              }
-            ],
-            "takeaway": "Clean football weather. File it under not a factor."
-          }
-        ]
-      },
-      {
-        "id": "what-it-means",
-        "title": "What It Means for NFL EDGE",
-        "icon": "💡",
-        "items": [
-          {
-            "headline": "The board still shows Week 6 — check the week number first",
-            "paragraphs": [
-              "Checked this morning: the app still shows Week 6. Its last headline cards — Balanced and Value both on Washington +7.5 at -118 on DraftKings — are finished business; Monday night is over.",
-              "Do not read a Week 6 card and bet Thursday's game off it. The board refreshes every morning and evening — confirm it says Week 7 before you touch a single card."
-            ],
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-app-board-20261021-am"
-            ],
-            "sources": [],
-            "takeaway": "A stale board is a trap. The week number is the first thing you read; everything else comes second."
-          },
-          {
-            "headline": "When the final report lands, let Check do the pricing",
-            "paragraphs": [
-              "The board shows the model's read at the DK/FD number. Your book might show something better — or worse. Do not guess whether it still works: tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet/no-bet verdict on YOUR price. Full re-evaluation, not a blind override.",
-              "One timing note, and only one: the line sits at the key number -3. If Check says bet at your price now, bet it — waiting lets the number drift the wrong way too. The one reason to wait is a named information event: today's final injury report could move this number again."
-            ],
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-check-internal-20261021"
-            ],
-            "sources": [],
-            "takeaway": "A good number today beats a hoped-for number later. If Check says bet at your price, bet it."
-          }
-        ]
-      },
-      {
-        "id": "fade",
-        "title": "Learn the Game",
-        "icon": "⚖️",
-        "mode": "learning",
-        "items": [
-          {
-            "headline": "Learn the Game: news moves vs. money moves",
-            "paragraphs": [
-              "A betting line can move for two very different reasons. A news move: the line shifts because of new information — an injury, a cleared quarterback, a weather scare. A money move: the line shifts because of betting flow — lots of dollars landing on one side.",
-              "A clearly labeled hypothetical: imagine a favorite opens at -2.5. Tuesday their starting guard is ruled out and the line jumps to -4 before tickets even pile in. That is a news move. Different game: no news at all, but 80% of the day's tickets come in on the underdog and the line drops from +7 to +5.5. That is a money move.",
-              "Why it matters: a news move is public information — everyone saw the same report, so the edge is usually gone by the time you read about it. A money move is someone's opinion with dollars behind it, and sometimes it points to a number the opener got wrong. Either way, your job is the same: get the current line, run it through Check, and take the verdict."
-            ],
-            "editorial_only": true,
-            "evidence_ids": [],
-            "sources": [],
-            "takeaway": "When a line moves, ask why: news moves are public information, money moves are someone's opinion with dollars behind it."
-          }
-        ]
-      },
-      {
-        "id": "market-watch",
-        "title": "Line Movement",
-        "icon": "👀",
-        "items": [
-          {
-            "headline": "Thursday: Chicago went from -1.5 to -3",
-            "paragraphs": [
-              "Patriots at Bears opened at Bears -1.5 with a 48.5 total. The current number across books is Bears -3 with a 50.5 total — 1.5 points toward Chicago on the spread, 2 up on the total.",
-              "The driver is health, not mystery money: Caleb Williams went from questionable to off the injury report entirely, while New England has two starting linemen out of practice and its new receiver on IR.",
-              "The app has not picked any of this up — the board is still on Week 6. Once it flips, run Thursday's number at your book's price through Check and take the verdict."
-            ],
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-tnf-lines-20261021"
-            ],
-            "sources": [
-              {
-                "label": "NBC Sports",
-                "url": "https://www.nbcsports.com/betting/nfl/news/patriots-vs-bears-odds-expert-picks-team-and-player-news-betting-trends-and-stats"
-              },
-              {
-                "label": "WagerTalk",
-                "url": "https://www.wagertalk.com/news/nfl/patriots-vs-bears-picks-predictions-and-odds-october-22-2026/"
-              }
-            ],
-            "takeaway": "The market has spoken on Thursday: Chicago is healthier than the opener priced. Today's final report is what moves it next."
-          }
-        ]
-      },
-      {
-        "id": "today-tip",
-        "title": "Today's Tip",
-        "icon": "✅",
-        "items": [
-          {
-            "headline": "Thursday game? Thursday check.",
-            "paragraphs": [
-              "One day to Thursday. Today's routine: read the final injury report when it lands, confirm the board says Week 7, type your book's line and price into Check, and take the verdict it gives you on YOUR price. Inactives come about 90 minutes before kickoff.",
-              "And the tracker only works if you are honest with yourself — settlement is manual, so log the losers too."
-            ],
-            "editorial_only": true,
-            "evidence_ids": [],
-            "sources": [],
-            "takeaway": "Check the board, Check the price, log the result — winners and losers alike."
-          }
-        ]
-      }
+ "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+ "submitted_at_utc": "2026-10-22T00:24:22Z",
+ "research_generated_at_utc": "2026-10-22T00:24:22Z",
+ "article": {
+  "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Wednesday Evening Brief",
+  "dek": "The final injury report is out — five Patriots ruled out, the Bears lose their young back but keep their right guard — and the board has refreshed to a full Week 7.",
+  "published_at_utc": "2026-10-22T00:24:22Z",
+  "research_generated_at_utc": "2026-10-22T00:24:22Z",
+  "sections": [
+   {
+    "id": "what-matters",
+    "title": "What Matters Today",
+    "icon": "📰",
+    "items": [
+     {
+      "headline": "Final injury report is out: Patriots down five, Bears down two starters",
+      "paragraphs": [
+       "Thursday's game is a day away and the report is no longer a guess. New England ruled out five: starting guards Alijah Vera-Tucker and Ben Brown, cornerback Carlton Davis for a third straight game, and depth corners Karon Prunty and Channing Canada. Four more are questionable, including right tackle Morgan Moses and safeties Kevin Byard and Craig Woodson. Matt Pryor and Walter Rouse start at guard.",
+       "Chicago ruled out running back Kyle Monangai for a third straight game and linebacker Jack Sanborn. Linebacker T.J. Edwards is doubtful, corner Tyrique Stevenson questionable. The good news for the Bears: right guard Jonah Jackson practiced in full, got removed from the report, and will start.",
+       "Patriots (4-2) at Bears (4-2), Thursday at 8:15 p.m. ET from Soldier Field, on Prime Video."
+      ],
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-injury-final-20261021",
+       "ev-kickoff-20261021-pm"
+      ],
+      "sources": [
+       {
+        "label": "98.5 The Sports Hub",
+        "url": "https://985thesportshub.com/2026/10/21/patriots-rule-five-out-four-more-questionable-for-thursday/"
+       },
+       {
+        "label": "Bears Wire",
+        "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/10/21/bears-patriots-final-injury-report-jonah-jackson-kyle-monangai/92359934007/"
+       }
+      ],
+      "takeaway": "Short weeks turn every name into a maybe. The final report is in — price your bet against it, not Tuesday's guess."
+     },
+     {
+      "headline": "Weather: no factor Thursday night",
+      "paragraphs": [
+       "Soldier Field at kickoff: about 61 degrees, wind around 5 mph, roughly a 9% chance of rain under mostly clear skies. That's as clean as October football gets in Chicago."
+      ],
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-weather-20261021-pm"
+      ],
+      "sources": [
+       {
+        "label": "weather.com",
+        "url": "https://weather.com/us/il/city/chicago/tenday"
+       },
+       {
+        "label": "cleatz.com weather report",
+        "url": "https://cleatz.com/nfl/weather-report/"
+       }
+      ],
+      "takeaway": "Clean football weather. File it under not a factor and move on."
+     }
     ]
-  },
-  "evidence": [
-    {
-      "evidence_id": "ev-tnf-info-20261021",
-      "fact": "Patriots (4-2) at Bears (4-2), Thursday Oct 22, 8:15 p.m. ET at Soldier Field, on Prime Video.",
-      "verification": "OFFICIAL",
+   },
+   {
+    "id": "what-it-means",
+    "title": "What It Means for NFL EDGE",
+    "icon": "💡",
+    "items": [
+     {
+      "headline": "Thursday inside the app: model and market agree on Chicago",
+      "paragraphs": [
+       "The board refreshed to Week 7 this evening — no more stale Week 6 screen. Both expected starters are confirmed: Drake Maye for New England, Caleb Williams for Chicago, with no injury flags on either.",
+       "The model has Chicago by about 2.3, right next to the board's -3. On the total, the model's number sits around 47.6, a few points under the board's 50.5.",
+       "DraftKings shows Bears -3 at -102 and the total at 50.5. FanDuel shows Bears -3 at -105. Your book's price may differ — that's exactly what Check is for: type in your book's line and price and the app runs it back through the model and evaluator for a bet/no-bet verdict on your price."
+      ],
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-app-board-20261021-pm",
+       "ev-check-20261021-pm"
+      ],
+      "sources": [],
+      "takeaway": "The board is fresh, the model and market see the same game. Your price is the only one that matters — Check it."
+     },
+     {
+      "headline": "Sunday's headline cards: Minnesota for hit rate, Cleveland for balance",
+      "paragraphs": [
+       "Hit Rate is the card's most-likely-to-win pick: Minnesota on the moneyline at -278 on DraftKings, Sunday at 1:00 p.m. ET. The model gives the Vikings about a 78.6% chance to win, the app's evaluator about 75%. Hit rate is not profit rate — it trades value for win probability, on purpose.",
+       "Balanced is the middle ground: Cleveland on the moneyline at -124 on FanDuel, Sunday at 1:00 p.m. ET. The model has the Browns around 71.9% while the price implies about 54%, giving it slightly positive expected value with medium reliability.",
+       "The Value lane has nothing tonight. It stays empty rather than force a play."
+      ],
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-app-cards-20261021-pm"
+      ],
+      "sources": [],
+      "takeaway": "Minnesota is the most likely winner. Cleveland is the strongest pick without paying too much. Either way, Check the price first."
+     }
+    ]
+   },
+   {
+    "id": "fade",
+    "title": "Learn the Game",
+    "icon": "⚖️",
+    "mode": "learning",
+    "items": [
+     {
+      "headline": "Learn the Game: handle vs. tickets",
+      "paragraphs": [
+       "Two numbers describe where the betting is: ticket count is how many bets were placed, handle is how much money was wagered. They don't always agree — and the disagreement is the interesting part.",
+       "A hypothetical: imagine 100 bets on the Lions totaling $1,000, and 20 bets on the Packers totaling $9,000. The Lions win the ticket count. The Packers win the handle. That split tells you a small group of bigger bettors disagrees with the crowd.",
+       "Bigger money doesn't mean smarter money — it means fewer, larger opinions. Treat a tickets/handle split as decision context: it earns a closer look at the price, not an automatic bet."
+      ],
+      "editorial_only": true,
+      "evidence_ids": [],
+      "sources": [],
+      "takeaway": "When tickets and handle point different ways, you know where the bigger money disagrees with the crowd. That's worth a look — never a pick by itself."
+     }
+    ]
+   },
+   {
+    "id": "market-watch",
+    "title": "Line Movement",
+    "icon": "👀",
+    "items": [
+     {
+      "headline": "Thursday: -3 holds all day through the final report",
+      "paragraphs": [
+       "Bears -3 was the story this morning and it is still the story. DraftKings sat at Chicago -3 (-102) and FanDuel at Chicago -3 (-105) through Wednesday — the final injury report didn't nudge either book. The total held at 50.5 on both books too.",
+       "Earlier in the week was where the real move happened: the spread climbed from the -1.5 opener to -3, and the total rose from the mid-40s to 50.5, on the Bears' Week 6 form and the Patriots' mounting injury list.",
+       "If your book still shows something better than -3, or a total you like better than 50.5, that gap is yours to check — not the market's problem to fix."
+      ],
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-lines-history-20261021-pm",
+       "ev-app-board-20261021-pm"
+      ],
       "sources": [
-        {
-          "label": "NBC Sports",
-          "url": "https://www.nbcsports.com/betting/nfl/news/patriots-vs-bears-odds-expert-picks-team-and-player-news-betting-trends-and-stats"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-tnf-lines-20261021",
-      "fact": "Patriots at Bears opened Bears -1.5 with total 48.5; current consensus is Bears -3 (DraftKings -3 at -102) with total 50.5.",
-      "verification": "BOOK_COMPOSITE",
-      "sources": [
-        {
-          "label": "NBC Sports",
-          "url": "https://www.nbcsports.com/betting/nfl/news/patriots-vs-bears-odds-expert-picks-team-and-player-news-betting-trends-and-stats"
-        },
-        {
-          "label": "WagerTalk",
-          "url": "https://www.wagertalk.com/news/nfl/patriots-vs-bears-picks-predictions-and-odds-october-22-2026/"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-injury-20261021",
-      "fact": "Tuesday (Oct 20) injury report: NE — Carlton Davis III (neck) upgraded DNP to limited, Andy Borregales (personal) full; Ben Brown (knee), Alijah Vera-Tucker (hamstring), Joshua Farmer (personal) still DNP; A.J. Brown (ankle) and Morgan Moses (foot) limited; Drake Maye (right shoulder) full. CHI — Jonah Jackson (hip/quad) DNP to limited; Kyle Monangai (thumb/toe), T.J. Edwards (hamstring), Jack Sanborn (concussion) DNP; Caleb Williams off the report entirely. Romeo Doubs placed on IR (shoulder). Final report lands Wednesday.",
-      "verification": "OFFICIAL",
-      "sources": [
-        {
-          "label": "Patriots.com",
-          "url": "https://www.patriots.com/news/week-7-injury-report-patriots-at-bears"
-        },
-        {
-          "label": "Yardbarker",
-          "url": "https://www.yardbarker.com/nfl/articles/chicago_bears_patriots_lose_key_weapon_ahead_of_thursday_night_football/s1_17081_44448400"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-weather-20261021",
-      "fact": "Chicago Thursday night: mostly clear, mid-50s near kickoff, wind around 4 mph, about 10% chance of rain. No weather factor.",
-      "verification": "OFFICIAL",
-      "sources": [
-        {
-          "label": "weather.com",
-          "url": "https://weather.com/us/il/city/chicago/tenday"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-app-board-20261021-am",
-      "fact": "App board still shows Week 6 at press time (last generated 2026-10-20T00:08:28Z). Last Week 6 headline cards: Balanced and Value both WAS +7.5 at -118 on DraftKings; Hit Rate lane no play. All expired.",
-      "verification": "INTERNAL_CANONICAL",
-      "sources": []
-    },
-    {
-      "evidence_id": "ev-check-internal-20261021",
-      "fact": "The Check function takes the reader's book line and price and re-runs it through the model and evaluator for a bet/no-bet verdict on their price.",
-      "verification": "INTERNAL_CANONICAL",
-      "sources": []
-    }
+       {
+        "label": "SI Betting",
+        "url": "https://www.si.com/betting/patriots-vs-bears-odds-shift-towards-chicago-caleb-williams-ahead-of-thursday-night-football-in-week-7"
+       },
+       {
+        "label": "cleatz.com weather report",
+        "url": "https://cleatz.com/nfl/weather-report/"
+       }
+      ],
+      "takeaway": "The final report is out and the market didn't flinch. There's no pending news left to wait for — if your book has a good number and Check says bet, bet it tonight."
+     }
+    ]
+   },
+   {
+    "id": "today-tip",
+    "title": "Today's Tip",
+    "icon": "✅",
+    "items": [
+     {
+      "headline": "Thursday game? Thursday check.",
+      "paragraphs": [
+       "The report is final, the weather is clean, the board is fresh. One move before kickoff: pull up the Thursday game, type your book's line and price into Check, and get the verdict on your actual number. Then log the result when it settles — winners and losers both. Settlement is manual, and the tracker only works if you're honest with yourself."
+      ],
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-check-20261021-pm"
+      ],
+      "sources": [],
+      "takeaway": "Check the board, Check the price, log the result — the honest ledger is the whole game."
+     }
+    ]
+   }
   ]
+ },
+ "evidence": [
+  {
+   "evidence_id": "ev-kickoff-20261021-pm",
+   "category": "game_info",
+   "verification": "OFFICIAL",
+   "fact": "Patriots (4-2) at Bears (4-2), Thursday Oct 22, 8:15 p.m. ET at Soldier Field, streaming on Prime Video.",
+   "interpretation": "The only game in this brief's window. Everything else is Sunday preparation.",
+   "app_guidance": "Open the app's Week 7 board and find the Thursday game before comparing prices.",
+   "sources": [
+    {
+     "label": "VSiN",
+     "url": "https://vsin.com/nfl/patriots-vs-bears-predictions-week-7-thursday-night-football-odds-picks-and-player-props/",
+     "published_at_utc": "2026-10-21T00:00:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-injury-final-20261021",
+   "category": "injury",
+   "verification": "OFFICIAL",
+   "fact": "Final Wednesday injury report. Patriots OUT: CB Carlton Davis III (neck, third straight game), CB Karon Prunty (hamstring), CB Channing Canada (hamstring), LG Alijah Vera-Tucker (hamstring), RG Ben Brown (knee). QUESTIONABLE: RT Morgan Moses (foot), LB Christian Elliss (chest), S Kevin Byard (chest), S Craig Woodson (shoulder). Matt Pryor and Walter Rouse start at guard. Bears OUT: RB Kyle Monangai (thumb/toe, third straight game), LB Jack Sanborn (concussion). DOUBTFUL: LB T.J. Edwards (hamstring). QUESTIONABLE: CB Tyrique Stevenson (hip). RG Jonah Jackson (hip/quad) practiced in full, removed from the report, will start.",
+   "interpretation": "New England is down both starting guards and thin at corner; Chicago loses its young back but gets its starting right guard back.",
+   "app_guidance": "This is the news the current lines already price in. Use Check on your book's actual price instead of guessing whether the news is 'priced in'.",
+   "sources": [
+    {
+     "label": "98.5 The Sports Hub",
+     "url": "https://985thesportshub.com/2026/10/21/patriots-rule-five-out-four-more-questionable-for-thursday/",
+     "published_at_utc": "2026-10-21T00:00:00Z"
+    },
+    {
+     "label": "Bears Wire",
+     "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/10/21/bears-patriots-final-injury-report-jonah-jackson-kyle-monangai/92359934007/",
+     "published_at_utc": "2026-10-21T00:00:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-weather-20261021-pm",
+   "category": "weather",
+   "verification": "OFFICIAL",
+   "fact": "Soldier Field Thursday: about 61°F near the 8:15 p.m. ET kickoff, wind around 5 mph, roughly a 9% chance of rain, mostly clear skies.",
+   "interpretation": "Clean football weather. Not a factor.",
+   "app_guidance": "No weather adjustment needed for Thursday; treat the totals number as a pure market read.",
+   "sources": [
+    {
+     "label": "weather.com",
+     "url": "https://weather.com/us/il/city/chicago/tenday",
+     "published_at_utc": "2026-10-21T00:00:00Z"
+    },
+    {
+     "label": "cleatz.com weather report",
+     "url": "https://cleatz.com/nfl/weather-report/",
+     "published_at_utc": "2026-10-21T22:15:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-lines-history-20261021-pm",
+   "category": "line_movement",
+   "verification": "BOOK_COMPOSITE",
+   "fact": "Patriots at Bears opened near Bears -1.5 with a total near 46.5/48.5 earlier in the week. The spread moved to Bears -3 and the total to 50.5; both have been steady through Wednesday's trading.",
+   "interpretation": "The market re-priced Thursday toward Chicago on the news cycle; the final injury report caused no further move.",
+   "app_guidance": "Use the line-movement section, not isolated numbers, to judge how the market arrived at today's price.",
+   "sources": [
+    {
+     "label": "SI Betting",
+     "url": "https://www.si.com/betting/patriots-vs-bears-odds-shift-towards-chicago-caleb-williams-ahead-of-thursday-night-football-in-week-7",
+     "published_at_utc": "2026-10-21T00:00:00Z"
+    },
+    {
+     "label": "cleatz.com weather report",
+     "url": "https://cleatz.com/nfl/weather-report/",
+     "published_at_utc": "2026-10-21T22:15:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-app-board-20261021-pm",
+   "category": "app",
+   "verification": "INTERNAL_CANONICAL",
+   "fact": "App board now shows Week 7 (generated 2026-10-22T00:08:55Z). NE at CHI: expected starters Drake Maye and Caleb Williams, both confirmed, no injury flags. Model expected margin: Chicago by about 2.3. Model total: about 47.6 vs board 50.5. Current board: DraftKings CHI -3 (-102), NE +3 (-118), ML -155/+130, total 50.5 (Over -115 / Under -105); FanDuel CHI -3 (-105), NE +3 (-115), ML -156/+132, total 50.5 (-110 both sides).",
+   "interpretation": "The board is fresh and the model's margin is right next to the market's -3. No Week 6 hangover this evening.",
+   "app_guidance": "Read the board first, then Check your own book's price.",
+   "sources": []
+  },
+  {
+   "evidence_id": "ev-app-cards-20261021-pm",
+   "category": "app",
+   "verification": "INTERNAL_CANONICAL",
+   "fact": "Headline cards: Hit Rate = Minnesota moneyline at -278 on DraftKings (Colts at Vikings, Sunday 1:00 p.m. ET) — model gives Minnesota about a 78.6% chance to win, the app's evaluator about 75%. Balanced = Cleveland moneyline at -124 on FanDuel (Browns at Titans, Sunday 1:00 p.m. ET) — model about 71.9% vs about 54% implied by the price, slightly positive expected value, medium reliability. Value lane: no play qualifies.",
+   "interpretation": "Minnesota is the card's most likely winner; Cleveland is the card's value play. Nothing forced on the value lane.",
+   "app_guidance": "Hit Rate answers 'most likely to win', not 'most +EV'. Balanced is the middle ground. Check either price before touching it.",
+   "sources": []
+  },
+  {
+   "evidence_id": "ev-check-20261021-pm",
+   "category": "app",
+   "verification": "INTERNAL_CANONICAL",
+   "fact": "The Check function takes the reader's book line and price and re-runs it through the model and evaluator, returning a bet/no-bet verdict on the reader's price — a full re-evaluation, not a blind override.",
+   "interpretation": "The board's DK/FD numbers are reference prices. Check prices your book's actual offer.",
+   "app_guidance": "When the board hasn't caught up to news, or your book isn't DK/FD, type your line and price into Check.",
+   "sources": []
+  }
+ ]
 }
