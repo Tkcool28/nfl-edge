@@ -1,313 +1,331 @@
 {
-  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-10-22T12:19:28Z",
-  "research_generated_at_utc": "2026-10-22T12:19:28Z",
-  "article": {
-    "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "edition": "Morning Brief",
-    "title": "NFL EDGE Thursday Morning Brief",
-    "dek": "Tonight: Bears -3 over the banged-up Patriots under clear Chicago skies — and the Giants just benched Jameis Winston for J.J. McCarthy, a change the app hasn't caught up to yet.",
-    "published_at_utc": "2026-10-22T12:19:28Z",
-    "research_generated_at_utc": "2026-10-22T12:19:28Z",
-    "sections": [
-      {
-        "id": "what-matters",
-        "title": "What Matters Today",
-        "icon": "📰",
-        "items": [
-          {
-            "headline": "Tonight, 8:15 p.m. ET: Bears -3, Patriots down five",
-            "paragraphs": [
-              "New England's final injury report is already in: guards Alijah Vera-Tucker (hamstring) and Ben Brown (knee), cornerback Carlton Davis III (neck), and backup corners Karon Prunty and Channing Canada are all out. Right tackle Morgan Moses (foot) is questionable, with Walter Rouse and Matt Pryor stepping in at guard.",
-              "Chicago is the healthier team on the short week. The Bears ruled out running back Kyle Monangai for a third straight game and linebacker Jack Sanborn; T.J. Edwards is doubtful and Tyrique Stevenson is questionable. The app's morning board has the Bears -3 at DraftKings and FanDuel, total 50.5, and the model prices Chicago by about 2.3 points.",
-              "Inactives come out about 90 minutes before kickoff. That is the last piece of news left tonight."
-            ],
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-kickoff-thu-am",
-              "ev-injury-ne-final",
-              "ev-injury-chi-final",
-              "ev-app-board-am"
-            ],
-            "sources": [
-              {
-                "label": "Reuters/Field Level Media",
-                "url": "https://www.reuters.com/sports/patriots-be-without-both-starting-guards-vs-bears--flm-2026-10-21/"
-              },
-              {
-                "label": "Providence Journal",
-                "url": "https://www.providencejournal.com/story/sports/nfl/patriots/2026/10/22/how-to-watch-patriots-vs-bears-in-tonights-game/92353016007/"
-              }
-            ],
-            "takeaway": "The book's price and the final injury report are the bet. Check your book's line against the app — a good number now beats a hoped-for number at kickoff."
-          },
-          {
-            "headline": "Giants name J.J. McCarthy the starter — the app hasn't caught up yet",
-            "paragraphs": [
-              "John Harbaugh announced Wednesday that J.J. McCarthy starts Sunday at Houston, replacing Jameis Winston, who threw two interceptions against New Orleans. McCarthy came off the bench and threw for 243 yards and a touchdown in the fourth quarter.",
-              "Here is the catch: the app still lists Winston as the expected starter, so its Giants board — Houston -10.5, total around 42.5 — was priced on the old quarterback. Do not trust the app's Giants numbers until the update lands."
-            ],
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-mccarthy-starter",
-              "ev-app-board-am"
-            ],
-            "sources": [
-              {
-                "label": "Giants Wire / USA Today",
-                "url": "https://giantswire.usatoday.com/story/sports/nfl/giants/2026/10/22/extremely-comfortable-jj-mccarthy-ready-take-over-giants/92375572007/"
-              }
-            ],
-            "takeaway": "New quarterback news beats old model math. Wait for the app to update, then Check the price — do not pay Winston's price on McCarthy's arm."
-          },
-          {
-            "headline": "Around the league: Lamar limited, Jacobs back",
-            "paragraphs": [
-              "Lamar Jackson got in limited work at Ravens practice as he tries to return from his ankle injury. Josh Jacobs was back at Packers practice and is expected to play this week after being cleared following the NFL's investigation."
-            ],
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-lamar-jacobs"
-            ],
-            "sources": [
-              {
-                "label": "Fox Sports",
-                "url": "https://foxsports.com/stories/nfl/nfl-catchup-giants-go-j-j-mccarthy-josh-jacobs-back-practice"
-              }
-            ],
-            "takeaway": "Practice reports are signals, not verdicts. Friday's designations tell you what the team actually believes."
-          },
-          {
-            "headline": "Weather: clear tonight, nothing to fade",
-            "paragraphs": [
-              "Soldier Field at kickoff: around 60 degrees, clear skies, wind 3-5 mph. Sunday's outdoor games are all clean too — no wind flags anywhere on the Week 7 slate."
-            ],
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-weather-thu"
-            ],
-            "sources": [
-              {
-                "label": "Weather.com",
-                "url": "https://weather.com/us/il/city/chicago/hourbyhour"
-              }
-            ],
-            "takeaway": "File weather under not a factor. The line is the story tonight, not the sky."
-          }
-        ]
-      },
-      {
-        "id": "what-it-means",
-        "title": "What It Means for NFL EDGE",
-        "icon": "💡",
-        "items": [
-          {
-            "headline": "Tonight inside the app: model and market agree on Chicago",
-            "paragraphs": [
-              "The app's model prices the game at Bears by about 2.3 points; the market sits at Bears -3 with a 50.5 total. Same neighborhood.",
-              "That makes your price the edge. DraftKings has Chicago -3 at -102, FanDuel at -105, Pinnacle at -105. And remember what the number means: -120 means every $1.20 you risk wins $1. Small price differences are real money on a three-point spread."
-            ],
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-app-board-am"
-            ],
-            "sources": [],
-            "takeaway": "When the model and the market agree, the only thing left is your book's price. Tap Check, type it in, get a verdict."
-          },
-          {
-            "headline": "Sunday's cards: Minnesota to win, Cleveland for balance, Atlanta for value",
-            "paragraphs": [
-              "Hit Rate is Minnesota. Colts at Vikings, Vikings -278 on DraftKings, and the app gives Minnesota a 78.6% chance — the pick that looks most likely to win. It forgoes value for win probability; -278 means every $2.78 you risk wins $1. Hit Rate is not Profit Rate, and that's fine — that's its job.",
-              "Balanced is Cleveland. Browns -124 on FanDuel at Tennessee, model 71.9%. A strong pick without paying too much — the middle ground, a good starting point for a new bettor.",
-              "Value is Atlanta. Falcons +2.5 against San Francisco at -102 on DraftKings — the model's +EV play. Value is always the model's +EV play."
-            ],
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-app-board-am"
-            ],
-            "sources": [],
-            "takeaway": "Three different jobs, three different cards. Pick the job first, then Check the price."
-          }
-        ]
-      },
-      {
-        "id": "fade",
-        "title": "Learn the Game",
-        "icon": "⚖️",
-        "mode": "learning",
-        "items": [
-          {
-            "headline": "Learn the Game: what 'juice' really costs",
-            "paragraphs": [
-              "Juice — also called the vig — is the book's cut, baked right into the price. A concrete, clearly-labeled hypothetical: imagine you bet -110 on both sides of the same game. One side wins, one loses. You staked $220 and you get back $210. That missing $10 is the juice.",
-              "Now watch how it moves. If the line stays at -3 but the price slides from -115 to -105, the book is inviting money without moving the number. Same bet, cheaper to buy. That is a real difference, and it is exactly why NFL EDGE asks for your book's price, not just the line."
-            ],
-            "editorial_only": true,
-            "evidence_ids": [],
-            "sources": [],
-            "takeaway": "The price is part of the bet. A better number on the same side is the closest thing to free money this game has."
-          }
-        ]
-      },
-      {
-        "id": "market-watch",
-        "title": "Line Movement",
-        "icon": "👀",
-        "items": [
-          {
-            "headline": "Thursday: -3 holds overnight, total steady at 50.5",
-            "paragraphs": [
-              "Last night's brief had Bears -3 holding all day through the final injury report. This morning: DraftKings -3 at -102, FanDuel -3 at -105, Pinnacle -3 at -105. Total 50.5 across all three books — unchanged.",
-              "The app's 6:00 a.m. refresh already has these numbers, so the board hasn't missed anything. Model at 2.3 versus market at 3.0 is a one-point conversation, not a disagreement."
-            ],
-            "editorial_only": false,
-            "evidence_ids": [
-              "ev-app-board-am",
-              "ev-prev-edition-pm"
-            ],
-            "sources": [],
-            "takeaway": "One grounded timing note: inactives land about 90 minutes before kickoff — the only news left. If your book has a good number and Check says bet, bet it now. Waiting for a better price with no news coming is just hoping."
-          }
-        ]
-      },
-      {
-        "id": "today-tip",
-        "title": "Today's Tip",
-        "icon": "✅",
-        "items": [
-          {
-            "headline": "Thursday game? Thursday check.",
-            "paragraphs": [
-              "The board refreshed this morning and refreshes again this evening. Whatever line you like, run it through Check with your book's actual line and price — the app runs it back through the model and the evaluator and hands you a bet-or-no-bet verdict on your price, not anyone else's.",
-              "And a ledger note for a one-game night: settlement is manual. The tracker only works if you're honest with yourself — log the losers too."
-            ],
-            "editorial_only": true,
-            "evidence_ids": [],
-            "sources": [],
-            "takeaway": "Check the board, Check the price, log the result — the honest ledger is the whole game."
-          }
-        ]
-      }
+ "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+ "submitted_at_utc": "2026-10-23T00:13:20Z",
+ "research_generated_at_utc": "2026-10-23T00:13:20Z",
+ "article": {
+  "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Thursday Evening Brief",
+  "dek": "Inactives are final for tonight's Patriots-Bears game: New England gets its right tackle back, Chicago loses a linebacker — and the line never moved all day.",
+  "published_at_utc": "2026-10-23T00:13:20Z",
+  "research_generated_at_utc": "2026-10-23T00:13:20Z",
+  "sections": [
+   {
+    "id": "what-matters",
+    "title": "What Matters Today",
+    "icon": "📰",
+    "items": [
+     {
+      "headline": "Tonight, 8:15 p.m. ET: Moses is active, Vera-Tucker to IR",
+      "paragraphs": [
+       "The Patriots get their right tackle back. Morgan Moses, questionable with a foot injury, is officially active tonight — and so is every other questionable Patriot: safety Kevin Byard III, linebacker Christian Elliss, safety Craig Woodson, and cornerback Christian Gonzalez, who was added to the report Thursday with an illness.",
+       "The cost: the Patriots put guard Alijah Vera-Tucker on injured reserve with his hamstring injury, so he is out at least four games. Already ruled out: guard Ben Brown, cornerback Carlton Davis III, and backup corners Karon Prunty and Channing Canada. Walter Rouse and Matt Pryor start at guard.",
+       "Chicago loses a defender. Linebacker T.J. Edwards, doubtful this morning, is officially out — joining running back Kyle Monangai and linebacker Jack Sanborn. The Bears elevated running back Zavier Scott and linebacker Buddy Johnson from the practice squad."
+      ],
+      "takeaway": "Inactives are the last news of the night — everything after is price. Compare your book's line to the app's and run it through Check.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-inactives-thu-pm",
+       "ev-kickoff-thu-pm"
+      ],
+      "sources": [
+       {
+        "label": "Patriots.com",
+        "url": "https://www.patriots.com/news/inactives-analysis-patriots-place-lg-alijah-vera-tucker-on-ir-rt-morgan-moses-officially-active-for-thursday-night-s-game-vs-the-bears"
+       },
+       {
+        "label": "Roundtable",
+        "url": "https://roundtable.io/sports/nfl/pats/news/thursday-night-football-inactives-revealed-for-new-england-patriots-chicago-bears"
+       }
+      ]
+     },
+     {
+      "headline": "McCarthy takes first-team reps — the app still hasn't caught up",
+      "paragraphs": [
+       "J.J. McCarthy practiced with the first team Thursday ahead of Sunday's game at Houston. Head coach John Harbaugh said McCarthy 'gives us the best chance to play the best offense we can.' Jameis Winston is the backup; Jake Haener is the emergency third quarterback.",
+       "The app's evening board still lists Winston as the expected starter, so its Giants number — Houston -10.5 — is priced on the old quarterback. Do not trust the app's Giants numbers until the update lands.",
+       "One for Sunday: Texans linebacker Azeez Al-Shaair returned to practice Thursday on a limited basis with his knee injury and is trending toward playing against the rookie starter."
+      ],
+      "takeaway": "New quarterback news beats old model math. Let the app update, then Check the price — do not pay Winston's price for McCarthy's arm.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-mccarthy-pm",
+       "ev-app-board-pm"
+      ],
+      "sources": [
+       {
+        "label": "Giants.com",
+        "url": "https://www.giants.com/news/j-j-mccarthy-to-start-quarterback-new-york-giants-week-7-houston-texans-john-harbaugh-jameis-winston"
+       },
+       {
+        "label": "ClutchPoints",
+        "url": "https://clutchpoints.com/nfl/houston-texans/texans-news-azeez-al-shaair-returns-practice-knee-injury-bad-news-jj-mccarthy"
+       }
+      ]
+     },
+     {
+      "headline": "Around the league: Lamar back on the field, Jacobs' first real practice",
+      "paragraphs": [
+       "Lamar Jackson opened Thursday's practice in uniform with the quarterbacks — the first time since his Oct. 4 ankle injury. He's still officially limited, and the Ravens' coordinator said there's 'still a lot of work to do' for Sunday. Also in Baltimore: linebacker Tavius Robinson missed a second straight practice and safety Jaylinn Hawkins went from limited to out on Thursday.",
+       "Josh Jacobs had his first on-field practice of the season Thursday and is expected to suit up and start Sunday against Detroit. Quarterback Jordan Love was limited Thursday with a back injury — his first such listing this season — but said there's 'no chance' he misses Sunday.",
+       "Also Thursday: Bills safety C.J. Gardner-Johnson's one-game suspension for spitting was upheld on appeal. Buffalo is on a bye this week, so he misses the Week 8 game against the Ravens. Minor moves: the Eagles are signing guard Evan Neal; the Steelers and Buccaneers put defenders Sebastian Joseph-Day and Christian Rozeboom on injured reserve."
+      ],
+      "takeaway": "Practice reports are signals, not verdicts. Friday's designations are the news that actually moves Sunday prices.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-lamar-jacobs-pm",
+       "ev-cjgj-pm"
+      ],
+      "sources": [
+       {
+        "label": "BaltimoreRavens.com",
+        "url": "https://www.baltimoreravens.com/news/lamar-jackson-injury-report-ravens-practice-start-ankle-2026"
+       },
+       {
+        "label": "Pride of Detroit",
+        "url": "https://www.prideofdetroit.com/detroit-lions-injuries/177719/week-7-injury-report-lions-healthy-packers-rb-josh-jacobs-first-practice-of-season"
+       },
+       {
+        "label": "NBC Sports PFT",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/c-j-gardner-johnsons-one-game-suspension-upheld-on-appeal"
+       }
+      ]
+     },
+     {
+      "headline": "Weather: clean tonight, nothing to fade",
+      "paragraphs": [
+       "The National Weather Service has Soldier Field mostly clear at kickoff, around 54 degrees with an east-northeast wind near 5 mph. No precipitation, no alerts. Same clean picture as this morning."
+      ],
+      "takeaway": "File weather under not a factor tonight. The line is the story, not the sky.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-weather-thu-pm"
+      ],
+      "sources": [
+       {
+        "label": "National Weather Service",
+        "url": "https://forecast.weather.gov/MapClick.php?lat=41.8781&lon=-87.6298&FcstType=text&TextType=2"
+       }
+      ]
+     }
     ]
-  },
-  "evidence": [
-    {
-      "evidence_id": "ev-kickoff-thu-am",
-      "category": "game_info",
-      "verification": "REPORTED",
-      "fact": "Patriots (4-2) at Bears (4-2), Thursday Oct 22, 8:15 p.m. ET at Soldier Field on Prime Video.",
-      "interpretation": "The only game in this brief's window. Everything else is Sunday preparation.",
-      "app_guidance": "Open the app's Week 7 board and find the Thursday game first.",
-      "sources": [
-        {
-          "label": "Providence Journal",
-          "url": "https://www.providencejournal.com/story/sports/nfl/patriots/2026/10/22/how-to-watch-patriots-vs-bears-in-tonights-game/92353016007/",
-          "published_at_utc": "2026-10-22T10:00:00Z"
-        }
+   },
+   {
+    "id": "what-it-means",
+    "title": "What It Means for NFL EDGE",
+    "icon": "💡",
+    "items": [
+     {
+      "headline": "Tonight inside the app: model at 2.3, market at -3",
+      "paragraphs": [
+       "The app's model prices the game at Bears by about 2.3 points; the market sits at Bears -3 with a 50.5 total. The inactive news — Moses active, Edwards out — is already inside those numbers.",
+       "That makes your price the edge. DraftKings has Chicago -3 at -110, FanDuel at -105, Pinnacle at -101. And remember what the number means: -120 means every $1.20 you risk wins $1. Small price differences are real money on a three-point spread."
+      ],
+      "takeaway": "When the model and the market agree, the only thing left is your book's price. Tap Check, type it in, get a verdict.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-app-board-pm"
       ]
-    },
-    {
-      "evidence_id": "ev-injury-ne-final",
-      "category": "injury",
-      "verification": "REPORTED",
-      "fact": "Patriots ruled out guards Alijah Vera-Tucker (hamstring) and Ben Brown (knee), CB Carlton Davis III (neck), and backup CBs Karon Prunty and Channing Canada. RT Morgan Moses (foot) questionable. Walter Rouse and Matt Pryor start at guard.",
-      "interpretation": "New England's interior line is patchwork on a short week against a blitz-heavy Bears defense.",
-      "app_guidance": "Price any Patriots position against the final report, not Tuesday's practice guess.",
-      "sources": [
-        {
-          "label": "Reuters/Field Level Media",
-          "url": "https://www.reuters.com/sports/patriots-be-without-both-starting-guards-vs-bears--flm-2026-10-21/",
-          "published_at_utc": "2026-10-21T20:00:00Z"
-        }
+     },
+     {
+      "headline": "Sunday's cards: Minnesota to win, Cleveland for balance, Tampa Bay for value",
+      "paragraphs": [
+       "Hit Rate is Minnesota. Colts at Vikings, Minnesota -285 on DraftKings, and the app gives them a 78.6% chance — the pick that looks most likely to win. It forgoes value for win probability; the app's own tutorial says Hit Rate is not Profit Rate, and that's fine — that's its job.",
+       "Balanced is Cleveland. Browns at Titans, Cleveland -126 on FanDuel at a 71.9% model chance. A strong pick without paying too much — the middle ground, a good starting point for a new bettor.",
+       "Value is Tampa Bay. Buccaneers at Panthers, Tampa Bay +3 at +100 on DraftKings — the model's +EV play. Value is always the model's +EV play."
+      ],
+      "takeaway": "Three different jobs, three different cards. Pick the job first, then Check the price.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-app-board-pm"
       ]
-    },
-    {
-      "evidence_id": "ev-injury-chi-final",
-      "category": "injury",
-      "verification": "REPORTED",
-      "fact": "Bears ruled out RB Kyle Monangai (thumb, toe) for a third straight game and LB Jack Sanborn (concussion). LB T.J. Edwards (hamstring) doubtful, CB Tyrique Stevenson (hip) questionable after full practice.",
-      "interpretation": "Chicago is the healthier team on the short week, losing depth pieces rather than starters.",
-      "app_guidance": "Check whether the board moved on any of this; short-week depth losses usually don't move lines.",
-      "sources": [
-        {
-          "label": "Reuters/Field Level Media",
-          "url": "https://www.reuters.com/sports/patriots-be-without-both-starting-guards-vs-bears--flm-2026-10-21/",
-          "published_at_utc": "2026-10-21T20:00:00Z"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-mccarthy-starter",
-      "category": "qb",
-      "verification": "REPORTED",
-      "fact": "Giants coach John Harbaugh named J.J. McCarthy the starting QB for Sunday at Houston, replacing Jameis Winston after Winston threw two interceptions vs New Orleans. McCarthy threw for 243 yards and a TD in fourth-quarter relief.",
-      "interpretation": "A rookie with three weeks in the offense faces a revived Texans pass rush. The book's line will move once it fully prices McCarthy.",
-      "app_guidance": "Do not trust the app's Giants numbers until it updates the expected starter; Check the price after the update.",
-      "sources": [
-        {
-          "label": "Giants Wire / USA Today",
-          "url": "https://giantswire.usatoday.com/story/sports/nfl/giants/2026/10/22/extremely-comfortable-jj-mccarthy-ready-take-over-giants/92375572007/",
-          "published_at_utc": "2026-10-22T08:00:00Z"
-        },
-        {
-          "label": "Fox Sports",
-          "url": "https://foxsports.com/stories/nfl/nfl-catchup-giants-go-j-j-mccarthy-josh-jacobs-back-practice",
-          "published_at_utc": "2026-10-22T05:00:00Z"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-lamar-jacobs",
-      "category": "injury",
-      "verification": "REPORTED",
-      "fact": "Lamar Jackson practiced in limited fashion Wednesday as he works back from an ankle injury. Josh Jacobs was back at Packers practice and is expected to play this week after being cleared following the NFL's investigation.",
-      "interpretation": "Both are progress signals, not clearance. Friday designations are what matter.",
-      "app_guidance": "Watch the Friday report before pricing Ravens or Packers positions.",
-      "sources": [
-        {
-          "label": "Fox Sports",
-          "url": "https://foxsports.com/stories/nfl/nfl-catchup-giants-go-j-j-mccarthy-josh-jacobs-back-practice",
-          "published_at_utc": "2026-10-22T05:00:00Z"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-weather-thu",
-      "category": "weather",
-      "verification": "REPORTED",
-      "fact": "Soldier Field at kickoff: around 60F, clear skies, wind 3-5 mph, no weather alerts. Sunday's outdoor Week 7 games all show winds under 15 mph; none flagged.",
-      "interpretation": "Weather is a non-factor tonight and across the Sunday slate.",
-      "app_guidance": "No weather adjustment needed anywhere this week.",
-      "sources": [
-        {
-          "label": "Weather.com",
-          "url": "https://weather.com/us/il/city/chicago/hourbyhour",
-          "published_at_utc": "2026-10-22T12:00:00Z"
-        },
-        {
-          "label": "fantasytools.ai NFL Weather",
-          "url": "https://fantasytools.ai/nfl-weather-report/",
-          "published_at_utc": "2026-10-22T04:48:00Z"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-app-board-am",
-      "category": "market",
-      "verification": "INTERNAL_CANONICAL",
-      "fact": "Thursday 6:00 a.m. board: Bears -3 (DK -102, FD -105, Pinnacle -105), total 50.5, Bears ML -155 to -160; model expected margin Bears by ~2.3. Giants game still lists Jameis Winston as expected starter (HOU -10.5, total 42.5-43.5). Headline cards: Hit Rate Minnesota (ML -278 DK, model 78.6%), Balanced Cleveland (ML -124 FD, model 71.9%), Value Atlanta +2.5 (-102 DK, +EV).",
-      "interpretation": "Model and market see roughly the same Thursday game; the Giants board is stale on the QB change.",
-      "app_guidance": "Check your book's actual line and price through Check; ignore app Giants numbers until the starter updates.",
+     }
+    ]
+   },
+   {
+    "id": "fade",
+    "title": "Learn the Game",
+    "icon": "⚖️",
+    "mode": "learning",
+    "items": [
+     {
+      "headline": "Learn the Game: key numbers",
+      "paragraphs": [
+       "A 'key number' is a final margin that NFL games land on more than any other. The big ones are 3 and 7 — so many games end with a field-goal or touchdown difference.",
+       "A concrete, clearly-labeled hypothetical: say you bet a team favored by 3 and they win by exactly 3. That's a push — your stake comes back. If you had bought the same team at -2.5 instead, you'd have a win instead of a push. Half a point across a key number is worth real money.",
+       "That's why books try to move the price before they move the number. When the line sits at -3 but the price slides from -115 to -105, the book is inviting action without changing its mind about the game. Same bet, cheaper to buy."
+      ],
+      "takeaway": "Around key numbers, the price is part of the bet — a cheaper price on the same side is the closest thing to free money this game has.",
+      "editorial_only": true,
+      "evidence_ids": [],
       "sources": []
-    },
-    {
-      "evidence_id": "ev-prev-edition-pm",
-      "category": "editorial_history",
-      "verification": "INTERNAL_CANONICAL",
-      "fact": "The Wednesday evening edition reported Bears -3 holding all day through the final injury report, with the model and market in agreement on Chicago.",
-      "interpretation": "Overnight movement, if any, is measured against that hold.",
-      "app_guidance": "Compare this morning's board against the evening snapshot for real movement.",
+     }
+    ]
+   },
+   {
+    "id": "market-watch",
+    "title": "Line Movement",
+    "icon": "👀",
+    "items": [
+     {
+      "headline": "Thursday: -3 holds, DK shades the price, Value card flips",
+      "paragraphs": [
+       "Bears -3 held all day: FanDuel -105 and Pinnacle -101 on the evening board, while DraftKings shaded the Bears price from -102 this morning to -110 — same line, more expensive. Total 50.5 across all three books, unchanged.",
+       "The app's evening refresh has all of these numbers, so the board hasn't missed anything. One card changed: the Value card moved from Atlanta +2.5 to Tampa Bay +3 at even money on DraftKings. That's a recommendation replacement — the model's +EV pick changed, not the market's price."
+      ],
+      "takeaway": "Tonight's timing note: no more news is coming before kickoff — if your book has a number you like and Check says bet, bet it now. Sunday still has one real information event left: Friday's final designations. That's the only wait in this edition.",
+      "editorial_only": false,
+      "evidence_ids": [
+       "ev-lines-thu-pm",
+       "ev-app-board-pm"
+      ],
+      "sources": [
+       {
+        "label": "SportsBettingDime",
+        "url": "https://www.sportsbettingdime.com/news/nfl/closing-odds-final-picks-for-patriots-vs-bears-on-tnf-oct-22/"
+       },
+       {
+        "label": "Oklahoman",
+        "url": "https://www.oklahoman.com/story/sports/nfl/2026/10/22/patriots-bears-channel-today-nfl-games-live-time-tv-streaming-thursday-night-football-week-6/92379857007/"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "today-tip",
+    "title": "Today's Tip",
+    "icon": "✅",
+    "items": [
+     {
+      "headline": "Thursday game? Thursday check.",
+      "paragraphs": [
+       "The board refreshed this evening and refreshes again in the morning. On a one-game night, the discipline is the same as any night: only the price you can actually bet is real. Run your book's actual line and price through Check — the app runs it back through the model and the evaluator and hands you a bet-or-no-bet verdict on your price, not anyone else's.",
+       "If Check says no bet, the evening's entertainment is free. If it says bet, you caught the right number on the right night."
+      ],
+      "takeaway": "Check your price before the 8:15 p.m. ET kickoff — after that, the only thing left is watching.",
+      "editorial_only": true,
+      "evidence_ids": [],
       "sources": []
-    }
+     }
+    ]
+   }
   ]
+ },
+ "evidence": [
+  {
+   "evidence_id": "ev-kickoff-thu-pm",
+   "category": "game_info",
+   "verification": "REPORTED",
+   "fact": "Patriots (4-2) at Bears (4-2), Thursday Oct 22, 8:15 p.m. ET at Soldier Field on Prime Video.",
+   "sources": [
+    {
+     "label": "Providence Journal",
+     "url": "https://www.providencejournal.com/story/sports/nfl/patriots/2026/10/22/how-to-watch-patriots-vs-bears-in-tonights-game/92353016007/"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-inactives-thu-pm",
+   "category": "injury",
+   "verification": "REPORTED",
+   "fact": "Patriots: RT Morgan Moses (foot) officially ACTIVE, as are all five questionable players (S Kevin Byard III, LB Christian Elliss, S Craig Woodson, CB Christian Gonzalez). LG Alijah Vera-Tucker (hamstring) placed on injured reserve today (out at least 4 games). Ruled out: G Ben Brown (knee), CB Carlton Davis III (neck), CBs Karon Prunty and Channing Canada; Walter Rouse and Matt Pryor start at guard. Bears: LB T.J. Edwards (hamstring) ruled OUT (was doubtful); RB Kyle Monangai and LB Jack Sanborn also out; elevated RB Zavier Scott and LB Buddy Johnson.",
+   "sources": [
+    {
+     "label": "Patriots.com",
+     "url": "https://www.patriots.com/news/inactives-analysis-patriots-place-lg-alijah-vera-tucker-on-ir-rt-morgan-moses-officially-active-for-thursday-night-s-game-vs-the-bears"
+    },
+    {
+     "label": "Roundtable",
+     "url": "https://roundtable.io/sports/nfl/pats/news/thursday-night-football-inactives-revealed-for-new-england-patriots-chicago-bears"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-mccarthy-pm",
+   "category": "qb",
+   "verification": "REPORTED",
+   "fact": "J.J. McCarthy practiced with the Giants' first team Thursday ahead of Sunday at Houston. Coach John Harbaugh said McCarthy 'gives us the best chance to play the best offense we can.' Jameis Winston is the backup; Jake Haener is the emergency third QB. Texans LB Azeez Al-Shaair returned to practice Thursday (limited, knee) and is trending toward playing Sunday.",
+   "sources": [
+    {
+     "label": "Giants.com",
+     "url": "https://www.giants.com/news/j-j-mccarthy-to-start-quarterback-new-york-giants-week-7-houston-texans-john-harbaugh-jameis-winston"
+    },
+    {
+     "label": "ClutchPoints",
+     "url": "https://clutchpoints.com/nfl/houston-texans/texans-news-azeez-al-shaair-returns-practice-knee-injury-bad-news-jj-mccarthy"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-lamar-jacobs-pm",
+   "category": "injury",
+   "verification": "REPORTED",
+   "fact": "Lamar Jackson opened Thursday's practice in uniform with the quarterbacks (first time since his Oct. 4 ankle injury); still officially limited. Ravens coordinator: 'still a lot of work to do' for Sunday. Also Ravens: OLB Tavius Robinson missed a second straight practice (pectoral); S Jaylinn Hawkins went limited to DNP Thursday (knee). Josh Jacobs had his first on-field practice of the season Thursday and is expected to start Sunday vs Detroit. Jordan Love was limited Thursday with a back injury (first time this season) but said there's 'no chance' he misses Sunday.",
+   "sources": [
+    {
+     "label": "BaltimoreRavens.com",
+     "url": "https://www.baltimoreravens.com/news/lamar-jackson-injury-report-ravens-practice-start-ankle-2026"
+    },
+    {
+     "label": "Pride of Detroit",
+     "url": "https://www.prideofdetroit.com/detroit-lions-injuries/177719/week-7-injury-report-lions-healthy-packers-rb-josh-jacobs-first-practice-of-season"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-cjgj-pm",
+   "category": "transaction",
+   "verification": "REPORTED",
+   "fact": "Bills S C.J. Gardner-Johnson's one-game suspension (spitting, Week 6) upheld on appeal; Buffalo is on a bye in Week 7, so he misses the Week 8 game vs the Ravens. Minor moves: Eagles signing G Evan Neal; Steelers placed DE Sebastian Joseph-Day on IR; Buccaneers placed LB Christian Rozeboom on IR.",
+   "sources": [
+    {
+     "label": "NBC Sports PFT",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/c-j-gardner-johnsons-one-game-suspension-upheld-on-appeal"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-weather-thu-pm",
+   "category": "weather",
+   "verification": "REPORTED",
+   "fact": "NWS forecast for Soldier Field tonight: mostly clear, low around 54F; east-northeast wind near 5 mph becoming southeast after midnight. No precipitation, no weather alerts.",
+   "sources": [
+    {
+     "label": "National Weather Service",
+     "url": "https://forecast.weather.gov/MapClick.php?lat=41.8781&lon=-87.6298&FcstType=text&TextType=2"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-lines-thu-pm",
+   "category": "market",
+   "verification": "REPORTED",
+   "fact": "Bears -3 held all day Thursday across all three books. Evening board prices: DraftKings -110 (shaded from -102 this morning), FanDuel -105, Pinnacle -101 (was -105). Total 50.5 across all three books, unchanged. For the record: the spread opened at Bears -1.5 earlier in the week and the total opened in the 46.5-47.5 range.",
+   "sources": [
+    {
+     "label": "SportsBettingDime",
+     "url": "https://www.sportsbettingdime.com/news/nfl/closing-odds-final-picks-for-patriots-vs-bears-on-tnf-oct-22/"
+    },
+    {
+     "label": "Oklahoman",
+     "url": "https://www.oklahoman.com/story/sports/nfl/2026/10/22/patriots-bears-channel-today-nfl-games-live-time-tv-streaming-thursday-night-football-week-6/92379857007/"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-app-board-pm",
+   "category": "market",
+   "verification": "INTERNAL_CANONICAL",
+   "fact": "Evening board: Bears -3 across DK/FD/Pinnacle, total 50.5; model expected margin Bears by ~2.3. Headline cards: Hit Rate Minnesota (-285 DraftKings, model 78.6%), Balanced Cleveland (-126 FanDuel, model 71.9%), Value Tampa Bay +3 at +100 on DraftKings (+EV). Giants QB listing: Winston (not yet updated).",
+   "sources": []
+  },
+  {
+   "evidence_id": "ev-vsin-check-pm",
+   "category": "market_context",
+   "verification": "INTERNAL_CANONICAL",
+   "fact": "VSiN free betting-splits page checked ~6:05pm Denver (text fetch + live browser read): 'No splits data available for Thursday, Oct 22' on the NFL tab; no DraftKings spread/total/moneyline handle or bet percentages visible for any game including Patriots-Bears; full splits behind Pro paywall. No verified public-vs-sharper disagreement -> learning substitute used for the Fade.",
+   "sources": []
+  }
+ ]
 }
