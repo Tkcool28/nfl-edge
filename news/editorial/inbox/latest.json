@@ -1,14 +1,14 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-10-23T12:21:43Z",
- "research_generated_at_utc": "2026-10-23T12:21:43Z",
+ "submitted_at_utc": "2026-10-24T00:17:16Z",
+ "research_generated_at_utc": "2026-10-24T00:17:16Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "edition": "Morning Brief",
-  "title": "NFL EDGE Friday Morning Brief",
-  "dek": "The Bears won Thursday night but may have lost Cole Kmet, two quarterback situations are moving faster than the app, and the full Sunday board is already live.",
-  "published_at_utc": "2026-10-23T12:21:43Z",
-  "research_generated_at_utc": "2026-10-23T12:21:43Z",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Friday Evening Brief",
+  "dek": "Lamar is officially questionable and the Ravens line flipped sides, Kmet's season is over, and the Value card found a new home in Paris.",
+  "published_at_utc": "2026-10-24T00:17:16Z",
+  "research_generated_at_utc": "2026-10-24T00:17:16Z",
   "sections": [
    {
     "id": "what-matters",
@@ -16,96 +16,92 @@
     "icon": "📰",
     "items": [
      {
-      "headline": "Bears 30, Patriots 24 — and Kmet goes down",
+      "headline": "Lamar officially questionable — and the line flipped sides",
       "paragraphs": [
-       "Chicago held off New England 30-24 on Thursday night to move to 5-2. Cairo Santos drilled a career-long 58-yard field goal with 1:34 left to make it a two-score game, and the Bears recovered the onside kick to close it. Caleb Williams went 22-of-33 for 308 yards and two touchdowns; Drake Maye answered with 321 yards, two touchdowns, an interception, and a rushing score.",
-       "The win came at a cost. Tight end Cole Kmet was carted off with a right knee injury with 5:46 left in the fourth quarter and was ruled out for the game. Coach Ben Johnson: \"I don't think it looked very good.\" The Bears run more tests Friday.",
-       "The -3 the board held all day covered. There is nothing left to Check on this one — settle it in the tracker honestly, whichever side you had."
+       "The Ravens listed Lamar Jackson as questionable for Sunday's game against the Bengals. Jackson confirmed it's a high ankle sprain, said he's 'heading in the right direction,' and the call is game-time — Tyler Huntley would start if he can't go.",
+       "The market heard it. This morning the board had the Ravens -1.5 at both books. Tonight it has the Bengals -1.5 — the line flipped sides on one designation. The moneyline moved from Ravens -118 to near pick'em, and the total's price shifted to the Under at -115.",
+       "The app's model still has this game about a pick'em (expected margin roughly -0.31), and the evening board's QB row now lists Lamar as questionable instead of Huntley."
       ],
-      "takeaway": "Bears 5-2, Patriots 4-3 — and all eyes on Kmet's Friday test results before next week's board.",
-      "editorial_only": false,
+      "takeaway": "A flipped line on a game-time QB call: don't bet this game Friday — wait for the decision, then Check your number.",
       "evidence_ids": [
-       "ev-tnf-final-am",
-       "ev-kmet-am"
+       "ev-lamar-pm",
+       "ev-lines-pm",
+       "ev-qbrows-pm"
       ],
       "sources": [
        {
         "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/thursday-night-football-bears-fend-off-patriots-30-24"
-       },
-       {
-        "label": "TSN/AP",
-        "url": "https://www.tsn.ca/nfl/article/bears-te-kmet-exits-late-vs-patriots-with-knee-injury-n1-50254858/"
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/lamar-jackson-officially-questionable-for-ravens-bengals"
        }
       ]
      },
      {
-      "headline": "Quarterback watch: McCarthy in, Lamar day-to-day, McKee again",
+      "headline": "Kmet's season is over",
       "paragraphs": [
-       "J.J. McCarthy will start for the Giants on Sunday at Houston, coach John Harbaugh announced Wednesday, and McCarthy took the first-team reps Thursday. He replaces the benched Jameis Winston.",
-       "Lamar Jackson practiced on a limited basis Wednesday and again Thursday — the second straight day — moving well without favoring the sprained ankle. He is day-to-day and coach Jesse Minter has not confirmed the starter for Sunday's home game against Cincinnati.",
-       "Two of these three are moving faster than the app. The board still lists Jameis Winston for the Giants and Tyler Huntley for the Ravens — it has not caught up to either story. Tanner McKee's second straight start Monday is the one the app already has right."
+       "Bears coach Ben Johnson confirmed it Friday afternoon: tight end Cole Kmet is headed to injured reserve with the serious right-knee injury from Thursday night's 30-24 win over the Patriots. His season is done.",
+       "More of the tight-end work now shifts to rookie Colston Loveland, who caught a touchdown Thursday. The Bears don't play again until next week, so there's nothing to bet here tonight — just a roster fact for next week's board."
       ],
-      "takeaway": "Inactives become official about 90 minutes before kickoff Sunday — until then, treat the QB rows on the board as stale and run your price through Check.",
-      "editorial_only": false,
+      "takeaway": "Bears 5-2, Patriots 4-3 — and Chicago's tight-end room is Loveland's now.",
       "evidence_ids": [
-       "ev-mccarthy-am",
-       "ev-lamar-am",
-       "ev-mckee-am"
+       "ev-kmet-pm"
       ],
       "sources": [
        {
-        "label": "FOX Sports",
-        "url": "https://foxsports.com/stories/nfl/nfl-catchup-giants-go-j-j-mccarthy-josh-jacobs-back-practice"
-       },
-       {
-        "label": "Cincinnati Enquirer",
-        "url": "https://www.cincinnati.com/story/sports/nfl/bengals/2026/10/22/lamar-jackson-practices-before-bengals-ravens-week-7/92382200007/"
-       },
-       {
-        "label": "NBC Sports Philadelphia",
-        "url": "https://www.nbcsportsphiladelphia.com/nfl/philadelphia-eagles/tanner-mckee-backup-to-starter-jalen-hurts-cowboys-week-7/760773/"
+        "label": "USA Today",
+        "url": "https://www.usatoday.com/story/sports/nfl/bears/2026/10/23/cole-kmet-knee-injury-update-caleb-williams/92395962007/"
        }
       ]
      },
      {
-      "headline": "Simmons to IR, Jacobs back, Paris game still on",
+      "headline": "Mayfield expected back — but three Bucs ruled out",
       "paragraphs": [
-       "Chiefs left tackle Josh Simmons (back/bulging disc) went on injured reserve Thursday after his rehab 'plateaued' — out at least four more games, no surgery planned. Undrafted rookie Kahlil Benson keeps the job. The 5-0 Chiefs visit Seattle on Sunday night.",
-       "Josh Jacobs is back at Packers practice and is expected to play this week, per NFL Network, after being cleared following the league's investigation. Green Bay visits Detroit on Sunday.",
-       "Pittsburgh canceled a planned Paris fan event over security concerns tied to civil unrest in France. Sunday's Steelers-Saints game — 9:30 a.m. ET kickoff — remains scheduled."
+       "Baker Mayfield practiced fully all week and coach Todd Bowles said Friday he's expected to start Sunday at Carolina, back from the dislocated right thumb that cost him three games. He's officially listed questionable.",
+       "The market moved on it: Tampa +3 went from -105 to -115 at DraftKings, and FanDuel is down to Panthers -2.5. The board's QB row flipped from Jalon Daniels to Mayfield — and the Value card rotated off Tampa to New Orleans.",
+       "One catch: the Bucs ruled out receiver Emeka Egbuka (concussion/foot), right tackle Luke Goedeke (calf), and safety Antoine Winfield Jr. (rib). A returning starter behind a backup right tackle, without his top receiver."
       ],
-      "takeaway": "Line-protection news for Sunday night, a lead back returning for Sunday afternoon, and logistics noise (not a postponement) in Paris.",
-      "editorial_only": false,
+      "takeaway": "The QB upgrade is real, the supporting cast is thinner — and the number already moved. Check your price, don't chase the news.",
       "evidence_ids": [
-       "ev-simmons-am",
-       "ev-jacobs-am",
-       "ev-paris-am"
+       "ev-mayfield-pm",
+       "ev-lines-pm",
+       "ev-qbrows-pm"
       ],
       "sources": [
        {
-        "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/chiefs-placing-lt-josh-simmons-on-ir-with-disc-issue"
+        "label": "Reuters",
+        "url": "https://www.reuters.com/sports/bucs-qb-baker-mayfield-thumb-start-vs-panthers--flm-2026-10-23/"
+       }
+      ]
+     },
+     {
+      "headline": "Final injury report roundup",
+      "paragraphs": [
+       "San Francisco heads to Atlanta shorthanded: the 49ers ruled out wide receivers Mike Evans (Achilles) and Deebo Samuel (hamstring) plus pass rusher Nick Bosa (calf). Christian Kirk, Upton Stout, and Siran Neal are questionable.",
+       "The good-news side of Friday: Patrick Mahomes practiced fully and isn't on the Chiefs' injury report (knee). The Dolphins ruled out cornerback Reese Taylor and listed two more as doubtful/questionable against the Jets. Saints left tackle Asim Richards (thumb) practiced fully with no designation and is expected to play in Paris.",
+       "Also cleared with no designation Friday: Jaylen Waddle (Broncos), Tony Pollard (Titans), Jonathan Taylor and Keenan Allen (Colts), Rashid Shaheed (Seahawks), and Bucky Irving (Bucs)."
+      ],
+      "takeaway": "The 49ers are the weekend's biggest absence list; most other Friday designations leaned positive.",
+      "evidence_ids": [
+       "ev-finals-pm"
+      ],
+      "sources": [
+       {
+        "label": "Niners Wire",
+        "url": "https://ninerswire.usatoday.com/story/sports/nfl/niners/2026/10/21/49ers-falcons-week-7-injury-news-updates-analysis--live/92375269007/"
        },
        {
-        "label": "FOX Sports",
-        "url": "https://foxsports.com/stories/nfl/nfl-catchup-giants-go-j-j-mccarthy-josh-jacobs-back-practice"
-       },
-       {
-        "label": "The Chairshot",
-        "url": "https://thechairshot.com/2026/10/chairshot-nfl-news-report-10-23-2026-bears-win-thursday-thriller-chiefs-lose-simmons-rams-face-another-injury-scare/"
+        "label": "Dolphins Wire",
+        "url": "https://dolphinswire.usatoday.com/story/sports/nfl/dolphins/2026/10/23/dolphins-injury-report-miami-rules-out-vs-jets/92402402007/"
        }
       ]
      },
      {
       "headline": "Weather: nothing today",
       "paragraphs": [
-       "No NFL games today, so no kickoff windows to check. Sunday's outdoor forecasts firm up closer to Sunday — the Sunday editions will carry the final kickoff-window weather."
+       "No NFL games on Friday, so there's no kickoff weather to check. Sunday's outdoor kickoff-window forecasts firm up closer to Sunday and will be covered in the Sunday morning edition."
       ],
       "takeaway": "Friday is a weather off-day; check back Sunday morning before you lock anything in.",
-      "editorial_only": false,
       "evidence_ids": [
-       "ev-weather-am"
+       "ev-weather-pm"
       ],
       "sources": []
      }
@@ -117,55 +113,42 @@
     "icon": "💡",
     "items": [
      {
-      "headline": "Your three cards this morning",
+      "headline": "Your three cards tonight",
       "paragraphs": [
-       "Hit Rate: Vikings moneyline at -278 on DraftKings — the pick the app thinks is most likely to win. Hit Rate forgoes value for win probability; the app's own tutorial says Hit Rate is not Profit Rate.",
-       "Balanced: Browns moneyline at -126 on FanDuel — the middle ground, a strong pick without paying too much. A fine starting point if you are new to this.",
-       "Value: Buccaneers +3 at -105 on DraftKings — always the model's +EV play. The price ticked a nickel worse overnight (was +100) and it is still the card.",
-       "None of these is a command. They are the three lanes the app sees; your price, through Check, decides whether any of them is a bet."
+       "Hit Rate: Vikings moneyline -295 (FanDuel), Colts at Vikings. The model's win probability is 78.6% — the most likely to win on the board. Notice the evaluator EV is -0.033: Hit Rate forgoes value for win probability. The app's own tutorial says Hit Rate ≠ Profit Rate, and that's not a flaw — it's the job description.",
+       "Balanced: Browns moneyline -126 (FanDuel), Browns at Titans. Unchanged from this morning — model 71.9%, EV +0.027. The middle ground: a strong pick without paying too much, a good starting point for a new bettor.",
+       "Value: Saints +3 -108 (DraftKings), Steelers at Saints in Paris. Always the model's +EV play (EV +0.034). It rotated off Tampa +3 this evening once Mayfield money made that number worse — the card follows the price, not the team."
       ],
       "takeaway": "Hit Rate = most likely to win. Balanced = strong without overpaying. Value = the +EV play. Check = the verdict on your price.",
-      "editorial_only": false,
       "evidence_ids": [
-       "ev-cards-am"
+       "ev-cards-pm"
       ],
       "sources": []
      },
      {
-      "headline": "Monday night: the model and the market disagree",
+      "headline": "Monday night: the model and the market still disagree",
       "paragraphs": [
-       "The model's expected margin has Cowboys-Eagles at about a pick'em. The market board has Dallas -4.5 at both DraftKings and FanDuel. That is a wide gap, and it is not a typo — the market has Tanner McKee's second start and a four-game Eagles losing streak fully priced in.",
-       "A gap like this does not mean the model is wrong or the market is wrong. It means this is exactly the spot Check was built for: type in your book's line and price on Monday night, and the app runs it back through the model and the evaluator and hands you a bet-or-no-bet verdict on your number — not the board's, not anyone else's."
+       "Cowboys at Eagles: the model's expected margin has this about a pick'em, while the market board has Dallas -4.5 at both books. Nothing changed today — the model didn't budge, and the price barely did.",
+       "Tanner McKee makes his second straight start for Philadelphia with Jalen Hurts on injured reserve. When the model says pick'em and the market says -4.5, don't guess — run your number through Check."
       ],
-      "takeaway": "When the model says pick'em and the market says -4.5, don't guess — Check your price. Monday game? Monday check.",
-      "editorial_only": false,
+      "takeaway": "Monday game? Monday check.",
       "evidence_ids": [
-       "ev-mnf-model-am"
+       "ev-lines-pm",
+       "ev-qbrows-pm"
       ],
       "sources": []
      },
      {
-      "headline": "Two boards built on yesterday's quarterbacks",
+      "headline": "The board caught up — but Sunday decides",
       "paragraphs": [
-       "The Giants board was built on Jameis Winston. The starter Sunday is J.J. McCarthy. The Ravens board was built on Tyler Huntley. The starter Sunday might be Lamar Jackson — or might still be Huntley. The app has not caught up to either story.",
-       "This is the one timing note that matters today: inactives become official about 90 minutes before kickoff Sunday. That is when these two games get real. Until then, any number you liked on Giants-Texans or Bengals-Ravens was priced for a quarterback who may not play — run it through Check, and be ready to re-run it when the starters are official."
+       "The evening board's quarterback rows now reflect the day's news: Mayfield in for Tampa, McCarthy in for the Giants, Lamar listed questionable for Baltimore. The morning's stale rows are fixed.",
+       "But Lamar is a true game-time decision, and inactives become official about 90 minutes before kickoff. If your book still shows this afternoon's number, run it through Check now — and again Sunday."
       ],
-      "takeaway": "Stale QB rows + fresh prices = Check now, Check again when inactives drop about 90 minutes before kickoff.",
-      "editorial_only": false,
+      "takeaway": "Fresh QB rows tonight, one game-time decision left — Check now, Check again when inactives drop.",
       "evidence_ids": [
-       "ev-mccarthy-am",
-       "ev-lamar-am"
+       "ev-qbrows-pm"
       ],
-      "sources": [
-       {
-        "label": "FOX Sports",
-        "url": "https://foxsports.com/stories/nfl/nfl-catchup-giants-go-j-j-mccarthy-josh-jacobs-back-practice"
-       },
-       {
-        "label": "Cincinnati Enquirer",
-        "url": "https://www.cincinnati.com/story/sports/nfl/bengals/2026/10/22/lamar-jackson-practices-before-bengals-ravens-week-7/92382200007/"
-       }
-      ]
+      "sources": []
      }
     ]
    },
@@ -176,14 +159,13 @@
     "mode": "learning",
     "items": [
      {
-      "headline": "Learn the Game: handle vs. tickets",
+      "headline": "Learn the Game: steam move",
       "paragraphs": [
-       "Two numbers you will see on any betting-splits page: BET is the share of tickets (how many bets), HND is the share of handle (how much money). Tickets count heads. Handle counts dollars.",
-       "A concrete, clearly-labeled hypothetical: say 70% of the tickets are on the favorite, but 60% of the money is on the underdog. The crowd is loud and the money is quiet — most bettors took the favorite, but the bigger dollars took the dog. That disagreement between tickets and handle is what bettors call a split.",
-       "A split is not a command to bet the other side. It is a question: why does the money disagree with the crowd? Sometimes the answer is nothing. Sometimes it is information you do not have yet. Either way, you now know what to watch — the line. If the line starts moving toward the money side, the market is telling you something.",
-       "This morning the free splits row showed no data for Thursday's game, so there is no real split to work with — which is exactly why this space is a lesson instead of a manufactured Fade."
+       "(Hypothetical example:) Imagine a team opens as a 2.5-point favorite on Monday. Friday afternoon, news breaks that their starting quarterback might not play. By Saturday morning, the other team is a 1.5-point favorite. That fast swing on fresh information is called a steam move.",
+       "What could it mean? The market decided the news mattered more than the opener did — it's information moving the line, not a slow pile of public bets. What to watch next: whether the line settles or keeps running, and where your model lands once it sees the same news.",
+       "How to apply it: don't chase the move after it ran. If you like the new side, type the current number into Check and let the app price what's left — the value may already be gone, and Check will tell you."
       ],
-      "takeaway": "Tickets count heads, handle counts dollars — when they disagree, watch the line, not the crowd, and never force a Fade that isn't there.",
+      "takeaway": "A steam move tells you the market heard news — Check tells you whether there's still a price worth playing.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -196,42 +178,19 @@
     "icon": "👀",
     "items": [
      {
-      "headline": "Overnight: one half-point, two price ticks",
+      "headline": "Friday: the flip, the QB money, and the steam",
       "paragraphs": [
-       "The only real move since the evening board: the Steelers-Saints game ticked a half point at DraftKings, Saints +3.5 to +3.0 — money toward New Orleans. FanDuel never moved off +3.0.",
-       "Two price ticks on the cards: the Value play (Buccaneers +3) got a nickel worse, +100 to -105 at DraftKings — still the card. The Hit Rate play (Vikings moneyline) got a tick better, -285 to -278. The Balanced card (Browns -126) never moved. Everything else on the Sunday board was flat.",
-       "The board refreshed this morning and refreshes again tonight. If your book isn't DK or FanDuel, the drill never changes: tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator for a bet-or-no-bet verdict on your price. Full re-evaluation, not a blind override."
+       "The headliner: Ravens-Bengals flipped sides. Ravens -1.5 this morning became Bengals -1.5 tonight at both books after Lamar's questionable designation, with the moneyline sliding to near pick'em. The app's QB row caught it (Lamar, questionable).",
+       "Quarterback money elsewhere: Tampa +3 went from -105 to -115 at DraftKings on Mayfield's return, and FanDuel is down to Panthers -2.5 — the Value card rotated from Tampa to New Orleans +3 (-108 at DraftKings). Vikings moneyline steamed from -278 to -298, and the Hit Rate card moved with it to FanDuel -295.",
+       "The rest: Browns -1.5 to -2.5 at DraftKings (moneyline -130 to -135, total down to 36.5); Broncos -230 to -238; Chiefs +3 -120 to -115 and moneyline +120 to +124 on Mahomes's clean bill; Raiders +3.5 to +3.0 at DraftKings — down from an opener of +7, the week's big mover. Saints +3 ticked from -102 to -108.",
+       "One timing note, and only one: Ravens-Bengals is a wait — Lamar is a game-time decision and inactives land about 90 minutes before Sunday's 1:00 p.m. ET kickoff. For everything else, if your book has this afternoon's number and Check says bet, bet now — waiting lets the number drift the wrong way too.",
+       "And the standing reminder: when the board hasn't picked up a move, or your book isn't DraftKings or FanDuel, tap Check, type in your book's line and price — the app runs it back through the model and evaluator and returns a bet/no-bet verdict on your price."
       ],
-      "takeaway": "Quiet night: one half-point (toward New Orleans), one cheaper Hit Rate, one pricier Value play — and the board caught all of it.",
-      "editorial_only": false,
+      "takeaway": "A news-heavy Friday moved four games and rotated a card — Check your number before Sunday's public money arrives.",
       "evidence_ids": [
-       "ev-lines-am"
+       "ev-lines-pm"
       ],
       "sources": []
-     },
-     {
-      "headline": "Opener vs. now: the week's two big moves",
-      "paragraphs": [
-       "From the shadow-tracked lookahead lines published October 15 to this morning's board, the two biggest moves of the week: Raiders +7.0 down to +3.5 against the Rams — three and a half points toward Las Vegas — and Texans -7.0 out to -10.5 against the Giants, as the McCarthy news landed during the week.",
-       "The closed one: Patriots-Bears opened Bears -1.5, closed -3, and finished 30-24 — the move and the result agreed.",
-       "Moves usually mean something, even when the reason isn't obvious yet. When you see one, the question is always the same: is there news behind it, or is it just money?"
-      ],
-      "takeaway": "Raiders +7 to +3.5 and Texans -7 to -10.5 were the week's big movers — both had real news behind them.",
-      "editorial_only": false,
-      "evidence_ids": [
-       "ev-lookahead-am",
-       "ev-tnf-final-am"
-      ],
-      "sources": [
-       {
-        "label": "4for4",
-        "url": "https://www.4for4.com/2026/w7/week-8-nfl-odds-lookahead-lines-report"
-       },
-       {
-        "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/thursday-night-football-bears-fend-off-patriots-30-24"
-       }
-      ]
      }
     ]
    },
@@ -241,14 +200,15 @@
     "icon": "✅",
     "items": [
      {
-      "headline": "Friday is for the Sunday board",
+      "headline": "Friday night: Check your Sunday prices",
       "paragraphs": [
-       "No games today. The whole Sunday board is live right now — thirteen games, lines and prices, all three cards. The most useful thing you can do with a football Friday is run the prices you actually like through Check today, before the weekend moves the numbers on you.",
-       "And the standing nudge, because settlement is manual and the tracker only works if you're honest with yourself: log last night's result — winner or loser, whichever side you had. The tracker can't teach you anything from games you pretend didn't happen."
+       "The board refreshes every morning and evening, and today it moved: a flipped side in Baltimore, quarterback money in Tampa, a pricier favorite in Minnesota. Before you lock anything in for Sunday, run each price through Check — type in your book's line and price and get a bet/no-bet verdict on the number you can actually play.",
+       "Sunday brings the late rush of public money on big-name teams, and that rush usually moves numbers the wrong way for price-sensitive bettors. Tonight's number can be better than Sunday's."
       ],
-      "takeaway": "Check your Sunday prices today, and log Thursday's result honestly — the tracker only works if you do.",
-      "editorial_only": true,
-      "evidence_ids": [],
+      "takeaway": "Check Friday's numbers tonight — a good price today beats a hoped-for price Sunday.",
+      "evidence_ids": [
+       "ev-lines-pm"
+      ],
       "sources": []
      }
     ]
@@ -257,174 +217,108 @@
  },
  "evidence": [
   {
-   "evidence_id": "ev-tnf-final-am",
-   "category": "game_result",
+   "evidence_id": "ev-lamar-pm",
+   "category": "injury",
    "verification": "REPORTED",
-   "fact": "Bears 30, Patriots 24 final, Thursday Oct 22 at Soldier Field. Bears 5-2, Patriots 4-3. Cairo Santos hit a career-long 58-yard field goal with 1:34 left; Caleb Williams 22-of-33 for 308 yards and 2 TD; Drake Maye 24-of-31 for 321 yards, 2 TD, 1 INT plus a rushing TD; Luther Burden III 4 catches for 130 yards and a TD.",
-   "interpretation": "The -3 the board held all day covered. Nothing left to bet on this game.",
-   "app_guidance": "No Check to run tonight — settle the tracker honestly, winners and losers.",
+   "fact": "Ravens QB Lamar Jackson is officially QUESTIONABLE for Sunday vs the Bengals. He was limited all week; Jackson confirmed it is a high ankle sprain ('heading in the right direction'), and the decision is game-time — Tyler Huntley would start if he can't go. Ravens also ruled OUT safety Jaylinn Hawkins (knee) and OLB Tavius Robinson (pectoral, out for the season).",
+   "interpretation": "A game-time QB call on the most bet divisional game of the weekend creates the biggest price uncertainty of the slate.",
+   "app_guidance": "The board's QB row now lists Lamar as questionable. Run any Ravens/Bengals number through Check now and again when inactives land about 90 minutes before kickoff.",
    "sources": [
     {
      "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/thursday-night-football-bears-fend-off-patriots-30-24"
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/lamar-jackson-officially-questionable-for-ravens-bengals"
     }
    ]
   },
   {
-   "evidence_id": "ev-kmet-am",
+   "evidence_id": "ev-kmet-pm",
    "category": "injury",
    "verification": "REPORTED",
-   "fact": "Bears TE Cole Kmet was carted off with a right knee injury with 5:46 left in the 4th quarter (caught an 8-yard pass, collided with Christian Gonzalez and Robert Spillane) and ruled out for the remainder of the game. Coach Ben Johnson: 'I don't think it looked very good.' More tests Friday.",
-   "interpretation": "Could be a multi-week absence; Bears TE work falls to Colston Loveland and rookie Sam Roush.",
-   "app_guidance": "Watch the Friday update before next week's board — Chicago plays at Seattle in Week 8.",
+   "fact": "Bears TE Cole Kmet is done for the season. Coach Ben Johnson confirmed Friday afternoon that Kmet will go on injured reserve with the serious right-knee injury suffered in Thursday night's 30-24 win over the Patriots. More of the tight-end work shifts to rookie Colston Loveland.",
+   "interpretation": "The Bears' tight-end room is now Loveland's. No betting angle Sunday (Bears are on the Week 7 Thursday result), but it matters for next week's board.",
+   "app_guidance": "Nothing to Check this weekend for Chicago — log Thursday's result honestly in the tracker, winners and losers.",
    "sources": [
     {
-     "label": "TSN/AP",
-     "url": "https://www.tsn.ca/nfl/article/bears-te-kmet-exits-late-vs-patriots-with-knee-injury-n1-50254858/"
+     "label": "USA Today",
+     "url": "https://www.usatoday.com/story/sports/nfl/bears/2026/10/23/cole-kmet-knee-injury-update-caleb-williams/92395962007/"
     }
    ]
   },
   {
-   "evidence_id": "ev-lamar-am",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Lamar Jackson practiced on a limited basis Wednesday AND Thursday (second straight day), moving well without favoring his sprained left ankle. He is day-to-day; coach Jesse Minter has not confirmed the starter for Sunday vs Cincinnati. Tyler Huntley started the last two games.",
-   "interpretation": "Trending toward a return, but nothing is official — the biggest single variable on the Sunday 1 p.m. ET board.",
-   "app_guidance": "The app's board still lists Tyler Huntley as Baltimore's expected starter — it has not caught up. Run your price through Check, and re-check when the starter is official (inactives land about 90 minutes before kickoff).",
-   "sources": [
-    {
-     "label": "Cincinnati Enquirer",
-     "url": "https://www.cincinnati.com/story/sports/nfl/bengals/2026/10/22/lamar-jackson-practices-before-bengals-ravens-week-7/92382200007/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-mccarthy-am",
+   "evidence_id": "ev-mayfield-pm",
    "category": "qb",
    "verification": "REPORTED",
-   "fact": "J.J. McCarthy will start for the Giants Sunday at Houston, coach John Harbaugh announced Wednesday; McCarthy took first-team reps Thursday. He replaces Jameis Winston, benched in Sunday's loss to New Orleans.",
-   "interpretation": "A first-time starter for this team on the road against a 10.5-point favorite — the market has already moved (Houston -7 to -10.5 on the week).",
-   "app_guidance": "The app still lists Jameis Winston as the Giants' expected starter — it has not caught up. The NYG@HOU numbers on the board were built on Winston; use Check, not the stale card, until the app reprices.",
+   "fact": "Bucs QB Baker Mayfield practiced fully all week and is expected to start Sunday at Carolina after missing three games with a dislocated right thumb, per coach Todd Bowles — though he is officially listed questionable. Tampa Bay ruled OUT WR Emeka Egbuka (concussion/foot), RT Luke Goedeke (calf), and S Antoine Winfield Jr. (rib).",
+   "interpretation": "The QB upgrade is real but the supporting cast is thinner — a returning starter behind a backup right tackle without his top receiver.",
+   "app_guidance": "The board's QB row flipped from backup Jalon Daniels to Mayfield. The market already priced in his return — Check your number before assuming the news is value.",
    "sources": [
     {
-     "label": "FOX Sports",
-     "url": "https://foxsports.com/stories/nfl/nfl-catchup-giants-go-j-j-mccarthy-josh-jacobs-back-practice"
+     "label": "Reuters",
+     "url": "https://www.reuters.com/sports/bucs-qb-baker-mayfield-thumb-start-vs-panthers--flm-2026-10-23/"
     }
    ]
   },
   {
-   "evidence_id": "ev-mckee-am",
-   "category": "qb",
-   "verification": "REPORTED",
-   "fact": "Tanner McKee makes his second straight start for Philadelphia Monday night vs Dallas. Jalen Hurts is on injured reserve with blood clots (deep vein thrombosis, bilateral pulmonary emboli) and is expected to miss the rest of the season.",
-   "interpretation": "The Eagles (2-4) are on a four-game losing streak with a backup QB; the market has Dallas -4.5 on the road.",
-   "app_guidance": "The app lists McKee as expected starter — it matches the news. Monday game? Monday check.",
-   "sources": [
-    {
-     "label": "NBC Sports Philadelphia",
-     "url": "https://www.nbcsportsphiladelphia.com/nfl/philadelphia-eagles/tanner-mckee-backup-to-starter-jalen-hurts-cowboys-week-7/760773/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-simmons-am",
+   "evidence_id": "ev-finals-pm",
    "category": "injury",
    "verification": "REPORTED",
-   "fact": "Chiefs LT Josh Simmons (back/bulging disc) was placed on injured reserve Thursday after his rehab 'plateaued'; he is out at least four more games and no surgery is planned. Undrafted rookie Kahlil Benson keeps starting at left tackle. Kansas City (5-0) plays at Seattle Sunday night.",
-   "interpretation": "The 5-0 Chiefs still have not fielded their planned starting offensive line once this season.",
-   "app_guidance": "Sunday night's board has Seattle -3/-2.5; line protection matters more than usual with the backup tackle.",
+   "fact": "Friday final injury reports: 49ers ruled OUT WR Mike Evans (Achilles), WR Deebo Samuel (hamstring), DE Nick Bosa (calf) for Sunday at Atlanta; WR Christian Kirk (calf), CB Upton Stout (shoulder), S Siran Neal (neck) are questionable. Chiefs QB Patrick Mahomes practiced fully Friday and is not on the Week 7 injury report (knee). Dolphins ruled OUT CB Reese Taylor (quad) and listed DE Robert Beal Jr. (hamstring) doubtful, LB Willie Gay Jr. (illness) and S Kyle Louis (knee) questionable vs the Jets. Saints LT Asim Richards (thumb) practiced fully Friday with no game designation and is expected to play in Paris. Cleared Friday with no designation: Broncos WR Jaylen Waddle (chest), Titans RB Tony Pollard, Colts RB Jonathan Taylor and WR Keenan Allen, Seahawks WR Rashid Shaheed (hip), Bucs RB Bucky Irving (illness).",
+   "interpretation": "San Francisco heads to Atlanta down its top two wideouts and best pass rusher; most other Friday designations leaned positive.",
+   "app_guidance": "Injury news lives here, not scattered. When a board row still shows a stale name or status, tap Check and type in the current line — the app re-runs it through the model on the fresh facts.",
    "sources": [
     {
-     "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/chiefs-placing-lt-josh-simmons-on-ir-with-disc-issue"
+     "label": "Niners Wire",
+     "url": "https://ninerswire.usatoday.com/story/sports/nfl/niners/2026/10/21/49ers-falcons-week-7-injury-news-updates-analysis--live/92375269007/"
+    },
+    {
+     "label": "Dolphins Wire",
+     "url": "https://dolphinswire.usatoday.com/story/sports/nfl/dolphins/2026/10/23/dolphins-injury-report-miami-rules-out-vs-jets/92402402007/"
     }
    ]
   },
   {
-   "evidence_id": "ev-jacobs-am",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Josh Jacobs is back at Packers practice and is expected to play this week, per NFL Network, after being cleared following the NFL's investigation.",
-   "interpretation": "Green Bay's lead back returns for Sunday at Detroit.",
-   "app_guidance": "Check the Sunday board for Green Bay's number with Jacobs back in the fold.",
-   "sources": [
-    {
-     "label": "FOX Sports",
-     "url": "https://foxsports.com/stories/nfl/nfl-catchup-giants-go-j-j-mccarthy-josh-jacobs-back-practice"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-paris-am",
-   "category": "other",
-   "verification": "REPORTED",
-   "fact": "Pittsburgh canceled a planned Paris fan event Thursday over security concerns tied to ongoing civil unrest in France. Sunday's Steelers-Saints game (9:30 a.m. ET kickoff) remains scheduled.",
-   "interpretation": "Logistics noise around the international game; the game itself is on.",
-   "app_guidance": "PIT@NO is the early Sunday window — the board is live for it now.",
-   "sources": [
-    {
-     "label": "The Chairshot",
-     "url": "https://thechairshot.com/2026/10/chairshot-nfl-news-report-10-23-2026-bears-win-thursday-thriller-chiefs-lose-simmons-rams-face-another-injury-scare/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-cards-am",
+   "evidence_id": "ev-cards-pm",
    "category": "app_board",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "Friday morning headline cards: Hit Rate = Vikings moneyline -278 (DraftKings), IND@MIN; Balanced = Browns moneyline -126 (FanDuel), CLE@TEN; Value = Buccaneers +3 at -105 (DraftKings), TB@CAR. All three cards unchanged from the evening edition.",
-   "interpretation": "The app's three lanes are stable overnight.",
-   "app_guidance": "Cards are the starting point; your price still goes through Check.",
+   "fact": "Friday evening headline cards: Hit Rate = Vikings moneyline -295 (FanDuel), IND@MIN — model win probability 78.6% vs market 71.6%, evaluator EV -0.033, trust 75.1%, 1.25 units. Balanced = Browns moneyline -126 (FanDuel), CLE@TEN — model 71.9% vs market 55.4%, EV +0.027, trust 63.7%, 1.0 units. Value = Saints +3 -108 (DraftKings), PIT@NO — model cover probability 50.5%, EV +0.034, trust 50.5%, 1.0 units. All three cards SUPPORTED with BET state, MEDIUM reliability.",
+   "interpretation": "Hit Rate is the most-likely-to-win pick and carries a negative EV — that is by design, not a flaw. Value is always the +EV play.",
+   "app_guidance": "Use the cards as labeled: Hit Rate for win probability, Balanced as the middle ground, Value for the +EV play — and Check for the verdict on your book's price.",
    "sources": []
   },
   {
-   "evidence_id": "ev-lines-am",
-   "category": "app_board",
-   "verification": "INTERNAL_CANONICAL",
-   "fact": "Overnight (evening to morning board): PIT@NO moved a half point at DraftKings (Saints +3.5 to +3.0); the Value card's price worsened (Buccaneers +3 from +100 to -105); the Hit Rate card's price improved (Vikings ML -285 to -278); the Balanced card held (Browns ML -126); every other Sunday line and price was flat.",
-   "interpretation": "A quiet night on the board — one real move, two price ticks.",
-   "app_guidance": "The board refreshed this morning and refreshes again tonight; Check re-runs the model on whatever price you type in.",
-   "sources": []
-  },
-  {
-   "evidence_id": "ev-mnf-model-am",
-   "category": "app_board",
-   "verification": "INTERNAL_CANONICAL",
-   "fact": "Monday night DAL@PHI: the model's expected margin has the game about even (roughly a pick'em), while the market board has Dallas -4.5 at both DraftKings and FanDuel.",
-   "interpretation": "A wide model-vs-market disagreement on Monday night, with McKee's second start priced into the market.",
-   "app_guidance": "When the model and the market disagree this much, that is exactly what Check is for — type in your book's line and price for a bet/no-bet verdict on your number.",
-   "sources": []
-  },
-  {
-   "evidence_id": "ev-lookahead-am",
+   "evidence_id": "ev-lines-pm",
    "category": "line_movement",
-   "verification": "REPORTED",
-   "fact": "Shadow-tracked Week 7 lookahead lines (published Oct 15) vs the current board: Raiders +7.0 to +3.5 vs the Rams (3.5-point move toward Las Vegas, the week's biggest); Texans -7.0 to -10.5 vs the Giants (3.5-point move toward Houston as the McCarthy news landed); Patriots-Bears opened Bears -1.5, closed -3, final 30-24 (covered).",
-   "interpretation": "The two biggest week-long moves both had real news behind them — a reminder that moves usually mean something, even when the reason is not obvious yet.",
-   "app_guidance": "Opener-vs-now context lives in the Line Movement section whenever the board flips weeks.",
-   "sources": [
-    {
-     "label": "4for4",
-     "url": "https://www.4for4.com/2026/w7/week-8-nfl-odds-lookahead-lines-report"
-    }
-   ]
+   "verification": "INTERNAL_CANONICAL",
+   "fact": "Morning (12:08 UTC) to evening (00:08 UTC) board moves: CIN@BAL flipped sides — Ravens -1.5 to Bengals -1.5 at both DraftKings and FanDuel; moneyline moved from BAL -118 to near pick'em (CIN -112/-116); total 48.5 price moved to Under -115. TB@CAR: Buccaneers +3 moved from -105 to -115 at DraftKings (Mayfield return money), FanDuel now CAR -2.5/TB +2.5; the Value card rotated from Tampa +3 to Saints +3. IND@MIN: Vikings moneyline steamed from -278 to -298 (DK) / -290 to -295 (FD); the Hit Rate card moved with it to FD -295. CLE@TEN: Browns -1.5 to -2.5 at DK, moneyline -130 to -135, total 37.5 to 36.5. DEN@ARI: Broncos -230 to -238 (DK). KC@SEA: Chiefs +3 -120 to -115, moneyline +120 to +124. LAR@LV: Raiders +3.5 to +3.0 at DK (opener was +7 — the week's big mover). PIT@NO: Saints +3 price ticked from -102 to -108 at DK. DAL@PHI: FanDuel spread price evened to -110/-110, DAL moneyline -198 to -210; the model's expected margin is unchanged at about pick'em (-0.45) vs the market's Dallas -4.5.",
+   "interpretation": "A news-heavy Friday: the Lamar designation flipped a side, the Mayfield return moved a number, and the week's two big opener moves (Raiders, Texans) kept drifting. Model expected margins did not move — the board's market side did.",
+   "app_guidance": "When the board hasn't picked up a move, or your book isn't DK/FD: tap Check, type in your book's line and price — the app runs it back through the model and evaluator and returns a bet/no-bet verdict on YOUR price.",
+   "sources": []
   },
   {
-   "evidence_id": "ev-vsin-am",
+   "evidence_id": "ev-qbrows-pm",
+   "category": "app_board",
+   "verification": "INTERNAL_CANONICAL",
+   "fact": "Evening board QB rows now reflect the day's news: TB lists Baker Mayfield (Questionable) instead of Jalon Daniels; NYG lists J.J. McCarthy instead of Jameis Winston; BAL lists Lamar Jackson (Questionable) instead of Tyler Huntley. All other rows (Burrow, Burrow-side CIN; Ward TEN; Watson CLE; Prescott DAL; McKee PHI; Darnold SEA; Mahomes KC; Murray MIN; Jones IND; Stroud HOU; Shough NO; Rodgers PIT; Purdy SF; Penix ATL; Nix DEN; Brissett ARI; Cousins LV; Stafford LAR; Young CAR; Willis MIA; Geno Smith NYJ; Maye NE; Williams CHI) are current as of the 6:00 p.m. Denver refresh.",
+   "interpretation": "The morning's stale QB rows are fixed — but Lamar is a genuine game-time decision, so Sunday's board needs one more look.",
+   "app_guidance": "Inactives become official about 90 minutes before kickoff — until then, run your price through Check.",
+   "sources": []
+  },
+  {
+   "evidence_id": "ev-vsin-pm",
    "category": "fade_check",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "VSiN free betting-splits page checked ~6:20 a.m. Denver: 'No splits data available for Thursday, Oct 22.' No free-row split was visible, so no public-vs-sharper disagreement could be verified; the learning substitute is used for the fade section.",
-   "interpretation": "No verifiable Fade today — forcing one would be manufacturing it.",
-   "app_guidance": "The Fade slot teaches instead of faking.",
+   "fact": "VSiN free betting-splits page checked ~5:57 p.m. Denver: 'No splits data available for Friday, Oct 23.' No free-row DraftKings split was visible, so no public-vs-sharper disagreement could be verified tonight.",
+   "interpretation": "No verified split means no Fade — the learning substitute is used rather than manufacturing one.",
+   "app_guidance": "Never force a Fade that isn't there; the learning slot teaches the vocabulary instead.",
    "sources": []
   },
   {
-   "evidence_id": "ev-weather-am",
+   "evidence_id": "ev-weather-pm",
    "category": "weather",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "No NFL games today (Friday). Sunday's outdoor kickoff-window forecasts firm up closer to Sunday and will be covered in the Sunday editions.",
-   "interpretation": "Nothing to report on weather today.",
-   "app_guidance": "Check the Sunday morning brief for kickoff-window weather.",
+   "fact": "No NFL games today (Friday). Sunday's outdoor kickoff-window forecasts firm up closer to Sunday and will be covered in the Sunday morning edition.",
+   "interpretation": "Friday is a weather off-day — no totals angles to discuss tonight.",
+   "app_guidance": "Check back Sunday morning before locking anything in.",
    "sources": []
   }
  ]
