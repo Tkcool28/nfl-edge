@@ -1,79 +1,86 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-10-26T00:12:30Z",
- "research_generated_at_utc": "2026-10-26T00:12:30Z",
+ "submitted_at_utc": "2026-10-26T12:18:00Z",
+ "research_generated_at_utc": "2026-10-26T12:18:00Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "edition": "Evening Brief",
-  "title": "NFL EDGE Sunday Evening Brief",
-  "dek": "Sunday night is here, Mayfield is back, and Monday's only open name is Barkley.",
+  "edition": "Morning Brief",
+  "title": "NFL EDGE Monday Morning Brief",
+  "dek": "One game left in Week 7: Cowboys at Eagles tonight, no card on the board yet, and Barkley is the name to watch at inactive time.",
+  "published_at_utc": "2026-10-26T12:18:00Z",
+  "research_generated_at_utc": "2026-10-26T12:18:00Z",
   "sections": [
    {
     "id": "what-matters",
     "title": "What Matters Today",
-    "icon": "\ud83d\udcf0",
+    "icon": "📰",
     "items": [
      {
-      "headline": "Tonight: Chiefs at Seahawks, 8:20 p.m. ET",
+      "headline": "Tonight: Cowboys at Eagles, 8:15 p.m. ET",
       "paragraphs": [
-       "The last Sunday game of the day is the one left on the board. Patrick Mahomes and the Chiefs visit Sam Darnold and the Seahawks at 8:20 p.m. ET, and the app's QB row has both starters confirmed.",
-       "The backup picture changed at inactive time. Seattle's Drew Lock is inactive with a right elbow injury and dresses only as the emergency third quarterback, so Jalen Milroe is the No. 2 behind Darnold. Seattle does get safety Nick Emmanwori, linebacker DeMarcus Lawrence and linebacker Uchenna Nwosu back after they were listed as questionable, but running back Zach Charbonnet is out. Kansas City's Rashee Rice is inactive.",
-       "Most of Sunday's slate is already underway, so the evening board prices only tonight's game and Monday night. That is why tonight's card and Monday's number are the whole evening brief."
+       "Week 7 comes down to one game. The Dallas Cowboys visit the Philadelphia Eagles at Lincoln Financial Field tonight at 8:15 p.m. ET, and the app's QB row has both starters confirmed: Dak Prescott for Dallas, Tanner McKee for Philadelphia.",
+       "McKee makes his fourth start. Jalen Hurts is out for the season with blood clots in his lungs and is on injured reserve, so McKee stays under center. He went 26-for-45 for 215 yards in Philadelphia's 25-14 loss to Carolina on Oct. 18.",
+       "Both teams come in at 2-4. The winner stays alive in the NFC East race; the loser drops to 2-5. That is the whole Monday board, and it is the only game the app still prices this morning."
       ],
-      "takeaway": "Starters confirmed for tonight, Seattle's backup QB changed, and only tonight and Monday are left on the board.",
+      "takeaway": "One game left in Week 7: Prescott vs. McKee at 8:15 p.m. ET, with Hurts out for the season.",
       "evidence_ids": [
-       "ev-snf-pm",
-       "ev-cards-pm"
+       "ev-mnf-am",
+       "ev-hurts-am",
+       "ev-records-am"
       ],
       "sources": [
-       {
-        "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-drew-lock-inactive-jalen-milroe-is-no-2-qb-behind-sam-darnold"
-       },
        {
         "label": "NFL EDGE product view (public)",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       },
+       {
+        "label": "USA Today",
+        "url": "https://www.usatoday.com/story/sports/nfl/eagles/2026/10/26/jalen-hurts-blood-clots-what-happened-eagles/92431197007/"
+       },
+       {
+        "label": "Delaware Online",
+        "url": "https://www.delawareonline.com/story/sports/nfl/eagles/2026/10/26/philadelphia-eagles-dallas-cowboys-score-predictions/92383176007/"
        }
       ]
      },
      {
-      "headline": "Injury roundup: Mayfield played, Barkley is the Monday question",
+      "headline": "Injury roundup: Barkley is the open question, two Eagles receivers are out",
       "paragraphs": [
-       "The morning's open question is settled. Baker Mayfield returned to Tampa Bay's lineup against Carolina after three games out with a broken thumb, and he led the Bucs to a touchdown on the opening drive. The app's QB row now lists him with no injury tag.",
-       "Monday night is nearly set. The Eagles ruled out receivers DeVonta Smith and Dontayvion Wicks, linebacker Nolan Smith and defensive back Michael Carter. Dallas ruled out tackle Drew Shelton, receiver KaVontae Turpin and linebacker Dee Winters, while George Pickens and Joey Porter Jr. carry no designation.",
-       "Saquon Barkley is the one open name. He is expected to play Monday after a full Saturday practice, but he still carries the questionable tag \u2014 Monday's inactives, about 90 minutes before kickoff, are what settle it."
+       "Philadelphia ruled out receivers DeVonta Smith (hamstring) and Dontayvion Wicks (ankle), linebacker Nolan Smith (concussion) and defensive back Michael Carter (abdomen) on Saturday's final injury report.",
+       "Saquon Barkley is the one open name. He is listed as questionable with a hamstring injury after missing the last two games, but he practiced in full on Saturday and reports say he is expected to play. That is not settled until the inactive list lands, about 90 minutes before kickoff.",
+       "Also questionable for Philadelphia: linebacker Jonathan Greenard (ankle), linebacker Jalyx Hunt (knee/ankle), guard Landon Dickerson (knee/pectoral), tight ends Grant Calcaterra (back) and Eli Stowers (quad), and cornerback Jakorian Bennett (knee). Tight end Dallas Goedert carries no designation after a full Saturday practice and says he expects to play.",
+       "For Dallas, tackle Drew Shelton, receiver KaVontae Turpin and linebacker Dee Winters are ruled out, while receiver George Pickens and cornerback Joey Porter Jr. carry no designation."
       ],
-      "takeaway": "Mayfield is back, Monday's report is settled except Barkley, and his call lands with Monday's inactives.",
+      "takeaway": "Smith and Wicks are out, Barkley is questionable but expected to play, and his call lands with tonight's inactives.",
       "evidence_ids": [
-       "ev-mayfield-pm",
-       "ev-monday-injuries-pm",
-       "ev-barkley-pm"
+       "ev-injuries-am",
+       "ev-barkley-am"
       ],
       "sources": [
        {
         "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/baker-mayfields-first-drive-back-results-in-a-td-7-0-lead"
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/eagles-list-saquon-barkley-as-questionable-devonta-smith-dontayvion-wicks-ruled-out"
        },
        {
-        "label": "For The Win",
-        "url": "https://ftw.usatoday.com/story/sports/nfl/2026/10/25/saquon-barkley-injury-news-week-7/92429579007/"
+        "label": "Eagles Wire",
+        "url": "https://theeagleswire.usatoday.com/story/sports/nfl/eagles/2026/10/26/is-saquon-barkley-playing-eagles-cowboys-injury-update/92425346007/"
        }
       ]
      },
      {
-      "headline": "Weather: clear and calm in Philadelphia on Monday night",
+      "headline": "Weather: clear and cool in Philadelphia tonight",
       "paragraphs": [
-       "Monday night in Philadelphia: clear, low around 50 degrees, rain chance 10 percent, wind NW around 6 mph.",
-       "That is a fact, not a totals edge \u2014 nothing in it argues the total either way."
+       "Tonight in Philadelphia: clear skies, about 61 degrees at the 8:15 p.m. ET kickoff, falling into the mid-50s through the game, rain chance around 2 percent, wind west around 5 mph.",
+       "That is a fact, not a totals edge. Nothing in it argues the total either way."
       ],
-      "takeaway": "Clear and calm for Monday night in Philadelphia; judge the total on its own.",
+      "takeaway": "Clear, cool and calm for kickoff in Philadelphia; judge the total on its own.",
       "evidence_ids": [
-       "ev-weather-pm"
+       "ev-weather-am"
       ],
       "sources": [
        {
-        "label": "weather.com",
-        "url": "https://weather.com/united-states/pennsylvania/city/philadelphia/tenday"
+        "label": "Weather.com Philadelphia hourly forecast",
+        "url": "https://weather.com/us/pa/city/philadelphia/hourbyhour"
        }
       ]
      }
@@ -82,37 +89,20 @@
    {
     "id": "what-it-means",
     "title": "What It Means for NFL EDGE",
-    "icon": "\ud83d\udca1",
+    "icon": "💡",
     "items": [
      {
-      "headline": "Your evening cards: one play, on tonight's game",
+      "headline": "No card on the board yet — and that is the app doing its job",
       "paragraphs": [
-       "Hit Rate: Chiefs moneyline +138 (FanDuel), Chiefs at Seahawks. The model's win probability is 57.3 percent \u2014 that is what this card is for, the pick that looks most likely to win. The evaluator EV is +0.001, and the app lists reliability as LOW, so this is a thinner read than a normal card \u2014 it is still the most likely winner on the remaining board, not a promise.",
-       "Balanced: no play tonight. No offer on the remaining board satisfies the Balanced lane's contract, so the app shows nothing rather than forcing one.",
-       "Value: no play tonight, for the same reason. The Value lane only fires when the model's +EV play is actually there, and on tonight's and Monday's numbers it is not.",
-       "Two empty lanes are not a broken app. The lanes only speak when the contract is met, and with most of Sunday's games already underway, there are only two games left for them to speak about."
+       "This morning all three headline cards read NO_PLAY. Hit Rate, Balanced and Value each show nothing, because no offer on tonight's game satisfies that lane's contract right now.",
+       "Hit Rate is the pick that looks most likely to win. It forgoes value for win probability, and the app's own tutorial says Hit Rate is not Profit Rate. Balanced is a strong pick without paying too much, a good starting point for a new bettor. Value is always the model's +EV play. When none of the three fires, the app stays quiet rather than forcing a play.",
+       "The gap to watch is still there. The model's expected margin for Cowboys at Eagles is -0.45, about a pick'em, while the market board has Dallas -4.5. When the model says pick'em and the market says -4.5, do not guess. Tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet/no-bet verdict on your price. Full re-evaluation, not a blind override.",
+       "If a card appears on the evening refresh, it will be on tonight's game only, since that is the only game left on the board."
       ],
-      "takeaway": "Hit Rate is the only evening card, on the Chiefs. Balanced and Value stay quiet rather than force a play.",
+      "takeaway": "No card yet is not a broken app. The model-versus-market gap on Dallas -4.5 is the number to run through Check.",
       "evidence_ids": [
-       "ev-cards-pm"
-      ],
-      "sources": [
-       {
-        "label": "NFL EDGE product view (public)",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     },
-     {
-      "headline": "Monday night: the model and the market still disagree",
-      "paragraphs": [
-       "Cowboys at Eagles: the model's expected margin has this about a pick'em, while the market board has Dallas -4.5 at both books. Tanner McKee makes his second straight start for Philadelphia, and that gap has not moved all day.",
-       "When the model says pick'em and the market says -4.5, don't guess \u2014 run your number through Check. Tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet/no-bet verdict on your price. Full re-evaluation, not a blind override.",
-       "Monday game? Monday check."
-      ],
-      "takeaway": "Monday game? Monday check.",
-      "evidence_ids": [
-       "ev-cards-pm"
+       "ev-noplay-am",
+       "ev-board-am"
       ],
       "sources": [
        {
@@ -126,17 +116,17 @@
    {
     "id": "fade",
     "title": "Learn the Game",
+    "icon": "⚖️",
     "mode": "learning",
-    "icon": "\u2696\ufe0f",
     "items": [
      {
-      "headline": "Learn the Game: buying points",
+      "headline": "Learn the Game: handle vs. tickets",
       "paragraphs": [
-       "(Hypothetical example:) Imagine your team is a 3-point favorite, and your book offers -3 at -110, but also offers -2.5 at -130. Paying that extra price to move the line half a point is called buying points.",
-       "What could it mean? That half-point matters most when the game lands exactly on the number you bought off. If your team wins by exactly 3, the -3 ticket pushes and the -2.5 ticket wins \u2014 but you paid more juice for every version of the bet, including all the ones that win or lose either way.",
-       "How to apply it: buying points is only worth it when the half-point you are buying sits on a common final margin, like 3 or 7. Before you pay up, type the exact line and price into Check and let the app tell you whether that version is worth betting."
+       "(Hypothetical example:) Imagine a game where 70 percent of the tickets are on the favorite, but only 40 percent of the money is. That means lots of small bets on the favorite, and fewer, bigger bets on the underdog.",
+       "What could it mean? Tickets count bets. Handle counts money. When they point different ways, the average bet on one side is much bigger than on the other. That split is worth noticing, but it is not proof of anything on its own. One book's split alone does not make a Fade.",
+       "How to apply it: when you see tickets and handle disagree, treat it as a question, not an answer. Check whether the line has moved with the money, then run your own price through Check and let the app tell you whether that version is worth betting."
       ],
-      "takeaway": "Buying points means paying extra juice to move the line \u2014 worth it only when the half-point sits on a common margin.",
+      "takeaway": "Tickets count bets, handle counts money — when they disagree, ask why before you act on either one.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -146,19 +136,18 @@
    {
     "id": "market-watch",
     "title": "Line Movement",
-    "icon": "\ud83d\udc40",
+    "icon": "👀",
     "items": [
      {
-      "headline": "Through the day: the remaining numbers did not move",
+      "headline": "Overnight: the Monday numbers did not move",
       "paragraphs": [
-       "Cowboys at Eagles is unchanged from the morning: Dallas -4.5 at both books, and the DraftKings total is still 43.5. The model's expected margin is unchanged too, about a pick'em \u2014 so the model-versus-market gap on Monday is the same gap it was this morning.",
-       "Chiefs at Seahawks is unchanged as well: Seattle -3.0 at FanDuel, with the total at 43.5 at both books. The evening board's other Sunday games show no market prices at all, because they are already underway \u2014 there is nothing left to move on them.",
-       "The card change is rotation, not a new opinion. The morning's Steelers, Browns and Raiders cards are off the board because their games kicked off, and the evening Hit Rate card is a new card on a game that is still to come. No spread flipped sides through the day."
+       "Cowboys at Eagles is unchanged from the evening edition. Dallas is still -4.5 at both books: -108 at DraftKings and -112 at FanDuel, with Philadelphia +4.5 at -112 and -108. The DraftKings total is still 43.5, and FanDuel still shows 44.5.",
+       "The moneyline has not moved either: Dallas -218 at DraftKings and -220 at FanDuel, with Philadelphia +180 and +184. The model's expected margin is -0.45 this morning, about a pick'em, just as it was last night. So the model-versus-market gap on Monday is the same gap it was yesterday.",
+       "The rest of the Week 7 board shows no market prices this morning, because those games are already played. Tonight's game is the only number left to move."
       ],
-      "takeaway": "Nothing moved on the two remaining games \u2014 the card change is just games kicking off, not new market opinion.",
+      "takeaway": "Nothing moved overnight on Dallas -4.5 or the total — the Monday gap is the same gap as last night.",
       "evidence_ids": [
-       "ev-lines-pm",
-       "ev-cards-pm"
+       "ev-board-am"
       ],
       "sources": [
        {
@@ -168,24 +157,24 @@
       ]
      },
      {
-      "headline": "What didn't move \u2014 and the one timing note",
+      "headline": "The one timing note: inactives tonight, not a better number later",
       "paragraphs": [
-       "When the board hasn't picked up a move, or your book isn't DraftKings or FanDuel, tap Check, type in your book's line and price \u2014 the app runs it back through the model and evaluator and returns a bet/no-bet verdict on your price. Full re-evaluation, not a blind override.",
-       "One timing note, and only one: the thing worth waiting for is Monday's inactives, about 90 minutes before the 8:15 p.m. ET kickoff, because Barkley is the one genuinely open question left. For tonight's game, there is nothing left to wait for \u2014 it kicks off at 8:20 p.m. ET, so if your book's number works right now and Check says bet, bet now."
+       "When the board has not picked up a move, or your book is not DraftKings or FanDuel, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet/no-bet verdict on your price. Full re-evaluation, not a blind override.",
+       "One timing note, and only one: the thing worth waiting for is tonight's inactives, about 90 minutes before the 8:15 p.m. ET kickoff, because Barkley is the one genuinely open question left. If your book has a good number right now and Check says bet, bet now. Waiting for a hoped-for number lets it drift the wrong way too, and tonight's game kicks off tonight."
       ],
-      "takeaway": "Monday's inactives are the one thing worth waiting for; tonight's game kicks off tonight, so a good number now is the play.",
+      "takeaway": "Wait only for tonight's inactives on Barkley; a good number that Check approves now is the play.",
       "evidence_ids": [
-       "ev-lines-pm",
-       "ev-barkley-pm"
+       "ev-barkley-am",
+       "ev-board-am"
       ],
       "sources": [
        {
-        "label": "NFL EDGE product view (public)",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+        "label": "Eagles Wire",
+        "url": "https://theeagleswire.usatoday.com/story/sports/nfl/eagles/2026/10/26/is-saquon-barkley-playing-eagles-cowboys-injury-update/92425346007/"
        },
        {
-        "label": "For The Win",
-        "url": "https://ftw.usatoday.com/story/sports/nfl/2026/10/25/saquon-barkley-injury-news-week-7/92429579007/"
+        "label": "NFL EDGE product view (public)",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
       ]
      }
@@ -194,17 +183,17 @@
    {
     "id": "today-tip",
     "title": "Today's Tip",
-    "icon": "\u2705",
+    "icon": "✅",
     "items": [
      {
-      "headline": "Tonight's job: two games left, check them both",
+      "headline": "Tonight's job: one game, one Check",
       "paragraphs": [
-       "The board refreshes every morning and evening, and tonight it holds just two games. Work through tonight's game first, since it kicks off at 8:20 p.m. ET, then set up Monday night: the model-versus-market gap on Dallas -4.5 is the number to run through Check.",
-       "One more thing, because the tracker only works if you're honest with yourself: settlement is manual, and there is no auto-settle. Log the losers too, not just the winners \u2014 that is the only way the record means anything next week."
+       "The board refreshes every morning and evening, and today it holds just one game. Work that game properly: starters are confirmed, the injury picture is settled except Barkley, and the model-versus-market gap on Dallas -4.5 is the number to run through Check.",
+       "Check your book's line and price, not just the DraftKings or FanDuel number in this brief. If Check says bet on your price, that is your verdict. If it says no, no card in this brief changes that. And remember what a price means: -120 means every $1.20 you risk wins $1. The app sets your actual stake from your bankroll and staking choice."
       ],
-      "takeaway": "Tonight first, Monday next, Check on both \u2014 and log the losers too, because the tracker only works if the record is honest.",
+      "takeaway": "One game left: confirm Barkley at inactive time, run your own price through Check, and let that verdict decide.",
       "evidence_ids": [
-       "ev-cards-pm"
+       "ev-board-am"
       ],
       "sources": [
        {
@@ -215,82 +204,15 @@
      }
     ]
    }
-  ],
-  "published_at_utc": "2026-10-26T00:12:30Z",
-  "research_generated_at_utc": "2026-10-26T00:12:30Z"
+  ]
  },
  "evidence": [
   {
-   "evidence_id": "ev-snf-pm",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Sunday Night Football inactives for Chiefs at Seahawks (8:20 p.m. ET kickoff): Seattle backup QB Drew Lock is inactive with a right elbow injury and will dress only as the emergency third quarterback; second-year QB Jalen Milroe is Seattle's No. 2 behind starter Sam Darnold. Seattle safety Nick Emmanwori, linebacker DeMarcus Lawrence and linebacker Uchenna Nwosu are all active after being listed as questionable. Seattle running back Zach Charbonnet is inactive. For Kansas City, receiver Rashee Rice is inactive.",
-   "interpretation": "The starters are unchanged \u2014 Mahomes vs Darnold \u2014 but Seattle's backup quarterback and backfield depth changed at inactive time.",
-   "sources": [
-    {
-     "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-drew-lock-inactive-jalen-milroe-is-no-2-qb-behind-sam-darnold"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-mayfield-pm",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Baker Mayfield returned to Tampa Bay's starting lineup on Sunday against Carolina after missing three games with a broken right thumb. He led the Buccaneers to a touchdown on the opening drive, going 2-for-4 for 23 yards on that drive, and the app's QB row now lists him as Tampa Bay's expected starter with no injury tag.",
-   "interpretation": "The morning's open Mayfield question is settled: he played.",
-   "sources": [
-    {
-     "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/baker-mayfields-first-drive-back-results-in-a-td-7-0-lead"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-barkley-pm",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Saquon Barkley is expected to play in Philadelphia's Monday night game against Dallas, according to NFL Network's Mike Garafolo, after missing the last two games with a hamstring injury. Barkley was listed as questionable on Saturday's final injury report but was a full participant in Saturday's practice.",
-   "interpretation": "The expectation is a return, but the official call still lands with Monday's inactives.",
-   "sources": [
-    {
-     "label": "For The Win",
-     "url": "https://ftw.usatoday.com/story/sports/nfl/2026/10/25/saquon-barkley-injury-news-week-7/92429579007/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-monday-injuries-pm",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "For Monday night, the Eagles ruled out receivers DeVonta Smith (hamstring) and Dontayvion Wicks (ankle), linebacker Nolan Smith (concussion) and defensive back Michael Carter (abdomen). Running back Saquon Barkley is questionable and tight end Dallas Goedert carries no designation. For Dallas, receiver George Pickens (shoulder) and cornerback Joey Porter Jr. (ankle) carry no designation after full Saturday practices, while the Cowboys ruled out tackle Drew Shelton, receiver KaVontae Turpin and linebacker Dee Winters.",
-   "interpretation": "Monday's only open name is Barkley; the rest of the report is settled.",
-   "sources": [
-    {
-     "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/eagles-list-saquon-barkley-as-questionable-devonta-smith-dontayvion-wicks-ruled-out"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-weather-pm",
-   "category": "weather",
-   "verification": "REPORTED",
-   "fact": "Monday night in Philadelphia: clear, low around 50 degrees, rain chance 10 percent, wind NW around 6 mph. Monday's daytime high is 71 degrees.",
-   "interpretation": "A calm, clear night in Philadelphia; a fact, not a totals edge.",
-   "sources": [
-    {
-     "label": "weather.com",
-     "url": "https://weather.com/united-states/pennsylvania/city/philadelphia/tenday"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-cards-pm",
-   "category": "app-board",
+   "evidence_id": "ev-mnf-am",
+   "category": "game",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "Fresh evening app snapshot 2026-10-26T00:08:44Z (Week 7). Only two games remain PREGAME: Chiefs at Seahawks and Cowboys at Eagles; every other Sunday game is in progress with no market board. Headline cards: Hit Rate = Chiefs moneyline +138 (FanDuel), Chiefs at Seahawks, model win probability 57.3 percent, evaluator EV +0.001, reliability LOW, state BET. Balanced = NO_PLAY: no offer currently satisfies the frozen Balanced lane contract. Value = NO_PLAY: no offer currently satisfies the frozen Value lane contract. Chiefs at Seahawks (8:20 p.m. ET): Seahawks -3.0 at DraftKings and FanDuel, moneyline Seahawks -162 DraftKings / -164 FanDuel, Chiefs +136 DraftKings / +138 FanDuel, total 43.5 at both books; model expected margin Seahawks by about 2.5; expected starters Patrick Mahomes and Sam Darnold. Cowboys at Eagles (8:15 p.m. ET Monday): Cowboys -4.5 at both books, moneyline Cowboys -225 DraftKings / -230 FanDuel, Eagles +185 DraftKings / +190 FanDuel, total 43.5 DraftKings / 44.5 FanDuel; model expected margin Cowboys by about 0.5, about a pick'em; expected starters Dak Prescott and Tanner McKee.",
-   "interpretation": "With most of Sunday's slate underway, the board prices only tonight and Monday, and only the Hit Rate lane has a play.",
+   "fact": "Cowboys at Eagles, Week 7, kickoff 2026-10-27T00:15:00Z (8:15 p.m. ET Oct 26) at Lincoln Financial Field. App QB row: Dak Prescott (Dallas) and Tanner McKee (Philadelphia) as expected starters, both QB:1, no injury tag.",
+   "interpretation": "Tonight's game is the only pregame game left on the Week 7 board.",
    "sources": [
     {
      "label": "NFL EDGE product view (public)",
@@ -299,11 +221,89 @@
    ]
   },
   {
-   "evidence_id": "ev-lines-pm",
-   "category": "app-board",
+   "evidence_id": "ev-records-am",
+   "category": "game",
+   "verification": "REPORTED",
+   "fact": "Both the Eagles and the Cowboys enter Monday night at 2-4; the Eagles have lost four straight games.",
+   "interpretation": "Tonight's winner stays in the NFC East race; the loser falls to 2-5.",
+   "sources": [
+    {
+     "label": "Delaware Online",
+     "url": "https://www.delawareonline.com/story/sports/nfl/eagles/2026/10/26/philadelphia-eagles-dallas-cowboys-score-predictions/92383176007/"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-hurts-am",
+   "category": "injury",
+   "verification": "REPORTED",
+   "fact": "Jalen Hurts is out for the season with blood clots in his lungs (bilateral pulmonary emboli, diagnosed after an initial superficial clot), is on injured reserve, and Tanner McKee starts in his place against Dallas on Monday Night Football.",
+   "interpretation": "Philadelphia's starting quarterback for tonight is McKee, not Hurts.",
+   "sources": [
+    {
+     "label": "USA Today",
+     "url": "https://www.usatoday.com/story/sports/nfl/eagles/2026/10/26/jalen-hurts-blood-clots-what-happened-eagles/92431197007/"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-injuries-am",
+   "category": "injury",
+   "verification": "REPORTED",
+   "fact": "Eagles ruled out for Monday night: WR DeVonta Smith (hamstring), WR Dontayvion Wicks (ankle), LB Nolan Smith (concussion), DB Michael Carter (abdomen). Cowboys ruled out: T Drew Shelton, WR KaVontae Turpin, LB Dee Winters. Cowboys WR George Pickens and CB Joey Porter Jr. carry no designation; Eagles TE Dallas Goedert carries no designation after a full Saturday practice.",
+   "interpretation": "The Monday injury picture is settled except for the questionable group led by Barkley.",
+   "sources": [
+    {
+     "label": "NBC Sports",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/eagles-list-saquon-barkley-as-questionable-devonta-smith-dontayvion-wicks-ruled-out"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-barkley-am",
+   "category": "injury",
+   "verification": "REPORTED",
+   "fact": "Saquon Barkley is listed as questionable with a hamstring injury after missing the last two games, was a full participant in Saturday's practice, and is reported expected to play Monday night; the inactive list about 90 minutes before kickoff confirms it.",
+   "interpretation": "Expectation is a return, but the official call still lands with tonight's inactives.",
+   "sources": [
+    {
+     "label": "Eagles Wire",
+     "url": "https://theeagleswire.usatoday.com/story/sports/nfl/eagles/2026/10/26/is-saquon-barkley-playing-eagles-cowboys-injury-update/92425346007/"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-weather-am",
+   "category": "weather",
+   "verification": "REPORTED",
+   "fact": "Philadelphia hourly forecast for Mon Oct 26: 8:00 p.m. EDT clear, 61F, rain 2%, wind W 5 mph; 9:00 p.m. clear, 59F, rain 2%, wind W 5 mph; 10:00 p.m. clear, 56F, rain 3%, wind WNW 4 mph.",
+   "interpretation": "Clear and cool at kickoff; a fact, not a totals edge.",
+   "sources": [
+    {
+     "label": "Weather.com Philadelphia hourly forecast",
+     "url": "https://weather.com/us/pa/city/philadelphia/hourbyhour"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-noplay-am",
+   "category": "card",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "Morning to evening board comparison for the two remaining games. Cowboys at Eagles spread is unchanged at Cowboys -4.5 at both books, and the DraftKings total is unchanged at 43.5; the model's expected margin is unchanged at about a pick'em. Chiefs at Seahawks spread is unchanged at Seahawks -3.0 at FanDuel. The morning's headline cards are off the board because their games are underway: Hit Rate was Steelers moneyline -158 (FanDuel), Balanced was Browns moneyline -130 (DraftKings), Value was Raiders +3.5 -120 (DraftKings). The evening Hit Rate card is a new card on a remaining game, not a moved price on a morning card.",
-   "interpretation": "No line moved on the remaining games through the day; the card change is rotation as games kicked off, not new market opinion.",
+   "fact": "App headline cards for the morning of 2026-10-26: Hit Rate NO_PLAY, Balanced NO_PLAY, Value NO_PLAY, each with warning 'No offer currently satisfies the frozen lane contract.'",
+   "interpretation": "No lane fires on tonight's game this morning.",
+   "sources": [
+    {
+     "label": "NFL EDGE product view (public)",
+     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-board-am",
+   "category": "market",
+   "verification": "INTERNAL_CANONICAL",
+   "fact": "App market board for DAL at PHI on 2026-10-26 morning: spread DAL -4.5 (-108 DraftKings, -112 FanDuel), PHI +4.5 (-112 DraftKings, -108 FanDuel); total 43.5 DraftKings, 44.5 FanDuel; moneyline DAL -218 DraftKings / -220 FanDuel, PHI +180 DraftKings / +184 FanDuel. Model expected_margin -0.4518. Evening edition had the same spread and DraftKings total.",
+   "interpretation": "No overnight movement on the Monday game; the model-versus-market gap is unchanged.",
    "sources": [
     {
      "label": "NFL EDGE product view (public)",
