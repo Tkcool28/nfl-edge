@@ -342,7 +342,7 @@
       "publication_count": 9,
       "returned_after_gap": false,
       "selection": "CLE",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "DISAPPEARED",
       "worst_line": null,
       "worst_price": -130
     },
@@ -584,7 +584,7 @@
       "publication_count": 1,
       "returned_after_gap": false,
       "selection": "PIT",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "REPLACED",
       "worst_line": null,
       "worst_price": -158
     },
@@ -626,9 +626,54 @@
       "publication_count": 1,
       "returned_after_gap": true,
       "selection": "LV",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "DISAPPEARED",
       "worst_line": 3.5,
       "worst_price": -120
+    },
+    {
+      "best_line": null,
+      "best_price": 138,
+      "episode_id": "episode-8f2cda776f92bd8748a5e554",
+      "first_line": null,
+      "first_price": 138,
+      "first_publication_id": "publication-421d7affc7bb45f5484ffa4e",
+      "first_seen_at_utc": "2026-10-26T00:08:44.284640Z",
+      "game_id": "2026_07_KC_SEA",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "last_line": null,
+      "last_price": 138,
+      "last_publication_id": "publication-421d7affc7bb45f5484ffa4e",
+      "last_seen_at_utc": "2026-10-26T00:08:44.284640Z",
+      "logical_recommendation_id": "logical-c35de39bea418a651400bc35",
+      "market": "MONEYLINE",
+      "normalized_selection": "KC",
+      "normalized_side": "away",
+      "observations": [
+        {
+          "american_odds": 138,
+          "book": "FANDUEL",
+          "exact_offer_identity_id": "offer-0e522c81900118d8a8e2cfba",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": 136
+          },
+          "publication_id": "publication-421d7affc7bb45f5484ffa4e",
+          "published_at_utc": "2026-10-26T00:08:44.284640Z",
+          "recommended_units": 0.5,
+          "source_product_sha256": "421d7affc7bb45f5484ffa4e9994794e9bb505a7ba3b2bc2b10a9c00c7814cfb",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-c20041a9a7fa5dab9811de9c"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "KC",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": null,
+      "worst_price": 138
     }
   ],
   "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1",
@@ -642,7 +687,8 @@
     "publication-4cf70952ac09fbbb598c7cd7",
     "publication-625d7e70f7443c3f2908be2e",
     "publication-7aa7210008d644007d89361d",
-    "publication-cc0b5a5a611c59a88a69fab7"
+    "publication-cc0b5a5a611c59a88a69fab7",
+    "publication-421d7affc7bb45f5484ffa4e"
   ],
   "week": 7
 }
