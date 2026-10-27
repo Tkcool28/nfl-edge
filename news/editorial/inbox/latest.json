@@ -1,14 +1,14 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-10-27T00:12:49Z",
- "research_generated_at_utc": "2026-10-27T00:12:49Z",
+ "submitted_at_utc": "2026-10-27T12:17:42Z",
+ "research_generated_at_utc": "2026-10-27T12:17:42Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "edition": "Evening Brief",
-  "title": "NFL EDGE Monday Evening Brief",
-  "dek": "Inactives are settled: Barkley is back for Cowboys at Eagles tonight, the Balanced card fires on Philadelphia +4.5, and the Monday prices moved at both books.",
-  "published_at_utc": "2026-10-27T00:12:49Z",
-  "research_generated_at_utc": "2026-10-27T00:12:49Z",
+  "edition": "Morning Brief",
+  "title": "NFL EDGE Tuesday Morning Brief",
+  "dek": "Week 7 is done after Dallas beat Philadelphia 38-21, the board has flipped to Week 8 with all three cards firing, and Thursday night is Panthers at Packers.",
+  "published_at_utc": "2026-10-27T12:17:42Z",
+  "research_generated_at_utc": "2026-10-27T12:17:42Z",
   "sections": [
    {
     "id": "what-matters",
@@ -16,17 +16,17 @@
     "icon": "\ud83d\udcf0",
     "items": [
      {
-      "headline": "Tonight: Cowboys at Eagles, 8:15 p.m. ET \u2014 and Barkley is back",
+      "headline": "Week 7 closes: Dallas 38, Philadelphia 21",
       "paragraphs": [
-       "Week 7 comes down to one game. The Dallas Cowboys visit the Philadelphia Eagles at Lincoln Financial Field tonight at 8:15 p.m. ET, and the app's QB row has both starters confirmed: Dak Prescott for Dallas, Tanner McKee for Philadelphia.",
-       "The big change since this morning is settled, not pending. Saquon Barkley is active. He missed Philadelphia's last two games with a hamstring injury, practiced in full on Saturday, and his name is not on tonight's inactive list. Jonathan Greenard and Jalyx Hunt are active too, after carrying questionable tags.",
-       "Both teams come in at 2-4. The winner stays alive in the NFC East race; the loser drops to 2-5. That is the whole Monday board, and it is the only game left in Week 7."
+       "Dallas closed Week 7 with a 38-21 win at Philadelphia on Monday night. Dak Prescott threw three touchdown passes, two to CeeDee Lamb and one to George Pickens, and Javonte Williams ran for a career-high 155 yards. Dallas scored the final 18 points of the game.",
+       "Philadelphia has now lost five straight and falls to 2-5, while Dallas moves to 3-4. Tanner McKee started again for the Eagles with Jalen Hurts out for the season, throwing for 211 yards with one touchdown and one interception.",
+       "One injury note out of the game: Saquon Barkley, back after missing two games with a hamstring injury, left with a back injury after seven carries for 62 yards and a touchdown. Dameon Pierce also left in the fourth quarter with an undisclosed injury. Both names are ones to watch when Philadelphia's next injury report lands ahead of Sunday night at Washington.",
+       "For the record: Monday's Balanced card was Philadelphia +4.5. Dallas won by 17, so that card did not cover. Log it with the wins. The tracker only works if the losers go in too."
       ],
-      "takeaway": "One game left in Week 7: Prescott vs. McKee at 8:15 p.m. ET, with Barkley back and the inactives settled.",
+      "takeaway": "Dallas 38, Philadelphia 21: the Cowboys close Week 7, the Eagles drop their fifth straight, and Barkley leaves with a back injury.",
       "evidence_ids": [
-       "ev-mnf-pm",
-       "ev-barkley-pm",
-       "ev-records-pm"
+       "ev-mnf-am",
+       "ev-barkley-mnf-am"
       ],
       "sources": [
        {
@@ -34,52 +34,69 @@
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        },
        {
-        "label": "Philadelphia Eagles",
-        "url": "https://www.philadelphiaeagles.com/news/cowboys-vs-eagles-inactives-saquon-barkley-jalyx-hunt-2026-week-7-monday-night-football"
+        "label": "NBC Sports",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-cowboys-run-past-eagles-38-21"
        },
        {
-        "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-jonathan-greenard-saquon-barkley-are-active-for-eagles-vs-cowboys"
+        "label": "Reuters",
+        "url": "https://www.reuters.com/sports/nfl/dak-prescott-3-tds-cowboys-hand-eagles-fifth-straight-loss--flm-2026-10-27/"
        }
       ]
      },
      {
-      "headline": "Injury roundup: Barkley back, two Eagles receivers still out",
+      "headline": "Injury roundup: Thursday's game is already banged up, and Jackson's call lands Wednesday",
       "paragraphs": [
-       "Philadelphia's inactives tonight: outside linebacker Nolan Smith (concussion), wide receivers DeVonta Smith (hamstring) and Dontayvion Wicks (ankle), defensive back Michael Carter II (abdomen), offensive lineman Jake Majors, and quarterback Cole Payton as the emergency third quarterback. That leaves Joe Milton as McKee's backup.",
-       "Barkley, Greenard and Hunt are all active, as the Eagles' own inactive list confirms. Jalen Hurts remains out for the season with blood clots in his lungs and is on injured reserve, so McKee stays under center.",
-       "For Dallas, the inactives are receiver KaVontae Turpin, running back Emari Demercado, linebacker Dee Winters, outside linebacker Tyrus Wheat and tackle Drew Shelton. No surprises there \u2014 Turpin, Winters and Shelton were already ruled out."
+       "Thursday night comes first, and both teams are hurting. Green Bay center Sean Rhyan has a reported high-ankle sprain and could miss Thursday's game against Carolina, and backup center Jacob Monk went on injured reserve Monday with a quad injury. Second-year pro John Williams, who finished Sunday's loss at Detroit at center, is the leading candidate to start there Thursday.",
+       "Green Bay's estimated Monday report also listed defensive tackles Anthony Campbell (ankle) and Devonte Wyatt (ankle), linebacker Zaire Franklin (shin), lineman Travis Glover (knee) and receiver Matthew Golden (foot/shoulder) as non-participants, with guard Aaron Banks limited (knee/toe). Quarterback Jordan Love and receiver Christian Watson are off the estimated report.",
+       "Carolina's Monday walk-through listed guard Damien Lewis (knee), outside linebacker Jaelan Phillips (hamstring), guard Torricelli Simpkins III (ankle), cornerback Akayleb Evans (triceps/knee) and defensive tackle Bobby Brown III (hand) as non-participants, with receiver Jalen Coker limited (shoulder). Head coach Dave Canales called Phillips a close call for Thursday. Quarterback Bryce Young (knee) was a full participant.",
+       "The other quarterback watch is in Baltimore. Lamar Jackson has missed three games with an ankle injury, and head coach Jesse Minter said Monday that Jackson is in a decent spot but they will know a lot more on Wednesday. Say this plainly: the app still lists Tyler Huntley as Baltimore's expected starter for Sunday at Buffalo. The app has not updated to Jackson yet, and Wednesday is when that call should land. Do not bet the Baltimore game off a Jackson return until the app's quarterback row or a designation says so."
       ],
-      "takeaway": "Barkley, Greenard and Hunt are in; DeVonta Smith and Wicks are out, and Dallas loses Turpin, Winters and Shelton.",
+      "takeaway": "Rhyan and Monk leave Green Bay thin at center for Thursday, Carolina lists five non-participants, and Jackson's return call lands Wednesday.",
       "evidence_ids": [
-       "ev-inactives-pm",
-       "ev-hurts-pm"
+       "ev-injuries-am",
+       "ev-jackson-am"
       ],
       "sources": [
        {
-        "label": "Philadelphia Eagles",
-        "url": "https://www.philadelphiaeagles.com/news/cowboys-vs-eagles-inactives-saquon-barkley-jalyx-hunt-2026-week-7-monday-night-football"
+        "label": "Packers News",
+        "url": "https://www.packersnews.com/story/sports/nfl/packers/2026/10/26/packers-center-sean-rhyan-could-be-sidelined-with-high-ankle-sprain/92439300007/"
        },
        {
-        "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-jonathan-greenard-saquon-barkley-are-active-for-eagles-vs-cowboys"
+        "label": "Packers Wire",
+        "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/10/26/packers-first-injury-report-of-week-8-5-new-injuries-to-start-short-week/92451088007/"
+       },
+       {
+        "label": "Panthers Wire",
+        "url": "https://pantherswire.usatoday.com/story/sports/nfl/panthers/2026/10/26/panthers-injury-report-week-8-monday/92450481007/"
+       },
+       {
+        "label": "USA Today",
+        "url": "https://www.usatoday.com/story/sports/nfl/ravens/2026/10/26/lamar-jackson-injury-update-ravens-jesse-minter/92448364007/"
+       },
+       {
+        "label": "NFL EDGE product view (public)",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
       ]
      },
      {
-      "headline": "Weather: clear and cool in Philadelphia tonight",
+      "headline": "Weather: cool and mostly clear Thursday at Lambeau",
       "paragraphs": [
-       "Tonight in Philadelphia: clear skies, about 60 degrees at the 8:15 p.m. ET kickoff, 59 degrees at 9:00 p.m. and 57 at 10:00 p.m., rain chance around 1 percent, wind west around 7 mph early and 6 mph later.",
-       "That is a fact, not a totals edge. Nothing in it argues the total either way."
+       "Thursday night in Green Bay looks cool and mostly clear: a daytime high near 62, falling to the low 40s by the 8:15 p.m. ET kickoff, with northwest wind around 7 mph and only a small rain chance. The overnight low is near 36.",
+       "That is a fact, not a totals edge. Nothing in it argues the total either way. The final kickoff-window check comes closer to Thursday."
       ],
-      "takeaway": "Clear, cool and calm for kickoff in Philadelphia; judge the total on its own.",
+      "takeaway": "Cool and mostly clear for Thursday night at Lambeau; judge the total on its own.",
       "evidence_ids": [
-       "ev-weather-pm"
+       "ev-weather-am"
       ],
       "sources": [
        {
-        "label": "Weather.com Philadelphia hourly forecast",
-        "url": "https://weather.com/us/pa/city/philadelphia/hourbyhour"
+        "label": "Weather.com Green Bay 10-day forecast",
+        "url": "https://weather.com/us/wi/city/green-bay/tenday"
+       },
+       {
+        "label": "Green Bay Press-Gazette",
+        "url": "https://www.greenbaypressgazette.com/story/sports/nfl/packers/fans/2026/10/27/bob-harlan-honor-and-other-things-to-know-about-packers-panthers-game/92216598007/"
        }
       ]
      }
@@ -91,17 +108,33 @@
     "icon": "\ud83d\udca1",
     "items": [
      {
-      "headline": "Tonight's card: Balanced on Philadelphia +4.5",
+      "headline": "All three cards fire on the new Week 8 board",
       "paragraphs": [
-       "Tonight there is one card on the board, and it is on tonight's game. Balanced is Philadelphia +4.5 at -115 on DraftKings. The app gives that pick a 50.6 percent model chance and lists its reliability as MEDIUM.",
-       "Balanced is a strong pick without paying too much \u2014 the middle ground, a good starting point for a new bettor. That is its job, and it is doing it here: the model says this game is about a pick'em, so getting Philadelphia with 4.5 points is the side the middle lane lands on.",
-       "Hit Rate and Value stay quiet tonight. Hit Rate is the pick that looks most likely to win, and it forgoes value for win probability; the app's own tutorial says Hit Rate is not Profit Rate. Value is always the model's +EV play, and no offer on tonight's game satisfies that lane's contract right now. Two quiet lanes are not a broken app. The lanes only speak when the contract is met.",
-       "One card is not a command. Your book's price decides whether it is a bet for you: tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet/no-bet verdict on your price. Full re-evaluation, not a blind override. Monday game? Monday check."
+       "The board flipped to Week 8 this morning, and unlike Monday morning, every lane has a play. Hit Rate is Green Bay on the moneyline at -185 at DraftKings, in Thursday's game against Carolina. Hit Rate is the pick that looks most likely to win. It forgoes value for win probability, and the app's own tutorial says Hit Rate is not Profit Rate. The model puts Green Bay at 66.0 percent, with LOW reliability, and the model's expected margin for the game is 4.29 against a market line of Green Bay -3.5.",
+       "Balanced is Cleveland +3.5 at -106 at FanDuel, for Sunday at Pittsburgh. Balanced is a strong pick without paying too much, a good starting point for a new bettor. The model puts Cleveland at 50.5 percent, with MEDIUM reliability, and the model's expected margin for the game is 0.95 against a market line of Pittsburgh -3.5.",
+       "Value is Chicago +3.5 at -118 at DraftKings, for Monday night at Seattle. Value is always the model's +EV play. The model puts Chicago at 50.6 percent, with MEDIUM reliability, and the model's expected margin for the game is -0.14, about a pick'em, against a market line of Seattle -3.5.",
+       "Thursday game? Thursday check. The Hit Rate card is on the first game of the week, so run your book's Thursday price through Check before kickoff rather than assuming the DraftKings number is your number."
       ],
-      "takeaway": "Tonight's only card is Balanced: Philadelphia +4.5 at -115 on DraftKings. Hit Rate and Value stay quiet.",
+      "takeaway": "Hit Rate: Green Bay moneyline -185. Balanced: Cleveland +3.5. Value: Chicago +3.5. Three different lanes, three different jobs.",
       "evidence_ids": [
-       "ev-cards-pm",
-       "ev-board-pm"
+       "ev-cards-am"
+      ],
+      "sources": [
+       {
+        "label": "NFL EDGE product view (public)",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       }
+      ]
+     },
+     {
+      "headline": "A fresh board means fresh prices, not fresh guesses",
+      "paragraphs": [
+       "The board refreshes every morning and evening, and this morning it is a whole new week. Do not carry Monday's numbers into Week 8. Every game above is priced fresh this morning, and the evening refresh can change any of them.",
+       "When the board has not picked up a move, or your book is not DraftKings or FanDuel, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet/no-bet verdict on your price. Full re-evaluation, not a blind override. And remember what a price means: -185 means every $1.85 you risk wins $1. The app sets your actual stake from your bankroll and staking choice."
+      ],
+      "takeaway": "New week, new prices: run your own book's line through Check and let that verdict decide.",
+      "evidence_ids": [
+       "ev-cards-am"
       ],
       "sources": [
        {
@@ -119,13 +152,13 @@
     "mode": "learning",
     "items": [
      {
-      "headline": "Learn the Game: the hook",
+      "headline": "Learn the Game: line shopping",
       "paragraphs": [
-       "(Hypothetical example:) Imagine a game where the favorite is -3.5 instead of -3. That extra half-point is called the hook, because it hooks the spread away from a whole number.",
-       "Why it matters: with a -3 spread, a favorite winning by exactly 3 pushes and your stake comes back. With -3.5, that same 3-point win loses. The hook turns a push into a loss, or, on the other side, a loss into a win for the underdog.",
-       "How to apply it: when you compare prices, do not just compare the odds. Compare the number too. A better price on a worse number is not always the better bet, and that is exactly the kind of thing to run through Check on your own book's line."
+       "(Hypothetical example:) Imagine your team is +3.5 at one book and +3 at another, both at the same price. Same team, same game, different number. Line shopping is simply checking more than one book and taking the better number.",
+       "Why does half a point matter? Because games land on 3 all the time. If your team loses by exactly 3, +3.5 wins and +3 pushes or loses depending on the book's rules. The better number does not make a bad bet good, but it makes a good bet a little better, and over a season those little edges add up.",
+       "How to apply it: before you bet any card in this brief, look at your books, take the best number you can actually get, and then run that exact line and price through Check. The app judges the number you bet, not the number in this brief."
       ],
-      "takeaway": "The hook is the half-point that turns a push into a win or a loss \u2014 always check the number, not just the price.",
+      "takeaway": "Same game, different books, different numbers \u2014 take the best number you can actually bet, then run it through Check.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -138,19 +171,23 @@
     "icon": "\ud83d\udc40",
     "items": [
      {
-      "headline": "Evening: the line held, the prices moved, and a card appeared",
+      "headline": "The board flipped, so here is where Week 8 opened",
       "paragraphs": [
-       "The spread line did not move: Dallas is still -4.5 at both books. The prices on it did. DraftKings moved from Dallas -108 to -105 and Philadelphia -112 to -115; FanDuel moved from Dallas -112 to -105 and Philadelphia -108 to -115. Both books moved the same way, charging a little more for Philadelphia's points and a little less for Dallas.",
-       "The total moved at one book. DraftKings is unchanged at 43.5 (-112 over, -108 under). FanDuel dropped from 44.5 to 43.5, with the over moving from -102 to -120 and the under from -120 to -102. The moneyline moved at DraftKings too: Dallas -218 to -225 and Philadelphia +180 to +185, while FanDuel is unchanged at -220 and +184.",
-       "The model's expected margin is -0.45 this evening, about a pick'em, exactly where it was this morning. So the model did not move. What changed is the card: this morning all three headline cards read NO_PLAY, and this evening Balanced fires on Philadelphia +4.5 at -115 on DraftKings. That is the one recommendation change on the board, and it is on tonight's game only, since the rest of the Week 7 board is already played.",
-       "The app caught it on the evening refresh, so the card above is the current one. If your book's price is not the DraftKings number, run it through Check anyway \u2014 the app re-evaluates your price, it does not just copy the card."
+       "Because the app's board just flipped to Week 8, this morning's market-watch compares the shadow-tracked Week 8 lookahead lines from last week against this morning's app board. These are lookahead currents from October 22 against fresh Week 8 prices, not tick-by-tick moves at one book.",
+       "The moves toward the underdog: Pittsburgh opened the lookahead at -4.5 and is -3.5 this morning, so Cleveland +3.5 is a better number than it was. The Rams opened at -7.5 and are -6.5 this morning against the Chargers. The moves toward the favorite: Tampa Bay went from -1.5 to -2.5 against Atlanta, Buffalo from -3.0 to -3.5 against Baltimore, Green Bay from -3.0 to -3.5 against Carolina, and Washington from -3.5 to -4.5 against Philadelphia. Cincinnati is -10.0 at DraftKings and -10.5 at FanDuel against Tennessee, from -10.0.",
+       "One split between the books: the Raiders at the Jets is Las Vegas -1.5 at DraftKings but Jets -1.5 at FanDuel. When the two books disagree on the favorite, your book's number is the only one that matters, and that is exactly what Check is for.",
+       "On totals, Arizona at Dallas moved from 51.5 to 54.5 at DraftKings and 53.5 at FanDuel, the Chargers at Rams moved from 46.5 to 44.5, and Philadelphia at Washington moved from 41.5 to 40.5. Carolina at Green Bay is unchanged at 47.5 at both books."
       ],
-      "takeaway": "Line still Dallas -4.5, prices moved at both books, FanDuel's total dropped to 43.5, and Balanced appeared on Philadelphia +4.5.",
+      "takeaway": "Week 8 opened with Cleveland and the Rams getting better numbers, and the two books split on Raiders at Jets.",
       "evidence_ids": [
-       "ev-board-pm",
-       "ev-cards-pm"
+       "ev-shadow-am",
+       "ev-cards-am"
       ],
       "sources": [
+       {
+        "label": "4for4 NFL Lookahead Lines",
+        "url": "https://www.4for4.com/betting/odds/lookahead/spread"
+       },
        {
         "label": "NFL EDGE product view (public)",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
@@ -158,20 +195,20 @@
       ]
      },
      {
-      "headline": "The one timing note: nothing left to wait for on this game",
+      "headline": "The one timing note: wait for Jackson on Wednesday, not for a better number",
       "paragraphs": [
-       "This morning, the thing worth waiting for was tonight's inactives, because Barkley was the one genuinely open question left. That question is answered now: he is active, and the inactive lists are out for both teams.",
-       "So there is no information event left to wait for on this game. When the board has not picked up a move, or your book is not DraftKings or FanDuel, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet/no-bet verdict on your price. Full re-evaluation, not a blind override."
+       "One timing note, and only one. The things worth waiting for this week are real information events: Lamar Jackson's call on Wednesday, the final Thursday designations before Panthers at Packers, and the inactive lists about 90 minutes before kickoff for Sunday's games, including Philadelphia at Washington on Sunday night.",
+       "Everything else is the opposite rule. If your book has a good number right now and Check says bet, bet now. A good number today beats a hoped-for number later in the week, because waiting lets the number drift the wrong way too."
       ],
-      "takeaway": "Inactives are settled, so nothing is left to wait for: run your own price through Check and let that verdict decide.",
+      "takeaway": "Wait only for Jackson on Wednesday, Thursday's final designations, and Sunday inactives; a good number Check approves now is the play.",
       "evidence_ids": [
-       "ev-barkley-pm",
-       "ev-board-pm"
+       "ev-jackson-am",
+       "ev-cards-am"
       ],
       "sources": [
        {
-        "label": "Philadelphia Eagles",
-        "url": "https://www.philadelphiaeagles.com/news/cowboys-vs-eagles-inactives-saquon-barkley-jalyx-hunt-2026-week-7-monday-night-football"
+        "label": "USA Today",
+        "url": "https://www.usatoday.com/story/sports/nfl/ravens/2026/10/26/lamar-jackson-injury-update-ravens-jesse-minter/92448364007/"
        },
        {
         "label": "NFL EDGE product view (public)",
@@ -187,15 +224,14 @@
     "icon": "\u2705",
     "items": [
      {
-      "headline": "Tonight's job: one game, one Check, honest log",
+      "headline": "Work Thursday first, then let the week come to you",
       "paragraphs": [
-       "The board refreshes every morning and evening, and tonight it holds just one game. Work that game properly: starters are confirmed, Barkley is back, the receivers are out, and the model-versus-market gap on Dallas -4.5 is the number to run through Check.",
-       "Check your book's line and price, not just the DraftKings or FanDuel number in this brief. If Check says bet on your price, that is your verdict. If it says no, no card in this brief changes that. And remember what a price means: -120 means every $1.20 you risk wins $1. The app sets your actual stake from your bankroll and staking choice.",
-       "One more thing, because settlement here is manual and there is no auto-settle: log the losers too. The tracker only works if you are honest with yourself about what actually happened."
+       "Thursday kicks first, so work Thursday first. The Hit Rate card is Green Bay on the moneyline, the injury report is still moving on both sides, and the final designations land Wednesday. Check your book's Thursday price now, re-check it after Wednesday's final report, and do not let a Sunday number distract you from the game that kicks in two days.",
+       "For the rest of the week, the board refreshes every morning and evening. The Balanced and Value cards are Sunday and Monday games. They can wait for their own injury news. And one more time, because settlement is manual and there is no auto-settle: log the losers too. Monday's Philadelphia card lost. It goes in the tracker right next to the wins, or the tracker is just a highlight reel."
       ],
-      "takeaway": "One game left: Barkley is back, run your own price through Check, and log whatever happens honestly.",
+      "takeaway": "Thursday first: check your Green Bay price now and again after Wednesday's final report, and log every result, win or lose.",
       "evidence_ids": [
-       "ev-board-pm"
+       "ev-cards-am"
       ],
       "sources": [
        {
@@ -210,97 +246,96 @@
  },
  "evidence": [
   {
-   "evidence_id": "ev-mnf-pm",
-   "category": "game",
-   "verification": "INTERNAL_CANONICAL",
-   "fact": "Cowboys at Eagles, Week 7, kickoff 2026-10-27T00:15:00Z (8:15 p.m. ET Oct 26) at Lincoln Financial Field. App QB row: Dak Prescott (Dallas) and Tanner McKee (Philadelphia) as expected starters, both QB:1, no injury tag.",
-   "interpretation": "Tonight's game is the only pregame game left on the Week 7 board.",
-   "sources": [
-    {
-     "label": "NFL EDGE product view (public)",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-records-pm",
+   "evidence_id": "ev-mnf-am",
    "category": "game",
    "verification": "REPORTED",
-   "fact": "Both the Eagles and the Cowboys enter Monday night at 2-4; the Eagles have lost four straight games.",
-   "interpretation": "Tonight's winner stays in the NFC East race; the loser falls to 2-5.",
+   "fact": "Dallas beat Philadelphia 38-21 on Monday Night Football, Oct 26, 2026, at Lincoln Financial Field. Dak Prescott threw 3 touchdown passes (2 to CeeDee Lamb, 1 to George Pickens); Javonte Williams ran for a career-high 155 yards; Dallas scored the final 18 points. Dallas moves to 3-4, Philadelphia falls to 2-5 with a fifth straight loss. Tanner McKee started for Philadelphia (23-of-35, 211 yards, 1 TD, 1 INT) with Jalen Hurts out for the season.",
+   "interpretation": "Week 7 is complete; the Week 8 board is now live.",
    "sources": [
     {
-     "label": "Delaware Online",
-     "url": "https://www.delawareonline.com/story/sports/nfl/eagles/2026/10/26/philadelphia-eagles-dallas-cowboys-score-predictions/92383176007/"
+     "label": "NBC Sports",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-cowboys-run-past-eagles-38-21"
+    },
+    {
+     "label": "Reuters",
+     "url": "https://www.reuters.com/sports/nfl/dak-prescott-3-tds-cowboys-hand-eagles-fifth-straight-loss--flm-2026-10-27/"
     }
    ]
   },
   {
-   "evidence_id": "ev-hurts-pm",
+   "evidence_id": "ev-barkley-mnf-am",
    "category": "injury",
    "verification": "REPORTED",
-   "fact": "Jalen Hurts is out for the season with blood clots in his lungs, is on injured reserve, and Tanner McKee starts in his place against Dallas on Monday Night Football.",
-   "interpretation": "Philadelphia's starting quarterback for tonight is McKee, not Hurts.",
+   "fact": "Saquon Barkley, returning after missing two games with a hamstring injury, left Monday night's game with a back injury after 7 carries for 62 yards and a touchdown and 2 catches for 9 yards. Dameon Pierce left in the fourth quarter with an undisclosed injury after 14 carries for 47 yards and a touchdown.",
+   "interpretation": "Both Philadelphia backs are injury watches for Sunday night at Washington.",
+   "sources": [
+    {
+     "label": "NBC Sports",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-cowboys-run-past-eagles-38-21"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-injuries-am",
+   "category": "injury",
+   "verification": "REPORTED",
+   "fact": "Green Bay: center Sean Rhyan has a reported high-ankle sprain and could miss Thursday vs Carolina; backup center Jacob Monk was placed on injured reserve Monday (quad); John Williams is the leading candidate to start at center. Estimated Monday non-participants: DL Anthony Campbell (ankle), LB Zaire Franklin (shin), OL Travis Glover (knee), WR Matthew Golden (foot/shoulder), DL Devonte Wyatt (ankle); LG Aaron Banks limited (knee/toe); QB Jordan Love and WR Christian Watson off the estimated report. Carolina estimated Monday: non-participants G Damien Lewis (knee), OLB Jaelan Phillips (hamstring, called a close call for Thursday by coach Dave Canales), G Torricelli Simpkins III (ankle), CB Akayleb Evans (triceps/knee), DT Bobby Brown III (hand); WR Jalen Coker limited (shoulder); QB Bryce Young full (knee).",
+   "interpretation": "Thursday's game is the week's first injury-moving game; final designations land Wednesday.",
+   "sources": [
+    {
+     "label": "Packers News",
+     "url": "https://www.packersnews.com/story/sports/nfl/packers/2026/10/26/packers-center-sean-rhyan-could-be-sidelined-with-high-ankle-sprain/92439300007/"
+    },
+    {
+     "label": "Packers Wire",
+     "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/10/26/packers-first-injury-report-of-week-8-5-new-injuries-to-start-short-week/92451088007/"
+    },
+    {
+     "label": "Panthers Wire",
+     "url": "https://pantherswire.usatoday.com/story/sports/nfl/panthers/2026/10/26/panthers-injury-report-week-8-monday/92450481007/"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-jackson-am",
+   "category": "injury",
+   "verification": "REPORTED",
+   "fact": "Lamar Jackson has missed three games with an ankle injury (high left ankle sprain, Oct 4). Ravens head coach Jesse Minter said Monday Oct 26 that Jackson is in a decent spot but they will know a lot more on Wednesday, and that if he is able to play, he will play. The app's Week 8 QB row still lists Tyler Huntley as Baltimore's expected starter for Sunday at Buffalo.",
+   "interpretation": "Jackson's status is unresolved until Wednesday at the earliest; the app has not yet reflected a return.",
    "sources": [
     {
      "label": "USA Today",
-     "url": "https://www.usatoday.com/story/sports/nfl/eagles/2026/10/26/jalen-hurts-blood-clots-what-happened-eagles/92431197007/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-barkley-pm",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Saquon Barkley is active for Monday night against Dallas after missing two games with a hamstring injury; he was a full participant in Saturday's practice. Jonathan Greenard (ankle) and Jalyx Hunt (knee/ankle) are also active after questionable designations.",
-   "interpretation": "The morning's open question is settled: Barkley returns tonight.",
-   "sources": [
-    {
-     "label": "Philadelphia Eagles",
-     "url": "https://www.philadelphiaeagles.com/news/cowboys-vs-eagles-inactives-saquon-barkley-jalyx-hunt-2026-week-7-monday-night-football"
+     "url": "https://www.usatoday.com/story/sports/nfl/ravens/2026/10/26/lamar-jackson-injury-update-ravens-jesse-minter/92448364007/"
     },
     {
-     "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-jonathan-greenard-saquon-barkley-are-active-for-eagles-vs-cowboys"
+     "label": "NFL EDGE product view (public)",
+     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
     }
    ]
   },
   {
-   "evidence_id": "ev-inactives-pm",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Eagles inactives: OLB Nolan Smith (concussion), WR DeVonta Smith (hamstring), WR Dontayvion Wicks (ankle), DB Michael Carter II (abdomen), OL Jake Majors, QB Cole Payton (emergency third QB). Cowboys inactives: WR KaVontae Turpin, RB Emari Demercado, LB Dee Winters, OLB Tyrus Wheat, T Drew Shelton.",
-   "interpretation": "Both inactive lists are out and contain no surprises beyond the already-ruled-out names.",
-   "sources": [
-    {
-     "label": "Philadelphia Eagles",
-     "url": "https://www.philadelphiaeagles.com/news/cowboys-vs-eagles-inactives-saquon-barkley-jalyx-hunt-2026-week-7-monday-night-football"
-    },
-    {
-     "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-jonathan-greenard-saquon-barkley-are-active-for-eagles-vs-cowboys"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-weather-pm",
+   "evidence_id": "ev-weather-am",
    "category": "weather",
    "verification": "REPORTED",
-   "fact": "Philadelphia hourly forecast for Mon Oct 26: 8:00 p.m. EDT clear, 60F, rain 1%, wind W 7 mph; 9:00 p.m. clear, 59F, rain 1%, wind W 6 mph; 10:00 p.m. clear, 57F, rain 1%, wind W 6 mph.",
-   "interpretation": "Clear and cool at kickoff; a fact, not a totals edge.",
+   "fact": "Green Bay forecast for Thu Oct 29: day mostly sunny, high 62F, rain 20%, wind WNW 12 mph; night mostly clear, low 36F, wind NW 7 mph. Press-Gazette cites the National Weather Service forecast: 20% chance of showers before 1 p.m., high near 67, low 43, patchy fog after midnight.",
+   "interpretation": "Cool and mostly clear for Thursday night kickoff; a fact, not a totals edge.",
    "sources": [
     {
-     "label": "Weather.com Philadelphia hourly forecast",
-     "url": "https://weather.com/us/pa/city/philadelphia/hourbyhour"
+     "label": "Weather.com Green Bay 10-day forecast",
+     "url": "https://weather.com/us/wi/city/green-bay/tenday"
+    },
+    {
+     "label": "Green Bay Press-Gazette",
+     "url": "https://www.greenbaypressgazette.com/story/sports/nfl/packers/fans/2026/10/27/bob-harlan-honor-and-other-things-to-know-about-packers-panthers-game/92216598007/"
     }
    ]
   },
   {
-   "evidence_id": "ev-cards-pm",
+   "evidence_id": "ev-cards-am",
    "category": "card",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "App headline cards for the evening of 2026-10-26: Balanced BET on PHI +4.5 at -115 on DraftKings (model probability 0.506, reliability MEDIUM); Hit Rate NO_PLAY, Value NO_PLAY, each with warning 'No offer currently satisfies the frozen lane contract.'",
-   "interpretation": "Balanced appears this evening where all three lanes were NO_PLAY this morning; Hit Rate and Value stay quiet.",
+   "fact": "App product view, Week 8, generated 2026-10-27T12:08:40Z: Hit Rate BET Green Bay moneyline -185 DraftKings (model probability 0.6599, reliability LOW, game CAR@GB, kickoff 2026-10-30T00:15:00Z, model expected margin 4.29). Balanced BET Cleveland spread +3.5 -106 FanDuel (model probability 0.5054, reliability MEDIUM, game CLE@PIT, model expected margin 0.95). Value BET Chicago spread +3.5 -118 DraftKings (model probability 0.5059, reliability MEDIUM, game CHI@SEA, model expected margin -0.14). Market lines cited from the same board: GB -3.5 both books; PIT -3.5 both books; SEA -3.5 DK / -3.0 FD; CAR@GB total 47.5 both books.",
+   "interpretation": "All three headline lanes fire on the fresh Week 8 board.",
    "sources": [
     {
      "label": "NFL EDGE product view (public)",
@@ -309,15 +344,15 @@
    ]
   },
   {
-   "evidence_id": "ev-board-pm",
+   "evidence_id": "ev-shadow-am",
    "category": "market",
-   "verification": "INTERNAL_CANONICAL",
-   "fact": "App market board for DAL at PHI on 2026-10-26 evening: spread DAL -4.5 (-105 DraftKings, -105 FanDuel), PHI +4.5 (-115 DraftKings, -115 FanDuel); total 43.5 DraftKings, 43.5 FanDuel; moneyline DAL -225 DraftKings / -220 FanDuel, PHI +185 DraftKings / +184 FanDuel. Model expected_margin -0.4518. Morning board: spread DAL -4.5 (-108 DraftKings, -112 FanDuel); total 43.5 DraftKings, 44.5 FanDuel; moneyline DAL -218 DraftKings / -220 FanDuel, PHI +180 DraftKings / +184 FanDuel.",
-   "interpretation": "Spread line unchanged, spread prices moved at both books, FanDuel total dropped to 43.5, DraftKings moneyline moved; model margin unchanged.",
+   "verification": "REPORTED",
+   "fact": "Shadow-tracked Week 8 lookahead currents as of 2026-10-22 (4for4 report, last updated 2026-10-22T16:12:31Z; unchanged through the 2026-10-26-am snapshot): ARI@DAL DAL -6.5 total 51.5; ATL@TB TB -1.5 total 44.5; BAL@BUF BUF -3.0 total 51.5; CAR@GB GB -3.0 total 47.5; CHI@SEA SEA -3.0 total 46.5; CLE@PIT PIT -4.5 total 38.5; IND@JAX JAX -7.5 total 47.5; KC@DEN KC -1.5 total 42.5; LAC@LAR LAR -7.5 total 46.5; LV@NYJ NYJ -1.5 total 42.5; MIN@DET DET -2.5 total 47.5; NE@MIA NE -7.5 total 44.5; PHI@WAS WAS -3.5 total 41.5; TEN@CIN CIN -10.0 total 46.5. App board 2026-10-27 morning: DAL -6.5, TB -2.5, BUF -3.5, GB -3.5, SEA -3.5 DK/-3.0 FD, PIT -3.5, JAX -7.5, KC -1.5, LAR -6.5, LV -1.5 DK / NYJ -1.5 FD, DET -3.0 DK/-3.5 FD, NE -7.5, WAS -4.5, CIN -10.0 DK/-10.5 FD; totals ARI@DAL 54.5 DK/53.5 FD, LAC@LAR 44.5, PHI@WAS 40.5, CAR@GB 47.5.",
+   "interpretation": "Week 8 lines moved toward Cleveland and the Rams since the lookahead, and toward Tampa Bay, Buffalo, Green Bay and Washington; the books split on Raiders at Jets.",
    "sources": [
     {
-     "label": "NFL EDGE product view (public)",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+     "label": "4for4 NFL Lookahead Lines",
+     "url": "https://www.4for4.com/betting/odds/lookahead/spread"
     }
    ]
   }
