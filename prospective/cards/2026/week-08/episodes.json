@@ -1,0 +1,146 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "episodes": [
+    {
+      "best_line": null,
+      "best_price": -185,
+      "episode_id": "episode-c26b7318aedc5b685b90bae1",
+      "first_line": null,
+      "first_price": -185,
+      "first_publication_id": "publication-d11268149f209ab5cd8de95f",
+      "first_seen_at_utc": "2026-10-27T12:08:40.940729Z",
+      "game_id": "2026_08_CAR_GB",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "last_line": null,
+      "last_price": -185,
+      "last_publication_id": "publication-d11268149f209ab5cd8de95f",
+      "last_seen_at_utc": "2026-10-27T12:08:40.940729Z",
+      "logical_recommendation_id": "logical-5282a90ad0b350feebd83aca",
+      "market": "MONEYLINE",
+      "normalized_selection": "GB",
+      "normalized_side": "home",
+      "observations": [
+        {
+          "american_odds": -185,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-c5ca8a328b380c4b0edbb4c8",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -187
+          },
+          "publication_id": "publication-d11268149f209ab5cd8de95f",
+          "published_at_utc": "2026-10-27T12:08:40.940729Z",
+          "recommended_units": 1.0,
+          "source_product_sha256": "d11268149f209ab5cd8de95fef5b8323adf150886ba0e3013ad67124c0e48419",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-8c3328794c43c9c3172e9838"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "GB",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": null,
+      "worst_price": -185
+    },
+    {
+      "best_line": 3.5,
+      "best_price": -106,
+      "episode_id": "episode-6b8eee655ba7a34c53d9c8a0",
+      "first_line": 3.5,
+      "first_price": -106,
+      "first_publication_id": "publication-d11268149f209ab5cd8de95f",
+      "first_seen_at_utc": "2026-10-27T12:08:40.940729Z",
+      "game_id": "2026_08_CLE_PIT",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "last_line": 3.5,
+      "last_price": -106,
+      "last_publication_id": "publication-d11268149f209ab5cd8de95f",
+      "last_seen_at_utc": "2026-10-27T12:08:40.940729Z",
+      "logical_recommendation_id": "logical-f8ffc97d4bd7a1129a13386c",
+      "market": "SPREAD",
+      "normalized_selection": "CLE",
+      "normalized_side": "away",
+      "observations": [
+        {
+          "american_odds": -106,
+          "book": "FANDUEL",
+          "exact_offer_identity_id": "offer-34491aa57101a59b7a805213",
+          "line": 3.5,
+          "play_through": {
+            "line": 3.5,
+            "price_american": -109
+          },
+          "publication_id": "publication-d11268149f209ab5cd8de95f",
+          "published_at_utc": "2026-10-27T12:08:40.940729Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "d11268149f209ab5cd8de95fef5b8323adf150886ba0e3013ad67124c0e48419",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-a09c19725ce50fd796feb946"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "CLE",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": 3.5,
+      "worst_price": -106
+    },
+    {
+      "best_line": 3.5,
+      "best_price": -118,
+      "episode_id": "episode-4a1b1ef4afdbd7dda9f3be13",
+      "first_line": 3.5,
+      "first_price": -118,
+      "first_publication_id": "publication-d11268149f209ab5cd8de95f",
+      "first_seen_at_utc": "2026-10-27T12:08:40.940729Z",
+      "game_id": "2026_08_CHI_SEA",
+      "lane": "VALUE",
+      "lane_key": "value",
+      "last_line": 3.5,
+      "last_price": -118,
+      "last_publication_id": "publication-d11268149f209ab5cd8de95f",
+      "last_seen_at_utc": "2026-10-27T12:08:40.940729Z",
+      "logical_recommendation_id": "logical-46ad536fea7f0383362253ec",
+      "market": "SPREAD",
+      "normalized_selection": "CHI",
+      "normalized_side": "away",
+      "observations": [
+        {
+          "american_odds": -118,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-8edfb6fd937ea06007f8bad9",
+          "line": 3.5,
+          "play_through": {
+            "line": 3.5,
+            "price_american": -119
+          },
+          "publication_id": "publication-d11268149f209ab5cd8de95f",
+          "published_at_utc": "2026-10-27T12:08:40.940729Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "d11268149f209ab5cd8de95fef5b8323adf150886ba0e3013ad67124c0e48419",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-d3f07346eff16102cae53ce5"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "CHI",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": 3.5,
+      "worst_price": -118
+    }
+  ],
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1",
+  "season": 2026,
+  "source_publication_ids": [
+    "publication-d11268149f209ab5cd8de95f"
+  ],
+  "week": 8
+}
