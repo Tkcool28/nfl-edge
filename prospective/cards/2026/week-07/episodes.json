@@ -674,6 +674,51 @@
       "terminal_reason": "DISAPPEARED",
       "worst_line": null,
       "worst_price": 138
+    },
+    {
+      "best_line": 4.5,
+      "best_price": -115,
+      "episode_id": "episode-ab511cf886df977c8d26fc23",
+      "first_line": 4.5,
+      "first_price": -115,
+      "first_publication_id": "publication-39ce6c3621c5077c97a92940",
+      "first_seen_at_utc": "2026-10-27T00:08:48.006656Z",
+      "game_id": "2026_07_DAL_PHI",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "last_line": 4.5,
+      "last_price": -115,
+      "last_publication_id": "publication-39ce6c3621c5077c97a92940",
+      "last_seen_at_utc": "2026-10-27T00:08:48.006656Z",
+      "logical_recommendation_id": "logical-debd504e2381cae77f8168b2",
+      "market": "SPREAD",
+      "normalized_selection": "PHI",
+      "normalized_side": "home",
+      "observations": [
+        {
+          "american_odds": -115,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-d1bb88bd413341e83ae615c5",
+          "line": 4.5,
+          "play_through": {
+            "line": 4.5,
+            "price_american": -118
+          },
+          "publication_id": "publication-39ce6c3621c5077c97a92940",
+          "published_at_utc": "2026-10-27T00:08:48.006656Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "39ce6c3621c5077c97a9294014922ec1251baf91e9ffc0fd0a018f878c6862f9",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-0127d80df2cbdc3fbdd604c3"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "PHI",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": 4.5,
+      "worst_price": -115
     }
   ],
   "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1",
@@ -689,7 +734,8 @@
     "publication-7aa7210008d644007d89361d",
     "publication-cc0b5a5a611c59a88a69fab7",
     "publication-421d7affc7bb45f5484ffa4e",
-    "publication-3f46bb265affa1679b353951"
+    "publication-3f46bb265affa1679b353951",
+    "publication-39ce6c3621c5077c97a92940"
   ],
   "week": 7
 }
