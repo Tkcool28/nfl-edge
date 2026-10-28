@@ -1,94 +1,79 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-10-28T00:13:30Z",
-  "research_generated_at_utc": "2026-10-28T00:13:30Z",
+  "submitted_at_utc": "2026-10-28T12:16:39Z",
+  "research_generated_at_utc": "2026-10-28T12:16:39Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "edition": "Evening Brief",
-    "title": "NFL EDGE Tuesday Evening Brief",
-    "dek": "Green Bay's center is out at least a month, a Tuesday report leans toward Lamar Jackson playing Sunday, and all three cards moved on the evening board \u2014 with Balanced and Value landing on the same play.",
-    "published_at_utc": "2026-10-28T00:13:30Z",
-    "research_generated_at_utc": "2026-10-28T00:13:30Z",
+    "edition": "Morning Brief",
+    "title": "NFL EDGE Wednesday Morning Brief",
+    "dek": "The app now lists Lamar Jackson as Baltimore's starter, the Value card moved to Denver, and Thursday's game at Lambeau stays cool and clear.",
+    "published_at_utc": "2026-10-28T12:16:39Z",
+    "research_generated_at_utc": "2026-10-28T12:16:39Z",
     "sections": [
       {
         "id": "what-matters",
         "title": "What Matters Today",
-        "icon": "\ud83d\udcf0",
+        "icon": "📰",
         "items": [
           {
-            "headline": "Lead: Rhyan out at least a month, and Thursday's line holds at -3.5",
+            "headline": "Lead: the app now lists Lamar Jackson as Baltimore's starter, and the Buffalo line moved with him",
             "paragraphs": [
-              "The biggest news since this morning is at center in Green Bay. Sean Rhyan, the Packers' starting center, is likely to be sidelined at least a month with the high-ankle sprain he suffered Sunday at Detroit, CBS Sports reported Tuesday. He is not expected to need tightrope surgery, but a month out means Thursday night against Carolina is not in question anymore \u2014 it is out, along with the games after it.",
-              "Second-year pro John Williams, who finished Sunday's game at center, is the man in the middle for Thursday. Backup center Jacob Monk is already on injured reserve. Green Bay's Tuesday report still lists Rhyan, linebacker Zaire Franklin (shin), receiver Matthew Golden (foot/shoulder) and lineman Travis Glover (knee) as non-participants, with defensive tackles Anthony Campbell and Devonte Wyatt back to limited work.",
-              "On the other side, Carolina's top pass rusher is still not practicing. Jaelan Phillips (hamstring) missed again Tuesday after head coach Dave Canales called him a close call for Thursday. Guard Damien Lewis (knee), cornerback Akayleb Evans (triceps/knee) and lineman Torricelli Simpkins III (ankle) also missed again. The good news for Carolina: defensive tackle Bobby Brown III (hand) and receiver Jalen Coker (shoulder) returned to full participation, and quarterback Bryce Young (knee) was full again.",
-              "Say this plainly: the app's Thursday spread line has not moved on any of this. Green Bay is still -3.5 at both books on the evening board; only the DraftKings juice ticked, from -110 to -112. If your book has moved further, run your number through Check and let the verdict decide \u2014 do not assume the morning price is still the price."
+              "The overnight change is at quarterback in Baltimore. The morning board now lists Lamar Jackson as the Ravens' expected starter for Sunday at Buffalo. Last night's board still had Tyler Huntley there. That is the app catching up to Tuesday's report, not a new designation — Jackson is expected to play, per NFL Network's Ian Rapoport, who said Jackson is believed to be close to 100 percent after missing three games with a high-ankle sprain.",
+              "Say this plainly: the app has updated, but the team has not designated anything yet. Head coach Jesse Minter said Monday the team will know a lot more on Wednesday, when Baltimore resumes practice. Last week Jackson practiced limited all week, was listed questionable Friday, then was ruled out Saturday. Wednesday's practice participation is still the real tell.",
+              "The market moved on the same story. DraftKings took Baltimore from +3.5 to +3 overnight, so the hook is gone there, though FanDuel still shows +3.5. Baltimore's moneyline at DraftKings shortened from +154 to +145, with Buffalo easing from -185 to -175. If your book has moved further on Jackson, run your number through Check and let the verdict decide — do not bet the Baltimore game off a report alone."
             ],
-            "takeaway": "Rhyan is out at least a month, Phillips still is not practicing, and Green Bay is still -3.5 on the evening board.",
+            "takeaway": "The app now lists Jackson as Baltimore's starter and DraftKings moved to +3; Wednesday's practice is still the test that matters.",
             "evidence_ids": [
-              "ev-rhyan-pm",
-              "ev-injuries-pm"
+              "ev-cards-am",
+              "ev-jackson-am"
             ],
             "sources": [
               {
-                "label": "Reuters",
-                "url": "https://www.reuters.com/sports/report-packers-c-sean-rhyan-ankle-out-least-month--flm-2026-10-27/"
-              },
-              {
-                "label": "Packers.com injury report",
-                "url": "https://www.packers.com/news/packers-panthers-injury-report-oct-27-2026"
-              },
-              {
                 "label": "NFL EDGE product view (public)",
                 "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              },
+              {
+                "label": "Sports Illustrated",
+                "url": "https://www.si.com/betting/positive-lamar-jackson-injury-update-improves-ravens-odds-vs-bills-in-nfl-week-8-2026"
               }
             ]
           },
           {
-            "headline": "Injury roundup: Jackson report leans return, Barkley says he will play",
+            "headline": "Injury roundup: Thursday's center picture is settled, and the final designations land today",
             "paragraphs": [
-              "The quarterback watch moved Tuesday, but it has not resolved. NFL Network's Ian Rapoport said Tuesday he expects Lamar Jackson to play Sunday at Buffalo, reporting Jackson is believed to be close to 100 percent after missing three games with a high-ankle sprain. That is a report, not a designation. Head coach Jesse Minter said Monday the team will know a lot more on Wednesday, and Jackson's practice participation Wednesday through Friday is the real tell \u2014 last week he was limited all week, listed questionable Friday, then ruled out Saturday.",
-              "Say this plainly: the app has NOT updated yet. Baltimore's expected starter on the evening board is still Tyler Huntley. Do not bet the Baltimore game off a Jackson return until the app's quarterback row or a designation says so \u2014 a Tuesday report is not a Wednesday practice.",
-              "In Philadelphia, Saquon Barkley says he will be fine. Barkley told reporters his hamstring came out great after Monday night and he does not think the back issue that cut his return short will keep him out of Sunday night at Washington. He played only nine offensive snaps against Dallas, touching the ball every time he was on the field, before the back locked up. Dameon Pierce also left in the fourth quarter with an undisclosed injury, and Philadelphia's first practice report of the week lands Wednesday. Both backs are watches until then.",
-              "One timing note, and only one: the things worth waiting for this week are real information events \u2014 Jackson's Wednesday practice, Thursday's final designations before Panthers at Packers, and the inactive lists about 90 minutes before kickoff for Sunday's games, including Philadelphia at Washington on Sunday night. Everything else is the opposite rule: if your book has a good number right now and Check says bet, bet now."
+              "Green Bay's center spot is settled for Thursday night against Carolina: second-year pro John Williams starts, with Sean Rhyan out at least a month with the high-ankle sprain he suffered Sunday at Detroit, as reported Tuesday. Backup center Jacob Monk is already on injured reserve. Carolina's top pass rusher, Jaelan Phillips (hamstring), missed practice again Tuesday after head coach Dave Canales called him a close call for Thursday.",
+              "The timing note for this week, and the only one: Thursday's final designations land today, ahead of the 8:15 p.m. ET kickoff at Lambeau, and the inactive lists come about 90 minutes before kickoff for Sunday's games. In Philadelphia, Saquon Barkley said Tuesday he expects to play Sunday night at Washington after his hamstring came out great Monday night, but the first full practice report of the week lands today, so both Philadelphia backs stay watches until then.",
+              "Everything else follows the opposite rule: if your book has a good number right now and Check says bet, bet now. A good number today beats a hoped-for number later in the week, because waiting lets the number drift the wrong way too."
             ],
-            "takeaway": "Jackson leans toward playing Sunday but is not official until Wednesday's practice; Barkley says he will play; both Philadelphia backs are watches.",
+            "takeaway": "Thursday's center picture is settled, final designations land today, and Philadelphia's backs stay watches until today's practice report.",
             "evidence_ids": [
-              "ev-jackson-pm",
-              "ev-barkley-pm",
-              "ev-cards-pm"
+              "ev-cards-am",
+              "ev-jackson-am"
             ],
             "sources": [
               {
-                "label": "RotoWire",
-                "url": "https://www.rotowire.com/football/headlines/lamar-jackson-injury-trending-toward-return-in-week-8-644647"
-              },
-              {
-                "label": "Buffalo Rumblings",
-                "url": "https://www.buffalorumblings.com/buffalo-bills-news/143730/lamar-jackson-reportedly-will-return-from-injury-vs-buffalo-bills-in-week-8"
-              },
-              {
-                "label": "RotoBaller",
-                "url": "https://www.rotoballer.com/player-news/saquon-barkley-not-worried-about-his-back-injury/1977091"
-              },
-              {
                 "label": "NFL EDGE product view (public)",
                 "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              },
+              {
+                "label": "Sports Illustrated",
+                "url": "https://www.si.com/betting/positive-lamar-jackson-injury-update-improves-ravens-odds-vs-bills-in-nfl-week-8-2026"
               }
             ]
           },
           {
-            "headline": "Weather: still cool and mostly clear Thursday at Lambeau",
+            "headline": "Weather: still cool and clear Thursday at Lambeau",
             "paragraphs": [
-              "Thursday night in Green Bay still looks cool and mostly clear: a daytime high near 61, falling toward the low 40s by the 8:15 p.m. ET kickoff and a low near 36 overnight, with northwest wind around 8 mph and only a small rain chance.",
-              "That is a fact, not a totals edge. Nothing in it argues the total either way. The final kickoff-window check comes closer to Thursday."
+              "Thursday night in Green Bay still looks cool and clear: a daytime high near 60, clear Thursday night with a low near 35, northwest wind around 7 mph, and only about a 10 percent rain chance.",
+              "That is a fact, not a totals edge. Nothing in it argues the total either way. The total for Carolina at Green Bay sits at 47.5 on both books this morning, unchanged from last night."
             ],
-            "takeaway": "Cool and mostly clear for Thursday night at Lambeau; judge the total on its own.",
+            "takeaway": "Cool and clear for Thursday night at Lambeau; judge the total on its own.",
             "evidence_ids": [
-              "ev-weather-pm"
+              "ev-weather-am"
             ],
             "sources": [
               {
-                "label": "Weather.com Green Bay 10-day forecast",
+                "label": "Weather.com Green Bay forecast",
                 "url": "https://weather.com/us/wi/city/green-bay/tenday"
               }
             ]
@@ -98,20 +83,19 @@
       {
         "id": "what-it-means",
         "title": "What It Means for NFL EDGE",
-        "icon": "\ud83d\udca1",
+        "icon": "💡",
         "items": [
           {
-            "headline": "All three cards still fire on the evening board",
+            "headline": "Three cards, three different games this morning",
             "paragraphs": [
-              "Hit Rate is GB moneyline -190 at FanDuel, for Thursday, 8:15 p.m. ET (CAR at GB). Hit Rate is the pick that looks most likely to win. It forgoes value for win probability, and the app's own tutorial says Hit Rate is not Profit Rate. The model puts GB at 66.0 percent, with LOW reliability, and the model's expected margin for the game is 4.29 against a market line of GB -3.5.",
-              "Balanced is CHI +3 -102 at FanDuel, for Monday, 8:15 p.m. ET (CHI at SEA). Balanced is a strong pick without paying too much, a good starting point for a new bettor. The model puts CHI at 50.6 percent, with MEDIUM reliability, and the model's expected margin for the game is -0.14 against a market line of CHI +3.",
-              "Value is CHI +3 -102 at FanDuel, for Monday, 8:15 p.m. ET (CHI at SEA). Value is always the model's +EV play. The model puts CHI at 50.6 percent, with MEDIUM reliability, and the model's expected margin for the game is -0.14 against a market line of CHI +3.",
-              "Notice something: Balanced and Value are the same play tonight, Chicago +3 at -102 at FanDuel for Monday night at Seattle. That happens when the middle-ground pick and the +EV pick agree. It does not make it two bets, and it does not make either lane wrong \u2014 it is one number the board likes from two different angles. Bet it once, if Check says bet.",
-              "Thursday game? Thursday check. The Hit Rate card is on the first game of the week, so run your book's Thursday price through Check before kickoff rather than assuming the FanDuel number is your number."
+              "Hit Rate is GB moneyline -185 at DraftKings, for Thursday, 8:15 p.m. ET (CAR at GB). Hit Rate is the pick that looks most likely to win. It forgoes value for win probability, and the app's own tutorial says Hit Rate is not Profit Rate. The model puts GB at 66.0 percent, with LOW reliability, and the model's expected margin for the game is 4.29 against a market line of GB -3.5.",
+              "Balanced is CHI +3 -104 at FanDuel, for Monday, 8:15 p.m. ET (CHI at SEA). Balanced is a strong pick without paying too much, a good starting point for a new bettor. The model puts CHI at 50.6 percent, with MEDIUM reliability, and the model's expected margin for the game is -0.14 against a market line of CHI +3.",
+              "Value is DEN +1.5 -110 at DraftKings, for Sunday (KC at DEN). Value is always the model's +EV play. The model puts DEN at 50.6 percent, with MEDIUM reliability, and the model's expected margin for the game is 1.74 against a market line of DEN +1.5. That is a new Value card: last night Value was Chicago +3, same as Balanced. This morning the Value lane moved on to Denver. It is not two bets on Chicago anymore — it is one card on a new game, so judge Denver on its own number.",
+              "Thursday game? Thursday check. The Hit Rate card is on the first game of the week, so run your book's Thursday price through Check before kickoff rather than assuming the DraftKings number is your number."
             ],
-            "takeaway": "Hit Rate: GB moneyline -190 at FanDuel. Balanced and Value agree tonight: CHI +3 -102 at FanDuel. Three lanes, two plays.",
+            "takeaway": "Hit Rate: GB moneyline -185 at DraftKings. Balanced: CHI +3 -104 at FanDuel. Value moved to a new game: DEN +1.5 -110 at DraftKings.",
             "evidence_ids": [
-              "ev-cards-pm"
+              "ev-cards-am"
             ],
             "sources": [
               {
@@ -123,12 +107,12 @@
           {
             "headline": "A fresh board means fresh prices, not fresh guesses",
             "paragraphs": [
-              "The board refreshes every morning and evening, and tonight's board is a fresh read on the same Week 8 games. Do not carry this morning's numbers into tonight without checking \u2014 the evening refresh can change any of them, and tonight it is the Rhyan news and the Jackson report that give the numbers context.",
+              "The board refreshes every morning and evening, and this morning's board is a fresh read on the same Week 8 games. Do not carry last night's numbers into today without checking — the morning refresh moved the Value card to a new game and flipped Baltimore's quarterback row.",
               "When the board has not picked up a move, or your book is not DraftKings or FanDuel, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet/no-bet verdict on your price. Full re-evaluation, not a blind override. And remember what a price means: -185 means every $1.85 you risk wins $1. The app sets your actual stake from your bankroll and staking choice."
             ],
             "takeaway": "New board, new check: run your own book's line through Check and let that verdict decide.",
             "evidence_ids": [
-              "ev-cards-pm"
+              "ev-cards-am"
             ],
             "sources": [
               {
@@ -142,17 +126,17 @@
       {
         "id": "fade",
         "title": "Learn the Game",
-        "icon": "\u2696\ufe0f",
+        "icon": "⚖️",
         "mode": "learning",
         "items": [
           {
-            "headline": "Learn the Game: juice (the vig)",
+            "headline": "Learn the Game: the hook",
             "paragraphs": [
-              "(Hypothetical example:) Imagine you bet a team at -110. That price means you risk $1.10 to win $1. If you win, you get your $1.10 back plus $1. If you lose, the $1.10 is gone. The extra 10 cents is the juice \u2014 the book's cut for taking your bet. It is also called the vig.",
-              "Why does it matter? Because juice is the hurdle your pick has to clear. At -110 you need to win about 52.4 percent of the time just to break even. At -185 you need to win about 64.9 percent. Same pick, different price, very different hurdle. That is why the app judges your exact line and price through Check instead of just the team name.",
-              "How to apply it: before you bet any card in this brief, look at the price, not just the team. A good team at a bad price is a bad bet. Run your book's line and price through Check and let the verdict do the math."
+              "(Hypothetical example:) Imagine a team is listed at +3.5. That half point is called the hook. It means your team can lose by 3 and you still win the bet — a 3-point loss is a win at +3.5, but a push at +3 and a loss at +2.5.",
+              "Why does it matter? Because the hook is worth real money on close games. A lot of football games land on 3, so +3.5 and +3 are not the same bet even though they look one half-point apart. That is why this brief notes when a hook disappears — Baltimore lost the hook at DraftKings overnight, going from +3.5 to +3.",
+              "How to apply it: before you bet a spread, look at the exact number, hook included. If your book still has the hook and the app's number does not, run your book's line through Check — the verdict is on your price, hook and all."
             ],
-            "takeaway": "Juice is the book's cut and your break-even hurdle \u2014 judge the price, not just the team, and run it through Check.",
+            "takeaway": "The hook is the half point that turns a 3-point loss into a win — always check whether your number still has it before you bet.",
             "editorial_only": true,
             "evidence_ids": [],
             "sources": []
@@ -162,21 +146,20 @@
       {
         "id": "market-watch",
         "title": "Line Movement",
-        "icon": "\ud83d\udc40",
+        "icon": "👀",
         "items": [
           {
-            "headline": "Evening board vs morning board: all three cards moved, and two lanes land on one play",
+            "headline": "Morning board vs evening board: Value moves to Denver, Baltimore's hook goes at DraftKings",
             "paragraphs": [
-              "Compared against this morning's board, the evening board moved every card. Hit Rate went from Green Bay moneyline -185 at DraftKings to -190 at FanDuel \u2014 same team, same Thursday game, a slightly worse price. Balanced went from Cleveland +3.5 at -106 at FanDuel to Chicago +3 at -102 at FanDuel. Value went from Chicago +3.5 at -118 at DraftKings to Chicago +3 at -102 at FanDuel. So Balanced and Value are the same play tonight: Chicago +3 at -102 at FanDuel, for Monday night at Seattle. Two lanes with different jobs landing on one number is not a mistake; it is the board agreeing with itself.",
-              "Why did the cards move? The numbers moved first. DraftKings took Chicago-Seattle from 3.5 to 3, so the hook is gone there, and FanDuel took Cleveland-Pittsburgh from 3.5 to 3.0, so Cleveland lost the hook at FanDuel too. Morning's Balanced card was Cleveland +3.5; that number does not exist at FanDuel anymore. The card followed the number, not the team.",
-              "The other moves on the card games since this morning: CAR spread at DraftKings: +3.5 (-110) this morning, +3.5 (-108) tonight; GB spread at DraftKings: -3.5 (-110) this morning, -3.5 (-112) tonight; CAR at GB total at DraftKings: 47.5 (-118) this morning, 47.5 (-112) tonight; CAR at GB total at FanDuel: 47.5 (-115) this morning, 47.5 (-112) tonight; CHI spread at DraftKings: +3.5 (-118) this morning, +3 (-105) tonight; SEA spread at DraftKings: -3.5 (-102) this morning, -3 (-115) tonight; CHI spread at FanDuel: +3 (-104) this morning, +3 (-102) tonight; SEA spread at FanDuel: -3 (-118) this morning, -3 (-120) tonight.",
-              "One more move worth noting, off the card games: Baltimore at Buffalo's total went from 53.5 to 54.5 at both books, and Buffalo -3.5 eased to even money at both books. That is the market nudging on the Jackson story before the app has: the app still lists Tyler Huntley as Baltimore's expected starter. If your book has moved further on Jackson, run your number through Check and get a verdict on your price, not the app's.",
-              "And a plain note on the Fade slot tonight: the free betting-splits page showed no splits data for today, so there was no verified public-vs-sharper split to write about. No split, no Fade \u2014 the Learn the Game box above stands in its place rather than a manufactured one."
+              "Compared against last night's board, the morning board moved the Value card and Baltimore's quarterback row, while the other two cards stayed on the same teams. Hit Rate went from Green Bay moneyline -190 at FanDuel to -185 at DraftKings — same team, same Thursday game, a slightly better price at a different book. Balanced stayed Chicago +3 at FanDuel, with the price ticking from -102 to -104. Value went from Chicago +3 -102 at FanDuel to Denver +1.5 -110 at DraftKings — a replacement, not a price change, so last night's Chicago Value read is gone from that lane.",
+              "The Baltimore move is the story overnight. DraftKings took Baltimore from +3.5 (-120) to +3 (even money), while FanDuel still shows +3.5 (-122). Baltimore's moneyline at DraftKings went from +154 to +145, and Buffalo from -185 to -175. The total stayed at 54.5 at both books. The app caught the quarterback part of this — Jackson is now the listed expected starter — and the DraftKings line followed the report.",
+              "The other card games were quiet. Carolina at Green Bay is unchanged at both books: Green Bay -3.5, total 47.5. Chicago at Seattle is unchanged on the line at both books, Chicago +3, with only juice ticks at FanDuel (Chicago -102 to -104, Seattle -120 to -118). Kansas City at Denver is unchanged too: Denver +1.5 at both books, with DraftKings' total at 41.5 and FanDuel's at 40.5, both as last night.",
+              "And a plain note on the Fade slot this morning: the free betting-splits page showed no splits data for Tuesday, Oct 27, so there was no verified public-vs-sharper split to write about. No split, no Fade — the Learn the Game box above stands in its place rather than a manufactured one."
             ],
-            "takeaway": "All three cards moved since morning; Balanced and Value now agree on Chicago +3, and the Buffalo total ticked up on the Jackson story.",
+            "takeaway": "Value moved to Denver +1.5, Baltimore lost the hook at DraftKings on the Jackson story, and the other card games held steady.",
             "evidence_ids": [
-              "ev-cards-pm",
-              "ev-rhyan-pm"
+              "ev-cards-am",
+              "ev-jackson-am"
             ],
             "sources": [
               {
@@ -184,8 +167,8 @@
                 "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
               },
               {
-                "label": "Reuters",
-                "url": "https://www.reuters.com/sports/report-packers-c-sean-rhyan-ankle-out-least-month--flm-2026-10-27/"
+                "label": "Sports Illustrated",
+                "url": "https://www.si.com/betting/positive-lamar-jackson-injury-update-improves-ravens-odds-vs-bills-in-nfl-week-8-2026"
               }
             ]
           }
@@ -194,17 +177,17 @@
       {
         "id": "today-tip",
         "title": "Today's Tip",
-        "icon": "\u2705",
+        "icon": "✅",
         "items": [
           {
-            "headline": "Work Thursday first, then let the week come to you",
+            "headline": "Work Thursday first, then watch Wednesday's practice",
             "paragraphs": [
-              "Thursday kicks first, so work Thursday first. The Hit Rate card is Green Bay on the moneyline, the center position is now settled \u2014 Williams starts, Rhyan is out for weeks \u2014 and the final designations land Wednesday. Check your book's Thursday price now, re-check it after Wednesday's final report, and do not let a Sunday number distract you from the game that kicks in two days.",
-              "For the rest of the week, the board refreshes every morning and evening. The Balanced and Value cards are both Monday night's game. They can wait for their own injury news. And one more time, because settlement is manual and there is no auto-settle: log the losers too. Monday's Philadelphia card lost. It goes in the tracker right next to the wins, or the tracker is just a highlight reel."
+              "Thursday kicks first, so work Thursday first. The Hit Rate card is Green Bay on the moneyline, the center position is settled with Williams starting, and the final designations land today. Check your book's Thursday price now, re-check it after the final report, and do not let a Sunday number distract you from the game that kicks tomorrow night.",
+              "For the rest of the week, the board refreshes every morning and evening. The Balanced and Value cards are Monday night and Sunday games. They can wait for their own injury news — and Baltimore's Wednesday practice is the one to watch before anything else on that game. One more time, because settlement is manual and there is no auto-settle: log the losers too, or the tracker is just a highlight reel."
             ],
-            "takeaway": "Thursday first: check your Green Bay price now and again after Wednesday's final report, and log every result, win or lose.",
+            "takeaway": "Thursday first: check your Green Bay price now and again after today's final report, and log every result, win or lose.",
             "evidence_ids": [
-              "ev-cards-pm"
+              "ev-cards-am"
             ],
             "sources": [
               {
@@ -219,84 +202,41 @@
   },
   "evidence": [
     {
-      "evidence_id": "ev-rhyan-pm",
-      "category": "injury",
-      "verification": "REPORTED",
-      "fact": "Green Bay starting center Sean Rhyan is likely to be sidelined at least a month with a high-ankle sprain suffered Sunday at Detroit, CBS Sports reported Tuesday, Oct 27, 2026; he is not expected to undergo tightrope surgery. Rhyan started every game at center this season. Backup center Jacob Monk was placed on injured reserve Monday (quad/thigh). Second-year pro John Williams finished Sunday's game at center.",
-      "interpretation": "Green Bay's center position is settled for Thursday vs Carolina (Williams starts) and Rhyan is out for weeks, not days.",
-      "sources": [
-        {
-          "label": "Reuters",
-          "url": "https://www.reuters.com/sports/report-packers-c-sean-rhyan-ankle-out-least-month--flm-2026-10-27/"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-injuries-pm",
-      "category": "injury",
-      "verification": "REPORTED",
-      "fact": "Green Bay Tuesday report (Oct 27, 2026): non-participants C Sean Rhyan (ankle), LB Zaire Franklin (shin), WR Matthew Golden (foot/shoulder), OL Travis Glover (knee); limited DT Anthony Campbell (ankle), DL Devonte Wyatt (ankle), G Aaron Banks (knee/toe). Carolina Tuesday: non-participants OLB Jaelan Phillips (hamstring), G Damien Lewis (knee), CB Akayleb Evans (triceps/knee), OL Torricelli Simpkins III (ankle); full participants DT Bobby Brown III (hand), WR Jalen Coker (shoulder), QB Bryce Young (knee). Both teams held walkthroughs; participation is estimated.",
-      "interpretation": "Thursday's game stays banged up on both sides; final designations land Wednesday.",
-      "sources": [
-        {
-          "label": "Packers.com injury report",
-          "url": "https://www.packers.com/news/packers-panthers-injury-report-oct-27-2026"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-jackson-pm",
-      "category": "injury",
-      "verification": "REPORTED",
-      "fact": "NFL Network's Ian Rapoport said Tuesday, Oct 27, 2026, that he expects Lamar Jackson to play Sunday at Buffalo, reporting Jackson is believed to be close to 100 percent after missing three games with a high-ankle sprain. Ravens head coach Jesse Minter said Monday the team will know a lot more on Wednesday. Last week Jackson was limited all week, listed questionable Friday, then ruled out Saturday. Baltimore's expected starter on the morning board was Tyler Huntley.",
-      "interpretation": "A Tuesday report leans return, but the official call is Wednesday's practice and Friday's designation; do not bet off the report alone.",
-      "sources": [
-        {
-          "label": "RotoWire",
-          "url": "https://www.rotowire.com/football/headlines/lamar-jackson-injury-trending-toward-return-in-week-8-644647"
-        },
-        {
-          "label": "Buffalo Rumblings",
-          "url": "https://www.buffalorumblings.com/buffalo-bills-news/143730/lamar-jackson-reportedly-will-return-from-injury-vs-buffalo-bills-in-week-8"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-barkley-pm",
-      "category": "injury",
-      "verification": "REPORTED",
-      "fact": "Saquon Barkley said Tuesday, Oct 27, 2026, that his hamstring came out great after Monday night's game and he does not think the back issue that limited him to nine offensive snaps vs Dallas will keep him out of Sunday night at Washington. Barkley finished with 7 carries for 62 yards and a touchdown and 2 catches for 9 yards. Dameon Pierce left in the fourth quarter with an undisclosed injury. Philadelphia's first practice report of the week lands Wednesday.",
-      "interpretation": "Barkley leans toward playing Sunday night, but both Philadelphia backs are watches until Wednesday's report.",
-      "sources": [
-        {
-          "label": "RotoBaller",
-          "url": "https://www.rotoballer.com/player-news/saquon-barkley-not-worried-about-his-back-injury/1977091"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-weather-pm",
-      "category": "weather",
-      "verification": "REPORTED",
-      "fact": "Green Bay forecast for Thursday, Oct 29, 2026: daytime high near 61, mostly clear Thursday night, low near 36, northwest wind around 8 mph, small rain chance. Kickoff for Carolina at Green Bay is 8:15 p.m. ET.",
-      "interpretation": "Cool and mostly clear; a fact, not a totals edge.",
-      "sources": [
-        {
-          "label": "Weather.com Green Bay 10-day forecast",
-          "url": "https://weather.com/us/wi/city/green-bay/tenday"
-        }
-      ]
-    },
-    {
-      "evidence_id": "ev-cards-pm",
+      "evidence_id": "ev-cards-am",
       "category": "game",
       "verification": "INTERNAL_CANONICAL",
-      "fact": "App product view, Week 8, generated 2026-10-28T00:08:46Z: Hit Rate GB moneyline -190 at FanDuel (model probability 0.6599, reliability LOW, game 2026_08_CAR_GB, model expected margin 4.29). Balanced CHI +3 -102 at FanDuel (model probability 0.5057, reliability MEDIUM, game 2026_08_CHI_SEA, model expected margin -0.14). Value CHI +3 -102 at FanDuel (model probability 0.5057, reliability MEDIUM, game 2026_08_CHI_SEA, model expected margin -0.14). Baltimore expected starter on evening board: Tyler Huntley.",
-      "interpretation": "Evening board cards and quarterback rows as published.",
+      "fact": "App product view, Week 8, generated 2026-10-28T12:08:46Z: Hit Rate GB moneyline -185 at DraftKings (model probability 0.6599, reliability LOW, game 2026_08_CAR_GB, model expected margin 4.29). Balanced CHI +3 -104 at FanDuel (model probability 0.5057, reliability MEDIUM, game 2026_08_CHI_SEA, model expected margin -0.14). Value DEN +1.5 -110 at DraftKings (model probability 0.5057, reliability MEDIUM, game 2026_08_KC_DEN, model expected margin 1.74). Baltimore expected starter on the morning board: Lamar Jackson (evening board: Tyler Huntley). Morning board spreads: CAR at GB GB -3.5 at both books; CHI at SEA CHI +3 at both books; KC at DEN DEN +1.5 at both books; BAL at BUF BAL +3 at DraftKings, +3.5 at FanDuel.",
+      "interpretation": "Morning board cards and quarterback rows as published.",
       "sources": [
         {
           "label": "NFL EDGE product view (public)",
           "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+        }
+      ]
+    },
+    {
+      "evidence_id": "ev-jackson-am",
+      "category": "injury",
+      "verification": "REPORTED",
+      "fact": "Ian Rapoport reported Tuesday, Oct 27, 2026, that Lamar Jackson is expected to play Sunday at Buffalo and is believed to be close to 100 percent after missing three games with a high-ankle sprain. Head coach Jesse Minter said Monday the team will know a lot more on Wednesday, when Baltimore resumes practice. DraftKings moved Baltimore from +3.5 to +3 on the report.",
+      "interpretation": "The report plus the app's quarterback flip point the same way, but Wednesday's practice is still the real test before any designation.",
+      "sources": [
+        {
+          "label": "Sports Illustrated",
+          "url": "https://www.si.com/betting/positive-lamar-jackson-injury-update-improves-ravens-odds-vs-bills-in-nfl-week-8-2026"
+        }
+      ]
+    },
+    {
+      "evidence_id": "ev-weather-am",
+      "category": "weather",
+      "verification": "REPORTED",
+      "fact": "Green Bay forecast for Thursday, Oct 29, 2026: sunny day, high near 60, clear Thursday night, low near 35, northwest wind around 7 mph, rain chance about 10 percent.",
+      "interpretation": "Cool and clear for Thursday night at Lambeau; no weather edge either way.",
+      "sources": [
+        {
+          "label": "Weather.com Green Bay forecast",
+          "url": "https://weather.com/us/wi/city/green-bay/tenday"
         }
       ]
     }
