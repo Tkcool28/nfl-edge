@@ -400,8 +400,8 @@
       "lane_key": "value",
       "last_line": 3.0,
       "last_price": -105,
-      "last_publication_id": "publication-7067c008285cd3c25ce65b20",
-      "last_seen_at_utc": "2026-10-31T00:08:47.030499Z",
+      "last_publication_id": "publication-d3dee85f6ecbe87a31d92ffc",
+      "last_seen_at_utc": "2026-10-31T12:08:44.812714Z",
       "logical_recommendation_id": "logical-46ad536fea7f0383362253ec",
       "market": "SPREAD",
       "normalized_selection": "CHI",
@@ -491,9 +491,26 @@
           "state": "BET",
           "value_at": null,
           "wager_identity_id": "wager-e672d3419c2a2768601312a1"
+        },
+        {
+          "american_odds": -105,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-42abd14f51679c6f813dacd8",
+          "line": 3.0,
+          "play_through": {
+            "line": 3.0,
+            "price_american": -108
+          },
+          "publication_id": "publication-d3dee85f6ecbe87a31d92ffc",
+          "published_at_utc": "2026-10-31T12:08:44.812714Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "d3dee85f6ecbe87a31d92ffc60f1e682bb17b23bc13a4c62caaa8e23652c15c7",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-e672d3419c2a2768601312a1"
         }
       ],
-      "publication_count": 5,
+      "publication_count": 6,
       "returned_after_gap": true,
       "selection": "CHI",
       "terminal_reason": "WEEK_HISTORY_END",
@@ -512,9 +529,9 @@
       "lane": "HIT_RATE",
       "lane_key": "hit_rate",
       "last_line": null,
-      "last_price": -270,
-      "last_publication_id": "publication-7067c008285cd3c25ce65b20",
-      "last_seen_at_utc": "2026-10-31T00:08:47.030499Z",
+      "last_price": -278,
+      "last_publication_id": "publication-d3dee85f6ecbe87a31d92ffc",
+      "last_seen_at_utc": "2026-10-31T12:08:44.812714Z",
       "logical_recommendation_id": "logical-0430b7fb0c01643c94bdfaba",
       "market": "MONEYLINE",
       "normalized_selection": "LAR",
@@ -570,14 +587,31 @@
           "state": "BET",
           "value_at": null,
           "wager_identity_id": "wager-81b45d9a968521308eb40e4d"
+        },
+        {
+          "american_odds": -278,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-2af2f29e8d5c4e50ec7b26cc",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -283
+          },
+          "publication_id": "publication-d3dee85f6ecbe87a31d92ffc",
+          "published_at_utc": "2026-10-31T12:08:44.812714Z",
+          "recommended_units": 0.25,
+          "source_product_sha256": "d3dee85f6ecbe87a31d92ffc60f1e682bb17b23bc13a4c62caaa8e23652c15c7",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-81b45d9a968521308eb40e4d"
         }
       ],
-      "publication_count": 3,
+      "publication_count": 4,
       "returned_after_gap": false,
       "selection": "LAR",
       "terminal_reason": "WEEK_HISTORY_END",
       "worst_line": null,
-      "worst_price": -270
+      "worst_price": -278
     },
     {
       "best_line": 3.0,
@@ -654,8 +688,8 @@
       "lane_key": "balanced",
       "last_line": 3.0,
       "last_price": -104,
-      "last_publication_id": "publication-7067c008285cd3c25ce65b20",
-      "last_seen_at_utc": "2026-10-31T00:08:47.030499Z",
+      "last_publication_id": "publication-d3dee85f6ecbe87a31d92ffc",
+      "last_seen_at_utc": "2026-10-31T12:08:44.812714Z",
       "logical_recommendation_id": "logical-21bcbb772a658ca5a68eebf7",
       "market": "SPREAD",
       "normalized_selection": "BAL",
@@ -677,9 +711,26 @@
           "state": "BET",
           "value_at": null,
           "wager_identity_id": "wager-78a8d72ad7dc845731dd7d29"
+        },
+        {
+          "american_odds": -104,
+          "book": "FANDUEL",
+          "exact_offer_identity_id": "offer-015719554a3700dc4eeabd07",
+          "line": 3.0,
+          "play_through": {
+            "line": 3.0,
+            "price_american": -107
+          },
+          "publication_id": "publication-d3dee85f6ecbe87a31d92ffc",
+          "published_at_utc": "2026-10-31T12:08:44.812714Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "d3dee85f6ecbe87a31d92ffc60f1e682bb17b23bc13a4c62caaa8e23652c15c7",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-78a8d72ad7dc845731dd7d29"
         }
       ],
-      "publication_count": 1,
+      "publication_count": 2,
       "returned_after_gap": true,
       "selection": "BAL",
       "terminal_reason": "WEEK_HISTORY_END",
@@ -697,7 +748,8 @@
     "publication-fddea0fb9260b447dc8cc673",
     "publication-389a0222b125038778acd236",
     "publication-6ce32fb4ef0163ce97b744c8",
-    "publication-7067c008285cd3c25ce65b20"
+    "publication-7067c008285cd3c25ce65b20",
+    "publication-d3dee85f6ecbe87a31d92ffc"
   ],
   "week": 8
 }
