@@ -1,79 +1,81 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-10-30T12:17:19Z",
- "research_generated_at_utc": "2026-10-30T12:17:19Z",
+ "submitted_at_utc": "2026-10-31T00:14:34Z",
+ "research_generated_at_utc": "2026-10-31T00:14:34Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "edition": "Morning Brief",
-  "title": "NFL EDGE Friday Morning Brief",
-  "dek": "Thursday night is final \u2014 Green Bay beats Carolina 27-19 \u2014 and Friday brings the last practice reports and final designations for Sunday's two big injury watches, while the morning board holds all three cards steady.",
-  "published_at_utc": "2026-10-30T12:17:19Z",
-  "research_generated_at_utc": "2026-10-30T12:17:19Z",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Friday Evening Brief",
+  "dek": "Friday's final designations clear both big injury watches — Lamar Jackson and Saquon Barkley are both set to play Sunday — and the evening board makes one card change, moving Balanced to Baltimore +3.",
+  "published_at_utc": "2026-10-31T00:14:34Z",
+  "research_generated_at_utc": "2026-10-31T00:14:34Z",
   "sections": [
    {
     "id": "what-matters",
     "title": "What Matters Today",
-    "icon": "\ud83d\udcf0",
+    "icon": "📰",
     "items": [
      {
-      "headline": "Lead: Thursday is final \u2014 Green Bay beats Carolina 27-19",
+      "headline": "Lead: Final designations clear Jackson and Barkley for Sunday",
       "paragraphs": [
-       "Thursday night is in the books. Green Bay beat Carolina 27-19 at Lambeau Field to open Week 8, moving to 5-3 while Carolina fell to 3-4. Jordan Love threw for 288 yards and three touchdowns, including a 24-yard scoring toss to Matthew Golden \u2014 the receiver whose active status was Thursday's last open question, answered before kickoff.",
-       "Green Bay built a 27-10 lead in the third quarter and held off a late Carolina rally. Wide receiver Christian Watson left in the second quarter for a precautionary hospital trip after a 53-yard catch, then returned to the game and finished with eight catches for 113 yards.",
-       "That closes Thursday. If you took a Green Bay price, it is settled against the full lineup, and the board has moved on to Sunday and Monday."
+       "The wait from this morning's brief is over. Friday's final injury reports clear both of the day's big watches. Baltimore quarterback Lamar Jackson carries no game designation after three full practices this week, and head coach Jesse Minter confirmed Friday that Jackson will play Sunday at Buffalo — his first game since the high-ankle sprain on October 4 cost him three games. Philadelphia running back Saquon Barkley is also clear: limited in Friday's practice after missing Wednesday and Thursday with hamstring and back injuries, he carries no game designation for Sunday night at Washington.",
+       "The app has caught up on the quarterback side. It lists Jackson as Baltimore's expected starter for Sunday's 1:00 p.m. ET kickoff at Buffalo, and Tanner McKee as Philadelphia's expected starter for Sunday night. That matches the final reports — no mismatch to flag."
       ],
-      "takeaway": "Green Bay 27, Carolina 19 \u2014 Thursday is final, and the board now points at Sunday and Monday.",
+      "takeaway": "Jackson and Barkley are both cleared — the two prices this morning said to wait on are now decided.",
       "evidence_ids": [
-       "ev-tnf-final"
+       "ev-jackson-fri",
+       "ev-barkley-fri",
+       "ev-cards-pm"
       ],
       "sources": [
        {
-        "label": "Green Bay Packers",
-        "url": "https://www.packers.com/news/in-game-updates-week-8-panthers-2026"
+        "label": "Ravens Wire",
+        "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/10/30/ravens-bills-week-8-final-injury-report-vega-ioane-lamar-jackson/92519739007/"
        },
        {
-        "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/thursday-night-football-packers-hold-on-for-27-19-win-over-panthers"
+        "label": "Eagles Wire",
+        "url": "https://theeagleswire.usatoday.com/story/sports/nfl/eagles/2026/10/30/eagles-commanders-week-8-final-injury-report-barkley-devonta-smith/92520512007/"
        }
       ]
      },
      {
-      "headline": "Injury roundup: Friday decides Jackson and Barkley; McKee starts again Sunday night",
+      "headline": "Injury roundup: the outs around those two returns",
       "paragraphs": [
-       "Baltimore: as of this morning, the latest word on Lamar Jackson is still Thursday's report \u2014 a full participant in practice, his second straight full practice since the high-ankle sprain on October 4 cost him three games. The app still lists Jackson as Baltimore's expected starter. Friday's practice and the final designations for Sunday at Buffalo are today's next step, and that is the official word to wait for.",
-       "Philadelphia: as of this morning, the latest word on Saquon Barkley (hamstring/back) is still Thursday's report \u2014 no practice for a second straight day, with wide receivers DeVonta Smith (hamstring) and Dontayvion Wicks (ankle) also missing both days. Friday's practice is Barkley's last chance to get on the field before Sunday night at Washington, and Friday's final designations settle all three.",
-       "Philadelphia's quarterback picture is settled, not a watch: Jalen Hurts is on injured reserve and out for the season, and Tanner McKee makes his third straight start Sunday night. The app lists McKee as Philadelphia's expected starter, which matches the team's depth chart \u2014 no mismatch to flag. Washington: Terry McLaurin remains out for the season after surgery on a torn patellar tendon, placed on injured reserve on October 28."
+       "Baltimore will be without starting right guard Vega Ioane (knee) and safety Jaylinn Hawkins (knee) on Sunday. On the Buffalo side, wide receiver DJ Moore and tight end Dalton Kincaid are questionable, among six Bills listed questionable.",
+       "Philadelphia ruled out five players: wide receivers DeVonta Smith (hamstring) and Dontayvion Wicks (ankle), linebacker Jihaad Campbell (hamstring/quad), wide receiver Britain Covey (knee), and cornerback Jonathan Jones (hamstring). Cornerback Jakorian Bennett is questionable with a knee injury.",
+       "Washington ruled out starting defensive lineman Javon Kinlaw. Defensive lineman Daron Payne (foot), tight end John Bates, wide receiver Treylon Burks, and defensive lineman Jer'Zhan Newton are questionable.",
+       "One thing that is not a watch: Philadelphia's quarterback. Jalen Hurts is on injured reserve and out for the season, and McKee makes his third straight start Sunday night."
       ],
-      "takeaway": "Jackson and Barkley are Friday decisions; McKee starting Sunday night is settled, and the app agrees.",
+      "takeaway": "The returns are the headline; the outs are mostly depth and receiver room — check the inactive lists about 90 minutes before kickoff for the questionable names.",
       "evidence_ids": [
-       "ev-jackson-thu",
-       "ev-barkley-thu",
-       "ev-eagles-qb"
+       "ev-jackson-fri",
+       "ev-barkley-fri",
+       "ev-commanders-fri"
       ],
       "sources": [
        {
-        "label": "Baltimore Ravens",
-        "url": "https://www.baltimoreravens.com/news/ravens-injury-report-vega-ioane-kyle-hamilton-roquan-smith-ravens-practice-return-2026"
+        "label": "Buffalo Rumblings",
+        "url": "https://www.buffalorumblings.com/buffalo-bills-injuries/144001/bills-injury-report-week-8-verdict-on-lamar-jackson-questionable-status-for-key-buffalo-pass-game-weapons"
        },
        {
-        "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/saquon-barkley-devonta-smith-out-of-practice-again-thursday"
+        "label": "Eagles Wire",
+        "url": "https://theeagleswire.usatoday.com/story/sports/nfl/eagles/2026/10/30/eagles-commanders-week-8-final-injury-report-barkley-devonta-smith/92520512007/"
        },
        {
-        "label": "Philadelphia Eagles",
-        "url": "https://www.philadelphiaeagles.com/news/eagles-at-commanders-rematch-has-a-much-different-look-2026-nfl-week-8-sunday-night-football"
+        "label": "Sports Illustrated",
+        "url": "https://www.si.com/nfl/commanders/onsi/commanders-eagles-final-injury-report-defensive-line"
        }
       ]
      },
      {
-      "headline": "Weather: no games today, so Sunday's outdoor slate is the next weather watch",
+      "headline": "Weather: no games Saturday, so Sunday's outdoor slate waits for Sunday morning",
       "paragraphs": [
-       "There are no NFL games on Friday, so there is no kickoff-window forecast to report this morning. The next weather that matters is Sunday's outdoor slate \u2014 Baltimore at Buffalo, Kansas City at Denver, Minnesota at Detroit, Atlanta at Tampa Bay and the rest of the 1 p.m. ET games \u2014 and the final kickoff-window forecasts for those games belong in Sunday morning's brief, when they are close enough to trust.",
+       "There are no NFL games on Saturday, so there is no kickoff-window forecast to report tonight. The next weather that matters is Sunday's outdoor slate — Baltimore at Buffalo, Kansas City at Denver, Minnesota at Detroit, Atlanta at Tampa Bay and the rest of the 1 p.m. ET games — and the final kickoff-window forecasts for those games belong in Sunday morning's brief, when they are close enough to trust.",
        "That is a schedule fact, not a totals edge. Nothing here argues any total either way."
       ],
-      "takeaway": "No games Friday; Sunday's outdoor games get their final weather check Sunday morning.",
+      "takeaway": "No games Saturday; Sunday's outdoor games get their final weather check Sunday morning.",
       "evidence_ids": [
-       "ev-cards-am"
+       "ev-cards-pm"
       ],
       "sources": []
      }
@@ -82,30 +84,30 @@
    {
     "id": "what-it-means",
     "title": "What It Means for NFL EDGE",
-    "icon": "\ud83d\udca1",
+    "icon": "💡",
     "items": [
      {
-      "headline": "Morning cards: unchanged \u2014 Rams moneyline on Hit Rate, Chicago +3 on Balanced and Value",
+      "headline": "Evening cards: Balanced moves to Baltimore +3; Hit Rate and Value hold",
       "paragraphs": [
        "Hit Rate is the Los Angeles Rams moneyline -270 at DraftKings, for Sunday, 4:05 p.m. ET (Los Angeles Chargers at Los Angeles Rams). Hit Rate is the pick that looks most likely to win. It forgoes value for win probability, and the app's own tutorial says Hit Rate is not Profit Rate. The app puts the Rams at 64.9 percent, with LOW reliability, and the app's expected margin for the game is 2.41 against a market line of Rams -6.5. The play-through price on the card is -275. The app lists Justin Herbert as the Chargers' expected starter and Matthew Stafford for the Rams.",
-       "Balanced is Chicago +3 at -105 at DraftKings, for Monday, 8:15 p.m. ET (Chicago at Seattle). Balanced is a strong pick without paying too much, a good starting point for a new bettor. The app puts Chicago at 50.6 percent, with MEDIUM reliability, and the app's expected margin for the game is -0.14 against a market line of Chicago +3. The play-through price on the card is -108. The app lists Caleb Williams as Chicago's expected starter.",
-       "Value is Chicago +3 at -105 at DraftKings, for Monday, 8:15 p.m. ET \u2014 the same pick as Balanced. Value is always the app's +EV play. The app puts Chicago at 50.6 percent, with MEDIUM reliability, and the play-through price is -108. When the middle-ground card and the +EV card agree on the same game and price, that is the app saying the same thing twice, not two separate bets \u2014 do not double it up as if they were."
+       "Balanced is Baltimore +3 at -104 at FanDuel, for Sunday, 1:00 p.m. ET (Baltimore at Buffalo). Balanced is a strong pick without paying too much, a good starting point for a new bettor. The app puts Baltimore at 50.5 percent, with MEDIUM reliability, and the app's expected margin for the game is 1.15 against a market line of Baltimore +3. The play-through price on the card is -107. The app lists Lamar Jackson as Baltimore's expected starter and Josh Allen for Buffalo.",
+       "Value is Chicago +3 at -105 at DraftKings, for Monday, 8:15 p.m. ET (Chicago at Seattle). Value is always the app's +EV play. The app puts Chicago at 50.6 percent, with MEDIUM reliability, and the play-through price is -108. The app lists Caleb Williams as Chicago's expected starter. Balanced and Value no longer agree — they are now two different games, not the same pick twice."
       ],
-      "takeaway": "Hit Rate: Rams moneyline -270 at DraftKings. Balanced and Value agree: Chicago +3 -105 at DraftKings.",
+      "takeaway": "Hit Rate: Rams moneyline -270. Balanced: Baltimore +3 -104 at FanDuel. Value: Chicago +3 -105 at DraftKings.",
       "evidence_ids": [
-       "ev-cards-am"
+       "ev-cards-pm"
       ],
       "sources": []
      },
      {
-      "headline": "A steady board still means checking your own price",
+      "headline": "A changed card still means checking your own price",
       "paragraphs": [
-       "The board refreshes every morning and evening, and this morning's board is a fresh read on the same Week 8 games. When the board has not picked up a move, or your book is not DraftKings or FanDuel, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet/no-bet verdict on your price. Full re-evaluation, not a blind override.",
-       "And remember what a price means: -270 means every $2.70 you risk wins $1, and -105 means every $1.05 you risk wins $1. The app sets your actual stake from your bankroll and staking choice."
+       "The board refreshes every morning and evening, and tonight's board proves why that matters: Balanced changed today. When the board has not picked up a move, or your book is not DraftKings or FanDuel, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet/no-bet verdict on your price. Full re-evaluation, not a blind override.",
+       "And remember what a price means: -270 means every $2.70 you risk wins $1, -104 means every $1.04 you risk wins $1, and -105 means every $1.05 you risk wins $1. The app sets your actual stake from your bankroll and staking choice."
       ],
-      "takeaway": "Same cards, new morning: run your own book's line through Check and let that verdict decide.",
+      "takeaway": "Balanced changed tonight: run your own book's line through Check and let that verdict decide.",
       "evidence_ids": [
-       "ev-cards-am"
+       "ev-cards-pm"
       ],
       "sources": []
      }
@@ -114,43 +116,44 @@
    {
     "id": "fade",
     "title": "Learn the Game",
-    "icon": "\u2696\ufe0f",
+    "icon": "⚖️",
     "mode": "learning",
     "items": [
      {
-      "headline": "Learn the Game: what a push is",
+      "headline": "Learn the Game: what a key number is",
       "paragraphs": [
-       "(Hypothetical example:) Imagine you bet a team at +3, and the team loses by exactly 3 points. That is a push. Nobody wins the bet, and your stake is returned \u2014 it is as if the bet never happened, except for the time you spent watching it.",
-       "A push only happens on a whole-number line, like +3 or -7. On a line with a half-point, like +3.5, there is no push: a 3-point loss wins at +3.5 and loses at -3.5. That half-point is exactly why books charge more for it, and why a push is not a loss \u2014 it just ties up your money for nothing.",
-       "How to apply it: when you compare your book's line to the app's line, check whether the half-point is there. If the app's number is +3 and your book offers +3.5, that is a genuinely better bet, not the same bet \u2014 and if your book offers +3 where the app has +3.5, run your line through Check, because the verdict is on your price, push and all."
+       "(Hypothetical example:) Imagine your team is favored by 2.5 points, and wins by exactly 3. You win. If the line had been 3.5, that same 3-point win would lose. That is why 3 is called a key number — it is one of the most common margins of victory in football, along with 7.",
+       "A line moving from -2.5 to -3.5 crosses a key number, and that is a bigger deal than a move from -4 to -4.5, which crosses no common margin. Books know this, which is why moving across 3 or 7 usually costs more in price.",
+       "How to apply it: when you compare your book's line to the app's line, check whether a key number sits between them. If the app's number is +3 and your book offers +3.5, that is a genuinely better bet, not the same bet — and if your book offers +2.5 where the app has +3, run your line through Check, because the verdict is on your price, key number and all."
       ],
-      "takeaway": "A push is a tie on a whole-number line \u2014 your stake comes back, and it is one reason the half-point matters.",
-      "editorial_only": true,
+      "takeaway": "Key numbers are 3 and 7 — the most common winning margins — so a line crossing one matters more than a line moving anywhere else.",
       "evidence_ids": [],
-      "sources": []
+      "sources": [],
+      "editorial_only": true
      }
     ]
    },
    {
     "id": "market-watch",
     "title": "Line Movement",
-    "icon": "\ud83d\udc40",
+    "icon": "👀",
     "items": [
      {
-      "headline": "Morning board vs evening board: no card changes, small price ticks toward Baltimore",
+      "headline": "Evening board vs morning board: Balanced changes, the rest tick",
       "paragraphs": [
-       "Compared against last night's board, the morning board makes no card changes at all. Hit Rate stays on the Rams moneyline -270 at DraftKings, and Balanced and Value stay together on Chicago +3 at -105 at DraftKings. Thursday's game is gone from the board entirely now that it is final, which is a rotation, not a change of mind.",
-       "The moves underneath were price ticks, not line moves. Baltimore stayed +3 at both books, but the price moved toward Baltimore backers: DraftKings went from -108 to -105 and FanDuel from -108 to -105, with Baltimore's moneyline ticking up from +142 to +145 at DraftKings and +146 at FanDuel. Chicago's spread stayed +3 at both books, with only a small FanDuel price tick from -106 to -105. The Rams stayed -6.5 at both books, with the Rams' moneyline ticking the other way at FanDuel, from -300 to -310, while DraftKings held at -270.",
-       "And a plain note on the Fade slot this morning: the free betting-splits page was checked again this morning and still showed no splits data for Thursday, October 29, so there was no verified public-vs-sharper split to write about. No split, no Fade \u2014 the Learn the Game box above stands in its place rather than a manufactured one."
+       "The one real card change: Balanced moves off Chicago and onto Baltimore. This morning Balanced was Chicago +3 at -105 at DraftKings, the same pick as Value. Tonight Balanced is Baltimore +3 at -104 at FanDuel, with a play-through price of -107. Value stays on Chicago +3 at -105 at DraftKings. So the two middle cards are now different games, not the same pick twice.",
+       "Underneath, the lines mostly held. Baltimore stayed +3 at both books, with only a one-cent FanDuel tick from -105 to -104. Chicago stayed +3 at -105 at both books, unchanged. The Rams stayed -270 at DraftKings, with FanDuel easing from -310 to -295.",
+       "One line did move: Philadelphia's DraftKings spread tightened from +6 to +5.5 at -108 for Sunday night at Washington, while FanDuel held at +5.5 at even money. That is an observed line move, not a card change — the app has no card on that game tonight. If your book's Philadelphia line differs from the app's, run it through Check.",
+       "And a plain note on the Fade slot tonight: the free betting-splits page was checked again this evening and showed 'No splits data available for Friday, Oct 30,' so there was no verified public-vs-sharper split to write about. No split, no Fade — the Learn the Game box above stands in its place rather than a manufactured one."
       ],
-      "takeaway": "Same three cards as last night; Baltimore's +3 got three cents cheaper at both books.",
+      "takeaway": "Balanced is the change — Baltimore +3 replaces Chicago +3; everything else is small price ticks.",
       "evidence_ids": [
-       "ev-cards-am",
-       "ev-vsin-none-am"
+       "ev-cards-pm",
+       "ev-vsin-none-pm"
       ],
       "sources": [
        {
-        "label": "VSiN betting splits",
+        "label": "VSiN",
         "url": "https://data.vsin.com/betting-splits/"
        }
       ]
@@ -160,27 +163,28 @@
    {
     "id": "today-tip",
     "title": "Today's Tip",
-    "icon": "\u2705",
+    "icon": "✅",
     "items": [
      {
-      "headline": "Today is a waiting day for two prices, and a normal day for the rest",
+      "headline": "The wait is over — and do not default to waiting again",
       "paragraphs": [
-       "One grounded timing note, and this is it: wait on Baltimore and Philadelphia until Friday's final designations land. Jackson's return and Barkley's availability are the two facts that could move those games, and both resolve today \u2014 there is no reason to lock either price before the official word arrives.",
-       "Everything else on the board is playable on its own terms right now. If your book has a good number on the Rams or Chicago and Check says bet, bet now \u2014 a good number today beats a hoped-for number Sunday, because waiting lets the number drift the wrong way too. And when Friday's designations do land, the evening brief will carry them."
+       "This morning's tip said wait on Baltimore and Philadelphia until Friday's designations landed. They have landed, and both watches cleared. That wait is done. If your book has a good number on Baltimore or Philadelphia and Check says bet, bet now — a good number today beats a hoped-for number Sunday, because waiting lets the number drift the wrong way too, and the Sunday late rush on big-name teams can push a line past the app's playable number.",
+       "One grounded timing note, and this is it: the next real information event is the inactive lists, about 90 minutes before kickoff, for the questionable names in the injury roundup. If you are betting a game with a questionable player you care about, that list is worth waiting for. Everything else is ready when Check says so.",
+       "And a quick honest note: settlement here is manual — there is no auto-settle. The tracker only works if you are honest with yourself. Log the losers too."
       ],
-      "takeaway": "Wait on Baltimore and Philadelphia until today's designations; the rest of the board is ready when Check says so.",
+      "takeaway": "Designations are in, so the morning's wait is over — bet when Check says bet, and save waiting for the inactive lists.",
       "evidence_ids": [
-       "ev-jackson-thu",
-       "ev-barkley-thu"
+       "ev-jackson-fri",
+       "ev-barkley-fri"
       ],
       "sources": [
        {
-        "label": "Baltimore Ravens",
-        "url": "https://www.baltimoreravens.com/news/ravens-injury-report-vega-ioane-kyle-hamilton-roquan-smith-ravens-practice-return-2026"
+        "label": "Ravens Wire",
+        "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/10/30/ravens-bills-week-8-final-injury-report-vega-ioane-lamar-jackson/92519739007/"
        },
        {
-        "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/saquon-barkley-devonta-smith-out-of-practice-again-thursday"
+        "label": "Eagles Wire",
+        "url": "https://theeagleswire.usatoday.com/story/sports/nfl/eagles/2026/10/30/eagles-commanders-week-8-final-injury-report-barkley-devonta-smith/92520512007/"
        }
       ]
      }
@@ -190,74 +194,66 @@
  },
  "evidence": [
   {
-   "evidence_id": "ev-tnf-final",
-   "category": "result",
+   "evidence_id": "ev-jackson-fri",
+   "category": "injury",
    "verification": "REPORTED",
-   "fact": "Thursday Night Football, Oct 29, 2026, Carolina at Green Bay: Green Bay won 27-19 at Lambeau Field (Green Bay 5-3, Carolina 3-4). Jordan Love 30-of-41 for 288 yards, 3 TDs, 1 INT, including a 24-yard TD to Matthew Golden. Christian Watson left in the second quarter for a precautionary hospital trip after a 53-yard catch, then returned and finished with 8 catches for 113 yards.",
+   "fact": "Baltimore QB Lamar Jackson (ankle) carries no game designation on Friday's final injury report after full practices Wednesday, Thursday and Friday; head coach Jesse Minter confirmed Friday Jackson will play Sunday at Buffalo, his first game since the Oct 4 high-ankle sprain cost him three games. Baltimore ruled out RG Vega Ioane (knee) and S Jaylinn Hawkins (knee); Buffalo listed WR DJ Moore and TE Dalton Kincaid questionable, among six Bills listed questionable.",
    "sources": [
     {
-     "label": "Green Bay Packers",
-     "url": "https://www.packers.com/news/in-game-updates-week-8-panthers-2026"
+     "label": "Ravens Wire",
+     "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/10/30/ravens-bills-week-8-final-injury-report-vega-ioane-lamar-jackson/92519739007/"
     },
     {
-     "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/thursday-night-football-packers-hold-on-for-27-19-win-over-panthers"
+     "label": "Buffalo Rumblings",
+     "url": "https://www.buffalorumblings.com/buffalo-bills-injuries/144001/bills-injury-report-week-8-verdict-on-lamar-jackson-questionable-status-for-key-buffalo-pass-game-weapons"
     }
    ]
   },
   {
-   "evidence_id": "ev-jackson-thu",
-   "category": "injury",
-   "verification": "OFFICIAL",
-   "fact": "Baltimore QB Lamar Jackson was a full participant in practice on Thursday, Oct 29, 2026, his second straight full practice since the high-ankle sprain on Oct 4 cost him three games. Final injury designations for Sunday at Buffalo land Friday.",
-   "sources": [
-    {
-     "label": "Baltimore Ravens",
-     "url": "https://www.baltimoreravens.com/news/ravens-injury-report-vega-ioane-kyle-hamilton-roquan-smith-ravens-practice-return-2026"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-barkley-thu",
+   "evidence_id": "ev-barkley-fri",
    "category": "injury",
    "verification": "REPORTED",
-   "fact": "Philadelphia RB Saquon Barkley (hamstring/back) did not practice Thursday, Oct 29, 2026, his second straight day without practice after a non-participant Wednesday walkthrough report. WRs DeVonta Smith (hamstring) and Dontayvion Wicks (ankle) also missed practice both days. Friday's practice is Barkley's last chance before Sunday night at Washington; final designations land Friday.",
+   "fact": "Philadelphia RB Saquon Barkley (hamstring/back) was limited in Friday practice after missing Wednesday and Thursday, and carries no game designation for Sunday night at Washington. Philadelphia ruled out WR DeVonta Smith (hamstring), WR Dontayvion Wicks (ankle), LB Jihaad Campbell (hamstring/quad), WR Britain Covey (knee) and CB Jonathan Jones (hamstring); CB Jakorian Bennett is questionable (knee). Philadelphia QB Jalen Hurts is on injured reserve and out for the season; Tanner McKee makes his third straight start Sunday night.",
    "sources": [
     {
-     "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/saquon-barkley-devonta-smith-out-of-practice-again-thursday"
+     "label": "Eagles Wire",
+     "url": "https://theeagleswire.usatoday.com/story/sports/nfl/eagles/2026/10/30/eagles-commanders-week-8-final-injury-report-barkley-devonta-smith/92520512007/"
+    },
+    {
+     "label": "NBC Sports Philadelphia",
+     "url": "https://www.nbcsportsphiladelphia.com/nfl/philadelphia-eagles/eagles-injury-update-saquon-barkley-devonta-smith-dontayvion-wicks-commanders-week-8/762864/?amp=1"
     }
    ]
   },
   {
-   "evidence_id": "ev-eagles-qb",
+   "evidence_id": "ev-commanders-fri",
    "category": "injury",
    "verification": "REPORTED",
-   "fact": "Philadelphia QB Jalen Hurts is on injured reserve and out for the season; Tanner McKee, the No. 3 quarterback on opening day, makes his third consecutive start Sunday night at Washington. The team's Week 8 depth chart (Oct 27) lists McKee as starter. Washington WR Terry McLaurin was placed on injured reserve Oct 28 after surgery on a torn patellar tendon and is out for the season.",
+   "fact": "Washington ruled out starting defensive lineman Javon Kinlaw for Sunday night against Philadelphia. Defensive lineman Daron Payne (foot), tight end John Bates, wide receiver Treylon Burks and defensive lineman Jer'Zhan Newton are questionable.",
    "sources": [
     {
-     "label": "Philadelphia Eagles",
-     "url": "https://www.philadelphiaeagles.com/news/eagles-at-commanders-rematch-has-a-much-different-look-2026-nfl-week-8-sunday-night-football"
+     "label": "Sports Illustrated",
+     "url": "https://www.si.com/nfl/commanders/onsi/commanders-eagles-final-injury-report-defensive-line"
     }
    ]
   },
   {
-   "evidence_id": "ev-vsin-none-am",
+   "evidence_id": "ev-vsin-none-pm",
    "category": "betting_splits",
    "verification": "REPORTED",
-   "fact": "VSiN free betting-splits page, checked the morning of Friday, Oct 30, 2026, still showed 'No splits data available for Thursday, Oct 29.' No featured-game DraftKings spread splits row was visible, so no verified public-vs-sharper split could be written about.",
+   "fact": "VSiN free betting-splits page, checked the evening of Friday, Oct 30, 2026, showed 'No splits data available for Friday, Oct 30.' No featured-game DraftKings spread splits row was visible, so no verified public-vs-sharper split could be written about.",
    "sources": [
     {
-     "label": "VSiN betting splits",
+     "label": "VSiN",
      "url": "https://data.vsin.com/betting-splits/"
     }
    ]
   },
   {
-   "evidence_id": "ev-cards-am",
+   "evidence_id": "ev-cards-pm",
    "category": "app",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "App product view, Week 8, generated 2026-10-30T12:08:50Z: Hit Rate Los Angeles Rams moneyline -270 at DraftKings (model probability 0.6490, reliability LOW, game 2026_08_LAC_LAR, model expected margin 2.41, market line Rams -6.5, play-through -275). Balanced Chicago +3 -105 at DraftKings (model probability 0.5057, MEDIUM, game 2026_08_CHI_SEA, expected margin -0.14, play-through -108). Value Chicago +3 -105 at DraftKings (model probability 0.5057, MEDIUM, play-through -108). No NFL games Friday Oct 30; next kickoffs Sunday Nov 1, 1:00 p.m. ET. App lists Lamar Jackson (Questionable) as Baltimore's expected starter, Justin Herbert for the Chargers, Matthew Stafford for the Rams, Caleb Williams for Chicago, Tanner McKee for Philadelphia, Jayden Daniels for Washington. Evening-to-morning board moves: Baltimore +3 DK -108 to -105, FD -108 to -105; Baltimore moneyline DK +142 to +145, FD +142 to +146; Chicago +3 FD -106 to -105; Rams moneyline FD -300 to -310, DK unchanged -270; all spreads unchanged.",
+   "fact": "App product view, Week 8, generated 2026-10-31T00:08:46Z: Hit Rate Los Angeles Rams moneyline -270 at DraftKings (model probability 0.6490, reliability LOW, play-through -275, expected margin 2.41, game 2026_08_LAC_LAR, Sunday 4:05 p.m. ET, QBs Justin Herbert / Matthew Stafford); Balanced Baltimore +3 -104 at FanDuel (model probability 0.5051, reliability MEDIUM, play-through -107, expected margin 1.15, game 2026_08_BAL_BUF, Sunday 1:00 p.m. ET, QBs Lamar Jackson / Josh Allen); Value Chicago +3 -105 at DraftKings (model probability 0.5057, reliability MEDIUM, play-through -108, expected margin -0.14, game 2026_08_CHI_SEA, Monday 8:15 p.m. ET, QB Caleb Williams). Philadelphia expected starter Tanner McKee. No NFL games Saturday.",
    "sources": []
   }
  ]
