@@ -1,26 +1,48 @@
 {
+ "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+ "submitted_at_utc": "2026-11-01T13:16:50Z",
+ "research_generated_at_utc": "2026-11-01T13:16:50Z",
  "article": {
-  "dek": "Saturday brought real news: Kansas City loses two cornerbacks before Denver, the Chargers put Derwin James on injured reserve, and New England loses two starters for Miami — while the app's cards hold into Sunday.",
-  "edition": "Evening Brief",
-  "published_at_utc": "2026-11-01T00:13:25Z",
-  "research_generated_at_utc": "2026-11-01T00:13:25Z",
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+  "edition": "Morning Brief",
+  "title": "NFL EDGE Sunday Morning Brief",
+  "dek": "Sunday's slate is here, the morning board changes two of the three cards, and the Saturday injury news still sets the table \u2014 with the inactive lists as the one thing left to wait for.",
+  "published_at_utc": "2026-11-01T13:16:50Z",
+  "research_generated_at_utc": "2026-11-01T13:16:50Z",
   "sections": [
    {
-    "icon": "📰",
     "id": "what-matters",
+    "icon": "\ud83d\udcf0",
+    "title": "What Matters Today",
     "items": [
      {
+      "headline": "Lead: the morning board changes two cards \u2014 and Sunday's games are here",
+      "paragraphs": [
+       "The morning board changes two of the three cards from Saturday evening. Balanced is now Chicago +3 at -102 at FanDuel for Monday night at Seattle, and Value is now Denver +1.5 at -112 at FanDuel for Sunday at 4:25 p.m. ET against Kansas City. Hit Rate stays the Los Angeles Rams moneyline, now -258 at DraftKings for Sunday at 4:05 p.m. ET against the Chargers.",
+       "That is the board as it stands this morning. The 1:00 p.m. ET games kick off first: Arizona at Dallas, Atlanta at Tampa Bay, Baltimore at Buffalo, Cleveland at Pittsburgh, Indianapolis at Jacksonville, Las Vegas at the Jets, Minnesota at Detroit, and Tennessee at Cincinnati. The late games are the Chargers at the Rams, Kansas City at Denver, and New England at Miami, with Philadelphia at Washington at 8:20 p.m. ET tonight.",
+       "One thing is still to come, and it is the only thing worth waiting for: the inactive lists, about 90 minutes before each kickoff, for the questionable names below. Check them before you lock anything in."
+      ],
+      "takeaway": "Two cards change on the morning board \u2014 Chicago is the new Balanced pick and Denver the new Value pick \u2014 and the inactive lists are the last update before kickoff.",
+      "evidence_ids": [
+       "ev-cards-am"
+      ]
+     },
+     {
+      "headline": "Injury roundup: Saturday's designations carry into Sunday",
+      "paragraphs": [
+       "Kansas City goes to Denver without two cornerbacks. The Chiefs placed L'Jarius Sneed on injured reserve Saturday and downgraded rookie Mansoor Delane to out with a shoulder injury. The Chargers placed safety Derwin James on injured reserve Saturday after a hamstring setback, pushing his earliest return to Week 12, and ruled out guard Kayode Awosika, defensive back Deane Leonard and receiver Brenen Thompson for Sunday against the Rams.",
+       "New England goes to Miami without receiver A.J. Brown (ankle) and running back TreVeyon Henderson (illness), both ruled out Saturday. Friday's clearances still stand: Lamar Jackson is cleared for Baltimore at Buffalo, and Saquon Barkley is cleared for Philadelphia at Washington.",
+       "The outs from Friday's final reports still stand too: Philadelphia is without DeVonta Smith, Dontayvion Wicks, Jihaad Campbell, Britain Covey and Jonathan Jones. Washington is without starting defensive lineman Javon Kinlaw. Baltimore is without Vega Ioane and Jaylinn Hawkins, and Denver ruled out running back RJ Harvey.",
+       "The questionables to carry into Sunday: Buffalo's DJ Moore and Dalton Kincaid, Philadelphia's Jakorian Bennett, Washington's Daron Payne, John Bates, Treylon Burks and Jer'Zhan Newton, and Denver's Jaylen Waddle (chest) and Garett Bolles (hip). Monday night has its own report: Chicago ruled out running back Kyle Monangai (toe), and Seattle ruled out receiver Rashid Shaheed (knee). Questionable does not mean out \u2014 the inactive lists about 90 minutes before kickoff are the next real update."
+      ],
+      "takeaway": "The Saturday outs and clearances stand, the questionables carry into Sunday, and the inactive lists are the next real update.",
       "evidence_ids": [
        "ev-chiefs-sat",
        "ev-james-sat",
-       "ev-pats-sat"
-      ],
-      "headline": "Lead: Saturday moves — Chiefs down two corners, James to IR, Patriots lose two starters",
-      "paragraphs": [
-       "Kansas City's secondary took two hits Saturday. The Chiefs placed cornerback L'Jarius Sneed on injured reserve and downgraded rookie cornerback Mansoor Delane to out with a shoulder injury for Sunday's game at Denver. That is two cover men gone for a division road trip, announced the same afternoon.",
-       "The Chargers placed safety Derwin James on injured reserve Saturday after a hamstring setback. James has been out since Week 3, and the move pushes his earliest return to Week 12. The Chargers also ruled out guard Kayode Awosika, defensive back Deane Leonard and receiver Brenen Thompson for Sunday against the Rams, while corners Donte Jackson and Rodney Shelley are questionable. Receiver Ladd McConkey is expected to play.",
-       "New England lost two starters for Sunday at Miami. Receiver A.J. Brown was ruled out with an ankle injury after missing practice Thursday and Friday, and running back TreVeyon Henderson was ruled out Saturday with an illness."
+       "ev-pats-sat",
+       "ev-friday-sat",
+       "ev-bears-sat",
+       "ev-seahawks-sat"
       ],
       "sources": [
        {
@@ -34,179 +56,152 @@
        {
         "label": "NBC Sports",
         "url": "https://www.nbcsports.com/fantasy/football/news/nfl-week-8-injury-report-ljax-expected-to-play-plus-updates-on-jaylin-noel-aaron-jones-cmc"
-       }
-      ],
-      "takeaway": "Two Chiefs corners are out at Denver, Derwin James is on injured reserve, and the Patriots go to Miami without A.J. Brown and TreVeyon Henderson."
-     },
-     {
-      "evidence_ids": [
-       "ev-friday-sat",
-       "ev-bears-sat",
-       "ev-seahawks-sat"
-      ],
-      "headline": "Injury roundup: Friday's designations stand, plus Monday's Bears-Seahawks report",
-      "paragraphs": [
-       "Friday's clearances still stand: Lamar Jackson is cleared to return for Baltimore at Buffalo, and Saquon Barkley is cleared for Philadelphia at Washington. No new news Saturday changed either one.",
-       "The outs from Friday's final reports still stand too: Philadelphia is without DeVonta Smith, Dontayvion Wicks, Jihaad Campbell, Britain Covey and Jonathan Jones. Washington is without starting defensive lineman Javon Kinlaw. Baltimore is without Vega Ioane and Jaylinn Hawkins.",
-       "The questionables to carry into Sunday: Buffalo's DJ Moore and Dalton Kincaid, Philadelphia's Jakorian Bennett, Washington's Daron Payne, John Bates, Treylon Burks and Jer'Zhan Newton, and Denver's Jaylen Waddle (chest) and Garett Bolles (hip). Denver already ruled out running back RJ Harvey with a knee injury.",
-       "Monday night has its own report now. Chicago ruled out running back Kyle Monangai with a toe injury — his fourth straight missed game — and listed cornerback Malik Muhammad and linebacker D'Marco Jackson as questionable. Tight end Colston Loveland was cleared and linebacker T.J. Edwards returns. Seattle ruled out receiver Rashid Shaheed with a knee injury Saturday; running back Zach Charbonnet was removed from the injury report but has not yet been activated from injured reserve.",
-       "Questionable does not mean out. The inactive lists about 90 minutes before kickoff are the next real update — check them before you lock anything in on those games."
-      ],
-      "sources": [
+       },
        {
         "label": "Ravens Wire",
         "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/10/30/ravens-bills-week-8-final-injury-report-vega-ioane-lamar-jackson/92519739007/"
        },
        {
-        "label": "Eagles Wire",
-        "url": "https://theeagleswire.usatoday.com/story/sports/nfl/eagles/2026/10/30/eagles-commanders-week-8-final-injury-report-barkley-devonta-smith/92520512007/"
-       },
-       {
         "label": "Bears Wire",
         "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/10/31/bears-seahawks-final-injury-report-game-designations/92534831007/"
+       }
+      ]
+     },
+     {
+      "headline": "Weather: calm and dry across Sunday's outdoor games",
+      "paragraphs": [
+       "Sunday's outdoor games get a calm, dry forecast. In Buffalo, the National Weather Service calls for 67 degrees at the 1:00 p.m. ET kickoff against Baltimore, mostly sunny skies, a 6 mph south wind and a 2 percent chance of precipitation.",
+       "In Denver, Sunday afternoon looks mostly cloudy with temperatures in the low 60s around the 4:25 p.m. ET kickoff against Kansas City, a light south-southeast wind and only a small rain chance.",
+       "In Landover for Sunday night, the National Weather Service hourly forecast has about 51 degrees at the 8:20 p.m. ET kickoff between Philadelphia and Washington, a near-calm south wind, zero percent rain chance, and temperatures falling to about 50 degrees as the game goes on.",
+       "That is the forecast as it stands Sunday morning, reported as fact. It is not a reason to bet a total one way or the other."
+      ],
+      "takeaway": "Buffalo: 67 and mostly sunny. Denver: low 60s, small rain chance. Landover: about 51 at kickoff, falling to about 50, no rain.",
+      "evidence_ids": [
+       "ev-weather-am"
+      ],
+      "sources": [
+       {
+        "label": "National Weather Service",
+        "url": "https://api.weather.gov/"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "what-it-means",
+    "icon": "\ud83d\udca1",
+    "title": "What It Means for NFL EDGE",
+    "items": [
+     {
+      "headline": "Morning cards: Rams still on top for likelihood, Chicago and Denver join the board",
+      "paragraphs": [
+       "Hit Rate is the Los Angeles Rams moneyline at -258 at DraftKings, Sunday at 4:05 p.m. ET against the Chargers. It is the pick the app rates most likely to win, with a model probability of 0.649. Remember the app's own tutorial: Hit Rate is not Profit Rate. A heavy moneyline favorite can look safe and still pay very little \u2014 you are betting on the outright winner only.",
+       "Balanced is Chicago +3 at -102 at FanDuel, Monday at 8:15 p.m. ET at Seattle. It is a strong pick without paying too much \u2014 the middle ground, and a good starting point for a new bettor.",
+       "Value is Denver +1.5 at -112 at FanDuel, Sunday at 4:25 p.m. ET against Kansas City. Value is always the model's +EV play. The app rates it at a model probability of 0.506."
+      ],
+      "takeaway": "Hit Rate: Rams moneyline -258. Balanced: Chicago +3 -102 at FanDuel. Value: Denver +1.5 -112 at FanDuel.",
+      "evidence_ids": [
+       "ev-cards-am"
+      ]
+     },
+     {
+      "headline": "A card that changes still means checking your own price",
+      "paragraphs": [
+       "The cards above are priced at DraftKings and FanDuel. If your book is neither, the card price is not your price.",
+       "Tap Check in the app, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet or no-bet verdict on your price. That is a full re-evaluation, not a blind override.",
+       "Odds are price mechanics: -120 means every $1.20 you risk wins $1. The app sets your actual stake from your bankroll and staking setting \u2014 that part is deliberately conservative, and it lives in the app, not here."
+      ],
+      "takeaway": "Your book's price is the one that matters \u2014 run it through Check and let that verdict decide.",
+      "evidence_ids": [
+       "ev-cards-am"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "fade",
+    "icon": "\u2696\ufe0f",
+    "title": "Learn the Game",
+    "mode": "learning",
+    "items": [
+     {
+      "headline": "Learn the Game: handle versus tickets",
+      "paragraphs": [
+       "Two numbers describe where the betting money sits: handle and tickets. Handle is the share of dollars wagered. Tickets is the share of individual bets placed. They often point the same way, but when they split, they tell different stories.",
+       "Hypothetical example, clearly labeled as hypothetical: say 70 percent of the tickets are on the favorite, but only 40 percent of the handle is. That means lots of smaller bets on the favorite and fewer, larger bets on the underdog. It does not prove the underdog wins \u2014 it just tells you the big money and the crowd disagree, and that is worth noticing before you follow the crowd.",
+       "That is the whole idea behind a Fade: not a command to bet against the public, but a second look at a price when the money and the crowd are not on the same side."
+      ],
+      "takeaway": "Handle is the share of dollars, tickets is the share of bets \u2014 when they disagree, the crowd and the big money are telling different stories.",
+      "editorial_only": true,
+      "evidence_ids": [],
+      "sources": []
+     }
+    ]
+   },
+   {
+    "id": "market-watch",
+    "icon": "\ud83d\udc40",
+    "title": "Line Movement",
+    "items": [
+     {
+      "headline": "Morning board vs evening board: two card changes, one price improves",
+      "paragraphs": [
+       "The morning board changes two cards. Balanced moves from Baltimore +3 at -104 at FanDuel to Chicago +3 at -102 at FanDuel, with a play-through price of -105. Value moves from Chicago +3 at -105 at DraftKings to Denver +1.5 at -112 at FanDuel, with a play-through price of -113. Those are recommendation replacements, not price moves on the same pick \u2014 the old picks are off the board this morning.",
+       "The one pick that stays also gets cheaper. Hit Rate, the Rams moneyline, improves from -265 to -258 at DraftKings, with the play-through price moving from -269 to -262. Same pick, cheaper than it was Saturday evening.",
+       "The morning refresh caught all of it. If your book shows something different from the prices above, tap Check, type in your book's line and price, and let the app re-evaluate it for you."
+      ],
+      "takeaway": "Two card changes \u2014 Chicago replaces Baltimore as Balanced, Denver replaces Chicago as Value \u2014 and the Rams moneyline improves to -258.",
+      "evidence_ids": [
+       "ev-cards-pm",
+       "ev-cards-am"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "today-tip",
+    "icon": "\u2705",
+    "title": "Today's Tip",
+    "items": [
+     {
+      "headline": "Sunday job: wait for one thing only, then trust Check",
+      "paragraphs": [
+       "There is one piece of information worth waiting for: the inactive lists, about 90 minutes before each kickoff, for the questionable names above. That is a real pending event with a set time.",
+       "Everything else is ready now. If your book has a good number and Check says bet, bet now \u2014 waiting for the Sunday rush lets the number drift the wrong way too, especially on big-name teams.",
+       "One more habit for the weekend: settlement in the app is manual, and the tracker only works if you are honest with yourself. Log the losers too. A tracker that only holds winners is not a record, it is a highlight reel."
+      ],
+      "takeaway": "Wait only for Sunday's inactive lists; otherwise bet when Check says bet \u2014 and log every result, winners and losers alike.",
+      "evidence_ids": [
+       "ev-friday-sat",
+       "ev-cards-am"
+      ],
+      "sources": [
+       {
+        "label": "McGraw Media",
+        "url": "https://mcgraw-media.com/2026/10/31/chiefs-ljarius-sneed-injured-reserve-mansoor-delane-out/"
+       },
+       {
+        "label": "USA Today",
+        "url": "https://www.usatoday.com/story/sports/nfl/chargers/2026/10/31/derwin-james-injury-update-injured-reserve/92537400007/"
        },
        {
         "label": "NBC Sports",
         "url": "https://www.nbcsports.com/fantasy/football/news/nfl-week-8-injury-report-ljax-expected-to-play-plus-updates-on-jaylin-noel-aaron-jones-cmc"
-       }
-      ],
-      "takeaway": "Jackson and Barkley are still cleared, the Friday outs and questionables carry into Sunday, and Monday's Bears-Seahawks report adds Monangai out and Shaheed out."
-     },
-     {
-      "evidence_ids": [
-       "ev-weather-sat"
-      ],
-      "headline": "Weather: calm and dry across Sunday's outdoor games",
-      "paragraphs": [
-       "Sunday's outdoor games get a calm, dry forecast. In Buffalo, the National Weather Service calls for the lower 60s at the 1:00 p.m. ET kickoff against Baltimore, mostly cloudy skies, a gentle south wind and no chance of precipitation through the game.",
-       "In Denver, Sunday afternoon looks cloudy with temperatures in the low 60s around the 4:25 p.m. ET kickoff against Kansas City, a light north-northeast wind and only a small rain chance.",
-       "In Landover for Sunday night, the National Weather Service hourly forecast has about 51 degrees at the 8:20 p.m. ET kickoff between Philadelphia and Washington, a near-calm southeast wind, zero percent rain chance, and temperatures falling into the 40s as the game goes on.",
-       "That is the forecast as it stands Saturday evening, reported as fact. It is not a reason to bet a total one way or the other."
-      ],
-      "sources": [
-       {
-        "label": "Democrat and Chronicle",
-        "url": "https://www.democratandchronicle.com/story/sports/football/nfl/bills/2026/10/31/orchard-park-weather-for-bills-vs-ravens-game-conditions/92518743007/"
        },
        {
-        "label": "Sports Illustrated",
-        "url": "https://www.si.com/nfl/commanders/onsi/commanders-eagles-weather-forecast-week-8"
+        "label": "Ravens Wire",
+        "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/10/30/ravens-bills-week-8-final-injury-report-vega-ioane-lamar-jackson/92519739007/"
        },
        {
-        "label": "Weather.com Denver",
-        "url": "https://weather.com/us/co/city/denver/tenday"
+        "label": "Bears Wire",
+        "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/10/31/bears-seahawks-final-injury-report-game-designations/92534831007/"
        }
-      ],
-      "takeaway": "Buffalo: lower 60s, no rain. Denver: cloudy, low 60s. Landover: about 51 at kickoff, falling into the 40s, no rain."
+      ]
      }
-    ],
-    "title": "What Matters Today"
-   },
-   {
-    "icon": "💡",
-    "id": "what-it-means",
-    "items": [
-     {
-      "evidence_ids": [
-       "ev-cards-pm"
-      ],
-      "headline": "Evening cards: Hit Rate price improves, Balanced and Value hold",
-      "paragraphs": [
-       "Hit Rate is the Los Angeles Rams moneyline at -265 at DraftKings, Sunday at 4:05 p.m. ET against the Chargers. It is the pick the app rates most likely to win, with a model probability of 0.649. Remember the app's own tutorial: Hit Rate is not Profit Rate. The price improved from -278 this morning, so the same pick costs less than it did at breakfast.",
-       "Balanced is Baltimore +3 at -104 at FanDuel, Sunday at 1:00 p.m. ET at Buffalo. It is a strong pick without paying too much — the middle ground, and a good starting point for a new bettor.",
-       "Value is Chicago +3 at -105 at DraftKings, Monday at 8:15 p.m. ET at Seattle. Value is always the model's +EV play. The app rates it at a model probability of 0.506 with medium reliability."
-      ],
-      "sources": [],
-      "takeaway": "Hit Rate: Rams moneyline -265, down from -278. Balanced: Baltimore +3 -104 at FanDuel. Value: Chicago +3 -105 at DraftKings."
-     },
-     {
-      "evidence_ids": [
-       "ev-cards-pm"
-      ],
-      "headline": "A card that holds still means checking your own price",
-      "paragraphs": [
-       "The cards above are priced at DraftKings and FanDuel. If your book is neither, the card price is not your price.",
-       "Tap Check in the app, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet or no-bet verdict on your price. That is a full re-evaluation, not a blind override.",
-       "Odds are price mechanics: -120 means every $1.20 you risk wins $1. The app sets your actual stake from your bankroll and staking setting — that part is deliberately conservative, and it lives in the app, not here."
-      ],
-      "sources": [],
-      "takeaway": "Your book's price is the one that matters — run it through Check and let that verdict decide."
-     }
-    ],
-    "title": "What It Means for NFL EDGE"
-   },
-   {
-    "icon": "⚖️",
-    "id": "fade",
-    "items": [
-     {
-      "editorial_only": true,
-      "evidence_ids": [],
-      "headline": "Learn the Game: what the moneyline means",
-      "paragraphs": [
-       "The moneyline is the simplest bet in the book: pick the team that wins the game outright. There is no spread to cover, just a winner.",
-       "Hypothetical example, clearly labeled as hypothetical: say a team is listed at -150 on the moneyline. The minus sign means that team is favored, and -150 means every $1.50 you risk wins $1. A team listed at +150 is the underdog, and +150 means every $1 you risk wins $1.50.",
-       "That is why a heavy moneyline favorite can look safe and still pay very little. You are not betting on how much a team wins by — only that it wins. The price tells you how much that win is worth."
-      ],
-      "sources": [],
-      "takeaway": "The moneyline pays on the outright winner only — the minus price is what you risk to win $1, and the plus price is what $1 wins you."
-     }
-    ],
-    "mode": "learning",
-    "title": "Learn the Game"
-   },
-   {
-    "icon": "👀",
-    "id": "market-watch",
-    "items": [
-     {
-      "evidence_ids": [
-       "ev-cards-pm"
-      ],
-      "headline": "Evening board vs morning board: one price improves, no card changes",
-      "paragraphs": [
-       "The evening board makes no card changes. Hit Rate, Balanced and Value are the same three picks as this morning.",
-       "The one move: the Rams moneyline improved from -278 to -265 at DraftKings, with the play-through price moving from -283 to -269. Same pick, cheaper than it was this morning.",
-       "Everything else on the cards held: Baltimore +3 at -104 at FanDuel and Chicago +3 at -105 at DraftKings are unchanged, play-through prices included. The evening refresh caught all of it.",
-       "If your book shows something different from the prices above, tap Check, type in your book's line and price, and let the app re-evaluate it for you."
-      ],
-      "sources": [],
-      "takeaway": "No card changes — the Rams moneyline improved to -265, and the other two cards are unchanged."
-     }
-    ],
-    "title": "Line Movement"
-   },
-   {
-    "icon": "✅",
-    "id": "today-tip",
-    "items": [
-     {
-      "evidence_ids": [
-       "ev-friday-sat"
-      ],
-      "headline": "Saturday night job: set Sunday up, then wait for one thing only",
-      "paragraphs": [
-       "There is one piece of information worth waiting for: the inactive lists, about 90 minutes before each Sunday kickoff, for the questionable names above. That is a real pending event with a set time.",
-       "Everything else is ready now. If your book has a good number and Check says bet, bet now — waiting for the Sunday rush lets the number drift the wrong way too, especially on big-name teams.",
-       "One more habit for the weekend: settlement in the app is manual, and the tracker only works if you are honest with yourself. Log the losers too. A tracker that only holds winners is not a record, it is a highlight reel."
-      ],
-      "sources": [
-       {
-        "label": "Eagles Wire",
-        "url": "https://theeagleswire.usatoday.com/story/sports/nfl/eagles/2026/10/30/eagles-commanders-week-8-final-injury-report-barkley-devonta-smith/92520512007/"
-       },
-       {
-        "label": "Sports Illustrated",
-        "url": "https://www.si.com/nfl/commanders/onsi/commanders-eagles-final-injury-report-defensive-line"
-       }
-      ],
-      "takeaway": "Wait only for Sunday's inactive lists; otherwise bet when Check says bet — and log every result, winners and losers alike."
-     }
-    ],
-    "title": "Today's Tip"
+    ]
    }
-  ],
-  "title": "NFL EDGE Saturday Evening Brief"
+  ]
  },
  "evidence": [
   {
@@ -302,29 +297,35 @@
    "verification": "REPORTED"
   },
   {
+   "category": "app",
+   "evidence_id": "ev-cards-pm",
+   "fact": "App product view, Week 8, generated 2026-11-01T00:08:50Z (evening board; a first fetch at 6:08 p.m. Denver still returned the morning board generated 2026-10-31T12:08:44Z, and a re-fetch two minutes later returned this evening board): Hit Rate Los Angeles Rams moneyline -265 at DraftKings (model probability 0.6490, reliability LOW, play-through -269, game 2026_08_LAC_LAR, Sunday 4:05 p.m. ET, QBs Justin Herbert / Matthew Stafford); Balanced Baltimore +3 -104 at FanDuel (model probability 0.5051, reliability MEDIUM, play-through -107, game 2026_08_BAL_BUF, Sunday 1:00 p.m. ET, QBs Lamar Jackson / Josh Allen); Value Chicago +3 -105 at DraftKings (model probability 0.5057, reliability MEDIUM, play-through -108, game 2026_08_CHI_SEA, Monday 8:15 p.m. ET, QB Caleb Williams). Philadelphia expected starter Tanner McKee. Vs the morning board: no card changes; Hit Rate price improved -278 to -265 at DraftKings (play-through -283 to -269); Balanced and Value unchanged.",
+   "sources": [],
+   "verification": "INTERNAL_CANONICAL"
+  },
+  {
+   "category": "app",
+   "evidence_id": "ev-cards-am",
+   "fact": "App product view, Week 8, generated 2026-11-01T12:08:31Z (morning board, prediction as of 2026-11-01T12:05:03Z): Hit Rate Los Angeles Rams moneyline -258 at DraftKings (model probability 0.649, play-through -262, game LAC at LAR, Sunday 4:05 p.m. ET, QBs Justin Herbert / Matthew Stafford); Balanced Chicago +3 -102 at FanDuel (model probability 0.506, reliability MEDIUM, play-through -105, game CHI at SEA, Monday 8:15 p.m. ET, QBs Caleb Williams / Sam Darnold); Value Denver +1.5 -112 at FanDuel (model probability 0.506, play-through -113, game KC at DEN, Sunday 4:25 p.m. ET, QBs Patrick Mahomes / Bo Nix). Expected margins: ARI at DAL 2.4, KC at DEN 1.7. Other Sunday starters per app: Brissett/Prescott, Penix/Mayfield, Jackson/Allen, Watson/Rodgers, Jones/Lawrence, Herbert/Stafford, Cousins/Smith, Murray/Goff, Maye/Willis, Ward/Burrow; Monday: Williams/Darnold; Sunday night: McKee/Daniels.",
+   "sources": [],
+   "verification": "INTERNAL_CANONICAL"
+  },
+  {
    "category": "weather",
-   "evidence_id": "ev-weather-sat",
-   "fact": "Sunday, Nov. 1 outdoor-game forecasts checked Saturday evening: Buffalo (Ravens at Bills, 1:00 p.m. ET) — National Weather Service Buffalo: lower 60s at kickoff, mostly cloudy, gentle south winds, no precipitation chance through the game. Denver (Chiefs at Broncos, 4:25 p.m. ET) — cloudy, daytime high around 62, light north-northeast wind near 7 mph, rain chance around 20%. Landover (Eagles at Commanders, 8:20 p.m. ET) — National Weather Service hourly: about 51 degrees at 8 p.m., southeast wind around 1 mph, 0% rain chance through the game window, falling into the 40s late.",
+   "evidence_id": "ev-weather-am",
+   "fact": "National Weather Service hourly forecasts checked Sunday morning, Nov. 1: Buffalo (BAL at BUF, 1:00 p.m. ET) - 67 degrees at kickoff, mostly sunny, 6 mph south wind, 2% precipitation chance. Denver (KC at DEN, 4:25 p.m. ET) - low 60s around kickoff (62 at 2:00 p.m. local, 63 at 3:00 p.m. local), partly to mostly cloudy, about 7 mph south-southeast wind, small rain chance around 11%. Landover (PHI at WAS, 8:20 p.m. ET) - 51 degrees at 8:00 p.m., partly cloudy, about 1 mph south wind, 0% precipitation chance, falling to about 50 degrees during the game.",
    "sources": [
     {
-     "label": "Democrat and Chronicle",
-     "url": "https://www.democratandchronicle.com/story/sports/football/nfl/bills/2026/10/31/orchard-park-weather-for-bills-vs-ravens-game-conditions/92518743007/"
-    },
-    {
-     "label": "Sports Illustrated",
-     "url": "https://www.si.com/nfl/commanders/onsi/commanders-eagles-weather-forecast-week-8"
-    },
-    {
-     "label": "Weather.com Denver",
-     "url": "https://weather.com/us/co/city/denver/tenday"
+     "label": "National Weather Service",
+     "url": "https://api.weather.gov/"
     }
    ],
    "verification": "REPORTED"
   },
   {
    "category": "betting_splits",
-   "evidence_id": "ev-vsin-sat-pm",
-   "fact": "VSiN free betting-splits page, checked Saturday evening, Oct. 31, 2026, showed 'No splits data available for Saturday, Oct 31.' No featured-game DraftKings spread splits row was visible, so no verified public-vs-sharper split could be written about and the learning substitute is used.",
+   "evidence_id": "ev-vsin-am",
+   "fact": "VSiN free betting-splits page, checked Sunday morning, Nov. 1, 2026: the text view showed 'No splits data available for Saturday, Oct 31' and no featured-game DraftKings spread splits row (no handle/ticket numbers) was visible, so no verified public-vs-sharper split could be written about and the learning substitute is used.",
    "sources": [
     {
      "label": "VSiN",
@@ -332,16 +333,6 @@
     }
    ],
    "verification": "REPORTED"
-  },
-  {
-   "category": "app",
-   "evidence_id": "ev-cards-pm",
-   "fact": "App product view, Week 8, generated 2026-11-01T00:08:50Z (evening board; a first fetch at 6:08 p.m. Denver still returned the morning board generated 2026-10-31T12:08:44Z, and a re-fetch two minutes later returned this evening board): Hit Rate Los Angeles Rams moneyline -265 at DraftKings (model probability 0.6490, reliability LOW, play-through -269, game 2026_08_LAC_LAR, Sunday 4:05 p.m. ET, QBs Justin Herbert / Matthew Stafford); Balanced Baltimore +3 -104 at FanDuel (model probability 0.5051, reliability MEDIUM, play-through -107, game 2026_08_BAL_BUF, Sunday 1:00 p.m. ET, QBs Lamar Jackson / Josh Allen); Value Chicago +3 -105 at DraftKings (model probability 0.5057, reliability MEDIUM, play-through -108, game 2026_08_CHI_SEA, Monday 8:15 p.m. ET, QB Caleb Williams). Philadelphia expected starter Tanner McKee. Vs the morning board: no card changes; Hit Rate price improved -278 to -265 at DraftKings (play-through -283 to -269); Balanced and Value unchanged.",
-   "sources": [],
-   "verification": "INTERNAL_CANONICAL"
   }
- ],
- "research_generated_at_utc": "2026-11-01T00:13:25Z",
- "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-11-01T00:13:25Z"
+ ]
 }
