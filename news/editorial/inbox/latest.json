@@ -1,62 +1,60 @@
 {
+ "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+ "submitted_at_utc": "2026-11-02T13:17:16Z",
+ "research_generated_at_utc": "2026-11-02T13:17:16Z",
  "article": {
-  "dek": "Sunday's two card legs both land, Lamar Jackson's return lasts one snap, and Monday night in Seattle is the last game standing — with a reshuffled Seahawks line in front of it.",
-  "edition": "Evening Brief",
-  "published_at_utc": "2026-11-02T01:13:11Z",
-  "research_generated_at_utc": "2026-11-02T01:13:11Z",
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+  "edition": "Morning Brief",
+  "title": "NFL EDGE Monday Morning Brief",
+  "dek": "Washington closes Sunday with a 27-10 win, Baltimore's quarterback room is down to one healthy arm before Thursday night, and Monday night in Seattle is the last game left on the Week 8 board.",
+  "published_at_utc": "2026-11-02T13:17:16Z",
+  "research_generated_at_utc": "2026-11-02T13:17:16Z",
   "sections": [
    {
-    "icon": "📰",
     "id": "what-matters",
+    "icon": "\ud83d\udcf0",
+    "title": "What Matters Today",
     "items": [
      {
+      "headline": "Lead: Washington closes Sunday 27-10 \u2014 one game left on the Week 8 board",
+      "paragraphs": [
+       "Washington beat Philadelphia 27-10 on Sunday night, scoring 27 unanswered points after falling behind 10-0 in the first quarter. Jayden Daniels threw for 217 yards and a touchdown with no interceptions, while Tanner McKee threw for 212 yards with one interception in his third start in place of Jalen Hurts. Philadelphia has now lost six straight, its first six-game losing streak since 2012.",
+       "That leaves exactly one game on the Week 8 board: Chicago at Seattle, Monday at 8:15 p.m. ET. The morning board's cards are all on that game \u2014 Seattle moneyline for Hit Rate, Chicago +3 for both Balanced and Value. See below for what each card means.",
+       "One thing is still to come, and it is the only thing worth waiting for: Monday night's inactive lists, about 90 minutes before kickoff, for the questionable names below. Check them before you lock anything in."
+      ],
+      "takeaway": "Washington 27-10 closes Sunday; Chicago at Seattle on Monday night is the only Week 8 game left, and its inactive lists are the last update before kickoff.",
       "evidence_ids": [
-       "ev-results-pm",
+       "ev-snf-result-am",
        "ev-cards-am"
       ],
-      "headline": "Lead: Sunday's card legs both land — two games left on the Week 8 slate",
-      "paragraphs": [
-       "Both of Sunday's card legs landed. The Los Angeles Rams beat the Chargers 24-9, so the morning's Hit Rate moneyline leg won. Denver beat Kansas City 28-24 outright, scoring 15 unanswered fourth-quarter points after trailing 24-13, so the morning's Value leg, Denver +1.5, won too.",
-       "What is left: Philadelphia at Washington kicks off at 8:20 p.m. ET tonight, and Chicago at Seattle closes Week 8 on Monday at 8:15 p.m. ET. The evening board's one remaining card is on that Monday game — see below.",
-       "One note on the results above: settlement in the app is manual. These are the reported final scores, not an app settlement — log your own results honestly, winners and losers alike."
-      ],
       "sources": [
        {
         "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/broncos-goal-line-stand-holds-off-chiefs-28-24-for-division-lead"
-       },
-       {
-        "label": "Rams Wire",
-        "url": "https://theramswire.usatoday.com/story/sports/nfl/rams/2026/11/01/rams-chargers-score-updates-injuries-analysis--live/92548774007/"
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-commanders-roll-to-27-10-victory-over-eagles"
        }
-      ],
-      "takeaway": "Rams 24-9 and Broncos 28-24 mean both Sunday card legs landed — only Sunday night and Monday night remain."
+      ]
      },
      {
-      "evidence_ids": [
-       "ev-jackson-pm",
-       "ev-snf-pm",
-       "ev-mnf-pm"
-      ],
-      "headline": "Injury roundup: Jackson's return lasts one snap; Sunday night inactives set; Seattle's line reshuffles",
+      "headline": "Injury roundup: Baltimore down to one healthy quarterback; Seattle's line reshuffles for Monday",
       "paragraphs": [
-       "Baltimore's day turned fast. Lamar Jackson, cleared to return after missing three games with a high ankle sprain, suffered a right thumb injury on Baltimore's first offensive play at Buffalo and was ruled out. Backup Tyler Huntley then suffered a toe injury and was questionable to return, forcing undrafted rookie Joe Fagnano into his NFL debut. Buffalo won 36-10. Baltimore now has a short week before hosting Jacksonville on Thursday night, and there is no Thursday starting-quarterback news yet — that is the injury story to watch this week, not something to guess at tonight.",
-       "For Sunday night, the inactive lists are set. Washington is without defensive tackles Daron Payne (foot) and Javon Kinlaw, while receiver Treylon Burks (foot) and tight end John Bates (shoulder) are both active. Philadelphia is without receivers DeVonta Smith (hamstring) and Dontayvion Wicks (ankle) for a second straight game, plus linebacker Jihaad Campbell, cornerback Jonathan Jones and receiver Britain Covey; Saquon Barkley is active and expected to play on a pitch count, and cornerback Jakorian Bennett is not among the inactives.",
-       "For Monday night, Seattle's offensive line gets reshuffled. Starting left tackle Charles Cross is out with an ankle injury, so Josh Jones steps in at left tackle, newly acquired Quenton Nelson debuts at left guard, and Grey Zabel shifts to right guard. Chicago is without running back Kyle Monangai (toe) for a fourth straight game, Seattle is without receiver Rashid Shaheed (knee), linebacker Uchenna Nwosu is doubtful (ankle), and Chicago's D'Marco Jackson (ankle) and Malik Muhammad (toe) are questionable."
+       "Baltimore's quarterback situation got worse overnight. Lamar Jackson will have surgery on his right thumb and go on injured reserve after getting hurt on the first offensive play at Buffalo, missing at least four games \u2014 and head coach Jesse Minter said the injury could potentially end his season. Backup Tyler Huntley hurt his toe in the same game, is being evaluated for suspected turf toe, and has an MRI on Monday; reports say he could miss Thursday night's home game against Jacksonville. That leaves undrafted rookie Joe Fagnano, who finished the Buffalo game at 10-of-21 for 91 yards with one interception, as the only healthy quarterback on the roster as Monday begins. No Thursday starter has been announced \u2014 that is the injury story to watch this week, not something to guess at today.",
+       "For Monday night, Seattle's offensive line gets reshuffled. Starting left tackle Charles Cross is out with an ankle injury, so Josh Jones steps in at left tackle, newly acquired Quenton Nelson debuts at left guard, and Grey Zabel shifts to right guard. Chicago is without running back Kyle Monangai (toe) for a fourth straight game, Seattle is without receiver Rashid Shaheed (knee) and running back Velus Jones Jr. (hamstring), linebacker Uchenna Nwosu is doubtful (ankle), and Chicago's D'Marco Jackson (ankle) and Malik Muhammad (toe) are questionable.",
+       "One return to note: Seattle running back Zach Charbonnet is set to play for the first time since tearing his ACL last postseason, after surgery in February and activation from the physically unable to perform list on Oct. 22. Questionable does not mean out \u2014 the inactive lists about 90 minutes before kickoff are the next real update."
+      ],
+      "takeaway": "Jackson is headed for thumb surgery and injured reserve, Huntley may miss Thursday with a toe injury, and Monday's questionables still wait on the inactive lists.",
+      "evidence_ids": [
+       "ev-ravens-qb-am",
+       "ev-mnf-pm",
+       "ev-charbonnet-am"
       ],
       "sources": [
        {
-        "label": "Ravens Wire",
-        "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/11/01/ravens-bills-live-updates-score-week-8-2026--live/92547268007/"
+        "label": "Reuters",
+        "url": "https://www.reuters.com/sports/nfl-injury-roundup-ravens-qb-peril-after-lamar-jackson-tyler-huntley-hurt--flm-2026-11-02/"
        },
        {
-        "label": "Philadelphia Eagles",
-        "url": "https://www.philadelphiaeagles.com/news/eagles-at-commanders-inactives-nfl-2026-week-8-sunday-night-football"
-       },
-       {
-        "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-treylon-burks-john-bates-active-for-commanders-eagles"
+        "label": "Baltimore Beatdown",
+        "url": "https://www.baltimorebeatdown.com/baltimore-ravens-news/87302/ravens-qb-tyler-huntley-could-miss-tnf-vs-jags-with-suspected-turf-toe"
        },
        {
         "label": "Heavy",
@@ -69,123 +67,119 @@
        {
         "label": "Bears Wire",
         "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/10/31/bears-seahawks-final-injury-report-game-designations/92534831007/"
+       },
+       {
+        "label": "Field Level Media",
+        "url": "https://wixx.com/2026/10/31/seahawks-rb-zach-charbonnet-knee-set-to-play-vs-bears/"
        }
-      ],
-      "takeaway": "Jackson out after one snap with a thumb injury, Huntley hurt too, and Baltimore faces a short week; Sunday night's inactives are set; Seattle's line reshuffles for Monday."
+      ]
      },
      {
-      "evidence_ids": [
-       "ev-weather-pm"
-      ],
-      "headline": "Weather: cloudy and cool for Monday night in Seattle",
+      "headline": "Weather: cool and cloudy for Monday night in Seattle",
       "paragraphs": [
-       "Monday night in Seattle looks cloudy, with a high of 54 degrees during the day and temperatures falling toward the high 40s at night. The rain chance at night is about 10 percent, with a light east-northeast wind.",
-       "That is the forecast as it stands Sunday evening, reported as fact. It is not a reason to bet a total one way or the other."
+       "Monday night in Seattle looks cool and cloudy. The National Weather Service hourly forecast has about 49 degrees around the 8:15 p.m. ET kickoff, cloudy skies, a light north-northwest wind of about 2 mph, and an 8 percent chance of precipitation, with temperatures holding around 48 to 49 degrees through the evening.",
+       "That is the forecast as it stands Monday morning, reported as fact. It is not a reason to bet a total one way or the other."
+      ],
+      "takeaway": "Seattle Monday night: about 49 degrees at kickoff, cloudy, light wind, 8 percent rain chance.",
+      "evidence_ids": [
+       "ev-weather-am"
       ],
       "sources": [
        {
-        "label": "weather.com",
-        "url": "https://weather.com/us/wa/city/seattle/tenday"
+        "label": "National Weather Service",
+        "url": "https://api.weather.gov/"
        }
-      ],
-      "takeaway": "Seattle Monday night: cloudy, low 50s at kickoff falling toward the high 40s, about a 10 percent rain chance, light wind."
+      ]
      }
-    ],
-    "title": "What Matters Today"
+    ]
    },
    {
-    "icon": "💡",
     "id": "what-it-means",
+    "icon": "\ud83d\udca1",
+    "title": "What It Means for NFL EDGE",
     "items": [
      {
-      "evidence_ids": [
-       "ev-cards-pm"
-      ],
-      "headline": "Evening cards: Seattle moneyline is the new Hit Rate, Chicago +3 holds as Balanced, Value has no play",
+      "headline": "Morning cards: Seattle moneyline on top, Chicago +3 fills both other cards",
       "paragraphs": [
-       "Hit Rate is now the Seattle moneyline at -166 at DraftKings, Monday at 8:15 p.m. ET against Chicago, with a model probability of 0.561 and a play-through price of -171. Hit Rate is the pick the app rates most likely to win. Remember the app's own tutorial: Hit Rate is not Profit Rate.",
-       "Balanced is unchanged: Chicago +3 at -102 at FanDuel, Monday at 8:15 p.m. ET at Seattle, with a model probability of 0.506 and a play-through price of -105. It is a strong pick without paying too much — the middle ground, and a good starting point for a new bettor.",
-       "Value has no play tonight. The app reports no offer currently satisfies the Value lane contract, so there is no Value pick on the evening board. Value is always the model's +EV play — when nothing qualifies, the app says so instead of forcing one."
+       "Hit Rate is the Seattle moneyline at -175 at DraftKings, Monday at 8:15 p.m. ET against Chicago. It is the pick the app rates most likely to win, with a model probability of 0.561. Remember the app's own tutorial: Hit Rate is not Profit Rate. A favorite's moneyline can look safe and still pay very little \u2014 you are betting on the outright winner only.",
+       "Balanced is Chicago +3 at -102 at DraftKings, Monday at 8:15 p.m. ET at Seattle. It is a strong pick without paying too much \u2014 the middle ground, and a good starting point for a new bettor.",
+       "Value is Chicago +3 at -102 at DraftKings as well \u2014 the same pick as Balanced. Value is always the model's +EV play, and this morning that play and the Balanced play land on the same line. Two cards pointing at the same pick is not two separate bets; it is one pick the app likes two ways."
       ],
-      "takeaway": "Hit Rate: Seattle moneyline -166. Balanced: Chicago +3 -102 at FanDuel. Value: no play tonight."
+      "takeaway": "Hit Rate: Seattle moneyline -175. Balanced and Value: both Chicago +3 -102 at DraftKings \u2014 one pick, liked two ways.",
+      "evidence_ids": [
+       "ev-cards-am"
+      ]
      },
      {
-      "evidence_ids": [
-       "ev-cards-pm"
-      ],
       "headline": "A card that changes still means checking your own price",
       "paragraphs": [
-       "The cards above are priced at DraftKings and FanDuel. If your book is neither, the card price is not your price.",
+       "The cards above are priced at DraftKings. If your book is not DraftKings, the card price is not your price.",
        "Tap Check in the app, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet or no-bet verdict on your price. That is a full re-evaluation, not a blind override.",
-       "Odds are price mechanics: -120 means every $1.20 you risk wins $1. The app sets your actual stake from your bankroll and staking setting — that part is deliberately conservative, and it lives in the app, not here."
+       "Odds are price mechanics: -120 means every $1.20 you risk wins $1. The app sets your actual stake from your bankroll and staking setting \u2014 that part is deliberately conservative, and it lives in the app, not here."
       ],
-      "takeaway": "Your book's price is the one that matters — run it through Check and let that verdict decide."
+      "takeaway": "Your book's price is the one that matters \u2014 run it through Check and let that verdict decide.",
+      "evidence_ids": [
+       "ev-cards-am"
+      ]
      }
-    ],
-    "title": "What It Means for NFL EDGE"
+    ]
    },
    {
-    "icon": "⚖️",
     "id": "fade",
+    "icon": "\u2696\ufe0f",
+    "title": "Learn the Game",
+    "mode": "learning",
     "items": [
      {
+      "headline": "Learn the Game: the vig",
+      "paragraphs": [
+       "The vig \u2014 short for vigorish, also called the juice \u2014 is the book's cut, built into the price itself. It is why both sides of a spread usually sit at -110 instead of even money.",
+       "Hypothetical example, clearly labeled as hypothetical: say you bet a spread at -110. That price means you risk $1.10 to win $1.00. Win, and you get your $1.10 back plus $1.00. Lose, and the $1.10 is gone. The extra 10 cents on each side is the book's margin for taking the bet.",
+       "That is why a price move matters even when the line does not move: -102 and -115 on the same +3 are not the same bet. When you run a price through Check, the app prices the vig in \u2014 a good line at a bad price can still come back no-bet."
+      ],
+      "takeaway": "The vig is the book's cut built into the price \u2014 at -110 you risk $1.10 to win $1.00, so the price itself is part of the bet.",
       "editorial_only": true,
       "evidence_ids": [],
-      "headline": "Learn the Game: key numbers",
-      "paragraphs": [
-       "A key number is a margin of victory that comes up more often than others. In the NFL, 3 is the biggest one, because so many games are decided by a field goal. That is why the difference between getting +3 and getting +2.5 matters more than it looks.",
-       "Hypothetical example, clearly labeled as hypothetical: say you bet a team at +3, and they lose by exactly 3 points. That bet pushes — your stake comes back. The same bet at +2.5 loses, because the team did not cover 2.5. Same team, same game, same final score — a different number, a different result.",
-       "That is the lesson to carry into the app: when you run a spread through Check, the number itself is part of the bet, not just the price next to it."
-      ],
-      "sources": [],
-      "takeaway": "Three is football's biggest key number — at +3, a three-point loss pushes, while at +2.5 the same loss loses."
+      "sources": []
      }
-    ],
-    "mode": "learning",
-    "title": "Learn the Game"
+    ]
    },
    {
-    "icon": "👀",
     "id": "market-watch",
+    "icon": "\ud83d\udc40",
+    "title": "Line Movement",
     "items": [
      {
-      "evidence_ids": [
-       "ev-cards-am",
-       "ev-cards-pm",
-       "ev-results-pm"
-      ],
-      "headline": "Morning board vs evening board: Hit Rate replaced, Balanced unchanged, Value gone",
+      "headline": "Evening board vs morning board: Seattle moneyline gets pricier, Chicago +3 changes books, Value returns",
       "paragraphs": [
-       "The evening board replaces Hit Rate. The Rams moneyline at -258 at DraftKings is off the board because that game is final — Seattle moneyline at -166 at DraftKings takes its place, with a play-through price of -171. That is a recommendation replacement, not a price move on the same pick.",
-       "Balanced does not move at all: Chicago +3 stays at -102 at FanDuel, with the play-through price still -105. Same pick, same price as the morning board.",
-       "Value is gone for tonight. Denver +1.5 at -112 at FanDuel settled as an outright 28-24 win, and no new offer satisfies the Value contract on the evening board, so the lane sits empty rather than forcing a pick.",
-       "The evening refresh caught all of it. If your book shows something different from the prices above, tap Check, type in your book's line and price, and let the app re-evaluate it for you."
+       "Hit Rate stays the Seattle moneyline, but it gets pricier: from -166 at DraftKings on the evening board to -175 at DraftKings this morning, with the play-through price moving from -171 to -180. Same pick, more expensive than it was Sunday evening.",
+       "Balanced stays Chicago +3 at -102, but the book changes: from FanDuel on the evening board to DraftKings this morning, with the play-through price still -105. Same pick, same price, different book.",
+       "Value comes back. The evening board had no Value play; this morning Chicago +3 at -102 at DraftKings satisfies the Value lane, so the lane is filled again \u2014 with the same pick as Balanced.",
+       "Everything else on the Week 8 board is final, so there is no other movement to report. The morning refresh caught all of it. If your book shows something different from the prices above, tap Check, type in your book's line and price, and let the app re-evaluate it for you."
       ],
-      "sources": [
-       {
-        "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/broncos-goal-line-stand-holds-off-chiefs-28-24-for-division-lead"
-       }
-      ],
-      "takeaway": "Hit Rate flips from the Rams to Seattle moneyline, Balanced holds Chicago +3 -102, and Value sits empty after Denver's win."
+      "takeaway": "Seattle moneyline -166 to -175, Chicago +3 stays -102 but moves from FanDuel to DraftKings, and Value returns with Chicago +3.",
+      "evidence_ids": [
+       "ev-cards-pm",
+       "ev-cards-am"
+      ]
      }
-    ],
-    "title": "Line Movement"
+    ]
    },
    {
-    "icon": "✅",
     "id": "today-tip",
+    "icon": "\u2705",
+    "title": "Today's Tip",
     "items": [
      {
-      "evidence_ids": [
-       "ev-cards-pm",
-       "ev-mnf-pm"
-      ],
       "headline": "Monday game? Monday check.",
       "paragraphs": [
-       "There is one piece of information worth waiting for: Monday night's inactive lists, about 90 minutes before kickoff, for the questionable names above. That is a real pending event with a set time.",
-       "Everything else is ready now. If your book has a good number on Chicago +3 and Check says bet, bet now — waiting for the Monday rush lets the number drift the wrong way too.",
-       "And a habit to keep from Sunday: settlement in the app is manual, and the tracker only works if you are honest with yourself. Log the losers too. A tracker that only holds winners is not a record, it is a highlight reel."
+       "There is one piece of information worth waiting for: Monday night's inactive lists, about 90 minutes before the 8:15 p.m. ET kickoff, for the questionable names above. That is a real pending event with a set time.",
+       "Everything else is ready now. If your book has a good number on Chicago +3 or the Seattle moneyline and Check says bet, bet now \u2014 waiting for the Monday night rush lets the number drift the wrong way too."
+      ],
+      "takeaway": "Wait only for Monday night's inactive lists; otherwise bet when Check says bet.",
+      "evidence_ids": [
+       "ev-cards-am",
+       "ev-mnf-pm"
       ],
       "sources": [
        {
@@ -195,71 +189,60 @@
        {
         "label": "Sportsbook Wire",
         "url": "https://sportsbookwire.usatoday.com/story/sports/nfl/2026/11/01/bears-at-seahawks-odds-picks-and-predictions/92547183007/"
+       },
+       {
+        "label": "Bears Wire",
+        "url": "https://bearswire.usatoday.com/story/sports/nfl/bears/2026/10/31/bears-seahawks-final-injury-report-game-designations/92534831007/"
+       },
+       {
+        "label": "Field Level Media",
+        "url": "https://wixx.com/2026/10/31/seahawks-rb-zach-charbonnet-knee-set-to-play-vs-bears/"
        }
-      ],
-      "takeaway": "Wait only for Monday night's inactive lists; otherwise bet when Check says bet — and log every result, winners and losers alike."
+      ]
      }
-    ],
-    "title": "Today's Tip"
+    ]
    }
-  ],
-  "title": "NFL EDGE Sunday Evening Brief"
+  ]
  },
  "evidence": [
   {
    "category": "app",
    "evidence_id": "ev-cards-pm",
-   "fact": "App product view, Week 8, generated 2026-11-02T00:08:47Z (evening board, prediction as of 2026-11-02T00:05:04Z): Hit Rate Seattle moneyline -166 at DraftKings (model probability 0.561, reliability MEDIUM, play-through -171, game 2026_08_CHI_SEA, Monday 8:15 p.m. ET, QBs Caleb Williams / Sam Darnold); Balanced Chicago +3 -102 at FanDuel (model probability 0.506, reliability MEDIUM, play-through -105, same game); Value NO_PLAY — no offer currently satisfies the frozen VALUE lane contract. Sunday night game PHI at WAS, QBs Tanner McKee / Jayden Daniels, still pregame. Note: this board was generated at 00:08Z, which was 5:08 p.m. MST after the Nov. 1 DST fallback (previously 6:08 p.m. MDT); it is the fresh evening board, not the morning board (morning prediction as of 2026-11-01T12:05:03Z).",
+   "fact": "App product view, Week 8, generated 2026-11-02T00:08:47Z (evening board, prediction as of 2026-11-02T00:05:04Z): Hit Rate Seattle moneyline -166 at DraftKings (model probability 0.561, reliability MEDIUM, play-through -171, game 2026_08_CHI_SEA, Monday 8:15 p.m. ET, QBs Caleb Williams / Sam Darnold); Balanced Chicago +3 -102 at FanDuel (model probability 0.506, reliability MEDIUM, play-through -105, same game); Value NO_PLAY \u2014 no offer currently satisfies the frozen VALUE lane contract. Sunday night game PHI at WAS, QBs Tanner McKee / Jayden Daniels, still pregame. Note: this board was generated at 00:08Z, which was 5:08 p.m. MST after the Nov. 1 DST fallback (previously 6:08 p.m. MDT); it is the fresh evening board, not the morning board (morning prediction as of 2026-11-01T12:05:03Z).",
    "sources": [],
    "verification": "INTERNAL_CANONICAL"
   },
   {
    "category": "app",
    "evidence_id": "ev-cards-am",
-   "fact": "App product view, Week 8, generated 2026-11-01T12:08:31Z (morning board, prediction as of 2026-11-01T12:05:03Z): Hit Rate Los Angeles Rams moneyline -258 at DraftKings (model probability 0.649, play-through -262, game LAC at LAR, Sunday 4:05 p.m. ET); Balanced Chicago +3 -102 at FanDuel (model probability 0.506, play-through -105, game CHI at SEA, Monday 8:15 p.m. ET); Value Denver +1.5 -112 at FanDuel (model probability 0.506, play-through -113, game KC at DEN, Sunday 4:25 p.m. ET).",
+   "fact": "App product view, Week 8, generated 2026-11-02T12:08:54Z (morning board, prediction as of 2026-11-02T12:05:04Z): Hit Rate Seattle moneyline -175 at DraftKings (model probability 0.561, reliability MEDIUM, play-through -180, game CHI at SEA, Monday 8:15 p.m. ET, QBs Caleb Williams / Sam Darnold); Balanced Chicago +3 -102 at DraftKings (model probability 0.506, reliability MEDIUM, play-through -105, same game); Value Chicago +3 -102 at DraftKings (model probability 0.506, play-through -105, same game). Expected margin for CHI at SEA: -0.14. All other Week 8 games are final; CHI at SEA is the only game left on the board.",
    "sources": [],
    "verification": "INTERNAL_CANONICAL"
   },
   {
    "category": "results",
-   "evidence_id": "ev-results-pm",
-   "fact": "Sunday finals, Nov. 1: Los Angeles Rams beat the Los Angeles Chargers 24-9 (Rams closed it with a nearly 7-minute fourth-quarter drive riding Kyren Williams). Denver Broncos beat the Kansas City Chiefs 28-24 at Empower Field, trailing 24-13 entering the fourth quarter before scoring 15 unanswered points, sealed by a goal-line stand and a sack of Patrick Mahomes; Denver moved to 6-2 and first place in the AFC West, Kansas City fell to 5-2.",
+   "evidence_id": "ev-snf-result-am",
+   "fact": "Sunday Night Football final, Nov. 1: Washington beat Philadelphia 27-10 at Northwest Stadium. Philadelphia led 10-0 in the first quarter, then Washington scored 27 unanswered points. Jayden Daniels finished 16-of-29 for 217 yards with one touchdown and no interceptions; Tanner McKee finished 23-of-34 for 212 yards with one interception in his third start in place of Jalen Hurts; Saquon Barkley scored Philadelphia's only touchdown. Philadelphia fell to 2-6 with its sixth straight loss, its first six-game losing streak since 2012; Washington improved to 2-4-1.",
    "sources": [
     {
      "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/broncos-goal-line-stand-holds-off-chiefs-28-24-for-division-lead"
-    },
-    {
-     "label": "Rams Wire",
-     "url": "https://theramswire.usatoday.com/story/sports/nfl/rams/2026/11/01/rams-chargers-score-updates-injuries-analysis--live/92548774007/"
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-commanders-roll-to-27-10-victory-over-eagles"
     }
    ],
    "verification": "REPORTED"
   },
   {
    "category": "injury",
-   "evidence_id": "ev-jackson-pm",
-   "fact": "Baltimore Ravens QB Lamar Jackson suffered a right thumb injury on Baltimore's first offensive play Sunday at Buffalo and was ruled out, after returning from three missed games with a high ankle sprain. Backup Tyler Huntley then suffered a toe injury and was questionable to return, forcing undrafted rookie Joe Fagnano into his NFL regular-season debut. Buffalo won 36-10; Baltimore fell to 4-4 and hosts Jacksonville on Thursday night with its top quarterbacks' health unresolved.",
+   "evidence_id": "ev-ravens-qb-am",
+   "fact": "Baltimore quarterback news, Monday morning, Nov. 2: Lamar Jackson will have surgery on his right thumb and go on injured reserve after getting hurt on Baltimore's first offensive play of the 36-10 loss at Buffalo, missing at least four games; head coach Jesse Minter said the injury could potentially end Jackson's season. Backup Tyler Huntley suffered a toe injury in the same game, is being evaluated for suspected turf toe, and has an MRI on Monday; reports say he could miss Thursday night's home game against Jacksonville. Undrafted rookie Joe Fagnano finished the Buffalo game (10-of-21, 91 yards, one interception) and is the only healthy quarterback on the roster as Monday begins. Baltimore hosts Jacksonville on Thursday night.",
    "sources": [
     {
-     "label": "Ravens Wire",
-     "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/11/01/ravens-bills-live-updates-score-week-8-2026--live/92547268007/"
-    }
-   ],
-   "verification": "REPORTED"
-  },
-  {
-   "category": "injury",
-   "evidence_id": "ev-snf-pm",
-   "fact": "Sunday Night Football inactives, Nov. 1 (PHI at WAS, 8:20 p.m. ET): Washington inactive — DT Daron Payne (foot), DT Javon Kinlaw; WR Treylon Burks (foot) and TE John Bates (shoulder) active. Philadelphia inactive — WR DeVonta Smith (hamstring), WR Dontayvion Wicks (ankle), LB Jihaad Campbell (hamstring/quad), CB Jonathan Jones (hamstring), C/G Jake Majors, WR Britain Covey (knee); RB Saquon Barkley (hamstring/back) active and expected on a pitch count; CB Jakorian Bennett not among the inactives; all three Eagles quarterbacks active.",
-   "sources": [
-    {
-     "label": "Philadelphia Eagles",
-     "url": "https://www.philadelphiaeagles.com/news/eagles-at-commanders-inactives-nfl-2026-week-8-sunday-night-football"
+     "label": "Reuters",
+     "url": "https://www.reuters.com/sports/nfl-injury-roundup-ravens-qb-peril-after-lamar-jackson-tyler-huntley-hurt--flm-2026-11-02/"
     },
     {
-     "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-treylon-burks-john-bates-active-for-commanders-eagles"
+     "label": "Baltimore Beatdown",
+     "url": "https://www.baltimorebeatdown.com/baltimore-ravens-news/87302/ravens-qb-tyler-huntley-could-miss-tnf-vs-jags-with-suspected-turf-toe"
     }
    ],
    "verification": "REPORTED"
@@ -285,21 +268,33 @@
    "verification": "REPORTED"
   },
   {
-   "category": "weather",
-   "evidence_id": "ev-weather-pm",
-   "fact": "Seattle forecast for Monday, Nov. 2: day mostly cloudy, high 54 degrees; night cloudy, low 47 degrees, rain chance 10%, wind ENE 3 mph; sunset 4:49 p.m. local. Monday night kickoff 8:15 p.m. ET (5:15 p.m. Seattle time) falls in the evening window between the day high and the night low.",
+   "category": "injury",
+   "evidence_id": "ev-charbonnet-am",
+   "fact": "Seattle running back Zach Charbonnet is set to play Monday night against Chicago, his first game since tearing his ACL in last postseason's divisional-round win over San Francisco on Jan. 17; he had surgery in February and was activated from the physically unable to perform list on Oct. 22. Rookie running back Jadarian Price was declared ready to play but still had to be activated off injured reserve.",
    "sources": [
     {
-     "label": "weather.com",
-     "url": "https://weather.com/us/wa/city/seattle/tenday"
+     "label": "Field Level Media",
+     "url": "https://wixx.com/2026/10/31/seahawks-rb-zach-charbonnet-knee-set-to-play-vs-bears/"
+    }
+   ],
+   "verification": "REPORTED"
+  },
+  {
+   "category": "weather",
+   "evidence_id": "ev-weather-am",
+   "fact": "National Weather Service hourly forecast for Seattle, checked Monday morning, Nov. 2: at the Monday night kickoff window (8:15 p.m. ET, 5:15 p.m. Seattle time), 49 degrees, cloudy, about a 2 mph north-northwest wind, and an 8 percent chance of precipitation, with temperatures holding around 48-49 degrees through the evening.",
+   "sources": [
+    {
+     "label": "National Weather Service",
+     "url": "https://api.weather.gov/"
     }
    ],
    "verification": "REPORTED"
   },
   {
    "category": "betting_splits",
-   "evidence_id": "ev-vsin-pm",
-   "fact": "VSiN free betting-splits page, checked Sunday evening, Nov. 1, 2026: the page text stated 'No splits data available for Sunday, Nov 1' and no featured-game DraftKings spread splits row (no handle/ticket numbers) was visible, so no verified public-vs-sharper split could be written about and the learning substitute is used.",
+   "evidence_id": "ev-vsin-am",
+   "fact": "VSiN free betting-splits page, checked Monday morning, Nov. 2, 2026: the page text stated 'No splits data available for Sunday, Nov 1' and no featured-game DraftKings spread splits row (no handle/ticket numbers) was visible, so no verified public-vs-sharper split could be written about and the learning substitute is used.",
    "sources": [
     {
      "label": "VSiN",
@@ -308,8 +303,5 @@
    ],
    "verification": "REPORTED"
   }
- ],
- "research_generated_at_utc": "2026-11-02T01:13:11Z",
- "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-11-02T01:13:11Z"
+ ]
 }
