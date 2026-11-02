@@ -1,0 +1,255 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "capture_mode": "NATIVE_PROSPECTIVE",
+  "creation_provenance": {
+    "provider_calls": 0,
+    "source": "CANONICAL_PUBLISHED_PRODUCT",
+    "user_specific_data_included": false
+  },
+  "field_availability": {
+    "backend_user_overlay": "EXCLUDED_USER_SPECIFIC_DATA",
+    "evaluator_probability": "NOT_EXPOSED_BY_CANONICAL_PRODUCT_V1"
+  },
+  "lanes": {
+    "balanced": {
+      "american_odds": -102,
+      "away_team": "CHI",
+      "book": "DRAFTKINGS",
+      "canonical_headline": {
+        "american_odds": -102,
+        "book": "DRAFTKINGS",
+        "ev": 0.035611175718443244,
+        "game_id": "2026_08_CHI_SEA",
+        "lane": "BALANCED",
+        "line": 3.0,
+        "market": "SPREAD",
+        "market_probability": 0.4654283198456959,
+        "matchup": {
+          "away_team": "CHI",
+          "home_team": "SEA"
+        },
+        "model_probability": 0.5056915599456514,
+        "play_through": {
+          "line": 3.0,
+          "price_american": -105
+        },
+        "recommended_units": 1.0,
+        "reliability": "MEDIUM",
+        "selection": "CHI",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5056915599456514,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.035611175718443244,
+      "exact_offer_identity_id": "offer-3c186c685560bc2e5981ee9b",
+      "game_id": "2026_08_CHI_SEA",
+      "home_team": "SEA",
+      "kickoff_at_utc": "2026-11-03T01:15:00Z",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "line": 3.0,
+      "logical_recommendation_id": "logical-372008eb71dd437c35aa63a9",
+      "market": "SPREAD",
+      "market_probability": 0.4654283198456959,
+      "model_probability": 0.5056915599456514,
+      "normalized_selection": "CHI",
+      "normalized_side": "away",
+      "play_through": {
+        "line": 3.0,
+        "price_american": -105
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 1.0,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "CHI",
+      "selector_version": "balanced-price-bounded-v2",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5056915599456514,
+      "value_at": null,
+      "wager_identity_id": "wager-a09d11ee18abe74569510af6",
+      "warnings": []
+    },
+    "hit_rate": {
+      "american_odds": -175,
+      "away_team": "CHI",
+      "book": "DRAFTKINGS",
+      "canonical_headline": {
+        "american_odds": -175,
+        "book": "DRAFTKINGS",
+        "ev": -0.056758385565584046,
+        "game_id": "2026_08_CHI_SEA",
+        "lane": "HIT_RATE",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.6040343668285394,
+        "matchup": {
+          "away_team": "CHI",
+          "home_team": "SEA"
+        },
+        "model_probability": 0.5614152576413477,
+        "play_through": {
+          "line": null,
+          "price_american": -180
+        },
+        "recommended_units": 0.25,
+        "reliability": "MEDIUM",
+        "selection": "SEA",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5614152576413477,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": -0.056758385565584046,
+      "exact_offer_identity_id": "offer-cf09fa84ba4b9123cb699819",
+      "game_id": "2026_08_CHI_SEA",
+      "home_team": "SEA",
+      "kickoff_at_utc": "2026-11-03T01:15:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "line": null,
+      "logical_recommendation_id": "logical-88507f7ff10fb63b09526ca3",
+      "market": "MONEYLINE",
+      "market_probability": 0.6040343668285394,
+      "model_probability": 0.5614152576413477,
+      "normalized_selection": "SEA",
+      "normalized_side": "home",
+      "play_through": {
+        "line": null,
+        "price_american": -180
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.25,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "SEA",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5614152576413477,
+      "value_at": null,
+      "wager_identity_id": "wager-22ba0eaf5c8b7eb1fe3b6701",
+      "warnings": []
+    },
+    "value": {
+      "american_odds": -102,
+      "away_team": "CHI",
+      "book": "DRAFTKINGS",
+      "canonical_headline": {
+        "american_odds": -102,
+        "book": "DRAFTKINGS",
+        "ev": 0.035611175718443244,
+        "game_id": "2026_08_CHI_SEA",
+        "lane": "VALUE",
+        "line": 3.0,
+        "market": "SPREAD",
+        "market_probability": 0.4654283198456959,
+        "matchup": {
+          "away_team": "CHI",
+          "home_team": "SEA"
+        },
+        "model_probability": 0.5056915599456514,
+        "play_through": {
+          "line": 3.0,
+          "price_american": -105
+        },
+        "recommended_units": 1.0,
+        "reliability": "MEDIUM",
+        "selection": "CHI",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5056915599456514,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.035611175718443244,
+      "exact_offer_identity_id": "offer-3c186c685560bc2e5981ee9b",
+      "game_id": "2026_08_CHI_SEA",
+      "home_team": "SEA",
+      "kickoff_at_utc": "2026-11-03T01:15:00Z",
+      "lane": "VALUE",
+      "lane_key": "value",
+      "line": 3.0,
+      "logical_recommendation_id": "logical-46ad536fea7f0383362253ec",
+      "market": "SPREAD",
+      "market_probability": 0.4654283198456959,
+      "model_probability": 0.5056915599456514,
+      "normalized_selection": "CHI",
+      "normalized_side": "away",
+      "play_through": {
+        "line": 3.0,
+        "price_american": -105
+      },
+      "portfolio_duplicate_of_lane": "balanced",
+      "portfolio_stake_suppressed_reason": "DUPLICATE_EXACT_OFFER",
+      "recommended_units": 1.0,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "CHI",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5056915599456514,
+      "value_at": null,
+      "wager_identity_id": "wager-e672d3419c2a2768601312a1",
+      "warnings": []
+    }
+  },
+  "product_freshness": {
+    "age_seconds": 0.0,
+    "observed_at_utc": "2026-11-02T12:08:54Z",
+    "state": "FRESH",
+    "threshold_seconds": 43200.0
+  },
+  "product_generated_at_utc": "2026-11-02T12:08:54Z",
+  "product_stale": false,
+  "product_warnings": [
+    "13 canonical Week 8 game(s) lack a provider event."
+  ],
+  "publication_id": "publication-a447417705774908ab813601",
+  "published_at_utc": "2026-11-02T12:08:54.556912Z",
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1",
+  "season": 2026,
+  "source_commit_sha": null,
+  "source_product_sha256": "a447417705774908ab813601c9becc3183600e125ff70a6e4a9b57df69c7fbc6",
+  "source_product_version": "live-2026-week8-product-v1",
+  "source_provenance": {
+    "evaluator_versions": {
+      "moneyline": "ml_v4",
+      "spread": "spread_v3",
+      "total": "total_v3"
+    },
+    "football_data_version": "live-2026-state:16f6cb09780dc18926ee9fc8",
+    "market_snapshot_version": "live-market:bfdab84c34800f5be8a40773",
+    "model_versions": {
+      "expected_margin": "expected-margin-v1-stable",
+      "qb_elo": "qb-elo-v1.0.0",
+      "ridge_totals_r4": "ridge-totals-r4-alpha100",
+      "xgboost_v2": "post-v5-v2-conservative-adaptive-tail"
+    },
+    "prediction_as_of_utc": "2026-11-02T12:05:04.391717Z",
+    "qb_snapshot_version": "sleeper-scheduled-20261102T120001Z-822dd8eb",
+    "selector_versions": {
+      "balanced": "balanced-price-bounded-v2",
+      "hit_rate": "v1",
+      "value": "v1"
+    }
+  },
+  "source_week_last_kickoff_at_utc": "2026-11-03T01:15:00Z",
+  "week": 8
+}
