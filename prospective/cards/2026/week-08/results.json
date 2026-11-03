@@ -1,0 +1,136 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "lane_results": [
+    {
+      "correction": null,
+      "game_id": "2026_08_LAC_LAR",
+      "grade": "PENDING",
+      "lane_key": "hit_rate",
+      "official_score": null,
+      "official_source_product_sha256": "e276856806c5b29244bc31e2c13b877a3952247e17a84860838163a92a3bf800",
+      "official_source_publication_id": "publication-e276856806c5b29244bc31e2",
+      "price_used_for_scoring": -258,
+      "realized_units": null,
+      "result_id": "result-35fc63e81ec81ed53c3a8876",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.25
+    },
+    {
+      "correction": null,
+      "game_id": "2026_08_KC_DEN",
+      "grade": "PENDING",
+      "lane_key": "value",
+      "official_score": null,
+      "official_source_product_sha256": "e276856806c5b29244bc31e2c13b877a3952247e17a84860838163a92a3bf800",
+      "official_source_publication_id": "publication-e276856806c5b29244bc31e2",
+      "price_used_for_scoring": -112,
+      "realized_units": null,
+      "result_id": "result-a1987fc56b242cf95aaa00e6",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    },
+    {
+      "correction": null,
+      "game_id": "2026_08_CHI_SEA",
+      "grade": "PENDING",
+      "lane_key": "hit_rate",
+      "official_score": null,
+      "official_source_product_sha256": "a447417705774908ab813601c9becc3183600e125ff70a6e4a9b57df69c7fbc6",
+      "official_source_publication_id": "publication-a447417705774908ab813601",
+      "price_used_for_scoring": -175,
+      "realized_units": null,
+      "result_id": "result-656a9b5cac84552e35c84b8c",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.25
+    },
+    {
+      "correction": null,
+      "game_id": "2026_08_CHI_SEA",
+      "grade": "PENDING",
+      "lane_key": "balanced",
+      "official_score": null,
+      "official_source_product_sha256": "a447417705774908ab813601c9becc3183600e125ff70a6e4a9b57df69c7fbc6",
+      "official_source_publication_id": "publication-a447417705774908ab813601",
+      "price_used_for_scoring": -102,
+      "realized_units": null,
+      "result_id": "result-17623f38cae2958cea8276ee",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 1.0
+    },
+    {
+      "correction": null,
+      "game_id": "2026_08_CHI_SEA",
+      "grade": "PENDING",
+      "lane_key": "value",
+      "official_score": null,
+      "official_source_product_sha256": "a447417705774908ab813601c9becc3183600e125ff70a6e4a9b57df69c7fbc6",
+      "official_source_publication_id": "publication-a447417705774908ab813601",
+      "price_used_for_scoring": -102,
+      "realized_units": null,
+      "result_id": "result-ef48f60a1bdd49de7595c742",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 1.0
+    }
+  ],
+  "portfolio_results": [
+    {
+      "game_id": "2026_08_LAC_LAR",
+      "grade": "PENDING",
+      "lane_keys": [
+        "hit_rate"
+      ],
+      "portfolio_entry_id": "portfolio-78db392c4aac661ccfa2835b",
+      "price_used_for_scoring": -258,
+      "realized_units": null,
+      "units_risked": 0.25
+    },
+    {
+      "game_id": "2026_08_KC_DEN",
+      "grade": "PENDING",
+      "lane_keys": [
+        "value"
+      ],
+      "portfolio_entry_id": "portfolio-ddc3d99c0a6bb3681aa73d1d",
+      "price_used_for_scoring": -112,
+      "realized_units": null,
+      "units_risked": 0.75
+    },
+    {
+      "game_id": "2026_08_CHI_SEA",
+      "grade": "PENDING",
+      "lane_keys": [
+        "hit_rate"
+      ],
+      "portfolio_entry_id": "portfolio-cf09fa84ba4b9123cb699819",
+      "price_used_for_scoring": -175,
+      "realized_units": null,
+      "units_risked": 0.25
+    },
+    {
+      "game_id": "2026_08_CHI_SEA",
+      "grade": "PENDING",
+      "lane_keys": [
+        "balanced",
+        "value"
+      ],
+      "portfolio_entry_id": "portfolio-3c186c685560bc2e5981ee9b",
+      "price_used_for_scoring": -102,
+      "realized_units": null,
+      "units_risked": 1.0
+    }
+  ],
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_RESULT_V1",
+  "season": 2026,
+  "settlement_status": "PENDING",
+  "week": 8
+}
