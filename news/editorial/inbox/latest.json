@@ -1,24 +1,31 @@
 {
+ "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+ "submitted_at_utc": "2026-11-04T13:18:52Z",
+ "research_generated_at_utc": "2026-11-04T13:18:52Z",
  "article": {
-  "dek": "Baltimore has named its Thursday night starter, the Thursday line has flipped a long way from its lookahead number, and the board still has not flipped to Week 9.",
-  "edition": "Evening Brief",
-  "published_at_utc": "2026-11-04T01:13:22Z",
-  "research_generated_at_utc": "2026-11-04T01:13:22Z",
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+  "edition": "Morning Brief",
+  "title": "NFL EDGE Wednesday Morning Brief",
+  "dek": "No games today, Thursday's starter is set, four Baltimore starters are back to full practice, and the Thursday line has ticked to 10 at one book while the app board still shows Week 8.",
+  "published_at_utc": "2026-11-04T13:18:52Z",
+  "research_generated_at_utc": "2026-11-04T13:18:52Z",
   "sections": [
    {
-    "icon": "📰",
+    "icon": "\ud83d\udcf0",
     "id": "what-matters",
+    "title": "What Matters Today",
     "items": [
      {
-      "evidence_ids": [
-       "ev-ravens-qb-pm"
-      ],
-      "headline": "Lead: Joe Fagnano will start Thursday for Baltimore",
+      "headline": "Lead: No games today \u2014 Thursday is the next game, and the board has not caught up yet",
       "paragraphs": [
-       "The morning's big unknown is answered. Head coach Jesse Minter announced Tuesday that undrafted rookie Joe Fagnano will start Thursday night against Jacksonville. It will be his first career start, and Baltimore's third starting quarterback this season.",
-       "Fagnano practiced Tuesday as a full participant with his right ankle heavily taped and braced. He hurt the ankle Sunday at Buffalo on a low hit, then finished the game, completing 10 of 21 passes for 91 yards with an interception and a lost fumble.",
-       "Lamar Jackson did not practice with his right thumb injury and is headed for surgery and injured reserve. Tyler Huntley did not practice with his toe injury and is out for Thursday. Baltimore signed Kedon Slovis off Green Bay's practice squad Tuesday to the 53-man roster, and Jake Moody is expected to kick Thursday."
+       "There are no NFL games today, Wednesday, November 4. The next game is Jacksonville at Baltimore on Thursday, November 5, at 8:15 p.m. ET.",
+       "Read the board plainly: the app still shows Week 8, generated November 2, with no Week 9 cards at all. That means the app has not picked up Joe Fagnano as Thursday's starter yet \u2014 its Week 8 Baltimore game still shows the quarterback as unresolved. Do not look to the board for Thursday's quarterback; the practice reports below are the current word.",
+       "The inactive list lands about 90 minutes before kickoff Thursday. If anything changes there, that is the last check before you act on a Thursday price."
+      ],
+      "takeaway": "No games today; Thursday is Jacksonville at Baltimore at 8:15 p.m. ET, and the app board still shows Week 8 with no Week 9 cards.",
+      "evidence_ids": [
+       "ev-board-am",
+       "ev-ravens-qb-am"
       ],
       "sources": [
        {
@@ -26,21 +33,21 @@
         "url": "https://www.baltimoreravens.com/news/joe-fagnano-ravens-quarterbacks-practice-report-tyler-huntley"
        },
        {
-        "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/jesse-minter-says-joe-fagnano-will-be-ravens-qb-on-thursday-night"
+        "label": "Ravens Wire",
+        "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/11/03/ravens-jaguars-week-9-injury-report-tuesday-vega-ioane/92594188007/"
        }
-      ],
-      "takeaway": "Fagnano starts Thursday: third Ravens starter this season, ankle braced but a full participant Tuesday."
+      ]
      },
      {
-      "evidence_ids": [
-       "ev-jaguars-inj-pm"
-      ],
-      "headline": "Injury roundup: Jacksonville loses two starters, and its top back is in question",
+      "headline": "Injury roundup: four Baltimore starters back to full practice, Tuten still has not practiced",
       "paragraphs": [
-       "Jacksonville coach Liam Coen confirmed Monday that defensive tackle DaVon Hamilton and safety Eric Murray are out for the rest of the season. Hamilton tore a quadriceps muscle and Murray hurt his elbow in Sunday's 42-7 win over Indianapolis. Both are headed to injured reserve.",
-       "Jacksonville running back Bhayshul Tuten did not practice again Tuesday with a foot injury, and his status for Thursday is in question. He is Jacksonville's leading rusher this season.",
-       "On the Baltimore side, starting right guard Roger Rosengarten (ankle), starting left guard John Simpson (back), and nose tackle John Jenkins (knee) were limited both days of practice this week."
+       "Baltimore's quarterback picture is unchanged and settled: undrafted rookie Joe Fagnano will make his first career start Thursday. He was a full participant Tuesday with his right ankle heavily taped and braced after hurting it Sunday at Buffalo, where he finished 10 of 21 for 91 yards with an interception and a lost fumble. Lamar Jackson did not practice with his right thumb injury and is headed for surgery and injured reserve. Tyler Huntley did not practice with his toe injury and is out for Thursday.",
+       "The better news for Baltimore is on the lines and at linebacker: offensive linemen Vega Ioane and Ronnie Stanley, linebacker Roquan Smith, outside linebacker Trey Hendrickson, and running back Justice Hill were all upgraded from limited to full participation Tuesday. Kicker Tyler Loop was placed on injured reserve Tuesday with a groin injury, so Jake Moody is expected to kick Thursday. Safety Jaylinn Hawkins did not practice with a knee injury. Starting right guard Roger Rosengarten (ankle), starting left guard John Simpson (back), and nose tackle John Jenkins (knee) were limited both days of practice this week.",
+       "For Jacksonville, running back Bhayshul Tuten did not practice Monday or Tuesday with ankle and foot injuries, and his status for Thursday is in question. Whether he practices Wednesday is the next signal. Chris Rodriguez Jr. was limited both days with a hand injury, and defensive end Travon Walker went from not practicing Monday to limited Tuesday with a rib injury. Defensive tackle DaVon Hamilton (torn quadriceps) and safety Eric Murray (elbow) are out for the season and headed to injured reserve."
+      ],
+      "takeaway": "Fagnano starts Thursday with a braced ankle; four Baltimore starters returned to full practice, Loop is on injured reserve, and Tuten has missed two straight practices.",
+      "evidence_ids": [
+       "ev-inj-am"
       ],
       "sources": [
        {
@@ -48,227 +55,185 @@
         "url": "https://www.baltimoreravens.com/news/joe-fagnano-ravens-quarterbacks-practice-report-tyler-huntley"
        },
        {
-        "label": "ClutchPoints",
-        "url": "https://clutchpoints.com/nfl/jacksonville-jaguars/jaguars-news-liam-coen-davon-hamilton-eric-murray-rest-season"
-       }
-      ],
-      "takeaway": "Jacksonville loses Hamilton and Murray for the season, Tuten's Thursday status is in question, and three Baltimore linemen were limited both days."
-     },
-     {
-      "evidence_ids": [
-       "ev-weather-pm"
-      ],
-      "headline": "Thursday weather in Baltimore: mild, with showers possible late",
-      "paragraphs": [
-       "Thursday night in Baltimore looks mild at kickoff, with temperatures in the mid-60s and a light southwest wind around 5 mph. Showers are possible late in the evening, with about a 50 percent chance of rain late Thursday night.",
-       "That is a forecast, not a betting edge. It can still change before kickoff, so check it again Thursday. The game is Jacksonville at Baltimore on Thursday, November 5, at 8:15 p.m. ET."
-      ],
-      "sources": [
-       {
-        "label": "Weather.com Baltimore 10-day",
-        "url": "https://weather.com/us/md/city/baltimore/tenday"
+        "label": "Ravens Wire",
+        "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/11/03/ravens-jaguars-week-9-injury-report-tuesday-vega-ioane/92594188007/"
        },
        {
-        "label": "Sharp Football Analysis NFL weather",
-        "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/"
+        "label": "Black and Teal",
+        "url": "https://blackandteal.com/jacksonville-jaguars-may-want-to-ease-or-even-rest-bhayshul-tuten-vs-ravens-on-tnf"
        }
-      ],
-      "takeaway": "Mild Thursday night in Baltimore, light wind, showers possible late — check the forecast again before kickoff."
+      ]
      }
-    ],
-    "title": "What Matters Today"
+    ]
    },
    {
-    "icon": "💡",
+    "icon": "\ud83d\udca1",
     "id": "what-it-means",
+    "title": "What It Means for NFL EDGE",
     "items": [
      {
-      "headline": "The board still has not flipped — no Week 9 cards yet",
+      "headline": "The cards on the board are Monday's history, not live picks",
       "paragraphs": [
-       "Read this plainly: the app's board still shows Week 8. It was generated November 2, and a second check this evening confirmed it has not flipped. There are no Week 9 cards, and there is no Jacksonville at Baltimore game on the board at all — so the app has not picked up Fagnano as Thursday's starter yet. Do not look to the board for Thursday's quarterback; the practice reports above are the current word.",
-       "The cards still on the board are Monday night's, and they are history now, not live picks. Hit Rate was Seattle moneyline at -175 at DraftKings — the pick the app rates most likely to win. Seattle lost, so that pick lost. Balanced and Value were both Chicago +3 at -102 at DraftKings, and Chicago won outright, so that pick won. Hit Rate is the likeliest pick, not a promise; the app's own tutorial says Hit Rate is not Profit Rate.",
-       "When the board flips, Thursday's cards will appear. Until then, if your book already has a Thursday line, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet or no-bet verdict on your price. That is a full re-evaluation, not a blind override."
+       "The only cards on the board are Monday night's, and that game is over. Hit Rate was Seattle moneyline at -175 at DraftKings \u2014 the pick the app rates most likely to win, which forgoes value for win probability. Seattle lost, so that pick lost. Balanced and Value were both Chicago +3 at -102 at DraftKings, and Chicago won outright, so that pick won.",
+       "Say it straight: Hit Rate is the likeliest pick, not a promise, and the app's own tutorial says Hit Rate is not Profit Rate. Balanced is a strong pick without paying too much \u2014 a good starting point for a new bettor. Value is always the model's +EV play. None of them is deficient for being a different kind of pick; they answer different questions.",
+       "When the board flips to Week 9, Thursday's cards will appear. Until then, if your book already has a Thursday line, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet or no-bet verdict on your price. That is a full re-evaluation, not a blind override \u2014 and it is the right tool here, because the board itself has not picked up Thursday's quarterback yet."
       ],
-      "takeaway": "Board still on Week 8, no Week 9 cards, Thursday's starter not yet reflected — use the practice reports and run any Thursday price through Check.",
+      "takeaway": "Monday's cards are history \u2014 Hit Rate lost, Balanced and Value won \u2014 and until the board flips to Week 9, run any Thursday price through Check.",
       "evidence_ids": [
-       "ev-board-pm"
+       "ev-board-am"
       ],
       "sources": []
      }
-    ],
-    "title": "What It Means for NFL EDGE"
+    ]
    },
    {
-    "icon": "⚖️",
+    "icon": "\u2696\ufe0f",
     "id": "fade",
+    "title": "Learn the Game",
+    "mode": "learning",
     "items": [
      {
+      "headline": "Learn the Game: what a key number is",
+      "paragraphs": [
+       "A key number is a final margin that games land on more often than other margins. In football, 3 and 7 matter most, because so many games end on a field goal or a touchdown with the extra point.",
+       "Hypothetical example, clearly labeled as hypothetical: say you like a favorite, and you can bet that team at -3. If the team wins by exactly 3, a -3 bet pushes and your stake comes back. But if the line moves to -3.5 before you bet, that same 3-point win loses. The team did not change. The number did.",
+       "That is why bettors watch half-points around key numbers so closely. Getting -2.5 instead of -3, or +7.5 instead of +7, can turn a loss into a push or a push into a win."
+      ],
+      "takeaway": "Key numbers are the margins games land on most, so a half-point across 3 or 7 changes the bet even when the team does not change.",
       "editorial_only": true,
       "evidence_ids": [],
-      "headline": "Learn the Game: what a push means",
-      "paragraphs": [
-       "A push is a tie against the spread. Nobody wins the bet, and nobody loses it. Your stake comes back.",
-       "Hypothetical example, clearly labeled as hypothetical: say you bet a team at -3, and that team wins by exactly 3 points. The final margin lands right on the number, so the bet pushes and your stake is returned.",
-       "That is why the number matters as much as the team. The same team at -2.5 would have won that bet, and at -3.5 it would have lost it. A push is not a win, and it is not a loss — it is the market calling it exactly even."
-      ],
-      "sources": [],
-      "takeaway": "A push means the margin landed exactly on the spread, so your stake comes back — the number you bet matters as much as the team."
+      "sources": []
      }
-    ],
-    "mode": "learning",
-    "title": "Learn the Game"
+    ]
    },
    {
-    "icon": "👀",
+    "icon": "\ud83d\udc40",
     "id": "market-watch",
+    "title": "Line Movement",
     "items": [
      {
-      "evidence_ids": [
-       "ev-line-move-pm",
-       "ev-board-pm"
-      ],
-      "headline": "Thursday's line has flipped a long way since the lookahead",
+      "headline": "Thursday's line has ticked to 10 at one book, and the total is down to 40",
       "paragraphs": [
-       "This is the move of the week so far, and it is all quarterback news. The shadow-tracked lookahead for Jacksonville at Baltimore had Baltimore as a 3-point favorite with a total of 48.5. By this morning's snapshot it had flipped to Jacksonville favored by 8.5 to 9.5 points, with the total down to 42.5.",
-       "This evening, FanDuel lists Jacksonville -9.5 with a total of 40.5, and Covers' Week 9 board shows the same direction: an opener of Jacksonville -7.5 and a total of 48.5, now Jacksonville -9.5 and 42.5. The market moved with the news that Baltimore is down to its third quarterback.",
-       "The app has not caught this move yet — its board still shows Week 8, generated November 2, with no Week 9 cards at all. So do not look to the board for Thursday's price. If your book has a Thursday line, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet or no-bet verdict on your price."
+       "This is all one move, and it is still the quarterback story. The shadow-tracked lookahead had Baltimore as a 3-point favorite with a total of 48.5. By Tuesday morning it had flipped to Jacksonville favored by 8.5 to 9.5 points with the total at 42.5, and Tuesday evening FanDuel listed Jacksonville -9.5 with a total of 40.5.",
+       "This morning's snapshot, updated 7:58 a.m. ET, shows the move stretching a little further: Jacksonville -9.5 at BetRivers, Baltimore +10 at Fanatics, with the total at Over 40 at Fanatics and Under 40.5 at Hard Rock Bet. The moneyline is Jacksonville -500 at BetRivers and Baltimore +400 at DraftKings.",
+       "The app has not caught this move yet \u2014 its board still shows Week 8, generated November 2, with no Week 9 cards at all. So do not look to the board for Thursday's price. If your book has a Thursday line, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet or no-bet verdict on your price."
+      ],
+      "takeaway": "Baltimore -3 and a 48.5 total in the lookahead are long gone \u2014 Jacksonville is now a 9.5- to 10-point favorite with the total at 40 to 40.5.",
+      "evidence_ids": [
+       "ev-line-am",
+       "ev-board-am"
       ],
       "sources": [
        {
-        "label": "Covers Week 9 odds",
-        "url": "https://www.covers.com/nfl/week-9-odds-opening-lines-2026"
+        "label": "WinDaily Week 9 odds",
+        "url": "https://windailysports.com/nfl-odds/week-9/"
        },
        {
         "label": "FanDuel Jaguars vs Ravens",
         "url": "https://www.fanduel.com/research/jaguars-vs-ravens-predictions-odds-picks-best-bets-for-nfl-week-9-thursday-night-football-2026"
        }
-      ],
-      "takeaway": "Baltimore -3 and a 48.5 total in the lookahead are gone — Jacksonville is now about a 9.5-point favorite with the total in the low 40s."
+      ]
      }
-    ],
-    "title": "Line Movement"
+    ]
    },
    {
-    "icon": "✅",
+    "icon": "\u2705",
     "id": "today-tip",
+    "title": "Today's Tip",
     "items": [
      {
-      "evidence_ids": [
-       "ev-board-pm"
-      ],
       "headline": "Thursday game? Thursday check.",
       "paragraphs": [
-       "The quarterback question is answered, so there is no reason to wait on that news anymore. If your book has a Thursday number you like, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet or no-bet verdict on your price. That is a full re-evaluation, not a blind override.",
-       "One thing still to watch: the inactive list lands about 90 minutes before kickoff Thursday. If anything changes there, run your price through Check again before you act.",
-       "Odds are price mechanics: -120 means every $1.20 you risk wins $1. The app sets your actual stake from your bankroll and staking setting — that part is deliberately conservative, and it lives in the app, not here. Settlement in the tracker is manual, and it only works if you are honest with yourself — log the losers too."
+       "The quarterback question is answered, so there is no reason to wait on that news anymore. If your book has a Thursday number you like, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet or no-bet verdict on your price. A good number today beats a hoped-for number later, because waiting lets the number drift the wrong way too.",
+       "The one thing still worth waiting on is the inactive list, about 90 minutes before kickoff Thursday. If anything changes there, run your price through Check again before you act.",
+       "Odds are price mechanics: -120 means every $1.20 you risk wins $1. The app sets your actual stake from your bankroll and staking setting \u2014 that part is deliberately conservative, and it lives in the app, not here. Settlement in the tracker is manual, and it only works if you are honest with yourself \u2014 log the losers too."
       ],
-      "sources": [],
-      "takeaway": "Thursday game? Thursday check. Run your book's Thursday price through Check, and re-check if the inactive list changes anything."
+      "takeaway": "Thursday game? Thursday check. Run your book's Thursday price through Check now, and re-check if the inactive list changes anything.",
+      "evidence_ids": [
+       "ev-board-am"
+      ],
+      "sources": []
      }
-    ],
-    "title": "Today's Tip"
+    ]
    }
-  ],
-  "title": "NFL EDGE Tuesday Evening Brief"
+  ]
  },
  "evidence": [
   {
-   "app_guidance": "Use the app's Thursday card / Check once the board flips; do not guess a starter the app has not updated to.",
+   "evidence_id": "ev-board-am",
+   "category": "app",
+   "fact": "App product view read Wednesday morning, Nov. 4, still shows the Week 8 board generated 2026-11-02T12:08:54Z: no Week 9 cards; Week 8 Baltimore game (BAL at BUF) shows quarterback unresolved/ambiguous; Monday cards were Hit Rate Seattle moneyline -175 at DraftKings, Balanced Chicago +3 -102 at DraftKings, Value Chicago +3 -102 at DraftKings; Monday final Chicago 34, Seattle 17.",
+   "verification": "INTERNAL_CANONICAL",
+   "title": "Morning board read 2026-11-04",
+   "sources": []
+  },
+  {
+   "evidence_id": "ev-ravens-qb-am",
    "category": "injury",
-   "evidence_id": "ev-ravens-qb-pm",
-   "fact": "Baltimore head coach Jesse Minter announced Tuesday, Nov. 3, that undrafted rookie Joe Fagnano will start Thursday, Nov. 5, vs Jacksonville, his first career start. Fagnano was a full participant Tuesday with his right ankle heavily taped/braced after hurting it Sunday at Buffalo (10/21, 91 yards, 1 INT, 1 lost fumble in relief). Lamar Jackson DNP (right thumb, surgery, injured reserve); Tyler Huntley DNP (toe, out Thursday). Baltimore signed Kedon Slovis off Green Bay's practice squad Tuesday to the 53-man roster; Jake Moody expected to kick Thursday.",
-   "interpretation": "Baltimore's starter question is settled for Thursday; the backup depth behind Fagnano is newly assembled.",
+   "fact": "Baltimore head coach Jesse Minter announced Tuesday, Nov. 3, that undrafted rookie Joe Fagnano will start Thursday, Nov. 5, vs Jacksonville, his first career start. Fagnano was a full participant Tuesday with his right ankle heavily taped/braced after hurting it Sunday at Buffalo (10/21, 91 yards, 1 INT, 1 lost fumble in relief). Lamar Jackson DNP (right thumb, surgery, injured reserve); Tyler Huntley DNP (toe, out Thursday).",
+   "verification": "REPORTED",
+   "title": "Ravens QB update 2026-11-04 AM",
    "sources": [
     {
      "label": "Baltimore Ravens",
      "url": "https://www.baltimoreravens.com/news/joe-fagnano-ravens-quarterbacks-practice-report-tyler-huntley"
     },
     {
-     "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/jesse-minter-says-joe-fagnano-will-be-ravens-qb-on-thursday-night"
+     "label": "Ravens Wire",
+     "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/11/03/ravens-jaguars-week-9-injury-report-tuesday-vega-ioane/92594188007/"
     }
-   ],
-   "verification": "REPORTED"
+   ]
   },
   {
-   "app_guidance": "Check the app's Thursday card and the inactive list about 90 minutes before kickoff before acting on Thursday numbers.",
+   "evidence_id": "ev-inj-am",
    "category": "injury",
-   "evidence_id": "ev-jaguars-inj-pm",
-   "fact": "Jacksonville coach Liam Coen confirmed Monday, Nov. 2, that DT DaVon Hamilton (torn quadriceps) and S Eric Murray (elbow) suffered season-ending injuries Sunday vs Indianapolis and will go on injured reserve. Jacksonville RB Bhayshul Tuten did not practice Tuesday, Nov. 3, with a foot injury; his Thursday status is in question. Baltimore RG Roger Rosengarten (ankle), LG John Simpson (back), NT John Jenkins (knee) were limited both days of practice this week.",
-   "interpretation": "Jacksonville's defense loses two starters; its running game may be short-handed Thursday.",
+   "fact": "Tuesday, Nov. 3, Week 9 injury reports: Baltimore upgraded to full participation \u2014 Vega Ioane, Ronnie Stanley, Roquan Smith, Trey Hendrickson, Justice Hill (all from limited); Tyler Loop placed on injured reserve (groin), Jake Moody expected to kick Thursday; Jaylinn Hawkins DNP (knee); Roger Rosengarten (ankle), John Simpson (back), John Jenkins (knee) limited both days. Jacksonville: Bhayshul Tuten DNP Monday and Tuesday (ankle/foot), status for Thursday in question; Chris Rodriguez Jr. limited both days (hand); Travon Walker DNP Monday, limited Tuesday (rib); DaVon Hamilton (torn quadriceps) and Eric Murray (elbow) out for the season, headed to injured reserve.",
+   "verification": "REPORTED",
+   "title": "Injury roundup 2026-11-04 AM",
    "sources": [
     {
      "label": "Baltimore Ravens",
      "url": "https://www.baltimoreravens.com/news/joe-fagnano-ravens-quarterbacks-practice-report-tyler-huntley"
     },
     {
-     "label": "ClutchPoints",
-     "url": "https://clutchpoints.com/nfl/jacksonville-jaguars/jaguars-news-liam-coen-davon-hamilton-eric-murray-rest-season"
-    }
-   ],
-   "verification": "REPORTED"
-  },
-  {
-   "app_guidance": "Recheck the forecast Thursday; do not treat weather alone as a totals edge.",
-   "category": "weather",
-   "evidence_id": "ev-weather-pm",
-   "fact": "Baltimore forecast for Thursday, Nov. 5: daytime high about 73F, Thursday night showers late with low about 64F, light southwest wind about 5 mph; kickoff-window reporting puts Thursday at about 67F with 3 mph wind and about 39% precipitation chance. Presented factually, not as a totals edge.",
-   "interpretation": "Mild night with a chance of late showers; forecast may change before kickoff.",
-   "sources": [
-    {
-     "label": "Weather.com Baltimore 10-day",
-     "url": "https://weather.com/us/md/city/baltimore/tenday"
+     "label": "Ravens Wire",
+     "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/11/03/ravens-jaguars-week-9-injury-report-tuesday-vega-ioane/92594188007/"
     },
     {
-     "label": "Sharp Football Analysis NFL weather",
-     "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/"
+     "label": "Black and Teal",
+     "url": "https://blackandteal.com/jacksonville-jaguars-may-want-to-ease-or-even-rest-bhayshul-tuten-vs-ravens-on-tnf"
     }
-   ],
-   "verification": "REPORTED"
+   ]
   },
   {
-   "app_guidance": "Compare any Thursday price you hold against the app's card via Check rather than chasing the market move.",
+   "evidence_id": "ev-line-am",
    "category": "market",
-   "evidence_id": "ev-line-move-pm",
-   "fact": "Shadow-tracked Week 9 lookahead (Oct 29-Nov 2 snapshots): Jacksonville at Baltimore opened with Baltimore -3, total 48.5. Morning Nov 3 snapshot: Jacksonville -8.5 (BetMGM) / Baltimore +9.5 (Hard Rock), total 42.5. Evening Nov 3: FanDuel lists Jacksonville -9.5 (-120) / Baltimore +9.5 (-102), total 40.5; Covers Week 9 board: opener Jacksonville -7.5, total 48.5, now Jacksonville -9.5, total 42.5.",
-   "interpretation": "The line flipped with Baltimore's quarterback injuries; the total fell as the quarterback news landed.",
+   "fact": "Week 9 line movement, Jacksonville at Baltimore: shadow-tracked lookahead Baltimore -3, total 48.5; Nov. 3 morning Jacksonville -8.5/-9.5 split books, total 42.5; Nov. 3 evening FanDuel Jacksonville -9.5, total 40.5; Nov. 4 morning WinDaily snapshot (updated 7:58 AM ET): Jacksonville -9.5 (BetRivers) / Baltimore +10 (Fanatics), total Over 40 (Fanatics) / Under 40.5 (Hard Rock Bet), moneyline Jacksonville -500 (BetRivers) / Baltimore +400 (DraftKings).",
+   "verification": "REPORTED",
+   "title": "Thursday line movement 2026-11-04 AM",
    "sources": [
     {
-     "label": "Covers Week 9 odds",
-     "url": "https://www.covers.com/nfl/week-9-odds-opening-lines-2026"
+     "label": "WinDaily Week 9 odds",
+     "url": "https://windailysports.com/nfl-odds/week-9/"
     },
     {
      "label": "FanDuel Jaguars vs Ravens",
      "url": "https://www.fanduel.com/research/jaguars-vs-ravens-predictions-odds-picks-best-bets-for-nfl-week-9-thursday-night-football-2026"
     }
-   ],
-   "verification": "REPORTED"
+   ]
   },
   {
-   "app_guidance": "Do not manufacture a Fade from an unavailable split.",
-   "category": "market",
-   "evidence_id": "ev-vsin-pm",
-   "fact": "VSiN free betting-splits page (https://data.vsin.com/betting-splits/) checked Tuesday evening, Nov. 3: the visible featured row was college basketball (Wofford vs Tennessee); no NFL row was visible and the full board is VSiN Pro. No NFL DraftKings split was available on the free tier at check time, so no Fade split qualified.",
-   "interpretation": "No verified public-vs-sharper NFL disagreement was available from the free tier, so the learning substitute is used.",
+   "evidence_id": "ev-vsin-am",
+   "category": "betting_splits",
+   "fact": "VSiN free betting-splits page (https://data.vsin.com/betting-splits/) text fetch, checked Wednesday morning, Nov. 4: the visible featured row was college basketball (Wofford/Tennessee); no NFL row was readable in that fetch, so no verified NFL split was available and no Fade qualifies. Learning substitute used; this is a check log, not a claim that splits do not exist elsewhere.",
+   "verification": "REPORTED",
+   "title": "VSiN splits check 2026-11-04 AM",
    "sources": [
     {
-     "label": "VSiN betting splits",
+     "label": "VSiN",
      "url": "https://data.vsin.com/betting-splits/"
     }
-   ],
-   "verification": "REPORTED"
-  },
-  {
-   "app_guidance": "Use Check for any Thursday price your book offers.",
-   "category": "app",
-   "evidence_id": "ev-board-pm",
-   "fact": "App product view (https://nfl.tkhermes.duckdns.org/api/v1/product/latest) read Tuesday evening, Nov. 3, at 6:09 p.m. Denver and re-checked at 6:11 p.m. Denver: still the Week 8 board, generated 2026-11-02T12:08:54Z (prediction as of 2026-11-02T12:05:04Z). Headline cards are Monday's Chicago at Seattle cards: Hit Rate Seattle moneyline -175 at DraftKings; Balanced Chicago +3 -102 at DraftKings; Value Chicago +3 -102 at DraftKings. No Week 9 games on the board and no Jacksonville at Baltimore game, so Thursday's quarterback change is not yet reflected in the app.",
-   "interpretation": "No live Week 9 picks exist yet; Thursday prices must go through Check until the board flips.",
-   "sources": [],
-   "verification": "INTERNAL_CANONICAL"
+   ]
   }
- ],
- "research_generated_at_utc": "2026-11-04T01:13:22Z",
- "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-11-04T01:13:22Z"
+ ]
 }
