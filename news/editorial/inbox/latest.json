@@ -1,280 +1,290 @@
 {
+ "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+ "submitted_at_utc": "2026-11-06T01:14:13Z",
+ "research_generated_at_utc": "2026-11-06T01:14:13Z",
  "article": {
-  "dek": "It is game day in Baltimore: an undrafted rookie makes his first start under the lights, the inactive list is the last check before kickoff, and the Thursday line has settled with Jacksonville near a 10-point favorite.",
-  "edition": "Morning Brief",
-  "published_at_utc": "2026-11-05T13:17:23Z",
-  "research_generated_at_utc": "2026-11-05T13:17:23Z",
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Thursday Evening Brief",
+  "dek": "The inactive list settled Thursday's two game-time calls, the board still has not flipped to Week 9, and Sunday already has a quarterback change worth knowing about.",
+  "published_at_utc": "2026-11-06T01:14:13Z",
+  "research_generated_at_utc": "2026-11-06T01:14:13Z",
   "sections": [
    {
-    "icon": "📰",
     "id": "what-matters",
     "title": "What Matters Today",
+    "icon": "📰",
     "items": [
      {
-      "evidence_ids": [
-       "ev-qb-am"
-      ],
-      "headline": "Lead: Game day in Baltimore, and the rookie starts",
+      "headline": "Lead: Inactives are in — Tuten and Walker play, Wiggins is out",
       "paragraphs": [
-       "It is game day. Jacksonville visits Baltimore tonight, Thursday, November 5, at 8:15 p.m. ET on Prime Video. The Jaguars are 5-2. The Ravens are 4-4 and have lost three straight.",
-       "Baltimore's quarterback is settled, and it is the story of the night. Undrafted rookie Joe Fagnano makes his first career start. Lamar Jackson is headed to injured reserve after right thumb surgery, and Tyler Huntley is out for the season with a turf toe injury that needs surgery. Fagnano came on in relief last Sunday at Buffalo and went 10 of 21 for 91 yards with an interception. He is dealing with an ankle issue of his own, but he was a full participant in Tuesday's practice and head coach Jesse Minter confirmed Tuesday that Fagnano starts. Kedon Slovis, signed off Green Bay's practice squad, backs him up.",
-       "The trade headline does not change tonight. Baltimore is finalizing a deal for veteran Jacoby Brissett, but it is not expected to be completed until the weekend, so Brissett would debut Monday, November 16, against the Los Angeles Chargers. Tonight belongs to Fagnano. The inactive list lands about 90 minutes before kickoff, and that is the last check before you act on a Thursday price."
+       "Kickoff is 8:15 p.m. ET on Prime Video, and the last unknowns are settled. Jacksonville running back Bhayshul Tuten is active after missing all week with ankle and foot injuries. He worked out before the game and is good to go. Defensive end Travon Walker is active too, after being questionable with a rib injury.",
+       "Baltimore is without its top cornerback. Nate Wiggins is inactive with a stinger and an illness. He was a full participant Tuesday, then missed Wednesday's practice. Safety Jaylinn Hawkins misses a third straight game with a knee injury.",
+       "The quarterback picture is unchanged and now final. Undrafted rookie Joe Fagnano makes his first career start. Austin Reed, signed Monday, is the backup. Kedon Slovis is the emergency third quarterback. The Brissett trade is still a next-week story, not a Thursday one."
+      ],
+      "takeaway": "Tuten and Walker play for Jacksonville; Wiggins is out for Baltimore, and Fagnano starts with Reed backing him up.",
+      "evidence_ids": [
+       "ev-inj-pm"
       ],
       "sources": [
        {
         "label": "Baltimore Ravens",
-        "url": "https://www.baltimoreravens.com/news/ravens-joe-fagnano-belief-quarterback-lamar-jackson-tyler-huntley"
+        "url": "https://www.baltimoreravens.com/news/nate-wiggins-inactive-for-jaguars-week-9-austin-reed-backup-quarterback"
        },
        {
-        "label": "USA Today",
-        "url": "https://www.usatoday.com/story/sports/nfl/ravens/2026/11/05/joe-fagnano-baltimore-ravens-quarterback-lamar-jackson-injury/92611338007/"
+        "label": "NBC Sports",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/thursday-night-football-de-travon-walker-rb-bhayshul-tuten-active-for-jaguars-vs-ravens"
        }
-      ],
-      "takeaway": "Tonight is Jacksonville at Baltimore at 8:15 p.m. ET; Fagnano makes his first start, and Brissett is a next-week story, not a Thursday one."
+      ]
      },
      {
-      "evidence_ids": [
-       "ev-inj-am",
-       "ev-qb-am"
-      ],
-      "headline": "Injury roundup: final designations stand — Tuten and Walker are game-time calls",
+      "headline": "Sunday quarterback news: Darnold is out, Lock starts for Seattle",
       "paragraphs": [
-       "Nothing new arrived overnight. The final designations from Wednesday still stand, and the inactive list about 90 minutes before kickoff is what settles the two game-time calls.",
-       "For Jacksonville, running back Bhayshul Tuten is questionable and a game-time decision after missing all week with ankle and foot injuries. Defensive end Travon Walker is questionable with a rib injury after limited practices Tuesday and Wednesday. Wide receiver Jakobi Meyers, running back Chris Rodriguez Jr., guard Ezra Cleveland, and safety Antonio Johnson carry no game status and are good to go. Defensive tackle DaVon Hamilton and safety Eric Murray are out for the season.",
-       "For Baltimore, rookie guard Vega Ioane carries no designation and is set to return after missing one game with a knee injury. Cornerback Nate Wiggins is questionable after missing Wednesday's practice with an illness. Safety Jaylinn Hawkins misses a third straight game with a knee injury. Kicker Tyler Loop is on injured reserve with a groin injury, so Jake Moody is expected to kick tonight."
+       "Seattle will be without starting quarterback Sam Darnold on Sunday against Arizona. Darnold is out with a quad injury suffered late in Monday's loss to Chicago. He will not go on injured reserve, and the team calls him week-to-week, but he is out for Week 9.",
+       "Drew Lock starts in his place. Lock has been dealing with an elbow injury of his own and was limited in practice for two weeks, so Seattle plans to manage his throwing workload and give Jalen Milroe practice reps. The Seahawks added quarterback Adrian Martinez to the practice squad on Wednesday for depth.",
+       "In Philadelphia, Joe Milton will start at quarterback Sunday against the Giants. Jalen Hurts is out for the season with blood clots. Tanner McKee, who has a chest injury but was a full participant, moves to the backup role."
+      ],
+      "takeaway": "Darnold is out Sunday and Lock starts with a sore elbow; in Philadelphia, Milton starts with McKee backing him up.",
+      "evidence_ids": [
+       "ev-darnold-pm",
+       "ev-milton-pm"
       ],
       "sources": [
        {
-        "label": "Baltimore Ravens",
-        "url": "https://www.baltimoreravens.com/news/ravens-jaguars-injury-report-vega-ioane-nate-wiggins-bhayshul-tuten"
+        "label": "Athlon Sports",
+        "url": "https://athlonsports.com/nfl/seattle-seahawks/seattle-seahawks-sam-darnold-injury-drew-lock-arizona-cardinals"
        },
        {
-        "label": "Black and Teal",
-        "url": "https://blackandteal.com/final-injury-report-antonio-johnson-gives-jaguars-a-spark-ravens-aren-t-ready-for-thursday-night"
-       },
-       {
-        "label": "Ravens Wire",
-        "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/11/04/ravens-updated-qb-depth-chart-tyler-huntley-injury-week-9/92611064007/"
+        "label": "DraftKings Network",
+        "url": "https://dknetwork.draftkings.com/2026/11/03/nfl-injury-report-week-9/"
        }
-      ],
-      "takeaway": "Tuten and Walker are game-time decisions; Ioane is clear, Wiggins is questionable with an illness, and Hawkins is out."
+      ]
      },
      {
-      "evidence_ids": [
-       "ev-weather-am"
-      ],
-      "headline": "Weather: mild in Baltimore at kickoff, rain chances rise through the evening",
+      "headline": "Weather: scattered thunderstorms possible at kickoff in Baltimore",
       "paragraphs": [
-       "Thursday night in Baltimore looks mild with rain in the picture. The forecast for M&T Bank Stadium calls for temperatures in the high 60s at kickoff, falling into the mid-60s through the evening, with a chance of rain showers that rises as the night goes on. Wind is light, out of the south at just a few miles per hour around kickoff.",
-       "That is a factual weather read, not a totals edge. Mostly dry conditions are expected around the 8:15 p.m. ET kickoff, with an isolated shower or thunderstorm possible during the game. If you are going, pack for rain. If you are betting, do not turn a rain chance into a totals opinion on its own."
+       "Thursday night in Baltimore looks wet at kickoff. The forecast for M&T Bank Stadium calls for scattered thunderstorms around 8:00 p.m. ET, about 70 degrees, with a rain chance near 43 percent at kickoff and 49 percent at 9:00 p.m. Wind is light, out of the south-southwest at about 5 miles per hour.",
+       "That is a factual weather read, not a totals edge. Rain chances stay in the picture through the evening, with showers possible again late. If you are going, pack for rain. If you are betting, do not turn a rain chance into a totals opinion on its own."
+      ],
+      "takeaway": "About 70 degrees at kickoff in Baltimore, light south wind, and scattered thunderstorms possible during the game.",
+      "evidence_ids": [
+       "ev-weather-pm"
       ],
       "sources": [
        {
-        "label": "Weather.com Baltimore",
-        "url": "https://weather.com/us/md/city/baltimore/tenday"
-       },
-       {
-        "label": "92Q Baltimore weather",
-        "url": "https://92q.com/5919303/baltimore-maryland-weather-rain-cooler-weekend/"
-       },
-       {
-        "label": "Weather Tomorrow Baltimore (NWS data)",
-        "url": "https://www.weathertommorow.com/tomorrow/maryland/baltimore"
+        "label": "The Weather Channel",
+        "url": "https://weather.com/us/md/city/baltimore/hourbyhour"
        }
-      ],
-      "takeaway": "Thursday night in Baltimore: high 60s at kickoff, light south wind, and a rising chance of rain showers through the evening."
+      ]
      }
     ]
    },
    {
-    "icon": "💡",
     "id": "what-it-means",
     "title": "What It Means for NFL EDGE",
+    "icon": "💡",
     "items": [
      {
+      "headline": "The board still has not flipped — no Week 9 cards, so Thursday still goes through Check",
+      "paragraphs": [
+       "Read after the evening refresh window and checked again a few minutes later, the app board still shows Week 8, generated November 2. There are no Week 9 cards at all. Its Baltimore game is still the Week 8 trip to Buffalo, and its quarterback field is blank — it has not picked up Fagnano as tonight's starter.",
+       "So there is still no Thursday card to read, and you should not force a pick out of a stale board. That is what Check is for. If your book has a Thursday line, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet or no-bet verdict on your price. Full re-evaluation, not a blind override.",
+       "The only cards on the board are Monday's Chicago at Seattle game, which has already been played. They are worth one look because they show how the three cards differ. The Value card and the Balanced card were the same play: Chicago +3 at -102, with the model giving Chicago a 50.6% chance against a market price implying 46.5% — a +3.6% edge. The Hit Rate card was Seattle on the moneyline at -175, with the model at 56.1% against a market price implying 60.4%. Hit Rate is the pick the app thinks is most likely to win. It is not the best value. The app's own tutorial says Hit Rate is not Profit Rate."
+      ],
+      "takeaway": "Board still shows Week 8 with no Week 9 cards, so Thursday's price goes through Check until the board flips.",
       "evidence_ids": [
-       "ev-board-am"
+       "ev-board-pm"
       ],
-      "headline": "The board still has not flipped — no Thursday cards yet, so Thursday goes through Check",
-      "paragraphs": [
-       "The morning board is the same board as last night. Read after the refresh window Thursday morning, it still shows Week 8, generated November 2, with no Week 9 cards at all. Its Baltimore game is still the Week 8 trip to Buffalo, and its quarterback field is blank — it has not picked up Fagnano as tonight's starter.",
-       "The only cards on it are Monday's history, and they are worth one look because they show how the three cards differ. On Chicago at Seattle, the Value card and the Balanced card were the same play: Chicago +3 at -102, with the model giving Chicago a 50.6% chance against a market price implying 46.5% — a +3.6% edge. The Hit Rate card was Seattle on the moneyline at -175, with the model at 56.1% against a market price implying 60.4% — a negative edge, because Hit Rate forgoes value for win probability. Hit Rate is the pick most likely to win. Balanced is a strong pick without paying too much, a good starting point for a new bettor. Value is always the model's +EV play. None of them is deficient for being a different kind of pick.",
-       "So there are no Thursday cards to read this morning, and you should not force a pick out of a stale board. That is what Check is for. If your book already has a Thursday line, tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet or no-bet verdict on your price. Full re-evaluation, not a blind override."
-      ],
-      "sources": [],
-      "takeaway": "Board still shows Week 8 with no Week 9 cards, so Thursday's price goes through Check until the board flips."
+      "sources": []
      }
     ]
    },
    {
-    "icon": "⚖️",
     "id": "fade",
-    "mode": "learning",
     "title": "Learn the Game",
+    "icon": "⚖️",
+    "mode": "learning",
     "items": [
      {
-      "evidence_ids": [],
-      "headline": "Learn the Game: closing line value — beating the number that matters",
+      "headline": "Learn the Game: handle vs. tickets — money and bets are not the same thing",
       "paragraphs": [
-       "Closing line value, usually shortened to CLV, is a simple idea. It asks whether the price you took was better than the price available right before the game started. If you bet a team at -3 and the line closes at -5, you got closing line value. If you bet it at -7 and it closes at -5, you did not.",
-       "Hypothetical example, clearly labeled as hypothetical: say you take the Jaguars at -7 on Monday, and by Thursday night the line has moved to Jacksonville -9.5. You hold a better number than the closing line. That does not guarantee the bet wins. It means you paid less for the same side than the market ended up charging.",
-       "Why it matters: over a long run, bettors who regularly beat the closing line tend to be on the right side of the market more often than bettors who do not. One game proves nothing. The habit, measured over many bets, is the signal."
+       "When a betting splits page shows two percentages, they are counting different things. Handle is the money. Tickets are the bets. A side can have most of the tickets and a minority of the handle, or the other way around.",
+       "Hypothetical example, clearly labeled as hypothetical: say 70% of the tickets are on the favorite, but only 40% of the handle is. That means lots of small bets on the favorite and fewer, bigger bets on the underdog. The crowd is on one side. The money is split differently.",
+       "Why it matters: a real Fade starts from a disagreement like that — heavy tickets on one side, handle leaning the other — plus a line move that backs it up. Tickets and handle agreeing on the same side is not a Fade. It is just a popular side."
       ],
-      "sources": [],
-      "takeaway": "Closing line value means you took a better price than the closing line; it does not guarantee a win, but beating the close over many bets is a good sign.",
-      "editorial_only": true
+      "takeaway": "Handle is the money, tickets are the bets — when they point opposite ways, that disagreement is where a Fade starts.",
+      "editorial_only": true,
+      "evidence_ids": [],
+      "sources": []
      }
     ]
    },
    {
-    "icon": "👀",
     "id": "market-watch",
     "title": "Line Movement",
+    "icon": "👀",
     "items": [
      {
-      "evidence_ids": [
-       "ev-line-am",
-       "ev-board-am"
-      ],
-      "headline": "Thursday's line has settled with Jacksonville near 10, and the total has ticked down to 39.5",
+      "headline": "Thursday's line ticked to Jacksonville -10, and the total held at 39.5",
       "paragraphs": [
-       "The Thursday line has barely moved since last night, and the total has inched down. Jacksonville is -9.5 at -120 on FanDuel, with Baltimore +10 at -109 on BetRivers. The moneyline is Jacksonville -500 and Baltimore +425. The total is 39.5, over -105 on Fanatics and under -105 on Hard Rock Bet. That is down from 40.5 last night.",
+       "The Thursday line moved a half-point through the day and the total did not move at all. At DraftKings, Jacksonville is now -10 at -108, with Baltimore +10 at -112. The moneyline is Jacksonville -535 and Baltimore +400. The total is 39.5, over -118 and under -102.",
        "Step back and the move is still the quarterback news. A week ago the lookahead had Baltimore as a 3-point favorite with a total of 48.5. Jackson's thumb injury, Huntley's season-ending turf toe, and Fagnano's first start flipped the favorite and pulled the total down about nine points. The market has now settled around Jacksonville by 10 with a total near 40.",
-       "The app has not caught any of it yet. The board still shows Week 8, generated November 2, so none of these Thursday prices are on a card. If your book has a Thursday line you like, run it through Check: type in the line and price, and the app runs it back through the model and evaluator for a bet or no-bet verdict on your price."
+       "Sunday has its own mover already. Seattle was -11.5 against Arizona on Wednesday, and by Thursday morning it was -8.5. That is the Darnold news landing in the number. Watch Friday's final designations before you act on a Sunday price — the inactives land about 90 minutes before kickoff.",
+       "The app has not caught any of it yet. The board still shows Week 8, generated November 2, so none of these prices are on a card. If your book has a line you like, run it through Check: type in the line and price, and the app runs it back through the model and evaluator for a bet or no-bet verdict on your price."
+      ],
+      "takeaway": "Jacksonville -10 at DraftKings with the total steady at 39.5; Seattle's Sunday line has already moved three points on the Darnold news.",
+      "evidence_ids": [
+       "ev-line-pm",
+       "ev-sea-pm",
+       "ev-board-pm"
       ],
       "sources": [
        {
-        "label": "WinDaily Week 9 odds",
+        "label": "USA Today",
+        "url": "https://www.usatoday.com/story/sports/nfl/2026/11/05/ravens-jaguars-score-stats-highlights-thursday-night-football--live/92599756007/"
+       },
+       {
+        "label": "WinDaily Sports",
         "url": "https://windailysports.com/nfl-odds/week-9/"
        }
-      ],
-      "takeaway": "From Baltimore -3 and a 48.5 total a week ago to Jacksonville -9.5 and a 39.5 total now — the quarterback news moved it, and it has settled."
+      ]
      }
     ]
    },
    {
-    "icon": "✅",
     "id": "today-tip",
     "title": "Today's Tip",
+    "icon": "✅",
     "items": [
      {
-      "evidence_ids": [
-       "ev-board-am"
-      ],
       "headline": "Thursday game? Thursday check — and bet the good number now",
       "paragraphs": [
-       "If your book has a Thursday number you like, run it through Check now and, if Check says bet, bet it now. A good number today beats a hoped-for number later, because waiting lets the number drift the wrong way too. The one thing still worth waiting on is the inactive list, about 90 minutes before kickoff — if Tuten, Walker, or Wiggins changes status there, run your price through Check again before you act.",
-       "One housekeeping note: settlement in the app is manual, and the tracker only works if you are honest with yourself. Log the losers too. A record that only keeps the wins is not a record."
+       "The inactives are settled, so there is nothing left to wait on for tonight. If your book has a Thursday number you like, run it through Check now and, if Check says bet, bet it now. A good number today beats a hoped-for number later, because waiting lets the number drift the wrong way too. And a quick price reminder: -120 means every $1.20 you risk wins $1. The app sets your actual stake from your bankroll and how aggressive you want to be.",
+       "For Sunday, the next real information event is Friday's final designations. That is the one to wait for on a Sunday price — not tonight's game, which is already priced and about to kick off."
       ],
-      "sources": [],
-      "takeaway": "Run your book's Thursday price through Check now; if it says bet, bet the good number now — and log the result either way, win or lose."
+      "takeaway": "Inactives are in, so run your book's Thursday price through Check now; if it says bet, bet the good number now.",
+      "evidence_ids": [
+       "ev-board-pm"
+      ],
+      "sources": []
      }
     ]
    }
-  ],
-  "title": "NFL EDGE Thursday Morning Brief"
+  ]
  },
  "evidence": [
   {
-   "category": "app",
-   "evidence_id": "ev-board-am",
-   "fact": "App product view read Thursday morning, Nov. 5, after the refresh window: still shows the Week 8 board generated 2026-11-02T12:08:54Z; no Week 9 cards; Week 8 Baltimore game (BAL at BUF) shows quarterback expected_starter null; it has not picked up Joe Fagnano as Thursday's starter. Headline cards are Monday's settled Chicago at Seattle game: Hit Rate Seattle moneyline -175 (model 56.1% vs market-implied 60.4%, EV -5.7%); Balanced and Value both Chicago +3 at -102 (model 50.6% vs market-implied 46.5%, EV +3.6%).",
-   "sources": [],
-   "title": "Morning board read 2026-11-05",
-   "verification": "INTERNAL_CANONICAL"
-  },
-  {
-   "category": "news",
-   "evidence_id": "ev-qb-am",
-   "fact": "Undrafted rookie Joe Fagnano makes his first career start Thursday night vs Jacksonville. Lamar Jackson is headed to injured reserve after right thumb surgery; Tyler Huntley is out for the season with a turf toe injury requiring surgery. Fagnano went 10 of 21 for 91 yards with an interception in relief at Buffalo on Nov. 1; he has an ankle issue but was a full participant in Tuesday's practice and head coach Jesse Minter confirmed Tuesday that Fagnano starts. Kedon Slovis backs him up. The Jacoby Brissett trade is not expected to complete until the weekend; Brissett would debut Nov. 16 vs the Chargers, not Thursday.",
+   "evidence_id": "ev-inj-pm",
+   "category": "injury",
+   "verification": "REPORTED",
+   "fact": "Inactive list for Jacksonville at Baltimore, Thursday Nov 5: Jaguars RB Bhayshul Tuten (ankle/foot) and DE Travon Walker (rib) are ACTIVE after being questionable; Ravens CB Nate Wiggins (stinger/illness) is INACTIVE, S Jaylinn Hawkins (knee) is INACTIVE; Austin Reed is Baltimore's No. 2 QB behind Joe Fagnano, Kedon Slovis is the emergency No. 3 QB.",
+   "interpretation": "Both Jacksonville game-time calls went the good way; Baltimore loses its top cornerback for a rookie quarterback's first start.",
    "sources": [
     {
      "label": "Baltimore Ravens",
-     "url": "https://www.baltimoreravens.com/news/ravens-joe-fagnano-belief-quarterback-lamar-jackson-tyler-huntley"
+     "url": "https://www.baltimoreravens.com/news/nate-wiggins-inactive-for-jaguars-week-9-austin-reed-backup-quarterback",
+     "published_at_utc": "2026-11-06T00:08:18Z"
     },
+    {
+     "label": "NBC Sports",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/thursday-night-football-de-travon-walker-rb-bhayshul-tuten-active-for-jaguars-vs-ravens",
+     "published_at_utc": "2026-11-06T00:58:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-darnold-pm",
+   "category": "injury",
+   "verification": "REPORTED",
+   "fact": "Seattle QB Sam Darnold is OUT for Sunday vs Arizona with a quad injury (week-to-week, will not go on injured reserve). Backup Drew Lock starts; Lock has been limited in practice for two weeks with an elbow injury and Seattle will manage his throwing workload, giving Jalen Milroe practice reps. Seattle added QB Adrian Martinez to the practice squad Nov 4.",
+   "interpretation": "Seattle goes to a backup who is himself banged up; the market has already moved on it (see ev-sea-pm).",
+   "sources": [
+    {
+     "label": "Athlon Sports",
+     "url": "https://athlonsports.com/nfl/seattle-seahawks/seattle-seahawks-sam-darnold-injury-drew-lock-arizona-cardinals",
+     "published_at_utc": "2026-11-05T21:44:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-milton-pm",
+   "category": "injury",
+   "verification": "REPORTED",
+   "fact": "Joe Milton will start at quarterback for Philadelphia on Sunday vs the New York Giants. Jalen Hurts is out for the season with blood clots. Tanner McKee (chest, full participant) moves to the backup role.",
+   "interpretation": "Philadelphia's quarterback situation is settled for Sunday, with a first-time starter under center.",
+   "sources": [
+    {
+     "label": "DraftKings Network",
+     "url": "https://dknetwork.draftkings.com/2026/11/03/nfl-injury-report-week-9/",
+     "published_at_utc": "2026-11-05T19:00:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-weather-pm",
+   "category": "weather",
+   "verification": "REPORTED",
+   "fact": "Thursday night in Baltimore: scattered thunderstorms around the 8:15 p.m. ET kickoff, about 70 degrees, rain chance 43% at 8:00 p.m. and 49% at 9:00 p.m., wind south-southwest about 5 mph, staying in the upper 60s through the evening.",
+   "interpretation": "Wet at kickoff with rain chances through the evening; a factual read, not a totals edge.",
+   "sources": [
+    {
+     "label": "The Weather Channel",
+     "url": "https://weather.com/us/md/city/baltimore/hourbyhour"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-line-pm",
+   "category": "line",
+   "verification": "REPORTED",
+   "fact": "Thursday evening lines (DraftKings, reported 4:40 p.m. ET Nov 5): Jacksonville -10 (-108), Baltimore +10 (-112); moneyline Jacksonville -535, Baltimore +400; total 39.5, over -118, under -102. Morning read was Jacksonville -9.5 at -120 (FanDuel), total 39.5, moneyline -500/+425.",
+   "interpretation": "The spread ticked a half-point toward Jacksonville through the day; the total held at 39.5.",
+   "sources": [
     {
      "label": "USA Today",
-     "url": "https://www.usatoday.com/story/sports/nfl/ravens/2026/11/05/joe-fagnano-baltimore-ravens-quarterback-lamar-jackson-injury/92611338007/"
+     "url": "https://www.usatoday.com/story/sports/nfl/2026/11/05/ravens-jaguars-score-stats-highlights-thursday-night-football--live/92599756007/",
+     "published_at_utc": "2026-11-05T21:40:00Z"
     },
     {
-     "label": "TSN",
-     "url": "https://www.tsn.ca/nfl/article/ravens-are-down-to-their-no-3-qb-as-afc-south-leading-jaguars-visit-on-tsn/"
+     "label": "Action Network",
+     "url": "https://www.actionnetwork.com/nfl/jaguars-vs-ravens-picks-props-odds-predictions-thursday-night-football-nov-5",
+     "published_at_utc": "2026-11-05T22:28:42Z"
     }
-   ],
-   "title": "Ravens QB update 2026-11-05 AM",
-   "verification": "REPORTED"
+   ]
   },
   {
-   "category": "news",
-   "evidence_id": "ev-inj-am",
-   "fact": "No new injury news overnight; Wednesday's final designations stand. Jacksonville: RB Bhayshul Tuten questionable (ankle/foot, DNP all week, game-time decision per head coach Liam Coen); DE Travon Walker questionable (rib, limited Tue/Wed); WR Jakobi Meyers, RB Chris Rodriguez Jr., G Ezra Cleveland, S Antonio Johnson carry no game status; DT DaVon Hamilton and S Eric Murray out for the season. Baltimore: G Vega Ioane no designation, set to return (knee, missed one game); CB Nate Wiggins questionable (illness, missed Wednesday practice); S Jaylinn Hawkins out a third straight game (knee); K Tyler Loop on IR (groin), Jake Moody expected to kick.",
+   "evidence_id": "ev-sea-pm",
+   "category": "line",
+   "verification": "REPORTED",
+   "fact": "Seattle vs Arizona Sunday line moved from Seattle -11.5 (Nov 4 snapshot) to Seattle -8.5 (Nov 5 morning snapshot) on the WinDaily Week 9 odds board, after Sam Darnold was ruled out for Sunday.",
+   "interpretation": "A three-point move on the quarterback news, before Friday's final designations.",
    "sources": [
     {
-     "label": "Baltimore Ravens",
-     "url": "https://www.baltimoreravens.com/news/ravens-jaguars-injury-report-vega-ioane-nate-wiggins-bhayshul-tuten"
-    },
-    {
-     "label": "Black and Teal",
-     "url": "https://blackandteal.com/final-injury-report-antonio-johnson-gives-jaguars-a-spark-ravens-aren-t-ready-for-thursday-night"
-    },
-    {
-     "label": "Ravens Wire",
-     "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/11/04/ravens-updated-qb-depth-chart-tyler-huntley-injury-week-9/92611064007/"
-    }
-   ],
-   "title": "Final injury roundup 2026-11-05 AM",
-   "verification": "REPORTED"
-  },
-  {
-   "category": "news",
-   "evidence_id": "ev-weather-am",
-   "fact": "Thursday night in Baltimore: temperatures in the high 60s at kickoff, falling into the mid-60s through the evening; chance of rain showers rising as the night goes on, mostly dry around the 8:15 p.m. ET kickoff with an isolated shower or thunderstorm possible; wind light, out of the south at a few miles per hour.",
-   "sources": [
-    {
-     "label": "Weather.com Baltimore",
-     "url": "https://weather.com/us/md/city/baltimore/tenday"
-    },
-    {
-     "label": "92Q Baltimore weather",
-     "url": "https://92q.com/5919303/baltimore-maryland-weather-rain-cooler-weekend/"
-    },
-    {
-     "label": "Weather Tomorrow Baltimore (NWS data)",
-     "url": "https://www.weathertommorow.com/tomorrow/maryland/baltimore"
-    }
-   ],
-   "title": "Baltimore weather 2026-11-05 evening",
-   "verification": "REPORTED"
-  },
-  {
-   "category": "news",
-   "evidence_id": "ev-line-am",
-   "fact": "WinDaily Week 9 board, updated 1:01 AM ET Nov. 5: Jacksonville -9.5 at -120 (FanDuel), Baltimore +10 at -109 (BetRivers); moneyline Jacksonville -500 (BetRivers), Baltimore +425 (BetMGM); total 39.5, over -105 (Fanatics), under -105 (Hard Rock Bet). Down from a 40.5 total Wednesday evening; spread steady at -9.5/-10. A week ago the lookahead had Baltimore -3 with a 48.5 total.",
-   "sources": [
-    {
-     "label": "WinDaily Week 9 odds",
+     "label": "WinDaily Sports",
      "url": "https://windailysports.com/nfl-odds/week-9/"
     }
-   ],
-   "title": "Thursday line movement 2026-11-05 AM",
-   "verification": "REPORTED"
+   ]
   },
   {
-   "category": "news",
-   "evidence_id": "ev-vsin-am",
-   "fact": "VSiN betting-splits free page checked Thursday morning, Nov. 5: the only featured row shown was college basketball (Fairleigh Dickinson +29.5 at Butler -29.5). No NFL row was visible, and the full board is VSiN Pro paid. No verified NFL split was available, so no real Fade qualified; the learning substitute was used instead.",
+   "evidence_id": "ev-board-pm",
+   "category": "app",
+   "verification": "INTERNAL_CANONICAL",
+   "fact": "App product view read Thursday evening, Nov. 5, after the 6:00 p.m. Denver refresh window and re-checked a few minutes later: still shows the Week 8 board generated 2026-11-02T12:08:54Z; no Week 9 cards; Week 8 Baltimore game (BAL at BUF) shows quarterback expected_starter null; it has not picked up Joe Fagnano as tonight's starter. Only headline cards are Monday's Chicago at Seattle game: Value and Balanced both Chicago +3 at -102 (DraftKings), model 50.6% vs market 46.5%; Hit Rate Seattle moneyline -175, model 56.1% vs market 60.4%.",
+   "interpretation": "No Thursday prices are on a card yet; Thursday goes through Check until the board flips to Week 9.",
+   "sources": []
+  },
+  {
+   "evidence_id": "ev-vsin-pm",
+   "category": "fade",
+   "verification": "REPORTED",
+   "fact": "VSiN betting-splits free page checked Thursday evening, Nov. 5: the only featured row shown was college basketball (McNeese State -2.5 vs North Texas). No NFL row was visible, and the full board is VSiN Pro paid. No verified NFL split was available.",
+   "interpretation": "No qualifying public-vs-sharper disagreement could be verified, so this edition uses the learning substitute.",
    "sources": [
     {
      "label": "VSiN",
      "url": "https://data.vsin.com/betting-splits/"
     }
-   ],
-   "title": "VSiN splits check 2026-11-05 AM",
-   "verification": "REPORTED"
+   ]
   }
- ],
- "research_generated_at_utc": "2026-11-05T13:17:23Z",
- "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-11-05T13:17:23Z"
+ ]
 }
