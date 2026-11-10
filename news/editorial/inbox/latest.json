@@ -1,76 +1,72 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-11-09T13:18:24Z",
- "research_generated_at_utc": "2026-11-09T13:18:24Z",
+ "submitted_at_utc": "2026-11-10T01:13:21Z",
+ "research_generated_at_utc": "2026-11-10T01:13:21Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-11-09T13:18:24Z",
-  "research_generated_at_utc": "2026-11-09T13:18:24Z",
-  "edition": "Morning Brief",
-  "title": "NFL EDGE Monday Morning Brief",
-  "dek": "Week 9 is one game from done \u2014 the Bears survived a wild Sunday night \u2014 and tonight's Bills-Vikings game is the only price left.",
+  "published_at_utc": "2026-11-10T01:13:21Z",
+  "research_generated_at_utc": "2026-11-10T01:13:21Z",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Monday Evening Brief",
+  "dek": "The inactives are out for tonight's Bills-Vikings game — Buffalo is missing both starters on the left side of its line — and the Monday total has climbed two points since this morning.",
   "sections": [
    {
     "id": "what-matters",
-    "icon": "\ud83d\udcf0",
+    "icon": "📰",
     "title": "What Matters Today",
     "items": [
      {
-      "headline": "Lead: the Bears survived five turnovers and won at the buzzer \u2014 one game left in Week 9",
+      "headline": "Lead: Buffalo loses the whole left side of its line, 90 minutes before kickoff",
       "paragraphs": [
-       "The Bears beat the Buccaneers 27-24 on Sunday night. Cairo Santos kicked a 38-yard field goal as time expired. Caleb Williams threw four interceptions \u2014 the first four-pick game of his career \u2014 but hit Colston Loveland for 38 yards on the final drive to set up the winner.",
-       "Tampa Bay forced five turnovers and still lost. Bucky Irving scored twice and Baker Mayfield tied the game at 24 with a two-point conversion and 2:51 left. Chicago is 7-2 with four straight wins. Tampa Bay falls to 3-6. Both teams go on bye now and play again November 22.",
-       "One game is left in Week 9. The Bills visit the Vikings tonight at 8:15 p.m. ET at U.S. Bank Stadium in Minneapolis. Both teams are 6-1."
+       "The inactive lists are out for tonight's Bills-Vikings game, and the big news is on Buffalo's side. Left tackle Dion Dawkins and left guard Alec Anderson are both out. That is the entire left side of the offensive line that protects Josh Allen's blind side.",
+       "Tylan Grable is expected to start at left tackle and Austin Corbett at left guard. They walk into a loud dome against Brian Flores' Vikings defense, the heaviest-blitzing defense in the league. That is a tough first test for two backups.",
+       "Minnesota's side is settled. Kyler Murray is out with his hamstring injury, so Carson Wentz starts at quarterback, with Max Brosmer as the backup. Receiver Jauan Jennings is out too, and safety Theo Jackson is out. Kickoff is 8:15 p.m. ET at U.S. Bank Stadium in Minneapolis."
       ],
-      "takeaway": "Bears 27, Buccaneers 24 \u2014 Santos won it at the buzzer \u2014 and only Bills at Vikings is left tonight, 8:15 p.m. ET, both teams 6-1.",
+      "takeaway": "Dawkins and Anderson are both out — Buffalo's left side is two backups tonight against the league's heaviest-blitzing defense. Wentz starts for Minnesota.",
       "evidence_ids": [
-       "ev-results-am"
+       "ev-inactives-pm"
       ],
       "sources": [
        {
         "label": "NBC Sports",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-bears-overcome-five-giveaways-beat-bucs-27-24"
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-bills-lt-dion-dawkins-lg-alec-anderson-are-inactive-vs-vikings"
        },
        {
-        "label": "Reuters",
-        "url": "https://www.reuters.com/sports/nfl/bears-overcome-mistakes-beat-bucs-game-ending-field-goal--flm-2026-11-09/"
+        "label": "Minnesota Vikings",
+        "url": "https://www.vikings.com/news/inactives-buffalo-bills-week-9-2026"
        }
       ]
      },
      {
-      "headline": "Injuries: Pickens sat, Ferguson gets more tests today, and Wentz starts for Minnesota tonight",
+      "headline": "Injuries: Ferguson and Goodson out for weeks, Locke ruled out, Pickens still a question",
       "paragraphs": [
-       "Cowboys receiver George Pickens sat out Sunday against the Colts with a hamstring injury. It was his first missed game since joining Dallas. Coach Brian Schottenheimer said Pickens will work through the whole week again, and his chances of playing against the 49ers on November 15 are good if he has no setbacks.",
-       "Cowboys tight end Jake Ferguson caught a touchdown, then left in the third quarter with a stinger and a left knee injury. He did not return. Schottenheimer said Ferguson gets more imaging on his knee today. Safety P.J. Locke suffered his second concussion in as many weeks.",
-       "For tonight: Carson Wentz starts at quarterback for Minnesota. Inactives come out about 90 minutes before kickoff, so the final names for Bills-Vikings are not out yet this morning."
+       "The Cowboys imaging the morning brief was waiting on came back, and it is bad news. Tight end Jake Ferguson sprained two ligaments in his left knee — the PCL and the MCL — and will miss multiple weeks. Running back Tyler Goodson is out multiple weeks with a knee injury too.",
+       "Safety P.J. Locke has been ruled out against the 49ers on November 15. It is his second concussion in as many weeks, and the team says he will likely miss multiple games.",
+       "Receiver George Pickens is in the rehab group this week. Whether he plays against the 49ers gets decided during the week. Tight end Luke Schoonmaker is expected back to help at the position."
       ],
-      "takeaway": "Pickens sat with a hamstring injury; Ferguson left with a knee injury and gets more tests today; Wentz starts for Minnesota tonight.",
+      "takeaway": "Ferguson (sprained PCL and MCL) and Goodson are out multiple weeks; Locke is ruled out against the 49ers; Pickens is still a week-to-week call.",
       "evidence_ids": [
-       "ev-injuries-am"
+       "ev-cowboys-pm"
       ],
       "sources": [
        {
-        "label": "Sports Illustrated",
-        "url": "https://www.si.com/nfl/cowboys/onsi/dallas-cowboys-injury-updates-week-9-win-colts"
-       },
-       {
         "label": "Dallas Cowboys",
-        "url": "https://www.dallascowboys.com/news/updates-november-2026"
+        "url": "https://www.dallascowboys.com/news/cowboys-injury-roundup-tough-decisions-ahead-as-ferguson-locke-others-get-bad-news"
        },
        {
-        "label": "Bleacher Nation",
-        "url": "https://www.bleachernation.com/betting/2026/11/09/bills-vs-vikings-odds/"
+        "label": "TSN",
+        "url": "https://www.tsn.ca/nfl/article/schottenheimer-cowboys-will-be-without-te-ferguson-rb-goodson-for-multiple-weeks-n1-50436570/"
        }
       ]
      },
      {
       "headline": "Weather: tonight is indoors, so weather is a non-factor",
       "paragraphs": [
-       "Bills-Vikings is at U.S. Bank Stadium in Minneapolis, which has a roof. No wind, no rain, no cold to adjust for. Weather does not change anything about tonight's game."
+       "Bills-Vikings is at U.S. Bank Stadium in Minneapolis, which has a roof. No wind, no rain, no cold to adjust for. Weather does not change anything about tonight's game. There is no NFL game tomorrow, so there is nothing to forecast for Tuesday either."
       ],
-      "takeaway": "Tonight is indoors in Minneapolis \u2014 weather is a non-factor.",
+      "takeaway": "Tonight is indoors in Minneapolis — weather is a non-factor, and there is no game tomorrow.",
       "evidence_ids": [
-       "ev-weather-am"
+       "ev-weather-pm"
       ],
       "sources": [
        {
@@ -83,24 +79,29 @@
    },
    {
     "id": "what-it-means",
-    "icon": "\ud83d\udca1",
+    "icon": "💡",
     "title": "What It Means for NFL EDGE",
     "items": [
      {
-      "headline": "The board still has not flipped \u2014 last week's cards are still showing, so tonight goes through Check",
+      "headline": "The board still has not flipped — last week's cards are still showing, so tonight goes through Check",
       "paragraphs": [
-       "The app board still shows Week 8. It was generated November 2 and has not flipped to Week 9, let alone Week 10. The headline cards on it are from last Monday night's Bears-Seahawks game: Hit Rate on the Seahawks moneyline at -175, Balanced and Value both on the Bears +3 at -102. Those games are done. Do not bet those cards.",
-       "Here is how to read them anyway, because the same three cards will be back when the board flips. Hit Rate is the pick most likely to win \u2014 the Seahawks moneyline, with the model at 56.1% against a market price that needed 60.4%. It forgoes value for win probability, and the app's own tutorial says Hit Rate is not Profit Rate. Balanced is the middle ground, a strong pick without paying too much. Value is always the model's plus-EV play \u2014 the Bears +3, with the model at 50.6% against a market that needed 50.5%, for a small positive edge.",
-       "For tonight, there is no card to read, so use Check. Tap Check, type in your book's line and price for Bills-Vikings, and the app runs it back through the model and the evaluator and returns a bet or no-bet verdict on your price. That is a full re-evaluation, not a blind override. Monday game? Monday check."
+       "The app board still shows Week 8. It was generated November 2 and has not flipped to Week 9, let alone Week 10 — I checked again at 6:10 p.m. Denver time and it is the same board as this morning. The headline cards on it are from last Monday night's Bears-Seahawks game: Hit Rate on the Seahawks moneyline at -175, Balanced and Value both on the Bears +3 at -102. Those games are done. Do not bet those cards.",
+       "Here is how to read them anyway, because the same three cards will be back when the board flips. Hit Rate is the pick most likely to win — the Seahawks moneyline, with the model at 56.1% against a market price that needed 60.4%. It forgoes value for win probability, and the app's own tutorial says Hit Rate is not Profit Rate. Balanced is the middle ground, a strong pick without paying too much. Value is always the model's plus-EV play — the Bears +3, with the model at 50.6% against a market that needed 50.5%, for a small positive edge.",
+       "One more thing the board has not picked up: it still shows Kyler Murray as Minnesota's expected starter, from a stale Week 8 snapshot. Carson Wentz is the one starting tonight — that comes from the team, not the app. For tonight, there is no card to read, so use Check. Tap Check, type in your book's line and price for Bills-Vikings, and the app runs it back through the model and the evaluator and returns a bet or no-bet verdict on your price. That is a full re-evaluation, not a blind override. Monday game? Monday check."
       ],
-      "takeaway": "The board still shows last week's Week 8 cards, so tonight's Bills-Vikings price goes through Check \u2014 type in your book's line and price and let the app give you a verdict on it.",
+      "takeaway": "The board still shows last week's Week 8 cards and still lists Murray as Minnesota's starter, so tonight's Bills-Vikings price goes through Check — type in your book's line and price and let the app give you a verdict on it.",
       "evidence_ids": [
-       "ev-board-am"
+       "ev-board-pm",
+       "ev-inactives-pm"
       ],
       "sources": [
        {
         "label": "NFL EDGE product",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       },
+       {
+        "label": "Minnesota Vikings",
+        "url": "https://www.vikings.com/news/inactives-buffalo-bills-week-9-2026"
        }
       ]
      }
@@ -108,7 +109,7 @@
    },
    {
     "id": "fade",
-    "icon": "\u2696\ufe0f",
+    "icon": "⚖️",
     "title": "Learn the Game",
     "mode": "learning",
     "items": [
@@ -116,41 +117,41 @@
       "editorial_only": true,
       "evidence_ids": [],
       "sources": [],
-      "headline": "Learn the Game: closing line value \u2014 did you beat the market?",
+      "headline": "Learn the Game: key numbers — why -3 and -3.5 are not the same bet",
       "paragraphs": [
-       "Closing line value, or CLV, is a simple idea. It asks whether the price you took was better than the price the game closed at. If you bet a team at +3.5 and the line closed at +2.5, you got a better number than the final market. If you bet at -3 and it closed at -3.5, you got a worse one.",
-       "Hypothetical example, clearly labeled as hypothetical: say you take a team at +3 at -110 on Tuesday. By Sunday the same bet is +2.5 at -110. You beat the closing line by half a point. That does not mean your bet wins \u2014 the team can still lose. It means you bought at a better price than the market settled on, and over a lot of bets, buying better prices is how an edge shows up.",
-       "The flip side matters too. If your number keeps closing worse than the price you took, your timing is costing you, even when individual bets win. Check the closing line after the game, not just the final score."
+       "A key number is a final margin that shows up a lot. In the NFL, 3 is the big one — more games end with a team winning by exactly 3 than by any other margin, because a field goal is the most common scoring play. That makes -3 and -3.5 very different bets.",
+       "Hypothetical example, clearly labeled as hypothetical: say you take a favorite at -3 at -110. If they win by exactly 3, you push — your stake comes back, no win, no loss. Take the same favorite at -3.5 instead, and a win by exactly 3 loses your bet. Same team, same game, same result — but the half point turns a push into a loss.",
+       "That is why tonight's move matters as a lesson, not a pick. The Bills went from -3 this morning to -3.5 at most books. If your book still shows -3, that half point is worth something — run it through Check and let the app judge your price. And if your book shows -3.5, know what you are paying for: you need a win by 4 or more."
       ],
-      "takeaway": "Closing line value asks whether your price was better than the closing price \u2014 beating the close does not guarantee a win, but buying better prices over time is how an edge shows up."
+      "takeaway": "Three is the most common winning margin in the NFL, so -3 can push where -3.5 loses — the half point matters, and a book still showing -3 is a better price than one showing -3.5."
      }
     ]
    },
    {
     "id": "market-watch",
-    "icon": "\ud83d\udc40",
+    "icon": "👀",
     "title": "Line Movement",
     "items": [
      {
-      "headline": "The Monday total fell four points this week, and the Bears won but did not cover",
+      "headline": "The spread crossed 3 and the total bounced back two points since this morning",
       "paragraphs": [
-       "Bills-Vikings opened with Buffalo as a 2.5-point favorite and a total of 47.5. This morning the Bills are -3 at DraftKings and FanDuel, -3.5 at some books, and the total is 43.5 at DraftKings and FanDuel, 44 to 44.5 elsewhere. The spread moved a point toward Buffalo. The total fell four points.",
-       "Sunday night moved too. The Bears closed as 6-point favorites after opening the week at -3.5, and the total closed at 47.5. The final was 27-24 \u2014 51 points. The favorite won but did not cover. The total went over.",
-       "The app board has caught none of this. It still shows Week 8 prices from November 2. If your book's number for tonight looks different from the ones above, run it through Check and let the app judge your price, not last week's."
+       "The Bills were -3 this morning at DraftKings and FanDuel. They are -3.5 at most books now, with the Vikings +3.5 at -115 at DraftKings. The spread moved a half point toward Buffalo and crossed the key number 3.",
+       "The total moved the other way from where the week was headed. It fell four points during the week, from 47.5 down to 43.5 this morning. Since this morning it has climbed back to 45.5 at most books. The morning's 43.5 is gone.",
+       "The app board has caught none of this. It still shows Week 8 prices from November 2, and there is no Bills-Vikings game on it at all. If your book's number for tonight looks different from the ones above, run it through Check and let the app judge your price, not last week's."
       ],
-      "takeaway": "Bills opened -2.5 with a 47.5 total; now -3 and 43.5. The Bears closed -6, won 27-24, and did not cover.",
+      "takeaway": "Bills -3 to -3.5, total 43.5 to 45.5 since this morning — the morning's numbers are gone at most books.",
       "evidence_ids": [
-       "ev-lines-am",
-       "ev-board-am"
+       "ev-lines-pm",
+       "ev-board-pm"
       ],
       "sources": [
        {
-        "label": "Covers",
-        "url": "https://www.covers.com/nfl/week-9-odds-opening-lines-2026"
+        "label": "Action Network",
+        "url": "https://www.actionnetwork.com/nfl/buffalo-bills-vs-minnesota-vikings-prediction-pick-odds-nfl-monday-night-football-november-9"
        },
        {
-        "label": "Bleacher Nation",
-        "url": "https://www.bleachernation.com/betting/2026/11/09/bills-vs-vikings-odds/"
+        "label": "Sports Rounders",
+        "url": "https://www.sportsrounders.com/nfl/predictions/buffalo-bills-vs-minnesota-vikings-prediction-2026-11-09"
        },
        {
         "label": "NFL EDGE product",
@@ -162,23 +163,28 @@
    },
    {
     "id": "today-tip",
-    "icon": "\u2705",
+    "icon": "✅",
     "title": "Today's Tip",
     "items": [
      {
-      "headline": "One game left \u2014 if Check says bet on your number, bet it now",
+      "headline": "One game left — if Check says bet on your number, bet it now",
       "paragraphs": [
-       "There is one price left this week. If you like a side or a total tonight, run your book's exact price through Check. If it says bet, bet the good number now \u2014 a good number today beats a hoped-for number later, because waiting lets the number drift the wrong way too. Wait only if your bet depends on an inactive-list name, and those come out about 90 minutes before kickoff.",
-       "One more thing: settlement is manual, and the tracker only works if you are honest with yourself. Log the losers too."
+       "There is one price left this week, and kickoff is about two hours away. If you like a side or a total tonight, run your book's exact price through Check. If it says bet, bet the good number now — the total already moved two points today, and the spread crossed 3. Waiting for kickoff risks a worse price, not a better one.",
+       "Wait only if your bet depends on a name that is still undecided — and tonight's inactives are already out, so there is nothing left to wait for. Monday game? Monday check."
       ],
-      "takeaway": "Run tonight's price through Check \u2014 if it says bet, bet the good number now; wait only if your bet depends on an inactive-list name. And log the losers too.",
+      "takeaway": "Run tonight's price through Check — if it says bet, bet the good number now; the inactives are out and the numbers have already moved twice today.",
       "evidence_ids": [
-       "ev-lines-am"
+       "ev-lines-pm",
+       "ev-inactives-pm"
       ],
       "sources": [
        {
-        "label": "Bleacher Nation",
-        "url": "https://www.bleachernation.com/betting/2026/11/09/bills-vs-vikings-odds/"
+        "label": "Action Network",
+        "url": "https://www.actionnetwork.com/nfl/buffalo-bills-vs-minnesota-vikings-prediction-pick-odds-nfl-monday-night-football-november-9"
+       },
+       {
+        "label": "NBC Sports",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-bills-lt-dion-dawkins-lg-alec-anderson-are-inactive-vs-vikings"
        }
       ]
      }
@@ -188,38 +194,60 @@
  },
  "evidence": [
   {
-   "evidence_id": "ev-results-am",
-   "category": "results",
+   "evidence_id": "ev-inactives-pm",
+   "category": "injury",
    "verification": "REPORTED",
-   "fact": "Buccaneers at Bears, Sunday night Nov 8: Bears 27, Buccaneers 24. Cairo Santos kicked a 38-yard field goal as time expired. Caleb Williams threw four interceptions (22-of-37, 279 yards, 2 TDs) and hit Colston Loveland for 38 yards on the final drive. Bucky Irving scored twice; Baker Mayfield tied it at 24 with a two-point conversion with 2:51 left. Tampa Bay forced five turnovers and lost. Bears 7-2, fourth straight win; Buccaneers 3-6. Both teams are on bye and play again Nov 22.",
-   "interpretation": "Week 9 is one game from done; only Bills at Vikings remains.",
-   "app_guidance": "Settled games are done \u2014 the only live price left this week is Monday night.",
+   "fact": "Bills at Vikings inactives, Monday Nov 9 (released about 90 minutes before the 8:15 p.m. ET kickoff): Buffalo is without starting left tackle Dion Dawkins (ribs) and starting left guard Alec Anderson (ankle) — the entire left side of the offensive line. Tylan Grable is expected to start at left tackle and Austin Corbett at left guard. Also inactive for Buffalo: WR Skyler Bell, S Jalon Kilgore, OLB Mike Danna, DL Greg Gaines. WR Joshua Palmer was placed on injured reserve Monday (hamstring). For Minnesota: QB Kyler Murray (hamstring) is out and Carson Wentz starts, backed up by Max Brosmer; WR Jauan Jennings (calf) is out; S Theo Jackson (quad) is out; also inactive: S Jakobe Thomas, CB Chuck Demmings, DL Caleb Banks (healthy scratch). RB Demond Claiborne was placed on injured reserve (knee); WR Odell Beckham Jr. was signed to the active roster.",
+   "interpretation": "Buffalo's line is the night's biggest change since the morning brief: the left side that protects Josh Allen's blind side is two backups against the heaviest-blitzing defense in the league. Minnesota's QB picture is unchanged — Wentz starts.",
+   "app_guidance": "If you bet tonight, this is the news that matters most — check whether your book's number moved on it, then run your price through Check.",
    "sources": [
     {
      "label": "NBC Sports",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-bears-overcome-five-giveaways-beat-bucs-27-24"
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-bills-lt-dion-dawkins-lg-alec-anderson-are-inactive-vs-vikings"
     },
     {
-     "label": "Reuters",
-     "url": "https://www.reuters.com/sports/nfl/bears-overcome-mistakes-beat-bucs-game-ending-field-goal--flm-2026-11-09/"
+     "label": "Minnesota Vikings",
+     "url": "https://www.vikings.com/news/inactives-buffalo-bills-week-9-2026"
+    },
+    {
+     "label": "Rochester Democrat and Chronicle",
+     "url": "https://www.democratandchronicle.com/story/sports/football/nfl/bills/2026/11/09/bills-vikings-score-updates-highlights-stats-monday-night-football--live/92639522007/"
     }
    ]
   },
   {
-   "evidence_id": "ev-injuries-am",
+   "evidence_id": "ev-cowboys-pm",
    "category": "injury",
    "verification": "REPORTED",
-   "fact": "Cowboys WR George Pickens (hamstring) sat out Sunday vs the Colts, his first missed game since joining Dallas; coach Brian Schottenheimer said Pickens will work through the week and has a good chance to play vs the 49ers on Nov 15 if he has no setbacks. Cowboys TE Jake Ferguson caught a TD, then left in the third quarter with a stinger and a left knee injury and did not return; Schottenheimer said Ferguson gets more knee imaging on Monday. Cowboys S P.J. Locke suffered his second concussion in as many weeks. Carson Wentz starts at quarterback for Minnesota tonight vs Buffalo.",
-   "interpretation": "Dallas's two pass-catchers are week-to-week questions for Nov 15; tonight's QB picture is set with Wentz starting.",
-   "app_guidance": "Watch the inactive list about 90 minutes before kickoff for tonight's final names; Dallas news matters for next week's board, not tonight.",
+   "fact": "Cowboys injury news, Monday Nov 9: TE Jake Ferguson will miss multiple weeks with sprained posterior cruciate and medial collateral ligaments in his left knee, suffered in the third quarter Sunday against the Colts. RB Tyler Goodson will also miss multiple weeks with a knee injury. S P.J. Locke has been ruled out against the 49ers on Nov 15 after his second concussion in as many weeks and will likely miss multiple games. WR George Pickens (hamstring) is in the rehab group this week, with his status for Nov 15 to be determined during the week. TE Luke Schoonmaker is expected to return from injury to help the tight end depth chart.",
+   "interpretation": "The imaging the morning brief was waiting on came back bad: Ferguson and Goodson are multi-week absences, and Locke is out too. Dallas goes into the 49ers game short at tight end, running back depth, and safety.",
+   "app_guidance": "This is next week's news, not tonight's — it matters when the board flips to Week 10 and Dallas prices appear.",
    "sources": [
     {
-     "label": "Sports Illustrated",
-     "url": "https://www.si.com/nfl/cowboys/onsi/dallas-cowboys-injury-updates-week-9-win-colts"
+     "label": "Dallas Cowboys",
+     "url": "https://www.dallascowboys.com/news/cowboys-injury-roundup-tough-decisions-ahead-as-ferguson-locke-others-get-bad-news"
     },
     {
-     "label": "Dallas Cowboys",
-     "url": "https://www.dallascowboys.com/news/updates-november-2026"
+     "label": "TSN",
+     "url": "https://www.tsn.ca/nfl/article/schottenheimer-cowboys-will-be-without-te-ferguson-rb-goodson-for-multiple-weeks-n1-50436570/"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-lines-pm",
+   "category": "lines",
+   "verification": "REPORTED",
+   "fact": "Bills at Vikings, Monday Nov 9 evening: the spread is now Bills -3.5 at most books (DraftKings, FanDuel, Circa, Pinnacle, BookMaker were -3 this morning), with Vikings +3.5 at -115 at DraftKings and Bills -3.5 at +100 at BetMGM. The total has climbed back to 45.5 at most books (DraftKings, BetMGM, Novig) after sitting at 43.5 at DraftKings and FanDuel this morning. Opening line was Bills -2.5 with a total of 47.5. Moneyline: Bills about -180 to -198, Vikings about +150 to +165.",
+   "interpretation": "Two moves since the morning brief: the spread crossed the key number 3 to -3.5 toward Buffalo, and the total bounced two points back up after falling four points during the week. The market is pricing a slower game, and the morning's 43.5 total is gone.",
+   "app_guidance": "If your book still shows -3 or 43.5, that number is better than the market now — run it through Check before it moves.",
+   "sources": [
+    {
+     "label": "Action Network",
+     "url": "https://www.actionnetwork.com/nfl/buffalo-bills-vs-minnesota-vikings-prediction-pick-odds-nfl-monday-night-football-november-9"
+    },
+    {
+     "label": "Sports Rounders",
+     "url": "https://www.sportsrounders.com/nfl/predictions/buffalo-bills-vs-minnesota-vikings-prediction-2026-11-09"
     },
     {
      "label": "Bleacher Nation",
@@ -228,11 +256,11 @@
    ]
   },
   {
-   "evidence_id": "ev-weather-am",
+   "evidence_id": "ev-weather-pm",
    "category": "weather",
    "verification": "REPORTED",
-   "fact": "Bills at Vikings, Monday Nov 9, 8:15 p.m. ET, at U.S. Bank Stadium in Minneapolis, which has a roof. The game is indoors.",
-   "interpretation": "Weather is a non-factor tonight.",
+   "fact": "Bills at Vikings, Monday Nov 9, 8:15 p.m. ET, at U.S. Bank Stadium in Minneapolis, which has a roof. The game is indoors. There are no NFL games on Tuesday Nov 10.",
+   "interpretation": "Weather is a non-factor tonight, and there is no game tomorrow to forecast for.",
    "app_guidance": "No weather adjustment needed for tonight's game.",
    "sources": [
     {
@@ -242,30 +270,12 @@
    ]
   },
   {
-   "evidence_id": "ev-lines-am",
-   "category": "lines",
-   "verification": "REPORTED",
-   "fact": "Bills at Vikings, Monday morning Nov 9: Bills -3 (-115/-120) at DraftKings and FanDuel, -3.5 at some books; moneyline Bills -175/-180, Vikings +145/+150; total 43.5 at DraftKings and FanDuel, 44 to 44.5 elsewhere. Opening line was Bills -2.5 with a total of 47.5. Buccaneers at Bears closed Sunday at Bears -6, total 47.5; final 27-24 (51 points) \u2014 favorite won, did not cover, total went over.",
-   "interpretation": "The Monday spread moved a point toward Buffalo and the total fell four points this week; the Sunday-night favorite won but did not cover.",
-   "app_guidance": "Compare your book's price to these numbers, then run it through Check for a verdict on your price.",
-   "sources": [
-    {
-     "label": "Covers",
-     "url": "https://www.covers.com/nfl/week-9-odds-opening-lines-2026"
-    },
-    {
-     "label": "Bleacher Nation",
-     "url": "https://www.bleachernation.com/betting/2026/11/09/bills-vs-vikings-odds/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-board-am",
+   "evidence_id": "ev-board-pm",
    "category": "board",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "NFL EDGE product endpoint checked Monday Nov 9, about 6:15 a.m. Denver time: the board still shows Week 8, generated 2026-11-02T12:08:54Z. Headline cards are all from Bears at Seahawks (2026_08_CHI_SEA): Hit Rate Seahawks moneyline -175, model probability 56.1% vs market 60.4%, EV -0.0568; Balanced and Value both Bears +3 at -102, model probability 50.6% vs market 46.5%, EV +0.0356. Thirteen of fourteen Week 8 games show IN_PROGRESS with empty market boards.",
-   "interpretation": "The board is a week stale; its cards are last week's games and must not be bet.",
-   "app_guidance": "Tonight's prices go through Check until the board flips.",
+   "fact": "NFL EDGE product endpoint checked Monday Nov 9, about 6:10 p.m. Denver time, and re-fetched at 6:11 p.m.: the board still shows Week 8, generated 2026-11-02T12:08:54Z — the same board as this morning, byte-identical. Headline cards are all from Bears at Seahawks (2026_08_CHI_SEA): Hit Rate Seahawks moneyline -175, model probability 56.1% vs market 60.4%, EV -0.0568; Balanced and Value both Bears +3 at -102, model probability 50.6% vs market 46.5%, EV +0.0356. Thirteen of fourteen Week 8 games show IN_PROGRESS with empty market boards. There is no Week 9 game on the board at all — no Bills-Vikings game, and the app's quarterback fields still show Kyler Murray as Minnesota's expected starter from the stale Week 8 snapshot, not Carson Wentz.",
+   "interpretation": "The evening refresh did not flip the board. Its cards are last week's games and must not be bet, and it has not picked up tonight's quarterback change either.",
+   "app_guidance": "Tonight's prices go through Check until the board flips; do not trust the app's quarterback fields for tonight.",
    "sources": [
     {
      "label": "NFL EDGE product",
@@ -274,12 +284,12 @@
    ]
   },
   {
-   "evidence_id": "ev-vsin-am",
+   "evidence_id": "ev-vsin-pm",
    "category": "splits",
    "verification": "REPORTED",
-   "fact": "VSiN free betting-splits page (data.vsin.com/betting-splits) checked Monday Nov 9, about 6:20 a.m. Denver time: the free text view showed only a college basketball game (Iona vs St. John's, Sunday Nov 8) with DraftKings splits. No NFL featured row and no DraftKings spread splits for Bills-Vikings were visible in the free tier. No verified public-vs-sharper disagreement could be read from it.",
-   "interpretation": "No qualifying Fade split was available this morning, so the fade slot uses the learning substitute.",
-   "app_guidance": "No Fade signal today; the learning item teaches closing line value instead.",
+   "fact": "VSiN free betting-splits page (data.vsin.com/betting-splits) checked Monday Nov 9, about 6:00 p.m. Denver time: the free text view showed only a college basketball game (Marshall vs Ohio State) with DraftKings splits. No NFL featured row and no DraftKings spread splits for Bills-Vikings were visible in the free tier. No verified public-vs-sharper disagreement could be read from it.",
+   "interpretation": "No qualifying Fade split was available this evening, so the fade slot uses the learning substitute.",
+   "app_guidance": "No Fade signal tonight; the learning item teaches key numbers instead.",
    "sources": [
     {
      "label": "VSiN betting splits",
