@@ -1,261 +1,287 @@
 {
- "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-11-11T13:18:45Z",
- "research_generated_at_utc": "2026-11-11T13:18:45Z",
  "article": {
+  "dek": "The final injury report is in for Thursday night \u2014 Washington loses its starting center, the Giants are nearly clean \u2014 and the line has not moved all day.",
+  "edition": "Evening Brief",
+  "published_at_utc": "2026-11-12T01:12:22Z",
+  "research_generated_at_utc": "2026-11-12T01:12:22Z",
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-11-11T13:18:45Z",
-  "research_generated_at_utc": "2026-11-11T13:18:45Z",
-  "edition": "Morning Brief",
-  "title": "NFL EDGE Wednesday Morning Brief",
-  "dek": "McCarthy confirmed he will start Thursday, the rain forecast at MetLife firmed up, and the app board is still nine days old — here is what changed overnight and how to use it.",
   "sections": [
    {
+    "icon": "\ud83d\udcf0",
     "id": "what-matters",
-    "icon": "📰",
-    "title": "What Matters Today",
     "items": [
      {
-      "headline": "Lead: McCarthy confirmed for Thursday — and the rain forecast firmed up",
-      "paragraphs": [
-       "The one name hanging over Thursday night is settled, and this time it is settled by the player himself. J.J. McCarthy told reporters Wednesday morning he will start against Washington on Thursday night, his first home start as the Giants' starting quarterback, and that he feels fully recovered from the hip injury he picked up Sunday in Philadelphia. He practiced in full on Tuesday, and Cam Skattebo was a full participant too. The Giants are as healthy as they are going to get on a short week.",
-       "The other Thursday fact is the sky, and it firmed up overnight. The National Weather Service now calls for rain and possibly a thunderstorm Thursday between 10 a.m. and 4 p.m., then rain after 4 p.m., with a 100% chance of precipitation during the day. Thursday night brings more rain, a low around 43, and wind gusting to 22 mph. Kickoff is 8:15 p.m. ET at MetLife, outdoors — so expect rain through kickoff, with temperatures falling toward the low 40s.",
-       "There is no game today. Week 10 opens Thursday night, and the numbers that matter now are Thursday's: the Giants are -2.5 at DraftKings, with the total at 41.5. Both held steady overnight."
-      ],
-      "takeaway": "McCarthy confirmed he will start Thursday, Skattebo is back, and rain is now a near-certainty at MetLife — Thursday's two big questions have answers, a day early.",
       "evidence_ids": [
-       "ev-qb-am",
-       "ev-weather-am"
+       "ev-inj-pm"
+      ],
+      "headline": "Lead: final designations are in \u2014 Patrick is out, Burks is expected to play, Giants nearly clean",
+      "paragraphs": [
+       "The last unknowns for Thursday night are answered. Washington ruled out center Lucas Patrick with a concussion on Wednesday's final injury report, and tight end Colson Yankoff is out too with a knee injury. Nick Allegretti starts at center in Patrick's place \u2014 head coach Dan Quinn confirmed that on Tuesday, and Allegretti is the man in the middle against the Giants' pass rush on a short week.",
+       "The good news for Washington is the receiver. Treylon Burks missed Wednesday's practice with the foot injury that kept him out against the Rams, but he got no game designation at all. Quinn said the day off was planned after Burks got work on Tuesday, and the receiver is expected to be ready Thursday. His place on the active list is confirmed with the inactives about 90 minutes before kickoff.",
+       "The Giants are nearly clean. Only outside linebacker Malik Harrison carries a designation \u2014 questionable with a groin injury after being limited all week. Abdul Carter practiced in full on Wednesday after two limited days and has no designation, and neither do J.J. McCarthy or Cam Skattebo. Colton Hood, the rookie corner who was limited Tuesday, has no designation either. On a short week, that is about as healthy as a team gets."
       ],
       "sources": [
        {
-        "label": "Giants Wire",
-        "url": "https://giantswire.usatoday.com/story/sports/nfl/giants/2026/11/11/giants-jj-mccarthy-ready-short-week-home-debut-commanders/92721377007/"
+        "label": "Sports Illustrated",
+        "url": "https://www.si.com/nfl/commanders/onsi/commanders-giants-final-injury-report-week-10"
        },
        {
-        "label": "National Weather Service",
-        "url": "https://forecast.weather.gov/MapClick.php?CityName=East+Rutherford&state=NJ&site=OKX&lat=40.8175&lon=-74.0844"
+        "label": "Yardbarker",
+        "url": "https://www.yardbarker.com/nfl/articles/giants_nearly_injury_free_ahead_of_thursday_night_matchup_with_commanders/s1_16664_44548934"
        }
-      ]
+      ],
+      "takeaway": "Patrick is out and Allegretti starts at center for Washington, Burks is expected to play despite missing Wednesday's practice, and the Giants' only designation is Harrison as questionable."
      },
      {
-      "headline": "Injuries: Carter and Hood limited, Burks limited, Patrick still in protocol",
-      "paragraphs": [
-       "Beyond McCarthy and Skattebo, Tuesday's practice report had four names to watch. Giants linebacker Abdul Carter (knee/back) was limited, and rookie cornerback Colton Hood (finger) was limited too — Hood is new to the report after leaving practice with a trainer. On Washington's side, receiver Treylon Burks (foot) was limited, and guard Lucas Patrick (concussion) did not practice and must clear protocol before Thursday.",
-       "The Giants hold a walkthrough today, and final designations come with the inactives about 90 minutes before kickoff on Thursday. That is the last word if your bet needs a specific name in the lineup. The other Week 10 quarterback spots are as the evening brief left them: Murray likely out 3-4 weeks, Watson set to start Sunday, Lock says he will play, and Beck starts for Arizona."
-      ],
-      "takeaway": "Carter and Hood were limited for the Giants, Burks limited and Patrick out for Washington — the inactives about 90 minutes before Thursday's kickoff are the last word on all four.",
       "evidence_ids": [
-       "ev-qb-am"
+       "ev-qb-pm",
+       "ev-board-pm"
+      ],
+      "headline": "Injuries: Darnold ruled out again, Willis to injured reserve, Mahomes practices in full",
+      "paragraphs": [
+       "The rest of the week's quarterback news landed Wednesday. Sam Darnold is ruled out again for Seattle \u2014 ribs and quad \u2014 and he did not practice Wednesday. Drew Lock was limited with elbow and quad injuries, but he starts Sunday against the Raiders, his second straight start. Head coach Mike Macdonald said Lock is making progress and the team will keep managing his throwing workload through the week.",
+       "In Miami, the Dolphins put quarterback Malik Willis on injured reserve with a groin injury, so Kyle McCord gets his first chance to lead an NFL team on Sunday against the Colts. And in Kansas City, the worry was smaller than it looked: Patrick Mahomes was a full participant in Wednesday's practice despite the knee and elbow issues that had him listed day-to-day, and Andy Reid expects him to play Sunday against the Falcons. Travis Kelce practiced in full too.",
+       "None of these games is Thursday, so none of it changes tomorrow night. But the board is still behind on all of it \u2014 it lists Darnold as Seattle's starter and Murray as Minnesota's \u2014 so if you are looking at a Sunday price, remember the board has not caught up yet."
       ],
       "sources": [
        {
-        "label": "DK Network",
-        "url": "https://dknetwork.draftkings.com/2026/11/10/nfl-injury-report-week-10/"
+        "label": "NBC Sports",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sam-darnold-did-not-practice-drew-lock-was-limited"
+       },
+       {
+        "label": "Indianapolis Star",
+        "url": "https://www.indystar.com/story/sports/nfl/colts/2026/11/11/indianapolis-colts-injury-report-vs-miami-dolphins-malik-willis/92731549007/"
+       },
+       {
+        "label": "Falcons Wire",
+        "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/11/11/falcons-chiefs-injury-report-patrick-mahomes/92723345007/"
        }
-      ]
+      ],
+      "takeaway": "Darnold is out and Lock starts again Sunday, McCord starts for Miami with Willis on injured reserve, and Mahomes practiced in full \u2014 the board still lists Darnold and Murray as starters, so it has not caught up."
      },
      {
-      "headline": "Weather: rain at MetLife on Thursday, and the forecast is now firm enough to plan around",
-      "paragraphs": [
-       "Thursday night at MetLife Stadium is going to be wet, and the forecast is firmer than it was last night. The National Weather Service now puts the chance of rain at 100% during the day Thursday, with a half to three-quarters of an inch possible, and 80% through the night. The kickoff window sits in the Thursday-night period: rain, temperatures falling toward the low 40s, north wind 8 to 11 mph with gusts as high as 22 mph.",
-       "This is a forecast fact, not a betting edge. Rain does not pick a side or a total on its own. It is worth knowing because Thursday is outdoors, and because the forecast has firmed up since the evening brief — it was an 80% chance then, and it is a near-certainty now. The final check comes Thursday."
-      ],
-      "takeaway": "Rain is forecast at MetLife on Thursday night — 100% chance during the day, 80% at night, wind gusting to 22 mph, temperatures falling toward the low 40s. A forecast fact, not a totals edge.",
       "evidence_ids": [
-       "ev-weather-am"
+       "ev-weather-pm"
+      ],
+      "headline": "Weather: Thursday night at MetLife is still rain, low around 40, gusts to 23 mph",
+      "paragraphs": [
+       "The final forecast is in and it barely moved from this morning. The National Weather Service calls for showers Thursday, mainly after 10 a.m., with a 100% chance of precipitation and a high near 60. Thursday night brings rain, a low around 40, and a north wind at 10 to 13 mph with gusts as high as 23 mph. The chance of rain Thursday night is 80%.",
+       "Kickoff is 8:15 p.m. ET at MetLife Stadium, outdoors, so the game will be played in rain with temperatures falling toward 40 and the wind gusting into the low 20s. That is a forecast fact, not a totals edge. Rain does not pick a side or a total on its own \u2014 it is worth knowing because Thursday is outdoors and the forecast is now final, not a two-days-out guess."
       ],
       "sources": [
        {
         "label": "National Weather Service",
         "url": "https://forecast.weather.gov/MapClick.php?CityName=East+Rutherford&state=NJ&site=OKX&lat=40.8175&lon=-74.0844"
        }
-      ]
+      ],
+      "takeaway": "Rain is forecast at MetLife on Thursday night \u2014 80% chance, low around 40, wind gusting to 23 mph. A forecast fact, not a totals edge."
      }
-    ]
+    ],
+    "title": "What Matters Today"
    },
    {
+    "icon": "\ud83d\udca1",
     "id": "what-it-means",
-    "icon": "💡",
-    "title": "What It Means for NFL EDGE",
     "items": [
      {
-      "headline": "The board is nine days old now — Thursday still goes through Check",
-      "paragraphs": [
-       "I checked the board this morning. It is the same board as last night, byte for byte — generated November 2, still showing Week 8. The app's own freshness field says FRESH, but the timestamp says November 2. The headline cards are from the Bears-Seahawks game: Hit Rate on the Seahawks moneyline at -175, Balanced and Value both on the Bears +3 at -102. Those games are done. Do not bet those cards.",
-       "Here is how to read them anyway, because the same three cards will be back when the board flips. Hit Rate is the pick most likely to win. The Seahawks moneyline is the example: the app gave Seattle a 60.0% chance to win, while the -175 price needs 63.6% to break even, so the expected value is negative. That is the point — Hit Rate forgoes value for win probability, and the app's own tutorial says Hit Rate is not Profit Rate. Balanced is the middle ground, a strong pick without paying too much. Value is always the app's plus-EV play — the Bears +3, with the app at 52.4% against a market that priced Chicago at 50.5%, for a small positive edge.",
-       "The board has not picked up this week's news either. It still lists Kyler Murray as Minnesota's expected starter — he is now likely out 3-4 weeks with a Grade 2 hamstring strain, and Carson Wentz started Monday night. It still lists Sam Darnold as Seattle's starter, though Darnold is ruled out and Drew Lock starts Sunday. Until the board flips to Week 10, there is no card to read for Thursday, so use Check. Tap Check, type in your book's line and price for Commanders-Giants — the Giants are -2.5 and the total is 41.5 at DraftKings right now — and the app runs it back through the model and the evaluator and returns a bet or no-bet verdict on your price. That is a full re-evaluation, not a blind override. Thursday game? Thursday check."
-      ],
-      "takeaway": "The board is nine days old and still shows last week's Week 8 cards — it still lists Murray and Darnold as starters and knows nothing about McCarthy — so Thursday's Commanders-Giants price goes through Check.",
       "evidence_ids": [
-       "ev-board-am",
-       "ev-lines-am"
+       "ev-board-pm"
+      ],
+      "headline": "The board still has not flipped \u2014 Thursday still goes through Check",
+      "paragraphs": [
+       "I checked the board tonight, after the evening refresh. It is the same board as this morning \u2014 generated November 2, still showing Week 8. I re-fetched it twice and got the same file both times. The app's own freshness field says FRESH, but the timestamp says November 2. The headline cards are from the Bears-Seahawks game: Hit Rate on the Seahawks moneyline at -175, Balanced and Value both on the Bears +3 at -102. Those games are done. Do not bet those cards.",
+       "Here is how to read them anyway, because the same three cards will be back when the board flips. Hit Rate is the pick most likely to win. The Seahawks moneyline is the example: the app gave Seattle a 60.0% chance to win, while the -175 price needs 63.6% to break even, so the expected value is negative. That is the point \u2014 Hit Rate forgoes value for win probability, and the app's own tutorial says Hit Rate is not Profit Rate. Balanced is the middle ground, a strong pick without paying too much. Value is always the app's plus-EV play \u2014 the Bears +3, with the app at 52.4% against a market that priced Chicago at 50.5%, for a small positive edge.",
+       "The board has not picked up this week's news either. It still lists Kyler Murray as Minnesota's expected starter \u2014 he is now likely out 3-4 weeks with a Grade 2 hamstring strain, and Carson Wentz started Monday night. It still lists Sam Darnold as Seattle's starter, though Darnold is ruled out and Drew Lock starts Sunday. It knows nothing about McCarthy, and there is no Commanders-Giants game on it at all. Until the board flips to Week 10, there is no card to read for Thursday, so use Check. Tap Check, type in your book's line and price for Commanders-Giants \u2014 the Giants are -2.5 at DraftKings and -1.5 at FanDuel, with the total at 41.5 \u2014 and the app runs it back through the model and the evaluator and returns a bet or no-bet verdict on your price. That is a full re-evaluation, not a blind override. Thursday game? Thursday check."
       ],
       "sources": [
        {
         "label": "NFL EDGE product",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       },
-       {
-        "label": "VSiN",
-        "url": "https://vsin.com/nfl/commanders-vs-giants-predictions-week-10-thursday-night-football-odds-picks-and-player-props/"
        }
-      ]
+      ],
+      "takeaway": "The board is still the November 2 board, nine days old, and it still shows last week's Week 8 cards \u2014 it still lists Murray and Darnold as starters and knows nothing about McCarthy \u2014 so Thursday's Commanders-Giants price goes through Check."
      }
-    ]
+    ],
+    "title": "What It Means for NFL EDGE"
    },
    {
+    "icon": "\u2696\ufe0f",
     "id": "fade",
-    "icon": "⚖️",
-    "title": "Learn the Game",
-    "mode": "learning",
     "items": [
      {
       "editorial_only": true,
       "evidence_ids": [],
-      "sources": [],
-      "headline": "Learn the Game: closing line value — the price you got matters as much as the pick",
+      "headline": "Learn the Game: the hook \u2014 the half point that decides your bet",
       "paragraphs": [
-       "Closing line value is a simple idea: did you get a better price than the one the market settled on? If you bet a team at -1.5 and the line closes at -2.5, you beat the closing line by a point. Your bet is the same, but your price was better than the price everyone ended up paying.",
-       "Hypothetical example, clearly labeled as hypothetical: say you take a favorite at -1.5 on Monday, and by Thursday the same favorite is -2.5 everywhere. You did not win anything yet — the game still has to be played. But you got in a point cheaper than the closing price, and over a season of bets, consistently beating the close is a sign your prices are good. The reverse is true too: if you take -2.5 when -1.5 was sitting there earlier in the week, you gave a point away before kickoff.",
-       "That is why the timing of a bet matters, not just the pick. A good price today can be a bad price tomorrow, and a line that moves against you is the market telling you the early price was the better one. Getting the best of the number is a skill of its own — separate from picking winners."
+       "The hook is the half point on a spread. A line of -2.5 has a hook. A line of -1.5 has a hook too. The hook is there so the bet cannot push \u2014 somebody wins, somebody loses, no ties. But it does more than that: it decides whole games.",
+       "Hypothetical example, clearly labeled as hypothetical: say your team is a 2.5-point favorite and wins by exactly 2. You lose. The same team, the same game, at -1.5 \u2014 you win. Nothing about the football changed. The price did. That is why a half point is worth real money, and why bettors shop for it: one book has -2.5, another has -1.5, and the second book is giving you a better bet on the same team.",
+       "Now watch for it in real life: when two books list the same team a half point apart, the shorter spread is the better price on the same team. A two-point win cashes -1.5 and loses -2.5. That is the hook doing its work \u2014 and it is why shopping the number is worth the minute it takes."
       ],
-      "takeaway": "Closing line value means beating the price the market settles on — take -1.5 when it closes -2.5 and you bought a point cheaper; take -2.5 when -1.5 was there and you gave one away."
+      "sources": [],
+      "takeaway": "The hook is the half point on a spread \u2014 it decides bets on the exact same game, so a -1.5 is a genuinely better price than a -2.5, and shopping for it is worth the minute it takes."
      }
-    ]
+    ],
+    "mode": "learning",
+    "title": "Learn the Game"
    },
    {
+    "icon": "\ud83d\udc40",
     "id": "market-watch",
-    "icon": "👀",
-    "title": "Line Movement",
     "items": [
      {
-      "headline": "Thursday's numbers held steady overnight — Giants -2.5, total 41.5",
-      "paragraphs": [
-       "Nothing moved overnight. The Giants are still -2.5 at DraftKings, the total is still 41.5, and the moneyline is still about -135. That is the same board as Tuesday evening — checked this morning against the evening brief, no change on any of the three numbers.",
-       "The move already happened, and it happened on the news. The Giants opened as 1.5-point home favorites and are now -2.5. The total opened at 44.5 and is now 41.5 — down three points. The spread moved a point late Monday, once the McCarthy news firmed up. The money is with the move, not against it: reported DraftKings splits from Monday evening had 71% of spread tickets and 89% of the money on the Giants. Tickets and handle agree on New York, so this is not a public-vs-money split — it is a popular side that the money likes too. That is why there is no Fade this morning: a Fade needs the two numbers to disagree, and here they do not.",
-       "The app board has caught none of this. It still shows Week 8 prices from November 2 — I checked this morning and it is byte-identical to last night's board — and there is no Commanders-Giants game on it at all. If your book's Thursday number looks different from -2.5 or 41.5, run it through Check and let the app judge your price, not last week's."
-      ],
-      "takeaway": "Giants -2.5 and total 41.5 held steady overnight after moving a point and three points respectively since opening — the money agrees with the tickets on New York, so there is no Fade, just a line that has already moved.",
       "evidence_ids": [
-       "ev-lines-am",
-       "ev-board-am"
+       "ev-lines-pm",
+       "ev-board-pm"
+      ],
+      "headline": "Thursday's line did not move all day \u2014 Giants -2.5, total 41.5, and a better number is sitting at FanDuel",
+      "paragraphs": [
+       "Nothing moved on the spread or the total today. The Giants are still -2.5 at DraftKings, the total is still 41.5, and those are the same numbers as this morning. The only drift was on the moneyline: the Giants went from about -135 this morning to -142 now, with the Commanders at +120. A small move, in New York's direction.",
+       "The move that matters already happened, and it happened on the news. The Giants opened as 1.5-point home favorites and are now -2.5. The total opened at 44.5 and is now 41.5 \u2014 down three points. The spread moved a point once the McCarthy news firmed up, and the total fell as the rain forecast firmed up. The money is with the move, not against it: reported DraftKings splits from Monday evening had 71% of spread tickets and 89% of the money on the Giants. Tickets and handle agree on New York, so this is not a public-vs-money split \u2014 it is a popular side that the money likes too. That is why there is no Fade tonight.",
+       "Here is the number worth knowing before kickoff: FanDuel has the Giants at -1.5 (-120), a full point better than DraftKings' -2.5. A two-point Giants win cashes -1.5 and loses -2.5. If your book has a Thursday number you like \u2014 especially a -1.5 \u2014 run it through Check and let the app judge your price. The app board has caught none of this. It still shows Week 8 prices from November 2, and there is no Commanders-Giants game on it at all."
       ],
       "sources": [
        {
-        "label": "Sports Illustrated",
-        "url": "https://www.si.com/betting/commanders-vs-giants-odds-shift-towards-new-york-on-thursday-night-football-with-j-j-mccarthy-expected-to-play"
+        "label": "NBC Sports",
+        "url": "https://www.nbcsports.com/betting/nfl/news/commanders-vs-giants-odds-expert-picks-team-and-player-news-betting-trends-and-stats"
        },
        {
-        "label": "VSiN",
-        "url": "https://vsin.com/nfl/commanders-vs-giants-predictions-week-10-thursday-night-football-odds-picks-and-player-props/"
+        "label": "Sports Illustrated",
+        "url": "https://www.si.com/betting/commanders-vs-giants-odds-for-week-10-new-york-gaining-ground-ahead-of-thursday-night-football"
+       },
+       {
+        "label": "CLEATZ",
+        "url": "https://cleatz.com/commanders-vs-giants-tnf-betting-preview/"
        },
        {
         "label": "NFL EDGE product",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
-      ]
+      ],
+      "takeaway": "Giants -2.5 and total 41.5 held all day after moving a point and three points since opening \u2014 the money agrees with the tickets on New York, so there is no Fade, and FanDuel's -1.5 is a full point better than DraftKings' -2.5."
      }
-    ]
+    ],
+    "title": "Line Movement"
    },
    {
+    "icon": "\u2705",
     "id": "today-tip",
-    "icon": "✅",
-    "title": "Today's Tip",
     "items": [
      {
-      "headline": "Thursday is tomorrow — run Check tonight, while your number is still there",
-      "paragraphs": [
-       "The one thing that would have been worth waiting for — McCarthy's status — is answered, by McCarthy himself. The only thing left to wait for is the inactives, about 90 minutes before kickoff on Thursday, and that only matters if your bet needs a specific name in the lineup. If it does not, there is nothing left to wait for.",
-       "So run Check tonight. Thursday is a short week and the line has already moved once — the Giants went from -1.5 to -2.5 while people waited. If your book has a Thursday number you like and Check says bet, bet it now. A good number today beats a hoped-for number tomorrow, because waiting lets the number drift the wrong way too.",
-       "One more thing, while the tracker is open: settlement is manual, and the tracker only works if you are honest with yourself. Log the losers too — a record that only keeps the wins is not a record."
-      ],
-      "takeaway": "McCarthy is confirmed, so the only wait left is the inactives about 90 minutes before Thursday's kickoff — if Check says bet on your Thursday number, bet it now, and log the losers too.",
       "evidence_ids": [
-       "ev-qb-am",
-       "ev-lines-am"
+       "ev-inj-pm",
+       "ev-lines-pm"
+      ],
+      "headline": "Thursday is tomorrow \u2014 if your book has -1.5, run Check tonight",
+      "paragraphs": [
+       "Everything that could be answered before kickoff is answered. McCarthy is confirmed, the final designations are in, and the forecast is final. The only thing left to wait for is the inactives, about 90 minutes before kickoff on Thursday, and that only matters if your bet needs a specific name in the lineup. If it does not, there is nothing left to wait for.",
+       "So run Check tonight. The line has already moved once this week \u2014 the Giants went from -1.5 to -2.5 while people waited \u2014 and FanDuel still has a -1.5 sitting there. If your book has a Thursday number you like and Check says bet, bet it now. A good number today beats a hoped-for number tomorrow, because waiting lets the number drift the wrong way too. And if your book's number is worse than the one you want, Check still tells you \u2014 a no-bet verdict on a bad price is the app doing its job.",
+       "One last thing: -120 means every $1.20 you risk wins $1. That is price mechanics, not a stake. The app sets your actual stake from your bankroll and how aggressive you want to be \u2014 let it do that part."
       ],
       "sources": [
        {
-        "label": "Giants Wire",
-        "url": "https://giantswire.usatoday.com/story/sports/nfl/giants/2026/11/11/giants-jj-mccarthy-ready-short-week-home-debut-commanders/92721377007/"
+        "label": "Sports Illustrated",
+        "url": "https://www.si.com/nfl/commanders/onsi/commanders-giants-final-injury-report-week-10"
        },
        {
-        "label": "Sports Illustrated",
-        "url": "https://www.si.com/betting/commanders-vs-giants-odds-shift-towards-new-york-on-thursday-night-football-with-j-j-mccarthy-expected-to-play"
+        "label": "NBC Sports",
+        "url": "https://www.nbcsports.com/betting/nfl/news/commanders-vs-giants-odds-expert-picks-team-and-player-news-betting-trends-and-stats"
        }
-      ]
+      ],
+      "takeaway": "The final designations and the forecast are in, so the only wait left is the inactives about 90 minutes before Thursday's kickoff \u2014 if your book has a number you like and Check says bet, bet it now."
      }
-    ]
+    ],
+    "title": "Today's Tip"
    }
-  ]
+  ],
+  "title": "NFL EDGE Wednesday Evening Brief"
  },
  "evidence": [
   {
-   "evidence_id": "ev-qb-am",
+   "app_guidance": "Patrick's absence and Burks' expected return are facts for Thursday's game. Run any Thursday price through Check \u2014 the app's model and evaluator do the pricing work.",
    "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Giants QB J.J. McCarthy confirmed Wednesday morning he will start Thursday night against Washington — his first home start as the Giants' starting quarterback — saying he feels fully recovered from the hip injury he picked up Sunday in Philadelphia. McCarthy was a full participant in Tuesday's practice, as were RB Cam Skattebo (hamstring) and WR Darnell Mooney (chest). Giants OLB Abdul Carter (knee/back) and rookie CB Colton Hood (finger) were limited Tuesday; Hood is a new name on the report after leaving practice with a trainer. Washington WR Treylon Burks (foot) was limited Tuesday; G Lucas Patrick (concussion) did not practice and must clear protocol before Thursday. The Giants hold a walkthrough Wednesday; final designations come with the inactives about 90 minutes before Thursday's 8:15 p.m. ET kickoff. The other Week 10 quarterback spots are as the evening brief left them: Murray likely out 3-4 weeks, Watson set to start Sunday, Lock says he will play, Beck starts for Arizona.",
-   "interpretation": "Thursday's quarterback question is now answered by McCarthy himself, not just by a coach's expectation — and the Giants are as healthy as a short week allows. The only names still to watch are Carter, Hood, Burks and Patrick.",
-   "app_guidance": "McCarthy's status no longer needs to gate a Thursday bet. The inactives about 90 minutes before kickoff are the last word if a bet needs a specific name in the lineup.",
+   "evidence_id": "ev-inj-pm",
+   "fact": "Final injury report for Commanders at Giants, Thursday Nov 12, released Wednesday Nov 11: Washington C Lucas Patrick (concussion) OUT \u2014 did not practice all week, entered protocol Sunday vs the Rams; TE Colson Yankoff (knee) OUT. Nick Allegretti starts at center in Patrick's place, confirmed by head coach Dan Quinn on Tuesday. WR Treylon Burks (foot) was DNP Wednesday but received NO game designation; Quinn said the day off was planned after Burks got work Tuesday and Burks is expected to be ready Thursday. Giants: only OLB Malik Harrison (groin) carries a designation \u2014 questionable after being limited all week. OLB Abdul Carter (knee/back) was full Wednesday after two limited days, no designation. QB J.J. McCarthy (hip) and RB Cam Skattebo (hamstring) have no designations. Rookie CB Colton Hood (finger, limited Tuesday) has no designation. The Giants held a walkthrough Wednesday; final active rosters are confirmed with the inactives about 90 minutes before Thursday's 8:15 p.m. ET kickoff at MetLife.",
+   "interpretation": "Thursday's last injury questions are answered: Washington loses its starting center, but its receiver should play; the Giants are nearly clean. Only Harrison is genuinely in doubt.",
    "sources": [
     {
-     "label": "Giants Wire",
-     "url": "https://giantswire.usatoday.com/story/sports/nfl/giants/2026/11/11/giants-jj-mccarthy-ready-short-week-home-debut-commanders/92721377007/"
+     "label": "Sports Illustrated",
+     "url": "https://www.si.com/nfl/commanders/onsi/commanders-giants-final-injury-report-week-10"
     },
     {
-     "label": "DK Network",
-     "url": "https://dknetwork.draftkings.com/2026/11/10/nfl-injury-report-week-10/"
+     "label": "Yardbarker",
+     "url": "https://www.yardbarker.com/nfl/articles/giants_nearly_injury_free_ahead_of_thursday_night_matchup_with_commanders/s1_16664_44548934"
     },
     {
-     "label": "National Football Post",
-     "url": "https://www.nationalfootballpost.com/2026/11/10/commanders-visit-1st-place-giants-for-must-win-rematch"
+     "label": "Sports Illustrated",
+     "url": "https://www.si.com/nfl/giants/onsi/giants-commanders-injury-report-thursday-night-01m768yvcepb"
     }
-   ]
+   ],
+   "verification": "REPORTED"
   },
   {
-   "evidence_id": "ev-weather-am",
+   "app_guidance": "The board still lists Darnold as Seattle's starter and Murray as Minnesota's \u2014 it has not caught up with this week's quarterback news, so Sunday prices go through Check too.",
+   "category": "injury",
+   "evidence_id": "ev-qb-pm",
+   "fact": "Other Week 10 quarterback news from Wednesday Nov 11: Seahawks QB Sam Darnold (ribs/quad) did not practice Wednesday and is already ruled out for Sunday vs the Raiders; Drew Lock (elbow/quad) was limited Wednesday and will start Sunday, his second straight start \u2014 head coach Mike Macdonald said Lock is making progress and the team will keep managing his throwing workload. Dolphins QB Malik Willis (groin) was placed on injured reserve; Kyle McCord gets his first chance to lead an NFL team Sunday vs the Colts. Chiefs QB Patrick Mahomes (knee/elbow) was a full participant in Wednesday's practice and Andy Reid expects him to play Sunday vs the Falcons; TE Travis Kelce (ankle) was also a full participant.",
+   "interpretation": "Sunday's quarterback picture is settling: Lock starts again for Seattle, McCord starts for Miami, Mahomes looks fine. None of it touches Thursday night.",
+   "sources": [
+    {
+     "label": "NBC Sports",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sam-darnold-did-not-practice-drew-lock-was-limited"
+    },
+    {
+     "label": "Indianapolis Star",
+     "url": "https://www.indystar.com/story/sports/nfl/colts/2026/11/11/indianapolis-colts-injury-report-vs-miami-dolphins-malik-willis/92731549007/"
+    },
+    {
+     "label": "Falcons Wire",
+     "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/11/11/falcons-chiefs-injury-report-patrick-mahomes/92723345007/"
+    }
+   ],
+   "verification": "REPORTED"
+  },
+  {
+   "app_guidance": "Rain is a fact about Thursday's game conditions. Run any Thursday price through Check \u2014 the app's model and evaluator do the pricing work.",
    "category": "weather",
-   "verification": "REPORTED",
-   "fact": "National Weather Service forecast for East Rutherford, New Jersey, updated Wednesday morning: Thursday brings rain and possibly a thunderstorm between 10 a.m. and 4 p.m., then rain after 4 p.m., high near 60, northeast wind 7 to 9 mph becoming southeast, chance of precipitation 100%, with a half to three-quarters of an inch of rain possible. Thursday night: rain, low around 43, north wind 8 to 11 mph with gusts as high as 22 mph, chance of precipitation 80%. Washington at the New York Giants kicks off 8:15 p.m. ET Thursday at MetLife Stadium, outdoors — so rain is expected through kickoff, with temperatures falling toward the low 40s and wind gusting to 22 mph.",
-   "interpretation": "Thursday's game will be played in rain. The forecast has firmed up since the evening brief — 100% chance of rain Thursday daytime now, up from 80% — and it is a real plan-around-it forecast, not a two-days-out guess.",
-   "app_guidance": "Rain is a fact about Thursday's game conditions. Run any Thursday price through Check — the app's model and evaluator do the pricing work.",
+   "evidence_id": "ev-weather-pm",
+   "fact": "National Weather Service forecast for East Rutherford, New Jersey, checked Wednesday evening Nov 11: Thursday brings showers, mainly after 10 a.m., high near 60, northeast wind 6 to 10 mph with gusts as high as 20 mph, chance of precipitation 100%, with a quarter to half an inch of rain possible. Thursday night: rain, low around 40, north wind 10 to 13 mph with gusts as high as 23 mph, chance of precipitation 80%, with a quarter to half an inch possible. Washington at the New York Giants kicks off 8:15 p.m. ET Thursday at MetLife Stadium, outdoors \u2014 so rain is expected through kickoff, with temperatures falling toward 40 and wind gusting to 23 mph. Essentially unchanged from the morning forecast (low 43 and gusts 22 then).",
+   "interpretation": "Thursday's game will be played in rain. The forecast is now final and barely moved from this morning \u2014 a plan-around-it forecast, not a two-days-out guess.",
    "sources": [
     {
      "label": "National Weather Service",
      "url": "https://forecast.weather.gov/MapClick.php?CityName=East+Rutherford&state=NJ&site=OKX&lat=40.8175&lon=-74.0844"
     }
-   ]
+   ],
+   "verification": "REPORTED"
   },
   {
-   "evidence_id": "ev-lines-am",
+   "app_guidance": "The -1.5 from Monday is gone at DraftKings but still available at FanDuel. If your book shows a better number than -2.5, run it through Check before it moves again.",
    "category": "lines",
-   "verification": "REPORTED",
-   "fact": "Commanders at Giants, Thursday Nov 12: DraftKings still lists the Giants -2.5 (-110), Commanders +2.5 (-110), total 41.5, Giants moneyline -135, Commanders +114 — unchanged from Tuesday evening. The line opened at Giants -1.5 with a total of 44.5, so the spread has moved a point toward New York and the total has dropped three points since opening, and the moneyline has moved from about -125 to -135. Reported DraftKings splits from Monday evening had 71% of spread tickets and 89% of the money on the Giants — tickets and handle agreeing on the same side.",
-   "interpretation": "Thursday's numbers held steady overnight after moving Monday and Tuesday. The money is with the move, not against it, and there is no public-vs-money disagreement in the reported splits.",
-   "app_guidance": "The -1.5 from Monday is gone. If your book still shows a better number than -2.5, run it through Check before it moves again.",
+   "evidence_id": "ev-lines-pm",
+   "fact": "Commanders at Giants, Thursday Nov 12: DraftKings still lists the Giants -2.5 (-110), Commanders +2.5 (-110), total 41.5 \u2014 unchanged from Wednesday morning. The moneyline drifted slightly: Giants -142 / Commanders +120 now, vs about -135 / +114 this morning. FanDuel lists the Giants -1.5 (-120) with the total 41.5 \u2014 a full point better on the spread than DraftKings. The line opened at Giants -1.5 with a total of 44.5, so the spread has moved a point toward New York and the total has dropped three points since opening. Reported DraftKings splits from Monday evening had 71% of spread tickets and 89% of the money on the Giants \u2014 tickets and handle agreeing on the same side.",
+   "interpretation": "Thursday's numbers held steady all day after moving Monday and Tuesday. The money is with the move, not against it, and there is no public-vs-money disagreement in the reported splits. The live shopping note is FanDuel's -1.5 vs DraftKings' -2.5.",
    "sources": [
     {
-     "label": "VSiN",
-     "url": "https://vsin.com/nfl/commanders-vs-giants-predictions-week-10-thursday-night-football-odds-picks-and-player-props/"
+     "label": "NBC Sports",
+     "url": "https://www.nbcsports.com/betting/nfl/news/commanders-vs-giants-odds-expert-picks-team-and-player-news-betting-trends-and-stats"
     },
     {
      "label": "Sports Illustrated",
-     "url": "https://www.si.com/betting/commanders-vs-giants-odds-shift-towards-new-york-on-thursday-night-football-with-j-j-mccarthy-expected-to-play"
+     "url": "https://www.si.com/betting/commanders-vs-giants-odds-for-week-10-new-york-gaining-ground-ahead-of-thursday-night-football"
     },
     {
-     "label": "OddsDesk",
-     "url": "https://oddsdesk.ai/nfl/picks"
+     "label": "CLEATZ",
+     "url": "https://cleatz.com/commanders-vs-giants-tnf-betting-preview/"
     }
-   ]
+   ],
+   "verification": "REPORTED"
   },
   {
-   "evidence_id": "ev-vsin-am",
+   "app_guidance": "No Fade signal this evening; the learning item teaches the hook instead.",
    "category": "splits",
-   "verification": "REPORTED",
-   "fact": "VSiN free betting-splits page (data.vsin.com/betting-splits) checked Wednesday Nov 11, about 6:15 a.m. Denver time: the free text view showed only a college basketball game (Florida vs Florida State) with DraftKings splits — spread -8.5, 70% of handle and 72% of bets on Florida; total 164.5, 79% of handle and 62% of bets on the over. No NFL featured row and no DraftKings spread splits for any NFL game were visible in the free tier. Separately, reported DraftKings splits for Commanders-Giants (Covers, Monday evening) show 71% of tickets and 89% of the money on the Giants — tickets and handle agreeing on the same side, which is not a public-vs-sharper disagreement, and DraftKings-only splits alone are insufficient for a Fade.",
-   "interpretation": "No qualifying Fade split was available this morning, so the fade slot uses the learning substitute.",
-   "app_guidance": "No Fade signal this morning; the learning item teaches closing line value instead.",
+   "evidence_id": "ev-vsin-pm",
+   "fact": "VSiN free betting-splits page (data.vsin.com/betting-splits) checked Wednesday Nov 11, about 6:00 p.m. Denver time: the free text view showed only a college basketball game (Fairleigh Dickinson vs East Texas A&M) with DraftKings splits \u2014 no NFL featured row and no DraftKings spread splits for any NFL game were visible in the free tier. The full board is VSiN Pro paid. Separately, reported DraftKings splits for Commanders-Giants (Monday evening) show 71% of tickets and 89% of the money on the Giants \u2014 tickets and handle agreeing on the same side, which is not a public-vs-sharper disagreement, and DraftKings-only splits alone are insufficient for a Fade.",
+   "interpretation": "No qualifying Fade split was available this evening, so the fade slot uses the learning substitute.",
    "sources": [
     {
      "label": "VSiN betting splits",
@@ -265,21 +291,25 @@
      "label": "Covers",
      "url": "https://www.covers.com/forum/nfl-betting-21/tnf-early-look-commanders-at-giants-104059459"
     }
-   ]
+   ],
+   "verification": "REPORTED"
   },
   {
-   "evidence_id": "ev-board-am",
-   "category": "board",
-   "verification": "REPORTED",
-   "fact": "NFL EDGE product board checked Wednesday morning, about 6:15 a.m. Denver time: still the same board generated November 2 — nine days old, still showing Week 8. Fourteen games listed, most marked in progress, and only the Chicago-Seattle game still shows a live DraftKings/FanDuel/Pinnacle market board. The app's own freshness field says FRESH, but the timestamp says November 2. The headline cards are from the Bears-Seahawks game: Hit Rate on the Seahawks moneyline at -175 (app probability 60.0% vs 63.6% needed to break even, negative expected value), Balanced and Value both on the Bears +3 at -102 (app probability 52.4% vs 50.5% break-even, small positive expected value). The board still lists Kyler Murray as Minnesota's expected starter — he is now likely out 3-4 weeks with a Grade 2 hamstring strain and Carson Wentz started Monday night — and still lists Sam Darnold as Seattle's starter, though Darnold is ruled out and Drew Lock starts Sunday at Las Vegas. There is no Commanders-Giants game on the board at all.",
-   "interpretation": "The board has not flipped to Week 10 and has picked up none of this week's news. Until it flips, Thursday's prices go through Check; do not trust the app's quarterback fields right now.",
    "app_guidance": "Until the board flips to Week 10, Thursday's prices go through Check; do not trust the app's quarterback fields right now.",
+   "category": "board",
+   "evidence_id": "ev-board-pm",
+   "fact": "NFL EDGE product board checked Wednesday evening, about 6:08 p.m. Denver time, after the evening refresh \u2014 and again at 6:10 p.m.: still the same board generated November 2 \u2014 nine days old, still showing Week 8. Byte-identical on re-fetch (same md5). Fourteen games listed, most marked in progress, and only the Chicago-Seattle game still shows a live DraftKings/FanDuel/Pinnacle market board. The app's own freshness field says FRESH, but the timestamp says November 2. The headline cards are from the Bears-Seahawks game: Hit Rate on the Seahawks moneyline at -175 (app probability 60.0% vs 63.6% needed to break even, negative expected value), Balanced and Value both on the Bears +3 at -102 (app probability 52.4% vs 50.5% break-even, small positive expected value). The board still lists Kyler Murray as Minnesota's expected starter \u2014 he is now likely out 3-4 weeks with a Grade 2 hamstring strain and Carson Wentz started Monday night \u2014 and still lists Sam Darnold as Seattle's starter, though Darnold is ruled out and Drew Lock starts Sunday at Las Vegas. There is no Commanders-Giants game on the board at all.",
+   "interpretation": "The board did not flip at the evening refresh. Until it flips to Week 10, Thursday's prices go through Check; do not trust the app's quarterback fields right now.",
    "sources": [
     {
      "label": "NFL EDGE product",
      "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
     }
-   ]
+   ],
+   "verification": "REPORTED"
   }
- ]
+ ],
+ "research_generated_at_utc": "2026-11-12T01:12:22Z",
+ "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+ "submitted_at_utc": "2026-11-12T01:12:22Z"
 }
