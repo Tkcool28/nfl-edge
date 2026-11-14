@@ -2,8 +2,9 @@
 
 A naked schedule JSON is never a checkpoint. The successful evidence manifest
 pins a content-addressed source+schedule bundle; replay must reproduce it under
-the current materializer. Only a newly blank surface or an equivalent canonical
-roof context may differ upstream. Actual roof position remains settled evidence.
+the current materializer. Only a newly blank surface, an equivalent canonical
+roof context, or the exact pinned LV@SF kickoff reconciliation may differ upstream.
+Actual roof position remains settled evidence.
 """
 from __future__ import annotations
 
@@ -76,6 +77,20 @@ def reuse(root: Path, rows, week: int, *, allow_reviewed: bool = False):
             if field == 'roof' and _roof(old) == _roof(new):
                 continue  # OPEN/CLOSED actuals never alter canonical retractable context.
             if field == 'surface' and not str(new[field] or '').strip():
+                continue
+            # One-time LV@SF source reconciliation; retain the pregame archive
+            # (including 21:05Z and its as-of), never backdate corrected knowledge.
+            # Official 13:25 PST gamebook and source hashes: see
+            # reports/week9_kickoff_reconciliation_2026.md.
+            if (field == 'gametime' and week == 9
+                    and ref == 'b35fb2e0cabb01ef7d829e447c53918c69fe2922c76eabe908bb5c2f7b6cb191'
+                    and all(old[k] == new[k] == v for k, v in {
+                        'season': '2026', 'game_type': 'REG', 'week': '9',
+                        'game_id': '2026_09_LV_SF', 'gameday': '2026-11-08',
+                        'away_team': 'LV', 'home_team': 'SF',
+                        'stadium': "Levi's Stadium", 'stadium_id': 'SFO01',
+                    }.items())
+                    and old[field] == '16:05' and new[field] == '16:25'):
                 continue
             if old[field] != new[field]:
                 raise HistoricalScheduleError(
