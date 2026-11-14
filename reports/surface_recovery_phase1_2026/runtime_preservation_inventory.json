@@ -1,0 +1,360 @@
+{
+  "read_only_inventory_at_utc": "2026-11-13T15:53:04.687309+00:00",
+  "no_replay_or_publish": true,
+  "checkpoints": {
+    "8": {
+      "checkpoint_ref": "285c4ed437205cbc5c6dc28ddaec7291af77a0ceaf41242a2ebfaf3c070ec517",
+      "verified_at_utc": "2026-10-30T00:01:01Z",
+      "schedule_matches_checkpoint": true,
+      "games": 14
+    },
+    "9": {
+      "checkpoint_ref": "b35fb2e0cabb01ef7d829e447c53918c69fe2922c76eabe908bb5c2f7b6cb191",
+      "verified_at_utc": "2026-11-06T00:01:01Z",
+      "schedule_matches_checkpoint": true,
+      "games": 15,
+      "lv_sf": {
+        "archived_source_row": {
+          "away_rest": "7",
+          "away_team": "LV",
+          "game_id": "2026_09_LV_SF",
+          "game_type": "REG",
+          "gameday": "2026-11-08",
+          "gametime": "16:05",
+          "home_rest": "14",
+          "home_team": "SF",
+          "location": "Home",
+          "roof": "outdoors",
+          "season": "2026",
+          "stadium": "Levi's Stadium",
+          "stadium_id": "SFO01",
+          "surface": "grass",
+          "week": "9"
+        },
+        "current_source_row": {
+          "game_id": "2026_09_LV_SF",
+          "season": "2026",
+          "game_type": "REG",
+          "week": "9",
+          "gameday": "2026-11-08",
+          "weekday": "Sunday",
+          "gametime": "16:25",
+          "away_team": "LV",
+          "away_score": "17",
+          "home_team": "SF",
+          "home_score": "38",
+          "location": "Home",
+          "result": "21",
+          "total": "55",
+          "overtime": "0",
+          "old_game_id": "2026110809",
+          "gsis": "60309",
+          "nfl_detail_id": "",
+          "pfr": "202611080sfo",
+          "pff": "30737",
+          "espn": "401873047",
+          "ftn": "7150",
+          "away_rest": "7",
+          "home_rest": "14",
+          "away_moneyline": "320",
+          "home_moneyline": "-410",
+          "spread_line": "8.5",
+          "away_spread_odds": "-108",
+          "home_spread_odds": "-112",
+          "total_line": "51.5",
+          "under_odds": "-102",
+          "over_odds": "-118",
+          "div_game": "0",
+          "roof": "outdoors",
+          "surface": "",
+          "temp": "",
+          "wind": "",
+          "away_qb_id": "00-0029604",
+          "home_qb_id": "00-0037834",
+          "away_qb_name": "Kirk Cousins",
+          "home_qb_name": "Brock Purdy",
+          "away_coach": "Klint Kubiak",
+          "home_coach": "Kyle Shanahan",
+          "referee": "",
+          "stadium_id": "SFO01",
+          "stadium": "Levi's Stadium"
+        },
+        "differences": {
+          "gametime": {
+            "old": "16:05",
+            "current": "16:25"
+          },
+          "surface": {
+            "old": "grass",
+            "current": ""
+          }
+        },
+        "archived_schedule_game": {
+          "away_rest": 7,
+          "away_team": "LV",
+          "context_source_at_utc": "2026-11-06T00:01:01Z",
+          "game_id": "2026_09_LV_SF",
+          "home_rest": 14,
+          "home_team": "SF",
+          "neutral_site": false,
+          "roof_structure": "OUTDOOR",
+          "roof_type": "outdoors",
+          "scheduled_start_utc": "2026-11-08T21:05:00Z",
+          "surface": "grass",
+          "venue": "Levi's Stadium",
+          "venue_id": "SFO01"
+        }
+      }
+    }
+  },
+  "last_success": {
+    "publication_status": {
+      "football_data_version": "live-2026-state:16f6cb09780dc18926ee9fc8",
+      "freshness": {
+        "age_seconds": 0.0,
+        "observed_at_utc": "2026-11-02T12:08:54Z",
+        "state": "FRESH",
+        "threshold_seconds": 43200.0
+      },
+      "generated_at_utc": "2026-11-02T12:08:54Z",
+      "immutable_snapshot": "product-2026-11-02T120854Z-live-2026-week8-product-v1.json",
+      "last_failure": null,
+      "last_publication_attempt": "2026-11-02T12:08:54Z",
+      "last_successful_publication": "2026-11-02T12:08:54Z",
+      "market_snapshot_version": "live-market:bfdab84c34800f5be8a40773",
+      "prediction_as_of_utc": "2026-11-02T12:05:04.391717Z",
+      "product_version": "live-2026-week8-product-v1",
+      "qb_snapshot_version": "sleeper-scheduled-20261102T120001Z-822dd8eb",
+      "stale": false
+    },
+    "run_status": {
+      "completed_2026_blocks": [
+        "2026_REG_W01",
+        "2026_REG_W02",
+        "2026_REG_W03",
+        "2026_REG_W04",
+        "2026_REG_W05",
+        "2026_REG_W06",
+        "2026_REG_W07"
+      ],
+      "credits_consumed": 3,
+      "error_message": null,
+      "error_type": null,
+      "finished_at_utc": "2026-11-02T12:08:54.566968Z",
+      "football_snapshot_sha256": "0008cbe0749d2a79b5d59f7891cc1864ab5d9de862d91048e83d98692375b244",
+      "football_state_version": "live-2026-state:16f6cb09780dc18926ee9fc8",
+      "immutable_snapshot": "/var/lib/nfl-edge/product_v1/product-2026-11-02T120854Z-live-2026-week8-product-v1.json",
+      "market_snapshot_sha256": "bfdab84c34800f5be8a40773c0fc6abb7b9c347ebf72234d34b891296d712e74",
+      "market_snapshot_version": "live-market:bfdab84c34800f5be8a40773",
+      "outcome": "SUCCESS",
+      "prediction_as_of_utc": "2026-11-02T12:05:04.391717Z",
+      "product_sha256": "a447417705774908ab813601c9becc3183600e125ff70a6e4a9b57df69c7fbc6",
+      "product_version": "live-2026-week8-product-v1",
+      "prospective_capture_error_message": null,
+      "prospective_capture_error_type": null,
+      "prospective_capture_result": "CAPTURED",
+      "prospective_publication_id": "publication-a447417705774908ab813601",
+      "prospective_runtime_path": "/var/lib/nfl-edge/prospective_card_log_v1/2026/week-08/publications/2026-11-02T120854Z--a447417705774908.json",
+      "prospective_source_product_sha256": "a447417705774908ab813601c9becc3183600e125ff70a6e4a9b57df69c7fbc6",
+      "provider_request_count": 1,
+      "publication_result": "PUBLISHED",
+      "run_id": "refresh-20261102T120504.392314Z",
+      "schedule_path": "/var/lib/nfl-edge/live_inputs_v1/2026/week8_schedule_v1.json",
+      "schedule_rollover_at_utc": "2026-10-27T12:00:00Z",
+      "schedule_version": "NFLVERSE_2026_REG_WEEK8_2026-10-30T00:01:01Z",
+      "schema_version": "nfl-edge-production-refresh-v1",
+      "season": 2026,
+      "selector_state_observations": {
+        "moneyline": 1,
+        "spread": 6
+      },
+      "sleeper_snapshot_id": "sleeper-scheduled-20261102T120001Z-822dd8eb",
+      "started_at_utc": "2026-11-02T12:05:04.392314Z",
+      "week": 8
+    },
+    "product_sha256": "a447417705774908ab813601c9becc3183600e125ff70a6e4a9b57df69c7fbc6",
+    "product_bytes": 68749,
+    "product_top_level_keys": [
+      "evaluator_versions",
+      "football_data_version",
+      "freshness",
+      "games",
+      "generated_at_utc",
+      "headlines",
+      "market_snapshot_version",
+      "model_versions",
+      "prediction_as_of_utc",
+      "product_version",
+      "qb_snapshot_version",
+      "schema_version",
+      "season",
+      "selector_versions",
+      "slate_status",
+      "stale",
+      "warnings",
+      "week"
+    ]
+  },
+  "protected_files": {
+    "/var/lib/nfl-edge/live_inputs_v1/2026/week7_schedule_v1.json": {
+      "sha256": "67ad7ce70e550a70abee1be067f1dcac8609b6282f876dd0db56799a882da50e",
+      "bytes": 6856
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/week6_schedule_v1.json": {
+      "sha256": "8a2ace347b2d2fbe0c0c08d50cbe803efbba26b6ec4e63cf1802e3b90dc2e76e",
+      "bytes": 6895
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/.live-inputs.lock": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/week5_schedule_v1.json": {
+      "sha256": "b8269e9e9550095c67f78b98408c6583544d8d9d6899af77cf8e9c8465ba79f8",
+      "bytes": 26757
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/settled_games.parquet": {
+      "sha256": "df8e0650c777ccac00aa194acc48537b743bfa291dbe3c33cae1a6354f51d9da",
+      "bytes": 10629
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/week4_schedule_v1.json": {
+      "sha256": "ac249a96e2c1c873006a3490e33c0e9125998d677421ee9255fcf29fa92414c1",
+      "bytes": 7746
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/settled_qb_stats.parquet": {
+      "sha256": "31ee1f8b5df5fffe4ae6694605946398b98ef84d5899227f923249def10bbbf3",
+      "bytes": 73853
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/settled_team_stats.parquet": {
+      "sha256": "e1b32fe2cdeacf165c5ee43726cc140535f68a74d6120f6190d7f076d6c83cae",
+      "bytes": 77976
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/week2_schedule_v1.json": {
+      "sha256": "4b88134fbcbe62f270ddd56c56a6edb45f114fbf06dc3800eceabc53d397d168",
+      "bytes": 7750
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/settled_pbp.parquet": {
+      "sha256": "f1e9d3986b554900af741be70e180975fde9c6277f082a822c9e192264bc0845",
+      "bytes": 5889902
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/week1_schedule_v1.json": {
+      "sha256": "10d2d5701d6b51a8e52cc5f9dfc16097d3e806e5926bd3b3e6195d8e80adbde3",
+      "bytes": 7736
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/week8_schedule_v1.json": {
+      "sha256": "ab84b145e8e43ead7eb971a37e33bfc5a8b711effd4be857bccb0de37963ed6a",
+      "bytes": 6864
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/settled_evidence_manifest.json": {
+      "sha256": "866ee1feaeaf692814e3763e6dcb8da19611cd14686bc810e977f9de6e0d4207",
+      "bytes": 22644
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/week9_schedule_v1.json": {
+      "sha256": "9fe57b01bcaab8048c0da8983e5528bce88f7fad76b4c1a54d36f850608c0839",
+      "bytes": 7308
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/week3_schedule_v1.json": {
+      "sha256": "1e34feb2f913d22d9b22a0abe725dd2701120ff42aefa1fbce5258951f99cc67",
+      "bytes": 7729
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/week10_schedule_v1.json": {
+      "sha256": "e398f2bcce9c036492a2db33a179b7ea49a0b6d4a0356901b4490d96c31de1d7",
+      "bytes": 6874
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/285c4ed437205cbc5c6dc28ddaec7291af77a0ceaf41242a2ebfaf3c070ec517.json": {
+      "sha256": "23c16f9a171709af8792e6ada0c2c2b27ea18d5e91ae5d6d1571335fbd9bed0b",
+      "bytes": 13392
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/5a3713269c28d4b671f7892bfe9bc38352fc9aef26cc401c1d5aa22718cbb2e9.json": {
+      "sha256": "a0dccffb2e772648fcb1d87e2291a625c314af68df5db83ca466ee567a6c6d60",
+      "bytes": 13372
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/c90149f275c82fc8acc7b10a6eb11b33e0f01429e8f790b54943f801ac12f9ff.json": {
+      "sha256": "f3cbe693e3e298ee6b44afd632eb61216e5b8b3a498d2cf57b90ff33e4dfbd4b",
+      "bytes": 13372
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/dd5cc717799b21a3205e710365b7633a80abb092482fdfec01fb75b1981cdd16.json": {
+      "sha256": "4e52807ac9dd09bfd1e98b69bb6ad94d6623359679dd67c1bf9d8a642b236d20",
+      "bytes": 14294
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/9af5de48492fda373c002197518625d6ac3b6397442672b2c259c1e0ae574715.json": {
+      "sha256": "cf2930efed8e8eb3ed6295c02d72afe2eaf966a52eb34c34c41748b45f319685",
+      "bytes": 13392
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/a914be2dbc0362719b2dec0a6ef51edae8d35ec8dafe7b78dcff011d4c5500a7.json": {
+      "sha256": "77ce95209101665d9141ff785b13702dd5f0f80fec49bdf6bd94a33528842ff2",
+      "bytes": 15180
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/81939105916275a1183f31f80b54d38d922111fca56a74e6e51ecc46d0701fec.json": {
+      "sha256": "c9c6c6afe4a46c8d1e66de157e543bdaa65b458a11b6399c5d6a5df1fb18c2fa",
+      "bytes": 13392
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/95a0e341def6190122a8799fc434082d44767331652eb6f4f96de36e2580c759.json": {
+      "sha256": "b57b944491b38849dc0837d20c6b50e54f12f8814edd74f5dcf7f5a09db4c526",
+      "bytes": 14294
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/7c6c29af94a57d4898fc88f9d064971f484877e9e57c4b7e4a15b327aee59919.json": {
+      "sha256": "cae50192150f89771afc53fedc998179d456ce49d2fa15eebe14c8bd551a58f7",
+      "bytes": 13392
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/0ee51a72efa028acee13e000799edfa518e7883883e7510e688084b349a02357.json": {
+      "sha256": "b1e68e3d9c502b527a8982ba1860681a0db24950de407a2d6cb5a1390970617d",
+      "bytes": 13372
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/467fdd32d4637e90801ca2f5ccc316ba277c8b94f44e28e10fa6ee326ee50e5a.json": {
+      "sha256": "45b6ce7384f2abfd81d348b924d7232b3afe81915bbf4e51bd528d48ed2ae972",
+      "bytes": 15198
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/28fe4625162855db8651ac48f33734b8f2bb6872e8285dd7a7036e3ed9d3be73.json": {
+      "sha256": "2e783d2b2f24f96afc5e81f7d902663a7b8add164bfef117093cc7d747c53c40",
+      "bytes": 13392
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/a4a6e02489c3e12b4d87c7ec1065e6fbdd2c8b6b0a5e6c9ff945ad5551401efb.json": {
+      "sha256": "2f3cfcc9a642693d1cf4a5a7c7447e5fe508238c4ba8ae06a151ce888999e204",
+      "bytes": 15156
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/be5817e96de05f363b23d58c0c2b6888ad911c5f9e4b71643a498d2face1ea5c.json": {
+      "sha256": "2f199e96ef7a62396bc24714ef45173606ed0028d5ce34015a42beb897f30e7d",
+      "bytes": 14187
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/b35fb2e0cabb01ef7d829e447c53918c69fe2922c76eabe908bb5c2f7b6cb191.json": {
+      "sha256": "214603b8bdc065f71f95c7906ca60d04f0994259bbc24e717b1caa5002c6da17",
+      "bytes": 14294
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/5411f0b653ee41b885534dbc41941ff0e0acd3cfb15d11668031caa9e19fafe1.json": {
+      "sha256": "76eb65a78e3609cadac2a019901bc37d9dd2f72f779d4658df3496470f0f8166",
+      "bytes": 14294
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/9d3dd3e64536ebb06e94cab0cb5d8bf0d3066a714705d38396e200fb4148946e.json": {
+      "sha256": "76aba502338d73da85e234569f0b0389fdc65195631ce7b2bb0da0c812805969",
+      "bytes": 14294
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/4b225c6fb2f5642bd6507296f336af1b918c440d1ab0914c8c183da2caceba84.json": {
+      "sha256": "6cec4ba0e43fc209ffb1ca9156dedc859612467ec317a3a8dc26a2bea4c6e575",
+      "bytes": 15196
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/fbaae0a56e4216d3891de143a1f84778e7dfc8b6b199a340dc653be6e7df1c4c.json": {
+      "sha256": "e4ba8fe1cd63eaa24003436e026e5576654f2af0bc33ce2730e435a6d1390fba",
+      "bytes": 13372
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/c17acd64f05a76c2d386f19f2cd74ffe28cb76b4afec64ab665ec1ca671181f2.json": {
+      "sha256": "5a34c460175b5e0394d5af9500c86ec82c103e82930d238a5844cee076c6118d",
+      "bytes": 13392
+    },
+    "/var/lib/nfl-edge/live_inputs_v1/2026/schedule_checkpoints/957604bdd17fb2d4298a4448ebe19df75d87d5be604e7ced4a2254e9df032159.json": {
+      "sha256": "d3223abe00a060bb7540c3f43a886e6bbc450724153f3479b2635e6eb6dec965",
+      "bytes": 34703
+    },
+    "/var/lib/nfl-edge/product_v1/publication-status-v1.json": {
+      "sha256": "1f2bdbf419f75fbb5d8c68cccbd4beda05a810bbd2d926444e9c3e650dbd25b2",
+      "bytes": 756
+    },
+    "/var/lib/nfl-edge/product_v1/product-2026-11-02T120854Z-live-2026-week8-product-v1.json": {
+      "sha256": "a447417705774908ab813601c9becc3183600e125ff70a6e4a9b57df69c7fbc6",
+      "bytes": 68749
+    },
+    "/var/lib/nfl-edge/production_refresh_v1/refresh-20261102T120504.392314Z/run-status.json": {
+      "sha256": "a40d3365fef876c8ebee16945394cf3b7fa531ebbd168dded6b2daeb1c987415",
+      "bytes": 2029
+    }
+  }
+}
