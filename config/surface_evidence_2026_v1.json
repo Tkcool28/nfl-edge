@@ -26,6 +26,68 @@
         "evidence_quality": "OFFICIAL_GAME_VENUE_AND_CURRENT_VENUE_SURFACE",
         "note": "Official Week 6 event and Seahawks calendar establish October 15 SEA at DEN at Empower Field. Current stadium operator field description explicitly identifies grass. Recover only grass class/canonical grass token; no grass cultivar claim, manufacturer inference, or stadium-ID lookup."
       }
+    },
+    {
+      "evidence_sha256": "9aa88d226b6a4fc862ae72dd13ae6b08608f68fd20813e6c08324c0201d9ca2d",
+      "evidence": {
+        "season": "2026",
+        "week": "9",
+        "game_type": "REG",
+        "game_id": "2026_09_JAX_BAL",
+        "gameday": "2026-11-05",
+        "away_team": "JAX",
+        "home_team": "BAL",
+        "stadium": "M&T Bank Stadium",
+        "stadium_id": "BAL00",
+        "canonical_game_id": "2026_09_JAX_BAL",
+        "surface": "grass",
+        "verified_surface_class": "grass",
+        "surface_subtype_known": true,
+        "source_urls": [
+          "https://static.www.nfl.com/image/upload/v1793965716/gamecenter/ab380826-4feb-11f1-abca-2c54536568a9.pdf",
+          "https://static.www.nfl.com/league/apps/league-site/media-guides/2026/Baltimore-Ravens-2026-Media-Guide.pdf",
+          "https://www.baltimoreravens.com/news/ravens-switching-to-natural-grass-at-m-t-bank-stadium-16430494"
+        ],
+        "retrieved_on": "2026-11-13",
+        "evidence_quality": "OFFICIAL_EXACT_GAME_NFL_GAMEBOOK_AND_CONTEMPORARY_CORROBORATION",
+        "note": "Exact November 5 NFL gamebook identifies M&T Bank Stadium and Natural Grass. The 2026 Ravens guide p415 independently confirms current grass and the historical 2016 conversion. The prior December 2015 article is historical corroboration only. No 2026 temporary artificial swap is inferred; the actual gamebook controls. Canonical grass only, no cultivar inference. Gamebook actual start 20:16 EST is not used to alter scheduled kickoff 20:15.",
+        "original_source_sha256": "4de7f0ca9111c3a7b9eec4ad9e514a28f1823026d893fa4bb23eb9930cc94c36",
+        "source_document_sha256": {
+          "https://static.www.nfl.com/image/upload/v1793965716/gamecenter/ab380826-4feb-11f1-abca-2c54536568a9.pdf": "88f002bb2f72bdce2b0efd9ed9ab94b28fa21dad1fc3b9867071545162907c60",
+          "https://static.www.nfl.com/league/apps/league-site/media-guides/2026/Baltimore-Ravens-2026-Media-Guide.pdf": "6c4f0106339b01358a829a5b6c1b14d63c0829b756874ad60a09284b1b7c4844",
+          "https://www.baltimoreravens.com/news/ravens-switching-to-natural-grass-at-m-t-bank-stadium-16430494": "240a58627f0a1d73a8840f4c40ba6f5fc66efd790d01a43f94df4f8465163ecd"
+        }
+      }
+    },
+    {
+      "evidence_sha256": "1c3a5ab2bbe72cb9c34c28378b3897d3254da4083adc4fac74bb4bda49084abb",
+      "evidence": {
+        "season": "2026",
+        "week": "10",
+        "game_type": "REG",
+        "game_id": "2026_10_WAS_NYG",
+        "gameday": "2026-11-12",
+        "away_team": "WAS",
+        "home_team": "NYG",
+        "stadium": "MetLife Stadium",
+        "stadium_id": "NYC01",
+        "canonical_game_id": "2026_10_WAS_NYG",
+        "surface": "fieldturf",
+        "verified_surface_class": "artificial",
+        "surface_subtype_known": true,
+        "source_urls": [
+          "https://static.www.nfl.com/image/upload/v1794570519/gamecenter/ab5828d9-4feb-11f1-abca-2c54536568a9.pdf",
+          "https://fieldturf.com/en/why-fieldturf/featured-projects/"
+        ],
+        "retrieved_on": "2026-11-13",
+        "evidence_quality": "OFFICIAL_EXACT_GAME_NFL_GAMEBOOK_AND_CONTEMPORARY_CORROBORATION",
+        "note": "Exact November 12 NFL gamebook identifies MetLife Stadium and Field Turf, independently establishing the post-World-Cup NFL surface. Manufacturer current installation listing identifies FieldTurf CORE; map only to existing fieldturf token, no CORE-specific encoding. Temporary summer 2026 World Cup grass does not describe this November game. Older Giants material and the 2026 Giants guide establish venue, not independently the current surface; neither is used as sole surface authority. No inference from NYG, NYC01, or absence of change reports.",
+        "original_source_sha256": "4de7f0ca9111c3a7b9eec4ad9e514a28f1823026d893fa4bb23eb9930cc94c36",
+        "source_document_sha256": {
+          "https://static.www.nfl.com/image/upload/v1794570519/gamecenter/ab5828d9-4feb-11f1-abca-2c54536568a9.pdf": "12c818cc26344849773621c74100defb2ad8e5cecfb343b8e28a9df44a8f0d3f",
+          "https://fieldturf.com/en/why-fieldturf/featured-projects/": "301ff52ba1f7d6a174acd868d36ed9017d0190f9d8789c991abe59b6414dd374"
+        }
+      }
     }
   ]
 }
