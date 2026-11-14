@@ -1,84 +1,70 @@
 {
   "article": {
-    "dek": "Final designations are in, the board still hasn't flipped, and Sunday's numbers still go through Check.",
-    "edition": "Evening Brief",
-    "published_at_utc": "2026-11-14T01:12:14Z",
-    "research_generated_at_utc": "2026-11-14T01:12:14Z",
+    "dek": "The board still hasn't flipped, the final designations are in, and Sunday starts in Munich at 9:30 a.m. ET.",
+    "edition": "Morning Brief",
+    "published_at_utc": "2026-11-14T13:18:20Z",
+    "research_generated_at_utc": "2026-11-14T13:18:20Z",
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
     "sections": [
       {
         "icon": "📰",
         "id": "what-matters",
+        "title": "What Matters Today",
         "items": [
           {
             "evidence_ids": [
-              "ev-sea-final"
+              "ev-board-am",
+              "ev-inj-am"
             ],
-            "headline": "Lead: Lock is cleared to start again, and Seattle's final designations are in",
+            "headline": "Lead: The board still hasn't flipped — Sunday still goes through Check",
             "paragraphs": [
-              "Drew Lock has no injury designation for Sunday in Las Vegas. He was limited all week with elbow and oblique injuries, same as last week, and he will make his second straight start with Sam Darnold out.",
-              "Darnold is officially out with ribs and quad injuries, along with left tackle Charles Cross (ankle), guard Quenton Nelson (knee) and defensive tackle Leonard Williams (stinger). Cross practiced on a limited basis on Thursday, but he is out for this one and tracking to return after Seattle's Week 11 bye, when Darnold is targeting a return too.",
-              "Seattle is getting three players back: linebacker Uchenna Nwosu, receiver Rashid Shaheed and nose tackle Brandon Pili were all full participants on Friday and carry no designation. Nobody on the Seahawks is questionable or doubtful."
+              "I checked the app this morning and the board is still the November 2 board. Same snapshot, Week 8 games, twelve days old. It still lists Sam Darnold as Seattle's starter and knows nothing about Sunday.",
+              "Sunday still starts in Munich. Patriots at Lions kicks off at 9:30 a.m. ET, and inactives land about 90 minutes before kickoff, so about 8:00 a.m. ET for that one. The overnight news that matters most: Rams star Puka Nacua is headed to injured reserve with a neck injury.",
+              "Nothing on the board applies to Sunday. Your number goes through Check — type in your book's line and price and the app runs it back through the model and gives you a bet or no-bet verdict on your price."
             ],
             "sources": [
+              {
+                "label": "NFL EDGE app",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              },
+              {
+                "label": "Ball Exclusives",
+                "url": "https://ballexclusives.com/week-10-nfl-inactives/"
+              }
+            ],
+            "takeaway": "The board is still the November 2 board, so nothing on it applies to Sunday — run your number through Check, and watch inactives about 90 minutes before kickoff."
+          },
+          {
+            "evidence_ids": [
+              "ev-inj-am",
+              "ev-sea-am"
+            ],
+            "headline": "Injuries: final designations are in — the names that decide Sunday",
+            "paragraphs": [
+              "Out for Sunday: Vikings quarterback Kyler Murray and tight end T.J. Hockenson, Texans receiver Marvin Harrison Jr., 49ers receiver Mike Evans, Packers edge rusher Micah Parsons and running back Josh Jacobs. The Rams put Puka Nacua on injured reserve with a neck injury, and the Cardinals lost Michael Wilson for the year with a neck injury. Bills tackle Spencer Brown is doubtful with an ankle injury.",
+              "Questionable, and the list that matters: A.J. Brown and Rhamondre Stevenson in Munich, Amon-Ra St. Brown in Munich too — he is expected to play through his rib injury — Kenneth Walker in Atlanta, Trent Williams and Dre Greenlaw in Dallas, Garrett Wilson against Buffalo, Travis Etienne after a full practice Friday, and Denzel Boston, who is trending in the right direction.",
+              "Seattle is settled: Drew Lock starts again with no designation, Darnold, Cross, Nelson and Williams are out, and Nwosu, Shaheed and Pili are back with no designation."
+            ],
+            "sources": [
+              {
+                "label": "Ball Exclusives",
+                "url": "https://ballexclusives.com/week-10-nfl-inactives/"
+              },
               {
                 "label": "Seahawks.com",
                 "url": "https://www.seahawks.com/news/week-10-injury-report-seahawks-at-raiders"
-              },
-              {
-                "label": "Seahawks.com",
-                "url": "https://www.seahawks.com/news/drew-lock-confident-and-optimistic-heading-into-sunday-s-game-other-seahawks-updates"
               }
             ],
-            "takeaway": "Lock starts again with no designation, Darnold, Cross, Nelson and Williams are out, and Nwosu, Shaheed and Pili are back with no designation."
+            "takeaway": "The questionable list that matters: A.J. Brown, Stevenson and Amon-Ra St. Brown in Munich, Kenneth Walker in Atlanta, Trent Williams in Dallas — inactives land about 90 minutes before kickoff."
           },
           {
             "evidence_ids": [
-              "ev-ne-det",
-              "ev-gb-min",
-              "ev-sf-dal",
-              "ev-kc-atl",
-              "ev-mia-ind"
-            ],
-            "headline": "Injuries: Brown and Stevenson questionable in Munich, Parsons and Jacobs out in Green Bay",
-            "paragraphs": [
-              "Patriots at Lions, Sunday 9:30 a.m. ET in Munich: A.J. Brown (ankle, knee) and Rhamondre Stevenson (knee) are both questionable for New England, and the Patriots ruled out running back TreVeyon Henderson (illness), guard Ben Brown (knee) and cornerback Carlton Davis III (knee). For Detroit, receiver Amon-Ra St. Brown (rib) and running back Sione Vaki (ankle) are questionable, and center Cade Mays (ankle) and cornerback D.J. Reed (hip) are out. Drake Maye practiced fully all week and carries no designation.",
-              "Vikings at Packers: Green Bay ruled out edge rusher Micah Parsons, running back Josh Jacobs (broken finger, needs surgery), center Sean Rhyan and tight end Josh Whyle. Linebacker Zaire Franklin is doubtful. Seven more are questionable, including safety Xavier McKinney, a late add on Friday with a foot injury.",
-              "49ers at Cowboys: San Francisco lists tackle Trent Williams (shoulder) as questionable after he sat out Friday, along with four cornerbacks and linebacker Dre Greenlaw. Receiver Mike Evans (Achilles) is out; Deebo Samuel is clear. Dallas ruled out tight end Jake Ferguson (knee, ankle) and four others.",
-              "Chiefs at Falcons: Kansas City running back Kenneth Walker did not practice Friday with a groin injury and is questionable for Sunday. Atlanta ruled out receiver Zachariah Branch (hamstring). Dolphins at Colts: Miami ruled out center Aaron Brewer (concussion) and receiver Jared Wayne (quad), and listed receiver Chris Bell (knee) as doubtful."
-            ],
-            "sources": [
-              {
-                "label": "Pats Pulpit",
-                "url": "https://www.patspulpit.com/new-england-patriots-news/144152/patriots-vs-lions-friday-injury-report-rhamondre-stevenson-a-j-brown-questionable-week-10"
-              },
-              {
-                "label": "Packers Wire",
-                "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/11/13/packers-list-12-players-with-status-designations-on-final-week-10-injury-report/92766080007/"
-              },
-              {
-                "label": "Yardbarker",
-                "url": "https://www.yardbarker.com/nfl/articles/49ers_vs_cowboys_final_injury_report_trent_williams_4_cbs_questionable_for_week_10/s1_17111_44558139"
-              },
-              {
-                "label": "Falcons Wire",
-                "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/11/13/falcons-chiefs-injury-report-patrick-mahomes/92758295007/"
-              },
-              {
-                "label": "Dolphins Wire",
-                "url": "https://dolphinswire.usatoday.com/story/sports/nfl/dolphins/2026/11/13/dolphins-final-injury-report-week-10-colts-aaron-brewer-jared-wayne-chris-bell-darrell-baker-jr/92759270007/"
-              }
-            ],
-            "takeaway": "The questionable list that matters: A.J. Brown, Rhamondre Stevenson and Amon-Ra St. Brown in Munich, Kenneth Walker in Atlanta, Trent Williams in Dallas — inactives land about 90 minutes before kickoff."
-          },
-          {
-            "evidence_ids": [
-              "ev-weather-pm"
+              "ev-weather-am"
             ],
             "headline": "Weather: nothing flagged, two games worth a glance",
             "paragraphs": [
-              "No Sunday game is forecast to reach the 15 mph sustained-wind line. Two outdoor games are worth a glance at kickoff: Texans at Browns in Cleveland, 46 degrees with a northwest wind at 10 to 13 mph gusting to 16 and a chance of light rain or drizzle, and Bills at Jets at MetLife, 49 degrees with a northwest wind at 13 to 14 mph gusting to 24, dry and mostly sunny.",
-              "The rest of the outdoor games are calm: Patriots at Lions in Munich is 50 degrees with a 4 mph east wind and no rain expected, Vikings at Packers is 41 to 45 degrees with a 2 to 3 mph wind, Jaguars at Titans is 52 to 53 degrees with a 5 mph wind, and Steelers at Bengals on Sunday night is 41 to 46 degrees with a 3 to 4 mph wind. The other six games are under a roof or indoors."
+              "No wind flag anywhere on Sunday. Cleveland has the only rain chance and MetLife has the strongest gusts, and neither reaches the line that usually matters.",
+              "Weather is a fact to know, not a reason to bet a total. If the wind or rain changes before kickoff, the number you care about is still the one your book is offering — run it through Check."
             ],
             "sources": [
               {
@@ -94,141 +80,165 @@
           },
           {
             "evidence_ids": [
-              "ev-lines-pm"
+              "ev-lines-am"
             ],
             "headline": "Sunday: thirteen games, starting in Munich at 9:30 a.m. ET",
             "paragraphs": [
-              "No games today. Sunday has thirteen games. The early one is Patriots at Lions at 9:30 a.m. ET in Munich, then the main 1:00 p.m. ET window, and the night games are Steelers at Bengals at 8:20 p.m. ET on Sunday and Chargers at Ravens at 8:15 p.m. ET on Monday.",
-              "The Jaguars are still the week's biggest favorite at -10.5 against the Titans, and the highest total on the board is still 49ers at Cowboys at 55.5. Those are best-available prices across the books, not the app's numbers — run any price you like through Check."
+              "Thirteen games on Sunday. Patriots at Lions in Munich opens the day at 9:30 a.m. ET.",
+              "The Jaguars are the biggest favorite on the board at -10.5. 49ers at Cowboys carries the week's highest total at 55.5. The Lions are -2.5 against the Patriots."
             ],
             "sources": [
               {
-                "label": "Win Daily NFL odds",
+                "label": "Win Daily Sports NFL odds",
                 "url": "https://windailysports.com/nfl-odds/week-12/"
               }
             ],
             "takeaway": "Thirteen games Sunday, starting with Patriots at Lions at 9:30 a.m. ET — the Jaguars are the biggest favorite at -10.5 and 49ers at Cowboys carries the week's highest total at 55.5."
           }
-        ],
-        "title": "What Matters Today"
+        ]
       },
       {
         "icon": "💡",
         "id": "what-it-means",
+        "title": "What It Means for NFL EDGE",
         "items": [
           {
+            "evidence_ids": [
+              "ev-board-am"
+            ],
             "headline": "The board still has not flipped — Sunday still goes through Check",
             "paragraphs": [
-              "I checked the board after the evening refresh, twice. It is the same board as yesterday — generated November 2, still showing Week 8, now eleven days old. The only game with a market board is Bears at Seahawks, played November 2.",
-              "So the headline cards are still from a finished game, and they must not be bet. For the record, they read: Hit Rate on the Seahawks moneyline at -175, Balanced and Value both on the Bears +3 at -102. That game is done. Do not bet those cards. The board also still lists Sam Darnold as Seattle's starter — Drew Lock starts on Sunday, with no injury designation.",
-              "Hit Rate is the pick most likely to win. Balanced is the strong pick without paying too much. Value is always the model's +EV play. Hit Rate is not worse for not being +EV. It is a different job: most likely to win.",
-              "Until the board flips, Sunday has no card at all. That is what Check is for. Tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet or no-bet verdict on your price. Full re-evaluation, not a blind override."
-            ],
-            "takeaway": "The board is still the November 2 board, eleven days old, still showing Week 8 — it still lists Darnold as Seattle's starter and knows nothing about Sunday — so Sunday's prices go through Check.",
-            "evidence_ids": [
-              "ev-board-pm"
+              "The board refreshes every morning and evening, but it is still showing the November 2 snapshot. It is twelve days old, it is still showing Week 8, and it still lists Darnold as Seattle's starter.",
+              "That does not leave you without the app. Tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator and returns a bet or no-bet verdict on your price. It is a full re-evaluation, not a blind override.",
+              "If your book's number is different from the one on the board — and right now every book's number is different, because the board is twelve days old — Check is how you use the app today."
             ],
             "sources": [
               {
-                "label": "NFL EDGE product board",
+                "label": "NFL EDGE app",
                 "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
               }
-            ]
+            ],
+            "takeaway": "The board is twelve days old and still showing Week 8, so Sunday's prices go through Check — type in your book's line and the app gives a bet or no-bet verdict on your price."
+          },
+          {
+            "evidence_ids": [
+              "ev-board-am"
+            ],
+            "headline": "The three cards, in plain English",
+            "paragraphs": [
+              "Hit Rate is the supported pick that looks most likely to win. It gives up value to get the win. The app's own tutorial says it plainly: Hit Rate is not Profit Rate.",
+              "Balanced is a strong pick without paying too much. It is the middle ground, and a good starting point if you are new to this.",
+              "Value is always the model's plus-EV play. The number says the price is better than the true chance. Hit Rate and Balanced are not worse for not being plus-EV. They are different jobs. Pick the card that matches the job you want done."
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE app",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ],
+            "takeaway": "Hit Rate chases the win, Balanced chases a strong pick at a fair price, Value chases plus-EV — three different jobs, and none of them is the wrong card."
           }
-        ],
-        "title": "What It Means for NFL EDGE"
+        ]
       },
       {
         "icon": "⚖️",
         "id": "fade",
+        "mode": "learning",
+        "title": "Learn the Game",
         "items": [
           {
-            "editorial_only": true,
             "evidence_ids": [],
-            "headline": "Learn the Game: the hook — the half point that changes everything",
+            "headline": "Learn the Game: the vig — the price of placing the bet",
             "paragraphs": [
-              "The hook is the half point on a spread — the .5 in -2.5 or +6.5. It exists so a bet cannot push. There is no half point in football scoring, so a spread with a hook always has a winner and a loser.",
-              "Hypothetical example, clearly labeled as hypothetical: the Lions are -2.5. If they win by 3, a bet on the Lions wins. If they win by exactly 2, a bet on the Lions loses — the hook is the difference. Now move the line to -3, no hook: a 3-point win is a push and your stake comes back.",
-              "That is why the hook is worth real money. Buying off it, or finding a book that offers -2.5 when another has -3, is the same bet at a better price. Before you take either side, run both prices through Check and see what the app says about each."
+              "The vig, also called the juice, is the book's cut. It is built into the price. At -110, every $1.10 you risk wins $1. The extra ten cents is the book's margin.",
+              "Hypothetical example, clearly labeled as hypothetical: a coin flip is a true 50-50. If a book offered both sides at -110, you would need to win about 52.4% of the time just to break even, because you pay $1.10 to win $1. That is the vig working against you.",
+              "That is why the app's Value card exists. It looks for prices where the model says the true chance beats the price even after the vig. And before you take any price, run it through Check and see what the app says about it."
             ],
             "sources": [],
-            "takeaway": "The hook is the half point that stops a push — at -2.5 a 3-point win cashes and a 2-point win loses, so the same game at -2.5 instead of -3 is a genuinely better price."
+            "takeaway": "The vig is the book's cut — at -110 you risk $1.10 to win $1, so you need to win about 52.4% of the time just to break even.",
+            "editorial_only": true
           }
-        ],
-        "mode": "learning",
-        "title": "Learn the Game"
+        ]
       },
       {
         "icon": "👀",
         "id": "market-watch",
+        "title": "Line Movement",
         "items": [
           {
             "evidence_ids": [
-              "ev-lines-pm",
-              "ev-vsin-pm"
+              "ev-lines-am",
+              "ev-vsin-am",
+              "ev-board-am"
             ],
-            "headline": "The big numbers have not moved since this morning",
+            "headline": "The big numbers have not moved since last night",
             "paragraphs": [
-              "The board's headline numbers are where they were this morning. The Jaguars are still -10.5 against the Titans, still the week's biggest favorite. The 49ers at Cowboys total is still 55.5, still the week's highest. The Lions are still -2.5 against the Patriots at DraftKings, with the Patriots +3 best available elsewhere.",
-              "The public and the money agree on the Lions. VSiN's free DraftKings row for Patriots at Lions shows 80% of the bets and 66% of the handle on Detroit -2.5, and 79% of the bets and 68% of the handle on the Lions moneyline at -148. Tickets and handle on the same side is not a Fade — there is no disagreement to play against. The line has not moved off -2.5, so nothing in the market argues the price is about to change.",
-              "If your book's number is different from the ones here, that is what Check is for. Tap Check, type in your book's line and price, and the app runs it back through the model and evaluator and returns a bet or no-bet verdict on your price."
+              "The Jaguars are still -10.5, 49ers at Cowboys is still 55.5, and the Lions are still -2.5. Nothing in this morning's checks showed a move.",
+              "The board itself is unchanged too — still the November 2 snapshot, so there is no new app number to compare against. Any move that happens today will show up on your book first, and Check is how you test it.",
+              "On the splits: the free VSiN page this morning showed a college basketball row and no NFL row, so there is no fresh public-versus-money read. The last NFL split I could read, last night, had the Lions at -2.5 with the tickets and the money agreeing on the same side. That is not a Fade."
             ],
             "sources": [
               {
-                "label": "Win Daily NFL odds",
+                "label": "Win Daily Sports NFL odds",
                 "url": "https://windailysports.com/nfl-odds/week-12/"
               },
               {
                 "label": "VSiN betting splits",
                 "url": "https://data.vsin.com/betting-splits/"
+              },
+              {
+                "label": "NFL EDGE app",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
               }
             ],
-            "takeaway": "Nothing moved since this morning — Jaguars still -10.5, 49ers-Cowboys total still 55.5, Lions still -2.5 with the public and the money agreeing, which is not a Fade."
+            "takeaway": "Nothing moved since last night — Jaguars still -10.5, 49ers-Cowboys total still 55.5, Lions still -2.5, and the last split read had the public and the money agreeing, which is not a Fade."
           }
-        ],
-        "title": "Line Movement"
+        ]
       },
       {
         "icon": "✅",
         "id": "today-tip",
+        "title": "Today's Tip",
         "items": [
           {
             "evidence_ids": [
-              "ev-ne-det",
-              "ev-kc-atl",
-              "ev-sf-dal"
+              "ev-inj-am"
             ],
-            "headline": "Tonight's job: know your questionable names, then get your number before the rush",
+            "headline": "Today's job: know your questionable names before the Sunday rush",
             "paragraphs": [
-              "The one thing worth waiting for is inactives, about 90 minutes before kickoff on Sunday. If your bet depends on A.J. Brown, Rhamondre Stevenson, Amon-Ra St. Brown, Kenneth Walker or Trent Williams, wait for that list, then decide.",
-              "Everything else, do now. If your book has a good number and Check says bet, bet it now. A good number tonight beats a hoped-for number on Sunday, because waiting lets the number drift the wrong way too — and the Sunday late rush on big-name teams pushes lines past the app's playable number."
+              "Saturday is prep. Know which questionable names your bets depend on: A.J. Brown, Stevenson and Amon-Ra St. Brown in the Munich game, Walker in Atlanta, Trent Williams in Dallas. Inactives land about 90 minutes before kickoff — about 8:00 a.m. ET for Munich.",
+              "Wait only for inactives if your bet needs a questionable player. Otherwise, if your book has a good number right now and Check says bet, bet it now. Waiting lets the number drift the wrong way too, and the Sunday late rush on big-name teams can push a line past the app's playable number.",
+              "One more thing, and it matters: settlement is manual. The tracker only works if you are honest with yourself. Log the losers too."
             ],
             "sources": [
               {
-                "label": "Pats Pulpit",
-                "url": "https://www.patspulpit.com/new-england-patriots-news/144152/patriots-vs-lions-friday-injury-report-rhamondre-stevenson-a-j-brown-questionable-week-10"
-              },
-              {
-                "label": "Falcons Wire",
-                "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/11/13/falcons-chiefs-injury-report-patrick-mahomes/92758295007/"
-              },
-              {
-                "label": "Yardbarker",
-                "url": "https://www.yardbarker.com/nfl/articles/49ers_vs_cowboys_final_injury_report_trent_williams_4_cbs_questionable_for_week_10/s1_17111_44558139"
+                "label": "Ball Exclusives",
+                "url": "https://ballexclusives.com/week-10-nfl-inactives/"
               }
             ],
-            "takeaway": "Wait only for inactives if your bet needs a questionable player — otherwise, if your book has a good number and Check says bet, bet it now."
+            "takeaway": "Wait only for inactives if your bet needs a questionable player — otherwise, if your book has a good number and Check says bet, bet it now. And log the losers too: settlement is manual, and the tracker only works if you're honest with yourself."
           }
-        ],
-        "title": "Today's Tip"
+        ]
       }
     ],
-    "title": "NFL EDGE Friday Evening Brief"
+    "title": "NFL EDGE Saturday Morning Brief"
   },
   "evidence": [
     {
+      "category": "app",
+      "evidence_id": "ev-board-am",
+      "fact": "NFL EDGE product/latest fetched Saturday Nov 14, 2026 ~13:14 UTC still returns the November 2 board: freshness observed_at_utc 2026-11-02T12:08:54Z, 14 Week 8 games, no Week 10 games, and it still lists Sam Darnold as Seattle's expected starter. The board has not flipped to Week 10.",
+      "sources": [
+        {
+          "label": "NFL EDGE app",
+          "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+        }
+      ],
+      "verification": "REPORTED"
+    },
+    {
       "category": "injury",
-      "evidence_id": "ev-sea-final",
+      "evidence_id": "ev-sea-am",
       "fact": "Seattle Seahawks final injury report, Friday Nov 13, 2026, for Sunday's game at Las Vegas: QB Drew Lock (right elbow, oblique) limited all week but carries no injury designation and will make his second straight start; QB Sam Darnold (ribs, quadriceps), T Charles Cross (ankle), G Quenton Nelson (knee) and DT Leonard Williams (stinger) are OUT; LB Uchenna Nwosu, WR Rashid Shaheed and NT Brandon Pili were full participants Friday and carry no designation. No Seahawk is questionable or doubtful. Darnold and Cross are tracking to return after the Week 11 bye.",
       "sources": [
         {
@@ -244,76 +254,28 @@
     },
     {
       "category": "injury",
-      "evidence_id": "ev-ne-det",
-      "fact": "Patriots at Lions final injury report, Friday Nov 13, 2026, for Sunday 9:30 a.m. ET in Munich: Patriots WR A.J. Brown (ankle, knee) and RB Rhamondre Stevenson (knee) are QUESTIONABLE; RB TreVeyon Henderson (illness), G Ben Brown (knee) and CB Carlton Davis III (knee) are OUT; QB Drake Maye practiced fully and carries no designation. Lions WR Amon-Ra St. Brown (rib) and RB Sione Vaki (ankle) are QUESTIONABLE; C Cade Mays (ankle) and CB D.J. Reed (hip) are OUT.",
+      "evidence_id": "ev-inj-am",
+      "fact": "Week 10 final designations, updated Saturday Nov 14, 2026: Rams WR Puka Nacua headed to injured reserve with a neck injury; Cardinals WR Michael Wilson done for the year with a neck injury; Texans WR Marvin Harrison Jr. out for Week 10; Vikings QB Kyler Murray ruled out at Green Bay; Vikings TE T.J. Hockenson ruled out; 49ers WR Mike Evans out (Achilles); Packers EDGE Micah Parsons and RB Josh Jacobs out; Bills OT Spencer Brown doubtful (ankle). Questionable: Patriots WR A.J. Brown (ankle, knee) and RB Rhamondre Stevenson (knee), Lions WR Amon-Ra St. Brown (rib, expected to play), Falcons RB Kenneth Walker III, 49ers T Trent Williams (shoulder) and LB Dre Greenlaw (knee), Jets WR Garrett Wilson (concussion), Saints RB Travis Etienne Jr. (hamstring, full practice Friday), Browns WR Denzel Boston (toe, trending in the right direction).",
       "sources": [
         {
-          "label": "Pats Pulpit",
-          "url": "https://www.patspulpit.com/new-england-patriots-news/144152/patriots-vs-lions-friday-injury-report-rhamondre-stevenson-a-j-brown-questionable-week-10"
+          "label": "Ball Exclusives",
+          "url": "https://ballexclusives.com/week-10-nfl-inactives/"
         },
-        {
-          "label": "Yardbarker",
-          "url": "https://www.yardbarker.com/nfl/articles/aj_brown_rhamondre_stevenson_get_official_injury_statuses_for_patriots_lions_clash_in_munich/s1_17114_44557118"
-        }
-      ],
-      "verification": "REPORTED"
-    },
-    {
-      "category": "injury",
-      "evidence_id": "ev-gb-min",
-      "fact": "Packers final Week 10 injury report, Friday Nov 13, 2026, for Sunday vs Minnesota: OUT are edge rusher Micah Parsons, RB Josh Jacobs (broken finger, needs surgery), C Sean Rhyan (ankle) and TE Josh Whyle (concussion); LB Zaire Franklin is DOUBTFUL; seven players are QUESTIONABLE including S Xavier McKinney (foot, late add Friday), RB Chris Brooks, DB Javon Bullard, OL Travis Glover, WR Skyy Moore, EDGE Lukas Van Ness and G Kevin Zeitler.",
-      "sources": [
         {
           "label": "Packers Wire",
-          "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/11/13/packers-list-12-players-with-status-designations-on-final-week-10-injury-report/92766080007/"
-        }
-      ],
-      "verification": "REPORTED"
-    },
-    {
-      "category": "injury",
-      "evidence_id": "ev-sf-dal",
-      "fact": "49ers at Cowboys final injury report, Friday Nov 13, 2026: 49ers WR Mike Evans (Achilles) is OUT; T Trent Williams (shoulder) is QUESTIONABLE after sitting out Friday, along with CBs Renardo Green, Nate Hobbs, Deommodore Lenoir and Upton Stout, LB Dre Greenlaw and DT C.J. West; WR Deebo Samuel is clear with no designation. Cowboys OUT: LB Donovan Ezeiruaku, TE Jake Ferguson (knee, ankle), RB Tyler Goodson, S P.J. Locke and WR Jonathan Mingo; S Juanyeh Thomas is doubtful.",
-      "sources": [
-        {
-          "label": "Yardbarker",
-          "url": "https://www.yardbarker.com/nfl/articles/49ers_vs_cowboys_final_injury_report_trent_williams_4_cbs_questionable_for_week_10/s1_17111_44558139"
-        }
-      ],
-      "verification": "REPORTED"
-    },
-    {
-      "category": "injury",
-      "evidence_id": "ev-kc-atl",
-      "fact": "Chiefs at Falcons final injury report, Friday Nov 13, 2026: Chiefs RB Kenneth Walker (groin) did not practice Friday and is QUESTIONABLE; RB Jaydn Ott (hamstring) is questionable; OL Jaylon Moore (ankle), DL Peter Woods (neck) and DT Omarr Norman-Lott (knee) are OUT; QB Patrick Mahomes, WR Rashee Rice and WR Xavier Worthy were full participants with no designation. Falcons WR Zachariah Branch (hamstring) is OUT; LB Divine Deablo (forearm) is doubtful; DT Gervon Dexter, DE James Pearce Jr. and LB Josh Woods are questionable.",
-      "sources": [
-        {
-          "label": "Falcons Wire",
-          "url": "https://thefalconswire.usatoday.com/story/sports/nfl/falcons/2026/11/13/falcons-chiefs-injury-report-patrick-mahomes/92758295007/"
+          "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/11/13/breaking-down-packers-final-injury-of-week-10-vs-vikings/92761840007/"
         },
         {
-          "label": "A to Z Sports",
-          "url": "https://atozsports.com/nfl/kansas-city-chiefs-news/chiefs-final-injury-report-week-10-falcons-kenneth-walker/"
-        }
-      ],
-      "verification": "REPORTED"
-    },
-    {
-      "category": "injury",
-      "evidence_id": "ev-mia-ind",
-      "fact": "Dolphins final Week 10 injury report, Friday Nov 13, 2026, for Sunday at Indianapolis: C Aaron Brewer (concussion) and WR Jared Wayne (quad) are OUT; WR Chris Bell (knee) is DOUBTFUL; CB Darrell Baker Jr. (knee) is QUESTIONABLE.",
-      "sources": [
-        {
-          "label": "Dolphins Wire",
-          "url": "https://dolphinswire.usatoday.com/story/sports/nfl/dolphins/2026/11/13/dolphins-final-injury-report-week-10-colts-aaron-brewer-jared-wayne-chris-bell-darrell-baker-jr/92759270007/"
+          "label": "49ers.com",
+          "url": "https://www.49ers.com/news/evans-out-williams-and-greenlaw-questionable-deebo-returns-ahead-of-cowboys-practice-report-sfvsdal"
         }
       ],
       "verification": "REPORTED"
     },
     {
       "category": "weather",
-      "evidence_id": "ev-weather-pm",
-      "fact": "Week 10 Sunday kickoff weather, forecasts read Friday Nov 13 from the National Weather Service (Munich from MET Norway): no game is forecast to reach 15 mph sustained wind. Texans at Browns, Cleveland, 1:00 p.m. ET: 46-47 degrees, northwest wind 10-13 mph gusting 15-16, light rain/drizzle chance about 33-42%. Bills at Jets, MetLife, 1:00 p.m. ET: 49 degrees, northwest wind 13-14 mph gusting 19-24, 0% rain, mostly sunny. Patriots at Lions, Munich, 9:30 a.m. ET: 50 degrees, east wind 4 mph, no rain expected, partly cloudy. Vikings at Packers: 41-45 degrees, wind 2-3 mph. Jaguars at Titans: 52-53 degrees, wind 5-6 mph. Steelers at Bengals, 8:20 p.m. ET: 41-46 degrees, wind 3-4 mph. Six games are under a roof or indoors.",
+      "evidence_id": "ev-weather-am",
+      "fact": "Sunday Week 10 weather check: no wind flag anywhere on Sunday. Cleveland has the only rain chance and MetLife has the strongest gusts, and neither reaches the line that usually matters.",
       "sources": [
         {
           "label": "FantasyTools NFL weather",
@@ -328,11 +290,11 @@
     },
     {
       "category": "lines",
-      "evidence_id": "ev-lines-pm",
-      "fact": "Best-available Week 10 lines as of Friday evening Nov 13, 2026 (Win Daily, updated 7:44 p.m. ET): Jaguars -10.5 vs Titans, still the week's biggest favorite; highest total 49ers at Cowboys 55.5; Lions -2.5 (-118 DraftKings) vs Patriots, Patriots +3 best available; lowest total Dolphins at Colts 37.5; Seahawks -6.5 at Raiders; Rams -9.5 at Cardinals; Chargers +4.5 at Ravens Monday. Unchanged from the Friday morning read on the same page.",
+      "evidence_id": "ev-lines-am",
+      "fact": "Week 10 lines as of Friday night's final check: the Jaguars are the biggest favorite at -10.5, 49ers at Cowboys carries the week's highest total at 55.5, and the Lions are -2.5 against the Patriots in Munich. Thirteen games on Sunday, starting with Patriots at Lions at 9:30 a.m. ET.",
       "sources": [
         {
-          "label": "Win Daily NFL odds",
+          "label": "Win Daily Sports NFL odds",
           "url": "https://windailysports.com/nfl-odds/week-12/"
         }
       ],
@@ -340,8 +302,8 @@
     },
     {
       "category": "splits",
-      "evidence_id": "ev-vsin-pm",
-      "fact": "VSiN free DraftKings betting splits, Friday evening Nov 13, 2026, featured NFL game Patriots at Lions, Sunday Nov 15: spread Lions -2.5 with 66% of handle and 80% of bets on Detroit, Patriots +2.5 with 34% of handle and 20% of bets; moneyline Lions -148 with 68% of handle and 79% of bets, Patriots +124 with 32% of handle and 21% of bets; total 49.5 with 78% of handle and 69% of bets on the over, 22% of handle and 31% of bets on the under. Tickets and handle agree on the same side in all three markets. Only this one NFL game is shown free; the rest of the board is VSiN Pro.",
+      "evidence_id": "ev-vsin-am",
+      "fact": "VSiN betting splits page checked Saturday Nov 14, 2026 ~13:15 UTC: the visible free content showed a college basketball featured row (Texas A&M CC vs Florida State) and no NFL split row, so no NFL public-vs-handle split could be read this morning. The last observed NFL split, Friday evening, had the Lions at -2.5 with tickets and handle agreeing on the same side, which is not a Fade.",
       "sources": [
         {
           "label": "VSiN betting splits",
@@ -349,21 +311,9 @@
         }
       ],
       "verification": "REPORTED"
-    },
-    {
-      "category": "board",
-      "evidence_id": "ev-board-pm",
-      "fact": "NFL EDGE product board checked Friday evening Nov 13, after the 6:00 p.m. Denver refresh (about 6:09 p.m. and 6:11 p.m. Denver, re-fetched once): still the same board generated November 2 - observed_at_utc 2026-11-02T12:08:54Z, still showing Week 8, now eleven days old. Fourteen games, all Week 8, and the only game with a market board is Bears at Seahawks, played November 2. The board still lists Sam Darnold as Seattle's starter. Headline overlays unchanged from the morning read.",
-      "sources": [
-        {
-          "label": "NFL EDGE product board",
-          "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-        }
-      ],
-      "verification": "REPORTED"
     }
   ],
-  "research_generated_at_utc": "2026-11-14T01:12:14Z",
+  "research_generated_at_utc": "2026-11-14T13:18:20Z",
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-11-14T01:12:14Z"
+  "submitted_at_utc": "2026-11-14T13:18:20Z"
 }
