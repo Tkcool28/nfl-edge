@@ -1,0 +1,13 @@
+# Match the accepted live Market Product numerical runtime.
+numpy==2.4.2
+scipy==1.17.1
+scikit-learn==1.8.0
+xgboost==2.1.4
+pandas==3.0.5
+pyarrow==25.0.0
+polars==1.44.2
+nflreadpy==0.1.5
+requests==2.33.0
+PyYAML==6.0.3
+pytest==9.1.1
+jsonschema==4.25.1
