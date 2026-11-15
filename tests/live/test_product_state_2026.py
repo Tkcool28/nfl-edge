@@ -305,3 +305,155 @@ def test_unsuccessful_refresh_does_not_replace_last_successful_pregame_state(tmp
     )
     assert len(rows) == 1
     assert rows[0]["selected_side"] == "away"
+
+
+@pytest.fixture
+def week9_gap_history(tmp_path, monkeypatch):
+    import hashlib
+
+    games = []
+    for week in range(2, 9):
+        gid = f"2026_{week:02}_A_B"
+        games.append(dict(game_id=gid, season=2026, season_type="REG", week=week, home_score=24, away_score=17))
+        rows = [_selector_row(market="spread", game_id=gid, week=week)]
+        if week == 2:
+            rows.append(_selector_row(market="moneyline", game_id=gid, week=week))
+        _write_proof(
+            tmp_path, name=f"week{week}", week=week, captured_at="2026-09-01T00:00:00Z",
+            games=[{"game_id": gid, "kickoff_at_utc": "2026-11-01T00:00:00Z"}], rows=rows,
+        )
+    for gid in sorted(product_state._WEEK9_GAME_IDS):
+        games.append(dict(game_id=gid, season=2026, season_type="REG", week=9, home_score=24, away_score=17))
+    failed_run = tmp_path / "week9-reviewed-failure"
+    failed_run.mkdir()
+    status = failed_run / "run-status.json"
+    status.write_text(json.dumps({"outcome": "MARKET_ACQUISITION_FAILED", "week": 9}))
+    monkeypatch.setattr(
+        product_state, "_WEEK9_FAILED_STATUS_SHA256", {failed_run.name: hashlib.sha256(status.read_bytes()).hexdigest()}
+    )
+    evidence = _evidence(through_week=9, games=games)
+    evidence.manifest = {"season": 2026, "schedule_checkpoints": {"9": product_state._WEEK9_CHECKPOINT}}
+    return evidence, status
+
+
+def test_week9_gap_carries_the_exact_week8_state_and_emits_deterministic_audit(tmp_path, week9_gap_history):
+    evidence, _ = week9_gap_history
+    entering = ValueSelectorState()
+    week8 = advance_live_value_state(
+        entering=entering, evidence=_evidence(through_week=8, games=evidence.games.to_dicts()), run_root=tmp_path,
+    )
+    assert (len(week8.ml_observations), len(week8.spread_observations)) == (1, 7)
+    results = []
+    for _ in range(2):
+        audit = []
+        state = advance_live_value_state(entering=entering, evidence=evidence, run_root=tmp_path, recovery_audit=audit)
+        assert state == week8
+        results.append(audit)
+    assert results[0] == results[1]
+    record, = results[0]
+    assert record["reason"] == "NO_AUTHENTIC_PREGAME_MARKET_OBSERVATION"
+    assert len(record["settled_game_ids"]) == 15
+    assert record["accepted_pregame_games"] == 0
+    assert record["observations_appended"] == {"moneyline": 0, "spread": 0}
+    assert record["selector_state_before_sha256"] == record["selector_state_after_sha256"]
+
+
+@pytest.mark.parametrize(
+    ("change", "message"),
+    [
+        ("missing_status", "outage status missing or changed"),
+        ("changed_status", "outage status missing or changed"),
+        ("market_artifact", "acquisition artifacts require review"),
+        ("foreign_season", "mismatched settled evidence"),
+        ("foreign_game", "mismatched settled evidence"),
+        ("foreign_week", "mismatched settled evidence"),
+        ("wrong_season_type", "mismatched settled evidence"),
+        ("wrong_checkpoint", "mismatched settled evidence"),
+        ("missing_week8", "settled Week 8"),
+        ("unreviewed_status", "unreviewed Week 9"),
+    ],
+)
+def test_week9_gap_fails_closed_when_evidence_changes(tmp_path, week9_gap_history, change, message):
+    evidence, status = week9_gap_history
+    gid = min(product_state._WEEK9_GAME_IDS)
+    if change == "missing_status":
+        status.unlink()
+    elif change == "changed_status":
+        status.write_text("{}")
+    elif change == "market_artifact":
+        (status.parent / "market").mkdir()
+    elif change == "foreign_season":
+        evidence.manifest["season"] = 2025
+    elif change in {"foreign_game", "foreign_week", "wrong_season_type"}:
+        changes = {
+            "foreign_game": {"game_id": "2026_09_X_Y"},
+            "foreign_week": {"week": 10},
+            "wrong_season_type": {"season_type": "POST"},
+        }
+        evidence.games = pl.DataFrame([
+            {**row, **changes[change]} if row["game_id"] == gid else row for row in evidence.games.to_dicts()
+        ])
+    elif change == "wrong_checkpoint":
+        evidence.manifest["schedule_checkpoints"]["9"] = "f" * 64
+    elif change == "missing_week8":
+        (tmp_path / "week8/product/deterministic-proof.json").unlink()
+    else:
+        run = tmp_path / "unknown"
+        run.mkdir()
+        (run / "run-status.json").write_text('{"week":9,"outcome":"SUCCESS"}')
+    with pytest.raises(Entering2026ProductStateError, match=message):
+        advance_live_value_state(entering=ValueSelectorState(), evidence=evidence, run_root=tmp_path)
+
+
+@pytest.mark.parametrize(
+    ("outcome", "message"),
+    [("SUCCESS", "partial Week 9 selector coverage"), ("MATERIALIZATION_FAILED", "selector proof requires review")],
+)
+def test_week9_gap_does_not_hide_partial_or_conflicting_records(tmp_path, week9_gap_history, outcome, message):
+    evidence, _ = week9_gap_history
+    gid = min(product_state._WEEK9_GAME_IDS)
+    _write_proof(
+        tmp_path, name="week9-surviving-record", captured_at="2026-11-04T00:00:00Z", week=9,
+        games=[{"game_id": gid, "kickoff_at_utc": "2026-11-09T00:00:00Z"}],
+        rows=[_selector_row(market="moneyline", game_id=gid, week=9)], outcome=outcome,
+    )
+    with pytest.raises(Entering2026ProductStateError, match=message):
+        advance_live_value_state(entering=ValueSelectorState(), evidence=evidence, run_root=tmp_path)
+
+
+def test_complete_week9_native_coverage_takes_the_normal_path(tmp_path, week9_gap_history):
+    evidence, status = week9_gap_history
+    status.unlink()
+    gids = sorted(product_state._WEEK9_GAME_IDS)
+    _write_proof(
+        tmp_path, name="week9-complete", week=9, captured_at="2026-11-04T00:00:00Z",
+        games=[{"game_id": gid, "kickoff_at_utc": "2026-11-09T00:00:00Z"} for gid in gids],
+        rows=[_selector_row(market="moneyline", game_id=gids[0], week=9)],
+    )
+    audit = []
+    state = advance_live_value_state(
+        entering=ValueSelectorState(), evidence=evidence, run_root=tmp_path, recovery_audit=audit,
+    )
+    assert len(state.ml_observations) == 2
+    assert audit == []
+
+
+def test_week_after_gap_still_requires_and_advances_native_evidence(tmp_path, week9_gap_history):
+    week9, _ = week9_gap_history
+    gid = "2026_10_A_B"
+    evidence = _evidence(
+        through_week=10,
+        games=[*week9.games.to_dicts(), dict(
+            game_id=gid, season=2026, season_type="REG", week=10, home_score=24, away_score=17,
+        )],
+    )
+    evidence.manifest = week9.manifest
+    with pytest.raises(Entering2026ProductStateError, match="settled Week 10"):
+        advance_live_value_state(entering=ValueSelectorState(), evidence=evidence, run_root=tmp_path)
+    _write_proof(
+        tmp_path, name="week10", week=10, captured_at="2026-11-12T00:00:00Z",
+        games=[{"game_id": gid, "kickoff_at_utc": "2026-11-16T00:00:00Z"}],
+        rows=[_selector_row(market="spread", game_id=gid, week=10)],
+    )
+    state = advance_live_value_state(entering=ValueSelectorState(), evidence=evidence, run_root=tmp_path)
+    assert (len(state.ml_observations), len(state.spread_observations)) == (1, 8)

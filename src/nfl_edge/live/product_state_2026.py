@@ -15,6 +15,7 @@ import io
 import json
 import tempfile
 import zipfile
+from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping
@@ -51,6 +52,34 @@ EXPECTED_TASK05F_FROZEN_STATE_SHA256 = "34ac985835ce4ceb65c6135b07851cd4f7e3ab2c
 EXPECTED_DIAGNOSTIC_SHA256 = "b38eae4df11dc52fe4fc5aeb87a402abcc8ffb9b60e3f252d56f56c9aef78b41"
 ACCEPTED_SCIKIT_LEARN_VERSION = "1.8.0"
 SELECTOR_TRUST_START_WEEK = 2
+
+
+_WEEK9_CHECKPOINT = "b35fb2e0cabb01ef7d829e447c53918c69fe2922c76eabe908bb5c2f7b6cb191"
+_WEEK9_GAME_IDS = frozenset(
+    f"2026_09_{matchup}" for matchup in (
+        "ARI_SEA", "BUF_MIN", "CIN_ATL", "CLE_NO", "DAL_IND",
+        "DEN_CAR", "DET_MIA", "GB_NE", "HOU_LAC", "JAX_BAL",
+        "LAR_WAS", "LV_SF", "NYG_PHI", "NYJ_KC", "TB_CHI",
+    )
+)
+# Read-only inventory of the original 14 HTTP 401 acquisition failures
+# identified by isolated preflight 57b3d6bd-a7e4-4e9c-8c7d-e87a94701a19.
+_WEEK9_FAILED_STATUS_SHA256 = {
+    "refresh-20261104T000503.538859Z": "cf5a2ecbc11c568b0af1a64cffeea2fec16605a8915a0929e0c30889df764bd0",
+    "refresh-20261104T120503.830759Z": "f93c5914493c47cd744f1f20552ee05b6c6689d7b45525d17eb45df1a74fd705",
+    "refresh-20261105T000504.032698Z": "e4b395f03780575bb1cceb5ab277e7fb2f44304249b5486ab2c5b0eef22b9241",
+    "refresh-20261105T120504.370044Z": "d6e98304925fe0d14d124fbd189a3968951d68cdbd7a0a243ac7f68243e8414f",
+    "refresh-20261106T000504.543755Z": "e7b2bc1a4d8b50ab6d696d120c9a5aa2011bc5de96a1f3bdaa11f6bc67884921",
+    "refresh-20261106T120505.089715Z": "6277215395a066d6842de543c3222fa2904a8bfaa50754321d425e5747746e08",
+    "refresh-20261107T000504.408016Z": "c22f92ad372899ac4505425d8b8e8b06635e1b1432efcc0535e2c39cc8a93358",
+    "refresh-20261107T120504.539312Z": "fe1bfbbf5f0d8193926038d8286dcdadad026f3aeeb58a5306f7659435abd6fc",
+    "refresh-20261108T000504.164262Z": "313efcdf65d0fef2f5290e05736ec2a9630758ec170e9133c83b6a46e89258a3",
+    "refresh-20261108T120504.235225Z": "ae6e19a02fd4a0ab10f7f061caf50e0ffe695d852e9c509f8f01dd2050b5941b",
+    "refresh-20261109T000504.577736Z": "202ed5a6da7ca9f183214e20b8276c7b1191508f075580daf8d3559b226db691",
+    "refresh-20261109T120503.902418Z": "40bfa8c056922ec19e8181d6e4fae78b3af4ce7da4ed71a81f8a5180e99d14f0",
+    "refresh-20261110T000503.882715Z": "797900676f2861f5b50c378f9af2af921f4686819ff0f0230d554e4434410d84",
+    "refresh-20261110T120504.007935Z": "19856038ae1161b1587fb6f1937b7fb104c47492573c408e78e8cd22012141b6",
+}
 
 
 class Entering2026ProductStateError(RuntimeError):
@@ -585,7 +614,7 @@ def _final_pregame_selector_rows(
     run_root: Path,
     week: int,
     required_game_ids: set[str],
-) -> list[dict[str, Any]]:
+) -> list[dict[str, Any]] | None:
     """Assemble one final causal selector board from per-game pre-kickoff states.
 
     Production refreshes can occur multiple times while a weekly slate is still
@@ -594,7 +623,8 @@ def _final_pregame_selector_rows(
     Rows from that game chosen snapshot are assembled into one synthetic
     settled-week board. The existing selector methodology remains unchanged:
     advance_value_state still contributes at most one moneyline-family and one
-    spread-family frontier observation for the completed week.
+    spread-family frontier observation for the completed week. Only Week 9
+    returns None for zero coverage so the separately verified outage can be checked.
     """
     latest_by_game: dict[str, tuple[datetime, str, list[dict[str, Any]]]] = {}
 
@@ -617,12 +647,18 @@ def _final_pregame_selector_rows(
         if int(selector.get("week", -1)) != week:
             continue
 
+        if week == 9 and selector.get("season") != 2026:
+            raise Entering2026ProductStateError(f"Week 9 selector season mismatch: {proof_path}")
+
         rows = selector.get("rows")
         games = selector.get("games")
         if not isinstance(rows, list) or not isinstance(games, list) or not games:
             continue
         if any(not isinstance(row, Mapping) or _game_week(row) != week for row in rows):
             continue
+
+        if week == 9 and any(str(row.get("game_id")) not in required_game_ids for row in rows):
+            raise Entering2026ProductStateError(f"Week 9 selector row game mismatch: {proof_path}")
 
         try:
             captured = _parse_utc(selector["captured_at_utc"])
@@ -646,6 +682,8 @@ def _final_pregame_selector_rows(
                 valid_games = False
                 break
             seen_games.add(gid)
+            if week == 9 and gid not in required_game_ids:
+                raise Entering2026ProductStateError(f"Week 9 selector game mismatch: {proof_path}")
             try:
                 kickoff = _parse_utc(game["kickoff_at_utc"])
             except (KeyError, TypeError, ValueError, Entering2026ProductStateError):
@@ -659,10 +697,19 @@ def _final_pregame_selector_rows(
                 latest_by_game[gid] = candidate
 
         if not valid_games:
+            if week == 9:
+                raise Entering2026ProductStateError(f"Week 9 selector game identity is invalid: {proof_path}")
             continue
 
     missing = sorted(required_game_ids.difference(latest_by_game))
     if missing:
+        if week == 9:
+            if not latest_by_game:
+                return None
+            raise Entering2026ProductStateError(
+                f"partial Week 9 selector coverage requires review: "
+                f"covered={sorted(latest_by_game)} missing={missing}"
+            )
         raise Entering2026ProductStateError(
             f"missing successful final pre-kickoff selector evidence for settled Week {week}: {missing}"
         )
@@ -672,12 +719,80 @@ def _final_pregame_selector_rows(
         assembled.extend(latest_by_game[gid][2])
     return assembled
 
+def _week9_gap_audit(
+    *,
+    state: ValueSelectorState,
+    evidence,
+    game_rows: list[dict[str, Any]],
+    run_root: Path,
+) -> dict[str, Any]:
+    # Both live callers have already loaded and advanced validated settled
+    # football evidence. Bind this decision to the exact immutable Week 9 slate.
+    manifest = getattr(evidence, "manifest", {})
+    if (
+        manifest.get("season") != 2026
+        or manifest.get("schedule_checkpoints", {}).get("9") != _WEEK9_CHECKPOINT
+        or {str(row["game_id"]) for row in game_rows} != _WEEK9_GAME_IDS
+        or len(game_rows) != len(_WEEK9_GAME_IDS)
+        or any(row.get("season") != 2026 or row.get("season_type") != "REG" for row in game_rows)
+    ):
+        raise Entering2026ProductStateError("Week 9 selector gap has mismatched settled evidence")
+    if (len(state.ml_observations), len(state.spread_observations)) != (1, 7):
+        raise Entering2026ProductStateError("Week 9 selector gap has mismatched Week 8 selector continuity")
+
+    for run_id, digest in _WEEK9_FAILED_STATUS_SHA256.items():
+        run = run_root / run_id
+        status = run / "run-status.json"
+        if not status.is_file() or _sha256(status) != digest:
+            raise Entering2026ProductStateError(f"Week 9 selector outage status missing or changed: {run_id}")
+        if any((run / name).exists() for name in ("raw", "market", "product")):
+            raise Entering2026ProductStateError(f"Week 9 acquisition artifacts require review: {run_id}")
+
+    for status_path in sorted(run_root.glob("*/run-status.json")):
+        if status_path.parent.name in _WEEK9_FAILED_STATUS_SHA256:
+            continue
+        status = json.loads(status_path.read_text(encoding="utf-8"))
+        if str(status.get("week")) == "9":
+            raise Entering2026ProductStateError(f"unreviewed Week 9 selector run: {status_path.parent.name}")
+
+    # Inspect proofs even when status is missing or failed. A native or
+    # conflicting Week 9 record anywhere in the archive requires review.
+    for proof_path in sorted(run_root.glob("*/product/deterministic-proof.json")):
+        proof = json.loads(proof_path.read_text(encoding="utf-8"))
+        selector = proof.get("selector_evidence")
+        if isinstance(selector, Mapping) and (
+            str(selector.get("week")) == "9" or "2026_09_" in json.dumps(selector)
+        ):
+            raise Entering2026ProductStateError(
+                f"Week 9 selector proof requires review: {proof_path.parents[1].name}"
+            )
+
+    state_sha = hashlib.sha256(
+        json.dumps(asdict(state), sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    ).hexdigest()
+    return {
+        "reason": "NO_AUTHENTIC_PREGAME_MARKET_OBSERVATION",
+        "season": 2026,
+        "week": 9,
+        "season_type": "REG",
+        "settled_game_ids": sorted(_WEEK9_GAME_IDS),
+        "schedule_checkpoint_sha256": _WEEK9_CHECKPOINT,
+        "failed_acquisition_status_sha256": dict(_WEEK9_FAILED_STATUS_SHA256),
+        "accepted_pregame_games": 0,
+        "entering_observations": {"moneyline": 1, "spread": 7},
+        "observations_appended": {"moneyline": 0, "spread": 0},
+        "selector_state_before_sha256": state_sha,
+        "selector_state_after_sha256": state_sha,
+    }
+
+
 def advance_live_value_state(
     *,
     entering: ValueSelectorState,
     evidence,
     run_root: Path,
     repository_root: Path | None = None,
+    recovery_audit: list[dict[str, Any]] | None = None,
 ) -> ValueSelectorState:
     """Advance selector trust prospectively from Week 2 final pregame boards.
 
@@ -687,7 +802,8 @@ def advance_live_value_state(
     """
     del repository_root  # retained for caller compatibility; legacy replay is forbidden.
     state = entering
-    game_rows = {str(row["game_id"]): row for row in evidence.games.to_dicts()}
+    settled_games = evidence.games.to_dicts()
+    game_rows = {str(row["game_id"]): row for row in settled_games}
 
     by_week: dict[int, set[str]] = {}
     for gid, row in game_rows.items():
@@ -705,6 +821,14 @@ def advance_live_value_state(
             week=week,
             required_game_ids=required_game_ids,
         )
+        if rows is None:
+            audit = _week9_gap_audit(
+                state=state, evidence=evidence, run_root=run_root,
+                game_rows=[row for row in settled_games if _game_week(row) == 9],
+            )
+            if recovery_audit is not None:
+                recovery_audit.append(audit)
+            continue
         settled_rows = []
         for source in rows:
             row = dict(source)
