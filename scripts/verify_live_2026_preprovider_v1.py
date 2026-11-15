@@ -93,12 +93,14 @@ def main() -> int:
         decision_state = load_entering_2026_product_state(
             root / "data/live/2026/entering_product_state_v1.json"
         )
+        selector_recovery = []
         if active.week > 1:
             decision_state["value_state"] = advance_live_value_state(
                 entering=decision_state["value_state"],
                 evidence=evidence,
                 run_root=args.run_root,
                 repository_root=root,
+                recovery_audit=selector_recovery,
             )
         value_state = decision_state["value_state"]
     except Exception as exc:
@@ -130,6 +132,8 @@ def main() -> int:
         "odds_api_called": False,
         "market_data_read": False,
     }
+    if selector_recovery:
+        proof["selector_recovery"] = selector_recovery
     print(json.dumps(proof, sort_keys=True))
     return 0
 
