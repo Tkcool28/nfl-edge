@@ -1,10 +1,14 @@
 {
+  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+  "submitted_at_utc": "2026-11-15T13:20:44Z",
+  "research_generated_at_utc": "2026-11-15T13:20:44Z",
   "article": {
-    "dek": "The board still hasn't flipped, Walker is out for Kansas City, and Watson is back under center for Cleveland.",
-    "edition": "Evening Brief",
-    "published_at_utc": "2026-11-15T01:14:53Z",
-    "research_generated_at_utc": "2026-11-15T01:14:53Z",
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+    "published_at_utc": "2026-11-15T13:20:44Z",
+    "edition": "Morning Brief",
+    "title": "NFL EDGE Sunday Morning Brief",
+    "dek": "The board finally flipped to Week 10 overnight — Munich inactives are in, the 49ers are back to -4.5, and the app has three live cards for Sunday.",
+    "research_generated_at_utc": "2026-11-15T13:20:44Z",
     "sections": [
       {
         "icon": "📰",
@@ -13,85 +17,80 @@
         "items": [
           {
             "evidence_ids": [
-              "ev-board-pm",
-              "ev-inj-pm"
+              "ev-board-am"
             ],
-            "headline": "Lead: The board still hasn't flipped — Sunday still goes through Check",
+            "headline": "Lead: The board finally flipped — Week 10 is live",
             "paragraphs": [
-              "I checked the app again after the evening refresh. It is still the November 2 board. Same snapshot, Week 8 games, twelve days old. It still lists Sam Darnold as Seattle's starter and Kyler Murray as Minnesota's starter, and it knows nothing about Sunday.",
-              "Sunday still starts in Munich. Patriots at Lions kicks off at 9:30 a.m. ET, and inactives land about 90 minutes before kickoff, so about 8:00 a.m. ET for that one.",
-              "Nothing on the board applies to Sunday. Your number goes through Check — type in your book's line and price and the app runs it back through the model and gives you a bet or no-bet verdict on your price."
+              "Overnight, the board flipped. Saturday night it was still showing the November 2 board. This morning it is Week 10, fresh, with thirteen Sunday games and three live headline cards.",
+              "That changes today completely. The numbers in this brief are real Week 10 numbers, not last week's leftovers. Munich kicks off at 9:30 a.m. ET, the 1:00 p.m. ET window follows, and the nightcap is Steelers at Bengals at 8:20 p.m. ET."
             ],
             "sources": [
               {
                 "label": "NFL EDGE app",
                 "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-              },
-              {
-                "label": "DK Network injury report",
-                "url": "https://dknetwork.draftkings.com/2026/11/10/nfl-injury-report-week-10/"
               }
             ],
-            "takeaway": "The board is still the November 2 board, so nothing on it applies to Sunday — run your number through Check, and watch inactives about 90 minutes before kickoff."
+            "takeaway": "The board flipped overnight — Week 10 is live, the cards are real, and Munich kicks off at 9:30 a.m. ET."
           },
           {
             "evidence_ids": [
-              "ev-inj-pm"
+              "ev-inj-am"
             ],
-            "headline": "Injuries: Saturday's changes — Walker is out, Watson is back",
+            "headline": "Injuries: Munich inactives are in — Brown, Stevenson and St. Brown all play",
             "paragraphs": [
-              "The one downgrade since this morning: Chiefs running back Kenneth Walker III went from questionable to out with a groin injury. He will not play at Atlanta. That is the only name that moved the wrong way today.",
-              "Going the other way: Deshaun Watson is back under center for Cleveland on Sunday after missing last week in concussion protocol. Kirk Cousins starts for Minnesota with Kyler Murray out. Garrett Wilson is trending to play against Buffalo — he practiced fully Friday even with the questionable tag, and so did Omar Cooper Jr. and Adonai Mitchell.",
-              "Two more from Saturday: Steelers tight end Pat Freiermuth was added to the injury report with an illness and is questionable for Sunday night. The Patriots activated fullback Reggie Gilliam and guard Greg Van Roten from injured reserve, and both are still questionable for Munich.",
-              "Still questionable from this morning: A.J. Brown and Rhamondre Stevenson in Munich, Amon-Ra St. Brown in Munich too, and Trent Williams in Dallas. Inactives land about 90 minutes before kickoff."
+              "Munich inactives landed early, and the news is good for both sides. Patriots receiver A.J. Brown and running back Rhamondre Stevenson are both active after being listed questionable. Lions receiver Amon-Ra St. Brown and running back Sione Vaki are active too.",
+              "The Lions are short elsewhere: cornerback D.J. Reed, center Cade Mays and safety Kerby Joseph did not travel and are out. The Patriots are without running back TreVeyon Henderson, who went on injured reserve Saturday, plus lineman Ben Brown, cornerback Carlton Davis III, safety Brenden Schooler and lineman Walter Rouse.",
+              "The rest of the board holds from Saturday: Chiefs running back Kenneth Walker III is out with a groin injury at Atlanta. Deshaun Watson starts for Cleveland, Kirk Cousins starts for Minnesota, and Drew Lock starts for Seattle with Sam Darnold out again. The app's expected starters match all of that.",
+              "Two more names from the week: Rams receiver Puka Nacua went on injured reserve Thursday and is out at least four games. Packers running back Josh Jacobs had finger surgery Monday and could miss up to three weeks. Jets receiver Garrett Wilson is still questionable against Buffalo, and the Saints activated running back Travis Etienne from injured reserve — he is questionable against Carolina.",
+              "Inactives for the later games land about 90 minutes before kickoff. If your bet depends on a questionable name, that is the moment that decides it."
             ],
             "sources": [
               {
-                "label": "DK Network injury report",
-                "url": "https://dknetwork.draftkings.com/2026/11/10/nfl-injury-report-week-10/"
+                "label": "Pats Pulpit — Patriots inactives",
+                "url": "https://www.patspulpit.com/new-england-patriots-news/144290/patriots-vs-lions-inactives-nfl-week-10"
               },
               {
-                "label": "NBC Sports injury report",
-                "url": "https://www.nbcsports.com/fantasy/football/news/nfl-week-10-injury-report-pats-backfield-in-flux-plus-gardner-minshew-michael-wilson-puka-nacua-injuries"
+                "label": "Detroit Lions — inactives",
+                "url": "https://www.detroitlions.com/news/inactives-lions-vs-patriots-stbrown-vaki-cisco"
+              },
+              {
+                "label": "Fantasy Injury News — Week 10 injury report",
+                "url": "https://fantasy-injury-news.com/injury-report/"
               }
             ],
-            "takeaway": "Walker is out, Watson and Cousins start, Wilson is trending to play — and the Munich questionable names are still decided at inactives, about 90 minutes before kickoff."
+            "takeaway": "Brown, Stevenson and St. Brown are all active in Munich; Walker is out for Kansas City, Watson and Cousins start, and the later inactives land about 90 minutes before kickoff."
           },
           {
             "evidence_ids": [
-              "ev-weather-pm"
+              "ev-weather-am"
             ],
-            "headline": "Weather: final check — nothing flagged, same as this morning",
+            "headline": "Weather: final check — nothing flagged, same as last night",
             "paragraphs": [
-              "No wind flag anywhere on Sunday. Every outdoor game stays under the 15 mph sustained wind line.",
-              "Cleveland is still the wettest open-air spot — a light rain chance and a north wind around 12 mph with gusts in the teens. MetLife has the strongest gusts, around 20 mph, with almost no rain chance. Munich is calm and overcast in the 40s. Dallas plays under a closed roof, so the rain outside never reaches the field.",
-              "Weather is a fact to know, not a reason to bet a total. The number you care about is still the one your book is offering — run it through Check."
+              "The morning weather check is clean. No outdoor game is forecast to reach 15 mph sustained wind, the line that usually matters.",
+              "Munich is calm and cloudy, 48 degrees, wind barely 2 mph. MetLife has the strongest gusts at 22 mph, and Cleveland has the only rain chance at 33% light rain — neither reaches the line that changes a game. This is weather to note, not weather to bet on."
             ],
             "sources": [
               {
                 "label": "FantasyTools NFL weather",
                 "url": "https://fantasytools.ai/nfl-weather-report/"
-              },
-              {
-                "label": "DK Network weather",
-                "url": "https://dknetwork.draftkings.com/2026/11/13/nfl-week-10-weather-forecast/"
               }
             ],
-            "takeaway": "No wind flag anywhere on Sunday — Cleveland has the only rain chance and MetLife the strongest gusts, and neither reaches the line that usually matters."
+            "takeaway": "No wind flag anywhere on Sunday — Munich is calm, MetLife has the strongest gusts, Cleveland has the only rain chance, and none of it reaches the line that matters."
           },
           {
             "evidence_ids": [
-              "ev-lines-pm"
+              "ev-board-am",
+              "ev-lines-am"
             ],
             "headline": "Sunday: thirteen games, starting in Munich at 9:30 a.m. ET",
             "paragraphs": [
-              "Thirteen games on Sunday. Patriots at Lions in Munich opens the day at 9:30 a.m. ET.",
-              "The Jaguars are the biggest favorite on the board at -10.5. 49ers at Cowboys carries the week's highest total at 55.5."
+              "Thirteen games today. Munich opens the day at 9:30 a.m. ET, the big 1:00 p.m. ET window carries nine games, then Seahawks at Raiders and Rams at Cardinals in the late window, 49ers at Cowboys at 4:25 p.m. ET, and Steelers at Bengals at 8:20 p.m. ET. Chargers at Ravens closes the week Monday at 8:15 p.m. ET.",
+              "The Jaguars are still the week's biggest favorite at -10.5 at Tennessee, and 49ers at Cowboys still carries the highest total at 55.5."
             ],
             "sources": [
               {
-                "label": "Win Daily Sports NFL odds",
-                "url": "https://windailysports.com/nfl-odds/week-10/"
+                "label": "NFL EDGE app",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
               }
             ],
             "takeaway": "Thirteen games Sunday, starting with Patriots at Lions at 9:30 a.m. ET — the Jaguars are the biggest favorite at -10.5 and 49ers at Cowboys carries the week's highest total at 55.5."
@@ -105,13 +104,13 @@
         "items": [
           {
             "evidence_ids": [
-              "ev-board-pm"
+              "ev-board-am"
             ],
-            "headline": "The board still has not flipped — Sunday still goes through Check",
+            "headline": "Three live cards — and what each one is actually for",
             "paragraphs": [
-              "The board refreshes every morning and evening, but I checked twice tonight and it is still showing the November 2 snapshot. It is twelve days old, it is still showing Week 8, and it still lists Darnold as Seattle's starter and Murray as Minnesota's starter — both wrong for Sunday.",
-              "That does not leave you without the app. Tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator and returns a bet or no-bet verdict on your price. It is a full re-evaluation, not a blind override.",
-              "If your book's number is different from the one on the board — and right now every book's number is different, because the board is twelve days old — Check is how you use the app today."
+              "Hit Rate has Seattle moneyline at -285 on DraftKings. The app gives Seattle about a 70% chance to win. That is the pick most likely to win — and the price says so. At -285, every $2.85 you risk wins $1. Hit Rate is about winning, not about value. The app's own tutorial says it plainly: Hit Rate is not Profit Rate.",
+              "Balanced has Cleveland +4.5 at -108 on DraftKings. The app gives the Browns about a 50.5% chance to cover, with a small edge of about 1.1%. This is the middle ground — a strong pick without paying too much. It is a good starting point if you are new to this.",
+              "Value has Carolina moneyline at +114 on FanDuel. The app gives the Panthers about a 52% chance to win outright, with an edge of about 1.1%. That is the model's plus-EV play. It is marked target-only, so watch the price: if your book is offering worse than +114, run it through Check before you touch it."
             ],
             "sources": [
               {
@@ -119,25 +118,42 @@
                 "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
               }
             ],
-            "takeaway": "The board is twelve days old and still showing Week 8, so Sunday's prices go through Check — type in your book's line and the app gives a bet or no-bet verdict on your price."
+            "takeaway": "Seattle moneyline is the likeliest winner, Cleveland +4.5 is the middle ground, and Carolina moneyline is the model's plus-EV play — use each card for what it is."
           },
           {
             "evidence_ids": [
-              "ev-inj-pm"
+              "ev-board-am"
             ],
-            "headline": "A questionable starter is a moving number",
+            "headline": "The Jaguars are -10.5. The app sees a much closer game.",
             "paragraphs": [
-              "The app's numbers are built on the expected starter. When the starter changes, the number changes with it — and the old verdict is dead.",
-              "That is what the inactives list does. A.J. Brown, Stevenson and Amon-Ra St. Brown are all questionable for Munich, and inactives land about 90 minutes before kickoff. If one of them sits, the line moves, and the price you liked an hour ago is a different bet.",
-              "So run the number again after the news lands. Tap Check, type in the new line and price, and let the app give you a fresh verdict on the team that is actually playing."
+              "Jacksonville is the week's biggest favorite at -10.5 at Tennessee. But the app's expected margin for that game is only about 5.8 points. The market and the app are a long way apart here.",
+              "That does not make Tennessee a bet on its own. It means the app thinks this game is closer than the price says. If you like the Jaguars, do not pay -10.5 blind — type your book's line into Check and let the app run it back through the model and the evaluator. If your book has a better number, Check will tell you."
             ],
             "sources": [
               {
-                "label": "DK Network injury report",
-                "url": "https://dknetwork.draftkings.com/2026/11/10/nfl-injury-report-week-10/"
+                "label": "NFL EDGE app",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
               }
             ],
-            "takeaway": "The app prices the expected starter — when inactives change the starter, the old verdict is dead, so Check the new number."
+            "takeaway": "The market has Jacksonville -10.5 but the app's margin is only about 5.8 — a big gap, so Check your price before you pay it."
+          },
+          {
+            "evidence_ids": [
+              "ev-board-am",
+              "ev-inj-am"
+            ],
+            "headline": "The quarterbacks check out — and inactives can still change the number",
+            "paragraphs": [
+              "The app's expected starters line up with the morning news: Watson for Cleveland, Cousins for Minnesota, Lock for Seattle. The board is pricing the right quarterbacks this morning.",
+              "But a questionable starter is still a moving number. When inactives land about 90 minutes before kickoff and the starter changes, the old verdict is dead. Run the new number through Check — the app re-runs it through the model and the evaluator and gives you a bet or no-bet verdict on your price."
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE app",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ],
+            "takeaway": "The app is pricing the right quarterbacks this morning — but if inactives change a starter, the old verdict is dead, so Check the new number."
           }
         ]
       },
@@ -148,16 +164,16 @@
         "title": "Learn the Game",
         "items": [
           {
+            "editorial_only": true,
             "evidence_ids": [],
-            "headline": "Learn the Game: key numbers — the 3 and the 7",
+            "headline": "Learn the Game: juice — the price of placing the bet",
             "paragraphs": [
-              "In football, most games are decided by 3 points or 7 points — a field goal, or a touchdown with the extra point. Those are the key numbers, and books price around them.",
-              "Hypothetical example, clearly labeled as hypothetical: say a favorite is -3. If you take that number, you win only if they win by more than 3 — win by exactly 3 and it is a push, your money back. If the line moves to -2.5, that same win by 3 now pays you. The half-point across the key number is worth real money, which is why it is called the hook.",
-              "That is why a move across 3 or 7 matters more than a move from, say, -6 to -6.5. Before you take any price, run it through Check and see what the app says about it."
+              "Juice, also called the vig, is the book's cut on a bet. It is why most standard lines are -110 instead of even money.",
+              "Hypothetical example, clearly labeled as hypothetical: say you bet a spread at -110. You risk $1.10 to win $1. That extra 10 cents is the juice — the book keeps it when you win, and it is gone when you lose. Two bets at -110 need you to win more than half the time just to break even, because the juice is working against you on every ticket.",
+              "That is why the price matters as much as the pick. A good pick at -110 and the same pick at -130 are not the same bet. Before you take any price, run it through Check and see what the app says about it."
             ],
             "sources": [],
-            "takeaway": "Key numbers are 3 and 7 — a line crossing one of them changes your bet more than a move anywhere else, so watch for the hook.",
-            "editorial_only": true
+            "takeaway": "Juice is the book's cut — at -110 you risk $1.10 to win $1, so the price is part of the bet, and Check tells you whether your price is worth it."
           }
         ]
       },
@@ -168,32 +184,34 @@
         "items": [
           {
             "evidence_ids": [
-              "ev-lines-pm",
-              "ev-vsin-pm",
-              "ev-board-pm"
+              "ev-lines-am",
+              "ev-board-am"
             ],
-            "headline": "Small moves today, and the big numbers held",
+            "headline": "The 49ers are back to -4.5, and the totals kept climbing",
             "paragraphs": [
-              "The Jaguars are still -10.5, and the 49ers-Cowboys total is still 55.5. I saw no reported move on the Lions in Munich in today's checks.",
-              "What did move: the 49ers ticked toward Dallas, from -4.5 down to -3.5 at DraftKings, while the total held at 55.5. The Munich total slipped a point, from 50.5 to 49.5. The Jaguars total went the other way, up to 46.5.",
-              "The board itself is unchanged — still the November 2 snapshot — so there is no new app number to compare against. Any move that happens tonight will show up on your book first, and Check is how you test it.",
-              "On the splits: the free VSiN page tonight showed a college basketball row and no NFL row, so there is no fresh public-versus-money read. That is not a Fade — it is just no data to read."
+              "The 49ers dipped to -3.5 on Saturday and are back to -4.5 at DraftKings this morning. Their total at Dallas climbed from 53.5 to 55.5 — still the week's highest.",
+              "The Munich total moved up too, from 49.5 to 50.5. The Bills moved from -7 to -8.5 at the Jets, and that total jumped from 46.5 to 50.5. The Texans at Browns total is up from 38.5 to 40.5, and the Jaguars moved from -10 to -10.5 with their total up from 45.5 to 46.5.",
+              "The board caught all of this — it refreshed fresh this morning. But your book is not DraftKings or FanDuel by default. If your number is different from the one here, tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator for a bet or no-bet verdict on your price."
             ],
             "sources": [
               {
-                "label": "Win Daily Sports NFL odds",
-                "url": "https://windailysports.com/nfl-odds/week-10/"
+                "label": "LineSmart — 49ers at Cowboys",
+                "url": "https://linesmart.app/nfl/games/san-francisco-49ers-at-dallas-cowboys-2026-11-15/"
               },
               {
-                "label": "VSiN betting splits",
-                "url": "https://data.vsin.com/betting-splits/"
+                "label": "LineSmart — Bills at Jets",
+                "url": "https://linesmart.app/nfl/games/buffalo-bills-at-new-york-jets-2026-11-15/"
               },
               {
-                "label": "NFL EDGE app",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+                "label": "LineSmart — Texans at Browns",
+                "url": "https://linesmart.app/nfl/games/houston-texans-at-cleveland-browns-2026-11-15/"
+              },
+              {
+                "label": "LineSmart — Jaguars at Titans",
+                "url": "https://linesmart.app/nfl/games/jacksonville-jaguars-at-tennessee-titans-2026-11-15/"
               }
             ],
-            "takeaway": "49ers -4.5 to -3.5, Munich total down a point, Jaguars total up to 46.5 — the big numbers held, and the free splits page had no NFL row to read tonight."
+            "takeaway": "49ers -4.5 again, Munich total up to 50.5, Bills -8.5 and the totals climbing — the board caught it all, and Check is there if your book's number is different."
           }
         ]
       },
@@ -204,102 +222,110 @@
         "items": [
           {
             "evidence_ids": [
-              "ev-inj-pm"
+              "ev-inj-am"
             ],
-            "headline": "Tonight's job: set your Sunday board before bed",
+            "headline": "Today's job: Munich is already decided — wait only for the names you need",
             "paragraphs": [
-              "Saturday night is prep. Know which questionable names your bets depend on: A.J. Brown, Stevenson and Amon-Ra St. Brown in Munich, Wilson against Buffalo, Williams in Dallas. Munich inactives land about 8:00 a.m. ET.",
-              "Wait only for inactives if your bet needs a questionable player. Otherwise, if your book has a good number right now and Check says bet, bet it now. Waiting lets the number drift the wrong way too, and the Sunday late rush on big-name teams can push a line past the app's playable number.",
-              "Set an alarm if Munich is on your card — 9:30 a.m. ET kickoff, inactives about 8:00 a.m. ET. The early game waits for no one."
+              "Munich kicks off at 9:30 a.m. ET and its inactives are already out, so there is nothing left to wait on there. For the rest of the day, inactives land about 90 minutes before each kickoff.",
+              "Wait only for inactives if your bet depends on a questionable player. Otherwise, if your book has a good number right now and Check says bet, bet it now. A good number today beats a hoped-for number later — waiting lets the number drift the wrong way too.",
+              "One more thing: settlement is manual, and the tracker only works if you are honest with yourself. Log the losers too. A tracker that only holds winners is a souvenir, not a record."
             ],
             "sources": [
               {
-                "label": "DK Network injury report",
-                "url": "https://dknetwork.draftkings.com/2026/11/10/nfl-injury-report-week-10/"
+                "label": "Pats Pulpit — Patriots inactives",
+                "url": "https://www.patspulpit.com/new-england-patriots-news/144290/patriots-vs-lions-inactives-nfl-week-10"
               }
             ],
-            "takeaway": "Know your questionable names tonight — wait only for inactives if your bet needs one, otherwise bet a good number now if Check says bet. Munich kicks off at 9:30 a.m. ET."
+            "takeaway": "Munich is decided — wait only for the inactives your bet actually needs, bet a good number now if Check says bet, and log the losers too."
           }
         ]
       }
-    ],
-    "title": "NFL EDGE Saturday Evening Brief"
+    ]
   },
   "evidence": [
     {
-      "category": "app",
-      "evidence_id": "ev-board-pm",
-      "fact": "NFL EDGE product/latest fetched Saturday Nov 14, 2026 at ~6:09 p.m. Denver (01:09 UTC) and re-fetched at ~6:12 p.m. Denver (01:12 UTC) still returns the November 2 board: freshness observed_at_utc 2026-11-02T12:08:54Z, 14 Week 8 games, no Week 10 games, and it still lists Sam Darnold as Seattle's expected starter and Kyler Murray as Minnesota's expected starter. The board has not flipped to Week 10.",
+      "evidence_id": "ev-board-am",
+      "category": "board",
+      "verification": "REPORTED",
+      "fact": "NFL EDGE product/latest fetched Sunday Nov 15, 2026 at ~6:15 a.m. Denver (13:15 UTC): the board has flipped to Week 10. Freshness observed_at_utc 2026-11-15T12:08:38Z, stale false, 14 games, slate UPCOMING. Saturday evening it still returned the November 2 board. Headline cards: Hit Rate Seattle moneyline -285 at DraftKings (model about 70%), Balanced Cleveland +4.5 -108 at DraftKings (model 50.5%, EV about +1.1%), Value Carolina moneyline +114 at FanDuel (model 52.0%, EV about +1.1%, marked TARGET_ONLY). Expected starters in the app match the news: Deshaun Watson for Cleveland, Kirk Cousins for Minnesota, Drew Lock for Seattle.",
       "sources": [
         {
           "label": "NFL EDGE app",
           "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
         }
-      ],
-      "verification": "REPORTED"
+      ]
     },
     {
+      "evidence_id": "ev-inj-am",
       "category": "injury",
-      "evidence_id": "ev-inj-pm",
-      "fact": "Week 10 injury delta, Saturday Nov 14, 2026 (reports updated 4:30 p.m. ET): Chiefs RB Kenneth Walker III downgraded from questionable to out with a groin injury for Sunday at Atlanta; Browns QB Deshaun Watson returns to start vs Houston after missing last week in concussion protocol; Vikings QB Kyler Murray out, Kirk Cousins starts at Green Bay; Jets WR Garrett Wilson (concussion) trending to play vs Buffalo after a full practice Friday, as are Omar Cooper Jr. and Adonai Mitchell; Steelers TE Pat Freiermuth added Saturday with an illness, questionable for Sunday night; Patriots activated FB Reggie Gilliam and G Greg Van Roten from injured reserve Saturday, both still questionable for Munich. Still questionable: Patriots WR A.J. Brown (knee, ankle) and RB Rhamondre Stevenson (knee), Lions WR Amon-Ra St. Brown (ribs), 49ers T Trent Williams.",
+      "verification": "REPORTED",
+      "fact": "Week 10 injury delta, Sunday morning Nov 15, 2026: Munich inactives are out — Patriots WR A.J. Brown (knee, ankle) and RB Rhamondre Stevenson (knee) are ACTIVE, as are Lions WR Amon-Ra St. Brown (ribs) and RB Sione Vaki (ankle). Lions CB D.J. Reed (hip), C Cade Mays (ankle) and S Kerby Joseph did not travel and are out. Patriots inactives: RB TreVeyon Henderson (illness, placed on injured reserve Saturday), OL Ben Brown, CB Carlton Davis III, S Brenden Schooler, OL Walter Rouse; FB Reggie Gilliam and G Greg Van Roten were activated from injured reserve. Carried from Saturday: Chiefs RB Kenneth Walker III out with a groin injury for Sunday at Atlanta; Browns QB Deshaun Watson returns to start vs Houston; Vikings QB Kyler Murray out, Kirk Cousins starts at Green Bay. Also: Rams WR Puka Nacua placed on injured reserve Thursday Nov 12 (knee, toe), out at least four games; Packers RB Josh Jacobs had surgery Monday on a fractured right ring finger and could miss up to three weeks; Seahawks QB Sam Darnold out again, Drew Lock starts vs Las Vegas; Jets WR Garrett Wilson (concussion) still questionable and trending down vs Buffalo; Saints activated RB Travis Etienne from injured reserve Saturday, questionable vs Carolina. Inactives for the later games land about 90 minutes before kickoff.",
       "sources": [
         {
-          "label": "DK Network injury report",
-          "url": "https://dknetwork.draftkings.com/2026/11/10/nfl-injury-report-week-10/"
+          "label": "Pats Pulpit — Patriots inactives",
+          "url": "https://www.patspulpit.com/new-england-patriots-news/144290/patriots-vs-lions-inactives-nfl-week-10"
         },
         {
-          "label": "NBC Sports injury report",
-          "url": "https://www.nbcsports.com/fantasy/football/news/nfl-week-10-injury-report-pats-backfield-in-flux-plus-gardner-minshew-michael-wilson-puka-nacua-injuries"
+          "label": "Detroit Lions — inactives",
+          "url": "https://www.detroitlions.com/news/inactives-lions-vs-patriots-stbrown-vaki-cisco"
+        },
+        {
+          "label": "Yardbarker — Patriots injury updates",
+          "url": "https://www.yardbarker.com/nfl/articles/patriots_get_2_huge_injury_updates_before_lions_game/s1_17355_44564045"
+        },
+        {
+          "label": "Fantasy Injury News — Week 10 injury report",
+          "url": "https://fantasy-injury-news.com/injury-report/"
         }
-      ],
-      "verification": "REPORTED"
+      ]
     },
     {
+      "evidence_id": "ev-weather-am",
       "category": "weather",
-      "evidence_id": "ev-weather-pm",
-      "fact": "Sunday Week 10 final weather check (NWS-based, pulled Saturday evening): no wind flag anywhere on Sunday — every outdoor game stays under 15 mph sustained wind. Cleveland has the only rain chance (light showers, north wind around 12 mph, gusts in the teens) and MetLife has the strongest gusts (around 20 mph), and neither reaches the line that usually matters. Munich is calm and overcast in the 40s. 49ers at Cowboys plays under a retractable roof expected closed, so the rain outside never reaches the field.",
+      "verification": "REPORTED",
+      "fact": "Sunday Week 10 morning weather check (NWS-based, pulled Sunday Nov 15, 7:19 a.m. ET): 0 games flagged for wind — no outdoor game reaches 15 mph sustained wind. Munich: calm and cloudy, 48 degrees, wind ESE 2 mph. MetLife (Bills at Jets): 52 degrees, wind NW 12 mph, gusts to 22 mph, sunny. Cleveland (Texans at Browns): 46 degrees, wind NW 12 mph, gusts to 17 mph, 33% chance of light rain. No game crosses the wind line that usually matters.",
       "sources": [
         {
           "label": "FantasyTools NFL weather",
           "url": "https://fantasytools.ai/nfl-weather-report/"
-        },
-        {
-          "label": "DK Network weather",
-          "url": "https://dknetwork.draftkings.com/2026/11/13/nfl-week-10-weather-forecast/"
         }
-      ],
-      "verification": "REPORTED"
+      ]
     },
     {
+      "evidence_id": "ev-lines-am",
       "category": "lines",
-      "evidence_id": "ev-lines-pm",
-      "fact": "Week 10 lines as of Saturday evening: the Jaguars are the biggest favorite at -10.5, 49ers at Cowboys carries the week's highest total at 55.5, the 49ers are -3.5 at DraftKings (down from -4.5), the Jaguars-Titans total is 46.5, and the Munich total is down a point to 49.5. Thirteen games on Sunday, starting with Patriots at Lions at 9:30 a.m. ET.",
+      "verification": "REPORTED",
+      "fact": "Week 10 line movement, overnight to Sunday morning (DraftKings, vs Saturday evening and openers): 49ers -3.5 back to -4.5, total up from 53.5 to 55.5 at Dallas. Munich total up from 49.5 to 50.5. Bills -7 to -8.5 at the Jets, total up from 46.5 to 50.5. Texans at Browns total up from 38.5 to 40.5. Jaguars -10 to -10.5 at Tennessee, total up from 45.5 to 46.5. The Jaguars remain the week's biggest favorite at -10.5 and 49ers at Cowboys carries the highest total at 55.5.",
       "sources": [
         {
-          "label": "Win Daily Sports NFL odds",
-          "url": "https://windailysports.com/nfl-odds/week-10/"
+          "label": "LineSmart — 49ers at Cowboys",
+          "url": "https://linesmart.app/nfl/games/san-francisco-49ers-at-dallas-cowboys-2026-11-15/"
         },
         {
-          "label": "VegasInsider NFL odds",
-          "url": "https://www.vegasinsider.com/nfl/nfl-week-10-odds-2026/"
+          "label": "LineSmart — Bills at Jets",
+          "url": "https://linesmart.app/nfl/games/buffalo-bills-at-new-york-jets-2026-11-15/"
+        },
+        {
+          "label": "LineSmart — Texans at Browns",
+          "url": "https://linesmart.app/nfl/games/houston-texans-at-cleveland-browns-2026-11-15/"
+        },
+        {
+          "label": "LineSmart — Jaguars at Titans",
+          "url": "https://linesmart.app/nfl/games/jacksonville-jaguars-at-tennessee-titans-2026-11-15/"
         }
-      ],
-      "verification": "REPORTED"
+      ]
     },
     {
+      "evidence_id": "ev-vsin-am",
       "category": "splits",
-      "evidence_id": "ev-vsin-pm",
-      "fact": "VSiN betting splits page checked Saturday Nov 14, 2026 ~00:56 UTC: the visible free content showed a college basketball featured row (UNC-Greensboro vs Cornell moneyline) and no NFL split row, so no NFL public-vs-handle split could be read this evening. The full board is VSiN Pro.",
+      "verification": "REPORTED",
+      "fact": "VSiN betting splits page checked Sunday Nov 15, 2026 ~13:16 UTC: the visible free content showed a college basketball featured row (UNC-Greensboro vs Cornell moneyline) and no NFL split row, so no NFL public-vs-handle split could be read this morning. The full board is VSiN Pro.",
       "sources": [
         {
           "label": "VSiN betting splits",
           "url": "https://data.vsin.com/betting-splits/"
         }
-      ],
-      "verification": "REPORTED"
+      ]
     }
-  ],
-  "research_generated_at_utc": "2026-11-15T01:14:53Z",
-  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-11-15T01:14:53Z"
+  ]
 }
