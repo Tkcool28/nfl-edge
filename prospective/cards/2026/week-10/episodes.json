@@ -177,7 +177,7 @@
       "publication_count": 1,
       "returned_after_gap": false,
       "selection": "CIN",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "REPLACED",
       "worst_line": null,
       "worst_price": -192
     },
@@ -222,16 +222,62 @@
       "publication_count": 1,
       "returned_after_gap": false,
       "selection": "PIT",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "DISAPPEARED",
       "worst_line": 3.5,
       "worst_price": -105
+    },
+    {
+      "best_line": null,
+      "best_price": -230,
+      "episode_id": "episode-89da143d81f0947fa450a744",
+      "first_line": null,
+      "first_price": -230,
+      "first_publication_id": "publication-a01086080ffcac55ebd9b292",
+      "first_seen_at_utc": "2026-11-16T12:08:39.100812Z",
+      "game_id": "2026_10_LAC_BAL",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "last_line": null,
+      "last_price": -230,
+      "last_publication_id": "publication-a01086080ffcac55ebd9b292",
+      "last_seen_at_utc": "2026-11-16T12:08:39.100812Z",
+      "logical_recommendation_id": "logical-0a7bb6e87ca98ae6091a8f94",
+      "market": "MONEYLINE",
+      "normalized_selection": "BAL",
+      "normalized_side": "home",
+      "observations": [
+        {
+          "american_odds": -230,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-a732f3e9651a2c7142acecf0",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -233
+          },
+          "publication_id": "publication-a01086080ffcac55ebd9b292",
+          "published_at_utc": "2026-11-16T12:08:39.100812Z",
+          "recommended_units": 0.25,
+          "source_product_sha256": "a01086080ffcac55ebd9b2929b44c263a2bd050b457cb2ba1402c776c19b66f2",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-d5aabe3193ae125ecb99a47a"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "BAL",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": null,
+      "worst_price": -230
     }
   ],
   "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1",
   "season": 2026,
   "source_publication_ids": [
     "publication-137b4462153f149ec9b632e5",
-    "publication-0019b7c16837cdb1d466a67b"
+    "publication-0019b7c16837cdb1d466a67b",
+    "publication-a01086080ffcac55ebd9b292"
   ],
   "week": 10
 }
