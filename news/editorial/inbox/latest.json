@@ -1,14 +1,14 @@
 {
   "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-11-16T01:15:41Z",
-  "research_generated_at_utc": "2026-11-16T01:15:41Z",
+  "submitted_at_utc": "2026-11-16T13:21:58Z",
+  "research_generated_at_utc": "2026-11-16T13:21:58Z",
   "article": {
     "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-11-16T01:15:41Z",
-    "edition": "Evening Brief",
-    "title": "NFL EDGE Sunday Evening Brief",
-    "dek": "Two games left in Week 10: both cards are on Steelers at Bengals tonight, McConkey is out for Monday, and the line moved toward Pittsburgh while the public stayed on Cincinnati.",
-    "research_generated_at_utc": "2026-11-16T01:15:41Z",
+    "published_at_utc": "2026-11-16T13:21:58Z",
+    "edition": "Morning Brief",
+    "title": "NFL EDGE Monday Morning Brief",
+    "dek": "Week 10 ends tonight with one game: the Chargers visit the Ravens, Baltimore is the only card on the board, and the final injury names land about 90 minutes before kickoff.",
+    "research_generated_at_utc": "2026-11-16T13:21:58Z",
     "sections": [
       {
         "icon": "📰",
@@ -17,71 +17,68 @@
         "items": [
           {
             "evidence_ids": [
-              "ev-board-pm"
+              "ev-board-am",
+              "ev-result-am"
             ],
-            "headline": "Lead: Two games left in Week 10 — and both cards are on tonight",
+            "headline": "Lead: One game left in Week 10 — and one card on it",
             "paragraphs": [
-              "Twelve of the week's fourteen games are underway or done. Two are left: Steelers at Bengals tonight at 8:20 p.m. ET, and Chargers at Ravens tomorrow at 8:15 p.m. ET.",
-              "The evening board's live cards are both on tonight's game. Hit Rate has Cincinnati on the moneyline. Balanced has Pittsburgh +3.5. And Value has no play at all tonight — the app found nothing that clears its plus-EV bar. That is the app telling you to wait, not a gap to fill yourself."
+              "Sunday night is settled. Cincinnati beat Pittsburgh 38-18 behind Joe Burrow's 409 yards and four touchdowns, and the Bengals take first place in the AFC North.",
+              "That leaves one game in Week 10: the Chargers at the Ravens tonight, 8:15 p.m. ET kickoff at M&T Bank Stadium. The board has one live card on it — Hit Rate, on Baltimore's moneyline. Balanced and Value have no play tonight. The app found nothing plus-EV."
             ],
             "sources": [
               {
                 "label": "NFL EDGE app",
                 "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              },
+              {
+                "label": "Bengals — Bengals-Steelers Final Score and Game Recap",
+                "url": "https://www.bengals.com/news/bengals-steelers-recap-postgame-notes-quotes-stats-week-10-2026-sunday-night-football"
               }
             ],
-            "takeaway": "Two games left in Week 10, both cards are on tonight's game, and Value has no play — the app found nothing plus-EV this evening."
+            "takeaway": "One game left in Week 10, one card on it — Hit Rate on Baltimore moneyline — and nothing plus-EV tonight."
           },
           {
             "evidence_ids": [
-              "ev-inj-pm"
+              "ev-inj-am"
             ],
-            "headline": "Injuries: a late scratch in Cincinnati, and McConkey is out for Monday",
+            "headline": "Injuries: McConkey is out, Brissett starts, and five Chargers names are still open",
             "paragraphs": [
-              "Tonight's late news: Steelers safety DeShon Elliott hurt his knee in pregame warmups and is a late scratch at Cincinnati. Pittsburgh does get four players back — defensive tackle Derrick Harmon, receiver Ben Skowronek, and cornerbacks Brandin Echols and Doneiko Slaughter — and tight end Pat Freiermuth is active after being listed questionable with an illness.",
-              "For Monday night, the Chargers downgraded receiver Ladd McConkey from questionable to out on Sunday afternoon. His back kept him out of practice all week, and he did not travel to Baltimore. That leaves Justin Herbert without his top target against a Ravens team that is nearly healthy — only safety Jaylinn Hawkins is out. Five more Chargers are questionable, including tight end David Njoku and guard Kayode Awosika, and several of them still need to be activated from injured reserve before they can play. The inactives land about 90 minutes before kickoff on Monday, and that is when the questionable names get decided.",
-              "From the earlier windows: the Packers played without running back Josh Jacobs, guard Kevin Zeitler, center Sean Rhyan and linebacker Zaire Franklin. The Vikings were without receivers Jordan Addison and Jauan Jennings and tight end T.J. Hockenson, so Kirk Cousins started without three of his top targets. And Sam Darnold sat out again for Seattle, with Drew Lock starting at Las Vegas."
+              "Ladd McConkey is out. The Chargers downgraded him from questionable on Sunday — back injury, missed practice all week, not traveling to Baltimore.",
+              "Five more Chargers are questionable: tight end David Njoku (fibula), linebacker Denzel Perryman (pectoral), linemen Trey Pipkins III and Kayode Awosika, and defensive lineman Justin Eboigbe. Justin Herbert is listed as probable with a finger injury.",
+              "For Baltimore, Lamar Jackson is out with a thumb injury and Tyler Huntley is out too, so Jacoby Brissett starts. Safety Jaylinn Hawkins is out with a knee injury, and running back Adam Randall is questionable.",
+              "The final inactive lists come out about 90 minutes before kickoff. That is when the five questionable names get decided."
             ],
             "sources": [
               {
-                "label": "Steelers Depot — Steelers vs Bengals inactives",
-                "url": "https://steelersdepot.com/2026/11/steelers-vs-bengals-inactives-for-week-10-2/"
-              },
-              {
-                "label": "Chargers — Chargers vs Ravens injury report",
+                "label": "Chargers — Chargers vs. Ravens injury report",
                 "url": "https://www.chargers.com/news/chargers-vs-ravens-injury-report-ladd-mcconkey-daiyan-henley-2026"
               },
               {
-                "label": "Baltimore Beatdown — McConkey ruled out for MNF",
-                "url": "https://www.baltimorebeatdown.com/baltimore-ravens-news/87816/chargers-list-wr-ladd-mcconkey-as-questionable-to-play-vs-ravens"
+                "label": "Ravens Wire — McConkey ruled out for MNF",
+                "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/11/16/ravens-chargers-ladd-mcconkey-injury-status-questionable-week-10/92784504007/"
               },
               {
-                "label": "Packers Wire — Packers inactives",
-                "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/11/15/packers-vikings-inactives-week-10-mostly-good-news/92796170007/"
+                "label": "Pick Playbook — Ravens Chargers injury news",
+                "url": "https://pickplaybook.com/2026/11/16/ravens-chargers-injury-news/"
               }
             ],
-            "takeaway": "Elliott is a late scratch for Pittsburgh, McConkey is out for Monday night, and the Chargers have five more questionable names to settle before kickoff."
+            "takeaway": "McConkey is out, Brissett starts for Baltimore, and five Chargers names get decided about 90 minutes before kickoff."
           },
           {
             "evidence_ids": [
-              "ev-weather-pm"
+              "ev-weather-am"
             ],
-            "headline": "Weather: clear and cold for both games — nothing flagged",
+            "headline": "Weather: clear and cold in Baltimore — nothing flagged",
             "paragraphs": [
-              "The final weather check is clean for both remaining games. Tonight in Cincinnati it is clear and 40 degrees at kickoff, no rain, wind barely 3 mph. Tomorrow in Baltimore it is clear, in the mid-40s at kickoff, near-zero rain chance, wind 4 to 5 mph.",
-              "Nothing reaches the 15 mph wind line that usually matters. This is weather to note, not weather to bet on."
+              "Clear skies for kickoff, 37 degrees, a light 3 mph wind, and no rain in the forecast. The weather is not a factor tonight."
             ],
             "sources": [
               {
-                "label": "SharpShotPicks NFL weather",
-                "url": "https://sharpshotpicks.com/nfl-weather/"
-              },
-              {
-                "label": "FantasyTools NFL weather",
-                "url": "https://fantasytools.ai/nfl-weather-report/"
+                "label": "National Weather Service — Baltimore forecast",
+                "url": "https://api.weather.gov/gridpoints/LWX/109,90/forecast"
               }
             ],
-            "takeaway": "Clear and cold for both games — 40 degrees in Cincinnati tonight, mid-40s in Baltimore tomorrow, and no wind flag anywhere."
+            "takeaway": "Clear, 37 degrees, light wind, no rain — nothing flagged for tonight."
           }
         ]
       },
@@ -92,13 +89,13 @@
         "items": [
           {
             "evidence_ids": [
-              "ev-board-pm"
+              "ev-board-am"
             ],
-            "headline": "Two live cards, both on tonight — and what each one is actually for",
+            "headline": "One live card: Hit Rate on Baltimore moneyline — and what it is actually for",
             "paragraphs": [
-              "Hit Rate has Cincinnati moneyline at -192 on DraftKings. The app gives the Bengals about a 60% chance to win. That is the pick most likely to win — and the price says so. At -192, every $1.92 you risk wins $1. Hit Rate is about winning, not about value. The app's own tutorial says it plainly: Hit Rate is not Profit Rate.",
-              "Balanced has Pittsburgh +3.5 at -105 on FanDuel. The app gives the Steelers about a 50.5% chance to cover. This is the middle ground — a strong pick without paying too much. It is a good starting point if you are new to this.",
-              "Value has no play tonight. The app's Value lane found no offer that clears its bar, so the card is empty. An empty Value card is information, not a mistake. Do not go hunting for a plus-EV play the app did not find."
+              "Hit Rate is Baltimore moneyline at -230 on DraftKings. That is the pick the app thinks is most likely to win tonight. It is not the value play. The app's own tutorial says it plainly: Hit Rate is not Profit Rate.",
+              "Say the price out loud before you touch it. At -230, every $2.30 you risk wins $1. The app rates this one LOW reliability, and its play-through is -233 — if the price drifts past that, the verdict changes.",
+              "Balanced has no play tonight, and Value has no play either. The app found nothing plus-EV on this game. A quiet card is a real answer."
             ],
             "sources": [
               {
@@ -106,16 +103,17 @@
                 "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
               }
             ],
-            "takeaway": "Cincinnati moneyline is the likeliest winner, Pittsburgh +3.5 is the middle ground, and Value is empty tonight — the app found no plus-EV play."
+            "takeaway": "Hit Rate is Baltimore moneyline -230 — the likeliest winner, not a value play — and Balanced and Value are empty tonight."
           },
           {
             "evidence_ids": [
-              "ev-board-pm"
+              "ev-board-am"
             ],
-            "headline": "The app sees both remaining games much closer than the market does",
+            "headline": "The app sees tonight's game much closer than the market does",
             "paragraphs": [
-              "Cincinnati is a 3.5-point favorite tonight, but the app has the Bengals by only about a point. Baltimore is a 4.5-point favorite tomorrow, but the app has Chargers at Ravens as essentially a pick'em.",
-              "That does not make Pittsburgh or the Chargers a bet on their own. It means the app thinks both games are closer than the price says. If you like the favorite, do not pay the full number blind — type your book's line into Check and let the app run it back through the model and the evaluator. If your book has a better number, Check will tell you."
+              "The market has Baltimore -4.5. The app's expected margin is about even — basically a coin flip on the spread. That is roughly four and a half points closer than the market.",
+              "Same story on the total. The board has 38.5. The app's projection sits near 44. That is a big gap, and it is exactly the kind of thing to run through Check: type in your book's total and price, and the app runs it back through the model and the evaluator and gives you a bet or no-bet verdict on your price.",
+              "If your book is not DraftKings or FanDuel, the board's numbers are not your numbers. Check is how you get a verdict on yours."
             ],
             "sources": [
               {
@@ -123,45 +121,49 @@
                 "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
               }
             ],
-            "takeaway": "The market has Cincinnati -3.5 and Baltimore -4.5, but the app sees both games about a field goal closer — Check your price before you pay it."
+            "takeaway": "The app sees the game about even on the spread and projects near 44 points against a 38.5 total — Check your price before you pay it."
           },
           {
             "evidence_ids": [
-              "ev-board-pm",
-              "ev-inj-pm"
+              "ev-board-am",
+              "ev-inj-am"
             ],
-            "headline": "The quarterbacks check out — Rodgers and Burrow tonight, Herbert and Brissett tomorrow",
+            "headline": "The quarterbacks check out — Herbert against Brissett",
             "paragraphs": [
-              "The app's expected starters line up with the news: Aaron Rodgers against Joe Burrow tonight, Justin Herbert against Jacoby Brissett tomorrow. Brissett starts for Baltimore with Lamar Jackson on injured reserve.",
-              "But a late change still kills an old verdict. Elliott's warmup injury tonight is the reminder — a number priced before the news is a number priced on the wrong team. If a starter changes, run the new number through Check. The app re-runs it through the model and the evaluator and gives you a bet or no-bet verdict on your price."
+              "The app is pricing the right quarterbacks for tonight: Justin Herbert for the Chargers, Jacoby Brissett for the Ravens. Brissett is in because Lamar Jackson is out with a thumb injury.",
+              "That matters because a stale quarterback is how a good verdict goes bad. If a late change hits before kickoff, the old verdict is dead — Check the new number before you bet it."
             ],
             "sources": [
               {
                 "label": "NFL EDGE app",
                 "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              },
+              {
+                "label": "Pick Playbook — Ravens Chargers injury news",
+                "url": "https://pickplaybook.com/2026/11/16/ravens-chargers-injury-news/"
               }
             ],
-            "takeaway": "The app is pricing the right quarterbacks for both remaining games — but if a late change hits, the old verdict is dead, so Check the new number."
+            "takeaway": "The app is pricing Herbert against Brissett — but if a late change hits, the old verdict is dead, so Check the new number."
           }
         ]
       },
       {
         "icon": "⚖️",
         "id": "fade",
-        "mode": "learning",
         "title": "Learn the Game",
+        "mode": "learning",
         "items": [
           {
             "editorial_only": true,
             "evidence_ids": [],
-            "headline": "Learn the Game: handle — the money behind the tickets",
+            "headline": "Learn the Game: play-through — the price where the answer changes",
             "paragraphs": [
-              "Handle is the total amount of money wagered on a game. Betting splits show two numbers side by side: the share of tickets (how many bets) and the share of handle (how much money). They do not always point the same way.",
-              "Hypothetical example, clearly labeled as hypothetical: say 65% of the tickets are on the favorite, but only 40% of the handle is. That means lots of small bets on the favorite and fewer, bigger bets on the underdog. The crowd is on one side and the money is on the other — and that split is worth noticing, because big bets usually come from bettors who are pickier about price.",
-              "When the tickets and the handle point the same way, the split is just a popularity contest. A split only starts to mean something when the two numbers disagree — lots of tickets on one side, most of the money on the other. Before you act on any split, run the price through Check and see what the app says about it."
+              "Play-through is the price where the app's verdict flips. Every card has one. It is the line in the sand between bet and no-bet on that pick.",
+              "Here is a clearly labeled hypothetical example. Say the app likes a team at -150, with a play-through of -170. At -150, the verdict is bet. If the price drifts to -180, the verdict flips to no-bet — same team, same game, worse price, different answer.",
+              "That is why the price matters as much as the pick. A good team at a bad price is a pass. When you see a play-through on a card, treat it as the most you should pay."
             ],
             "sources": [],
-            "takeaway": "Handle is the money behind the tickets — when most tickets are on one side but most of the money is on the other, the split is worth noticing, and Check tells you whether the price is worth it."
+            "takeaway": "Play-through is the most you should pay for a pick — past that price, the same team in the same game becomes a no-bet."
           }
         ]
       },
@@ -172,30 +174,26 @@
         "items": [
           {
             "evidence_ids": [
-              "ev-lines-pm",
-              "ev-splits-pm"
+              "ev-lines-am",
+              "ev-result-am"
             ],
-            "headline": "Cincinnati drifted to -3.5 while the public kept piling on",
+            "headline": "Monday is steady at Ravens -4.5 — and Sunday night closed the way the line said it would not",
             "paragraphs": [
-              "The Bengals opened as a 4.5-point favorite in some tracked books. Tonight they are -3.5 at DraftKings and FanDuel. The line moved toward Pittsburgh even though the public is heavy on Cincinnati — about 63% of the spread tickets and 69% of the money at DraftKings are on the Bengals.",
-              "The total moved the other way, climbing from about 47.5 to 49.5. The board caught both moves — it shows Bengals -3.5 and a 49.5 total right now.",
-              "Monday is steady so far: Ravens -4.5 and a 38.5 total across DraftKings, FanDuel and Pinnacle this evening. Your book is not DraftKings or FanDuel by default. If your number is different from the one here, tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator for a bet or no-bet verdict on your price."
+              "Nothing moved overnight on tonight's game. Baltimore is still -4.5 at DraftKings and FanDuel, the total is still 38.5, and the moneyline is still Baltimore -230. The board caught all of it.",
+              "Sunday night is the one that moved and settled. Cincinnati closed at -3.5, drifted down from -4.5 during the day, and then covered it easily in the 38-18 win. The public stayed on Cincinnati while the line came toward Pittsburgh — and the favorite won by 20 anyway. A line move is a fact, not a fortune teller.",
+              "If your book's number is different from the board's, tap Check, type in your line and price, and get a verdict on your number."
             ],
             "sources": [
               {
-                "label": "OddsChecker — Steelers vs Bengals odds and movement",
-                "url": "https://www.oddschecker.com/us/picks-parlays/football/nfl/20261115-steelers-vs-bengals-prediction-betting-pick-latest-nfl-week-10-odds-for-sunday-night-football"
-              },
-              {
-                "label": "WiseGuyTeam NFL betting splits",
-                "url": "https://wiseguyteam.com/nfl-betting-splits"
-              },
-              {
                 "label": "NFL EDGE app",
                 "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              },
+              {
+                "label": "Bengals — Bengals-Steelers Final Score and Game Recap",
+                "url": "https://www.bengals.com/news/bengals-steelers-recap-postgame-notes-quotes-stats-week-10-2026-sunday-night-football"
               }
             ],
-            "takeaway": "Bengals -4.5 to -3.5 while the public stays on Cincinnati, the total up to 49.5, and Monday steady at Ravens -4.5 — the board caught it, and Check is there if your book's number is different."
+            "takeaway": "Monday is steady at Ravens -4.5 and 38.5; Sunday night's drift to -3.5 ended in a 20-point Bengals win — a line move is a fact, not a fortune teller."
           }
         ]
       },
@@ -206,17 +204,18 @@
         "items": [
           {
             "evidence_ids": [
-              "ev-inj-pm",
-              "ev-board-pm"
+              "ev-inj-am",
+              "ev-board-am"
             ],
-            "headline": "Tonight's job: the inactives are out — bet a good number now, and wait only for Monday's names",
+            "headline": "Today's job: wait only for the inactive list, then bet a good number now",
             "paragraphs": [
-              "Tonight's game kicks off at 8:20 p.m. ET and its inactives are already out, so there is nothing left to wait on there. If your book has a good number on Steelers at Bengals right now and Check says bet, bet it now. A good number today beats a hoped-for number later — waiting lets the number drift the wrong way too.",
-              "Monday is the one place patience pays. The Chargers still have five questionable names, and whether Njoku, Perryman and Awosika get activated from injured reserve changes what that offense looks like. Those inactives land about 90 minutes before kickoff on Monday. Wait for the names your bet actually needs — and nothing else."
+              "The only thing worth waiting for today is the inactive list, about 90 minutes before kickoff. That decides the five questionable Chargers — Njoku, Perryman, Pipkins, Awosika, and Eboigbe.",
+              "After that, there is nothing left to wait for. If your book has a good number and Check says bet, bet now. A good number today beats a hoped-for number at kickoff, because waiting lets the number drift the wrong way too.",
+              "One more thing: settlement is manual. The tracker only works if you are honest with yourself — log the losers too. Sunday night's Balanced card lost; write it down the same way you write down the wins."
             ],
             "sources": [
               {
-                "label": "Chargers — Chargers vs Ravens injury report",
+                "label": "Chargers — Chargers vs. Ravens injury report",
                 "url": "https://www.chargers.com/news/chargers-vs-ravens-injury-report-ladd-mcconkey-daiyan-henley-2026"
               },
               {
@@ -224,7 +223,7 @@
                 "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
               }
             ],
-            "takeaway": "Bet a good Sunday-night number now if Check says bet; for Monday, wait only for the Chargers' questionable names, decided about 90 minutes before kickoff."
+            "takeaway": "Wait only for the inactives, about 90 minutes before kickoff — then bet a good number now if Check says bet, and log the losers too."
           }
         ]
       }
@@ -232,10 +231,10 @@
   },
   "evidence": [
     {
-      "evidence_id": "ev-board-pm",
+      "evidence_id": "ev-board-am",
       "category": "board",
       "verification": "REPORTED",
-      "fact": "NFL EDGE product/latest fetched Sunday Nov 15, 2026 at 6:08 p.m. Denver (2026-11-16T00:08:35Z): FRESH, Week 10, 14 games. Twelve games are in progress; only two are still pregame — Steelers at Bengals (8:20 p.m. ET) and Chargers at Ravens (Monday, 8:15 p.m. ET). The evening board's headline cards are both on tonight's game: Hit Rate is Cincinnati moneyline -192 at DraftKings (model about 59.7% to win, market about 64.6%), Balanced is Pittsburgh +3.5 at -105 at FanDuel (model about 50.5% to cover, play-through +3.5 at -108). Value is NO_PLAY — no offer satisfies the frozen VALUE lane contract. Expected margins: the app has Cincinnati by about 1.1 points, not 3.5, and Chargers at Ravens as essentially a pick'em (about 0.1), not Ravens by 4.5. Expected starters in the app match the news: Aaron Rodgers vs Joe Burrow tonight, Justin Herbert vs Jacoby Brissett tomorrow (Brissett starts with Lamar Jackson on injured reserve).",
+      "fact": "NFL EDGE product/latest fetched Monday Nov 16, 2026 at 6:15 a.m. Denver (2026-11-16T13:15:00Z): FRESH, Week 10, 14 games. Thirteen games are in progress or done; only one is still pregame — Chargers at Ravens, 8:15 p.m. ET kickoff at M&T Bank Stadium. One live headline card: Hit Rate is Baltimore moneyline -230 at DraftKings (model probability 57.2%, market-implied 66.6%, EV -0.041, reliability LOW, play-through -233, 0.25 units). Balanced and Value are NO_PLAY — no offer satisfies their contracts. Market board for tonight: Ravens -4.5 (-112 DK, -110 FD), Chargers +4.5; total 38.5 (Over -115, Under -105) at both books; moneyline Baltimore -230, Los Angeles +190. Model expected margin is about -0.1 (essentially even), and the model's total projection is about 44.2 against the market total of 38.5. Quarterbacks: Justin Herbert for Los Angeles, Jacoby Brissett for Baltimore.",
       "sources": [
         {
           "label": "NFL EDGE app",
@@ -244,63 +243,59 @@
       ]
     },
     {
-      "evidence_id": "ev-inj-pm",
-      "category": "injury",
+      "evidence_id": "ev-result-am",
+      "category": "result",
       "verification": "REPORTED",
-      "fact": "Week 10 injury delta since the morning brief, Sunday Nov 15, 2026: Sunday night — Steelers safety DeShon Elliott is a late scratch at Cincinnati (knee injury in pregame warmups). Pittsburgh gets back DT Derrick Harmon (foot), WR Ben Skowronek (calf) and CBs Brandin Echols and Doneiko Slaughter; TE Pat Freiermuth (illness) is active. Monday night — Chargers WR Ladd McConkey was downgraded from questionable to OUT (back) on Sunday afternoon and did not travel to Baltimore; TE David Njoku, LB Denzel Perryman, OT Trey Pipkins III, G Kayode Awosika and DT Justin Eboigbe are questionable, several needing activation from injured reserve. The Ravens are nearly healthy: only S Jaylinn Hawkins (knee) is out, RB Adam Randall is questionable. Earlier windows — Packers RB Josh Jacobs (ankle), G Kevin Zeitler (ankle/triceps), C Sean Rhyan (ankle) and LB Zaire Franklin (shin) are out vs Minnesota; Vikings WR Jordan Addison, WR Jauan Jennings and TE T.J. Hockenson are out, so Kirk Cousins started without three of his top targets. Seahawks QB Sam Darnold is out again (quad/rib) and Drew Lock started at Las Vegas.",
+      "fact": "Sunday Night Football, Week 10: Cincinnati beat Pittsburgh 38-18 at Paycor Stadium. Joe Burrow completed 35 of 44 passes for 409 yards and four touchdowns. Cincinnati improves to 7-2 and takes first place in the AFC North; Pittsburgh falls to 6-3. That settles the Sunday evening brief's two live cards: Hit Rate (Cincinnati moneyline) won, Balanced (Pittsburgh +3.5) lost.",
       "sources": [
         {
-          "label": "Steelers Depot — Steelers vs Bengals inactives",
-          "url": "https://steelersdepot.com/2026/11/steelers-vs-bengals-inactives-for-week-10-2/"
+          "label": "Bengals — Bengals-Steelers Final Score and Game Recap",
+          "url": "https://www.bengals.com/news/bengals-steelers-recap-postgame-notes-quotes-stats-week-10-2026-sunday-night-football"
         },
         {
-          "label": "Chargers — Chargers vs Ravens injury report",
+          "label": "USA TODAY — Bengals vs. Steelers final score",
+          "url": "https://www.usatoday.com/story/sports/nfl/2026/11/15/bengals-steelers-score-stats-highlights-sunday-night-football--live/92734713007/"
+        }
+      ]
+    },
+    {
+      "evidence_id": "ev-inj-am",
+      "category": "injury",
+      "verification": "REPORTED",
+      "fact": "Chargers at Ravens injury news, confirmed Sunday Nov 15, 2026: Chargers WR Ladd McConkey (back) was downgraded from questionable to out and will not travel to Baltimore; he missed practice all week. Five more Chargers are questionable: TE David Njoku (fibula), LB Denzel Perryman (pectoral), G/T Trey Pipkins III (personal/knee), G Kayode Awosika (fibula), DL Justin Eboigbe (ankle). Also out for Los Angeles: WR Brenen Thompson (hamstring), G Branson Taylor (ankle), CB Isas Waxter (ankle), S Kendall Williamson (calf). For Baltimore: QB Lamar Jackson is out (thumb) and QB Tyler Huntley is out (toe), so Jacoby Brissett is expected to start — the app is already pricing Brissett. S Jaylinn Hawkins is out (knee). RB Adam Randall is questionable (neck/hamstring). QB Justin Herbert is listed as probable (finger). Final inactive lists come out about 90 minutes before kickoff.",
+      "sources": [
+        {
+          "label": "Chargers — Chargers vs. Ravens injury report",
           "url": "https://www.chargers.com/news/chargers-vs-ravens-injury-report-ladd-mcconkey-daiyan-henley-2026"
         },
         {
-          "label": "Baltimore Beatdown — McConkey ruled out for MNF",
-          "url": "https://www.baltimorebeatdown.com/baltimore-ravens-news/87816/chargers-list-wr-ladd-mcconkey-as-questionable-to-play-vs-ravens"
+          "label": "Ravens Wire — McConkey ruled out for MNF",
+          "url": "https://ravenswire.usatoday.com/story/sports/nfl/ravens/2026/11/16/ravens-chargers-ladd-mcconkey-injury-status-questionable-week-10/92784504007/"
         },
         {
-          "label": "Packers Wire — Packers inactives",
-          "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/11/15/packers-vikings-inactives-week-10-mostly-good-news/92796170007/"
-        },
-        {
-          "label": "Fantasy Injury News — Week 10 inactives",
-          "url": "https://fantasy-injury-news.com/jordan-addison-out-travis-etienne-back-sunday-inactives/"
-        },
-        {
-          "label": "Field Gulls — Seahawks vs Raiders inactives",
-          "url": "https://www.fieldgulls.com/seattle-seahawks-injury-report/179994/seahawks-vs-raiders-nfl-week-10-inactives-emanuel-wilson-healthy-scratch"
+          "label": "Pick Playbook — Ravens Chargers injury news",
+          "url": "https://pickplaybook.com/2026/11/16/ravens-chargers-injury-news/"
         }
       ]
     },
     {
-      "evidence_id": "ev-weather-pm",
+      "evidence_id": "ev-weather-am",
       "category": "weather",
       "verification": "REPORTED",
-      "fact": "Final kickoff-window weather for the two games left in Week 10, checked Sunday evening Nov 15, 2026: Steelers at Bengals (8:20 p.m. ET, Paycor Stadium) — clear, 40 degrees at kickoff, 0% chance of rain, wind 3 mph. Chargers at Ravens (Monday, 8:15 p.m. ET, M&T Bank Stadium) — clear, about 42 to 47 degrees at kickoff, 0 to 4% chance of rain, wind 4 to 5 mph from the northwest, gusts to 9 mph. No wind flag anywhere — nothing reaches the 15 mph line that usually matters.",
+      "fact": "National Weather Service forecast for M&T Bank Stadium, Baltimore, checked Monday Nov 16, 2026 at 6:15 a.m. Denver: tonight clear, 37 degrees, wind 3 mph from the northwest, 0% chance of precipitation. Daytime high 59 and sunny. Nothing flagged for the 8:15 p.m. ET kickoff window.",
       "sources": [
         {
-          "label": "SharpShotPicks NFL weather",
-          "url": "https://sharpshotpicks.com/nfl-weather/"
-        },
-        {
-          "label": "FantasyTools NFL weather",
-          "url": "https://fantasytools.ai/nfl-weather-report/"
+          "label": "National Weather Service — Baltimore forecast",
+          "url": "https://api.weather.gov/gridpoints/LWX/109,90/forecast"
         }
       ]
     },
     {
-      "evidence_id": "ev-lines-pm",
+      "evidence_id": "ev-lines-am",
       "category": "lines",
       "verification": "REPORTED",
-      "fact": "Week 10 line movement, morning to evening Sunday Nov 15, 2026: Steelers at Bengals — Cincinnati opened as a 4.5-point favorite in some tracked books and has moved to -3.5 at DraftKings and FanDuel, with the total climbing from about 47.5 to 49.5. The evening board shows Bengals -3.5 (-110 DK, -115 FD) and total 49.5 (Over -105). Chargers at Ravens — steady at Ravens -4.5 and total 38.5 across DraftKings, FanDuel and Pinnacle this evening; the board's expected margin has it as essentially a pick'em. The morning's three cards (Seattle moneyline, Cleveland +4.5, Carolina moneyline) were for the afternoon window; the evening board's live cards are the two Sunday-night plays.",
+      "fact": "Line movement, Sunday evening to Monday morning Nov 16, 2026: Chargers at Ravens is unchanged — Baltimore -4.5 at DraftKings (-112) and FanDuel (-110), total 38.5 at both books, moneyline Baltimore -230 / Los Angeles +190 at both books. The app's board caught the same numbers. Sunday night closed with Cincinnati -3.5 at DraftKings and FanDuel, and the Bengals covered it with the 38-18 win.",
       "sources": [
-        {
-          "label": "OddsChecker — Steelers vs Bengals odds and movement",
-          "url": "https://www.oddschecker.com/us/picks-parlays/football/nfl/20261115-steelers-vs-bengals-prediction-betting-pick-latest-nfl-week-10-odds-for-sunday-night-football"
-        },
         {
           "label": "NFL EDGE app",
           "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
@@ -308,18 +303,14 @@
       ]
     },
     {
-      "evidence_id": "ev-splits-pm",
+      "evidence_id": "ev-splits-am",
       "category": "splits",
       "verification": "REPORTED",
-      "fact": "Fade check, Sunday evening Nov 15, 2026 (board read ~7:54 p.m. ET): the VSiN betting-splits free page showed a college basketball featured row (Harvard vs American) and no NFL split row, so no VSiN NFL split could be read. Cross-checked on a splits board tracking DraftKings, Circa and BetMGM: for Steelers at Bengals, DraftKings bettors are 63% of tickets and 69% of the money on Cincinnati -3.5, and 87% of the moneyline money is on the Bengals — tickets and handle agree on the favorite, so no tickets-vs-handle disagreement, and no Circa row was shown for that game. For Chargers at Ravens the board's own read is that the public is on the Over (65% of DraftKings tickets, 82% of the money) while Circa money leans the Under (84%), but the Circa rows on that game contradict each other (spread money 98% on the Ravens, moneyline money 100% on the Chargers), so the sharp side is not cleanly verified and no Fade qualifies tonight.",
+      "fact": "Fade check, Monday morning Nov 16, 2026 (~6:17 a.m. Denver): the VSiN betting-splits free page showed its NFL section header but the featured game row was college basketball (Harvard vs. American) — no NFL DraftKings split row was visible, so no NFL tickets/handle split could be read. No second book was available to corroborate a split. No Fade qualifies. No public/sharp disagreement was verified.",
       "sources": [
         {
           "label": "VSiN betting splits",
           "url": "https://data.vsin.com/betting-splits/"
-        },
-        {
-          "label": "WiseGuyTeam NFL betting splits",
-          "url": "https://wiseguyteam.com/nfl-betting-splits"
         }
       ]
     }
