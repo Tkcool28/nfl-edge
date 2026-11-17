@@ -228,7 +228,7 @@
     },
     {
       "best_line": null,
-      "best_price": -230,
+      "best_price": -225,
       "episode_id": "episode-89da143d81f0947fa450a744",
       "first_line": null,
       "first_price": -230,
@@ -238,9 +238,9 @@
       "lane": "HIT_RATE",
       "lane_key": "hit_rate",
       "last_line": null,
-      "last_price": -230,
-      "last_publication_id": "publication-a01086080ffcac55ebd9b292",
-      "last_seen_at_utc": "2026-11-16T12:08:39.100812Z",
+      "last_price": -225,
+      "last_publication_id": "publication-cc37662a14de5ebe052a286b",
+      "last_seen_at_utc": "2026-11-17T00:08:43.761683Z",
       "logical_recommendation_id": "logical-0a7bb6e87ca98ae6091a8f94",
       "market": "MONEYLINE",
       "normalized_selection": "BAL",
@@ -262,9 +262,26 @@
           "state": "BET",
           "value_at": null,
           "wager_identity_id": "wager-d5aabe3193ae125ecb99a47a"
+        },
+        {
+          "american_odds": -225,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-fb2bde8602f92a33d990ac46",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -228
+          },
+          "publication_id": "publication-cc37662a14de5ebe052a286b",
+          "published_at_utc": "2026-11-17T00:08:43.761683Z",
+          "recommended_units": 0.25,
+          "source_product_sha256": "cc37662a14de5ebe052a286b8f5d70642b91a4ae3490229c7b25740818e63d82",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-d5aabe3193ae125ecb99a47a"
         }
       ],
-      "publication_count": 1,
+      "publication_count": 2,
       "returned_after_gap": false,
       "selection": "BAL",
       "terminal_reason": "WEEK_HISTORY_END",
@@ -277,7 +294,8 @@
   "source_publication_ids": [
     "publication-137b4462153f149ec9b632e5",
     "publication-0019b7c16837cdb1d466a67b",
-    "publication-a01086080ffcac55ebd9b292"
+    "publication-a01086080ffcac55ebd9b292",
+    "publication-cc37662a14de5ebe052a286b"
   ],
   "week": 10
 }
