@@ -1,0 +1,1681 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "finalized_at_utc": "2026-11-17T12:20:04Z",
+  "official_definition": "FINAL_VALID_PUBLISHED_LANE_STATE_STRICTLY_BEFORE_GAME_KICKOFF",
+  "official_wagers": [
+    {
+      "final_lane_state": {
+        "american_odds": -108,
+        "away_team": "HOU",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -108,
+          "book": "DRAFTKINGS",
+          "ev": 0.01128164764528411,
+          "game_id": "2026_10_HOU_CLE",
+          "lane": "BALANCED",
+          "line": 4.5,
+          "market": "SPREAD",
+          "market_probability": 0.5022899015342339,
+          "matchup": {
+            "away_team": "HOU",
+            "home_team": "CLE"
+          },
+          "model_probability": 0.5045366915145383,
+          "play_through": {
+            "line": 4.5,
+            "price_american": -111
+          },
+          "recommended_units": 0.75,
+          "reliability": "MEDIUM",
+          "selection": "CLE",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5045366915145383,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": 0.01128164764528411,
+        "exact_offer_identity_id": "offer-6005a89aa68d093242daf97c",
+        "game_id": "2026_10_HOU_CLE",
+        "home_team": "CLE",
+        "kickoff_at_utc": "2026-11-15T18:00:00Z",
+        "lane": "BALANCED",
+        "lane_key": "balanced",
+        "line": 4.5,
+        "logical_recommendation_id": "logical-d8b1aaae78f935bec5b50e65",
+        "market": "SPREAD",
+        "market_probability": 0.5022899015342339,
+        "model_probability": 0.5045366915145383,
+        "normalized_selection": "CLE",
+        "normalized_side": "home",
+        "play_through": {
+          "line": 4.5,
+          "price_american": -111
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "CLE",
+        "selector_version": "balanced-price-bounded-v2",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5045366915145383,
+        "value_at": null,
+        "wager_identity_id": "wager-76cad9f41ea164c9fb82fd5f",
+        "warnings": []
+      },
+      "first_appearance": {
+        "american_odds": -108,
+        "line": 4.5,
+        "publication_id": "publication-137b4462153f149ec9b632e5",
+        "published_at_utc": "2026-11-15T12:08:38.915907Z",
+        "source_product_sha256": "137b4462153f149ec9b632e53572174f8433f7cb38298c89b1b991319209cef0"
+      },
+      "game_id": "2026_10_HOU_CLE",
+      "kickoff_at_utc": "2026-11-15T18:00:00Z",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "official_wager": {
+        "american_odds": -108,
+        "away_team": "HOU",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -108,
+          "book": "DRAFTKINGS",
+          "ev": 0.01128164764528411,
+          "game_id": "2026_10_HOU_CLE",
+          "lane": "BALANCED",
+          "line": 4.5,
+          "market": "SPREAD",
+          "market_probability": 0.5022899015342339,
+          "matchup": {
+            "away_team": "HOU",
+            "home_team": "CLE"
+          },
+          "model_probability": 0.5045366915145383,
+          "play_through": {
+            "line": 4.5,
+            "price_american": -111
+          },
+          "recommended_units": 0.75,
+          "reliability": "MEDIUM",
+          "selection": "CLE",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5045366915145383,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": 0.01128164764528411,
+        "exact_offer_identity_id": "offer-6005a89aa68d093242daf97c",
+        "game_id": "2026_10_HOU_CLE",
+        "home_team": "CLE",
+        "kickoff_at_utc": "2026-11-15T18:00:00Z",
+        "lane": "BALANCED",
+        "lane_key": "balanced",
+        "line": 4.5,
+        "logical_recommendation_id": "logical-d8b1aaae78f935bec5b50e65",
+        "market": "SPREAD",
+        "market_probability": 0.5022899015342339,
+        "model_probability": 0.5045366915145383,
+        "normalized_selection": "CLE",
+        "normalized_side": "home",
+        "play_through": {
+          "line": 4.5,
+          "price_american": -111
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "CLE",
+        "selector_version": "balanced-price-bounded-v2",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5045366915145383,
+        "value_at": null,
+        "wager_identity_id": "wager-76cad9f41ea164c9fb82fd5f",
+        "warnings": []
+      },
+      "resolution_state": "OFFICIAL_BET",
+      "source_product_sha256": "137b4462153f149ec9b632e53572174f8433f7cb38298c89b1b991319209cef0",
+      "source_publication_id": "publication-137b4462153f149ec9b632e5"
+    },
+    {
+      "final_lane_state": {
+        "american_odds": -285,
+        "away_team": "SEA",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -285,
+          "book": "DRAFTKINGS",
+          "ev": -0.012355031687278362,
+          "game_id": "2026_10_SEA_LV",
+          "lane": "HIT_RATE",
+          "line": null,
+          "market": "MONEYLINE",
+          "market_probability": 0.7040537380351426,
+          "matchup": {
+            "away_team": "SEA",
+            "home_team": "LV"
+          },
+          "model_probability": 0.6962636907946992,
+          "play_through": {
+            "line": null,
+            "price_american": -296
+          },
+          "recommended_units": 0.5,
+          "reliability": "MEDIUM",
+          "selection": "SEA",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.6962636907946992,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": -0.012355031687278362,
+        "exact_offer_identity_id": "offer-a4d77b8115322b5ee3ec2895",
+        "game_id": "2026_10_SEA_LV",
+        "home_team": "LV",
+        "kickoff_at_utc": "2026-11-15T21:05:00Z",
+        "lane": "HIT_RATE",
+        "lane_key": "hit_rate",
+        "line": null,
+        "logical_recommendation_id": "logical-fd2743db8e0b6b7ea83ba690",
+        "market": "MONEYLINE",
+        "market_probability": 0.7040537380351426,
+        "model_probability": 0.6962636907946992,
+        "normalized_selection": "SEA",
+        "normalized_side": "away",
+        "play_through": {
+          "line": null,
+          "price_american": -296
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.5,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "SEA",
+        "selector_version": "v1",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.6962636907946992,
+        "value_at": null,
+        "wager_identity_id": "wager-c375c7adccba4bfa63f055dd",
+        "warnings": []
+      },
+      "first_appearance": {
+        "american_odds": -285,
+        "line": null,
+        "publication_id": "publication-137b4462153f149ec9b632e5",
+        "published_at_utc": "2026-11-15T12:08:38.915907Z",
+        "source_product_sha256": "137b4462153f149ec9b632e53572174f8433f7cb38298c89b1b991319209cef0"
+      },
+      "game_id": "2026_10_SEA_LV",
+      "kickoff_at_utc": "2026-11-15T21:05:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "official_wager": {
+        "american_odds": -285,
+        "away_team": "SEA",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -285,
+          "book": "DRAFTKINGS",
+          "ev": -0.012355031687278362,
+          "game_id": "2026_10_SEA_LV",
+          "lane": "HIT_RATE",
+          "line": null,
+          "market": "MONEYLINE",
+          "market_probability": 0.7040537380351426,
+          "matchup": {
+            "away_team": "SEA",
+            "home_team": "LV"
+          },
+          "model_probability": 0.6962636907946992,
+          "play_through": {
+            "line": null,
+            "price_american": -296
+          },
+          "recommended_units": 0.5,
+          "reliability": "MEDIUM",
+          "selection": "SEA",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.6962636907946992,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": -0.012355031687278362,
+        "exact_offer_identity_id": "offer-a4d77b8115322b5ee3ec2895",
+        "game_id": "2026_10_SEA_LV",
+        "home_team": "LV",
+        "kickoff_at_utc": "2026-11-15T21:05:00Z",
+        "lane": "HIT_RATE",
+        "lane_key": "hit_rate",
+        "line": null,
+        "logical_recommendation_id": "logical-fd2743db8e0b6b7ea83ba690",
+        "market": "MONEYLINE",
+        "market_probability": 0.7040537380351426,
+        "model_probability": 0.6962636907946992,
+        "normalized_selection": "SEA",
+        "normalized_side": "away",
+        "play_through": {
+          "line": null,
+          "price_american": -296
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.5,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "SEA",
+        "selector_version": "v1",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.6962636907946992,
+        "value_at": null,
+        "wager_identity_id": "wager-c375c7adccba4bfa63f055dd",
+        "warnings": []
+      },
+      "resolution_state": "OFFICIAL_BET",
+      "source_product_sha256": "137b4462153f149ec9b632e53572174f8433f7cb38298c89b1b991319209cef0",
+      "source_publication_id": "publication-137b4462153f149ec9b632e5"
+    },
+    {
+      "final_lane_state": {
+        "american_odds": -192,
+        "away_team": "PIT",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -192,
+          "book": "DRAFTKINGS",
+          "ev": -0.017655558446228126,
+          "game_id": "2026_10_PIT_CIN",
+          "lane": "HIT_RATE",
+          "line": null,
+          "market": "MONEYLINE",
+          "market_probability": 0.6459016393442624,
+          "matchup": {
+            "away_team": "PIT",
+            "home_team": "CIN"
+          },
+          "model_probability": 0.5965141575727637,
+          "play_through": {
+            "line": null,
+            "price_american": -198
+          },
+          "recommended_units": 0.25,
+          "reliability": "MEDIUM",
+          "selection": "CIN",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5965141575727637,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": -0.017655558446228126,
+        "exact_offer_identity_id": "offer-e71117f60d90392952c1c2ae",
+        "game_id": "2026_10_PIT_CIN",
+        "home_team": "CIN",
+        "kickoff_at_utc": "2026-11-16T01:20:00Z",
+        "lane": "HIT_RATE",
+        "lane_key": "hit_rate",
+        "line": null,
+        "logical_recommendation_id": "logical-8f89aab08275da5b7e104f07",
+        "market": "MONEYLINE",
+        "market_probability": 0.6459016393442624,
+        "model_probability": 0.5965141575727637,
+        "normalized_selection": "CIN",
+        "normalized_side": "home",
+        "play_through": {
+          "line": null,
+          "price_american": -198
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.25,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "CIN",
+        "selector_version": "v1",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5965141575727637,
+        "value_at": null,
+        "wager_identity_id": "wager-9f196eaaa863f29245cce0e7",
+        "warnings": []
+      },
+      "first_appearance": {
+        "american_odds": -192,
+        "line": null,
+        "publication_id": "publication-0019b7c16837cdb1d466a67b",
+        "published_at_utc": "2026-11-16T00:08:35.519596Z",
+        "source_product_sha256": "0019b7c16837cdb1d466a67b5bebfc64b0496c6c2e7d3f742d0493afafe21916"
+      },
+      "game_id": "2026_10_PIT_CIN",
+      "kickoff_at_utc": "2026-11-16T01:20:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "official_wager": {
+        "american_odds": -192,
+        "away_team": "PIT",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -192,
+          "book": "DRAFTKINGS",
+          "ev": -0.017655558446228126,
+          "game_id": "2026_10_PIT_CIN",
+          "lane": "HIT_RATE",
+          "line": null,
+          "market": "MONEYLINE",
+          "market_probability": 0.6459016393442624,
+          "matchup": {
+            "away_team": "PIT",
+            "home_team": "CIN"
+          },
+          "model_probability": 0.5965141575727637,
+          "play_through": {
+            "line": null,
+            "price_american": -198
+          },
+          "recommended_units": 0.25,
+          "reliability": "MEDIUM",
+          "selection": "CIN",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5965141575727637,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": -0.017655558446228126,
+        "exact_offer_identity_id": "offer-e71117f60d90392952c1c2ae",
+        "game_id": "2026_10_PIT_CIN",
+        "home_team": "CIN",
+        "kickoff_at_utc": "2026-11-16T01:20:00Z",
+        "lane": "HIT_RATE",
+        "lane_key": "hit_rate",
+        "line": null,
+        "logical_recommendation_id": "logical-8f89aab08275da5b7e104f07",
+        "market": "MONEYLINE",
+        "market_probability": 0.6459016393442624,
+        "model_probability": 0.5965141575727637,
+        "normalized_selection": "CIN",
+        "normalized_side": "home",
+        "play_through": {
+          "line": null,
+          "price_american": -198
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.25,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "CIN",
+        "selector_version": "v1",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5965141575727637,
+        "value_at": null,
+        "wager_identity_id": "wager-9f196eaaa863f29245cce0e7",
+        "warnings": []
+      },
+      "resolution_state": "OFFICIAL_BET",
+      "source_product_sha256": "0019b7c16837cdb1d466a67b5bebfc64b0496c6c2e7d3f742d0493afafe21916",
+      "source_publication_id": "publication-0019b7c16837cdb1d466a67b"
+    },
+    {
+      "final_lane_state": {
+        "american_odds": -105,
+        "away_team": "PIT",
+        "book": "FANDUEL",
+        "canonical_headline": {
+          "american_odds": -105,
+          "book": "FANDUEL",
+          "ev": -0.06126665542249965,
+          "game_id": "2026_10_PIT_CIN",
+          "lane": "BALANCED",
+          "line": 3.5,
+          "market": "SPREAD",
+          "market_probability": 0.513948077676165,
+          "matchup": {
+            "away_team": "PIT",
+            "home_team": "CIN"
+          },
+          "model_probability": 0.5053886562163841,
+          "play_through": {
+            "line": 3.5,
+            "price_american": -108
+          },
+          "recommended_units": 0.75,
+          "reliability": "MEDIUM",
+          "selection": "PIT",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5053886562163841,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": -0.06126665542249965,
+        "exact_offer_identity_id": "offer-082ae480cf465530063119a3",
+        "game_id": "2026_10_PIT_CIN",
+        "home_team": "CIN",
+        "kickoff_at_utc": "2026-11-16T01:20:00Z",
+        "lane": "BALANCED",
+        "lane_key": "balanced",
+        "line": 3.5,
+        "logical_recommendation_id": "logical-252dce231f43f36cf19b06f5",
+        "market": "SPREAD",
+        "market_probability": 0.513948077676165,
+        "model_probability": 0.5053886562163841,
+        "normalized_selection": "PIT",
+        "normalized_side": "away",
+        "play_through": {
+          "line": 3.5,
+          "price_american": -108
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "PIT",
+        "selector_version": "balanced-price-bounded-v2",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5053886562163841,
+        "value_at": null,
+        "wager_identity_id": "wager-2e23c003e848c1a370ca0921",
+        "warnings": []
+      },
+      "first_appearance": {
+        "american_odds": -105,
+        "line": 3.5,
+        "publication_id": "publication-0019b7c16837cdb1d466a67b",
+        "published_at_utc": "2026-11-16T00:08:35.519596Z",
+        "source_product_sha256": "0019b7c16837cdb1d466a67b5bebfc64b0496c6c2e7d3f742d0493afafe21916"
+      },
+      "game_id": "2026_10_PIT_CIN",
+      "kickoff_at_utc": "2026-11-16T01:20:00Z",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "official_wager": {
+        "american_odds": -105,
+        "away_team": "PIT",
+        "book": "FANDUEL",
+        "canonical_headline": {
+          "american_odds": -105,
+          "book": "FANDUEL",
+          "ev": -0.06126665542249965,
+          "game_id": "2026_10_PIT_CIN",
+          "lane": "BALANCED",
+          "line": 3.5,
+          "market": "SPREAD",
+          "market_probability": 0.513948077676165,
+          "matchup": {
+            "away_team": "PIT",
+            "home_team": "CIN"
+          },
+          "model_probability": 0.5053886562163841,
+          "play_through": {
+            "line": 3.5,
+            "price_american": -108
+          },
+          "recommended_units": 0.75,
+          "reliability": "MEDIUM",
+          "selection": "PIT",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5053886562163841,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": -0.06126665542249965,
+        "exact_offer_identity_id": "offer-082ae480cf465530063119a3",
+        "game_id": "2026_10_PIT_CIN",
+        "home_team": "CIN",
+        "kickoff_at_utc": "2026-11-16T01:20:00Z",
+        "lane": "BALANCED",
+        "lane_key": "balanced",
+        "line": 3.5,
+        "logical_recommendation_id": "logical-252dce231f43f36cf19b06f5",
+        "market": "SPREAD",
+        "market_probability": 0.513948077676165,
+        "model_probability": 0.5053886562163841,
+        "normalized_selection": "PIT",
+        "normalized_side": "away",
+        "play_through": {
+          "line": 3.5,
+          "price_american": -108
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "PIT",
+        "selector_version": "balanced-price-bounded-v2",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5053886562163841,
+        "value_at": null,
+        "wager_identity_id": "wager-2e23c003e848c1a370ca0921",
+        "warnings": []
+      },
+      "resolution_state": "OFFICIAL_BET",
+      "source_product_sha256": "0019b7c16837cdb1d466a67b5bebfc64b0496c6c2e7d3f742d0493afafe21916",
+      "source_publication_id": "publication-0019b7c16837cdb1d466a67b"
+    },
+    {
+      "final_lane_state": {
+        "american_odds": -225,
+        "away_team": "LAC",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -225,
+          "book": "DRAFTKINGS",
+          "ev": -0.03787982158918812,
+          "game_id": "2026_10_LAC_BAL",
+          "lane": "HIT_RATE",
+          "line": null,
+          "market": "MONEYLINE",
+          "market_probability": 0.6643580181140117,
+          "matchup": {
+            "away_team": "LAC",
+            "home_team": "BAL"
+          },
+          "model_probability": 0.5715955187154228,
+          "play_through": {
+            "line": null,
+            "price_american": -228
+          },
+          "recommended_units": 0.25,
+          "reliability": "LOW",
+          "selection": "BAL",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5715955187154228,
+          "value_at": null,
+          "warnings": [
+            "HEAVILY_JUICED"
+          ]
+        },
+        "ev": -0.03787982158918812,
+        "exact_offer_identity_id": "offer-fb2bde8602f92a33d990ac46",
+        "game_id": "2026_10_LAC_BAL",
+        "home_team": "BAL",
+        "kickoff_at_utc": "2026-11-17T01:15:00Z",
+        "lane": "HIT_RATE",
+        "lane_key": "hit_rate",
+        "line": null,
+        "logical_recommendation_id": "logical-0a7bb6e87ca98ae6091a8f94",
+        "market": "MONEYLINE",
+        "market_probability": 0.6643580181140117,
+        "model_probability": 0.5715955187154228,
+        "normalized_selection": "BAL",
+        "normalized_side": "home",
+        "play_through": {
+          "line": null,
+          "price_american": -228
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.25,
+        "reliability": "LOW",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "BAL",
+        "selector_version": "v1",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5715955187154228,
+        "value_at": null,
+        "wager_identity_id": "wager-d5aabe3193ae125ecb99a47a",
+        "warnings": [
+          "HEAVILY_JUICED"
+        ]
+      },
+      "first_appearance": {
+        "american_odds": -230,
+        "line": null,
+        "publication_id": "publication-a01086080ffcac55ebd9b292",
+        "published_at_utc": "2026-11-16T12:08:39.100812Z",
+        "source_product_sha256": "a01086080ffcac55ebd9b2929b44c263a2bd050b457cb2ba1402c776c19b66f2"
+      },
+      "game_id": "2026_10_LAC_BAL",
+      "kickoff_at_utc": "2026-11-17T01:15:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "official_wager": {
+        "american_odds": -225,
+        "away_team": "LAC",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -225,
+          "book": "DRAFTKINGS",
+          "ev": -0.03787982158918812,
+          "game_id": "2026_10_LAC_BAL",
+          "lane": "HIT_RATE",
+          "line": null,
+          "market": "MONEYLINE",
+          "market_probability": 0.6643580181140117,
+          "matchup": {
+            "away_team": "LAC",
+            "home_team": "BAL"
+          },
+          "model_probability": 0.5715955187154228,
+          "play_through": {
+            "line": null,
+            "price_american": -228
+          },
+          "recommended_units": 0.25,
+          "reliability": "LOW",
+          "selection": "BAL",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5715955187154228,
+          "value_at": null,
+          "warnings": [
+            "HEAVILY_JUICED"
+          ]
+        },
+        "ev": -0.03787982158918812,
+        "exact_offer_identity_id": "offer-fb2bde8602f92a33d990ac46",
+        "game_id": "2026_10_LAC_BAL",
+        "home_team": "BAL",
+        "kickoff_at_utc": "2026-11-17T01:15:00Z",
+        "lane": "HIT_RATE",
+        "lane_key": "hit_rate",
+        "line": null,
+        "logical_recommendation_id": "logical-0a7bb6e87ca98ae6091a8f94",
+        "market": "MONEYLINE",
+        "market_probability": 0.6643580181140117,
+        "model_probability": 0.5715955187154228,
+        "normalized_selection": "BAL",
+        "normalized_side": "home",
+        "play_through": {
+          "line": null,
+          "price_american": -228
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.25,
+        "reliability": "LOW",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "BAL",
+        "selector_version": "v1",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5715955187154228,
+        "value_at": null,
+        "wager_identity_id": "wager-d5aabe3193ae125ecb99a47a",
+        "warnings": [
+          "HEAVILY_JUICED"
+        ]
+      },
+      "resolution_state": "OFFICIAL_BET",
+      "source_product_sha256": "cc37662a14de5ebe052a286b8f5d70642b91a4ae3490229c7b25740818e63d82",
+      "source_publication_id": "publication-cc37662a14de5ebe052a286b"
+    }
+  ],
+  "overlap_count": 0,
+  "portfolio_entries": [
+    {
+      "american_odds": -108,
+      "book": "DRAFTKINGS",
+      "game_id": "2026_10_HOU_CLE",
+      "kickoff_at_utc": "2026-11-15T18:00:00Z",
+      "lane_keys": [
+        "balanced"
+      ],
+      "line": 4.5,
+      "market": "SPREAD",
+      "portfolio_entry_id": "portfolio-6005a89aa68d093242daf97c",
+      "primary_lane_key": "balanced",
+      "recommended_units": 0.75,
+      "selection": "CLE",
+      "source_product_sha256": "137b4462153f149ec9b632e53572174f8433f7cb38298c89b1b991319209cef0",
+      "source_publication_id": "publication-137b4462153f149ec9b632e5"
+    },
+    {
+      "american_odds": -285,
+      "book": "DRAFTKINGS",
+      "game_id": "2026_10_SEA_LV",
+      "kickoff_at_utc": "2026-11-15T21:05:00Z",
+      "lane_keys": [
+        "hit_rate"
+      ],
+      "line": null,
+      "market": "MONEYLINE",
+      "portfolio_entry_id": "portfolio-a4d77b8115322b5ee3ec2895",
+      "primary_lane_key": "hit_rate",
+      "recommended_units": 0.5,
+      "selection": "SEA",
+      "source_product_sha256": "137b4462153f149ec9b632e53572174f8433f7cb38298c89b1b991319209cef0",
+      "source_publication_id": "publication-137b4462153f149ec9b632e5"
+    },
+    {
+      "american_odds": -192,
+      "book": "DRAFTKINGS",
+      "game_id": "2026_10_PIT_CIN",
+      "kickoff_at_utc": "2026-11-16T01:20:00Z",
+      "lane_keys": [
+        "hit_rate"
+      ],
+      "line": null,
+      "market": "MONEYLINE",
+      "portfolio_entry_id": "portfolio-e71117f60d90392952c1c2ae",
+      "primary_lane_key": "hit_rate",
+      "recommended_units": 0.25,
+      "selection": "CIN",
+      "source_product_sha256": "0019b7c16837cdb1d466a67b5bebfc64b0496c6c2e7d3f742d0493afafe21916",
+      "source_publication_id": "publication-0019b7c16837cdb1d466a67b"
+    },
+    {
+      "american_odds": -105,
+      "book": "FANDUEL",
+      "game_id": "2026_10_PIT_CIN",
+      "kickoff_at_utc": "2026-11-16T01:20:00Z",
+      "lane_keys": [
+        "balanced"
+      ],
+      "line": 3.5,
+      "market": "SPREAD",
+      "portfolio_entry_id": "portfolio-082ae480cf465530063119a3",
+      "primary_lane_key": "balanced",
+      "recommended_units": 0.75,
+      "selection": "PIT",
+      "source_product_sha256": "0019b7c16837cdb1d466a67b5bebfc64b0496c6c2e7d3f742d0493afafe21916",
+      "source_publication_id": "publication-0019b7c16837cdb1d466a67b"
+    },
+    {
+      "american_odds": -225,
+      "book": "DRAFTKINGS",
+      "game_id": "2026_10_LAC_BAL",
+      "kickoff_at_utc": "2026-11-17T01:15:00Z",
+      "lane_keys": [
+        "hit_rate"
+      ],
+      "line": null,
+      "market": "MONEYLINE",
+      "portfolio_entry_id": "portfolio-fb2bde8602f92a33d990ac46",
+      "primary_lane_key": "hit_rate",
+      "recommended_units": 0.25,
+      "selection": "BAL",
+      "source_product_sha256": "cc37662a14de5ebe052a286b8f5d70642b91a4ae3490229c7b25740818e63d82",
+      "source_publication_id": "publication-cc37662a14de5ebe052a286b"
+    }
+  ],
+  "resolutions": [
+    {
+      "final_lane_state": {
+        "american_odds": -108,
+        "away_team": "HOU",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -108,
+          "book": "DRAFTKINGS",
+          "ev": 0.01128164764528411,
+          "game_id": "2026_10_HOU_CLE",
+          "lane": "BALANCED",
+          "line": 4.5,
+          "market": "SPREAD",
+          "market_probability": 0.5022899015342339,
+          "matchup": {
+            "away_team": "HOU",
+            "home_team": "CLE"
+          },
+          "model_probability": 0.5045366915145383,
+          "play_through": {
+            "line": 4.5,
+            "price_american": -111
+          },
+          "recommended_units": 0.75,
+          "reliability": "MEDIUM",
+          "selection": "CLE",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5045366915145383,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": 0.01128164764528411,
+        "exact_offer_identity_id": "offer-6005a89aa68d093242daf97c",
+        "game_id": "2026_10_HOU_CLE",
+        "home_team": "CLE",
+        "kickoff_at_utc": "2026-11-15T18:00:00Z",
+        "lane": "BALANCED",
+        "lane_key": "balanced",
+        "line": 4.5,
+        "logical_recommendation_id": "logical-d8b1aaae78f935bec5b50e65",
+        "market": "SPREAD",
+        "market_probability": 0.5022899015342339,
+        "model_probability": 0.5045366915145383,
+        "normalized_selection": "CLE",
+        "normalized_side": "home",
+        "play_through": {
+          "line": 4.5,
+          "price_american": -111
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "CLE",
+        "selector_version": "balanced-price-bounded-v2",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5045366915145383,
+        "value_at": null,
+        "wager_identity_id": "wager-76cad9f41ea164c9fb82fd5f",
+        "warnings": []
+      },
+      "first_appearance": {
+        "american_odds": -108,
+        "line": 4.5,
+        "publication_id": "publication-137b4462153f149ec9b632e5",
+        "published_at_utc": "2026-11-15T12:08:38.915907Z",
+        "source_product_sha256": "137b4462153f149ec9b632e53572174f8433f7cb38298c89b1b991319209cef0"
+      },
+      "game_id": "2026_10_HOU_CLE",
+      "kickoff_at_utc": "2026-11-15T18:00:00Z",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "official_wager": {
+        "american_odds": -108,
+        "away_team": "HOU",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -108,
+          "book": "DRAFTKINGS",
+          "ev": 0.01128164764528411,
+          "game_id": "2026_10_HOU_CLE",
+          "lane": "BALANCED",
+          "line": 4.5,
+          "market": "SPREAD",
+          "market_probability": 0.5022899015342339,
+          "matchup": {
+            "away_team": "HOU",
+            "home_team": "CLE"
+          },
+          "model_probability": 0.5045366915145383,
+          "play_through": {
+            "line": 4.5,
+            "price_american": -111
+          },
+          "recommended_units": 0.75,
+          "reliability": "MEDIUM",
+          "selection": "CLE",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5045366915145383,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": 0.01128164764528411,
+        "exact_offer_identity_id": "offer-6005a89aa68d093242daf97c",
+        "game_id": "2026_10_HOU_CLE",
+        "home_team": "CLE",
+        "kickoff_at_utc": "2026-11-15T18:00:00Z",
+        "lane": "BALANCED",
+        "lane_key": "balanced",
+        "line": 4.5,
+        "logical_recommendation_id": "logical-d8b1aaae78f935bec5b50e65",
+        "market": "SPREAD",
+        "market_probability": 0.5022899015342339,
+        "model_probability": 0.5045366915145383,
+        "normalized_selection": "CLE",
+        "normalized_side": "home",
+        "play_through": {
+          "line": 4.5,
+          "price_american": -111
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "CLE",
+        "selector_version": "balanced-price-bounded-v2",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5045366915145383,
+        "value_at": null,
+        "wager_identity_id": "wager-76cad9f41ea164c9fb82fd5f",
+        "warnings": []
+      },
+      "resolution_state": "OFFICIAL_BET",
+      "source_product_sha256": "137b4462153f149ec9b632e53572174f8433f7cb38298c89b1b991319209cef0",
+      "source_publication_id": "publication-137b4462153f149ec9b632e5"
+    },
+    {
+      "final_lane_state": {
+        "american_odds": 114,
+        "away_team": "CAR",
+        "book": "FANDUEL",
+        "canonical_headline": {
+          "american_odds": 114,
+          "book": "FANDUEL",
+          "ev": 0.011402290881491917,
+          "game_id": "2026_10_CAR_NO",
+          "lane": "VALUE",
+          "line": null,
+          "market": "MONEYLINE",
+          "market_probability": 0.46242774566473976,
+          "matchup": {
+            "away_team": "CAR",
+            "home_team": "NO"
+          },
+          "model_probability": 0.5202763693526629,
+          "play_through": null,
+          "recommended_units": 0.0,
+          "reliability": "LOW",
+          "selection": "CAR",
+          "state": "TARGET_ONLY",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5202763693526629,
+          "value_at": {
+            "line": null,
+            "price_american": 119
+          },
+          "warnings": []
+        },
+        "ev": 0.011402290881491917,
+        "exact_offer_identity_id": "offer-b846473d695ed4396a11bc00",
+        "game_id": "2026_10_CAR_NO",
+        "home_team": "NO",
+        "kickoff_at_utc": "2026-11-15T18:00:00Z",
+        "lane": "VALUE",
+        "lane_key": "value",
+        "line": null,
+        "logical_recommendation_id": "logical-7d4eb7fd42bea50577c77989",
+        "market": "MONEYLINE",
+        "market_probability": 0.46242774566473976,
+        "model_probability": 0.5202763693526629,
+        "normalized_selection": "CAR",
+        "normalized_side": "away",
+        "play_through": null,
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.0,
+        "reliability": "LOW",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "CAR",
+        "selector_version": "v1",
+        "state": "TARGET_ONLY",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5202763693526629,
+        "value_at": {
+          "line": null,
+          "price_american": 119
+        },
+        "wager_identity_id": "wager-abdfbf5e0e188c1934c116c2",
+        "warnings": []
+      },
+      "first_appearance": null,
+      "game_id": "2026_10_CAR_NO",
+      "kickoff_at_utc": "2026-11-15T18:00:00Z",
+      "lane": "VALUE",
+      "lane_key": "value",
+      "official_wager": null,
+      "resolution_state": "OFFICIAL_TARGET_ONLY",
+      "source_product_sha256": "137b4462153f149ec9b632e53572174f8433f7cb38298c89b1b991319209cef0",
+      "source_publication_id": "publication-137b4462153f149ec9b632e5"
+    },
+    {
+      "final_lane_state": {
+        "american_odds": -285,
+        "away_team": "SEA",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -285,
+          "book": "DRAFTKINGS",
+          "ev": -0.012355031687278362,
+          "game_id": "2026_10_SEA_LV",
+          "lane": "HIT_RATE",
+          "line": null,
+          "market": "MONEYLINE",
+          "market_probability": 0.7040537380351426,
+          "matchup": {
+            "away_team": "SEA",
+            "home_team": "LV"
+          },
+          "model_probability": 0.6962636907946992,
+          "play_through": {
+            "line": null,
+            "price_american": -296
+          },
+          "recommended_units": 0.5,
+          "reliability": "MEDIUM",
+          "selection": "SEA",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.6962636907946992,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": -0.012355031687278362,
+        "exact_offer_identity_id": "offer-a4d77b8115322b5ee3ec2895",
+        "game_id": "2026_10_SEA_LV",
+        "home_team": "LV",
+        "kickoff_at_utc": "2026-11-15T21:05:00Z",
+        "lane": "HIT_RATE",
+        "lane_key": "hit_rate",
+        "line": null,
+        "logical_recommendation_id": "logical-fd2743db8e0b6b7ea83ba690",
+        "market": "MONEYLINE",
+        "market_probability": 0.7040537380351426,
+        "model_probability": 0.6962636907946992,
+        "normalized_selection": "SEA",
+        "normalized_side": "away",
+        "play_through": {
+          "line": null,
+          "price_american": -296
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.5,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "SEA",
+        "selector_version": "v1",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.6962636907946992,
+        "value_at": null,
+        "wager_identity_id": "wager-c375c7adccba4bfa63f055dd",
+        "warnings": []
+      },
+      "first_appearance": {
+        "american_odds": -285,
+        "line": null,
+        "publication_id": "publication-137b4462153f149ec9b632e5",
+        "published_at_utc": "2026-11-15T12:08:38.915907Z",
+        "source_product_sha256": "137b4462153f149ec9b632e53572174f8433f7cb38298c89b1b991319209cef0"
+      },
+      "game_id": "2026_10_SEA_LV",
+      "kickoff_at_utc": "2026-11-15T21:05:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "official_wager": {
+        "american_odds": -285,
+        "away_team": "SEA",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -285,
+          "book": "DRAFTKINGS",
+          "ev": -0.012355031687278362,
+          "game_id": "2026_10_SEA_LV",
+          "lane": "HIT_RATE",
+          "line": null,
+          "market": "MONEYLINE",
+          "market_probability": 0.7040537380351426,
+          "matchup": {
+            "away_team": "SEA",
+            "home_team": "LV"
+          },
+          "model_probability": 0.6962636907946992,
+          "play_through": {
+            "line": null,
+            "price_american": -296
+          },
+          "recommended_units": 0.5,
+          "reliability": "MEDIUM",
+          "selection": "SEA",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.6962636907946992,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": -0.012355031687278362,
+        "exact_offer_identity_id": "offer-a4d77b8115322b5ee3ec2895",
+        "game_id": "2026_10_SEA_LV",
+        "home_team": "LV",
+        "kickoff_at_utc": "2026-11-15T21:05:00Z",
+        "lane": "HIT_RATE",
+        "lane_key": "hit_rate",
+        "line": null,
+        "logical_recommendation_id": "logical-fd2743db8e0b6b7ea83ba690",
+        "market": "MONEYLINE",
+        "market_probability": 0.7040537380351426,
+        "model_probability": 0.6962636907946992,
+        "normalized_selection": "SEA",
+        "normalized_side": "away",
+        "play_through": {
+          "line": null,
+          "price_american": -296
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.5,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "SEA",
+        "selector_version": "v1",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.6962636907946992,
+        "value_at": null,
+        "wager_identity_id": "wager-c375c7adccba4bfa63f055dd",
+        "warnings": []
+      },
+      "resolution_state": "OFFICIAL_BET",
+      "source_product_sha256": "137b4462153f149ec9b632e53572174f8433f7cb38298c89b1b991319209cef0",
+      "source_publication_id": "publication-137b4462153f149ec9b632e5"
+    },
+    {
+      "final_lane_state": {
+        "american_odds": -192,
+        "away_team": "PIT",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -192,
+          "book": "DRAFTKINGS",
+          "ev": -0.017655558446228126,
+          "game_id": "2026_10_PIT_CIN",
+          "lane": "HIT_RATE",
+          "line": null,
+          "market": "MONEYLINE",
+          "market_probability": 0.6459016393442624,
+          "matchup": {
+            "away_team": "PIT",
+            "home_team": "CIN"
+          },
+          "model_probability": 0.5965141575727637,
+          "play_through": {
+            "line": null,
+            "price_american": -198
+          },
+          "recommended_units": 0.25,
+          "reliability": "MEDIUM",
+          "selection": "CIN",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5965141575727637,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": -0.017655558446228126,
+        "exact_offer_identity_id": "offer-e71117f60d90392952c1c2ae",
+        "game_id": "2026_10_PIT_CIN",
+        "home_team": "CIN",
+        "kickoff_at_utc": "2026-11-16T01:20:00Z",
+        "lane": "HIT_RATE",
+        "lane_key": "hit_rate",
+        "line": null,
+        "logical_recommendation_id": "logical-8f89aab08275da5b7e104f07",
+        "market": "MONEYLINE",
+        "market_probability": 0.6459016393442624,
+        "model_probability": 0.5965141575727637,
+        "normalized_selection": "CIN",
+        "normalized_side": "home",
+        "play_through": {
+          "line": null,
+          "price_american": -198
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.25,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "CIN",
+        "selector_version": "v1",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5965141575727637,
+        "value_at": null,
+        "wager_identity_id": "wager-9f196eaaa863f29245cce0e7",
+        "warnings": []
+      },
+      "first_appearance": {
+        "american_odds": -192,
+        "line": null,
+        "publication_id": "publication-0019b7c16837cdb1d466a67b",
+        "published_at_utc": "2026-11-16T00:08:35.519596Z",
+        "source_product_sha256": "0019b7c16837cdb1d466a67b5bebfc64b0496c6c2e7d3f742d0493afafe21916"
+      },
+      "game_id": "2026_10_PIT_CIN",
+      "kickoff_at_utc": "2026-11-16T01:20:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "official_wager": {
+        "american_odds": -192,
+        "away_team": "PIT",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -192,
+          "book": "DRAFTKINGS",
+          "ev": -0.017655558446228126,
+          "game_id": "2026_10_PIT_CIN",
+          "lane": "HIT_RATE",
+          "line": null,
+          "market": "MONEYLINE",
+          "market_probability": 0.6459016393442624,
+          "matchup": {
+            "away_team": "PIT",
+            "home_team": "CIN"
+          },
+          "model_probability": 0.5965141575727637,
+          "play_through": {
+            "line": null,
+            "price_american": -198
+          },
+          "recommended_units": 0.25,
+          "reliability": "MEDIUM",
+          "selection": "CIN",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5965141575727637,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": -0.017655558446228126,
+        "exact_offer_identity_id": "offer-e71117f60d90392952c1c2ae",
+        "game_id": "2026_10_PIT_CIN",
+        "home_team": "CIN",
+        "kickoff_at_utc": "2026-11-16T01:20:00Z",
+        "lane": "HIT_RATE",
+        "lane_key": "hit_rate",
+        "line": null,
+        "logical_recommendation_id": "logical-8f89aab08275da5b7e104f07",
+        "market": "MONEYLINE",
+        "market_probability": 0.6459016393442624,
+        "model_probability": 0.5965141575727637,
+        "normalized_selection": "CIN",
+        "normalized_side": "home",
+        "play_through": {
+          "line": null,
+          "price_american": -198
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.25,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "CIN",
+        "selector_version": "v1",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5965141575727637,
+        "value_at": null,
+        "wager_identity_id": "wager-9f196eaaa863f29245cce0e7",
+        "warnings": []
+      },
+      "resolution_state": "OFFICIAL_BET",
+      "source_product_sha256": "0019b7c16837cdb1d466a67b5bebfc64b0496c6c2e7d3f742d0493afafe21916",
+      "source_publication_id": "publication-0019b7c16837cdb1d466a67b"
+    },
+    {
+      "final_lane_state": {
+        "american_odds": -105,
+        "away_team": "PIT",
+        "book": "FANDUEL",
+        "canonical_headline": {
+          "american_odds": -105,
+          "book": "FANDUEL",
+          "ev": -0.06126665542249965,
+          "game_id": "2026_10_PIT_CIN",
+          "lane": "BALANCED",
+          "line": 3.5,
+          "market": "SPREAD",
+          "market_probability": 0.513948077676165,
+          "matchup": {
+            "away_team": "PIT",
+            "home_team": "CIN"
+          },
+          "model_probability": 0.5053886562163841,
+          "play_through": {
+            "line": 3.5,
+            "price_american": -108
+          },
+          "recommended_units": 0.75,
+          "reliability": "MEDIUM",
+          "selection": "PIT",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5053886562163841,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": -0.06126665542249965,
+        "exact_offer_identity_id": "offer-082ae480cf465530063119a3",
+        "game_id": "2026_10_PIT_CIN",
+        "home_team": "CIN",
+        "kickoff_at_utc": "2026-11-16T01:20:00Z",
+        "lane": "BALANCED",
+        "lane_key": "balanced",
+        "line": 3.5,
+        "logical_recommendation_id": "logical-252dce231f43f36cf19b06f5",
+        "market": "SPREAD",
+        "market_probability": 0.513948077676165,
+        "model_probability": 0.5053886562163841,
+        "normalized_selection": "PIT",
+        "normalized_side": "away",
+        "play_through": {
+          "line": 3.5,
+          "price_american": -108
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "PIT",
+        "selector_version": "balanced-price-bounded-v2",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5053886562163841,
+        "value_at": null,
+        "wager_identity_id": "wager-2e23c003e848c1a370ca0921",
+        "warnings": []
+      },
+      "first_appearance": {
+        "american_odds": -105,
+        "line": 3.5,
+        "publication_id": "publication-0019b7c16837cdb1d466a67b",
+        "published_at_utc": "2026-11-16T00:08:35.519596Z",
+        "source_product_sha256": "0019b7c16837cdb1d466a67b5bebfc64b0496c6c2e7d3f742d0493afafe21916"
+      },
+      "game_id": "2026_10_PIT_CIN",
+      "kickoff_at_utc": "2026-11-16T01:20:00Z",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "official_wager": {
+        "american_odds": -105,
+        "away_team": "PIT",
+        "book": "FANDUEL",
+        "canonical_headline": {
+          "american_odds": -105,
+          "book": "FANDUEL",
+          "ev": -0.06126665542249965,
+          "game_id": "2026_10_PIT_CIN",
+          "lane": "BALANCED",
+          "line": 3.5,
+          "market": "SPREAD",
+          "market_probability": 0.513948077676165,
+          "matchup": {
+            "away_team": "PIT",
+            "home_team": "CIN"
+          },
+          "model_probability": 0.5053886562163841,
+          "play_through": {
+            "line": 3.5,
+            "price_american": -108
+          },
+          "recommended_units": 0.75,
+          "reliability": "MEDIUM",
+          "selection": "PIT",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5053886562163841,
+          "value_at": null,
+          "warnings": []
+        },
+        "ev": -0.06126665542249965,
+        "exact_offer_identity_id": "offer-082ae480cf465530063119a3",
+        "game_id": "2026_10_PIT_CIN",
+        "home_team": "CIN",
+        "kickoff_at_utc": "2026-11-16T01:20:00Z",
+        "lane": "BALANCED",
+        "lane_key": "balanced",
+        "line": 3.5,
+        "logical_recommendation_id": "logical-252dce231f43f36cf19b06f5",
+        "market": "SPREAD",
+        "market_probability": 0.513948077676165,
+        "model_probability": 0.5053886562163841,
+        "normalized_selection": "PIT",
+        "normalized_side": "away",
+        "play_through": {
+          "line": 3.5,
+          "price_american": -108
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "PIT",
+        "selector_version": "balanced-price-bounded-v2",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5053886562163841,
+        "value_at": null,
+        "wager_identity_id": "wager-2e23c003e848c1a370ca0921",
+        "warnings": []
+      },
+      "resolution_state": "OFFICIAL_BET",
+      "source_product_sha256": "0019b7c16837cdb1d466a67b5bebfc64b0496c6c2e7d3f742d0493afafe21916",
+      "source_publication_id": "publication-0019b7c16837cdb1d466a67b"
+    },
+    {
+      "final_lane_state": {
+        "american_odds": -225,
+        "away_team": "LAC",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -225,
+          "book": "DRAFTKINGS",
+          "ev": -0.03787982158918812,
+          "game_id": "2026_10_LAC_BAL",
+          "lane": "HIT_RATE",
+          "line": null,
+          "market": "MONEYLINE",
+          "market_probability": 0.6643580181140117,
+          "matchup": {
+            "away_team": "LAC",
+            "home_team": "BAL"
+          },
+          "model_probability": 0.5715955187154228,
+          "play_through": {
+            "line": null,
+            "price_american": -228
+          },
+          "recommended_units": 0.25,
+          "reliability": "LOW",
+          "selection": "BAL",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5715955187154228,
+          "value_at": null,
+          "warnings": [
+            "HEAVILY_JUICED"
+          ]
+        },
+        "ev": -0.03787982158918812,
+        "exact_offer_identity_id": "offer-fb2bde8602f92a33d990ac46",
+        "game_id": "2026_10_LAC_BAL",
+        "home_team": "BAL",
+        "kickoff_at_utc": "2026-11-17T01:15:00Z",
+        "lane": "HIT_RATE",
+        "lane_key": "hit_rate",
+        "line": null,
+        "logical_recommendation_id": "logical-0a7bb6e87ca98ae6091a8f94",
+        "market": "MONEYLINE",
+        "market_probability": 0.6643580181140117,
+        "model_probability": 0.5715955187154228,
+        "normalized_selection": "BAL",
+        "normalized_side": "home",
+        "play_through": {
+          "line": null,
+          "price_american": -228
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.25,
+        "reliability": "LOW",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "BAL",
+        "selector_version": "v1",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5715955187154228,
+        "value_at": null,
+        "wager_identity_id": "wager-d5aabe3193ae125ecb99a47a",
+        "warnings": [
+          "HEAVILY_JUICED"
+        ]
+      },
+      "first_appearance": {
+        "american_odds": -230,
+        "line": null,
+        "publication_id": "publication-a01086080ffcac55ebd9b292",
+        "published_at_utc": "2026-11-16T12:08:39.100812Z",
+        "source_product_sha256": "a01086080ffcac55ebd9b2929b44c263a2bd050b457cb2ba1402c776c19b66f2"
+      },
+      "game_id": "2026_10_LAC_BAL",
+      "kickoff_at_utc": "2026-11-17T01:15:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "official_wager": {
+        "american_odds": -225,
+        "away_team": "LAC",
+        "book": "DRAFTKINGS",
+        "canonical_headline": {
+          "american_odds": -225,
+          "book": "DRAFTKINGS",
+          "ev": -0.03787982158918812,
+          "game_id": "2026_10_LAC_BAL",
+          "lane": "HIT_RATE",
+          "line": null,
+          "market": "MONEYLINE",
+          "market_probability": 0.6643580181140117,
+          "matchup": {
+            "away_team": "LAC",
+            "home_team": "BAL"
+          },
+          "model_probability": 0.5715955187154228,
+          "play_through": {
+            "line": null,
+            "price_american": -228
+          },
+          "recommended_units": 0.25,
+          "reliability": "LOW",
+          "selection": "BAL",
+          "state": "BET",
+          "support": "SUPPORTED",
+          "trust_probability": 0.5715955187154228,
+          "value_at": null,
+          "warnings": [
+            "HEAVILY_JUICED"
+          ]
+        },
+        "ev": -0.03787982158918812,
+        "exact_offer_identity_id": "offer-fb2bde8602f92a33d990ac46",
+        "game_id": "2026_10_LAC_BAL",
+        "home_team": "BAL",
+        "kickoff_at_utc": "2026-11-17T01:15:00Z",
+        "lane": "HIT_RATE",
+        "lane_key": "hit_rate",
+        "line": null,
+        "logical_recommendation_id": "logical-0a7bb6e87ca98ae6091a8f94",
+        "market": "MONEYLINE",
+        "market_probability": 0.6643580181140117,
+        "model_probability": 0.5715955187154228,
+        "normalized_selection": "BAL",
+        "normalized_side": "home",
+        "play_through": {
+          "line": null,
+          "price_american": -228
+        },
+        "portfolio_duplicate_of_lane": null,
+        "portfolio_stake_suppressed_reason": null,
+        "recommended_units": 0.25,
+        "reliability": "LOW",
+        "roof_state": {
+          "status": "AVAILABLE",
+          "support": "SUPPORTED"
+        },
+        "selection": "BAL",
+        "selector_version": "v1",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5715955187154228,
+        "value_at": null,
+        "wager_identity_id": "wager-d5aabe3193ae125ecb99a47a",
+        "warnings": [
+          "HEAVILY_JUICED"
+        ]
+      },
+      "resolution_state": "OFFICIAL_BET",
+      "source_product_sha256": "cc37662a14de5ebe052a286b8f5d70642b91a4ae3490229c7b25740818e63d82",
+      "source_publication_id": "publication-cc37662a14de5ebe052a286b"
+    }
+  ],
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_OFFICIAL_V1",
+  "season": 2026,
+  "source_publication_ids": [
+    "publication-137b4462153f149ec9b632e5",
+    "publication-0019b7c16837cdb1d466a67b",
+    "publication-a01086080ffcac55ebd9b292",
+    "publication-cc37662a14de5ebe052a286b",
+    "publication-0f1a9989209912f2e77cb672"
+  ],
+  "week": 10,
+  "week_last_kickoff_at_utc": "2026-11-17T01:15:00Z"
+}

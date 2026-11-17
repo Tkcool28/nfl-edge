@@ -1,0 +1,146 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "lane_results": [
+    {
+      "correction": null,
+      "game_id": "2026_10_HOU_CLE",
+      "grade": "PENDING",
+      "lane_key": "balanced",
+      "official_score": null,
+      "official_source_product_sha256": "137b4462153f149ec9b632e53572174f8433f7cb38298c89b1b991319209cef0",
+      "official_source_publication_id": "publication-137b4462153f149ec9b632e5",
+      "price_used_for_scoring": -108,
+      "realized_units": null,
+      "result_id": "result-6b2cc5177eb6ae1b917b991c",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    },
+    {
+      "correction": null,
+      "game_id": "2026_10_SEA_LV",
+      "grade": "PENDING",
+      "lane_key": "hit_rate",
+      "official_score": null,
+      "official_source_product_sha256": "137b4462153f149ec9b632e53572174f8433f7cb38298c89b1b991319209cef0",
+      "official_source_publication_id": "publication-137b4462153f149ec9b632e5",
+      "price_used_for_scoring": -285,
+      "realized_units": null,
+      "result_id": "result-65599735015c55f980772e24",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.5
+    },
+    {
+      "correction": null,
+      "game_id": "2026_10_PIT_CIN",
+      "grade": "PENDING",
+      "lane_key": "hit_rate",
+      "official_score": null,
+      "official_source_product_sha256": "0019b7c16837cdb1d466a67b5bebfc64b0496c6c2e7d3f742d0493afafe21916",
+      "official_source_publication_id": "publication-0019b7c16837cdb1d466a67b",
+      "price_used_for_scoring": -192,
+      "realized_units": null,
+      "result_id": "result-91713e0f597397c5532ab826",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.25
+    },
+    {
+      "correction": null,
+      "game_id": "2026_10_PIT_CIN",
+      "grade": "PENDING",
+      "lane_key": "balanced",
+      "official_score": null,
+      "official_source_product_sha256": "0019b7c16837cdb1d466a67b5bebfc64b0496c6c2e7d3f742d0493afafe21916",
+      "official_source_publication_id": "publication-0019b7c16837cdb1d466a67b",
+      "price_used_for_scoring": -105,
+      "realized_units": null,
+      "result_id": "result-df831c6834b1344cd21fe495",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.75
+    },
+    {
+      "correction": null,
+      "game_id": "2026_10_LAC_BAL",
+      "grade": "PENDING",
+      "lane_key": "hit_rate",
+      "official_score": null,
+      "official_source_product_sha256": "cc37662a14de5ebe052a286b8f5d70642b91a4ae3490229c7b25740818e63d82",
+      "official_source_publication_id": "publication-cc37662a14de5ebe052a286b",
+      "price_used_for_scoring": -225,
+      "realized_units": null,
+      "result_id": "result-8dfee37450dcf21f79256e9f",
+      "result_source": null,
+      "result_source_provenance": null,
+      "settled_at_utc": null,
+      "units_risked": 0.25
+    }
+  ],
+  "portfolio_results": [
+    {
+      "game_id": "2026_10_HOU_CLE",
+      "grade": "PENDING",
+      "lane_keys": [
+        "balanced"
+      ],
+      "portfolio_entry_id": "portfolio-6005a89aa68d093242daf97c",
+      "price_used_for_scoring": -108,
+      "realized_units": null,
+      "units_risked": 0.75
+    },
+    {
+      "game_id": "2026_10_SEA_LV",
+      "grade": "PENDING",
+      "lane_keys": [
+        "hit_rate"
+      ],
+      "portfolio_entry_id": "portfolio-a4d77b8115322b5ee3ec2895",
+      "price_used_for_scoring": -285,
+      "realized_units": null,
+      "units_risked": 0.5
+    },
+    {
+      "game_id": "2026_10_PIT_CIN",
+      "grade": "PENDING",
+      "lane_keys": [
+        "hit_rate"
+      ],
+      "portfolio_entry_id": "portfolio-e71117f60d90392952c1c2ae",
+      "price_used_for_scoring": -192,
+      "realized_units": null,
+      "units_risked": 0.25
+    },
+    {
+      "game_id": "2026_10_PIT_CIN",
+      "grade": "PENDING",
+      "lane_keys": [
+        "balanced"
+      ],
+      "portfolio_entry_id": "portfolio-082ae480cf465530063119a3",
+      "price_used_for_scoring": -105,
+      "realized_units": null,
+      "units_risked": 0.75
+    },
+    {
+      "game_id": "2026_10_LAC_BAL",
+      "grade": "PENDING",
+      "lane_keys": [
+        "hit_rate"
+      ],
+      "portfolio_entry_id": "portfolio-fb2bde8602f92a33d990ac46",
+      "price_used_for_scoring": -225,
+      "realized_units": null,
+      "units_risked": 0.25
+    }
+  ],
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_RESULT_V1",
+  "season": 2026,
+  "settlement_status": "PENDING",
+  "week": 10
+}
