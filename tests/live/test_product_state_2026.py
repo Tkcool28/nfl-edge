@@ -457,3 +457,209 @@ def test_week_after_gap_still_requires_and_advances_native_evidence(tmp_path, we
     )
     state = advance_live_value_state(entering=ValueSelectorState(), evidence=evidence, run_root=tmp_path)
     assert (len(state.ml_observations), len(state.spread_observations)) == (1, 8)
+
+
+@pytest.fixture
+def week10_gap_history(tmp_path, monkeypatch, week9_gap_history):
+    week9, _ = week9_gap_history
+    excluded = product_state._WEEK10_EXCLUDED_GAME
+    schedule = [
+        {"game_id": gid, "kickoff_at_utc": kickoff}
+        for gid, kickoff in product_state._WEEK10_KICKOFFS.items()
+    ]
+    rows = [
+        _selector_row(market=market, side=side, game_id=gid, week=10)
+        for gid in product_state._WEEK10_KICKOFFS if gid != excluded
+        for market in ("moneyline", "spread", "total")
+        for side in ("home", "away")
+    ]
+    _write_proof(
+        tmp_path, name="week10-reviewed-success", week=10, captured_at="2026-11-15T12:08:38Z",
+        games=schedule, rows=rows,
+    )
+    status = tmp_path / "week10-reviewed-success/run-status.json"
+    status.write_text(json.dumps({"week": 10, "outcome": "SUCCESS"}))
+    proof = status.parent / "product/deterministic-proof.json"
+    failed = tmp_path / "week10-reviewed-failure/run-status.json"
+    failed.parent.mkdir()
+    failed.write_text(json.dumps({"week": 10, "outcome": "FOOTBALL_STATE_NOT_READY"}))
+    pins = {
+        status.parent.name: (product_state._sha256(status), product_state._sha256(proof)),
+        failed.parent.name: (product_state._sha256(failed), None),
+    }
+    monkeypatch.setattr(product_state, "_WEEK10_RUN_HASHES", pins)
+    evidence = _evidence(through_week=10, games=[
+        *week9.games.to_dicts(),
+        *[
+            dict(game_id=gid, season=2026, season_type="REG", week=10,
+                 home_score=21 if gid == excluded else 24, away_score=24 if gid == excluded else 17)
+            for gid in product_state._WEEK10_KICKOFFS
+        ],
+    ])
+    evidence.manifest = week9.manifest
+    evidence.manifest["schedule_checkpoints"]["10"] = product_state._WEEK10_CHECKPOINT
+    return evidence, status, proof, pins
+
+
+def test_week10_gap_advances_existing_selector_with_13_games_and_preserves_all_settlement(
+    tmp_path, week10_gap_history,
+):
+    evidence, _, _, _ = week10_gap_history
+    settled = evidence.games.clone()
+    results = []
+    for _ in range(2):
+        audit = []
+        state = advance_live_value_state(
+            entering=ValueSelectorState(), evidence=evidence, run_root=tmp_path, recovery_audit=audit,
+        )
+        results.append((state, audit))
+    assert results[0] == results[1]
+    assert evidence.games.equals(settled)
+    state, (week9_record, week10_record) = results[0]
+    assert (len(state.ml_observations), len(state.spread_observations)) == (2, 8)
+    assert week9_record["selector_state_after_sha256"] == week10_record["selector_state_before_sha256"]
+    assert week10_record["entering_observations"] == {"moneyline": 1, "spread": 7}
+    assert week10_record["exiting_observations"] == {"moneyline": 2, "spread": 8}
+    assert week10_record["football_settlement_complete"]
+    excluded = product_state._WEEK10_EXCLUDED_GAME
+    assert week10_record["excluded_market_observation_game_id"] == excluded
+    assert week10_record["excluded_game_kickoff_at_utc"] == "2026-11-13T01:15:00Z"
+    assert len(week10_record["settled_game_ids"]) == 14
+    assert set(week10_record["accepted_pregame_game_ids"]) == set(week10_record["settled_game_ids"]) - {excluded}
+    assert week10_record["accepted_evaluator_rows"] == 78
+    assert week10_record["accepted_market_settlement_rows"] == 52
+    assert week10_record["synthetic_market_observations"] == 0
+
+
+@pytest.mark.parametrize(("change", "message"), [
+    ("wrong_checkpoint", "mismatched settled evidence"),
+    ("lost_settlement", "mismatched settled evidence"),
+    ("wrong_final", "mismatched WAS"),
+    ("missing_proof", "proof missing"),
+    ("changed_proof", "proof changed"),
+    ("changed_status", "status missing or changed"),
+    ("conflicting_status", "status conflicts"),
+    ("missing_rows", "six authentic evaluator rows"),
+    ("wrong_missing_game", "identity or timing requires review"),
+    ("wrong_kickoff", "identity or timing requires review"),
+    ("post_kickoff", "settled Week 10"),
+    ("new_valid_was_proof", "unreviewed Week 10 selector status"),
+    ("new_proof_without_status", "unreviewed Week 10 selector proof"),
+    ("week11_missing", "settled Week 11"),
+])
+def test_week10_gap_rejects_evidence_drift(tmp_path, week10_gap_history, change, message):
+    evidence, status, proof, pins = week10_gap_history
+    excluded = product_state._WEEK10_EXCLUDED_GAME
+    if change == "wrong_checkpoint":
+        evidence.manifest["schedule_checkpoints"]["10"] = "f" * 64
+    elif change == "lost_settlement":
+        evidence.games = evidence.games.filter(pl.col("game_id") != excluded)
+    elif change == "wrong_final":
+        evidence.games = evidence.games.with_columns(
+            pl.when(pl.col("game_id") == excluded).then(20).otherwise(pl.col("home_score")).alias("home_score"),
+        )
+    elif change == "missing_proof":
+        proof.unlink()
+    elif change == "changed_proof":
+        proof.write_text("{}")
+    elif change in {"changed_status", "conflicting_status"}:
+        status.write_text(json.dumps({"week": 10, "outcome": "MATERIALIZATION_FAILED"}))
+        if change == "conflicting_status":
+            pins[status.parent.name] = (product_state._sha256(status), product_state._sha256(proof))
+    elif change in {"missing_rows", "wrong_missing_game", "wrong_kickoff", "post_kickoff"}:
+        payload = json.loads(proof.read_text())
+        selector = payload["selector_evidence"]
+        if change in {"missing_rows", "wrong_missing_game"}:
+            missing = "2026_10_BUF_NYJ"
+            selector["rows"] = [row for row in selector["rows"] if row["game_id"] != missing]
+            if change == "wrong_missing_game":
+                selector["rows"].append(_selector_row(market="moneyline", game_id=excluded, week=10))
+        elif change == "wrong_kickoff":
+            next(game for game in selector["games"] if game["game_id"] == excluded)["kickoff_at_utc"] = (
+                "2026-11-13T02:15:00Z"
+            )
+        else:
+            selector["captured_at_utc"] = "2026-11-15T14:30:00Z"
+        proof.write_text(json.dumps(payload))
+        pins[status.parent.name] = (product_state._sha256(status), product_state._sha256(proof))
+    elif change.startswith("new_"):
+        _write_proof(
+            tmp_path, name="week10-discovered", week=10, captured_at="2026-11-13T00:00:00Z",
+            games=[{"game_id": excluded, "kickoff_at_utc": "2026-11-13T01:15:00Z"}],
+            rows=[_selector_row(market="moneyline", game_id=excluded, week=10)],
+        )
+        if change == "new_proof_without_status":
+            (tmp_path / "week10-discovered/run-status.json").unlink()
+        else:
+            (tmp_path / "week10-discovered/run-status.json").write_text('{"week": 10, "outcome": "SUCCESS"}')
+    else:
+        evidence.through_week = 11
+        evidence.games = pl.DataFrame([*evidence.games.to_dicts(), dict(
+            game_id="2026_11_A_B", season=2026, season_type="REG", week=11, home_score=24, away_score=17,
+        )])
+    with pytest.raises(Entering2026ProductStateError, match=message):
+        advance_live_value_state(entering=ValueSelectorState(), evidence=evidence, run_root=tmp_path)
+
+
+def test_week10_gap_audit_matches_production_and_offline_preprovider(
+    tmp_path, monkeypatch, capsys, week10_gap_history,
+):
+    from nfl_edge.operations import production_refresh_v1 as refresh
+    from scripts import verify_live_2026_preprovider_v1 as preprovider
+
+    evidence, _, _, _ = week10_gap_history
+    evidence.feature_inputs = lambda: evidence.games
+    active = SimpleNamespace(
+        path=tmp_path / "week11_schedule_v1.json",
+        payload={"schedule_version": "fixture"},
+        rollover_at_utc="2026-11-17T06:00:00Z",
+        season=2026,
+        week=11,
+    )
+    advanced = SimpleNamespace(
+        state_version="fixture",
+        completed_2026_blocks=list(range(1, 11)),
+        summary=lambda: {},
+    )
+    sleeper = SimpleNamespace(
+        freshness_state="FRESH", source_warning_state=None, snapshot_id="fixture",
+        observed_at_utc="2026-11-18T00:00:00Z", freshness_contract=lambda: {},
+    )
+    football = {"games": [], "snapshot_sha256": "fixture"}
+    for caller in (refresh, preprovider):
+        monkeypatch.setattr(caller, "resolve_active_schedule", lambda *args, **kwargs: active)
+        monkeypatch.setattr(caller, "load_settled_evidence", lambda root: evidence)
+        monkeypatch.setattr(caller, "advance_entering_state_through_settled_weeks", lambda **kwargs: advanced)
+        monkeypatch.setattr(caller, "load_overrides", lambda path: {})
+        monkeypatch.setattr(caller, "SleeperExpectedQBResolver", lambda *args, **kwargs: object())
+        monkeypatch.setattr(caller, "score_week", lambda **kwargs: football)
+        monkeypatch.setattr(caller, "load_entering_2026_product_state", lambda path: {"value_state": ValueSelectorState()})
+    monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: sleeper)
+    monkeypatch.setattr(refresh, "_validate_football", lambda path: football)
+    monkeypatch.setattr(preprovider, "SleeperQBSource", SimpleNamespace(load=lambda *args, **kwargs: sleeper))
+
+    def stop_at_market_seam(*args, **kwargs):
+        raise RuntimeError("fixture ends at the pre-provider gate")
+
+    monkeypatch.setattr(refresh, "load_capture", stop_at_market_seam)
+    monkeypatch.setattr(refresh, "acquire_live_response", lambda **kwargs: pytest.fail("provider called"))
+    as_of = "2026-11-18T00:05:00Z"
+    monkeypatch.setattr("sys.argv", [
+        "verify_live_2026_preprovider_v1.py", "--repository-root", str(tmp_path),
+        "--schedule-root", str(tmp_path), "--evidence-root", str(tmp_path),
+        "--run-root", str(tmp_path), "--prediction-as-of-utc", as_of,
+    ])
+    assert preprovider.main() == 0
+    offline = json.loads(capsys.readouterr().out)
+    outcome, production = refresh.run_refresh(refresh.RefreshConfig(
+        repository_root=tmp_path, run_root=tmp_path, publication_dir=tmp_path / "publication",
+        prediction_as_of_utc=as_of, live=False, market_response=tmp_path / "unused.json", evidence_root=tmp_path,
+    ))
+    assert outcome is refresh.RefreshOutcome.MARKET_ACQUISITION_FAILED
+    assert production["provider_request_count"] == offline["provider_request_count"] == 0
+    assert production["selector_state_observations"] == offline["selector_state_observations"] == {
+        "moneyline": 2, "spread": 8,
+    }
+    assert production["selector_recovery"] == offline["selector_recovery"]
+    status = json.loads((tmp_path / "latest-status.json").read_text())
+    assert status["selector_recovery"] == offline["selector_recovery"]
