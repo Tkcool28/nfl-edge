@@ -9,7 +9,7 @@ The refresh composes frozen existing contracts only:
 ```text
 non-billable nflverse weekly inputs -> active-week resolution ->
 settled-prior-week state advancement -> validated Sleeper audit ->
-football scorer -> one Odds API capture -> market normalization ->
+football scorer -> one Odds API capture -> resolve any kickoff mismatch -> market normalization ->
 deterministic materialization -> atomic publication -> observational prospective capture
 ```
 
@@ -25,6 +25,22 @@ The existing Sleeper timer uses fixed UTC triggers: `00:00` and `12:00 UTC`. Its
 During MDT this is approximately `18:05` and `06:05` America/Denver. During MST it is approximately `17:05` and `05:05`. Both timers deliberately use fixed UTC, so local Mountain wall-clock time shifts one hour at DST transitions; the sequencing relationship remains five minutes after Sleeper in UTC.
 
 `Persistent=false` is intentional: a reboot or downtime does **not** cause a catch-up billable Odds API request. The next ordinary scheduled cycle is the next opportunity.
+
+### Kickoff disagreements
+
+The refresh uses nflverse when the Odds response agrees on a matchup's kickoff.
+If the same home and away teams appear with different kickoff times, it makes
+one ESPN scoreboard request for the active week. When ESPN confirms the Odds
+kickoff, the refresh uses that time to rescore the affected slate and normalize
+the original Odds response. It saves the revised schedule and both source
+captures in the run directory. The nflverse schedule and historical checkpoints
+stay intact.
+
+If ESPN cannot confirm a disputed kickoff or prospective publication records
+conflict with the revised time, the refresh preserves the last-good
+publication. An absent Odds event alone does not trigger ESPN. Saved Odds
+responses can be replayed without network access by supplying the corresponding
+saved ESPN scoreboard with `--espn-response` when a discrepancy needs resolution.
 
 ### Rolling regular-season week contract
 

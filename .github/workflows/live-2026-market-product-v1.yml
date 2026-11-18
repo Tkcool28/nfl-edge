@@ -113,6 +113,7 @@ jobs:
         run: |
           pytest -q \
             tests/live/test_live_markets_2026.py \
+            tests/live/test_schedule_verification_2026.py \
             tests/live/test_live_product_2026.py \
             tests/live/test_live_product_headline_hotfix_v1.py
 
