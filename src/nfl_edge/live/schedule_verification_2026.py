@@ -1,28 +1,29 @@
-"""Independent, fail-closed verification of the active nflverse schedule."""
+"""Resolve kickoff disagreements using the saved Odds pull and ESPN."""
 
 from __future__ import annotations
 
 import hashlib
 import json
 import time
+from copy import deepcopy
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
-from zoneinfo import ZoneInfo
 
 import requests
 
 from .nflverse_2026_identity import CANONICAL_TEAMS
-from .week11_flex_2026 import CORRECTION_ID, FLEX_GAMES
+from .markets_2026 import _normalized_team, _parse_utc
+from .schedule_2026 import rollover_at_utc, validate_schedule
 
 ESPN_SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
 ESPN_ALIASES = {"JAC": "JAX", "WSH": "WAS", "WFT": "WAS", "LA": "LAR"}
 MAX_RESPONSE_BYTES = 2 * 1024 * 1024
 REQUEST_SECONDS = 18
-EASTERN = ZoneInfo("America/New_York")
 
 
 class ScheduleVerificationError(ValueError):
-    """The independent schedule source did not substantiate the active slate."""
+    """Kickoff evidence cannot safely resolve a disagreement."""
 
 
 def espn_week_url(season: int, week: int) -> str:
@@ -74,122 +75,114 @@ def _event_rows(raw: bytes, *, season: int, week: int) -> dict[str, dict[str, An
         gid = f"{season}_{week:02d}_{teams['away']}_{teams['home']}"
         if gid in rows:
             raise ValueError(f"duplicate ESPN game {gid}")
-        rows[gid] = {
-            "event_id": event_id,
-            "away_team": teams["away"],
-            "home_team": teams["home"],
-            "kickoff_utc": _utc_text(kickoff),
-            "game_date_eastern": kickoff.astimezone(EASTERN).date().isoformat(),
-        }
+        rows[gid] = {"event_id": event_id, "kickoff_utc": _utc_text(kickoff)}
     return rows
 
 
-def verify_espn_response(
-    schedule: dict[str, Any], raw: bytes, *, primary: dict[str, Any], retrieved_at_utc: str, url: str,
-) -> dict[str, Any]:
-    """Compare the exact slate with captured bytes, including for offline replay."""
-    season, week = schedule["season"], schedule["week"]
-    expected = {game["game_id"]: game for game in schedule["games"]}
-    correction = schedule.get("kickoff_reconciliation")
-    reconciliations = {row["game_id"]: row for row in correction["games"]} if correction else {}
-    primary_games = {}
-    for gid, game in expected.items():
-        canonical = game["scheduled_start_utc"]
-        original = reconciliations[gid]["observed_nflverse_kickoff_utc"] if gid in reconciliations else canonical
-        primary_games[gid] = {
-            "away_team": game["away_team"],
-            "home_team": game["home_team"],
-            "nflverse_kickoff_utc": original,
-            "canonical_kickoff_utc": canonical,
-            "game_date_eastern": _kickoff(original).astimezone(EASTERN).date().isoformat(),
-        }
-    report = {
-        "schema_version": "NFL_EDGE_INDEPENDENT_SCHEDULE_VERIFICATION_V1",
-        "season": season,
-        "season_type": "REG",
-        "week": week,
-        "primary": primary,
-        "secondary": {"url": url, "retrieved_at_utc": retrieved_at_utc,
-                      "response_sha256": hashlib.sha256(raw).hexdigest()},
-        "expected_game_count": len(expected),
-        "canonical_slate_sha256": hashlib.sha256(json.dumps(
-            {gid: game["scheduled_start_utc"] for gid, game in expected.items()}, sort_keys=True,
-        ).encode()).hexdigest(),
-        "primary_games": primary_games,
-        "correction_id": correction["correction_id"] if correction else None,
-        "discrepancies": [],
-    }
-    try:
-        if len(raw) > MAX_RESPONSE_BYTES:
-            raise ValueError("saved ESPN response exceeds the byte limit")
-        if not retrieved_at_utc.endswith("Z"):
-            raise ValueError("ESPN retrieval timestamp must be UTC")
-        _kickoff(retrieved_at_utc)
-        events = _event_rows(raw, season=season, week=week)
-    except (KeyError, TypeError, ValueError, OverflowError) as exc:
-        return {**report, "status": "ESPN_INVALID_RESPONSE", "detail": str(exc)}
+def _espn_scoreboard(url: str) -> bytes:
+    started = time.monotonic()
+    with requests.get(url, timeout=(6, 6), stream=True, allow_redirects=False) as response:
+        if response.status_code != 200:
+            raise ScheduleVerificationError(f"ESPN HTTP {response.status_code}")
+        raw = bytearray()
+        for chunk in response.iter_content(chunk_size=16384):
+            raw.extend(chunk)
+            if len(raw) > MAX_RESPONSE_BYTES or time.monotonic() - started >= REQUEST_SECONDS:
+                raise ScheduleVerificationError("ESPN response exceeded the acquisition limit")
+    return bytes(raw)
 
-    missing, unexpected = sorted(expected.keys() - events.keys()), sorted(events.keys() - expected.keys())
-    report.update(secondary_games=events, espn_game_count=len(events), missing_games=missing, unexpected_games=unexpected)
-    if missing or unexpected:
-        report["status"] = "ESPN_SLATE_MISMATCH"
-        return report
 
-    for gid, source in primary_games.items():
-        event = events[gid]
-        flex = FLEX_GAMES.get(gid) if report["correction_id"] == CORRECTION_ID else None
-        if (
-            event["kickoff_utc"] == source["nflverse_kickoff_utc"] == source["canonical_kickoff_utc"]
-            and (flex is None or event["event_id"] == flex.espn_id)
-        ):
+def _kickoff_disagreements(schedule: dict[str, Any], events: list[dict[str, Any]]) -> list[dict[str, str]]:
+    if not events:
+        return []
+    games = {(game["away_team"], game["home_team"]): game for game in schedule["games"]}
+    seen: set[str] = set()
+    disagreements = []
+    for event in events:
+        pair = _normalized_team(event.get("away_team")), _normalized_team(event.get("home_team"))
+        game = games.get(pair)
+        if game is None or not event.get("commence_time"):
             continue
-        approved = bool(
-            flex and event["event_id"] == flex.espn_id
-            and event["kickoff_utc"] == source["canonical_kickoff_utc"] == flex.new_utc
-            and source["nflverse_kickoff_utc"] == flex.old_utc
-        )
-        report["discrepancies"].append({
-            "game_id": gid,
-            **source,
-            "espn_event_id": event["event_id"],
-            "espn_kickoff_utc": event["kickoff_utc"],
-            "espn_game_date_eastern": event["game_date_eastern"],
-            "approved_correction": approved,
-        })
-    report["status"] = (
-        "VERIFIED" if all(row["approved_correction"] for row in report["discrepancies"]) else "KICKOFF_DISCREPANCY"
-    )
-    return report
+        gid = game["game_id"]
+        if gid in seen:
+            raise ScheduleVerificationError(f"multiple Odds events for {gid}")
+        seen.add(gid)
+        odds_kickoff = _parse_utc(str(event["commence_time"]))
+        if odds_kickoff != _parse_utc(game["scheduled_start_utc"]):
+            if not event.get("id"):
+                raise ScheduleVerificationError(f"Odds event for {gid} has no ID")
+            disagreements.append({
+                "game_id": gid,
+                "odds_event_id": str(event["id"]),
+                "nflverse_kickoff_utc": game["scheduled_start_utc"],
+                "odds_kickoff_utc": _utc_text(odds_kickoff),
+            })
+    return sorted(disagreements, key=lambda row: row["game_id"])
 
 
-def verify_independent_schedule(schedule: dict[str, Any], *, primary: dict[str, Any]) -> dict[str, Any]:
-    # The REST query requests one exact regular-season week. The parser verifies
-    # that ESPN actually honored that window and returned the full slate.
+def reconcile_market_kickoffs(
+    schedule: dict[str, Any],
+    events: list[dict[str, Any]],
+    *,
+    live: bool,
+    espn_response: Path | None = None,
+    capture_path: Path | None = None,
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    """Check ESPN only for specific nflverse/Odds kickoff disagreements."""
+    discrepancies = _kickoff_disagreements(schedule, events)
+    if not discrepancies:
+        return schedule, None
+
     season, week = schedule["season"], schedule["week"]
     url = espn_week_url(season, week)
-    started = time.monotonic()
-    secondary = {"url": url, "requested_at_utc": _utc_text(datetime.now(timezone.utc))}
+    report = {
+        "schema_version": "NFL_EDGE_KICKOFF_RECONCILIATION_V1",
+        "season": season,
+        "week": week,
+        "original_schedule_version": schedule["schedule_version"],
+        "espn": {"url": url},
+        "discrepancies": discrepancies,
+    }
+    if not live and espn_response is None:
+        return schedule, {**report, "status": "ESPN_CAPTURE_REQUIRED"}
     try:
-        with requests.get(url, timeout=(6, 6), stream=True, allow_redirects=False) as response:
-            if response.status_code != 200:
-                raise ScheduleVerificationError(f"ESPN HTTP {response.status_code}")
-            chunks = bytearray()
-            for chunk in response.iter_content(chunk_size=16384):
-                chunks.extend(chunk)
-                if len(chunks) > MAX_RESPONSE_BYTES:
-                    raise ScheduleVerificationError("ESPN response exceeds the byte limit")
-                if time.monotonic() - started >= REQUEST_SECONDS:
-                    raise ScheduleVerificationError("ESPN response exceeded the acquisition deadline")
-    except (requests.RequestException, ScheduleVerificationError) as exc:
-        timed_out = isinstance(exc, requests.Timeout) or "timeout" in str(exc).lower() or "deadline" in str(exc)
-        return {
-            "schema_version": "NFL_EDGE_INDEPENDENT_SCHEDULE_VERIFICATION_V1",
-            "status": "ESPN_TIMEOUT" if timed_out else "ESPN_UNAVAILABLE",
-            "season": season, "season_type": "REG", "week": week, "primary": primary, "secondary": secondary,
-            "detail": str(exc),
-        }
-    report = verify_espn_response(
-        schedule, bytes(chunks), primary=primary, retrieved_at_utc=_utc_text(datetime.now(timezone.utc)), url=url,
-    )
-    report["secondary"].update(secondary)
-    return report
+        if live:
+            raw = _espn_scoreboard(url)
+            report["espn"]["retrieved_at_utc"] = _utc_text(datetime.now(timezone.utc))
+            if capture_path is not None:
+                capture_path.parent.mkdir(parents=True, exist_ok=True)
+                capture_path.write_bytes(raw)
+        else:
+            assert espn_response is not None
+            with espn_response.open("rb") as handle:
+                raw = handle.read(MAX_RESPONSE_BYTES + 1)
+            report["espn"]["saved_response"] = str(espn_response)
+    except (OSError, requests.RequestException, ScheduleVerificationError) as exc:
+        return schedule, {**report, "status": "ESPN_UNAVAILABLE", "detail": str(exc)}
+    report["espn"]["response_sha256"] = hashlib.sha256(raw).hexdigest()
+    try:
+        if len(raw) > MAX_RESPONSE_BYTES:
+            raise ValueError("ESPN response exceeds the byte limit")
+        secondary = _event_rows(raw, season=season, week=week)
+    except (KeyError, TypeError, ValueError, OverflowError) as exc:
+        return schedule, {**report, "status": "ESPN_INVALID_RESPONSE", "detail": str(exc)}
+
+    for row in discrepancies:
+        espn = secondary.get(row["game_id"], {})
+        row["espn_event_id"] = espn.get("event_id")
+        row["espn_kickoff_utc"] = espn.get("kickoff_utc")
+    if any(row["espn_kickoff_utc"] != row["odds_kickoff_utc"] for row in discrepancies):
+        return schedule, {**report, "status": "KICKOFF_UNCONFIRMED"}
+
+    revised = deepcopy(schedule)
+    kickoffs = {row["game_id"]: row["odds_kickoff_utc"] for row in discrepancies}
+    for game in revised["games"]:
+        if game["game_id"] in kickoffs:
+            game["scheduled_start_utc"] = kickoffs[game["game_id"]]
+    revised["games"].sort(key=lambda game: (_parse_utc(game["scheduled_start_utc"]), game["game_id"]))
+    if rollover_at_utc(revised) != rollover_at_utc(schedule):
+        return schedule, {**report, "status": "ACTIVE_WEEK_BOUNDARY_CHANGED"}
+    slate = [(game["game_id"], game["scheduled_start_utc"]) for game in revised["games"]]
+    digest = hashlib.sha256(json.dumps(slate, separators=(",", ":")).encode()).hexdigest()
+    revised["schedule_version"] = f"ODDS_ESPN_{season}_REG_WEEK{week}_{digest}"
+    return validate_schedule(revised), {**report, "status": "KICKOFF_CONFIRMED"}

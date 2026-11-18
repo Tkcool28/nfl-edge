@@ -13,7 +13,7 @@ import os
 import tempfile
 from contextlib import contextmanager
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -36,13 +36,12 @@ from nfl_edge.live.nflverse_2026_identity import (
     canonical_team,
     normalize_frame,
 )
-from nfl_edge.live.schedule_2026 import rollover_at_utc
 from nfl_edge.live.schedule_materializer_2026 import (
     NFLVERSE_GAMES_URL,
     ScheduleMaterializationError,
     build_week_schedule,
     choose_active_schedule,
-    fetch_nflverse_schedule,
+    fetch_nflverse_rows,
 )
 
 PLAYER_STATS_URL = (
@@ -51,8 +50,6 @@ PLAYER_STATS_URL = (
 TEAM_STATS_URL = "https://github.com/nflverse/nflverse-data/releases/download/stats_team/stats_team_week_2026.parquet"
 PBP_URL = "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.parquet"
 EVIDENCE_SCHEMA = "nfl-edge-settled-2026-evidence-v1"
-SETTLED_FRAMES = ("games", "team_stats", "qb_stats", "pbp")
-MANIFEST_NAME = "settled_evidence_manifest.json"
 
 # nflverse weekly team/player tables already use the frozen feature builders'
 # canonical names. Keep that direct mapping explicit, and reject an upstream
@@ -91,17 +88,13 @@ class SettledEvidenceError(RuntimeError):
 
 
 @contextmanager
-def _evidence_lock(root: Path, *, exclusive: bool, nonblocking: bool = False):
+def _evidence_lock(root: Path, *, exclusive: bool):
     """Coordinate the materializer and production reader as one evidence set."""
     import fcntl
 
     root.mkdir(parents=True, exist_ok=True)
     with (root / ".live-inputs.lock").open("a+", encoding="utf-8") as handle:
-        flags = fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH
-        try:
-            fcntl.flock(handle.fileno(), flags | (fcntl.LOCK_NB if nonblocking else 0))
-        except BlockingIOError as exc:
-            raise SettledEvidenceError("weekly input materialization is still in progress") from exc
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH)
         try:
             yield
         finally:
@@ -416,11 +409,7 @@ def _materialize_settled_evidence(
 ) -> SettledSeasonEvidence:
     observed = _now()
     active_as_of = active_as_of_utc or observed
-    source = None
-    if schedule_rows is None:
-        rows, source = fetch_nflverse_schedule(session=session)
-    else:
-        rows = list(schedule_rows)
+    rows = list(schedule_rows) if schedule_rows is not None else fetch_nflverse_rows(session=session)
     try:
         active = choose_active_schedule(
             rows,
@@ -440,11 +429,9 @@ def _materialize_settled_evidence(
     schedules = {}
     bundles = {active_week: checkpoint(rows, active)}
     decisions = []
-    # Preserve the independent publication behavior for ordinary schedules.
-    # The revised Week 11 schedule is written only when its new cohort is ready.
-    active_path = root / f"week{active_week}_schedule_v1.json"
-    if "kickoff_reconciliation" not in active:
-        _write_json_atomic(active_path, active)
+    # Publish the strictly validated active schedule independently. No evaluator
+    # may proceed without the separate complete settled-evidence/state gates.
+    _write_json_atomic(root / f"week{active_week}_schedule_v1.json", active)
     schedules[active_week] = active
     for week in range(1, active_week):
         try:
@@ -521,7 +508,7 @@ def _materialize_settled_evidence(
             _write_json_atomic(root / "schedule_checkpoints" / f"{checkpoint_sha(bundle)}.json", bundle)
         for name, frame in empties.items():
             _write_parquet_atomic(root / f"settled_{name}.parquet", frame)
-        _publish_cohort_manifest(root, manifest, source, active)
+        _write_json_atomic(root / "settled_evidence_manifest.json", manifest)
         return _load_settled_evidence(root)
 
     # Settled schedule construction and active-slate construction must produce
@@ -594,54 +581,8 @@ def _materialize_settled_evidence(
             _write_json_atomic(path, bundle)
     if surface_recoveries:
         manifest["surface_recovery"] = surface_recoveries
-    _publish_cohort_manifest(root, manifest, source, active)
+    _write_json_atomic(root / "settled_evidence_manifest.json", manifest)
     return _load_settled_evidence(root)
-
-
-def _is_sha256(value: Any) -> bool:
-    return isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
-
-
-def _file_sha(path: Path) -> str:
-    with path.open("rb") as handle:
-        return hashlib.file_digest(handle, "sha256").hexdigest()
-
-
-def _publish_cohort_manifest(
-    root: Path, manifest: dict[str, Any], source: dict[str, str] | None, active: dict[str, Any],
-) -> None:
-    manifest["active_schedule_version"] = active["schedule_version"]
-    manifest["cohort_artifact_sha256"] = {
-        name: _file_sha(root / f"settled_{name}.parquet") for name in SETTLED_FRAMES
-    }
-    if source is not None:
-        manifest["schedule_source_acquisition"] = source
-    if "kickoff_reconciliation" in active:
-        previous_path = root / MANIFEST_NAME
-        previous = json.loads(previous_path.read_text()) if previous_path.is_file() else {}
-        prior_archive = previous.get("week11_pre_flex_manifest_sha256")
-        if not prior_archive and previous.get("active_week") == 11 and not previous.get("kickoff_reconciliation"):
-            prior_ref = previous.get("schedule_checkpoints", {}).get("11")
-            if not _is_sha256(prior_ref):
-                raise SettledEvidenceError("prior Week 11 checkpoint reference is missing or invalid")
-            prior_path = root / "schedule_checkpoints" / f"{prior_ref}.json"
-            old_bundle = reuse(root, json.loads(prior_path.read_text())["source_rows"], 11)
-            if old_bundle is None:
-                raise SettledEvidenceError("prior Week 11 checkpoint is unavailable")
-            prior_archive = checkpoint_sha(previous)
-            archive_path = root / "schedule_manifest_history" / f"{prior_archive}.json"
-            if not archive_path.exists():
-                _write_json_atomic(archive_path, previous)
-        if prior_archive:
-            if not _is_sha256(prior_archive):
-                raise SettledEvidenceError("prior Week 11 manifest archive reference is invalid")
-            archive_path = root / "schedule_manifest_history" / f"{prior_archive}.json"
-            if checkpoint_sha(json.loads(archive_path.read_text())) != prior_archive:
-                raise SettledEvidenceError("prior Week 11 manifest archive digest mismatch")
-            manifest["week11_pre_flex_manifest_sha256"] = prior_archive
-        manifest["kickoff_reconciliation"] = active["kickoff_reconciliation"]
-        _write_json_atomic(root / "week11_schedule_v1.json", active)
-    _write_json_atomic(root / MANIFEST_NAME, manifest)
 
 
 def materialize_settled_evidence(
@@ -663,7 +604,7 @@ def materialize_settled_evidence(
 
 def _load_settled_evidence(root: str | Path) -> SettledSeasonEvidence:
     base = Path(root)
-    manifest_path = base / MANIFEST_NAME
+    manifest_path = base / "settled_evidence_manifest.json"
     if not manifest_path.is_file():
         raise SettledEvidenceError(f"missing settled evidence manifest: {manifest_path}")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -672,13 +613,12 @@ def _load_settled_evidence(root: str | Path) -> SettledSeasonEvidence:
     through_week = int(manifest.get("through_week", -1))
     if not 0 <= through_week <= 17:
         raise SettledEvidenceError("settled evidence through_week is invalid")
-    artifact_digests = manifest.get("cohort_artifact_sha256")
     for raw_week, ref in manifest.get("schedule_checkpoints", {}).items():
         week = int(raw_week)
         try:
             bundle_path = base / "schedule_checkpoints" / f"{ref}.json"
             # reuse() validates digest/path, identity and current replay contract.
-            if not _is_sha256(ref):
+            if not isinstance(ref, str) or len(ref) != 64 or any(c not in "0123456789abcdef" for c in ref):
                 raise HistoricalScheduleError("invalid checkpoint digest")
             bundle = json.loads(bundle_path.read_text())
             checked = reuse(base, bundle["source_rows"], week)
@@ -688,12 +628,10 @@ def _load_settled_evidence(root: str | Path) -> SettledSeasonEvidence:
         except (HistoricalScheduleError, OSError, ValueError, KeyError) as exc:
             raise SettledEvidenceError(f"stage=HISTORICAL_REPLAY_INTEGRITY week={week}: {exc}") from exc
     frames = {}
-    for name in SETTLED_FRAMES:
+    for name in ("games", "team_stats", "qb_stats", "pbp"):
         path = base / f"settled_{name}.parquet"
         if not path.is_file():
             raise SettledEvidenceError(f"missing settled evidence artifact: {path}")
-        if artifact_digests is not None and artifact_digests.get(name) != _file_sha(path):
-            raise SettledEvidenceError(f"settled {name} cohort digest mismatch")
         frames[name] = pl.read_parquet(path)
         expected = int(manifest.get("row_counts", {}).get(name, -1))
         if frames[name].height != expected:
@@ -717,59 +655,7 @@ def _load_settled_evidence(root: str | Path) -> SettledSeasonEvidence:
     )
 
 
-def load_settled_evidence(root: str | Path, *, nonblocking: bool = False) -> SettledSeasonEvidence:
+def load_settled_evidence(root: str | Path) -> SettledSeasonEvidence:
     base = Path(root)
-    with _evidence_lock(base, exclusive=False, nonblocking=nonblocking):
+    with _evidence_lock(base, exclusive=False):
         return _load_settled_evidence(base)
-
-
-def _timestamp(value: str) -> datetime:
-    parsed = datetime.fromisoformat(value)
-    if parsed.utcoffset() != timedelta(0):
-        raise SettledEvidenceError("cohort timestamp must be UTC")
-    return parsed
-
-
-def require_current_schedule_cohort(
-    evidence: SettledSeasonEvidence, schedule: dict[str, Any], schedule_path: Path, *, as_of_utc: str,
-) -> dict[str, Any]:
-    """Bind the paying refresh to the successful materialization in this timer cycle."""
-    now = _timestamp(as_of_utc)
-    cycle = now.replace(hour=12 if now.hour >= 12 else 0, minute=1, second=0, microsecond=0)
-    if now < cycle:
-        cycle -= timedelta(hours=12)
-    week = schedule["week"]
-    manifest = evidence.manifest
-    source = manifest.get("schedule_source_acquisition", {})
-    observed = _timestamp(evidence.observed_at_utc)
-    retrieved = _timestamp(source["retrieved_at_utc"]) if source.get("retrieved_at_utc") else None
-    raw_digest = source.get("response_sha256", "")
-    refs = manifest.get("schedule_checkpoints", {})
-    if (manifest.get("active_week") != week or evidence.through_week != week - 1
-            or set(refs) != {str(w) for w in range(1, week + 1)}
-            or manifest.get("active_schedule_version") != schedule["schedule_version"]
-            or manifest.get("kickoff_reconciliation") != schedule.get("kickoff_reconciliation")
-            or set(manifest.get("cohort_artifact_sha256", {})) != set(SETTLED_FRAMES)
-            or source.get("url") != NFLVERSE_GAMES_URL
-            or not _is_sha256(raw_digest)):
-        raise SettledEvidenceError("active schedule is missing a complete, consistent materialized input cohort")
-    if week == 11 and "kickoff_reconciliation" not in schedule:
-        raise SettledEvidenceError("Week 11 requires a rematerialized flex schedule cohort")
-    if retrieved is None or not cycle <= observed <= retrieved <= now:
-        raise SettledEvidenceError(f"input cohort is stale or future-dated: expected current cycle at {cycle.isoformat()}")
-    rollover = rollover_at_utc(schedule)
-    if schedule["verified_at_utc"] != evidence.observed_at_utc or not rollover <= now < rollover + timedelta(days=7):
-        raise SettledEvidenceError("active schedule observation or rollover disagrees with the cohort")
-    with _evidence_lock(evidence.root, exclusive=False, nonblocking=True):
-        if json.loads((evidence.root / MANIFEST_NAME).read_text()) != manifest:
-            raise SettledEvidenceError("input cohort changed during refresh")
-        bundle_path = evidence.root / "schedule_checkpoints" / f"{refs[str(week)]}.json"
-        bundle = json.loads(bundle_path.read_text())
-        if (checkpoint_sha(bundle) != refs[str(week)] or bundle["schedule"] != schedule
-                or json.loads(schedule_path.read_text()) != schedule):
-            raise SettledEvidenceError("active schedule differs from the cohort checkpoint")
-        return {
-            **source,
-            "checkpoint_sha256": refs[str(week)],
-            "cohort_observed_at_utc": evidence.observed_at_utc,
-        }

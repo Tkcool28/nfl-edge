@@ -13,7 +13,6 @@ import json
 from pathlib import Path
 
 from .schedule_materializer_2026 import NFLVERSE_GAMES_URL, _roof, build_week_schedule
-from .week11_flex_2026 import FLEX_GAMES
 
 SCHEMA = 'NFL_EDGE_HISTORICAL_SCHEDULE_CHECKPOINT_V1'
 REVIEWED_CHECKPOINTS = {6: 'be5817e96de05f363b23d58c0c2b6888ad911c5f9e4b71643a498d2face1ea5c'}
@@ -93,19 +92,11 @@ def reuse(root: Path, rows, week: int, *, allow_reviewed: bool = False):
                     }.items())
                     and old[field] == '16:05' and new[field] == '16:25'):
                 continue
-            flex = FLEX_GAMES.get(old['game_id']) if week == 11 else None
-            if (field == 'gametime' and flex is not None
-                    and flex.check_source_identity(old) and flex.check_source_identity(new)
-                    and old[field] == flex.old_local and new[field] == flex.new_local):
-                continue  # Source catch-up does not rewrite the archived checkpoint.
             if old[field] != new[field]:
                 raise HistoricalScheduleError(
                     f"{new['game_id']}: checkpoint identity/context conflict field={field} recovery=REJECTED"
                 )
-    replay = build_week_schedule(
-        archived, season=2026, week=week, observed_at_utc=payload['verified_at_utc'],
-        reconcile_flex="kickoff_reconciliation" in payload,
-    )
+    replay = build_week_schedule(archived, season=2026, week=week, observed_at_utc=payload['verified_at_utc'])
     if replay != payload:
         raise HistoricalScheduleError(f'Week {week}: checkpoint incompatible with current replay contract')
     return bundle

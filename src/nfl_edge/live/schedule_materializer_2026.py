@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 import io
 import json
 import os
@@ -19,7 +18,6 @@ from .nflverse_2026_identity import NFLVerse2026IdentityError, canonical_team
 from .schedule_2026 import DENVER, ROLLOVER_LOCAL_TIME, LiveScheduleError, validate_schedule
 from .surface_evidence_2026 import SurfaceEvidenceError, recover_missing_surface
 from .venue_structure_2026 import VenueStructure2026Error, structure_for_blank_roof
-from .week11_flex_2026 import CORRECTION_ID, Week11FlexError, reconcile_week11_flex
 
 NFLVERSE_GAMES_URL = "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv"
 SOURCE_NAME = "nflverse/nfldata games.csv"
@@ -111,7 +109,6 @@ def build_week_schedule(
     season: int,
     week: int,
     observed_at_utc: str,
-    reconcile_flex: bool = False,
 ) -> dict[str, Any]:
     _utc(observed_at_utc)
     selected = [
@@ -157,14 +154,6 @@ def build_week_schedule(
                 "context_source_at_utc": observed_at_utc,
             }
         )
-    flex_evidence = None
-    if reconcile_flex:
-        if (season, week) != (2026, 11):
-            raise ScheduleMaterializationError(f"{CORRECTION_ID}: invalid season or week")
-        try:
-            flex_evidence = reconcile_week11_flex(selected, games)
-        except Week11FlexError as exc:
-            raise ScheduleMaterializationError(str(exc)) from exc
     games.sort(key=lambda game: (game["scheduled_start_utc"], game["game_id"]))
 
     payload = {
@@ -183,13 +172,6 @@ def build_week_schedule(
         "market_fields_consumed": [],
         "games": games,
     }
-    if flex_evidence is not None:
-        payload["kickoff_reconciliation"] = flex_evidence
-        # The correction version describes canonical content. Retrieval time
-        # remains separately recorded as source and football context provenance.
-        content = [{k: v for k, v in game.items() if k != "context_source_at_utc"} for game in games]
-        digest = hashlib.sha256(json.dumps(content, sort_keys=True).encode()).hexdigest()
-        payload["schedule_version"] = f"{CORRECTION_ID}_{digest}"
     if surface_recoveries:
         payload["surface_recovery"] = surface_recoveries
     try:
@@ -246,36 +228,22 @@ def choose_active_schedule(
         )
     # Validate every required field of the *active* slate, and fail closed if
     # it is incomplete. Never substitute surface, roof or other football data.
-    week = max(eligible)
     return build_week_schedule(
-        by_week[week],
+        by_week[max(eligible)],
         season=season,
-        week=week,
+        week=max(eligible),
         observed_at_utc=observed_at_utc,
-        reconcile_flex=(season, week) == (2026, 11),
     )
 
 def fetch_nflverse_rows(*, session: requests.Session | None = None) -> list[dict[str, str]]:
-    return fetch_nflverse_schedule(session=session)[0]
-
-
-def fetch_nflverse_schedule(
-    *, session: requests.Session | None = None,
-) -> tuple[list[dict[str, str]], dict[str, str]]:
-    if session is None:
-        with requests.Session() as client:
-            return fetch_nflverse_schedule(session=client)
-    response = session.get(NFLVERSE_GAMES_URL, timeout=30)
+    client = session or requests.Session()
+    response = client.get(NFLVERSE_GAMES_URL, timeout=30)
     response.raise_for_status()
     reader = csv.DictReader(io.StringIO(response.text))
     rows = [dict(row) for row in reader]
     if not rows:
         raise ScheduleMaterializationError("nflverse games.csv returned no rows")
-    return rows, {
-        "url": NFLVERSE_GAMES_URL,
-        "retrieved_at_utc": _observed_now(),
-        "response_sha256": hashlib.sha256(response.content).hexdigest(),
-    }
+    return rows
 
 
 def _atomic_write(path: Path, payload: Mapping[str, Any]) -> None:

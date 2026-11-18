@@ -18,20 +18,12 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from nfl_edge.live.evidence_2026 import (  # noqa: E402
-    load_settled_evidence,
-    require_current_schedule_cohort,
-)
+from nfl_edge.live.evidence_2026 import load_settled_evidence  # noqa: E402
 from nfl_edge.live.product_state_2026 import (  # noqa: E402
     advance_live_value_state,
     load_entering_2026_product_state,
 )
 from nfl_edge.live.schedule_2026 import resolve_active_schedule  # noqa: E402
-from nfl_edge.live.schedule_verification_2026 import (  # noqa: E402
-    MAX_RESPONSE_BYTES,
-    espn_week_url,
-    verify_espn_response,
-)
 from nfl_edge.live.scorer_2026 import score_week  # noqa: E402
 from nfl_edge.live.sleeper_qb import (  # noqa: E402
     DEFAULT_OVERRIDES,
@@ -42,7 +34,6 @@ from nfl_edge.live.sleeper_qb import (  # noqa: E402
 from nfl_edge.live.state_advancement_2026 import (  # noqa: E402
     advance_entering_state_through_settled_weeks,
 )
-from nfl_edge.prospective.runtime_v1 import require_prospective_kickoff_compatibility  # noqa: E402
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -52,9 +43,6 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--evidence-root", type=Path, required=True)
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--prediction-as-of-utc", required=True)
-    parser.add_argument("--espn-response", type=Path, help="Saved ESPN exact-week scoreboard response")
-    parser.add_argument("--espn-retrieved-at-utc", help="Original retrieval timestamp for the saved ESPN response")
-    parser.add_argument("--prospective-dir", type=Path, help="Read-only prospective runtime root to check")
     return parser
 
 
@@ -63,7 +51,6 @@ def main() -> int:
     root = args.repository_root.resolve()
 
     stage = "PREPROVIDER_INITIALIZATION"
-    schedule_verification = None
     try:
         stage = "ACTIVE_WEEK_SCHEDULE"
         active = resolve_active_schedule(
@@ -73,25 +60,6 @@ def main() -> int:
         )
         stage = "HISTORICAL_RESULTS_AND_REPLAY"
         evidence = load_settled_evidence(args.evidence_root)
-        if active.payload.get("kickoff_reconciliation") or args.espn_response or args.espn_retrieved_at_utc:
-            stage = "INDEPENDENT_SCHEDULE_VERIFICATION"
-            if not args.espn_response or not args.espn_retrieved_at_utc:
-                raise ValueError("offline schedule verification requires the captured ESPN response and retrieval time")
-            primary = require_current_schedule_cohort(
-                evidence, active.payload, active.path, as_of_utc=args.prediction_as_of_utc,
-            )
-            with args.espn_response.open("rb") as capture:
-                schedule_verification = verify_espn_response(
-                    active.payload, capture.read(MAX_RESPONSE_BYTES + 1), primary=primary,
-                    retrieved_at_utc=args.espn_retrieved_at_utc, url=espn_week_url(active.season, active.week),
-                )
-            if schedule_verification["status"] != "VERIFIED":
-                raise ValueError("saved ESPN response did not verify the active schedule")
-        stage = "PROSPECTIVE_KICKOFF_COMPATIBILITY"
-        if active.payload.get("kickoff_reconciliation") and args.prospective_dir is None:
-            raise ValueError("Week 11 flex requires the prospective publication root")
-        if args.prospective_dir is not None:
-            require_prospective_kickoff_compatibility(active.payload, runtime_root=args.prospective_dir)
         stage = "FOOTBALL_STATE_ADVANCEMENT"
         state = advance_entering_state_through_settled_weeks(
             repository_root=root,
@@ -140,13 +108,11 @@ def main() -> int:
             "verdict": "NFL_EDGE_PREPROVIDER_BLOCKED", "blocked_stage": stage,
             "error_type": type(exc).__name__, "error": str(exc),
             "provider_request_count": 0, "odds_api_called": False, "market_data_read": False,
-            **({"schedule_verification": schedule_verification} if schedule_verification is not None else {}),
         }, sort_keys=True))
         return 1
 
     proof = {
         "verdict": "NFL_EDGE_PREPROVIDER_READY",
-        **({"schedule_verification": schedule_verification} if schedule_verification is not None else {}),
         "season": active.season,
         "week": active.week,
         "schedule_version": str(active.payload["schedule_version"]),

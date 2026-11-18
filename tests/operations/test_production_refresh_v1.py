@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import dataclasses
 import hashlib
 import json
 from pathlib import Path
@@ -8,8 +7,10 @@ from types import SimpleNamespace
 
 import pytest
 
+from nfl_edge.live import schedule_verification_2026 as verification
 from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash
 from nfl_edge.operations import production_refresh_v1 as refresh
+from tests.live.test_schedule_verification_2026 import kickoff_sources
 
 
 class _FreshSleeper:
@@ -34,15 +35,10 @@ def _config(tmp_path: Path, *, live: bool = True) -> refresh.RefreshConfig:
         prediction_as_of_utc="2026-09-09T00:05:00Z",
         live=live,
         market_response=response,
-        evidence_root=tmp_path / "evidence",
     )
 
 
 def _wire_active_schedule(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, week: int = 1) -> None:
-    monkeypatch.setattr(refresh, "load_settled_evidence", lambda *args, **kwargs: object())
-    monkeypatch.setattr(refresh, "require_current_schedule_cohort", lambda *args, **kwargs: {})
-    monkeypatch.setattr(refresh, "verify_independent_schedule", lambda *args, **kwargs: {"status": "VERIFIED"})
-    monkeypatch.setattr(refresh, "require_prospective_kickoff_compatibility", lambda *args, **kwargs: None)
     path = tmp_path / "data" / "live" / "2026" / f"week{week}_schedule_v1.json"
     monkeypatch.setattr(
         refresh,
@@ -126,6 +122,7 @@ def test_success_orders_stages_and_writes_secret_safe_artifacts(
 
     assert outcome is refresh.RefreshOutcome.SUCCESS
     assert calls == ["sleeper", "score", "provider", "normalize", "materialize", "materialize", "publish"]
+    assert summary["schedule_reconciliation_status"] is None
     assert summary["provider_request_count"] == 1
     status = json.loads((tmp_path / "runs" / "latest-status.json").read_text())
     assert status["outcome"] == "SUCCESS"
@@ -160,7 +157,6 @@ def test_prospective_capture_runs_only_after_successful_publication(
         market_response=config.market_response,
         market_metadata=config.market_metadata,
         prospective_dir=tmp_path / "prospective-runtime",
-        evidence_root=config.evidence_root,
     )
 
     outcome, summary = refresh.run_refresh(config)
@@ -203,7 +199,6 @@ def test_prospective_capture_failure_is_visible_but_never_blocks_publication(
         market_response=config.market_response,
         market_metadata=config.market_metadata,
         prospective_dir=tmp_path / "prospective-runtime",
-        evidence_root=config.evidence_root,
     )
 
     outcome, summary = refresh.run_refresh(config)
@@ -245,7 +240,6 @@ def test_publication_failure_never_attempts_prospective_capture(
         market_response=config.market_response,
         market_metadata=config.market_metadata,
         prospective_dir=tmp_path / "prospective-runtime",
-        evidence_root=config.evidence_root,
     )
 
     outcome, summary = refresh.run_refresh(config)
@@ -293,10 +287,9 @@ def test_week2_requires_settled_evidence_before_sleeper_or_provider(
     monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: calls.append("sleeper"))
     monkeypatch.setattr(refresh, "acquire_live_response", lambda **kwargs: calls.append("provider"))
 
-    config = _config(tmp_path)
-    outcome, summary = refresh.run_refresh(dataclasses.replace(config, evidence_root=None))
+    outcome, summary = refresh.run_refresh(_config(tmp_path))
 
-    assert outcome is refresh.RefreshOutcome.SCHEDULE_NOT_READY
+    assert outcome is refresh.RefreshOutcome.FOOTBALL_STATE_NOT_READY
     assert calls == []
     assert summary["provider_request_count"] == 0
     assert summary["week"] == 2
@@ -627,37 +620,40 @@ def test_systemd_contract_is_billable_safe() -> None:
     assert "12:05:00 UTC" in timer
 
 
-@pytest.mark.parametrize("failure", ["stale", "discrepancy", "unavailable", "changed_during_scoring"])
-def test_schedule_preflight_failure_prevents_paid_acquisition(monkeypatch, tmp_path, failure):
+@pytest.mark.parametrize("confirmed", [True, False])
+def test_odds_kickoff_disagreement_checks_espn_after_single_pull(monkeypatch, tmp_path, confirmed):
     calls = []
     _wire_success(monkeypatch, tmp_path, calls)
-    requests = []
+    # Week 1 fixture bypasses historical state advancement in this orchestration test.
+    schedule, events, scoreboard = kickoff_sources(week_number=1)
+    active = refresh.resolve_active_schedule()
+    active.payload = schedule
+    monkeypatch.setattr(refresh, "resolve_active_schedule", lambda *a, **kw: active)
+    monkeypatch.setattr(refresh, "load_capture", lambda *a, **kw: (
+        events, {"acquired_at_utc": "2026-09-09T00:05:00Z", "response_sha256": "b" * 64},
+    ))
+    if not confirmed:
+        scoreboard["events"].pop()
 
-    def cohort(*args, **kwargs):
-        if failure == "stale" or (failure == "changed_during_scoring" and calls):
-            raise RuntimeError("input cohort stale or changed")
-        return {}
+    def espn(url):
+        calls.append("ESPN")
+        return json.dumps(scoreboard).encode()
 
-    def verify(*args, **kwargs):
-        requests.append("ESPN")
-        return {"status": {
-            "stale": "VERIFIED", "discrepancy": "KICKOFF_DISCREPANCY",
-            "unavailable": "ESPN_UNAVAILABLE", "changed_during_scoring": "VERIFIED",
-        }[failure]}
-
-    monkeypatch.setattr(refresh, "require_current_schedule_cohort", cohort)
-    monkeypatch.setattr(refresh, "verify_independent_schedule", verify)
+    monkeypatch.setattr(verification, "_espn_scoreboard", espn)
     config = _config(tmp_path)
-    config.publication_dir.mkdir()
-    last_good = config.publication_dir / "latest.json"
-    last_good.write_bytes(b"last good")
-    outcome, status = refresh.run_refresh(config)
-
-    assert outcome is refresh.RefreshOutcome.SCHEDULE_NOT_READY
-    assert status["provider_request_count"] == 0
-    assert "provider" not in calls
-    assert requests == ([] if failure == "stale" else ["ESPN"])
-    assert last_good.read_bytes() == b"last good"
-    if requests:
-        proof = config.run_root / status["run_id"] / "schedule-verification.json"
-        assert json.loads(proof.read_text())["status"] == status["schedule_verification_status"]
+    outcome, summary = refresh.run_refresh(config)
+    assert summary["provider_request_count"] == 1
+    assert calls[:4] == ["sleeper", "score", "provider", "ESPN"]
+    assert calls.count("provider") == calls.count("ESPN") == 1
+    run_dir = config.run_root / summary["run_id"]
+    report = json.loads((run_dir / "schedule-reconciliation.json").read_text())
+    assert report["odds_acquired_at_utc"] == "2026-09-09T00:05:00Z"
+    if confirmed:
+        assert outcome is refresh.RefreshOutcome.SUCCESS
+        assert calls[4:6] == ["score", "normalize"]
+        assert report["status"] == "KICKOFF_CONFIRMED"
+        assert (run_dir / "reconciled-schedule.json").is_file()
+    else:
+        assert outcome is refresh.RefreshOutcome.SCHEDULE_NOT_READY
+        assert report["status"] == "KICKOFF_UNCONFIRMED"
+        assert "publish" not in calls

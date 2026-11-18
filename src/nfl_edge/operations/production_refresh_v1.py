@@ -21,7 +21,7 @@ from typing import Any, Iterator
 
 from nfl_edge.backend.publication import ProductStore
 from nfl_edge.contracts.live_product_v1 import validate_product_snapshot
-from nfl_edge.live.evidence_2026 import load_settled_evidence, require_current_schedule_cohort
+from nfl_edge.live.evidence_2026 import load_settled_evidence
 from nfl_edge.live.markets_2026 import (
     acquire_live_response,
     load_capture,
@@ -31,7 +31,7 @@ from nfl_edge.live.markets_2026 import (
 from nfl_edge.live.product_2026 import build_product_snapshot, product_snapshot_bytes
 from nfl_edge.live.product_state_2026 import advance_live_value_state, load_entering_2026_product_state
 from nfl_edge.live.schedule_2026 import resolve_active_schedule
-from nfl_edge.live.schedule_verification_2026 import ScheduleVerificationError, verify_independent_schedule
+from nfl_edge.live.schedule_verification_2026 import ScheduleVerificationError, reconcile_market_kickoffs
 from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash, score_week
 from nfl_edge.live.sleeper_qb import DEFAULT_OVERRIDES, SleeperExpectedQBResolver, SleeperQBSource, load_overrides
 from nfl_edge.live.state_advancement_2026 import advance_entering_state_through_settled_weeks
@@ -81,6 +81,7 @@ class RefreshConfig:
     prospective_dir: Path | None = None
     schedule_root: Path | None = None
     evidence_root: Path | None = None
+    espn_response: Path | None = None
 
 
 def _utc_now() -> str:
@@ -212,7 +213,7 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
         "schedule_version": None,
         "schedule_path": None,
         "schedule_rollover_at_utc": None,
-        "schedule_verification_status": None,
+        "schedule_reconciliation_status": None,
         "completed_2026_blocks": [],
         "football_state_version": None,
         "sleeper_snapshot_id": None,
@@ -296,32 +297,11 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
             advanced_state = None
             prior_live_inputs = None
             evidence = None
-            if config.live:
-                try:
-                    if config.evidence_root is None:
-                        raise ScheduleVerificationError("live acquisition requires a weekly input cohort")
-                    evidence = load_settled_evidence(config.evidence_root, nonblocking=True)
-                    primary = require_current_schedule_cohort(
-                        evidence, schedule, schedule_path, as_of_utc=_utc_now(),
-                    )
-                    if schedule.get("kickoff_reconciliation") and config.prospective_dir is None:
-                        raise ScheduleVerificationError("Week 11 flex requires the prospective publication root")
-                    if config.prospective_dir is not None:
-                        require_prospective_kickoff_compatibility(schedule, runtime_root=config.prospective_dir)
-                    verification = verify_independent_schedule(schedule, primary=primary)
-                    summary["schedule_verification_status"] = verification["status"]
-                    _atomic_json(run_dir / "schedule-verification.json", verification)
-                    if verification["status"] != "VERIFIED":
-                        raise ScheduleVerificationError(f"{verification['status']}: see schedule-verification.json")
-                except Exception as exc:
-                    return finish(RefreshOutcome.SCHEDULE_NOT_READY, exc)
-
             if active_schedule.week > 1:
                 try:
                     if config.evidence_root is None:
                         raise RuntimeError("active Week > 1 requires --evidence-root with settled prior-week evidence")
-                    if evidence is None:
-                        evidence = load_settled_evidence(config.evidence_root)
+                    evidence = load_settled_evidence(config.evidence_root)
                     advanced_state = advance_entering_state_through_settled_weeks(
                         repository_root=config.repository_root,
                         active_schedule_path=active_schedule.path,
@@ -354,20 +334,25 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
             football_path = (
                 run_dir / "football" / f"NFL_EDGE_{active_schedule.season}_WEEK{active_schedule.week}_FOOTBALL_V1.json"
             )
-            try:
-                overrides = load_overrides(config.repository_root / DEFAULT_OVERRIDES)
-                football = score_week(
+            def score_schedule(path: Path, output: Path) -> dict[str, Any]:
+                snapshot = score_week(
                     repository_root=config.repository_root,
                     prediction_as_of_utc=config.prediction_as_of_utc,
-                    resolver=SleeperExpectedQBResolver(sleeper, overrides=overrides),
-                    schedule_path=schedule_path,
+                    resolver=resolver,
+                    schedule_path=path,
                     entering_state=advanced_state,
                     prior_live_inputs=prior_live_inputs,
                 )
-                football_path.parent.mkdir(parents=True, exist_ok=True)
-                football_path.write_bytes(canonical_snapshot_bytes(football))
-                football = _validate_football(football_path)
-                summary["football_snapshot_sha256"] = _sha256(football_path)
+                output.parent.mkdir(parents=True, exist_ok=True)
+                output.write_bytes(canonical_snapshot_bytes(snapshot))
+                checked = _validate_football(output)
+                summary["football_snapshot_sha256"] = _sha256(output)
+                return checked
+
+            try:
+                overrides = load_overrides(config.repository_root / DEFAULT_OVERRIDES)
+                resolver = SleeperExpectedQBResolver(sleeper, overrides=overrides)
+                football = score_schedule(schedule_path, football_path)
             except Exception as exc:
                 return finish(RefreshOutcome.SCORING_FAILED, exc)
 
@@ -396,14 +381,6 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                     }
             except Exception as exc:
                 return finish(RefreshOutcome.FOOTBALL_STATE_NOT_READY, exc)
-
-            if config.live:
-                try:
-                    # The same cohort must still be current after scoring and
-                    # historical replay, immediately before the paid request.
-                    require_current_schedule_cohort(evidence, schedule, schedule_path, as_of_utc=_utc_now())
-                except Exception as exc:
-                    return finish(RefreshOutcome.SCHEDULE_NOT_READY, exc)
 
             capture_events: list[dict[str, Any]] | None = None
             capture_metadata: dict[str, Any] | None = None
@@ -459,6 +436,38 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                         metadata["acquired_at_utc"] = str(original_capture_ts)
                 else:
                     events, metadata = load_capture(capture.response_path, metadata_path=capture.metadata_path)
+            except Exception as exc:
+                return finish(RefreshOutcome.MARKET_NORMALIZATION_FAILED, exc)
+
+            try:
+                schedule, reconciliation = reconcile_market_kickoffs(
+                    schedule, events, live=config.live, espn_response=config.espn_response,
+                    capture_path=(run_dir / "raw" / "espn-scoreboard.json") if config.live else None,
+                )
+                if reconciliation is not None:
+                    reconciliation["odds_response_sha256"] = metadata["response_sha256"]
+                    reconciliation["odds_acquired_at_utc"] = metadata["acquired_at_utc"]
+                    summary["schedule_reconciliation_status"] = reconciliation["status"]
+                    _atomic_json(run_dir / "schedule-reconciliation.json", reconciliation)
+                    if reconciliation["status"] != "KICKOFF_CONFIRMED":
+                        raise ScheduleVerificationError(
+                            f"{reconciliation['status']}: see schedule-reconciliation.json"
+                        )
+                    if config.prospective_dir is not None:
+                        require_prospective_kickoff_compatibility(schedule, runtime_root=config.prospective_dir)
+                    schedule_path = (run_dir / "reconciled-schedule.json").resolve()
+                    _atomic_json(schedule_path, schedule)
+                    summary.update(schedule_path=str(schedule_path), schedule_version=schedule["schedule_version"])
+            except Exception as exc:
+                return finish(RefreshOutcome.SCHEDULE_NOT_READY, exc)
+
+            if reconciliation is not None:
+                try:
+                    football = score_schedule(schedule_path, football_path.with_name("reconciled-" + football_path.name))
+                except Exception as exc:
+                    return finish(RefreshOutcome.SCORING_FAILED, exc)
+
+            try:
                 market = normalize_market_snapshot(
                     schedule=schedule,
                     events=events,
@@ -569,7 +578,10 @@ def main(argv: list[str] | None = None) -> int:
     source.add_argument("--live", action="store_true")
     source.add_argument("--market-response", type=Path)
     parser.add_argument("--market-metadata", type=Path)
+    parser.add_argument("--espn-response", type=Path, help="Saved ESPN scoreboard for replaying a kickoff discrepancy")
     args = parser.parse_args(argv)
+    if args.live and args.espn_response is not None:
+        parser.error("--espn-response requires --market-response")
     outcome, summary = run_refresh(
         RefreshConfig(
             repository_root=args.repository_root,
@@ -582,6 +594,7 @@ def main(argv: list[str] | None = None) -> int:
             prospective_dir=args.prospective_dir,
             schedule_root=args.schedule_root,
             evidence_root=args.evidence_root,
+            espn_response=args.espn_response,
         )
     )
     print(json.dumps(summary, sort_keys=True))
