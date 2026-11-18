@@ -15,6 +15,7 @@ import io
 import json
 import tempfile
 import zipfile
+from collections import Counter
 from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -82,12 +83,98 @@ _WEEK9_FAILED_STATUS_SHA256 = {
 }
 
 
+_WEEK10_CHECKPOINT = "28066c8c30623acc93f95df5814d2fc6aec1d026c49dc9e8d6660c7142070173"
+_WEEK10_EXCLUDED_GAME = "2026_10_WAS_NYG"
+_WEEK10_KICKOFFS = {
+    "2026_10_BUF_NYJ": "2026-11-15T18:00:00Z",
+    "2026_10_CAR_NO": "2026-11-15T18:00:00Z",
+    "2026_10_HOU_CLE": "2026-11-15T18:00:00Z",
+    "2026_10_JAX_TEN": "2026-11-15T18:00:00Z",
+    "2026_10_KC_ATL": "2026-11-15T18:00:00Z",
+    "2026_10_LAC_BAL": "2026-11-17T01:15:00Z",
+    "2026_10_LAR_ARI": "2026-11-15T21:05:00Z",
+    "2026_10_MIA_IND": "2026-11-15T18:00:00Z",
+    "2026_10_MIN_GB": "2026-11-15T18:00:00Z",
+    "2026_10_NE_DET": "2026-11-15T14:30:00Z",
+    "2026_10_PIT_CIN": "2026-11-16T01:20:00Z",
+    "2026_10_SEA_LV": "2026-11-15T21:05:00Z",
+    "2026_10_SF_DAL": "2026-11-15T21:25:00Z",
+    "2026_10_WAS_NYG": "2026-11-13T01:15:00Z",
+}
+# Original production run-status and deterministic-proof SHA-256 values.
+# The nine football-state failures had no deterministic product proof.
+_WEEK10_RUN_HASHES = {
+    "refresh-20261111T000503.973105Z": (
+        "3d7c43ce14c44b1f0408f9eaee9d8189bb897ec6348dd0ae55b906a84b0db0f4",
+        None,
+    ),
+    "refresh-20261111T120503.847881Z": (
+        "7c0a33f643a02932a4357a854e1338c37b8727af4a5fb6cf847e9c355785e423",
+        None,
+    ),
+    "refresh-20261112T000503.893432Z": (
+        "1f11da046f42a4437bd50dc3c259789080478b0c5132765e28ef2974b42e6344",
+        None,
+    ),
+    "refresh-20261112T120503.955761Z": (
+        "fa87c09c4259778a1ae1d692ff8d771a8821f9b417764bce264539c4631f0b4c",
+        None,
+    ),
+    "refresh-20261113T000503.858360Z": (
+        "260d3e3d924640246541af79afe94230314687ce4d63b934292fc335c9be334e",
+        None,
+    ),
+    "refresh-20261113T120503.993233Z": (
+        "4e3bac91e6aa798bebd15b4a34eca4fa2a179a114737fd98ede02b13526e0971",
+        None,
+    ),
+    "refresh-20261114T000504.083825Z": (
+        "cc16196c344af3f90e40632ba4b741a15a7682c2d1317200c5d62099f9c51012",
+        None,
+    ),
+    "refresh-20261114T120504.271445Z": (
+        "fb09dddee524c53055a3e6817db02fe8acf1abf0a672e40b91c088a8e79bfcbe",
+        None,
+    ),
+    "refresh-20261115T000503.493466Z": (
+        "76d208d6bf6d02aaff55091f367585ec70c7ca59f73f04fe05f312cc29379a13",
+        None,
+    ),
+    "refresh-20261115T120503.492203Z": (
+        "b207fd8c68048078699169b7494700bf84f0d18632ade92a8872531781845c9d",
+        "3a70588704b94abe2d15fce7e17f78e9e37a32c33fc37e37d1b9ed70b10bb051",
+    ),
+    "refresh-20261116T000503.421702Z": (
+        "d372fa9dbbebde08d181237c24c7978323e3f2941d3f7e897e2365fdf054ff38",
+        "ab36b44302603edb69598ea67a8aa50f1b899ba5b8766b977833161f82e7add7",
+    ),
+    "refresh-20261116T120503.369973Z": (
+        "1a0ebc445568d2144d04f7856b5132af91d0e6748bfd67bc48fd82eefa99cd4b",
+        "55987812a3f33a9b121ec9dccdc82d0b947869be09de124a9e8fd1c8345e39c3",
+    ),
+    "refresh-20261117T000503.332182Z": (
+        "91918b3b3d8dc33a4ba1ae5d62b25d32696a4843ba6e3cc705378db606124e56",
+        "fe2a9c76f505b23f533fdc01dfa8c584a205ce374916320a057e845a1b5d67b9",
+    ),
+    "refresh-20261117T120503.333058Z": (
+        "3236593ebf1775bed9be60ccfd54fea7a3d759071fa5f206f441e19b4b1dfb1d",
+        "787c1eaba6cee6d30b3b143f7a2fcea9d406dce9c558c6f806ebfae2b25d9fdd",
+    ),
+}
+
+
 class Entering2026ProductStateError(RuntimeError):
     """Raised when accepted historical evidence cannot reproduce frozen state."""
 
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _selector_state_sha256(state: ValueSelectorState) -> str:
+    return hashlib.sha256(
+        json.dumps(asdict(state), sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    ).hexdigest()
 
 
 def _load_script(name: str, path: Path):
@@ -614,29 +701,24 @@ def _final_pregame_selector_rows(
     run_root: Path,
     week: int,
     required_game_ids: set[str],
+    successful_proofs: Iterable[tuple[Path, Mapping[str, Any]]] | None = None,
+    selected_runs: dict[str, str] | None = None,
 ) -> list[dict[str, Any]] | None:
     """Assemble one final causal selector board from per-game pre-kickoff states.
 
     Production refreshes can occur multiple times while a weekly slate is still
     open. For each game independently, choose the latest successful native
     selector-evidence snapshot captured strictly before that game kickoff.
-    Rows from that game chosen snapshot are assembled into one synthetic
-    settled-week board. The existing selector methodology remains unchanged:
+    Rows from the chosen snapshots are assembled into one settled-week board.
     advance_value_state still contributes at most one moneyline-family and one
     spread-family frontier observation for the completed week. Only Week 9
     returns None for zero coverage so the separately verified outage can be checked.
     """
     latest_by_game: dict[str, tuple[datetime, str, list[dict[str, Any]]]] = {}
 
-    for proof_path in sorted(run_root.glob("*/product/deterministic-proof.json")):
-        status_path = proof_path.parents[1] / "run-status.json"
-        if not status_path.is_file():
-            continue
-        status = json.loads(status_path.read_text(encoding="utf-8"))
-        if status.get("outcome") != "SUCCESS":
-            continue
-
-        payload = json.loads(proof_path.read_text(encoding="utf-8"))
+    if successful_proofs is None:
+        successful_proofs = _successful_selector_proofs(run_root)
+    for proof_path, payload in successful_proofs:
         selector = payload.get("selector_evidence")
         if not isinstance(selector, Mapping):
             # Selector trust begins prospectively in Week 2. Pre-PR131 Week 1
@@ -716,8 +798,19 @@ def _final_pregame_selector_rows(
 
     assembled: list[dict[str, Any]] = []
     for gid in sorted(required_game_ids):
-        assembled.extend(latest_by_game[gid][2])
+        _, proof_path, rows = latest_by_game[gid]
+        assembled.extend(rows)
+        if selected_runs is not None:
+            selected_runs[gid] = Path(proof_path).parents[1].name
     return assembled
+
+
+def _successful_selector_proofs(run_root: Path) -> Iterable[tuple[Path, Mapping[str, Any]]]:
+    for proof_path in sorted(run_root.glob("*/product/deterministic-proof.json")):
+        status_path = proof_path.parents[1] / "run-status.json"
+        if status_path.is_file() and json.loads(status_path.read_bytes()).get("outcome") == "SUCCESS":
+            yield proof_path, json.loads(proof_path.read_bytes())
+
 
 def _week9_gap_audit(
     *,
@@ -767,9 +860,7 @@ def _week9_gap_audit(
                 f"Week 9 selector proof requires review: {proof_path.parents[1].name}"
             )
 
-    state_sha = hashlib.sha256(
-        json.dumps(asdict(state), sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
-    ).hexdigest()
+    state_sha = _selector_state_sha256(state)
     return {
         "reason": "NO_AUTHENTIC_PREGAME_MARKET_OBSERVATION",
         "season": 2026,
@@ -783,6 +874,113 @@ def _week9_gap_audit(
         "observations_appended": {"moneyline": 0, "spread": 0},
         "selector_state_before_sha256": state_sha,
         "selector_state_after_sha256": state_sha,
+    }
+
+
+def _week10_gap_board(
+    *,
+    evidence,
+    game_rows: list[dict[str, Any]],
+    run_root: Path,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    # The callers have already validated all settled football artifacts and
+    # the checkpoint bundle. Keep this exception scoped to that exact slate.
+    manifest = getattr(evidence, "manifest", {})
+    settled_ids = {str(row["game_id"]) for row in game_rows}
+    if (
+        manifest.get("season") != 2026
+        or manifest.get("schedule_checkpoints", {}).get("10") != _WEEK10_CHECKPOINT
+        or settled_ids != _WEEK10_KICKOFFS.keys()
+        or len(game_rows) != len(_WEEK10_KICKOFFS)
+        or any(row.get("season") != 2026 or row.get("season_type") != "REG" for row in game_rows)
+    ):
+        raise Entering2026ProductStateError("Week 10 selector gap has mismatched settled evidence")
+    excluded, = (row for row in game_rows if row["game_id"] == _WEEK10_EXCLUDED_GAME)
+    if (excluded.get("away_score"), excluded.get("home_score")) != (24, 21):
+        raise Entering2026ProductStateError("Week 10 selector gap has mismatched WAS–NYG settlement")
+    accepted_ids = settled_ids - {_WEEK10_EXCLUDED_GAME}
+
+    for status_path in sorted(run_root.glob("*/run-status.json")):
+        if status_path.parent.name not in _WEEK10_RUN_HASHES:
+            status = json.loads(status_path.read_bytes())
+            if str(status.get("week")) == "10":
+                raise Entering2026ProductStateError(
+                    f"unreviewed Week 10 selector status requires review: {status_path.parent.name}"
+                )
+    for proof_path in sorted(run_root.glob("*/product/deterministic-proof.json")):
+        run_id = proof_path.parents[1].name
+        if run_id not in _WEEK10_RUN_HASHES:
+            selector = json.loads(proof_path.read_bytes()).get("selector_evidence")
+            if isinstance(selector, Mapping) and (
+                str(selector.get("week")) == "10" or "2026_10_" in json.dumps(selector)
+            ):
+                raise Entering2026ProductStateError(
+                    f"unreviewed Week 10 selector proof requires review: {run_id}"
+                )
+
+    proofs = []
+    reviewed_runs = {}
+    for run_id, (status_sha, proof_sha) in sorted(_WEEK10_RUN_HASHES.items()):
+        run = run_root / run_id
+        status_path = run / "run-status.json"
+        proof_path = run / "product/deterministic-proof.json"
+        status_bytes = status_path.read_bytes() if status_path.is_file() else b""
+        if hashlib.sha256(status_bytes).hexdigest() != status_sha:
+            raise Entering2026ProductStateError(f"Week 10 selector status missing or changed: {run_id}")
+        status = json.loads(status_bytes)
+        expected_outcome = "SUCCESS" if proof_sha else "FOOTBALL_STATE_NOT_READY"
+        if status.get("week") != 10 or status.get("outcome") != expected_outcome:
+            raise Entering2026ProductStateError(f"Week 10 selector status conflicts with inventory: {run_id}")
+        reviewed_runs[run_id] = {"status_sha256": status_sha, "proof_sha256": proof_sha}
+        if proof_sha is None:
+            if proof_path.exists():
+                raise Entering2026ProductStateError(f"Week 10 unexpected selector proof requires review: {run_id}")
+            continue
+        if not proof_path.is_file():
+            raise Entering2026ProductStateError(f"Week 10 selector proof missing: {run_id}")
+        proof_bytes = proof_path.read_bytes()
+        if hashlib.sha256(proof_bytes).hexdigest() != proof_sha:
+            raise Entering2026ProductStateError(f"Week 10 selector proof changed: {run_id}")
+        proof = json.loads(proof_bytes)
+        selector = proof["selector_evidence"]
+        kickoffs = {game["game_id"]: game["kickoff_at_utc"] for game in selector["games"]}
+        if (
+            selector.get("season") != 2026
+            or selector.get("week") != 10
+            or len(selector["games"]) != len(_WEEK10_KICKOFFS)
+            or kickoffs != _WEEK10_KICKOFFS
+            or _parse_utc(selector["captured_at_utc"]) < _parse_utc(kickoffs[_WEEK10_EXCLUDED_GAME])
+            or any(row["game_id"] not in accepted_ids for row in selector["rows"])
+        ):
+            raise Entering2026ProductStateError(f"Week 10 selector identity or timing requires review: {run_id}")
+        reviewed_runs[run_id]["captured_at_utc"] = selector["captured_at_utc"]
+        proofs.append((proof_path, proof))
+
+    selected_runs: dict[str, str] = {}
+    rows = _final_pregame_selector_rows(
+        run_root=run_root,
+        week=10,
+        required_game_ids=accepted_ids,
+        successful_proofs=proofs,
+        selected_runs=selected_runs,
+    )
+    if rows is None or Counter(str(row["game_id"]) for row in rows) != dict.fromkeys(accepted_ids, 6):
+        raise Entering2026ProductStateError("Week 10 selector gap requires six authentic evaluator rows per covered game")
+    return rows, {
+        "reason": "DOCUMENTED_PARTIAL_PREGAME_MARKET_OBSERVATION",
+        "season": 2026,
+        "season_type": "REG",
+        "week": 10,
+        "settled_game_ids": sorted(settled_ids),
+        "football_settlement_complete": True,
+        "excluded_market_observation_game_id": _WEEK10_EXCLUDED_GAME,
+        "excluded_game_kickoff_at_utc": _WEEK10_KICKOFFS[_WEEK10_EXCLUDED_GAME],
+        "schedule_checkpoint_sha256": _WEEK10_CHECKPOINT,
+        "accepted_pregame_game_ids": sorted(accepted_ids),
+        "accepted_evaluator_rows": len(rows),
+        "reviewed_runs": reviewed_runs,
+        "selected_run_by_game": selected_runs,
+        "synthetic_market_observations": 0,
     }
 
 
@@ -810,17 +1008,25 @@ def advance_live_value_state(
         week = _game_week(row)
         by_week.setdefault(week, set()).add(gid)
 
+    week10_checkpoint = getattr(evidence, "manifest", {}).get("schedule_checkpoints", {}).get("10")
     for week in range(SELECTOR_TRUST_START_WEEK, int(evidence.through_week) + 1):
         required_game_ids = by_week.get(week, set())
         if not required_game_ids:
             raise Entering2026ProductStateError(
                 f"settled evidence has no games for selector trust Week {week}"
             )
-        rows = _final_pregame_selector_rows(
-            run_root=run_root,
-            week=week,
-            required_game_ids=required_game_ids,
-        )
+        week10_audit = None
+        if week == 10 and (week10_checkpoint == _WEEK10_CHECKPOINT or required_game_ids & _WEEK10_KICKOFFS.keys()):
+            rows, week10_audit = _week10_gap_board(
+                evidence=evidence, run_root=run_root,
+                game_rows=[row for row in settled_games if _game_week(row) == 10],
+            )
+        else:
+            rows = _final_pregame_selector_rows(
+                run_root=run_root,
+                week=week,
+                required_game_ids=required_game_ids,
+            )
         if rows is None:
             audit = _week9_gap_audit(
                 state=state, evidence=evidence, run_root=run_root,
@@ -847,5 +1053,24 @@ def advance_live_value_state(
                 continue
             row["settlement"] = "WIN" if result > 0 else "LOSS" if result < 0 else "PUSH"
             settled_rows.append(row)
+        previous_state = state
         state = advance_value_state(state, settled_rows)
+        if week10_audit is not None:
+            before = {
+                "moneyline": len(previous_state.ml_observations),
+                "spread": len(previous_state.spread_observations),
+            }
+            after = {"moneyline": len(state.ml_observations), "spread": len(state.spread_observations)}
+            if len(settled_rows) != 52 or before != {"moneyline": 1, "spread": 7} or after != {"moneyline": 2, "spread": 8}:
+                raise Entering2026ProductStateError("Week 10 selector gap has mismatched selector advancement")
+            if recovery_audit is not None:
+                week10_audit.update(
+                    accepted_market_settlement_rows=len(settled_rows),
+                    entering_observations=before,
+                    exiting_observations=after,
+                    observations_appended={"moneyline": 1, "spread": 1},
+                    selector_state_before_sha256=_selector_state_sha256(previous_state),
+                    selector_state_after_sha256=_selector_state_sha256(state),
+                )
+                recovery_audit.append(week10_audit)
     return state
