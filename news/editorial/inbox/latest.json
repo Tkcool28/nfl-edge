@@ -1,262 +1,328 @@
 {
-  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
-  "submitted_at_utc": "2026-11-17T13:23:06Z",
-  "research_generated_at_utc": "2026-11-17T13:23:06Z",
-  "article": {
-    "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-    "published_at_utc": "2026-11-17T13:23:06Z",
-    "edition": "Morning Brief",
-    "title": "NFL EDGE Tuesday Morning Brief",
-    "dek": "Week 10 is over — the Chargers finally won, the Ravens lost a fifth straight, and the board hasn't flipped to Week 11 yet, so today is a settle-and-wait day.",
-    "research_generated_at_utc": "2026-11-17T13:23:06Z",
-    "sections": [
-      {
-        "id": "what-matters",
-        "icon": "📰",
-        "title": "What Matters Today",
-        "items": [
-          {
-            "headline": "Lead: The Chargers finally won — 23-20 over the Ravens on Monday night",
-            "paragraphs": [
-              "The Los Angeles Chargers beat the Baltimore Ravens 23-20 on Monday Night Football. It is their first win of the season. They are 1-8. Baltimore lost its fifth straight and fell to 4-6.",
-              "Justin Herbert ran for a first-quarter touchdown and Omarion Hampton ran for 105 yards and a score. The Chargers outrushed the Ravens 160-16. Derrick Henry was held to 10 yards on 10 carries, though he scored twice.",
-              "Jacoby Brissett threw for 340 yards in his Ravens debut. But a Zay Flowers fumble with 2:03 left ended Baltimore's last real drive, and the Hail Mary at the end fell short.",
-              "The 43 combined points went over the 39.5 closing total. The Chargers covered as 4.5-point underdogs."
-            ],
-            "takeaway": "Week 10 is done. The Chargers finally won, the Ravens lost a fifth straight, and the total went over the 39.5 close.",
-            "evidence_ids": [
-              "ev-mnf-result"
-            ],
-            "sources": [
-              {
-                "label": "NBC Sports — Chargers run past Ravens 23-20 for first win of 2026",
-                "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-chargers-run-past-ravens-23-20-for-first-win-of-2026"
-              },
-              {
-                "label": "USA Today — Herbert, Chargers break through; Ravens run nowhere",
-                "url": "https://www.usatoday.com/story/sports/nfl/columnist/nate-davis/2026/11/16/ravens-chargers-winners-losers-mnf-jacoby-brissett-justin-herbert/92820695007/"
-              }
-            ]
-          },
-          {
-            "headline": "No games today, and the board hasn't flipped to Week 11 yet",
-            "paragraphs": [
-              "There are no NFL games today. The next games come Thursday night.",
-              "The app's board is still on Week 10 and still lists last night's game — with the books having pulled its lines after the final, so there is nothing to price.",
-              "All three headline cards are empty. Hit Rate, Balanced, and Value all say no play. That is the board telling you there is nothing to do today."
-            ],
-            "takeaway": "No games, no cards, no lines to check. Today is a settle-and-wait day until the board flips to Week 11.",
-            "evidence_ids": [
-              "ev-board-am"
-            ],
-            "sources": [
-              {
-                "label": "NFL EDGE app",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-              }
-            ]
-          },
-          {
-            "headline": "Injury check: no new injuries out of Monday night",
-            "paragraphs": [
-              "No injury news came out of Monday night's game in the overnight recaps.",
-              "Lamar Jackson is still out for Baltimore. Jacoby Brissett started in his place and threw for 340 yards in his debut.",
-              "Thursday's inactive lists come out about 90 minutes before kickoff. That is the next injury news that matters — check the board Thursday and read the lists before you play anything."
-            ],
-            "takeaway": "No new injuries to track. Jackson is still out, Brissett is the starter until that changes, and Thursday's inactives are the next thing to watch.",
-            "evidence_ids": [
-              "ev-inj-am"
-            ],
-            "sources": [
-              {
-                "label": "USA Today — Herbert, Chargers break through; Ravens run nowhere",
-                "url": "https://www.usatoday.com/story/sports/nfl/columnist/nate-davis/2026/11/16/ravens-chargers-winners-losers-mnf-jacoby-brissett-justin-herbert/92820695007/"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "what-it-means",
-        "icon": "💡",
-        "title": "What It Means for NFL EDGE",
-        "items": [
-          {
-            "headline": "Last night's Hit Rate pick lost — log it, and look at what the app got right",
-            "paragraphs": [
-              "The evening brief's only card was Hit Rate on Baltimore moneyline at -225. Baltimore lost 23-20. If you played it, that is a loss. Log it.",
-              "The loss doesn't mean the app misread the game. The app had the game about even — its expected margin was roughly -0.12 — and it projected about 44 points against a 39.5 total. The real total was 43.",
-              "Hit Rate is the card that forgoes value for win probability. A -225 favorite losing is exactly why the price still matters, and why the app shows you the play-through: -225 was inside it, but inside the line is not a guarantee."
-            ],
-            "takeaway": "Log the loser. The app read the game close to right — nearly even, nearly 44 points — and the favorite still lost. That is football, and that is why settlement has to be honest.",
-            "evidence_ids": [
-              "ev-board-am",
-              "ev-mnf-result"
-            ],
-            "sources": [
-              {
-                "label": "NFL EDGE app",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-              },
-              {
-                "label": "NBC Sports — Chargers run past Ravens 23-20 for first win of 2026",
-                "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-chargers-run-past-ravens-23-20-for-first-win-of-2026"
-              }
-            ]
-          },
-          {
-            "headline": "No cards today means no forcing it",
-            "paragraphs": [
-              "All three cards are empty today. That is not a broken board — it is a board with nothing to price, because Week 10 is over and Week 11 hasn't posted yet.",
-              "When the board flips to Week 11, the cards come back with it. Check the board then and let the app tell you what, if anything, is worth a look."
-            ],
-            "takeaway": "An empty board is an answer, not a problem. Wait for the Week 11 flip — don't go hunting for a bet the app hasn't priced.",
-            "evidence_ids": [
-              "ev-board-am"
-            ],
-            "sources": [
-              {
-                "label": "NFL EDGE app",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "fade",
-        "icon": "⚖️",
-        "title": "Learn the Game",
-        "mode": "learning",
-        "items": [
-          {
-            "headline": "Learn the Game: a push — when nobody wins and you get your money back",
-            "paragraphs": [
-              "A push is a bet that lands exactly on the number. Say, as a clearly labeled hypothetical, you bet a team -3 and they win by exactly 3. Nobody wins that bet. Your stake comes back.",
-              "The same thing happens with totals. As a clearly labeled hypothetical, you bet over 44 and the game finishes with 44 total points. That is a push too — stake back, no win, no loss.",
-              "Books usually list a push as a refund, not a win or a loss. It doesn't help or hurt your record. It just hands your money back."
-            ],
-            "takeaway": "A push is a tie with the number: your stake comes back, no win, no loss. It is the one outcome where the book and the bettor both walk away even.",
-            "editorial_only": true,
-            "evidence_ids": [],
-            "sources": []
-          }
-        ]
-      },
-      {
-        "id": "market-watch",
-        "icon": "👀",
-        "title": "Line Movement",
-        "items": [
-          {
-            "headline": "Nothing moved overnight — the lines are pulled and Week 11 hasn't posted",
-            "paragraphs": [
-              "There is no line movement to report this morning. The books pulled the lines on Chargers-Ravens after the final, and the Week 11 lines haven't posted to the board yet.",
-              "For the record, the closing numbers held from the evening: the spread closed at Ravens -4.5 and the Chargers covered; the total closed at 39.5 and finished at 43, so the over hit. The app had flagged the total's move from 38.5 to 39.5 in the evening brief, and it projected about 44 points.",
-              "When the Week 11 board posts, the movement that matters starts there — openers against where the lines settle. Check the board when it flips."
-            ],
-            "takeaway": "No movement overnight: last night's lines are gone and Week 11 hasn't posted. The closer tells the story — Chargers covered, the total went over.",
-            "evidence_ids": [
-              "ev-board-am",
-              "ev-mnf-result"
-            ],
-            "sources": [
-              {
-                "label": "NFL EDGE app",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-              },
-              {
-                "label": "NBC Sports — Chargers run past Ravens 23-20 for first win of 2026",
-                "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-chargers-run-past-ravens-23-20-for-first-win-of-2026"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "today-tip",
-        "icon": "✅",
-        "title": "Today's Tip",
-        "items": [
-          {
-            "headline": "Today's job: settle last night honestly, then wait for Thursday",
-            "paragraphs": [
-              "If you played anything on Monday night, settle it now while the result is fresh. Baltimore moneyline -225 lost. The total over 39.5 won. The Chargers +4.5 covered.",
-              "Settlement is manual — the tracker only works if you're honest with yourself. Log the losers too.",
-              "Then wait. There is nothing to play today, and a good number Thursday beats a forced bet Tuesday. Check the board when it flips to Week 11."
-            ],
-            "takeaway": "Settle Monday night now, log the losers too, and wait for the Week 11 board. Nothing today is worth forcing.",
-            "evidence_ids": [
-              "ev-board-am",
-              "ev-mnf-result"
-            ],
-            "sources": [
-              {
-                "label": "NFL EDGE app",
-                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-              },
-              {
-                "label": "NBC Sports — Chargers run past Ravens 23-20 for first win of 2026",
-                "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-chargers-run-past-ravens-23-20-for-first-win-of-2026"
-              }
-            ]
-          }
-        ]
-      }
+ "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+ "submitted_at_utc": "2026-11-18T01:16:40Z",
+ "research_generated_at_utc": "2026-11-18T01:16:40Z",
+ "article": {
+  "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+  "published_at_utc": "2026-11-18T01:16:40Z",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Tuesday Evening Brief",
+  "dek": "Thursday night is Colts at Texans, the board still hasn't flipped to Week 11, and the betting splits show the public and the money on opposite sides of the big spread.",
+  "research_generated_at_utc": "2026-11-18T01:16:40Z",
+  "sections": [
+   {
+    "id": "what-matters",
+    "icon": "📰",
+    "title": "What Matters Today",
+    "items": [
+     {
+      "headline": "Lead: Thursday night is Colts at Texans — and the board hasn't flipped to Week 11 yet",
+      "paragraphs": [
+       "Week 11 opens Thursday night with the Indianapolis Colts at the Houston Texans, 8:15 p.m. ET kickoff at NRG Stadium.",
+       "But the app's board hasn't flipped to Week 11 yet. We checked at 6:09 p.m. and again at 6:12 p.m., and it still shows last week's games with the lines pulled. No Week 11 cards, no Thursday prices, no picks in the app yet.",
+       "That is the board telling you plainly: there is nothing to play in the app tonight. Thursday's numbers will land when the board flips."
+      ],
+      "takeaway": "Thursday night is Colts at Texans, but the board is still on Week 10. Nothing to play in the app tonight — the Week 11 numbers come with the flip.",
+      "evidence_ids": [
+       "ev-board-pm"
+      ],
+      "sources": [
+       {
+        "label": "NFL EDGE app",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       }
+      ]
+     },
+     {
+      "headline": "Injury news: Maye likely done for the year, and Thursday's teams are banged up",
+      "paragraphs": [
+       "Drake Maye is believed to have suffered a fractured ankle in Sunday's loss to the Lions, and the early word is he is likely done for the season. The Patriots are on bye this week and don't play again until November 29 at the Chargers, so this doesn't change a game this week — but it changes New England's season. Tommy DeVito is next up if Maye isn't ready for Week 12.",
+       "Lamar Jackson's thumb injury is likely to sideline him for the rest of the regular season. He lasted one snap after returning from his ankle injury. Jacoby Brissett stays the Ravens starter.",
+       "For Thursday night, Houston's second injury report is rough. Running back Woody Marks (concussion) is unlikely to play on the short week. Edge rusher Danielle Hunter (hamstring) and receiver Marvin Harrison Jr. (hamstring) haven't practiced. Running back David Montgomery (groin), receiver Tank Dell (hand and shoulder), and cornerback Kamari Lassiter (wrist) all sat out Tuesday too.",
+       "The Colts aren't healthy either. Cornerbacks Sauce Gardner (calf) and Charvarius Ward (knee) missed practice Monday and Tuesday and are trending out for Thursday. The one settled thing in Indy: the team has already announced Daniel Jones as the starter for Thursday night.",
+       "Elsewhere: Baker Mayfield is dealing with a foot strain and is questionable for Sunday at Detroit. Geno Smith's ankle tests showed no major injury, but he is questionable for Sunday. Jordan Addison is expected to have surgery on his thumb. Ladd McConkey's back spasms kept him inactive on Monday night.",
+       "Final injury reports and game statuses for Thursday come after Wednesday's practice. The inactive lists land about 90 minutes before kickoff on Thursday."
+      ],
+      "takeaway": "Maye is likely done for the year and Jackson is likely out for the regular season. For Thursday, Houston is missing pieces on both sides of the ball and the Colts' top two corners are trending out — with Daniel Jones already confirmed as Indy's starter.",
+      "evidence_ids": [
+       "ev-inj-pm",
+       "ev-inj-tnf"
+      ],
+      "sources": [
+       {
+        "label": "NBC Sports - NFL Week 11 Injury Report: Drake Maye likely done for season, surgery for Jordan Addison",
+        "url": "https://www.nbcsports.com/fantasy/football/news/nfl-week-11-injury-report-drake-maye-likely-done-for-season-surgery-for-jordan-addison"
+       },
+       {
+        "label": "SI - Texans vs. Colts Injury Report: Latest on Danielle Hunter, Marvin Harrison Jr.",
+        "url": "https://www.si.com/nfl/texans/onsi/texans-vs-colts-injury-report-latest-on-danielle-hunter-marvin-harrison-jr"
+       },
+       {
+        "label": "NBC Sports - Sauce Gardner, Charvarius Ward DNP again Tuesday",
+        "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-17/sauce-gardner-charvarius-ward-dnp-again-tuessday"
+       }
+      ]
+     },
+     {
+      "headline": "Thursday weather in Houston: mild, dry, and under a roof anyway",
+      "paragraphs": [
+       "Thursday night in Houston looks quiet. About 68 degrees at kickoff, wind about 4 mph, partly cloudy, rain chance about 10 percent.",
+       "And it barely matters for this game: NRG Stadium has a retractable roof. Just the facts — no weather edge here, and no reason to read one into the total."
+      ],
+      "takeaway": "Houston on Thursday: about 68 degrees, light wind, low rain chance — and a roof over the field. Weather is a non-factor for Colts at Texans.",
+      "evidence_ids": [
+       "ev-weather"
+      ],
+      "sources": [
+       {
+        "label": "Sharp Football Analysis - NFL Weather Today: Week 11 forecast for every game",
+        "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/"
+       }
+      ]
+     }
     ]
-  },
-  "evidence": [
-    {
-      "evidence_id": "ev-mnf-result",
-      "category": "result",
-      "verification": "REPORTED",
-      "fact": "Chargers beat Ravens 23-20 on Monday Night Football, Monday Nov 16, 2026, at M&T Bank Stadium in Baltimore. It is the Chargers' first win of the season (1-8); Baltimore lost its fifth straight and fell to 4-6. Justin Herbert ran for a first-quarter touchdown and threw 12 of 18 for 129 yards; Omarion Hampton ran for 105 yards and a touchdown. The Chargers outrushed the Ravens 160-16. Derrick Henry was held to 10 yards on 10 carries but scored twice. Jacoby Brissett threw for 340 yards in his Ravens debut. Zay Flowers fumbled with 2:03 left and the Chargers recovered, ending Baltimore's last real drive. The 43 combined points went over the 39.5 closing total; the Chargers covered as 4.5-point underdogs.",
+   },
+   {
+    "id": "what-it-means",
+    "icon": "💡",
+    "title": "What It Means for NFL EDGE",
+    "items": [
+     {
+      "headline": "An empty board is an answer, not a problem",
+      "paragraphs": [
+       "All three headline cards are empty tonight: Hit Rate, Balanced, and Value all say no play. That's not the app failing. That's the app saying there is nothing priced yet.",
+       "When the board flips to Week 11, Thursday's game gets priced like any other. Hit Rate is the supported pick that looks most likely to win. Balanced is a strong pick without paying too much — a good starting point if you're new to this. Value is the model's plus-EV play. Each card does a different job, and none of them is the wrong one for doing its job.",
+       "Until the flip, don't go hunting for a bet the app hasn't priced. The board refreshes every morning and evening. Thursday morning is the next look."
+      ],
+      "takeaway": "No cards tonight because the board hasn't flipped. Don't force a bet the app hasn't priced — check again when the board turns to Week 11.",
+      "evidence_ids": [
+       "ev-board-pm"
+      ],
       "sources": [
-        {
-          "label": "NBC Sports — Chargers run past Ravens 23-20 for first win of 2026",
-          "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-chargers-run-past-ravens-23-20-for-first-win-of-2026"
-        },
-        {
-          "label": "USA Today — Herbert, Chargers break through; Ravens run nowhere",
-          "url": "https://www.usatoday.com/story/sports/nfl/columnist/nate-davis/2026/11/16/ravens-chargers-winners-losers-mnf-jacoby-brissett-justin-herbert/92820695007/"
-        }
+       {
+        "label": "NFL EDGE app",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       }
       ]
-    },
-    {
-      "evidence_id": "ev-board-am",
-      "category": "board",
-      "verification": "REPORTED",
-      "fact": "NFL EDGE product/latest fetched Tuesday Nov 17, 2026 at about 6:20 a.m. Denver (2026-11-17T13:20:00Z); board generated_at 2026-11-17T12:08:43Z, state FRESH, stale false, Week 10, 14 games, slate UPCOMING. All three headline cards are NO_PLAY — Hit Rate, Balanced, and Value are all empty. The market board for Chargers at Ravens is empty (moneyline, spread, and total all blank — the books pulled the lines after the final). Model expected margin for that game is about -0.12 (essentially even), and the model's total projection is about 44.2 against the market total of 39.5. Quarterbacks: Justin Herbert for Los Angeles, Jacoby Brissett for Baltimore. The board has not flipped to Week 11 yet.",
+     },
+     {
+      "headline": "Your book already has Thursday's lines — use Check until the board catches up",
+      "paragraphs": [
+       "Your book doesn't wait for the app. The Texans are 12.5-point favorites just about everywhere, with the total at 44.5. The app's board doesn't have those numbers yet, but Check does the same job: tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator and gives you a bet or no-bet verdict on your price.",
+       "One thing to watch: the board still lists Week 10 quarterbacks, so it hasn't caught Thursday yet. The news says Daniel Jones starts for the Colts and C.J. Stroud for Houston. When the board flips, check that the quarterbacks on the card match what you know — and if a QB change lands after the flip, Check is how you re-price it at your number."
+      ],
+      "takeaway": "The board is behind your book tonight. Type your book's Thursday line into Check and let the app give you a verdict on your price — that's what it's for.",
+      "evidence_ids": [
+       "ev-board-pm",
+       "ev-inj-tnf",
+       "ev-odds"
+      ],
       "sources": [
-        {
-          "label": "NFL EDGE app",
-          "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-        }
+       {
+        "label": "NFL EDGE app",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       },
+       {
+        "label": "NBC Sports - Sauce Gardner, Charvarius Ward DNP again Tuesday",
+        "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-17/sauce-gardner-charvarius-ward-dnp-again-tuessday"
+       },
+       {
+        "label": "LineSmart - Colts vs Texans Nov 19: Odds, Line Moves",
+        "url": "https://linesmart.app/nfl/games/indianapolis-colts-at-houston-texans-2026-11-19/"
+       }
       ]
-    },
-    {
-      "evidence_id": "ev-inj-am",
-      "category": "injury",
-      "verification": "REPORTED",
-      "fact": "No injury news came out of Monday night's game in the overnight recaps checked Tuesday morning Nov 17, 2026. Lamar Jackson remains out for Baltimore — he has been mostly out of the lineup for the past six weeks — and Jacoby Brissett started in his place on Monday night, throwing for 340 yards in his Ravens debut. Thursday's inactive lists come out about 90 minutes before kickoff.",
+     }
+    ]
+   },
+   {
+    "id": "fade",
+    "icon": "⚖️",
+    "title": "The Fade",
+    "items": [
+     {
+      "headline": "The public is on the Colts. The money is on the Texans.",
+      "paragraphs": [
+       "Here's the split on Thursday night, from the free DraftKings row on VSiN's betting splits page. On the spread, 62 percent of the bets are on the Colts getting 12.5 points — but only 33 percent of the money is. Flip it around: the Texans laying 12.5 have just 38 percent of the bets and 67 percent of the money.",
+       "That's a real disagreement: most tickets on one side, most dollars on the other. And the line has moved with the money. The Texans opened at -10 at DraftKings and now sit at -12.5, and the spread grew at every book tracked. The total hasn't moved at all — still 44.5.",
+       "What could it mean? The bigger, price-sensitive money likes Houston; the crowd likes the points. It is not a pick, and it doesn't override the app. It's one more layer to think with.",
+       "What price to watch: if you like Houston, the good number is already gone — the Texans were -10 earlier in the week and now cost -12.5, so don't chase the move just because the money made it. If you like the Colts, the points keep growing: +12.5 now, and Thursday's inactives, about 90 minutes before kickoff, could push it further. Watch whether it crosses 13.",
+       "How to use it: take whichever side you actually like and run it through Check at your book's price. If the public keeps hammering the favorite's opponent and the dog gets a better price without any new bad team news, you may be looking at the same football opinion for a better price."
+      ],
+      "takeaway": "Most bets are on the Colts, most money is on the Texans, and the line moved toward Houston. Use it as context, not a pick — and run your side through Check at your price.",
+      "evidence_ids": [
+       "ev-splits-pm",
+       "ev-odds"
+      ],
       "sources": [
-        {
-          "label": "USA Today — Herbert, Chargers break through; Ravens run nowhere",
-          "url": "https://www.usatoday.com/story/sports/nfl/columnist/nate-davis/2026/11/16/ravens-chargers-winners-losers-mnf-jacoby-brissett-justin-herbert/92820695007/"
-        }
+       {
+        "label": "VSiN - Betting Splits",
+        "url": "https://data.vsin.com/betting-splits/"
+       },
+       {
+        "label": "LineSmart - Colts vs Texans Nov 19: Odds, Line Moves",
+        "url": "https://linesmart.app/nfl/games/indianapolis-colts-at-houston-texans-2026-11-19/"
+       }
       ]
-    },
-    {
-      "evidence_id": "ev-splits-am",
-      "category": "splits",
-      "verification": "REPORTED",
-      "fact": "Fade check, Tuesday morning Nov 17, 2026 (about 6:17 a.m. Denver): the VSiN betting-splits free page showed its featured-game row for college basketball (Florida A&M +20.5 vs Texas-El Paso), not the NFL. No NFL DraftKings split was visible on the free tier. The NFL public-results line (spread 1-0, totals 2-0, moneyline 1-1) is a record of past results, not a split. No verified public-vs-sharper disagreement for any NFL game, so no Fade qualifies this morning.",
+     }
+    ]
+   },
+   {
+    "id": "market-watch",
+    "icon": "👀",
+    "title": "Line Movement",
+    "items": [
+     {
+      "headline": "The Texans keep getting more expensive",
+      "paragraphs": [
+       "At DraftKings, the Texans opened at -10 and now sit at -12.5. The Colts' moneyline lengthened from +410 to +470 at DraftKings since Monday, and every book tracked lengthened the Colts' price while the Texans' spread grew by one to two points. The total hasn't budged: 44.5 from the open to now.",
+       "There is no single headline behind the move — it came with the market across the week, not with one piece of news. The books kept nudging Houston up while the Colts' price drifted out.",
+       "The app hasn't caught any of this yet, because the board is still on Week 10 with no Thursday lines at all. Until the board flips, Check is how you price your book's Thursday number — the app runs your line and price back through the model and tells you bet or no-bet."
+      ],
+      "takeaway": "Texans -10 to -12.5 at DraftKings, Colts moneyline drifting out at every book, total steady at 44.5. The app hasn't priced Thursday yet — use Check until it does.",
+      "evidence_ids": [
+       "ev-odds",
+       "ev-board-pm"
+      ],
       "sources": [
-        {
-          "label": "VSiN — Betting Splits",
-          "url": "https://data.vsin.com/betting-splits/"
-        }
+       {
+        "label": "LineSmart - Colts vs Texans Nov 19: Odds, Line Moves",
+        "url": "https://linesmart.app/nfl/games/indianapolis-colts-at-houston-texans-2026-11-19/"
+       },
+       {
+        "label": "Action Network - Best NFL Betting Promos: Colts vs. Texans, Week 11",
+        "url": "https://www.actionnetwork.com/nfl/best-nfl-betting-promos"
+       },
+       {
+        "label": "NFL EDGE app",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       }
       ]
-    }
+     }
+    ]
+   },
+   {
+    "id": "today-tip",
+    "icon": "✅",
+    "title": "Today's Tip",
+    "items": [
+     {
+      "headline": "Tonight's job: get Thursday ready, don't force Tuesday",
+      "paragraphs": [
+       "There are no games tonight and no cards in the app. The useful thing to do now is decide what you'd play on Thursday at your book's number — Colts +12.5, Texans -12.5, the total at 44.5 — and be ready to run it through Check when the board flips.",
+       "If you played anything on Monday night and haven't settled it yet, settle it now while the result is fresh. Settlement is manual — the tracker only works if you're honest with yourself. Log the losers too.",
+       "Then wait for the flip. Thursday morning is the next board, and Thursday's inactives land about 90 minutes before kickoff. A good number at your book plus a Check bet verdict beats a forced bet on a night with nothing priced."
+      ],
+      "takeaway": "Nothing to force tonight. Line up your Thursday number, settle Monday night honestly, and let Check price it when the board flips.",
+      "evidence_ids": [
+       "ev-board-pm"
+      ],
+      "sources": [
+       {
+        "label": "NFL EDGE app",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       }
+      ]
+     }
+    ]
+   }
   ]
+ },
+ "evidence": [
+  {
+   "evidence_id": "ev-board-pm",
+   "category": "board",
+   "verification": "REPORTED",
+   "fact": "NFL EDGE product/latest fetched Tuesday Nov 17, 2026 at 6:09 p.m. Denver (2026-11-18T01:09:29Z) and re-fetched at 6:12 p.m. Denver: still the morning board. observed_at_utc 2026-11-17T12:08:43Z, state FRESH, Week 10, 14 games, all game_status IN_PROGRESS, every market board empty (moneyline, spread, total all blank - the books pulled the lines after the finals). All three headline overlays are null - Hit Rate, Balanced, and Value all say no play. The board has not flipped to Week 11 yet, so it shows no Thursday Colts at Texans game, no Week 11 lines, and still lists Week 10 quarterbacks.",
+   "sources": [
+    {
+     "label": "NFL EDGE app",
+     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-inj-pm",
+   "category": "injury",
+   "verification": "REPORTED",
+   "fact": "Drake Maye (New England QB, ankle) is believed to have suffered a fractured ankle in the Week 10 loss to the Lions and is likely done for the 2026 season; Ian Rapoport said it would be a surprise if Maye played again this year. The Patriots are on bye in Week 11 and do not play again until Nov 29 at the Chargers; Tommy DeVito is next up if Maye is not ready for Week 12. Lamar Jackson (Baltimore QB, thumb) returned from an ankle injury in Week 8, lasted one offensive snap, and the thumb injury is likely to sideline him for the remainder of the regular season; Jacoby Brissett remains the Ravens starter. Baker Mayfield (Tampa Bay QB) is dealing with a foot strain and is questionable for Sunday at Detroit. Geno Smith (NY Jets QB, ankle) is questionable for Sunday; Monday tests showed no major injury. Jordan Addison (Minnesota WR, thumb) is expected to have surgery. Ladd McConkey (LA Chargers WR, back spasms) was inactive for Monday night's game at Baltimore.",
+   "sources": [
+    {
+     "label": "NBC Sports - NFL Week 11 Injury Report: Drake Maye likely done for season, surgery for Jordan Addison",
+     "url": "https://www.nbcsports.com/fantasy/football/news/nfl-week-11-injury-report-drake-maye-likely-done-for-season-surgery-for-jordan-addison"
+    },
+    {
+     "label": "Fantasy Injury News - Drake Maye injury: Patriots QB status for Week 12",
+     "url": "https://fantasy-injury-news.com/drake-mayes-ankle-injury-threatens-multiple-games-houstons-backfield-in-flux-before-thursday/"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-inj-tnf",
+   "category": "injury",
+   "verification": "REPORTED",
+   "fact": "Ahead of Thursday Night Football (Indianapolis Colts at Houston Texans, Nov 19), Houston's second injury report of the week (Nov 17) lists as DNP: RB Woody Marks (concussion, unlikely to play on the short week), DE Danielle Hunter (hamstring), WR Marvin Harrison Jr. (hamstring), RB David Montgomery (groin), WR Tank Dell (hand/shoulder), TE Brevin Jordan (foot/illness), and CB Kamari Lassiter (wrist, shifted from full participant to DNP). Indianapolis lists as DNP: DT Jerry Tillery (calf), OL Jalen Travis (knee), LB Jaylon Carlies (neck), TE Will Mallory (hamstring). Colts CBs Sauce Gardner (calf) and Charvarius Ward (knee) did not practice Monday or Tuesday and are trending out for Thursday. The Colts have already announced Daniel Jones as the starter for Thursday Night Football. Final injury reports and game statuses come after Wednesday's practice.",
+   "sources": [
+    {
+     "label": "SI - Texans vs. Colts Injury Report: Latest on Danielle Hunter, Marvin Harrison Jr.",
+     "url": "https://www.si.com/nfl/texans/onsi/texans-vs-colts-injury-report-latest-on-danielle-hunter-marvin-harrison-jr"
+    },
+    {
+     "label": "NBC Sports - Sauce Gardner, Charvarius Ward DNP again Tuesday",
+     "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-17/sauce-gardner-charvarius-ward-dnp-again-tuessday"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-weather",
+   "category": "weather",
+   "verification": "REPORTED",
+   "fact": "Indianapolis Colts at Houston Texans, Thursday Nov 19, 8:15 p.m. ET, NRG Stadium (retractable roof): about 68 degrees F and about 4 mph wind at kickoff, partly cloudy. National Weather Service Houston forecast for Thursday: mostly sunny, high near 76, northeast wind around 5 mph; Thursday night partly cloudy, low around 59; rain chance about 10 percent.",
+   "sources": [
+    {
+     "label": "Sharp Football Analysis - NFL Weather Today: Week 11 forecast for every game",
+     "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/"
+    },
+    {
+     "label": "National Weather Service - Houston forecast",
+     "url": "https://forecast.weather.gov/MapClick.php?&lat=30.083274&lon=-95.496607"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-odds",
+   "category": "odds",
+   "verification": "REPORTED",
+   "fact": "Colts at Texans, Thursday Nov 19, 8:15 p.m. ET: Texans are 12.5-point favorites at DraftKings and FanDuel, total 44.5. At DraftKings the spread opened at Texans -10 and has moved to -12.5; the total has not moved from 44.5. The Colts moneyline lengthened from +410 to +470 at DraftKings since Monday, and every book tracked lengthened the Colts moneyline while the Texans spread grew by one to two points at all five books. Current consensus: Texans -12.5, total 44.5, Colts about +525, Texans about -750.",
+   "sources": [
+    {
+     "label": "LineSmart - Colts vs Texans Nov 19: Odds, Line Moves",
+     "url": "https://linesmart.app/nfl/games/indianapolis-colts-at-houston-texans-2026-11-19/"
+    },
+    {
+     "label": "Action Network - Best NFL Betting Promos: Colts vs. Texans, Week 11",
+     "url": "https://www.actionnetwork.com/nfl/best-nfl-betting-promos"
+    },
+    {
+     "label": "WIN DAILY - Thursday Night Football Odds: Colts vs Texans",
+     "url": "https://windailysports.com/nfl-odds/thursday-night-football/"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-splits-pm",
+   "category": "splits",
+   "verification": "REPORTED",
+   "fact": "Fade check, Tuesday evening Nov 17, 2026 (about 5:57 p.m. Denver): the VSiN betting-splits free page, NFL tab, DraftKings source, showed the featured game Indianapolis Colts at Houston Texans, Thursday Nov 19. Spread: Colts +12.5 drew 62% of bets (BET) but only 33% of handle (HND); Texans -12.5 drew 38% of bets but 67% of handle. Total 44.5: 65% of bets on the over side of the Colts row with 54% of handle. Moneyline: Colts +525 drew 11% of bets and 12% of handle; Texans -750 drew 89% of bets and 88% of handle. The spread disagreement (most tickets on the Colts, most money on the Texans) is corroborated by line movement: the Texans spread moved from -10 to -12.5 at DraftKings since the opener, and grew one to two points at all five books tracked.",
+   "sources": [
+    {
+     "label": "VSiN - Betting Splits",
+     "url": "https://data.vsin.com/betting-splits/"
+    },
+    {
+     "label": "LineSmart - Colts vs Texans Nov 19: Odds, Line Moves",
+     "url": "https://linesmart.app/nfl/games/indianapolis-colts-at-houston-texans-2026-11-19/"
+    }
+   ]
+  }
+ ]
 }
