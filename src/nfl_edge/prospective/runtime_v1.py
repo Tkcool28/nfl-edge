@@ -10,8 +10,11 @@ from typing import Any, Mapping
 
 from nfl_edge.prospective.capture_v1 import (
     build_publication_snapshot,
+    load_publications,
     write_publication_snapshot,
 )
+
+from nfl_edge.prospective.common_v1 import ProspectiveCardError, parse_utc
 
 RUNTIME_CAPTURE_SCHEMA_VERSION = "NFL_EDGE_PROSPECTIVE_CARD_RUNTIME_CAPTURE_V1"
 
@@ -23,6 +26,27 @@ def runtime_publications_dir(
     week: int,
 ) -> Path:
     return Path(runtime_root) / str(int(season)) / f"week-{int(week):02d}" / "publications"
+
+
+def require_prospective_kickoff_compatibility(
+    schedule: Mapping[str, Any], *, runtime_root: str | Path,
+) -> None:
+    """Prevent a revised slate from conflicting with immutable lane history."""
+    season, week = schedule["season"], schedule["week"]
+    directory = runtime_publications_dir(runtime_root, season=season, week=week)
+    kickoffs = {game["game_id"]: parse_utc(game["scheduled_start_utc"]) for game in schedule["games"]}
+    for publication in load_publications(directory):
+        if (publication["season"], publication["week"]) != (season, week):
+            raise ProspectiveCardError("prospective publication season or week differs from active schedule")
+        for lane_key, lane in publication["lanes"].items():
+            game_id = lane.get("game_id")
+            if game_id is None:
+                continue
+            if game_id not in kickoffs or parse_utc(lane["kickoff_at_utc"]) != kickoffs[game_id]:
+                raise ProspectiveCardError(
+                    f"prospective kickoff drift for {lane_key}/{game_id} in {publication['publication_id']}: "
+                    f"recorded={lane['kickoff_at_utc']} active={kickoffs.get(game_id)}"
+                )
 
 
 def capture_published_product(

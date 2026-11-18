@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import dataclasses
 import hashlib
 import json
 from pathlib import Path
@@ -33,10 +34,15 @@ def _config(tmp_path: Path, *, live: bool = True) -> refresh.RefreshConfig:
         prediction_as_of_utc="2026-09-09T00:05:00Z",
         live=live,
         market_response=response,
+        evidence_root=tmp_path / "evidence",
     )
 
 
 def _wire_active_schedule(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, *, week: int = 1) -> None:
+    monkeypatch.setattr(refresh, "load_settled_evidence", lambda *args, **kwargs: object())
+    monkeypatch.setattr(refresh, "require_current_schedule_cohort", lambda *args, **kwargs: {})
+    monkeypatch.setattr(refresh, "verify_independent_schedule", lambda *args, **kwargs: {"status": "VERIFIED"})
+    monkeypatch.setattr(refresh, "require_prospective_kickoff_compatibility", lambda *args, **kwargs: None)
     path = tmp_path / "data" / "live" / "2026" / f"week{week}_schedule_v1.json"
     monkeypatch.setattr(
         refresh,
@@ -154,6 +160,7 @@ def test_prospective_capture_runs_only_after_successful_publication(
         market_response=config.market_response,
         market_metadata=config.market_metadata,
         prospective_dir=tmp_path / "prospective-runtime",
+        evidence_root=config.evidence_root,
     )
 
     outcome, summary = refresh.run_refresh(config)
@@ -196,6 +203,7 @@ def test_prospective_capture_failure_is_visible_but_never_blocks_publication(
         market_response=config.market_response,
         market_metadata=config.market_metadata,
         prospective_dir=tmp_path / "prospective-runtime",
+        evidence_root=config.evidence_root,
     )
 
     outcome, summary = refresh.run_refresh(config)
@@ -237,6 +245,7 @@ def test_publication_failure_never_attempts_prospective_capture(
         market_response=config.market_response,
         market_metadata=config.market_metadata,
         prospective_dir=tmp_path / "prospective-runtime",
+        evidence_root=config.evidence_root,
     )
 
     outcome, summary = refresh.run_refresh(config)
@@ -284,9 +293,10 @@ def test_week2_requires_settled_evidence_before_sleeper_or_provider(
     monkeypatch.setattr(refresh, "_validate_sleeper", lambda config: calls.append("sleeper"))
     monkeypatch.setattr(refresh, "acquire_live_response", lambda **kwargs: calls.append("provider"))
 
-    outcome, summary = refresh.run_refresh(_config(tmp_path))
+    config = _config(tmp_path)
+    outcome, summary = refresh.run_refresh(dataclasses.replace(config, evidence_root=None))
 
-    assert outcome is refresh.RefreshOutcome.FOOTBALL_STATE_NOT_READY
+    assert outcome is refresh.RefreshOutcome.SCHEDULE_NOT_READY
     assert calls == []
     assert summary["provider_request_count"] == 0
     assert summary["week"] == 2
@@ -615,3 +625,39 @@ def test_systemd_contract_is_billable_safe() -> None:
     assert "Persistent=false" in timer
     assert "00:05:00 UTC" in timer
     assert "12:05:00 UTC" in timer
+
+
+@pytest.mark.parametrize("failure", ["stale", "discrepancy", "unavailable", "changed_during_scoring"])
+def test_schedule_preflight_failure_prevents_paid_acquisition(monkeypatch, tmp_path, failure):
+    calls = []
+    _wire_success(monkeypatch, tmp_path, calls)
+    requests = []
+
+    def cohort(*args, **kwargs):
+        if failure == "stale" or (failure == "changed_during_scoring" and calls):
+            raise RuntimeError("input cohort stale or changed")
+        return {}
+
+    def verify(*args, **kwargs):
+        requests.append("ESPN")
+        return {"status": {
+            "stale": "VERIFIED", "discrepancy": "KICKOFF_DISCREPANCY",
+            "unavailable": "ESPN_UNAVAILABLE", "changed_during_scoring": "VERIFIED",
+        }[failure]}
+
+    monkeypatch.setattr(refresh, "require_current_schedule_cohort", cohort)
+    monkeypatch.setattr(refresh, "verify_independent_schedule", verify)
+    config = _config(tmp_path)
+    config.publication_dir.mkdir()
+    last_good = config.publication_dir / "latest.json"
+    last_good.write_bytes(b"last good")
+    outcome, status = refresh.run_refresh(config)
+
+    assert outcome is refresh.RefreshOutcome.SCHEDULE_NOT_READY
+    assert status["provider_request_count"] == 0
+    assert "provider" not in calls
+    assert requests == ([] if failure == "stale" else ["ESPN"])
+    assert last_good.read_bytes() == b"last good"
+    if requests:
+        proof = config.run_root / status["run_id"] / "schedule-verification.json"
+        assert json.loads(proof.read_text())["status"] == status["schedule_verification_status"]

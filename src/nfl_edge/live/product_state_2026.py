@@ -25,6 +25,7 @@ import polars as pl
 import sklearn
 
 from nfl_edge.holdout import product_2025
+from nfl_edge.live.week11_flex_2026 import FLEX_GAMES
 from nfl_edge.recommendation.final_selectors_v1 import ValueSelectorState, advance_value_state
 from nfl_edge.value.accepted_calibration import (
     calibrated_market_probability,
@@ -771,6 +772,18 @@ def _final_pregame_selector_rows(
             except (KeyError, TypeError, ValueError, Entering2026ProductStateError):
                 valid_games = False
                 break
+            if captured < kickoff and gid in required_game_ids and week == 11 and gid in FLEX_GAMES:
+                flex = FLEX_GAMES[gid]
+                official_kickoff = _parse_utc(flex.new_utc)
+                if kickoff not in {_parse_utc(flex.old_utc), official_kickoff}:
+                    raise Entering2026ProductStateError(f"{gid}: unexpected Week 11 proof kickoff: {proof_path}")
+                if captured >= official_kickoff:
+                    if rows_by_game.get(gid):
+                        raise Entering2026ProductStateError(
+                            f"{gid}: Week 11 selector rows captured after official kickoff under old schedule: "
+                            f"{proof_path}"
+                        )
+                    continue  # An old empty board after official kickoff cannot supersede an eligible board.
             if captured >= kickoff or gid not in required_game_ids:
                 continue
             candidate = (captured, str(proof_path), rows_by_game.get(gid, []))

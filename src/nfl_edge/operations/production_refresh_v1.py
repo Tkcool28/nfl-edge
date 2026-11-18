@@ -21,7 +21,7 @@ from typing import Any, Iterator
 
 from nfl_edge.backend.publication import ProductStore
 from nfl_edge.contracts.live_product_v1 import validate_product_snapshot
-from nfl_edge.live.evidence_2026 import load_settled_evidence
+from nfl_edge.live.evidence_2026 import load_settled_evidence, require_current_schedule_cohort
 from nfl_edge.live.markets_2026 import (
     acquire_live_response,
     load_capture,
@@ -31,10 +31,11 @@ from nfl_edge.live.markets_2026 import (
 from nfl_edge.live.product_2026 import build_product_snapshot, product_snapshot_bytes
 from nfl_edge.live.product_state_2026 import advance_live_value_state, load_entering_2026_product_state
 from nfl_edge.live.schedule_2026 import resolve_active_schedule
+from nfl_edge.live.schedule_verification_2026 import ScheduleVerificationError, verify_independent_schedule
 from nfl_edge.live.scorer_2026 import canonical_snapshot_bytes, football_snapshot_hash, score_week
 from nfl_edge.live.sleeper_qb import DEFAULT_OVERRIDES, SleeperExpectedQBResolver, SleeperQBSource, load_overrides
 from nfl_edge.live.state_advancement_2026 import advance_entering_state_through_settled_weeks
-from nfl_edge.prospective.runtime_v1 import capture_published_product
+from nfl_edge.prospective.runtime_v1 import capture_published_product, require_prospective_kickoff_compatibility
 
 
 class RefreshOutcome(str, Enum):
@@ -211,6 +212,7 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
         "schedule_version": None,
         "schedule_path": None,
         "schedule_rollover_at_utc": None,
+        "schedule_verification_status": None,
         "completed_2026_blocks": [],
         "football_state_version": None,
         "sleeper_snapshot_id": None,
@@ -294,11 +296,32 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
             advanced_state = None
             prior_live_inputs = None
             evidence = None
+            if config.live:
+                try:
+                    if config.evidence_root is None:
+                        raise ScheduleVerificationError("live acquisition requires a weekly input cohort")
+                    evidence = load_settled_evidence(config.evidence_root, nonblocking=True)
+                    primary = require_current_schedule_cohort(
+                        evidence, schedule, schedule_path, as_of_utc=_utc_now(),
+                    )
+                    if schedule.get("kickoff_reconciliation") and config.prospective_dir is None:
+                        raise ScheduleVerificationError("Week 11 flex requires the prospective publication root")
+                    if config.prospective_dir is not None:
+                        require_prospective_kickoff_compatibility(schedule, runtime_root=config.prospective_dir)
+                    verification = verify_independent_schedule(schedule, primary=primary)
+                    summary["schedule_verification_status"] = verification["status"]
+                    _atomic_json(run_dir / "schedule-verification.json", verification)
+                    if verification["status"] != "VERIFIED":
+                        raise ScheduleVerificationError(f"{verification['status']}: see schedule-verification.json")
+                except Exception as exc:
+                    return finish(RefreshOutcome.SCHEDULE_NOT_READY, exc)
+
             if active_schedule.week > 1:
                 try:
                     if config.evidence_root is None:
                         raise RuntimeError("active Week > 1 requires --evidence-root with settled prior-week evidence")
-                    evidence = load_settled_evidence(config.evidence_root)
+                    if evidence is None:
+                        evidence = load_settled_evidence(config.evidence_root)
                     advanced_state = advance_entering_state_through_settled_weeks(
                         repository_root=config.repository_root,
                         active_schedule_path=active_schedule.path,
@@ -373,6 +396,14 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                     }
             except Exception as exc:
                 return finish(RefreshOutcome.FOOTBALL_STATE_NOT_READY, exc)
+
+            if config.live:
+                try:
+                    # The same cohort must still be current after scoring and
+                    # historical replay, immediately before the paid request.
+                    require_current_schedule_cohort(evidence, schedule, schedule_path, as_of_utc=_utc_now())
+                except Exception as exc:
+                    return finish(RefreshOutcome.SCHEDULE_NOT_READY, exc)
 
             capture_events: list[dict[str, Any]] | None = None
             capture_metadata: dict[str, Any] | None = None

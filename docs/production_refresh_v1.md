@@ -8,8 +8,9 @@ The refresh composes frozen existing contracts only:
 
 ```text
 non-billable nflverse weekly inputs -> active-week resolution ->
+current input cohort and independent ESPN schedule verification ->
 settled-prior-week state advancement -> validated Sleeper audit ->
-football scorer -> one Odds API capture -> market normalization ->
+football scorer -> cohort recheck -> one Odds API capture -> market normalization ->
 deterministic materialization -> atomic publication -> observational prospective capture
 ```
 
@@ -25,6 +26,41 @@ The existing Sleeper timer uses fixed UTC triggers: `00:00` and `12:00 UTC`. Its
 During MDT this is approximately `18:05` and `06:05` America/Denver. During MST it is approximately `17:05` and `05:05`. Both timers deliberately use fixed UTC, so local Mountain wall-clock time shifts one hour at DST transitions; the sequencing relationship remains five minutes after Sleeper in UTC.
 
 `Persistent=false` is intentional: a reboot or downtime does **not** cause a catch-up billable Odds API request. The next ordinary scheduled cycle is the next opportunity.
+
+### Independent schedule verification
+
+A paid refresh requires the successful nflverse cohort from the current
+`00:01` or `12:01` UTC materialization cycle. The manifest binds the active
+schedule version and content-addressed checkpoint to all four settled football
+artifacts and records the nflverse response digest and retrieval time. The
+refresh rechecks cohort identity and freshness immediately before acquisition.
+An overlapping materializer or a stale, partial, corrupt or inconsistent
+cohort blocks the run.
+
+The refresh requests the exact 2026 regular-season week once from ESPN's public
+scoreboard. It compares the complete oriented slate and exact UTC kickoffs.
+The run's `schedule-verification.json` records source timestamps, digests,
+coverage and individual discrepancies. A timeout, unavailable endpoint,
+invalid schema, missing or duplicate game, or unreviewed discrepancy stops the
+run before it contacts the Odds API. The last-good product remains available.
+
+Week 11's `NFL_2026_REG_WEEK11_FLEX_20261109_V1` reconciliation is tied to the
+[NFL's November 9 announcement](https://www.nfl.com/news/week-11-schedule-change).
+It moves JAX at NYG from 18:00Z to 21:25Z and PIT at PHI from 21:25Z to 18:00Z
+on November 22. The weekly materializer records the original source rows,
+writes a new checkpoint and archives the prior manifest. The correction's
+schedule version is derived from schedule content. A prospective publication
+with a conflicting kickoff blocks a new paid refresh.
+
+For an isolated Week 11 qualification, provide a saved exact-week ESPN
+response using `--espn-response` and its original retrieval timestamp using
+`--espn-retrieved-at-utc` to `scripts/verify_live_2026_preprovider_v1.py`.
+Use `--prospective-dir` to check a read-only copy of the native publication
+records. The exact-week URL for Week 11 is
+`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week=11`.
+The diagnostic reads the saved bytes and can run inside a network namespace.
+Separately replay the original sportsbook response and sidecar in staging to
+validate market coverage and evaluator rows at the original capture time.
 
 ### Rolling regular-season week contract
 

@@ -9,8 +9,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
+from nfl_edge.live.evidence_2026 import load_settled_evidence, require_current_schedule_cohort
 from nfl_edge.live.markets_2026 import (
     acquire_live_response,
     build_request_plan,
@@ -21,6 +23,8 @@ from nfl_edge.live.markets_2026 import (
 from nfl_edge.live.product_2026 import build_product_snapshot, product_snapshot_bytes
 from nfl_edge.live.product_state_2026 import load_entering_2026_product_state
 from nfl_edge.live.schedule_2026 import load_schedule
+from nfl_edge.live.schedule_verification_2026 import verify_independent_schedule
+from nfl_edge.prospective.runtime_v1 import require_prospective_kickoff_compatibility
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_STATE = ROOT / "data/live/2026/entering_product_state_v1.json"
@@ -50,6 +54,8 @@ def main() -> int:
     source.add_argument("--live", action="store_true")
     source.add_argument("--market-response", type=Path)
     parser.add_argument("--market-metadata", type=Path)
+    parser.add_argument("--evidence-root", type=Path, help="Materialized input cohort required for --live")
+    parser.add_argument("--prospective-dir", type=Path, help="Read-only prospective runtime root")
     parser.add_argument(
         "--acquired-at-utc",
         help="Required only when replay response has no metadata sidecar.",
@@ -61,6 +67,25 @@ def main() -> int:
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
     if args.live:
+        if args.evidence_root is None:
+            parser.error("--live requires --evidence-root")
+        if schedule.get("kickoff_reconciliation") and args.prospective_dir is None:
+            parser.error("Week 11 flex requires --prospective-dir")
+        evidence = load_settled_evidence(args.evidence_root, nonblocking=True)
+        primary = require_current_schedule_cohort(
+            evidence, schedule, args.schedule, as_of_utc=datetime.now(timezone.utc).isoformat(),
+        )
+        if args.prospective_dir is not None:
+            require_prospective_kickoff_compatibility(schedule, runtime_root=args.prospective_dir)
+        if football["schedule_version"] != schedule["schedule_version"]:
+            raise ValueError("football snapshot schedule version differs from the active cohort")
+        verification = verify_independent_schedule(schedule, primary=primary)
+        _write_json(args.output_dir / "schedule-verification.json", verification)
+        if verification["status"] != "VERIFIED":
+            raise RuntimeError(f"{verification['status']}: see schedule-verification.json")
+        require_current_schedule_cohort(
+            evidence, schedule, args.schedule, as_of_utc=datetime.now(timezone.utc).isoformat(),
+        )
         capture = acquire_live_response(
             schedule=schedule,
             output_dir=args.output_dir / "raw",
