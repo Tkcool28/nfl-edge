@@ -1,14 +1,14 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-11-18T01:16:40Z",
- "research_generated_at_utc": "2026-11-18T01:16:40Z",
+ "submitted_at_utc": "2026-11-18T13:22:11Z",
+ "research_generated_at_utc": "2026-11-18T13:22:11Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-11-18T01:16:40Z",
-  "edition": "Evening Brief",
-  "title": "NFL EDGE Tuesday Evening Brief",
-  "dek": "Thursday night is Colts at Texans, the board still hasn't flipped to Week 11, and the betting splits show the public and the money on opposite sides of the big spread.",
-  "research_generated_at_utc": "2026-11-18T01:16:40Z",
+  "published_at_utc": "2026-11-18T13:22:11Z",
+  "edition": "Morning Brief",
+  "title": "NFL EDGE Wednesday Morning Brief",
+  "dek": "The board flipped to Week 11 overnight with two cards and no Value play, Thursday's teams are banged up, and the betting splits still show the public and the money on opposite sides of the big Thursday spread.",
+  "research_generated_at_utc": "2026-11-18T13:22:11Z",
   "sections": [
    {
     "id": "what-matters",
@@ -16,15 +16,15 @@
     "title": "What Matters Today",
     "items": [
      {
-      "headline": "Lead: Thursday night is Colts at Texans — and the board hasn't flipped to Week 11 yet",
+      "headline": "The board flipped to Week 11 overnight — and there is no Value card",
       "paragraphs": [
        "Week 11 opens Thursday night with the Indianapolis Colts at the Houston Texans, 8:15 p.m. ET kickoff at NRG Stadium.",
-       "But the app's board hasn't flipped to Week 11 yet. We checked at 6:09 p.m. and again at 6:12 p.m., and it still shows last week's games with the lines pulled. No Week 11 cards, no Thursday prices, no picks in the app yet.",
-       "That is the board telling you plainly: there is nothing to play in the app tonight. Thursday's numbers will land when the board flips."
+       "The app's board flipped overnight. Thirteen games are priced, and there are two cards on it. Hit Rate is the Bengals moneyline at -295 on FanDuel for Monday night. Balanced is the Vikings +3 at +100 on FanDuel for Sunday night.",
+       "The Value card is empty. The app found no +EV price on the board this week, and it says so plainly instead of forcing one."
       ],
-      "takeaway": "Thursday night is Colts at Texans, but the board is still on Week 10. Nothing to play in the app tonight — the Week 11 numbers come with the flip.",
+      "takeaway": "Two cards, no Value card. Hit Rate is Bengals moneyline -295, Balanced is Vikings +3 at +100, and nothing on the board is +EV this week.",
       "evidence_ids": [
-       "ev-board-pm"
+       "ev-board-am"
       ],
       "sources": [
        {
@@ -34,49 +34,60 @@
       ]
      },
      {
-      "headline": "Injury news: Maye likely done for the year, and Thursday's teams are banged up",
+      "headline": "Injury news: Thursday's teams are banged up, and two Sunday quarterbacks are in doubt",
       "paragraphs": [
-       "Drake Maye is believed to have suffered a fractured ankle in Sunday's loss to the Lions, and the early word is he is likely done for the season. The Patriots are on bye this week and don't play again until November 29 at the Chargers, so this doesn't change a game this week — but it changes New England's season. Tommy DeVito is next up if Maye isn't ready for Week 12.",
-       "Lamar Jackson's thumb injury is likely to sideline him for the rest of the regular season. He lasted one snap after returning from his ankle injury. Jacoby Brissett stays the Ravens starter.",
-       "For Thursday night, Houston's second injury report is rough. Running back Woody Marks (concussion) is unlikely to play on the short week. Edge rusher Danielle Hunter (hamstring) and receiver Marvin Harrison Jr. (hamstring) haven't practiced. Running back David Montgomery (groin), receiver Tank Dell (hand and shoulder), and cornerback Kamari Lassiter (wrist) all sat out Tuesday too.",
-       "The Colts aren't healthy either. Cornerbacks Sauce Gardner (calf) and Charvarius Ward (knee) missed practice Monday and Tuesday and are trending out for Thursday. The one settled thing in Indy: the team has already announced Daniel Jones as the starter for Thursday night.",
-       "Elsewhere: Baker Mayfield is dealing with a foot strain and is questionable for Sunday at Detroit. Geno Smith's ankle tests showed no major injury, but he is questionable for Sunday. Jordan Addison is expected to have surgery on his thumb. Ladd McConkey's back spasms kept him inactive on Monday night.",
-       "Final injury reports and game statuses for Thursday come after Wednesday's practice. The inactive lists land about 90 minutes before kickoff on Thursday."
+       "For Thursday, Houston is missing pieces on both sides of the ball. Danielle Hunter and Marvin Harrison Jr. did not practice Monday or Tuesday, and Woody Marks is doubtful with a concussion. David Montgomery was a full participant and is trending to return.",
+       "The Colts' top two corners, Sauce Gardner and Charvarius Ward, missed both walkthroughs and are trending out. Left tackle Bernhard Raimann missed both walkthroughs with a concussion, and Jalen Travis is doubtful. Daniel Jones is confirmed as Indy's starter.",
+       "For Sunday, Baker Mayfield is questionable with a foot strain and the reporting says he is trending toward missing the game at Detroit. Jalon Daniels would start if he sits. The app still lists Mayfield as Tampa Bay's expected starter, so trust the reporting here, not the app, and watch Wednesday's practice.",
+       "Geno Smith is questionable with an ankle injury, but the Jets say he starts at the Chargers if he is healthy. The app lists him as the expected starter. Drake Maye is likely done for the year with a fractured ankle, and the Patriots are on bye."
       ],
-      "takeaway": "Maye is likely done for the year and Jackson is likely out for the regular season. For Thursday, Houston is missing pieces on both sides of the ball and the Colts' top two corners are trending out — with Daniel Jones already confirmed as Indy's starter.",
+      "takeaway": "Thursday's final designations come after Wednesday's practice, and inactives land about 90 minutes before kickoff. Mayfield is the one to watch: the app still shows him starting, but the reporting says he is trending to miss Sunday.",
       "evidence_ids": [
-       "ev-inj-pm",
-       "ev-inj-tnf"
+       "ev-inj-am",
+       "ev-board-am"
       ],
       "sources": [
        {
-        "label": "NBC Sports - NFL Week 11 Injury Report: Drake Maye likely done for season, surgery for Jordan Addison",
-        "url": "https://www.nbcsports.com/fantasy/football/news/nfl-week-11-injury-report-drake-maye-likely-done-for-season-surgery-for-jordan-addison"
+        "label": "Houston Texans - Week 11 Injury Report: Texans vs Colts",
+        "url": "https://www.houstontexans.com/news/week-11-injury-report-texans-vs-colts"
        },
        {
-        "label": "SI - Texans vs. Colts Injury Report: Latest on Danielle Hunter, Marvin Harrison Jr.",
-        "url": "https://www.si.com/nfl/texans/onsi/texans-vs-colts-injury-report-latest-on-danielle-hunter-marvin-harrison-jr"
+        "label": "Stampede Blue - Indianapolis Colts Injury Report: Week 11 Thursday Night Football",
+        "url": "https://www.stampedeblue.com/indianapolis-colts-injuries/130189/indianapolis-colts-injury-report-week-11-thursday-night-football?utm_source=bleacherreport&utm_medium=referral"
        },
        {
-        "label": "NBC Sports - Sauce Gardner, Charvarius Ward DNP again Tuesday",
-        "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-17/sauce-gardner-charvarius-ward-dnp-again-tuessday"
+        "label": "SI - Baker Mayfield Injury Uncertainty Continues to Shift Buccaneers vs. Lions Odds for NFL Week 11",
+        "url": "https://www.si.com/betting/baker-mayfield-injury-uncertainty-continues-to-shift-buccaneers-vs-lions-odds-for-nfl-week-11-2026"
+       },
+       {
+        "label": "NBC Sports - Geno Smith (ankle) will start vs. LAC if healthy",
+        "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-16/geno-smith-ankle-will-start-vs-lac-if-healthy"
+       },
+       {
+        "label": "NFL EDGE app",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
       ]
      },
      {
-      "headline": "Thursday weather in Houston: mild, dry, and under a roof anyway",
+      "headline": "Weather: mild everywhere, and Thursday is under a roof",
       "paragraphs": [
-       "Thursday night in Houston looks quiet. About 68 degrees at kickoff, wind about 4 mph, partly cloudy, rain chance about 10 percent.",
-       "And it barely matters for this game: NRG Stadium has a retractable roof. Just the facts — no weather edge here, and no reason to read one into the total."
+       "Thursday in Houston is about 68 degrees with light wind and a low rain chance, and there is a roof over the field anyway.",
+       "Sunday's outdoor games are mild too. Buffalo is about 60 degrees with a chance of rain showers and wind gusting into the 20s. Chicago is about 49 degrees and mostly sunny with a breeze. Denver is about 48 degrees, mostly sunny, and calm.",
+       "No game this week has real weather trouble. Nothing here changes how a game should be priced."
       ],
-      "takeaway": "Houston on Thursday: about 68 degrees, light wind, low rain chance — and a roof over the field. Weather is a non-factor for Colts at Texans.",
+      "takeaway": "Weather is a non-factor this week: mild everywhere, Thursday under a roof, and no outdoor game with wind trouble.",
       "evidence_ids": [
-       "ev-weather"
+       "ev-weather-am"
       ],
       "sources": [
        {
         "label": "Sharp Football Analysis - NFL Weather Today: Week 11 forecast for every game",
         "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/"
+       },
+       {
+        "label": "FFBeacon - NFL Weather, Week 11 2026: Forecast for Every Game",
+        "url": "https://ffbeacon.com/season/weather"
        }
       ]
      }
@@ -88,15 +99,15 @@
     "title": "What It Means for NFL EDGE",
     "items": [
      {
-      "headline": "An empty board is an answer, not a problem",
+      "headline": "Two cards, no Value card — here is how to read them",
       "paragraphs": [
-       "All three headline cards are empty tonight: Hit Rate, Balanced, and Value all say no play. That's not the app failing. That's the app saying there is nothing priced yet.",
-       "When the board flips to Week 11, Thursday's game gets priced like any other. Hit Rate is the supported pick that looks most likely to win. Balanced is a strong pick without paying too much — a good starting point if you're new to this. Value is the model's plus-EV play. Each card does a different job, and none of them is the wrong one for doing its job.",
-       "Until the flip, don't go hunting for a bet the app hasn't priced. The board refreshes every morning and evening. Thursday morning is the next look."
+       "Hit Rate is the pick most likely to win. The Bengals moneyline at -295 is the app's strongest win-probability play: the app puts Cincinnati at about 74% to win, against a market price that needs about 75% to break even. That is fine. Hit Rate forgoes value for win probability, and the app's own tutorial says Hit Rate is not Profit Rate.",
+       "Balanced is the middle ground. The Vikings +3 at +100 is a good starting point: about a coin flip by the app's numbers, at even money.",
+       "Value is always the app's +EV play. This week there is not one. An empty Value card is the app being honest, not broken. Do not go hunting for a third card that is not there."
       ],
-      "takeaway": "No cards tonight because the board hasn't flipped. Don't force a bet the app hasn't priced — check again when the board turns to Week 11.",
+      "takeaway": "Hit Rate is Bengals moneyline -295: the most likely winner, not a value play. Balanced is Vikings +3 at +100. Value is empty because nothing on the board is +EV.",
       "evidence_ids": [
-       "ev-board-pm"
+       "ev-board-am"
       ],
       "sources": [
        {
@@ -106,29 +117,38 @@
       ]
      },
      {
-      "headline": "Your book already has Thursday's lines — use Check until the board catches up",
+      "headline": "The app thinks the big spreads are too fat — and it still did not bet any of them",
       "paragraphs": [
-       "Your book doesn't wait for the app. The Texans are 12.5-point favorites just about everywhere, with the total at 44.5. The app's board doesn't have those numbers yet, but Check does the same job: tap Check, type in your book's line and price, and the app runs it back through the model and the evaluator and gives you a bet or no-bet verdict on your price.",
-       "One thing to watch: the board still lists Week 10 quarterbacks, so it hasn't caught Thursday yet. The news says Daniel Jones starts for the Colts and C.J. Stroud for Houston. When the board flips, check that the quarterbacks on the card match what you know — and if a QB change lands after the flip, Check is how you re-price it at your number."
+       "Look at the gaps. The app has Kansas City by about 6 points; the market has the Chiefs -16.5. It has Buffalo by about 3; the market has the Bills -16.5. It has Houston by less than a point; the market has the Texans -12.5. It has Chicago by a fraction of a point; the market has the Bears -11.5.",
+       "That is a real disagreement. But none of those underdogs made the board as a card. A gap is a question, not a pick. The app only posts a card when the whole check passes, and this week only two plays passed.",
+       "If your book has a better number than the app's board on one of these dogs, that is what Check is for. Type in your book's line and price and let the app run it back through the model and give you a bet or no-bet verdict on your price."
       ],
-      "takeaway": "The board is behind your book tonight. Type your book's Thursday line into Check and let the app give you a verdict on your price — that's what it's for.",
+      "takeaway": "The app's margins are far under the market on all four double-digit favorites, but none of those dogs cleared the bar for a card. A gap alone is not a bet — run your price through Check.",
       "evidence_ids": [
-       "ev-board-pm",
-       "ev-inj-tnf",
-       "ev-odds"
+       "ev-board-am",
+       "ev-odds-am"
       ],
       "sources": [
        {
         "label": "NFL EDGE app",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       },
+       }
+      ]
+     },
+     {
+      "headline": "Two Sunday games the app cannot price yet",
+      "paragraphs": [
+       "Jaguars at Giants and Steelers at Eagles have no market observations in the app. The books have not fed the app lines for those two games yet.",
+       "That does not mean there is nothing there. It means the app cannot price them until the lines land. Your book already has them. Type your book's line into Check and the app will give you a verdict on your price."
+      ],
+      "takeaway": "Jaguars at Giants and Steelers at Eagles are unpriced in the app. Use Check with your book's line until the board catches up.",
+      "evidence_ids": [
+       "ev-board-am"
+      ],
+      "sources": [
        {
-        "label": "NBC Sports - Sauce Gardner, Charvarius Ward DNP again Tuesday",
-        "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-17/sauce-gardner-charvarius-ward-dnp-again-tuessday"
-       },
-       {
-        "label": "LineSmart - Colts vs Texans Nov 19: Odds, Line Moves",
-        "url": "https://linesmart.app/nfl/games/indianapolis-colts-at-houston-texans-2026-11-19/"
+        "label": "NFL EDGE app",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
       ]
      }
@@ -140,18 +160,18 @@
     "title": "The Fade",
     "items": [
      {
-      "headline": "The public is on the Colts. The money is on the Texans.",
+      "headline": "The public is on the Colts. The money is still on the Texans.",
       "paragraphs": [
-       "Here's the split on Thursday night, from the free DraftKings row on VSiN's betting splits page. On the spread, 62 percent of the bets are on the Colts getting 12.5 points — but only 33 percent of the money is. Flip it around: the Texans laying 12.5 have just 38 percent of the bets and 67 percent of the money.",
-       "That's a real disagreement: most tickets on one side, most dollars on the other. And the line has moved with the money. The Texans opened at -10 at DraftKings and now sit at -12.5, and the spread grew at every book tracked. The total hasn't moved at all — still 44.5.",
-       "What could it mean? The bigger, price-sensitive money likes Houston; the crowd likes the points. It is not a pick, and it doesn't override the app. It's one more layer to think with.",
-       "What price to watch: if you like Houston, the good number is already gone — the Texans were -10 earlier in the week and now cost -12.5, so don't chase the move just because the money made it. If you like the Colts, the points keep growing: +12.5 now, and Thursday's inactives, about 90 minutes before kickoff, could push it further. Watch whether it crosses 13.",
-       "How to use it: take whichever side you actually like and run it through Check at your book's price. If the public keeps hammering the favorite's opponent and the dog gets a better price without any new bad team news, you may be looking at the same football opinion for a better price."
+       "We checked the splits this morning. On the spread, 62% of the bets are on the Colts +12.5, but only 40% of the money is. The Texans -12.5 have 38% of the bets and 60% of the money.",
+       "That is the same split we saw Tuesday evening, and it held overnight. The money moved 7 points toward the Colts since then, but most tickets are still on one side and most money on the other.",
+       "The line backs it up. DraftKings still shows Texans -12.5, and Pinnacle has moved to -13. The total and the moneyline show no split at all: the over has 69% of the money and 66% of the bets, and the Texans moneyline is 90% on both counts.",
+       "Here is how to use it. If the public keeps hammering the Colts and the dog's price gets better without any new bad Texans news, you may be looking at the same football opinion for a better price. Watch whether DraftKings follows Pinnacle to -13. And run either side through Check at your price before you decide anything.",
+       "This is decision context, not a pick. The Fade does not override the app."
       ],
-      "takeaway": "Most bets are on the Colts, most money is on the Texans, and the line moved toward Houston. Use it as context, not a pick — and run your side through Check at your price.",
+      "takeaway": "Most bets are on the Colts, most money is on the Texans, and the line nudged toward Houston at Pinnacle. Use it as context, not a pick — and run your side through Check at your price.",
       "evidence_ids": [
-       "ev-splits-pm",
-       "ev-odds"
+       "ev-splits-am",
+       "ev-odds-am"
       ],
       "sources": [
        {
@@ -159,8 +179,8 @@
         "url": "https://data.vsin.com/betting-splits/"
        },
        {
-        "label": "LineSmart - Colts vs Texans Nov 19: Odds, Line Moves",
-        "url": "https://linesmart.app/nfl/games/indianapolis-colts-at-houston-texans-2026-11-19/"
+        "label": "NFL EDGE app",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
       ]
      }
@@ -172,26 +192,19 @@
     "title": "Line Movement",
     "items": [
      {
-      "headline": "The Texans keep getting more expensive",
+      "headline": "Houston keeps getting more expensive",
       "paragraphs": [
-       "At DraftKings, the Texans opened at -10 and now sit at -12.5. The Colts' moneyline lengthened from +410 to +470 at DraftKings since Monday, and every book tracked lengthened the Colts' price while the Texans' spread grew by one to two points. The total hasn't budged: 44.5 from the open to now.",
-       "There is no single headline behind the move — it came with the market across the week, not with one piece of news. The books kept nudging Houston up while the Colts' price drifted out.",
-       "The app hasn't caught any of this yet, because the board is still on Week 10 with no Thursday lines at all. Until the board flips, Check is how you price your book's Thursday number — the app runs your line and price back through the model and tells you bet or no-bet."
+       "The Texans opened -10 at DraftKings. They are -12.5 there now, unchanged overnight, and Pinnacle has them at -13. The total has not moved from 44.5 at DraftKings or FanDuel.",
+       "The Colts moneyline is +525 at DraftKings and +540 at FanDuel. The books keep lengthening the Colts' price while the Texans' spread grows.",
+       "Monday night is the closest big game to the app's numbers: the Bengals are -6.5 at DraftKings and the app has them by about 5. Every other double-digit favorite is far from the app's margin.",
+       "If your book still shows Texans -12.5 and Check says bet, bet now. Waiting risks -13 becoming the number everywhere, and a good number today beats a hoped-for number tomorrow."
       ],
-      "takeaway": "Texans -10 to -12.5 at DraftKings, Colts moneyline drifting out at every book, total steady at 44.5. The app hasn't priced Thursday yet — use Check until it does.",
+      "takeaway": "Texans -10 to -12.5 at DraftKings, now -13 at Pinnacle. Total steady at 44.5. If your book still has -12.5 and Check says bet, take it now.",
       "evidence_ids": [
-       "ev-odds",
-       "ev-board-pm"
+       "ev-odds-am",
+       "ev-board-am"
       ],
       "sources": [
-       {
-        "label": "LineSmart - Colts vs Texans Nov 19: Odds, Line Moves",
-        "url": "https://linesmart.app/nfl/games/indianapolis-colts-at-houston-texans-2026-11-19/"
-       },
-       {
-        "label": "Action Network - Best NFL Betting Promos: Colts vs. Texans, Week 11",
-        "url": "https://www.actionnetwork.com/nfl/best-nfl-betting-promos"
-       },
        {
         "label": "NFL EDGE app",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
@@ -206,15 +219,15 @@
     "title": "Today's Tip",
     "items": [
      {
-      "headline": "Tonight's job: get Thursday ready, don't force Tuesday",
+      "headline": "Thursday game? Thursday check.",
       "paragraphs": [
-       "There are no games tonight and no cards in the app. The useful thing to do now is decide what you'd play on Thursday at your book's number — Colts +12.5, Texans -12.5, the total at 44.5 — and be ready to run it through Check when the board flips.",
-       "If you played anything on Monday night and haven't settled it yet, settle it now while the result is fresh. Settlement is manual — the tracker only works if you're honest with yourself. Log the losers too.",
-       "Then wait for the flip. Thursday morning is the next board, and Thursday's inactives land about 90 minutes before kickoff. A good number at your book plus a Check bet verdict beats a forced bet on a night with nothing priced."
+       "Inactives land about 90 minutes before the 8:15 p.m. ET kickoff on Thursday. That is when you will know for sure about Gardner, Ward, Hunter, and Harrison Jr.",
+       "Line up your Thursday number now. Run it through Check at your book's price, and let the app give you a verdict. The board refreshes every morning and evening, so check again when it turns.",
+       "And do not force anything on the two games the app cannot price yet. Check them with your book's line, or leave them alone until the board catches up."
       ],
-      "takeaway": "Nothing to force tonight. Line up your Thursday number, settle Monday night honestly, and let Check price it when the board flips.",
+      "takeaway": "Thursday game, Thursday check: inactives land about 90 minutes before kickoff, so line up your number now and run it through Check at your price.",
       "evidence_ids": [
-       "ev-board-pm"
+       "ev-board-am"
       ],
       "sources": [
        {
@@ -229,10 +242,10 @@
  },
  "evidence": [
   {
-   "evidence_id": "ev-board-pm",
+   "evidence_id": "ev-board-am",
    "category": "board",
    "verification": "REPORTED",
-   "fact": "NFL EDGE product/latest fetched Tuesday Nov 17, 2026 at 6:09 p.m. Denver (2026-11-18T01:09:29Z) and re-fetched at 6:12 p.m. Denver: still the morning board. observed_at_utc 2026-11-17T12:08:43Z, state FRESH, Week 10, 14 games, all game_status IN_PROGRESS, every market board empty (moneyline, spread, total all blank - the books pulled the lines after the finals). All three headline overlays are null - Hit Rate, Balanced, and Value all say no play. The board has not flipped to Week 11 yet, so it shows no Thursday Colts at Texans game, no Week 11 lines, and still lists Week 10 quarterbacks.",
+   "fact": "NFL EDGE product/latest fetched Wednesday Nov 18, 2026 about 6:15 a.m. Denver (app data observed_at_utc 2026-11-18T12:08:48Z, state FRESH): the board has flipped to Week 11, slate UPCOMING, 13 games. Headline cards: Hit Rate is Cincinnati moneyline -295 at FanDuel (CIN at WAS, Monday 8:15 p.m. ET), model probability 73.7% vs market 71.1%, EV -0.011, play-through -306, 1.0 unit, state BET. Balanced is Minnesota +3.0 at +100 at FanDuel (MIN at SF, Sunday 8:20 p.m. ET), model probability 50.6% vs market 50.9%, EV -0.025, play-through -103, 0.75 units, state BET. Value is NO_PLAY: no value card this week. Model expected margins vs the DraftKings spread: KC by about 6.3 vs KC -16.5, BUF by about 3.4 vs BUF -16.5, HOU by about 0.8 vs HOU -12.5, CHI by about 0.2 vs CHI -11.5; CIN by about 5.2 vs CIN -6.5 is the closest of the big spreads. Two canonical Week 11 games lack a provider event and have no market observations in the app: JAX at NYG and PIT at PHI. Quarterbacks: Daniel Jones is listed as Indianapolis' expected starter for Thursday; Cam Ward is listed as Tennessee's expected starter; Baker Mayfield is listed as Tampa Bay's expected starter with injury_status Questionable; Geno Smith is listed as the Jets' expected starter with injury_status Questionable.",
    "sources": [
     {
      "label": "NFL EDGE app",
@@ -241,86 +254,70 @@
    ]
   },
   {
-   "evidence_id": "ev-inj-pm",
+   "evidence_id": "ev-inj-am",
    "category": "injury",
    "verification": "REPORTED",
-   "fact": "Drake Maye (New England QB, ankle) is believed to have suffered a fractured ankle in the Week 10 loss to the Lions and is likely done for the 2026 season; Ian Rapoport said it would be a surprise if Maye played again this year. The Patriots are on bye in Week 11 and do not play again until Nov 29 at the Chargers; Tommy DeVito is next up if Maye is not ready for Week 12. Lamar Jackson (Baltimore QB, thumb) returned from an ankle injury in Week 8, lasted one offensive snap, and the thumb injury is likely to sideline him for the remainder of the regular season; Jacoby Brissett remains the Ravens starter. Baker Mayfield (Tampa Bay QB) is dealing with a foot strain and is questionable for Sunday at Detroit. Geno Smith (NY Jets QB, ankle) is questionable for Sunday; Monday tests showed no major injury. Jordan Addison (Minnesota WR, thumb) is expected to have surgery. Ladd McConkey (LA Chargers WR, back spasms) was inactive for Monday night's game at Baltimore.",
+   "fact": "Thursday Night Football, Indianapolis Colts at Houston Texans, Nov 19, 8:15 p.m. ET: Colts cornerbacks Sauce Gardner (calf) and Charvarius Ward (knee) missed both Monday and Tuesday walkthroughs and are trending out; left tackle Bernhard Raimann (concussion) missed both walkthroughs; tight end Will Mallory (hamstring) missed both; right tackle Jalen Travis (knee) is doubtful. Houston: defensive end Danielle Hunter (hamstring) and wide receiver Marvin Harrison Jr. (hamstring) did not practice Monday or Tuesday; tight end Brevin Jordan (foot/illness) did not practice; running back Woody Marks (concussion) is doubtful; running back David Montgomery (groin) was a full participant and is trending to return. Final Thursday designations come after Wednesday's practice. Quarterbacks for Sunday: Baker Mayfield (Tampa Bay, foot strain) is questionable and NFL Network's Ian Rapoport reports he is trending toward missing Sunday at Detroit, with Jalon Daniels expected to start if Mayfield sits; the Buccaneers signed Cooper Rush and elevated Easton Stick. Geno Smith (NY Jets, ankle) is questionable; Jets head coach Aaron Glenn said Smith will start Sunday at the Chargers if he is healthy. Drake Maye (New England, ankle) is believed to have suffered a fractured ankle and is likely done for the 2026 season; the Patriots are on bye in Week 11.",
    "sources": [
     {
-     "label": "NBC Sports - NFL Week 11 Injury Report: Drake Maye likely done for season, surgery for Jordan Addison",
-     "url": "https://www.nbcsports.com/fantasy/football/news/nfl-week-11-injury-report-drake-maye-likely-done-for-season-surgery-for-jordan-addison"
+     "label": "Houston Texans - Week 11 Injury Report: Texans vs Colts",
+     "url": "https://www.houstontexans.com/news/week-11-injury-report-texans-vs-colts"
     },
     {
-     "label": "Fantasy Injury News - Drake Maye injury: Patriots QB status for Week 12",
-     "url": "https://fantasy-injury-news.com/drake-mayes-ankle-injury-threatens-multiple-games-houstons-backfield-in-flux-before-thursday/"
+     "label": "Stampede Blue - Indianapolis Colts Injury Report: Week 11 Thursday Night Football",
+     "url": "https://www.stampedeblue.com/indianapolis-colts-injuries/130189/indianapolis-colts-injury-report-week-11-thursday-night-football?utm_source=bleacherreport&utm_medium=referral"
+    },
+    {
+     "label": "SI - Baker Mayfield Injury Uncertainty Continues to Shift Buccaneers vs. Lions Odds for NFL Week 11",
+     "url": "https://www.si.com/betting/baker-mayfield-injury-uncertainty-continues-to-shift-buccaneers-vs-lions-odds-for-nfl-week-11-2026"
+    },
+    {
+     "label": "NBC Sports - Geno Smith (ankle) will start vs. LAC if healthy",
+     "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-16/geno-smith-ankle-will-start-vs-lac-if-healthy"
     }
    ]
   },
   {
-   "evidence_id": "ev-inj-tnf",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Ahead of Thursday Night Football (Indianapolis Colts at Houston Texans, Nov 19), Houston's second injury report of the week (Nov 17) lists as DNP: RB Woody Marks (concussion, unlikely to play on the short week), DE Danielle Hunter (hamstring), WR Marvin Harrison Jr. (hamstring), RB David Montgomery (groin), WR Tank Dell (hand/shoulder), TE Brevin Jordan (foot/illness), and CB Kamari Lassiter (wrist, shifted from full participant to DNP). Indianapolis lists as DNP: DT Jerry Tillery (calf), OL Jalen Travis (knee), LB Jaylon Carlies (neck), TE Will Mallory (hamstring). Colts CBs Sauce Gardner (calf) and Charvarius Ward (knee) did not practice Monday or Tuesday and are trending out for Thursday. The Colts have already announced Daniel Jones as the starter for Thursday Night Football. Final injury reports and game statuses come after Wednesday's practice.",
-   "sources": [
-    {
-     "label": "SI - Texans vs. Colts Injury Report: Latest on Danielle Hunter, Marvin Harrison Jr.",
-     "url": "https://www.si.com/nfl/texans/onsi/texans-vs-colts-injury-report-latest-on-danielle-hunter-marvin-harrison-jr"
-    },
-    {
-     "label": "NBC Sports - Sauce Gardner, Charvarius Ward DNP again Tuesday",
-     "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-17/sauce-gardner-charvarius-ward-dnp-again-tuessday"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-weather",
+   "evidence_id": "ev-weather-am",
    "category": "weather",
    "verification": "REPORTED",
-   "fact": "Indianapolis Colts at Houston Texans, Thursday Nov 19, 8:15 p.m. ET, NRG Stadium (retractable roof): about 68 degrees F and about 4 mph wind at kickoff, partly cloudy. National Weather Service Houston forecast for Thursday: mostly sunny, high near 76, northeast wind around 5 mph; Thursday night partly cloudy, low around 59; rain chance about 10 percent.",
+   "fact": "Week 11 kickoff weather (National Weather Service forecasts, read Nov 17-18): Thursday, Colts at Texans, NRG Stadium (retractable roof): about 68 degrees, light wind, low rain chance, roof overhead - weather is a non-factor. Sunday, Dolphins at Bills, Highmark Stadium: about 60 degrees, chance of rain showers (about 42-43% precipitation), wind from the southwest about 10 mph gusting to 22-26. Sunday, Saints at Bears, Soldier Field: about 49 degrees, mostly sunny, wind from the northwest about 10 mph gusting to 15-17, about 8-12% precipitation. Sunday, Raiders at Broncos, Empower Field at Mile High: about 48 degrees, mostly sunny, wind from the northeast about 5 mph, 0% precipitation. No game this week is flagged for wind trouble - every outdoor forecast is under 15 mph sustained wind. Four games are indoors or under a roof.",
    "sources": [
     {
      "label": "Sharp Football Analysis - NFL Weather Today: Week 11 forecast for every game",
      "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/"
     },
     {
-     "label": "National Weather Service - Houston forecast",
-     "url": "https://forecast.weather.gov/MapClick.php?&lat=30.083274&lon=-95.496607"
+     "label": "FFBeacon - NFL Weather, Week 11 2026: Forecast for Every Game",
+     "url": "https://ffbeacon.com/season/weather"
     }
    ]
   },
   {
-   "evidence_id": "ev-odds",
-   "category": "odds",
-   "verification": "REPORTED",
-   "fact": "Colts at Texans, Thursday Nov 19, 8:15 p.m. ET: Texans are 12.5-point favorites at DraftKings and FanDuel, total 44.5. At DraftKings the spread opened at Texans -10 and has moved to -12.5; the total has not moved from 44.5. The Colts moneyline lengthened from +410 to +470 at DraftKings since Monday, and every book tracked lengthened the Colts moneyline while the Texans spread grew by one to two points at all five books. Current consensus: Texans -12.5, total 44.5, Colts about +525, Texans about -750.",
-   "sources": [
-    {
-     "label": "LineSmart - Colts vs Texans Nov 19: Odds, Line Moves",
-     "url": "https://linesmart.app/nfl/games/indianapolis-colts-at-houston-texans-2026-11-19/"
-    },
-    {
-     "label": "Action Network - Best NFL Betting Promos: Colts vs. Texans, Week 11",
-     "url": "https://www.actionnetwork.com/nfl/best-nfl-betting-promos"
-    },
-    {
-     "label": "WIN DAILY - Thursday Night Football Odds: Colts vs Texans",
-     "url": "https://windailysports.com/nfl-odds/thursday-night-football/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-splits-pm",
+   "evidence_id": "ev-splits-am",
    "category": "splits",
    "verification": "REPORTED",
-   "fact": "Fade check, Tuesday evening Nov 17, 2026 (about 5:57 p.m. Denver): the VSiN betting-splits free page, NFL tab, DraftKings source, showed the featured game Indianapolis Colts at Houston Texans, Thursday Nov 19. Spread: Colts +12.5 drew 62% of bets (BET) but only 33% of handle (HND); Texans -12.5 drew 38% of bets but 67% of handle. Total 44.5: 65% of bets on the over side of the Colts row with 54% of handle. Moneyline: Colts +525 drew 11% of bets and 12% of handle; Texans -750 drew 89% of bets and 88% of handle. The spread disagreement (most tickets on the Colts, most money on the Texans) is corroborated by line movement: the Texans spread moved from -10 to -12.5 at DraftKings since the opener, and grew one to two points at all five books tracked.",
+   "fact": "Fade check, Wednesday morning Nov 18, 2026 (about 6:17 a.m. Denver): the VSiN betting-splits free page, NFL tab, DraftKings source, showed the featured game Indianapolis Colts at Houston Texans, Thursday Nov 19, 8:15 p.m. ET. Spread: Colts +12.5 drew 62% of bets (BET) but only 40% of handle (HND); Texans -12.5 drew 38% of bets but 60% of handle. Total 44.5: Over drew 69% of handle and 66% of bets; Under drew 31% of handle and 34% of bets - tickets and handle agree. Moneyline: Colts +525 drew 10% of bets and 10% of handle; Texans -750 drew 90% of bets and 90% of handle - tickets and handle agree. The spread disagreement (most tickets on the Colts, most money on the Texans) is the same split the Tuesday evening brief reported (then 62% bets / 33% handle on the Colts) - it held overnight, with handle moving 7 points toward the Colts. Corroborating line movement: the Texans spread moved from -10 at the opener to -12.5 at DraftKings, and Pinnacle now lists Houston -13.0 while DraftKings still shows -12.5.",
    "sources": [
     {
      "label": "VSiN - Betting Splits",
      "url": "https://data.vsin.com/betting-splits/"
     },
     {
-     "label": "LineSmart - Colts vs Texans Nov 19: Odds, Line Moves",
-     "url": "https://linesmart.app/nfl/games/indianapolis-colts-at-houston-texans-2026-11-19/"
+     "label": "NFL EDGE app",
+     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-odds-am",
+   "category": "odds",
+   "verification": "REPORTED",
+   "fact": "Week 11 lines from the NFL EDGE app market board, fetched Wednesday Nov 18 about 6:15 a.m. Denver (app data observed 2026-11-18T12:08:48Z, FRESH): Colts at Texans, Thursday Nov 19: Texans -12.5 at DraftKings (-108) and FanDuel (-110), -13.0 at Pinnacle; total 44.5 at DraftKings and FanDuel; Colts moneyline +525 at DraftKings, +540 at FanDuel; Texans moneyline -750 at DraftKings, -770 at FanDuel. Monday night, Bengals at Commanders: Bengals -6.5 at DraftKings (-102), -5.5 at FanDuel (-120); total 53.5. Sunday: Cardinals at Chiefs, Chiefs -16.5 at DraftKings; Dolphins at Bills, Bills -16.5 at DraftKings; Saints at Bears, Bears -11.5 at DraftKings; Raiders at Broncos, Broncos -10.0 at DraftKings; Buccaneers at Lions, Lions -7.0 at DraftKings; Titans at Cowboys, Cowboys -8.5 at DraftKings; Vikings at 49ers, 49ers -3.0 at DraftKings; Ravens at Panthers, Panthers -2.5 at DraftKings; Jets at Chargers, Chargers -3.5 at DraftKings.",
+   "sources": [
+    {
+     "label": "NFL EDGE app",
+     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
     }
    ]
   }
