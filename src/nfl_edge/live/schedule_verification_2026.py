@@ -41,41 +41,62 @@ def _utc_text(timestamp: datetime) -> str:
     return timestamp.isoformat().replace("+00:00", "Z")
 
 
-def _event_rows(raw: bytes, *, season: int, week: int) -> dict[str, dict[str, Any]]:
+def _espn_team(competitor: Any) -> str | None:
+    team = competitor.get("team") if isinstance(competitor, dict) else None
+    abbreviation = team.get("abbreviation") if isinstance(team, dict) else None
+    if not isinstance(abbreviation, str):
+        return None
+    code = abbreviation.strip().upper()
+    canonical = ESPN_ALIASES.get(code, code)
+    return canonical if canonical in CANONICAL_TEAMS else None
+
+
+def _event_rows(
+    raw: bytes, *, matchups: dict[tuple[str, str], str],
+) -> dict[str, dict[str, Any]]:
     payload = json.loads(raw)
-    if (
-        (payload["season"]["year"], payload["season"]["type"], payload["week"]["number"]) != (season, 2, week)
-        or not isinstance(payload["events"], list)
-    ):
-        raise ValueError("ESPN response season, season type or week drift")
+    if not isinstance(payload, dict) or not isinstance(payload.get("events"), list):
+        raise ValueError("ESPN response has no events list")
     rows: dict[str, dict[str, Any]] = {}
     ids: set[str] = set()
     for event in payload["events"]:
-        if (event["season"]["year"], event["season"]["type"], event["week"]["number"]) != (season, 2, week):
-            raise ValueError("ESPN event season, season type or week drift")
-        event_id = event["id"]
-        if not isinstance(event_id, str) or not event_id.isascii() or not event_id.isdigit() or event_id in ids:
-            raise ValueError("invalid or duplicate ESPN event ID")
-        ids.add(event_id)
-        competition, = event["competitions"]
-        if competition["id"] != event_id:
-            raise ValueError(f"ESPN competition identity disagrees with event {event_id}")
-        kickoff = _kickoff(event["date"])
-        if kickoff != _kickoff(competition["date"]):
-            raise ValueError(f"ESPN event and competition kickoffs disagree for {event_id}")
-        teams = {}
-        for competitor in competition["competitors"]:
-            side, alias = competitor["homeAway"], competitor["team"]["abbreviation"]
-            team = ESPN_ALIASES.get(alias, alias)
-            if side not in {"home", "away"} or side in teams or team not in CANONICAL_TEAMS:
-                raise ValueError(f"invalid ESPN team or orientation for event {event_id}")
-            teams[side] = team
-        if set(teams) != {"home", "away"} or teams["away"] == teams["home"]:
-            raise ValueError(f"incomplete ESPN team identity for event {event_id}")
-        gid = f"{season}_{week:02d}_{teams['away']}_{teams['home']}"
-        if gid in rows:
-            raise ValueError(f"duplicate ESPN game {gid}")
-        rows[gid] = {"event_id": event_id, "kickoff_utc": _utc_text(kickoff)}
+        competitions = event.get("competitions") if isinstance(event, dict) else None
+        if not isinstance(competitions, list):
+            continue
+        for competition in competitions:
+            competitors = competition.get("competitors") if isinstance(competition, dict) else None
+            if not isinstance(competitors, list):
+                continue
+            identities = [
+                (entry.get("homeAway") if isinstance(entry, dict) else None, _espn_team(entry))
+                for entry in competitors
+            ]
+            teams = {team for _, team in identities}
+            # Identify the matchup before checking orientation so a reversed
+            # or extra competitor cannot hide ambiguous affected evidence.
+            matched = next(
+                ((away, home, gid) for (away, home), gid in matchups.items() if {away, home} <= teams),
+                None,
+            )
+            if matched is None:
+                continue
+            away, home, gid = matched
+            if len(competitions) != 1 or len(identities) != 2:
+                raise ValueError(f"ambiguous ESPN competition for {gid}")
+            if ("away", away) not in identities or ("home", home) not in identities:
+                raise ValueError(f"incorrect ESPN home/away orientation for {gid}")
+            if gid in rows:
+                raise ValueError(f"duplicate ESPN game {gid}")
+            event_id = event["id"]
+            if not isinstance(event_id, str) or not event_id.isascii() or not event_id.isdigit() or event_id in ids:
+                raise ValueError(f"invalid or duplicate ESPN event ID for {gid}")
+            if competition["id"] != event_id:
+                raise ValueError(f"ESPN competition identity disagrees with event {event_id}")
+            kickoff = _kickoff(event["date"])
+            if kickoff != _kickoff(competition["date"]):
+                raise ValueError(f"ESPN event and competition kickoffs disagree for {event_id}")
+            rows[gid] = {"event_id": event_id, "kickoff_utc": _utc_text(kickoff)}
+            ids.add(event_id)
     return rows
 
 
@@ -163,7 +184,12 @@ def reconcile_market_kickoffs(
     try:
         if len(raw) > MAX_RESPONSE_BYTES:
             raise ValueError("ESPN response exceeds the byte limit")
-        secondary = _event_rows(raw, season=season, week=week)
+        disputed_ids = {row["game_id"] for row in discrepancies}
+        matchups = {
+            (game["away_team"], game["home_team"]): game["game_id"]
+            for game in schedule["games"] if game["game_id"] in disputed_ids
+        }
+        secondary = _event_rows(raw, matchups=matchups)
     except (KeyError, TypeError, ValueError, OverflowError) as exc:
         return schedule, {**report, "status": "ESPN_INVALID_RESPONSE", "detail": str(exc)}
 

@@ -1,6 +1,8 @@
+import gzip
 import hashlib
 import json
 from copy import deepcopy
+from pathlib import Path
 
 import pytest
 import requests
@@ -85,7 +87,51 @@ def test_saved_replay_uses_espn_only_from_disk(tmp_path, monkeypatch, sources):
     assert report["status"] == "KICKOFF_CONFIRMED"
 
 
-@pytest.mark.parametrize("fault", ["wrong_time", "reversed", "missing", "malformed", "timeout", "duplicate"])
+def test_authentic_daily_espn_capture_confirms_both_week_11_games(tmp_path, monkeypatch, sources):
+    schedule, odds, _ = sources
+    # Exact captured bytes from the November 22 daily scoreboard.
+    fixture = Path(__file__).resolve().parents[1] / "fixtures" / "espn_nfl_2026-11-22.json.gz"
+    raw = gzip.decompress(fixture.read_bytes())
+    digest = "cefbc941f6fc0f1b3b584830713411769dc853e9825e16b36adad2c4b04bcfe4"
+    assert hashlib.sha256(raw).hexdigest() == digest
+    assert "season" not in json.loads(raw)
+    response = tmp_path / "daily-espn.json"
+    response.write_bytes(raw)
+    monkeypatch.setattr(verification, "_espn_scoreboard", lambda *_: pytest.fail("offline replay used the network"))
+
+    revised, report = verification.reconcile_market_kickoffs(schedule, odds, live=False, espn_response=response)
+
+    assert report["status"] == "KICKOFF_CONFIRMED"
+    assert report["espn"]["response_sha256"] == digest
+    assert {r["game_id"]: r["espn_event_id"] for r in report["discrepancies"]} == {
+        "2026_11_JAX_NYG": "401873069", "2026_11_PIT_PHI": "401873076",
+    }
+    assert match_provider_events(revised, odds)[1]["matched_canonical_games"] == 2
+
+
+def test_missing_season_week_and_unrelated_incomplete_events_are_ignored(monkeypatch, sources):
+    schedule, odds, espn = sources
+    for payload in [espn, *espn["events"]]:
+        payload.pop("season")
+        payload.pop("week")
+    espn["events"].extend([{}, {
+        "competitions": [{"competitors": [
+            {"homeAway": "away", "team": {"abbreviation": "JAX"}},
+            {"homeAway": "home", "team": {"abbreviation": "LAR"}},
+        ]}],
+    }])
+    monkeypatch.setattr(verification, "_espn_scoreboard", lambda _: json.dumps(espn).encode())
+
+    _, report = verification.reconcile_market_kickoffs(schedule, odds, live=True)
+
+    assert report["status"] == "KICKOFF_CONFIRMED"
+    assert len(report["discrepancies"]) == 2
+
+
+@pytest.mark.parametrize("fault", [
+    "wrong_time", "reversed", "missing", "malformed", "timeout", "duplicate",
+    "ambiguous", "invalid_kickoff", "naive_kickoff", "contradictory_dates",
+])
 def test_unconfirmed_kickoff_never_changes_source(monkeypatch, sources, fault):
     schedule, odds, espn = sources
     first = espn["events"][0]
@@ -97,7 +143,17 @@ def test_unconfirmed_kickoff_never_changes_source(monkeypatch, sources, fault):
     elif fault == "missing":
         espn["events"].pop(0)
     elif fault == "duplicate":
-        espn["events"].append(first)
+        duplicate = deepcopy(first)
+        duplicate["id"] = duplicate["competitions"][0]["id"] = "999"
+        espn["events"].append(duplicate)
+    elif fault == "ambiguous":
+        first["competitions"].append(deepcopy(first["competitions"][0]))
+    elif fault == "invalid_kickoff":
+        first["date"] = "invalid"
+    elif fault == "naive_kickoff":
+        first["date"] = "2026-11-22T21:25:00"
+    elif fault == "contradictory_dates":
+        first["competitions"][0]["date"] = "2026-11-22T20:25:00Z"
 
     def fetch(_):
         if fault == "timeout":
@@ -108,9 +164,11 @@ def test_unconfirmed_kickoff_never_changes_source(monkeypatch, sources, fault):
     result, report = verification.reconcile_market_kickoffs(schedule, odds, live=True)
     assert result is schedule
     expected = {
-        "wrong_time": "KICKOFF_UNCONFIRMED", "reversed": "KICKOFF_UNCONFIRMED",
+        "wrong_time": "KICKOFF_UNCONFIRMED", "reversed": "ESPN_INVALID_RESPONSE",
         "missing": "KICKOFF_UNCONFIRMED", "malformed": "ESPN_INVALID_RESPONSE",
         "timeout": "ESPN_UNAVAILABLE", "duplicate": "ESPN_INVALID_RESPONSE",
+        "ambiguous": "ESPN_INVALID_RESPONSE", "invalid_kickoff": "ESPN_INVALID_RESPONSE",
+        "naive_kickoff": "ESPN_INVALID_RESPONSE", "contradictory_dates": "ESPN_INVALID_RESPONSE",
     }
     assert report["status"] == expected[fault]
 

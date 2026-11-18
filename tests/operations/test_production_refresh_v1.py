@@ -623,15 +623,19 @@ def test_systemd_contract_is_billable_safe() -> None:
 @pytest.mark.parametrize("confirmed", [True, False])
 def test_odds_kickoff_disagreement_checks_espn_after_single_pull(monkeypatch, tmp_path, confirmed):
     calls = []
+    load_capture = refresh.load_capture
     _wire_success(monkeypatch, tmp_path, calls)
     # Week 1 fixture bypasses historical state advancement in this orchestration test.
     schedule, events, scoreboard = kickoff_sources(week_number=1)
     active = refresh.resolve_active_schedule()
     active.payload = schedule
     monkeypatch.setattr(refresh, "resolve_active_schedule", lambda *a, **kw: active)
-    monkeypatch.setattr(refresh, "load_capture", lambda *a, **kw: (
-        events, {"acquired_at_utc": "2026-09-09T00:05:00Z", "response_sha256": "b" * 64},
-    ))
+    monkeypatch.setattr(refresh, "load_capture", load_capture)
+    captured_at = "2026-09-09T00:05:00Z"
+    raw = json.dumps(events).encode()
+    sidecar = json.dumps({"acquired_at_utc": captured_at}).encode()
+    (tmp_path / "raw.json").write_bytes(raw)
+    (tmp_path / "raw.meta.json").write_bytes(sidecar)
     if not confirmed:
         scoreboard["events"].pop()
 
@@ -647,7 +651,10 @@ def test_odds_kickoff_disagreement_checks_espn_after_single_pull(monkeypatch, tm
     assert calls.count("provider") == calls.count("ESPN") == 1
     run_dir = config.run_root / summary["run_id"]
     report = json.loads((run_dir / "schedule-reconciliation.json").read_text())
-    assert report["odds_acquired_at_utc"] == "2026-09-09T00:05:00Z"
+    assert report["odds_acquired_at_utc"] == captured_at
+    assert report["odds_response_sha256"] == hashlib.sha256(raw).hexdigest()
+    assert (tmp_path / "raw.json").read_bytes() == raw
+    assert (tmp_path / "raw.meta.json").read_bytes() == sidecar
     if confirmed:
         assert outcome is refresh.RefreshOutcome.SUCCESS
         assert calls[4:6] == ["score", "normalize"]
