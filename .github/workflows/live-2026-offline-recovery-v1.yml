@@ -1,0 +1,128 @@
+name: Live 2026 Offline Recovery V1
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/live-2026-*.yml'
+      - 'requirements/recovery-ci.txt'
+      - 'pyproject.toml'
+      - 'config/**'
+      - 'src/nfl_edge/**'
+      - 'scripts/**'
+      - 'tests/live/**'
+      - 'tests/operations/**'
+      - 'tests/recommendation/**'
+      - 'data/live/2026/**'
+      - 'docs/live_2026_offline_recovery_ci_v1.md'
+
+permissions:
+  contents: read
+
+env:
+  PYTHONHASHSEED: '0'
+  OMP_NUM_THREADS: '1'
+  OPENBLAS_NUM_THREADS: '1'
+  OPENBLAS_CORETYPE: HASWELL
+  MKL_NUM_THREADS: '1'
+  MKL_CBWR: COMPATIBLE
+  NUMEXPR_NUM_THREADS: '1'
+
+jobs:
+  offline-compatibility:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install and verify accepted runtime
+        run: |
+          python -m pip install -r requirements/recovery-ci.txt
+          python -m pip check
+          python scripts/ci_live_2026_recovery_v1.py runtime
+      - name: Verify frozen surfaces and entering-state digest
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          changed="$(git diff --name-only "$BASE_SHA"...HEAD)"
+          if grep -E '^(src/nfl_edge/(models|backtest|holdout|value|recommendation)/|src/nfl_edge/staking_policy_v1.py$|config/(task05[fg]_|expected_margin_v1.yaml$|qb_elo_v1.yaml$|totals_))' <<< "$changed"; then
+            echo 'Frozen methodology surface changed' >&2
+            exit 1
+          fi
+          echo 'cf5f1a0f255befae56d7ac91d97af8641500a466c1d84097fe401e950020158b  data/live/2026/entering_product_state_v1.json' | sha256sum --check --strict
+      - name: Run offline compatibility tests
+        run: |
+          mkdir -p "$RUNNER_TEMP/recovery-tests"
+          sudo unshare --net -- setpriv --reuid="$(id -u)" --regid="$(id -g)" --init-groups --no-new-privs \
+            env -i HOME="$HOME" PATH="$PATH" PYTHONHASHSEED="$PYTHONHASHSEED" \
+            OMP_NUM_THREADS="$OMP_NUM_THREADS" OPENBLAS_NUM_THREADS="$OPENBLAS_NUM_THREADS" \
+            OPENBLAS_CORETYPE="$OPENBLAS_CORETYPE" MKL_NUM_THREADS="$MKL_NUM_THREADS" \
+            MKL_CBWR="$MKL_CBWR" NUMEXPR_NUM_THREADS="$NUMEXPR_NUM_THREADS" \
+            "$(command -v python)" -m pytest -q \
+            tests/live/test_schedule{,_materializer}_2026.py \
+            tests/live/test_historical_surface_recovery_2026.py \
+            tests/live/test_week{5_surface,9_week10_surface}_evidence_2026.py \
+            tests/live/test_week9_kickoff_reconciliation_2026.py \
+            tests/live/test_evidence_2026.py tests/live/test_settled_totals_semantics_2026.py \
+            tests/live/test_live_2026_scoring.py tests/live/test_product_state_2026.py \
+            tests/recommendation/test_task05g_final_selector_freeze_regression.py \
+            --junitxml="$RUNNER_TEMP/recovery-tests/compatibility.xml"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: recovery-compatibility-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/recovery-tests/
+          if-no-files-found: warn
+
+  authentic-historical-replay:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install and verify accepted runtime
+        run: |
+          python -m pip install -r requirements/recovery-ci.txt
+          python -m pip check
+          python scripts/ci_live_2026_recovery_v1.py runtime
+      - name: Stage authenticated archive
+        env:
+          ARCHIVE_URL: ${{ secrets.NFL_EDGE_RECOVERY_ARCHIVE_URL }}
+          ARCHIVE_SHA256: ${{ vars.NFL_EDGE_RECOVERY_ARCHIVE_SHA256 }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/recovery-proof"
+          if [[ -z "$ARCHIVE_URL" || ! "$ARCHIVE_SHA256" =~ ^[0-9a-f]{64}$ ]]; then
+            echo "::error::Missing authenticated Week 7 evidence. Configure NFL_EDGE_RECOVERY_ARCHIVE_URL and NFL_EDGE_RECOVERY_ARCHIVE_SHA256."
+            exit 1
+          fi
+          umask 077
+          curl --fail --silent --proto '=https' --connect-timeout 15 --max-time 180 \
+            --output "$RUNNER_TEMP/recovery.tar.gz" "$ARCHIVE_URL" ||
+            { echo "::error::Could not download the private recovery archive."; exit 1; }
+          echo "$ARCHIVE_SHA256  $RUNNER_TEMP/recovery.tar.gz" | sha256sum --check --strict
+      - name: Run canonical historical replay twice with networking disabled
+        run: |
+          sudo unshare --net -- setpriv --reuid="$(id -u)" --regid="$(id -g)" --init-groups --no-new-privs \
+            env -i HOME="$HOME" PATH="$PATH" PYTHONHASHSEED="$PYTHONHASHSEED" \
+            OMP_NUM_THREADS="$OMP_NUM_THREADS" OPENBLAS_NUM_THREADS="$OPENBLAS_NUM_THREADS" \
+            OPENBLAS_CORETYPE="$OPENBLAS_CORETYPE" MKL_NUM_THREADS="$MKL_NUM_THREADS" \
+            MKL_CBWR="$MKL_CBWR" NUMEXPR_NUM_THREADS="$NUMEXPR_NUM_THREADS" \
+            "$(command -v python)" scripts/ci_live_2026_recovery_v1.py replay \
+            "$RUNNER_TEMP/recovery.tar.gz" "$RUNNER_TEMP/recovery-proof/manifest.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: recovery-replay-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/recovery-proof/manifest.json
+          if-no-files-found: ignore
