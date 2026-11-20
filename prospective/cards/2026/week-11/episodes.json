@@ -262,13 +262,13 @@
       "publication_count": 1,
       "returned_after_gap": false,
       "selection": "DET",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "REPLACED",
       "worst_line": null,
       "worst_price": -260
     },
     {
       "best_line": 3.0,
-      "best_price": -106,
+      "best_price": -105,
       "episode_id": "episode-c2b482fa8fbf81d82e6d0e24",
       "first_line": 3.0,
       "first_price": -106,
@@ -278,9 +278,9 @@
       "lane": "BALANCED",
       "lane_key": "balanced",
       "last_line": 3.0,
-      "last_price": -106,
-      "last_publication_id": "publication-1c3024f22e570bcf5f12991c",
-      "last_seen_at_utc": "2026-11-20T00:08:51.257348Z",
+      "last_price": -105,
+      "last_publication_id": "publication-0a10da2a9740b67bd1012969",
+      "last_seen_at_utc": "2026-11-20T12:08:55.997141Z",
       "logical_recommendation_id": "logical-9b225e96e67875971042b0b3",
       "market": "SPREAD",
       "normalized_selection": "NYJ",
@@ -302,14 +302,76 @@
           "state": "BET",
           "value_at": null,
           "wager_identity_id": "wager-8f60f85ce74849e446b87b5b"
+        },
+        {
+          "american_odds": -105,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-20684bbe01839a69b9165152",
+          "line": 3.0,
+          "play_through": {
+            "line": 3.0,
+            "price_american": -108
+          },
+          "publication_id": "publication-0a10da2a9740b67bd1012969",
+          "published_at_utc": "2026-11-20T12:08:55.997141Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "0a10da2a9740b67bd1012969e469859a343cbf47767d5cb7cfea16048c550f97",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-8f60f85ce74849e446b87b5b"
         }
       ],
-      "publication_count": 1,
+      "publication_count": 2,
       "returned_after_gap": false,
       "selection": "NYJ",
       "terminal_reason": "WEEK_HISTORY_END",
       "worst_line": 3.0,
       "worst_price": -106
+    },
+    {
+      "best_line": null,
+      "best_price": -255,
+      "episode_id": "episode-ba60a59168358d23730a1c75",
+      "first_line": null,
+      "first_price": -255,
+      "first_publication_id": "publication-0a10da2a9740b67bd1012969",
+      "first_seen_at_utc": "2026-11-20T12:08:55.997141Z",
+      "game_id": "2026_11_JAX_NYG",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "last_line": null,
+      "last_price": -255,
+      "last_publication_id": "publication-0a10da2a9740b67bd1012969",
+      "last_seen_at_utc": "2026-11-20T12:08:55.997141Z",
+      "logical_recommendation_id": "logical-4e8a2a95d1aae16d22c0b263",
+      "market": "MONEYLINE",
+      "normalized_selection": "JAX",
+      "normalized_side": "away",
+      "observations": [
+        {
+          "american_odds": -255,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-f4979976ab619bfaba080188",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -264
+          },
+          "publication_id": "publication-0a10da2a9740b67bd1012969",
+          "published_at_utc": "2026-11-20T12:08:55.997141Z",
+          "recommended_units": 1.25,
+          "source_product_sha256": "0a10da2a9740b67bd1012969e469859a343cbf47767d5cb7cfea16048c550f97",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-66a1d6cb000d2877eff47955"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": true,
+      "selection": "JAX",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": null,
+      "worst_price": -255
     }
   ],
   "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1",
@@ -319,7 +381,8 @@
     "publication-6d58094358eb92359e2e5720",
     "publication-ac250682add3071ff875afe2",
     "publication-1436c9d55503b8f7c13dbd33",
-    "publication-1c3024f22e570bcf5f12991c"
+    "publication-1c3024f22e570bcf5f12991c",
+    "publication-0a10da2a9740b67bd1012969"
   ],
   "week": 11
 }
