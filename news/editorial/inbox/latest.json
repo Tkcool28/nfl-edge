@@ -1,363 +1,381 @@
 {
- "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-11-20T01:06:21Z",
- "research_generated_at_utc": "2026-11-20T01:06:21Z",
- "article": {
-  "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-11-20T01:06:21Z",
-  "edition": "Evening Brief",
-  "title": "NFL EDGE Thursday Evening Brief",
-  "dek": "Both cards flipped this evening, the Colts are down both starting cornerbacks for tonight, and Baker Mayfield is trending to play Sunday.",
-  "research_generated_at_utc": "2026-11-20T01:06:21Z",
-  "sections": [
-   {
-    "id": "what-matters",
-    "icon": "📰",
-    "title": "What Matters Today",
-    "items": [
-     {
-      "headline": "Both cards flipped this evening",
-      "paragraphs": [
-       "The app's cards changed this evening. Hit Rate is now the Detroit Lions moneyline at -260 on FanDuel for Sunday at 1:00 p.m. ET. Balanced is now the New York Jets +3 at -106 on DraftKings for Sunday at 4:05 p.m. ET.",
-       "This morning the cards were the Jaguars moneyline at -260 and the Vikings +3 at +100. The Jaguars moneyline is still on the board at -255 on FanDuel, and the Vikings +3 is still +100 — but neither holds a card tonight.",
-       "The Value card is still empty. The app found no +EV price on the board, and it says so plainly instead of forcing one."
-      ],
-      "takeaway": "New cards tonight: Hit Rate is Lions moneyline -260, Balanced is Jets +3 at -106. Value is still empty.",
-      "evidence_ids": [
-       "ev-board-pm"
-      ],
-      "sources": [
-       {
-        "label": "NFL EDGE app",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     },
-     {
-      "headline": "Tonight: the Colts are down both starting tackles and both starting cornerbacks",
-      "paragraphs": [
-       "Inactives are out for Thursday night, and the morning's watch item is settled: Sauce Gardner is OUT with a calf injury. He did not practice all week. Charvarius Ward is out too, so Indianapolis plays without both starting cornerbacks — and without both starting tackles, Bernhard Raimann and Jalen Travis.",
-       "The Colts' other inactives are tight end Will Mallory, defensive tackle Jerry Tillery, and third quarterback Riley Leonard. Tackle Charlie Heck, who was questionable, had the designation removed and will play.",
-       "Houston is short too: defensive end Danielle Hunter, wide receiver Marvin Harrison Jr., running back Woody Marks, and tight end Brevin Jordan are out, plus guard Wyatt Teller, who was questionable with a back injury. Running back David Montgomery is back after missing four games."
-      ],
-      "takeaway": "The Colts play tonight without both starting tackles and both starting cornerbacks. The Texans are without Hunter and Harrison Jr., but David Montgomery is back.",
-      "evidence_ids": [
-       "ev-inj-pm"
-      ],
-      "sources": [
-       {
-        "label": "Indianapolis Colts - Colts announce 7 inactive players for Week 11 game vs. Houston Texans",
-        "url": "https://www.colts.com/news/colts-announce-7-inactive-players-for-week-11-game-vs-houston-texans"
-       },
-       {
-        "label": "NBC Sports PFT - Thursday Night Football: Sauce Gardner is officially inactive vs. Texans",
-        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/thursday-night-football-sauce-gardner-is-officially-inactive-vs-texans"
-       }
-      ]
-     },
-     {
-      "headline": "Baker Mayfield practiced Thursday — and the app caught up",
-      "paragraphs": [
-       "Baker Mayfield practiced on Thursday and looked fine, and he is trending to play Sunday at Detroit. That is a sharp turn from Wednesday, when he sat out practice and was reported to be a long shot to play.",
-       "Head coach Todd Bowles said the team will decide on Friday. The app has already moved: it now lists Mayfield — not Jalon Daniels — as Tampa Bay's expected starter. The change landed this afternoon.",
-       "Geno Smith is the other quarterback to watch. He was limited again on Thursday, his second straight limited practice, and he still says starting Sunday at the Chargers is the plan. The app still lists him as the Jets' expected starter."
-      ],
-      "takeaway": "Mayfield practiced Thursday and is trending to play; the app now lists him as Tampa Bay's starter. Geno Smith was limited again but still plans to play.",
-      "evidence_ids": [
-       "ev-qb-pm"
-      ],
-      "sources": [
-       {
-        "label": "Footballguys - All of the Latest News (Baker Mayfield practicing, trending to play)",
-        "url": "https://www.footballguys.com:443/subscribers/apps/news.php?pos=qb"
-       },
-       {
-        "label": "New York Jets - Jets vs. Chargers Week 11 Injury Report, Thursday",
-        "url": "https://www.newyorkjets.com/news/jets-injury-report-week-11-vs-chargers-thursday-11-19-2026"
-       },
-       {
-        "label": "NBC Sports - Geno Smith (ankle) limited for another practice",
-        "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-19/geno-smith-ankle-limited-for-another-practice"
-       }
-      ]
-     },
-     {
-      "headline": "Weather: nothing changed since this morning",
-      "paragraphs": [
-       "Thursday night is under a roof in Houston: about 68 degrees, wind about 4 mph. Weather is a non-factor tonight.",
-       "Sunday's windiest spot is still Chicago: the Saints-Bears game is about 49 degrees with wind about 15 mph, gusting to 32. Buffalo is about 61 degrees with wind about 12 mph, gusting to 26. Sunday night in Mexico City is about 66 degrees with a 76% chance of rain and wind about 2 mph.",
-       "The forecast has not moved since Tuesday. Weather is a fact, not an edge. The app prices the games, not the forecast."
-      ],
-      "takeaway": "Mild everywhere, Thursday under a roof. Chicago is still the windiest spot at 15 mph with gusts to 32.",
-      "evidence_ids": [
-       "ev-weather-pm"
-      ],
-      "sources": [
-       {
-        "label": "Sharp Football Analysis - NFL Weather Today: Week 11 forecast for every game",
-        "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/"
-       }
-      ]
-     }
+  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+  "submitted_at_utc": "2026-11-20T13:18:39Z",
+  "research_generated_at_utc": "2026-11-20T13:18:39Z",
+  "article": {
+    "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
+    "published_at_utc": "2026-11-20T13:18:39Z",
+    "edition": "Morning Brief",
+    "title": "NFL EDGE Friday Morning Brief",
+    "dek": "Thursday night is settled, the cards flipped overnight, and two starting quarterbacks get their answer today.",
+    "research_generated_at_utc": "2026-11-20T13:18:39Z",
+    "sections": [
+      {
+        "id": "what-matters",
+        "icon": "📰",
+        "title": "What Matters Today",
+        "items": [
+          {
+            "headline": "Thursday night is done: Texans 26, Colts 3",
+            "paragraphs": [
+              "C.J. Stroud threw three touchdowns and the Texans rolled the Colts 26-3 on Thursday night. Indianapolis scored on its opening drive and never scored again. Houston held the Colts to 167 total yards.",
+              "The Texans covered as 12.5-point favorites, and the game totaled 29 points, well under the 44.5 total. Houston moves to 4-6. The Colts fall to 3-8.",
+              "One note on last night's Fade: the tickets were on the Texans moneyline and the money was on the Colts. The tickets side won, and won big. The Fade is decision context, not a pick. It was right to watch, and it would have been wrong to follow blindly."
+            ],
+            "takeaway": "Texans 26, Colts 3. Stroud threw three touchdowns, the Colts managed 167 yards, and last night's split resolved with the tickets side.",
+            "evidence_ids": [
+              "ev-tnf-am",
+              "ev-fade-am"
+            ],
+            "sources": [
+              {
+                "label": "Reuters",
+                "url": "https://www.reuters.com/sports/nfl/cj-stroud-3-tds-leads-texans-past-unproductive-colts--flm-2026-11-20/"
+              },
+              {
+                "label": "Wise Guy Team DraftKings splits",
+                "url": "https://wiseguyteam.com/draftkings-betting-splits"
+              }
+            ]
+          },
+          {
+            "headline": "Both cards flipped overnight",
+            "paragraphs": [
+              "Hit Rate is now the Jacksonville Jaguars moneyline at -255 on DraftKings, Sunday at 4:25 p.m. ET against the Giants. Last night it was the Lions moneyline at -260.",
+              "Balanced is still the New York Jets +3, now at -105 on DraftKings for Sunday at 4:05 p.m. ET against the Chargers. That is one cent better than last night's -106.",
+              "Value is still empty. The app found no +EV price on the board, and it says so plainly instead of forcing one."
+            ],
+            "takeaway": "New cards this morning: Hit Rate is Jaguars moneyline -255, Balanced is Jets +3 at -105. Value is still empty.",
+            "evidence_ids": [
+              "ev-board-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE app",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          },
+          {
+            "headline": "Two starting quarterbacks get their answer today",
+            "paragraphs": [
+              "Baker Mayfield practiced Thursday, limited, and said he feels ready to play Sunday at Detroit. The Bucs decide today, and the final injury designations land today. If he cannot go, rookie Jalon Daniels makes his fourth start. The app still lists Mayfield as Tampa Bay's expected starter.",
+              "Geno Smith was limited again Thursday with his ankle injury, but he says the plan is to play Sunday at the Chargers, and an MRI showed no significant damage. Rookie Cade Klubnik is the backup if Smith cannot go. The app still lists Smith as the Jets' expected starter.",
+              "Safety Antoine Winfield Jr. missed his second straight practice with an ankle injury, which would thin a Tampa Bay defense that takes the ball away as well as anyone. Final designations land today. Inactives come about 90 minutes before kickoff on Sunday."
+            ],
+            "takeaway": "Mayfield and Geno Smith both say they plan to play, and both teams decide today. The app lists both as expected starters for now.",
+            "evidence_ids": [
+              "ev-qb-am",
+              "ev-board-am"
+            ],
+            "sources": [
+              {
+                "label": "Buccaneers",
+                "url": "https://www.buccaneers.com/news/baker-mayfield-feels-ready-for-sunday-eager-to-get-into-rhythm"
+              },
+              {
+                "label": "New York Jets",
+                "url": "https://www.newyorkjets.com/news/jets-injury-report-week-11-vs-chargers-thursday-11-19-2026"
+              }
+            ]
+          },
+          {
+            "headline": "Weather: still nothing new",
+            "paragraphs": [
+              "The forecast has not been refreshed since Tuesday, and nothing in it has changed since last night. Chicago is still the windiest spot on Sunday: 49 degrees, 15 mph wind with gusts to 32.",
+              "Buffalo gets 12 mph wind with gusts to 26. Rain is in the forecast in Philadelphia and at MetLife, and there is a 76% chance of precipitation for the Mexico City game Sunday night. Detroit plays indoors."
+            ],
+            "takeaway": "Mild everywhere. Chicago is still the windiest spot at 15 mph with gusts to 32.",
+            "evidence_ids": [
+              "ev-weather-am"
+            ],
+            "sources": [
+              {
+                "label": "Sharp Football Analysis",
+                "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "what-it-means",
+        "icon": "💡",
+        "title": "What It Means for NFL EDGE",
+        "items": [
+          {
+            "headline": "How to read the flipped Hit Rate card",
+            "paragraphs": [
+              "Hit Rate is the Jaguars moneyline at -255. That is the app's most likely winner, not a value play. The app gives Jacksonville about a 76% chance to win, and the play-through price is -264, so -255 is inside the number the app will still take.",
+              "The spread tells the same story. Jacksonville is -6.0, and the app's expected margin is Jacksonville by about 5.7. The app basically agrees with the market here. This card is about win probability, and the app says Jacksonville is the most likely winner on the board. Hit Rate is not Profit Rate."
+            ],
+            "takeaway": "Hit Rate is Jaguars moneyline -255: the most likely winner, not a value play. The app agrees with the market on the spread, so this one is about the win, not a gap.",
+            "evidence_ids": [
+              "ev-board-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE app",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          },
+          {
+            "headline": "Balanced is the same pick at a slightly better price",
+            "paragraphs": [
+              "Balanced is still the Jets +3, now at -105 instead of -106. The app gives the Jets about a coin flip to cover, 50.6%, and the play-through price is -108. That is the middle ground: a strong pick without paying too much.",
+              "The Jets are also the team with the quarterback question. Geno Smith says he plans to play, and the app lists him as the expected starter. If your book has the Jets at +3 and Check says bet, that is the number the card is built on."
+            ],
+            "takeaway": "Balanced is Jets +3 at -105, a cent better than last night. The app calls it about a coin flip to cover.",
+            "evidence_ids": [
+              "ev-board-am",
+              "ev-qb-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE app",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              },
+              {
+                "label": "New York Jets",
+                "url": "https://www.newyorkjets.com/news/jets-injury-report-week-11-vs-chargers-thursday-11-19-2026"
+              }
+            ]
+          },
+          {
+            "headline": "The app still thinks the big spreads are too fat, and it still bet none of them",
+            "paragraphs": [
+              "Kansas City is -16.5 and the app has the Chiefs by about 6.3. Buffalo is -16.5 and the app has the Bills by about 3.4. Chicago is -11.5 and the app has the Bears by about 0.2. Denver is -10.5 and the app has the Broncos by about 2.2.",
+              "Five big spreads, five big gaps, zero cards. A gap is a starting point, not a bet. The app did not bet any of them, and the board says why: the price has to be right, not just the opinion. If your book has one of these favorites cheaper than the app's number, tap Check, type in your book's line and price, and the app runs it back through the model and gives you a bet or no-bet verdict on your price."
+            ],
+            "takeaway": "Five big spreads, five big model gaps, zero cards. The gap alone is not the bet. Check your price.",
+            "evidence_ids": [
+              "ev-board-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE app",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "fade",
+        "icon": "⚖️",
+        "title": "The Fade",
+        "items": [
+          {
+            "headline": "The tickets love Detroit. The money is heavier on Tampa Bay.",
+            "paragraphs": [
+              "Look at the DraftKings moneyline splits for Tampa Bay at Detroit, read this morning. Detroit has 89% of the bets but only 70% of the money. Tampa Bay has 11% of the bets but 30% of the money. The crowd and the bigger money disagree.",
+              "The line has already moved toward Tampa Bay once. Detroit was a 7-point favorite on Thursday and is now -6.0, after Mayfield practiced. Another book is paying +220 on the Bucs moneyline while DraftKings lists +212. The disagreement is real, and the market has already started to notice it."
+            ],
+            "takeaway": "Most tickets are on Detroit, most money is not. Tampa Bay has 11% of the bets but 30% of the money, and the line already moved from -7 to -6.",
+            "evidence_ids": [
+              "ev-fade-am"
+            ],
+            "sources": [
+              {
+                "label": "Wise Guy Team DraftKings splits",
+                "url": "https://wiseguyteam.com/draftkings-betting-splits"
+              },
+              {
+                "label": "Sports Illustrated",
+                "url": "https://www.si.com/betting/baker-mayfield-injury-update-tanks-buccaneers-odds-vs-lions-in-nfl-week-11-2026"
+              }
+            ]
+          },
+          {
+            "headline": "What to watch, and how to use it",
+            "paragraphs": [
+              "If the public keeps hammering Detroit and the number drifts back toward -6.5 or -7 without any new bad Bucs news, you may be looking at the same football opinion for a better price. That is the spot to wait for.",
+              "But the waiting has a deadline. The Bucs decide on Mayfield today. If he is ruled out, the number goes the other way fast, and the better Tampa Bay price disappears. If he plays, the price you are waiting for may never come back. Check your Tampa Bay price against the app before kickoff, and let Check give you the verdict on your number.",
+              "This is decision context, not a pick. The app's cards are the Jaguars and the Jets. The Fade is a second layer: it tells you where the price might move, not what to bet."
+            ],
+            "takeaway": "Watch the Detroit number: back toward -6.5 or -7 with no new bad Bucs news means Tampa Bay gets cheaper. A Mayfield ruling-out today kills that wait, so check the final designations first.",
+            "evidence_ids": [
+              "ev-fade-am",
+              "ev-qb-am",
+              "ev-board-am"
+            ],
+            "sources": [
+              {
+                "label": "Wise Guy Team DraftKings splits",
+                "url": "https://wiseguyteam.com/draftkings-betting-splits"
+              },
+              {
+                "label": "Buccaneers",
+                "url": "https://www.buccaneers.com/news/baker-mayfield-feels-ready-for-sunday-eager-to-get-into-rhythm"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "market-watch",
+        "icon": "👀",
+        "title": "Line Movement",
+        "items": [
+          {
+            "headline": "The Hit Rate card changed hands overnight",
+            "paragraphs": [
+              "Last night Hit Rate was the Lions moneyline at -260. This morning it is the Jaguars moneyline at -255. The app's most-likely-winner pick moved to Jacksonville.",
+              "Balanced held: Jets +3, with the price one cent better at -105. Value is still empty. The board flipped to a new week of cards, and only the Hit Rate name changed."
+            ],
+            "takeaway": "Hit Rate flipped from Lions moneyline -260 to Jaguars moneyline -255 overnight. Balanced held at Jets +3, a cent better.",
+            "evidence_ids": [
+              "ev-board-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE app",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          },
+          {
+            "headline": "Thursday's split resolved with the tickets",
+            "paragraphs": [
+              "Last night the tickets were on the Texans moneyline and the money was on the Colts. The Texans won 26-3 and covered -12.5. The total landed at 29, under 44.5.",
+              "That is the Fade working as designed: it flagged a disagreement, and the disagreement resolved the way the crowd leaned. It is a reminder the Fade is context, not a command. The next split gets judged on its own numbers."
+            ],
+            "takeaway": "Last night's Fade split went the tickets' way: Texans 26, Colts 3, covering -12.5 with the total under 44.5.",
+            "evidence_ids": [
+              "ev-tnf-am",
+              "ev-fade-am"
+            ],
+            "sources": [
+              {
+                "label": "Reuters",
+                "url": "https://www.reuters.com/sports/nfl/cj-stroud-3-tds-leads-texans-past-unproductive-colts--flm-2026-11-20/"
+              }
+            ]
+          },
+          {
+            "headline": "Everything else held still",
+            "paragraphs": [
+              "Kansas City is still -16.5, Buffalo is still -16.5, Cincinnati is still -6.0 for Monday night, and Detroit is still -6.0 after the Mayfield news moved it Thursday. Jacksonville is still -6.0.",
+              "No other line on the board moved overnight. When the board is quiet, the morning check is quick: the cards changed, the lines did not."
+            ],
+            "takeaway": "No other line moved overnight: KC -16.5, Buffalo -16.5, Cincinnati -6.0, Detroit -6.0, Jacksonville -6.0 all held.",
+            "evidence_ids": [
+              "ev-board-am"
+            ],
+            "sources": [
+              {
+                "label": "NFL EDGE app",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "today-tip",
+        "icon": "✅",
+        "title": "Today's Tip",
+        "items": [
+          {
+            "headline": "Friday is decision day for two quarterbacks",
+            "paragraphs": [
+              "Final injury designations land today for Baker Mayfield and Geno Smith. Both say they plan to play. Both teams decide today.",
+              "Check your Tampa Bay and Jets prices against the app's listings now, then check back after the designations. If your book has a good number right now and Check says bet, bet now. A good number today beats a hoped-for number Sunday, because waiting lets the number drift the wrong way too. Inactives land about 90 minutes before kickoff on Sunday, and the board refreshes every morning and evening.",
+              "And log the losers too. Settlement is manual, and the tracker only works if you are honest with yourself."
+            ],
+            "takeaway": "Check your Tampa Bay and Jets prices now, then check back after today's final designations. If Check says bet on a good number, bet now. And log the losers.",
+            "evidence_ids": [
+              "ev-qb-am",
+              "ev-board-am"
+            ],
+            "sources": [
+              {
+                "label": "Buccaneers",
+                "url": "https://www.buccaneers.com/news/baker-mayfield-feels-ready-for-sunday-eager-to-get-into-rhythm"
+              },
+              {
+                "label": "NFL EDGE app",
+                "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+              }
+            ]
+          }
+        ]
+      }
     ]
-   },
-   {
-    "id": "what-it-means",
-    "icon": "💡",
-    "title": "What It Means for NFL EDGE",
-    "items": [
-     {
-      "headline": "How to read the flipped cards",
-      "paragraphs": [
-       "Hit Rate is the pick the app thinks is most likely to win. It forgoes value for win probability. The app's own tutorial says Hit Rate is not Profit Rate — a likely winner is not the same thing as a good price.",
-       "Lions moneyline -260 at FanDuel. At -260, every $2.60 you risk wins $1. The app's model gives Detroit about a 76% chance; the market says about 71%. The app's play-through is -269. That is the price where it stops being a bet, and -260 still clears it.",
-       "It is also the app's biggest stake of the week at 1.25 units. Balanced is Jets +3 at -106 on DraftKings — close to even money, a good starting point if you are new to this. Value is empty because nothing on the board is +EV, and the app says so plainly instead of forcing one."
-      ],
-      "takeaway": "Hit Rate is Lions moneyline -260: the most likely winner, not a value play. Balanced is Jets +3 at -106. Value is empty because nothing is +EV.",
-      "evidence_ids": [
-       "ev-board-pm"
-      ],
+  },
+  "evidence": [
+    {
+      "evidence_id": "ev-board-am",
+      "category": "board",
+      "verification": "REPORTED",
+      "fact": "NFL EDGE product/latest fetched Friday Nov 20, 2026 about 6:08 a.m. Denver (app data generated_at_utc 2026-11-20T12:08:48Z, state FRESH, prediction_as_of_utc 2026-11-20T12:05:04Z). Board on Week 11, slate UPCOMING, 13 games. Headline cards CHANGED since the Thursday evening edition: Hit Rate is now Jacksonville moneyline -255 at DraftKings (JAX at NYG, Sunday 4:25 p.m. ET), model probability 75.8% vs market 69.8%, trust probability 72.8%, EV +0.009, play-through -264, 1.25 units, state BET. Balanced is still NY Jets +3.0 at -105 at DraftKings (NYJ at LAC, Sunday 4:05 p.m. ET), price one cent better than Thursday evening (-106), model probability 50.6% vs market 51.5%, EV -0.061, play-through -108, 0.75 units, state BET. Value is NO_PLAY: no +EV price on the board. Previous evening cards: Detroit moneyline -260 and Jets +3 at -106. Model expected margins vs the DraftKings spread: KC by about 6.3 vs KC -16.5, BUF by about 3.4 vs BUF -16.5, CHI by about 0.2 vs CHI -11.5, DEN by about 2.2 vs DEN -10.5, DAL by about -0.1 (essentially even) vs DAL -8.5, DET by about 1.7 vs DET -6.0, JAX by about 5.7 vs JAX -6.0, CIN by about 5.2 vs CIN -6.0, PIT by about 1.8 vs PIT -3.5. Quarterbacks: Baker Mayfield still listed as Tampa Bay's expected starter (Questionable, last changed 2026-11-20T00:00:01Z); Geno Smith still listed as the Jets' expected starter (Questionable). Thursday night game IND at HOU shows no current market observations (game played).",
       "sources": [
-       {
-        "label": "NFL EDGE app",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
+        {
+          "label": "NFL EDGE app",
+          "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+        }
       ]
-     },
-     {
-      "headline": "The app still thinks the big spreads are too fat — and it still did not bet any of them",
-      "paragraphs": [
-       "The model's margins against the DraftKings spreads: Chiefs by about 6.3 against a 16.5-point spread. Bills by about 3.4 against 16.5. Texans by about 0.8 against 12.5. Bears by about 0.2 against 11.5. Jaguars by about 5.7 against 6.0 — the closest of the bunch.",
-       "Two more gaps joined them tonight: the model has Detroit by only about 1.7 against a 6-point spread, and Pittsburgh by about 1.8 against a 4.5-point spread for the Eagles.",
-       "None of those underdogs cleared the bar for a card. A gap is the start of the work, not the bet. If your book has a better number than the app's, tap Check, type in your book's line and price, and let the app run it back through the model and give you a bet or no-bet verdict on your price."
-      ],
-      "takeaway": "Seven big spreads, seven big model gaps, zero cards. The gap alone is not the bet — Check your price.",
-      "evidence_ids": [
-       "ev-board-pm"
-      ],
+    },
+    {
+      "evidence_id": "ev-tnf-am",
+      "category": "result",
+      "verification": "REPORTED",
+      "fact": "Thursday Night Football, Indianapolis Colts at Houston Texans, Nov 19, 8:15 p.m. ET: Houston won 26-3 at Reliant Stadium. C.J. Stroud threw three touchdowns (21 of 27, 194 yards, 1 interception) to Nico Collins, Kayshon Boutte and Marlin Klein. The Colts scored on their opening possession and never scored again, held to 167 total yards. Texans move to 4-6, Colts fall to 3-8. The Texans covered as 12.5-point favorites and the game totaled 29 points, under the 44.5 total.",
       "sources": [
-       {
-        "label": "NFL EDGE app",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
+        {
+          "label": "Reuters",
+          "url": "https://www.reuters.com/sports/nfl/cj-stroud-3-tds-leads-texans-past-unproductive-colts--flm-2026-11-20/"
+        },
+        {
+          "label": "Colts",
+          "url": "https://www.colts.com/news/colts-fall-to-texans-on-thursday-night-football-in-week-11"
+        }
       ]
-     }
-    ]
-   },
-   {
-    "id": "fade",
-    "icon": "⚖️",
-    "title": "The Fade",
-    "items": [
-     {
-      "headline": "Tonight the tickets and the money disagree on the moneyline",
-      "paragraphs": [
-       "DraftKings' own published figures for tonight's game, read this evening: 76% of the tickets are on the Texans moneyline at -750, but 61% of the money is on the Colts at +533. The crowd is on the favorite. The bigger bets are on the dog.",
-       "That is the opposite of the spread split earlier this week, when most tickets were on the Colts +12.5 and most money was on the Texans. Different market, different bettors, different story — which is why you read the split for the bet you are actually considering.",
-       "A split like this is worth watching. It is not a pick by itself. The spread still sits at Texans -12.5, Pinnacle is at -13, and the app has no card on this game — its model has Houston by only about 0.8 against that 12.5-point spread."
-      ],
-      "takeaway": "Most tickets are on the Texans moneyline, most money is on the Colts. The crowd and the bigger money disagree — and that disagreement is worth watching, not following blindly.",
-      "evidence_ids": [
-       "ev-fade-pm",
-       "ev-board-pm"
-      ],
+    },
+    {
+      "evidence_id": "ev-qb-am",
+      "category": "injury",
+      "verification": "REPORTED",
+      "fact": "Tampa Bay QB Baker Mayfield (foot, right thumb) did not practice Wednesday, returned limited Thursday, and said 'I feel ready' to play Sunday at Detroit. Head coach Todd Bowles said the team will decide Friday whether Mayfield starts; final injury designations come Friday. If Mayfield cannot go, rookie Jalon Daniels would make his fourth start. Safety Antoine Winfield Jr. (ankle) missed his second straight practice Thursday. Jets QB Geno Smith (ankle) was limited Wednesday and Thursday, says the plan is to play Sunday at the Chargers, and an MRI showed no significant damage; rookie Cade Klubnik is the backup if Smith cannot go. The app lists both Mayfield and Smith as their teams' expected starters.",
       "sources": [
-       {
-        "label": "Wise Guy Team - DraftKings Betting Splits Today (DK's own published figures, read Nov 19, 7:20 PM ET)",
-        "url": "https://wiseguyteam.com/draftkings-betting-splits"
-       },
-       {
-        "label": "NFL EDGE app",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
+        {
+          "label": "Buccaneers",
+          "url": "https://www.buccaneers.com/news/baker-mayfield-feels-ready-for-sunday-eager-to-get-into-rhythm"
+        },
+        {
+          "label": "New York Jets",
+          "url": "https://www.newyorkjets.com/news/jets-injury-report-week-11-vs-chargers-thursday-11-19-2026"
+        }
       ]
-     },
-     {
-      "headline": "What to watch, and how to use it",
-      "paragraphs": [
-       "Watch the Colts moneyline price. It already shortened from +550 on Thursday afternoon to +533 at DraftKings, and the Colts' share of the money ticked up from 58% to 61% across the evening. If it keeps shortening toward +450, the big money is still coming in. If it drifts back past +600, the moment has passed.",
-       "If you liked the Colts at +12.5, this split is a reason to wait for a better number — not a reason to chase the moneyline at +533. Sharper, price-sensitive bettors let the price come to them.",
-       "If you want to play it, run your price through Check first. Type in your book's line and price, and the app runs it back through the model and returns a bet or no-bet verdict on your number."
-      ],
-      "takeaway": "Watch the Colts moneyline: shorter toward +450 means the big money is still coming; back past +600 means the moment passed. Wait for the price — don't chase it.",
-      "evidence_ids": [
-       "ev-fade-pm",
-       "ev-board-pm"
-      ],
+    },
+    {
+      "evidence_id": "ev-weather-am",
+      "category": "weather",
+      "verification": "REPORTED",
+      "fact": "Week 11 kickoff weather from Sharp Football Analysis, read Friday Nov 20, 2026 about 6:15 a.m. Denver. Forecast last updated Tuesday Nov 17, 4:19 a.m. ET and unchanged since the Thursday evening brief. Sunday: Miami at Buffalo 61F, 12 mph wind, gusts 26; New Orleans at Chicago 49F, 15 mph wind, gusts 32 (windiest spot); Arizona at Kansas City 49F, 8 mph wind, gusts 16; Pittsburgh at Philadelphia 61F, 4 mph wind, gusts 11, rain; Jacksonville at NY Giants 58F, 4 mph wind, gusts 11, rain; Las Vegas at Denver 48F, 3 mph wind, gusts 9; Minnesota at San Francisco in Mexico City 66F, 2 mph wind, gusts 8, 76% chance of precipitation. Detroit is indoors, SoFi has a fixed roof, Dallas has a retractable roof. Monday: Cincinnati at Washington 47F, 8 mph wind, gusts 17.",
       "sources": [
-       {
-        "label": "Wise Guy Team - DraftKings Betting Splits Today (DK's own published figures, read Nov 19, 7:20 PM ET)",
-        "url": "https://wiseguyteam.com/draftkings-betting-splits"
-       },
-       {
-        "label": "Reuters - Week 11 Colts-Texans Preview, Prop Picks, Prediction",
-        "url": "https://www.reuters.com/sports/week-11-mnf-colts-texans-preview-prop-picks-prediction--flm-2026-11-19/"
-       },
-       {
-        "label": "NFL EDGE app",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
+        {
+          "label": "Sharp Football Analysis",
+          "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/"
+        }
       ]
-     }
-    ]
-   },
-   {
-    "id": "market-watch",
-    "icon": "👀",
-    "title": "Line Movement",
-    "items": [
-     {
-      "headline": "Thursday's total jumped a point",
-      "paragraphs": [
-       "The Colts-Texans total moved from 43.5 this morning to 44.5 at DraftKings and FanDuel tonight. The spread held: Texans -12.5 at both books, -13 at Pinnacle.",
-       "The app caught the move. Its board shows 44.5. If your book still has the total at 43.5 and Check says bet, take it now. A good number today beats a hoped-for number tomorrow."
-      ],
-      "takeaway": "Total up a point to 44.5, spread still Texans -12.5. The app caught the total move.",
-      "evidence_ids": [
-       "ev-board-pm"
-      ],
+    },
+    {
+      "evidence_id": "ev-fade-am",
+      "category": "splits",
+      "verification": "REPORTED",
+      "fact": "DraftKings moneyline betting splits for Tampa Bay at Detroit, Sunday 1:00 p.m. ET, from DraftKings' own published figures as republished by Wise Guy Team, read Nov 20, 2026, 7:59 a.m. ET: Tampa Bay 11% of bets, 30% of money; Detroit 89% of bets, 70% of money. The tickets and the money point different ways. Corroborating movement: Detroit was a 7-point favorite on Thursday and is now -6.0 on the app after Mayfield practiced Thursday. Another book pays better on Tampa Bay: Caesars lists the Bucs +220 on the moneyline vs DraftKings +212. VSiN's free betting-splits page was also checked this morning: the free featured row was college basketball (Florida -7.5 vs West Virginia), with no NFL split row visible and the full NFL board behind VSiN Pro, so the DraftKings figures above are the verified split used here.",
       "sources": [
-       {
-        "label": "NFL EDGE app",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
+        {
+          "label": "Wise Guy Team DraftKings splits",
+          "url": "https://wiseguyteam.com/draftkings-betting-splits"
+        },
+        {
+          "label": "Sports Illustrated",
+          "url": "https://www.si.com/betting/baker-mayfield-injury-update-tanks-buccaneers-odds-vs-lions-in-nfl-week-11-2026"
+        }
       ]
-     },
-     {
-      "headline": "Kansas City got expensive again, Cincinnati drifted, Detroit got cheaper",
-      "paragraphs": [
-       "Chiefs -15.5 at DraftKings this morning, -16.5 tonight — back where they were on Wednesday morning. Pinnacle still shows -16. The model still has Kansas City by only about 6.3, so the move does not change anything on the card.",
-       "The Bengals spread drifted too: -6.5 at DraftKings this morning, -6.0 tonight, and their moneyline is still -270 at FanDuel. The Lions spread came down a point on the Mayfield news: -7.0 this morning, -6.0 at DraftKings tonight. The Jaguars moneyline also ticked down, from -260 to -255 at FanDuel.",
-       "One timing note: the Mayfield decision lands on Friday. If he is ruled out, Detroit likely gets more expensive — so if you like the Lions, the -6.0 is there now. If you like Tampa Bay, waiting for Friday could buy you a better number."
-      ],
-      "takeaway": "Chiefs back to -16.5, Bengals down to -6.0, Lions down to -6.0 on the Mayfield news. Tampa Bay backers can wait for Friday; Detroit backers should take the -6.0 now.",
-      "evidence_ids": [
-       "ev-board-pm"
-      ],
-      "sources": [
-       {
-        "label": "NFL EDGE app",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     }
-    ]
-   },
-   {
-    "id": "today-tip",
-    "icon": "✅",
-    "title": "Today's Tip",
-    "items": [
-     {
-      "headline": "Friday brings the Mayfield decision — check back in the morning",
-      "paragraphs": [
-       "Thursday night is underway, and the board's next refresh lands tomorrow morning. The Mayfield decision is the one to watch: if your book still prices Tampa Bay like Jalon Daniels is starting, run it through Check now — the app already lists Mayfield as the expected starter.",
-       "Settlement is manual, and the tracker only works if you're honest with yourself. Log the losers too — the record is only useful if it tells the truth."
-      ],
-      "takeaway": "Check your Tampa Bay price against the app's Mayfield listing now, then check back tomorrow morning for the decision. And log the losers — the tracker only works if it's honest.",
-      "evidence_ids": [
-       "ev-board-pm",
-       "ev-qb-pm"
-      ],
-      "sources": [
-       {
-        "label": "NFL EDGE app",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       },
-       {
-        "label": "Footballguys - All of the Latest News (Baker Mayfield practicing, trending to play)",
-        "url": "https://www.footballguys.com:443/subscribers/apps/news.php?pos=qb"
-       }
-      ]
-     }
-    ]
-   }
+    }
   ]
- },
- "evidence": [
-  {
-   "evidence_id": "ev-board-pm",
-   "category": "board",
-   "verification": "REPORTED",
-   "fact": "NFL EDGE product/latest fetched Thursday Nov 19, 2026 about 6:02 p.m. Denver (app data generated_at_utc 2026-11-20T00:08:44Z, state FRESH; re-fetched 01:02Z with identical content — the evening board, not the morning board). Board on Week 11, slate UPCOMING, 13 games. Headline cards CHANGED since the morning edition: Hit Rate is now Detroit moneyline -260 at FanDuel (TB at DET, Sunday 1:00 p.m. ET), model probability 75.8% vs market 71.1%, EV -0.007, play-through -269, 1.25 units, state BET. Balanced is now NY Jets +3.0 at -106 at DraftKings (NYJ at LAC, Sunday 4:05 p.m. ET), model probability 50.6% vs market 50.9%, EV -0.052, play-through -109, 0.75 units, state BET. Value is NO_PLAY: no value card this week. Previous cards: Jaguars moneyline -260 at FanDuel (now -255) and Vikings +3.0 at +100 at FanDuel (still +100). Model expected margins vs the DraftKings spread: KC by about 6.3 vs KC -16.5, BUF by about 3.4 vs BUF -16.5, HOU by about 0.8 vs HOU -12.5, CHI by about 0.2 vs CHI -11.5, JAX by about 5.7 vs JAX -6.0, DET by about 1.7 vs DET -6.0, PIT by about 1.8 vs PHI -4.5. DraftKings lines this evening: Chiefs -16.5, Bills -16.5, Texans -12.5, Bears -11.5, Jaguars -6.0, Chargers -3.0, Bengals -6.0, Lions -6.0, Cowboys -8.5, Broncos -10.0, Eagles -4.5. Totals: Colts-Texans 44.5 at DraftKings and FanDuel (was 43.5 this morning). Pinnacle: Chiefs -16.0, Texans -13.0, Jaguars -6.0. FanDuel moneylines: Bengals -270, Jaguars -255 (was -260), Texans -820, Colts +570, Lions -260. Quarterbacks: the app now lists Baker Mayfield as Tampa Bay's expected starter for Sunday at Detroit (changed 2026-11-20T00:00:01Z, injury status Questionable); Geno Smith is listed as the Jets' expected starter for Sunday at the Chargers (Questionable); Daniel Jones is listed as Indianapolis' expected starter and C.J. Stroud as Houston's for Thursday night; Cam Ward is listed as Tennessee's expected starter.",
-   "sources": [
-    {
-     "label": "NFL EDGE app",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-inj-pm",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Inactives for Thursday Night Football, Indianapolis Colts at Houston Texans, Nov 19, 8:15 p.m. ET, announced Thursday evening: Colts INACTIVE - CB Sauce Gardner (calf), CB Charvarius Ward (knee), OT Bernhard Raimann (concussion), OT Jalen Travis (knee), TE Will Mallory (hamstring), DT Jerry Tillery (calf), QB Riley Leonard (third quarterback). Gardner was listed as questionable on Wednesday's final injury report and did not practice all week. OT Charlie Heck (personal), listed as questionable Wednesday, had the designation removed Thursday morning and will play. Texans INACTIVE - WR Marvin Harrison Jr. (hamstring), DE Danielle Hunter (hamstring), RB Woody Marks (concussion), TE Brevin Jordan (foot/illness), C Jake Andrews, OG Wyatt Teller (back), OT Nate Thomas. Teller was questionable with a back injury. Texans RB David Montgomery is back after missing four games. For Sunday/Monday: Cincinnati WR Tee Higgins (knee) practiced in full on Thursday ahead of Monday night at Washington.",
-   "sources": [
-    {
-     "label": "Indianapolis Colts - Colts announce 7 inactive players for Week 11 game vs. Houston Texans",
-     "url": "https://www.colts.com/news/colts-announce-7-inactive-players-for-week-11-game-vs-houston-texans"
-    },
-    {
-     "label": "NBC Sports PFT - Thursday Night Football: Sauce Gardner is officially inactive vs. Texans",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/thursday-night-football-sauce-gardner-is-officially-inactive-vs-texans"
-    },
-    {
-     "label": "NBC Sports - Tee Higgins (knee) practicing in full for Week 11",
-     "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-19/tee-higgins-knee-practicing-in-full-for-week-11"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-qb-pm",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Tampa Bay QB Baker Mayfield (foot strain) practiced on Thursday, Nov 19 and 'looks fine' and is 'trending to play' Sunday at Detroit, per FOX Sports' Greg Auman via Footballguys (11:48 a.m. Thu). Mayfield sat out Wednesday's practice, when Jalon Daniels took first-team reps, and was reported to be a long shot to play. Head coach Todd Bowles said the team will decide on Friday. The app now lists Mayfield as Tampa Bay's expected starter. NY Jets QB Geno Smith (ankle) was a limited participant in practice on Thursday, his second straight limited day (Wednesday was a walkthrough, so participation was estimated). Smith said on Wednesday that starting Sunday at the Chargers is 'the plan'; head coach Aaron Glenn said Smith will start if he is healthy, with rookie Cade Klubnik standing by if not.",
-   "sources": [
-    {
-     "label": "Footballguys - All of the Latest News (Baker Mayfield practicing, trending to play)",
-     "url": "https://www.footballguys.com:443/subscribers/apps/news.php?pos=qb"
-    },
-    {
-     "label": "New York Jets - Jets vs. Chargers Week 11 Injury Report, Thursday",
-     "url": "https://www.newyorkjets.com/news/jets-injury-report-week-11-vs-chargers-thursday-11-19-2026"
-    },
-    {
-     "label": "NBC Sports - Geno Smith (ankle) limited for another practice",
-     "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-19/geno-smith-ankle-limited-for-another-practice"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-weather-pm",
-   "category": "weather",
-   "verification": "REPORTED",
-   "fact": "Week 11 kickoff weather from Sharp Football Analysis, read Thursday Nov 19, 2026 about 6:05 p.m. Denver (forecast last updated Tuesday Nov 17, unchanged from the morning edition): Thursday, Colts at Texans, NRG Stadium (retractable roof): about 68 degrees, wind about 4 mph — weather is a non-factor. Sunday, Dolphins at Bills, Highmark Stadium: about 61 degrees, wind about 12 mph gusting to 26. Sunday, Saints at Bears, Soldier Field: about 49 degrees, wind about 15 mph gusting to 32. Sunday, Raiders at Broncos, Empower Field at Mile High: about 48 degrees, wind about 3 mph gusting to 9. Sunday night, Vikings at 49ers, Estadio Banorte (Mexico City): about 66 degrees, wind about 2 mph gusting to 8, 76% chance of precipitation. Monday, Bengals at Commanders, Northwest Stadium: about 47 degrees, wind about 8 mph gusting to 17. No game this week is flagged for wind trouble beyond Chicago's gusts.",
-   "sources": [
-    {
-     "label": "Sharp Football Analysis - NFL Weather Today: Week 11 forecast for every game",
-     "url": "https://www.sharpfootballanalysis.com/betting/nfl-weather-betting/"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-fade-pm",
-   "category": "splits",
-   "verification": "REPORTED",
-   "fact": "DraftKings moneyline betting splits for Colts at Texans, Thursday Nov 19, 8:15 p.m. ET, from DraftKings' own published figures as republished by Wise Guy Team: read 7:01 p.m. ET, Colts +533, 24% of bets, 58% of money; Texans -750, 76% of bets, 42% of money. Read again 7:20 p.m. ET: Colts +533, 24% of bets, 61% of money; Texans -750, 76% of bets, 39% of money — the Colts' share of the money rose across the evening. The Colts moneyline was +550 as of Thursday afternoon (Reuters preview). Spread context from the NFL EDGE board: Texans -12.5 at DraftKings and FanDuel, -13 at Pinnacle; total 44.5. Earlier in the week the spread split ran the other way (most tickets on the Colts +12.5, most money on the Texans). VSiN check: the free featured game on data.vsin.com tonight was college basketball (Florida -7.5); the NFL tab did not render in the text fetch, so the split is sourced from DraftKings' published figures instead, with the Colts moneyline price move (+550 to +533) as corroborating movement.",
-   "sources": [
-    {
-     "label": "Wise Guy Team - DraftKings Betting Splits Today (DK's own published figures, read Nov 19, 7:20 PM ET)",
-     "url": "https://wiseguyteam.com/draftkings-betting-splits"
-    },
-    {
-     "label": "Reuters - Week 11 Colts-Texans Preview, Prop Picks, Prediction",
-     "url": "https://www.reuters.com/sports/week-11-mnf-colts-texans-preview-prop-picks-prediction--flm-2026-11-19/"
-    },
-    {
-     "label": "NFL EDGE app",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-    }
-   ]
-  }
- ]
 }
