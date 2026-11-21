@@ -1,0 +1,249 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "capture_mode": "NATIVE_PROSPECTIVE",
+  "creation_provenance": {
+    "provider_calls": 0,
+    "source": "CANONICAL_PUBLISHED_PRODUCT",
+    "user_specific_data_included": false
+  },
+  "field_availability": {
+    "backend_user_overlay": "EXCLUDED_USER_SPECIFIC_DATA",
+    "evaluator_probability": "NOT_EXPOSED_BY_CANONICAL_PRODUCT_V1"
+  },
+  "lanes": {
+    "balanced": {
+      "american_odds": -105,
+      "away_team": "NYJ",
+      "book": "DRAFTKINGS",
+      "canonical_headline": {
+        "american_odds": -105,
+        "book": "DRAFTKINGS",
+        "ev": -0.06880804844806027,
+        "game_id": "2026_11_NYJ_LAC",
+        "lane": "BALANCED",
+        "line": 3.0,
+        "market": "SPREAD",
+        "market_probability": 0.5183217790582515,
+        "matchup": {
+          "away_team": "NYJ",
+          "home_team": "LAC"
+        },
+        "model_probability": 0.5056418649981905,
+        "play_through": {
+          "line": 3.0,
+          "price_american": -108
+        },
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "selection": "NYJ",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5056418649981905,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": -0.06880804844806027,
+      "exact_offer_identity_id": "offer-20684bbe01839a69b9165152",
+      "game_id": "2026_11_NYJ_LAC",
+      "home_team": "LAC",
+      "kickoff_at_utc": "2026-11-22T21:05:00Z",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "line": 3.0,
+      "logical_recommendation_id": "logical-9b225e96e67875971042b0b3",
+      "market": "SPREAD",
+      "market_probability": 0.5183217790582515,
+      "model_probability": 0.5056418649981905,
+      "normalized_selection": "NYJ",
+      "normalized_side": "away",
+      "play_through": {
+        "line": 3.0,
+        "price_american": -108
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.75,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "NYJ",
+      "selector_version": "balanced-price-bounded-v2",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5056418649981905,
+      "value_at": null,
+      "wager_identity_id": "wager-8f60f85ce74849e446b87b5b",
+      "warnings": []
+    },
+    "hit_rate": {
+      "american_odds": -255,
+      "away_team": "JAX",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": -255,
+        "book": "FANDUEL",
+        "ev": 0.008724448618236569,
+        "game_id": "2026_11_JAX_NYG",
+        "lane": "HIT_RATE",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.69776056575181,
+        "matchup": {
+          "away_team": "JAX",
+          "home_team": "NYG"
+        },
+        "model_probability": 0.7576848367188069,
+        "play_through": {
+          "line": null,
+          "price_american": -264
+        },
+        "recommended_units": 1.25,
+        "reliability": "MEDIUM",
+        "selection": "JAX",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.7277227012353085,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.008724448618236569,
+      "exact_offer_identity_id": "offer-71e89f49550f723d45829e58",
+      "game_id": "2026_11_JAX_NYG",
+      "home_team": "NYG",
+      "kickoff_at_utc": "2026-11-22T21:25:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "line": null,
+      "logical_recommendation_id": "logical-4e8a2a95d1aae16d22c0b263",
+      "market": "MONEYLINE",
+      "market_probability": 0.69776056575181,
+      "model_probability": 0.7576848367188069,
+      "normalized_selection": "JAX",
+      "normalized_side": "away",
+      "play_through": {
+        "line": null,
+        "price_american": -264
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 1.25,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "JAX",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.7277227012353085,
+      "value_at": null,
+      "wager_identity_id": "wager-66a1d6cb000d2877eff47955",
+      "warnings": []
+    },
+    "value": {
+      "american_odds": -110,
+      "away_team": "JAX",
+      "book": "DRAFTKINGS",
+      "canonical_headline": {
+        "american_odds": -110,
+        "book": "DRAFTKINGS",
+        "ev": 0.00168995949462164,
+        "game_id": "2026_11_JAX_NYG",
+        "lane": "VALUE",
+        "line": 6.0,
+        "market": "SPREAD",
+        "market_probability": 0.5183217790582515,
+        "matchup": {
+          "away_team": "JAX",
+          "home_team": "NYG"
+        },
+        "model_probability": 0.5044360252556671,
+        "play_through": null,
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "selection": "NYG",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5044360252556671,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.00168995949462164,
+      "exact_offer_identity_id": "offer-1a6eaebea5342ade9282e0e6",
+      "game_id": "2026_11_JAX_NYG",
+      "home_team": "NYG",
+      "kickoff_at_utc": "2026-11-22T21:25:00Z",
+      "lane": "VALUE",
+      "lane_key": "value",
+      "line": 6.0,
+      "logical_recommendation_id": "logical-c2c37476f04ad99cbfd2d6fb",
+      "market": "SPREAD",
+      "market_probability": 0.5183217790582515,
+      "model_probability": 0.5044360252556671,
+      "normalized_selection": "NYG",
+      "normalized_side": "home",
+      "play_through": null,
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.75,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "NYG",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5044360252556671,
+      "value_at": null,
+      "wager_identity_id": "wager-2e26af2822e876d5ed5c560e",
+      "warnings": []
+    }
+  },
+  "product_freshness": {
+    "age_seconds": 0.0,
+    "observed_at_utc": "2026-11-21T00:08:47Z",
+    "state": "FRESH",
+    "threshold_seconds": 43200.0
+  },
+  "product_generated_at_utc": "2026-11-21T00:08:47Z",
+  "product_stale": false,
+  "product_warnings": [
+    "1 canonical Week 11 game(s) lack a provider event."
+  ],
+  "publication_id": "publication-895a62a2de20d4a41904ade3",
+  "published_at_utc": "2026-11-21T00:08:55.059518Z",
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1",
+  "season": 2026,
+  "source_commit_sha": null,
+  "source_product_sha256": "895a62a2de20d4a41904ade36553264ac80365e0153352f791e59668d59a3a09",
+  "source_product_version": "live-2026-week11-product-v1",
+  "source_provenance": {
+    "evaluator_versions": {
+      "moneyline": "ml_v4",
+      "spread": "spread_v3",
+      "total": "total_v3"
+    },
+    "football_data_version": "live-2026-state:57dbd6fe472d9633e5b1ef7c",
+    "market_snapshot_version": "live-market:39f506f91e5358b9c4193c7d",
+    "model_versions": {
+      "expected_margin": "expected-margin-v1-stable",
+      "qb_elo": "qb-elo-v1.0.0",
+      "ridge_totals_r4": "ridge-totals-r4-alpha100",
+      "xgboost_v2": "post-v5-v2-conservative-adaptive-tail"
+    },
+    "prediction_as_of_utc": "2026-11-21T00:05:04.277325Z",
+    "qb_snapshot_version": "sleeper-scheduled-20261121T000001Z-7af15d4f",
+    "selector_versions": {
+      "balanced": "balanced-price-bounded-v2",
+      "hit_rate": "v1",
+      "value": "v1"
+    }
+  },
+  "source_week_last_kickoff_at_utc": "2026-11-24T01:15:00Z",
+  "week": 11
+}
