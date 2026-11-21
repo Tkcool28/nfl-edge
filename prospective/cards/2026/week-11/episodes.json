@@ -279,8 +279,8 @@
       "lane_key": "balanced",
       "last_line": 3.0,
       "last_price": -105,
-      "last_publication_id": "publication-895a62a2de20d4a41904ade3",
-      "last_seen_at_utc": "2026-11-21T00:08:55.059518Z",
+      "last_publication_id": "publication-067ac1aa0774971e14255ab3",
+      "last_seen_at_utc": "2026-11-21T12:08:54.015401Z",
       "logical_recommendation_id": "logical-9b225e96e67875971042b0b3",
       "market": "SPREAD",
       "normalized_selection": "NYJ",
@@ -336,9 +336,26 @@
           "state": "BET",
           "value_at": null,
           "wager_identity_id": "wager-8f60f85ce74849e446b87b5b"
+        },
+        {
+          "american_odds": -105,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-20684bbe01839a69b9165152",
+          "line": 3.0,
+          "play_through": {
+            "line": 3.0,
+            "price_american": -108
+          },
+          "publication_id": "publication-067ac1aa0774971e14255ab3",
+          "published_at_utc": "2026-11-21T12:08:54.015401Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "067ac1aa0774971e14255ab31028076ec6c5fe9973a9b5ec76e0430682996525",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-8f60f85ce74849e446b87b5b"
         }
       ],
-      "publication_count": 3,
+      "publication_count": 4,
       "returned_after_gap": false,
       "selection": "NYJ",
       "terminal_reason": "WEEK_HISTORY_END",
@@ -347,7 +364,7 @@
     },
     {
       "best_line": null,
-      "best_price": -255,
+      "best_price": -253,
       "episode_id": "episode-ba60a59168358d23730a1c75",
       "first_line": null,
       "first_price": -255,
@@ -357,9 +374,9 @@
       "lane": "HIT_RATE",
       "lane_key": "hit_rate",
       "last_line": null,
-      "last_price": -255,
-      "last_publication_id": "publication-895a62a2de20d4a41904ade3",
-      "last_seen_at_utc": "2026-11-21T00:08:55.059518Z",
+      "last_price": -253,
+      "last_publication_id": "publication-067ac1aa0774971e14255ab3",
+      "last_seen_at_utc": "2026-11-21T12:08:54.015401Z",
       "logical_recommendation_id": "logical-4e8a2a95d1aae16d22c0b263",
       "market": "MONEYLINE",
       "normalized_selection": "JAX",
@@ -398,9 +415,26 @@
           "state": "BET",
           "value_at": null,
           "wager_identity_id": "wager-66a1d6cb000d2877eff47955"
+        },
+        {
+          "american_odds": -253,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-28805d9d1a3f1ce088fbfdb2",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -262
+          },
+          "publication_id": "publication-067ac1aa0774971e14255ab3",
+          "published_at_utc": "2026-11-21T12:08:54.015401Z",
+          "recommended_units": 1.25,
+          "source_product_sha256": "067ac1aa0774971e14255ab31028076ec6c5fe9973a9b5ec76e0430682996525",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-66a1d6cb000d2877eff47955"
         }
       ],
-      "publication_count": 2,
+      "publication_count": 3,
       "returned_after_gap": true,
       "selection": "JAX",
       "terminal_reason": "WEEK_HISTORY_END",
@@ -420,8 +454,8 @@
       "lane_key": "value",
       "last_line": 6.0,
       "last_price": -110,
-      "last_publication_id": "publication-895a62a2de20d4a41904ade3",
-      "last_seen_at_utc": "2026-11-21T00:08:55.059518Z",
+      "last_publication_id": "publication-067ac1aa0774971e14255ab3",
+      "last_seen_at_utc": "2026-11-21T12:08:54.015401Z",
       "logical_recommendation_id": "logical-c2c37476f04ad99cbfd2d6fb",
       "market": "SPREAD",
       "normalized_selection": "NYG",
@@ -440,9 +474,23 @@
           "state": "BET",
           "value_at": null,
           "wager_identity_id": "wager-2e26af2822e876d5ed5c560e"
+        },
+        {
+          "american_odds": -110,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-1a6eaebea5342ade9282e0e6",
+          "line": 6.0,
+          "play_through": null,
+          "publication_id": "publication-067ac1aa0774971e14255ab3",
+          "published_at_utc": "2026-11-21T12:08:54.015401Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "067ac1aa0774971e14255ab31028076ec6c5fe9973a9b5ec76e0430682996525",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-2e26af2822e876d5ed5c560e"
         }
       ],
-      "publication_count": 1,
+      "publication_count": 2,
       "returned_after_gap": false,
       "selection": "NYG",
       "terminal_reason": "WEEK_HISTORY_END",
@@ -459,7 +507,8 @@
     "publication-1436c9d55503b8f7c13dbd33",
     "publication-1c3024f22e570bcf5f12991c",
     "publication-0a10da2a9740b67bd1012969",
-    "publication-895a62a2de20d4a41904ade3"
+    "publication-895a62a2de20d4a41904ade3",
+    "publication-067ac1aa0774971e14255ab3"
   ],
   "week": 11
 }
