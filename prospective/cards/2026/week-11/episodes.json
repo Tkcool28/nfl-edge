@@ -392,7 +392,7 @@
       "publication_count": 6,
       "returned_after_gap": false,
       "selection": "NYJ",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "REPLACED",
       "worst_line": 3.0,
       "worst_price": -106
     },
@@ -505,7 +505,7 @@
       "publication_count": 5,
       "returned_after_gap": true,
       "selection": "JAX",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "REPLACED",
       "worst_line": null,
       "worst_price": -255
     },
@@ -606,9 +606,99 @@
       "publication_count": 1,
       "returned_after_gap": true,
       "selection": "NYG",
-      "terminal_reason": "WEEK_HISTORY_END",
+      "terminal_reason": "DISAPPEARED",
       "worst_line": 6.0,
       "worst_price": -109
+    },
+    {
+      "best_line": null,
+      "best_price": -295,
+      "episode_id": "episode-48f0682e92f6b6924d696024",
+      "first_line": null,
+      "first_price": -295,
+      "first_publication_id": "publication-f89c3f6b262168af54cf4d76",
+      "first_seen_at_utc": "2026-11-23T12:08:45.176246Z",
+      "game_id": "2026_11_CIN_WAS",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "last_line": null,
+      "last_price": -295,
+      "last_publication_id": "publication-f89c3f6b262168af54cf4d76",
+      "last_seen_at_utc": "2026-11-23T12:08:45.176246Z",
+      "logical_recommendation_id": "logical-5979096cf47d4f7e822fcee8",
+      "market": "MONEYLINE",
+      "normalized_selection": "CIN",
+      "normalized_side": "away",
+      "observations": [
+        {
+          "american_odds": -295,
+          "book": "FANDUEL",
+          "exact_offer_identity_id": "offer-14aabcf2cda1756529d1e8b8",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -306
+          },
+          "publication_id": "publication-f89c3f6b262168af54cf4d76",
+          "published_at_utc": "2026-11-23T12:08:45.176246Z",
+          "recommended_units": 1.0,
+          "source_product_sha256": "f89c3f6b262168af54cf4d76b6066aa4e44e8555a4996b94b7d70088f90de088",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-a52a18db4f4f7d99b545fe69"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": true,
+      "selection": "CIN",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": null,
+      "worst_price": -295
+    },
+    {
+      "best_line": 6.0,
+      "best_price": -107,
+      "episode_id": "episode-bb2b0d9d5caf86dd066c3237",
+      "first_line": 6.0,
+      "first_price": -107,
+      "first_publication_id": "publication-f89c3f6b262168af54cf4d76",
+      "first_seen_at_utc": "2026-11-23T12:08:45.176246Z",
+      "game_id": "2026_11_CIN_WAS",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "last_line": 6.0,
+      "last_price": -107,
+      "last_publication_id": "publication-f89c3f6b262168af54cf4d76",
+      "last_seen_at_utc": "2026-11-23T12:08:45.176246Z",
+      "logical_recommendation_id": "logical-116d0cbc76019febebdaae80",
+      "market": "SPREAD",
+      "normalized_selection": "WAS",
+      "normalized_side": "home",
+      "observations": [
+        {
+          "american_odds": -107,
+          "book": "DRAFTKINGS",
+          "exact_offer_identity_id": "offer-12d666eec1133c1bbff164e4",
+          "line": 6.0,
+          "play_through": {
+            "line": 6.0,
+            "price_american": -110
+          },
+          "publication_id": "publication-f89c3f6b262168af54cf4d76",
+          "published_at_utc": "2026-11-23T12:08:45.176246Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "f89c3f6b262168af54cf4d76b6066aa4e44e8555a4996b94b7d70088f90de088",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-cb6bd7c2c1d239b6eff64f43"
+        }
+      ],
+      "publication_count": 1,
+      "returned_after_gap": false,
+      "selection": "WAS",
+      "terminal_reason": "WEEK_HISTORY_END",
+      "worst_line": 6.0,
+      "worst_price": -107
     }
   ],
   "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_EPISODES_V1",
@@ -623,7 +713,8 @@
     "publication-895a62a2de20d4a41904ade3",
     "publication-067ac1aa0774971e14255ab3",
     "publication-bc4eeefe8ceb7819a70b122e",
-    "publication-3f35c0b4cb13c89812c959b1"
+    "publication-3f35c0b4cb13c89812c959b1",
+    "publication-f89c3f6b262168af54cf4d76"
   ],
   "week": 11
 }
