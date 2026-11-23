@@ -1,14 +1,14 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-11-22T13:19:29Z",
- "research_generated_at_utc": "2026-11-22T13:19:29Z",
+ "submitted_at_utc": "2026-11-23T01:12:46Z",
+ "research_generated_at_utc": "2026-11-23T01:12:46Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-11-22T13:19:29Z",
-  "edition": "Morning Brief",
-  "title": "NFL EDGE Sunday Morning Brief",
-  "dek": "Detroit moved two points in a day, the Value card is back, and Tampa Bay's two questionable stars get their answer at the inactives.",
-  "research_generated_at_utc": "2026-11-22T13:19:29Z",
+  "published_at_utc": "2026-11-23T01:12:46Z",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Sunday Evening Brief",
+  "dek": "Two of the three morning cards won, Mike Evans is back tonight in a 49ers uniform, and Cincinnati keeps climbing toward -6.",
+  "research_generated_at_utc": "2026-11-23T01:12:46Z",
   "sections": [
    {
     "id": "what-matters",
@@ -16,49 +16,82 @@
     "title": "What Matters Today",
     "items": [
      {
-      "headline": "Mayfield and Evans are both expected to play in Detroit",
+      "headline": "Correction: Mike Evans is back tonight — for the 49ers",
       "paragraphs": [
-       "Baker Mayfield is expected to play today at Detroit, barring a setback. That is the word from Tom Pelissero of The Ringer, and the Sunday morning update says the same: he will play.",
-       "Here is what he is playing through. Mayfield has a plantar fascia injury in his foot, plus a thumb issue. He is expected to wear a special orthotic and new cleats. He is officially questionable. He sat out Wednesday and practiced on a limited basis Thursday and Friday.",
-       "Mike Evans is expected back too, after limited practices Thursday and Friday. He is also officially questionable. Tampa Bay is short-handed on defense, though: safety Antoine Winfield Jr. is out with an ankle injury.",
-       "It is not final until the inactives come out, about 90 minutes before the 1:00 p.m. ET kickoff. If Mayfield cannot go, undrafted rookie Jalon Daniels would start. The app lists Mayfield as Tampa Bay's expected starter."
+       "First, a correction from this morning. This morning's brief said Mike Evans was expected back for Tampa Bay. That was wrong. Evans plays for San Francisco, and he returns tonight against Minnesota in Mexico City.",
+       "Evans has been out with a flare-up of Achilles tendinitis, per NFL Network's Ian Rapoport. He leads the 49ers with 70 receiving yards per game over the six games he has played this season.",
+       "Tonight is the biggest game left on the Week 11 board: San Francisco is 8-1, Minnesota is 7-2, and kickoff is 8:20 p.m. ET. The app has it a pick'em — San Francisco by about a tenth of a point — while the market has the 49ers -3.5. Both quarterbacks are clear: Kirk Cousins for Minnesota, Brock Purdy for San Francisco.",
+       "Evans returning does not change the app's number. If your book has a 49ers price you like, Check it and let the app run it back through the model and the evaluator."
       ],
-      "takeaway": "Mayfield and Evans are both expected to play, but both are officially questionable — the inactives settle it about 90 minutes before kickoff. Winfield Jr. is out.",
+      "takeaway": "Mike Evans returns tonight for San Francisco, not Tampa Bay — this morning had it wrong, and this brief corrects it. The app calls the game a pick'em against a market -3.5.",
+      "evidence_ids": [
+       "ev-evans",
+       "ev-board-pm"
+      ],
+      "sources": [
+       {
+        "label": "Yahoo Sports — Week 11 live updates (Evans to return for 49ers, per Rapoport)",
+        "url": "https://www.chatsports.com/nfl/a/source/week-11-nfl-schedule-scores-live-updates-brock-bowers-questionable-with-ankle-injury-baker-mayfield-mike-evans-to-play-18604206"
+       },
+       {
+        "label": "FanDuel Research — Vikings vs 49ers prediction (Evans +200 anytime TD)",
+        "url": "https://www.fanduel.com/research/vikings-vs-49ers-prediction-nfl-player-props-odds-and-4-best-bets-for-mexico-city-snf"
+       },
+       {
+        "label": "NFL EDGE app — product/latest",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       }
+      ]
+     },
+     {
+      "headline": "The morning cards went 2-for-3",
+      "paragraphs": [
+       "Balanced won. The Jets were +3 at -102, and they won outright, 27-24 at the Chargers. A dog winning outright covers every spread number on the board.",
+       "Value won too. The Giants were +6 at -109, and they won outright, 23-18 over Jacksonville at MetLife. The Giants led 20-6 at halftime and held on.",
+       "Hit Rate lost. The Jaguars moneyline was -255, the most likely winner on the board, and Jacksonville lost. That is the Hit Rate lane doing what it says: it picks the most likely winner, not a sure thing. The app gave Jacksonville about a 76 percent chance. The other 24 percent showed up.",
+       "Two wins and a loss is a good morning. Log the Jaguars loss the same way you log the two wins — the tracker only works if you are honest with yourself."
+      ],
+      "takeaway": "Jets +3 won outright 27-24 and Giants +6 won outright 23-18. Jaguars moneyline -255 lost. Two of three cards won.",
+      "evidence_ids": [
+       "ev-scores",
+       "ev-board-pm"
+      ],
+      "sources": [
+       {
+        "label": "Reuters — NFL roundup: Lions, Bears improve to 8-2",
+        "url": "https://www.reuters.com/sports/nfl-roundup-lions-bears-improve-8-2-ahead-turkey-day-tilt--flm-2026-11-22/"
+       },
+       {
+        "label": "theScore — Jaguars vs Giants matchup",
+        "url": "https://www.thescore.com/nfl/event/140733"
+       },
+       {
+        "label": "NFL EDGE app — product/latest",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       }
+      ]
+     },
+     {
+      "headline": "Mayfield played hurt, and Detroit won anyway",
+      "paragraphs": [
+       "Baker Mayfield played through the plantar fascia injury in his foot. He finished 20 of 33 for 187 yards and two touchdowns, both to rookie Ted Hurst, and he was sacked four times. Detroit won 31-21 and covered the 3.5.",
+       "The two-point move toward Tampa Bay during the week ended at Detroit -3.5, and the favorite still covered. Kansas City covered too, 34-7 over Arizona against a 15.5-point spread on DraftKings.",
+       "The big favorites did not all cover. Buffalo beat Miami 26-9 but did not cover 16.5. Chicago beat New Orleans 21-13 but did not cover 11.5. The app had Buffalo by about 3 and Chicago by about a quarter of a point — much closer to the final margins than the market was."
+      ],
+      "takeaway": "Mayfield played hurt (20 of 33, 187 yards, 2 touchdowns) and Detroit still won 31-21, covering -3.5. Buffalo and Chicago won but did not cover their big numbers.",
       "evidence_ids": [
        "ev-mayfield",
-       "ev-board-am"
+       "ev-scores",
+       "ev-board-pm"
       ],
       "sources": [
        {
-        "label": "FantasyLife — Week 11 injuries, coachspeak and news (Sunday AM update)",
-        "url": "https://www.fantasylife.com/articles/fantasy/week-11-fantasy-football-injuries-coachspeak-and-news-to-help"
+        "label": "NBC Sports — Mayfield plays through foot issue in Week 11 loss",
+        "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-22/mayfield-plays-through-foot-issue-in-week-11-loss"
        },
        {
-        "label": "Pro Football Rumors — Mayfield on track to start in Week 11",
-        "url": "https://www.profootballrumors.com/2026/11/buccaneers-qb-baker-mayfield-on-track-to-start-in-week-11"
-       },
-       {
-        "label": "NFL EDGE app — product/latest",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     },
-     {
-      "headline": "Arizona's quarterback is settled, and the app has him",
-      "paragraphs": [
-       "Carson Beck is out with back spasms, and Josh Johnson starts today at Kansas City. That makes Johnson Arizona's fourth starting quarterback in four weeks. Rookie Joey Aguilar is the backup.",
-       "The app's quarterback snapshot updated this morning and now lists Johnson as Arizona's expected starter. The numbers for this game reflect the change.",
-       "The app has Kansas City winning by about 6, not 16.5, and it still put no card on this game. A gap is a starting point, not a bet."
-      ],
-      "takeaway": "Beck is out and Josh Johnson starts at Kansas City. The app has updated, and it still has no card on this game.",
-      "evidence_ids": [
-       "ev-ari-qb",
-       "ev-board-am"
-      ],
-      "sources": [
-       {
-        "label": "Arizona Cardinals — Josh Johnson start confirmed after Carson Beck downgraded",
-        "url": "https://www.azcardinals.com/news/josh-johnson-start-confirmed-after-carson-beck-downgraded"
+        "label": "Reuters — NFL roundup: Lions, Bears improve to 8-2",
+        "url": "https://www.reuters.com/sports/nfl-roundup-lions-bears-improve-8-2-ahead-turkey-day-tilt--flm-2026-11-22/"
        },
        {
         "label": "NFL EDGE app — product/latest",
@@ -67,37 +100,41 @@
       ]
      },
      {
-      "headline": "Drake Maye is out indefinitely",
+      "headline": "Monday: both quarterbacks clear, injuries in the trenches and the backfield",
       "paragraphs": [
-       "Drake Maye fractured his right fibula. It will not need surgery, but he is expected to miss some time, per ESPN's Adam Schefter. He is out indefinitely.",
-       "New England is not on today's board, so it changes nothing on this slate. It is still the biggest quarterback news of the weekend, and it matters next week when the Patriots return to the board."
+       "Joe Burrow carries no injury designation after an illness and is expected to start for Cincinnati. Jayden Daniels is expected to start for Washington. The quarterback question is settled on both sides.",
+       "Cincinnati ruled out guard Dalton Risner with a knee injury. Guard Dylan Fairchild (oblique), safety Kyle Dugger (quadriceps) and cornerback Dax Hill (illness) are questionable. Washington has running back Rachaad White (heel), center Lucas Patrick (concussion) and cornerback Amik Robertson (ankle) questionable, plus running back Jacory Croskey-Merritt (groin), who has resumed practicing and is in line to return.",
+       "The inactives land about 90 minutes before the 8:15 p.m. ET kickoff. If White or Croskey-Merritt is out, Check the Washington price again — the number will move."
       ],
-      "takeaway": "Maye fractured his right fibula and is out indefinitely. New England does not play today, so nothing changes on this slate.",
+      "takeaway": "Burrow and Daniels are both clear to start Monday. Risner is out for Cincinnati; White, Patrick, Robertson and Croskey-Merritt are questionable for Washington.",
       "evidence_ids": [
-       "ev-maye"
+       "ev-monday"
       ],
       "sources": [
        {
-        "label": "DARI Market — NFL Injury Report November 22, 2026 (Maye fractured fibula, per Schefter)",
-        "url": "https://darimarket.us/nfl/injury-report"
+        "label": "Vigged — Bengals vs Commanders (NWS weather, injury report)",
+        "url": "https://vigged.com/nfl/2026/week-11/cincinnati-bengals-at-washington-commanders"
+       },
+       {
+        "label": "SI — Commanders vs Bengals final injury report",
+        "url": "https://www.si.com/nfl/commanders/onsi/commanders-bengals-monday-night-football-how-to-watch?utm_source=RSS"
        }
       ]
      },
      {
-      "headline": "Weather: rain in Chicago and at MetLife, wind in two spots",
+      "headline": "Monday weather: cool and breezy, rain unlikely",
       "paragraphs": [
-       "Rain is likely at kickoff in Chicago and at MetLife for Jaguars at Giants. Chicago gets 56 degrees with wind at 15 mph gusting to 24 and a 91 percent chance of rain. MetLife gets 61 degrees, light wind, and a 63 percent chance of light rain.",
-       "Philadelphia's rain chance has dropped to 42 percent, with 64 degrees and light wind. Kansas City stays dry but windy: 48 degrees, mostly sunny, wind 15 mph gusting to 24. Carolina gets a 39 percent chance of light rain, Buffalo is clear at 66 degrees, Denver is clear at 43 degrees, and Mexico City is fair at 62 degrees for the night game.",
+       "The National Weather Service forecast for kickoff at Northwest Stadium: 54 degrees, wind from the northwest at 10 mph gusting to 22, partly cloudy, with an 8 percent chance of rain.",
        "That is the weather, plain and simple. It is not a totals edge, and it does not change what the app says. Note it, then bet the numbers."
       ],
-      "takeaway": "Rain likely in Chicago and at MetLife. Wind about 15 mph in Chicago and Kansas City. Philadelphia's rain chance has dropped. Mild everywhere else.",
+      "takeaway": "Monday in Landover: 54 degrees, wind 10 mph gusting to 22, 8 percent chance of rain. Cool and breezy, rain unlikely.",
       "evidence_ids": [
-       "ev-weather"
+       "ev-monday"
       ],
       "sources": [
        {
-        "label": "FantasyTools — NFL Weather Week 11 (National Weather Service)",
-        "url": "https://fantasytools.ai/nfl-weather-report/"
+        "label": "Vigged — Bengals vs Commanders (NWS weather, injury report)",
+        "url": "https://vigged.com/nfl/2026/week-11/cincinnati-bengals-at-washington-commanders"
        }
       ]
      }
@@ -109,15 +146,16 @@
     "title": "What It Means for NFL EDGE",
     "items": [
      {
-      "headline": "How to read today's three cards",
+      "headline": "One thing to know first: the evening board had not refreshed",
       "paragraphs": [
-       "All three cards are live again. Hit Rate is Jaguars moneyline at -255, the most likely winner on the board. The app gives Jacksonville about a 74 percent chance, against about 72 percent needed to break even at that price. A -255 price means every $2.55 you risk wins $1.",
-       "Balanced is Jets +3 at -102, about a coin flip and the middle ground — a strong pick without paying too much. The app gives the Jets about a 51 percent chance, against about 50 percent needed to break even.",
-       "Value is back. Giants +6 at -109 was not on a card last night, and it is the Value pick again this morning. The app gives the Giants about 52.5 percent, against about 52.2 percent needed — barely over the line. If your book has a Giants price you like, Check it and let the app run it back through the model and the evaluator."
+       "The board refreshes every morning and evening, and this evening it had not refreshed by the time this brief was written. The numbers below are from the morning board, which is the latest available. Check the app for the latest before you bet.",
+       "Here is what the morning board says about the two games left. Tonight, the app has San Francisco winning by about a tenth of a point — a pick'em — against a market spread of -3.5. The app's total sits near 49.5 against a market total of 46.5. The app put no card on this game.",
+       "Monday, the app and the market nearly agree. The app has Cincinnati by about 5, the market has -6 on DraftKings and -5.5 on FanDuel. The app's total sits near 48 against a market total of 54.5. Again, no card on the game.",
+       "A gap is a starting point, not a bet. The card is what the model and the evaluator agreed on after the full check. If a number at your book catches your eye, type the line and the price into Check and let the app run it back through the model and the evaluator."
       ],
-      "takeaway": "Hit Rate is Jaguars moneyline -255, the most likely winner. Balanced is Jets +3 at -102, about a coin flip. Value is Giants +6 at -109, barely over the line.",
+      "takeaway": "The evening board had not refreshed, so these numbers are from the morning board — Check for the latest. The app calls tonight a pick'em and nearly agrees with the market on Monday. No card on either game.",
       "evidence_ids": [
-       "ev-board-am"
+       "ev-board-pm"
       ],
       "sources": [
        {
@@ -127,20 +165,25 @@
       ]
      },
      {
-      "headline": "The app still thinks the big spreads are too fat, and it still bet none of them",
+      "headline": "Hit Rate lost today, and that is the lane working as advertised",
       "paragraphs": [
-       "Look at the gaps. The app has Kansas City winning by about 6, not 15.5. Buffalo by about 3.4, not 16.5. Chicago by about 0.2, not 11.5. Detroit by about 1.7, not 3.5.",
-       "Detroit is the one that moved. The market came two points toward the app's number in a day, and the app still put no dog on a card. A gap is a starting point, not a bet. The card is what the model and the evaluator agreed on after the full check.",
-       "If one of those dogs catches your eye at your book, do not just take it. Type the line and the price into Check and let the app run it back through the model and the evaluator. That is what Check is for."
+       "Hit Rate is the pick most likely to win. It is not the pick most likely to profit. The app's own tutorial says Hit Rate is not Profit Rate, and today showed why: Jacksonville had about a 76 percent chance, and the 24 percent happened.",
+       "Balanced is the middle ground — a strong pick without paying too much. The Jets were about a coin flip at +3, and they won outright. Value is always the model's plus-expected-value play. The Giants were barely over the line at +6, and they won outright too.",
+       "Three cards, three different jobs. Judge each one by its own job, not by whether it won today. A Hit Rate loss does not make the lane broken, and a Value win does not make it a lock next time."
       ],
-      "takeaway": "Big spreads, big model gaps, zero cards on the dogs. The gap alone is not the bet. Check your price.",
+      "takeaway": "Hit Rate picks the most likely winner, not a sure thing — Jacksonville's 24 percent showed up today. Balanced and Value won outright. Judge each lane by its own job.",
       "evidence_ids": [
-       "ev-board-am"
+       "ev-board-pm",
+       "ev-scores"
       ],
       "sources": [
        {
         "label": "NFL EDGE app — product/latest",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       },
+       {
+        "label": "theScore — Jaguars vs Giants matchup",
+        "url": "https://www.thescore.com/nfl/event/140733"
        }
       ]
      }
@@ -153,13 +196,13 @@
     "mode": "learning",
     "items": [
      {
-      "headline": "The juice: what -110 really costs you",
+      "headline": "The hook: why a half-point matters",
       "paragraphs": [
-       "Every price has the book's cut built in, and that cut has a name: the juice. At -110, you risk $1.10 to win $1. That extra 10 cents is the juice.",
-       "Here is a clearly labeled hypothetical example. Imagine you bet $11 on two different games, both at -110, and you split them — one win, one loss. The winner pays back $21, your $11 stake plus $10 profit. The loser costs you $11. You went 1-1 and you are still down $1. That is the juice doing its job.",
-       "That is why the app shows a break-even number on every card. At -110 you have to win more than half your bets just to break even. The price tells you what you win. The break-even number tells you what you need."
+       "A spread with a half-point in it — like -3.5 — has a name: the hook. The half-point exists so the bet cannot push. There is no tie. You win or you lose.",
+       "Here is a clearly labeled hypothetical example. Imagine a favorite listed at -3.5 at one book and -3 at another book, both at the same price. If the favorite wins by exactly 3, the -3.5 ticket loses and the -3 ticket pushes — your stake comes back. Same game, same price, different result, all because of the hook.",
+       "That is why shopping for the line matters as much as picking the side. A half-point is small until it is the whole bet. When you see two books a half-point apart, the better number is usually the one without the hook working against you — and Check will tell you what each price is actually worth."
       ],
-      "takeaway": "At -110 you have to win more than half your bets just to break even — the juice is why the app's break-even number matters more than the price alone.",
+      "takeaway": "The hook is the half-point in a spread like -3.5, and it decides win, loss or push — a favorite winning by exactly 3 loses at -3.5 and pushes at -3, so shop the line.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -172,15 +215,38 @@
     "title": "Line Movement",
     "items": [
      {
-      "headline": "Detroit moved another full point overnight",
+      "headline": "Cincinnati is up to -6, and the books disagree by a point",
       "paragraphs": [
-       "Detroit went from -4.5 last night to -3.5 this morning on DraftKings and FanDuel. That is a second full point toward Tampa Bay, and two points in a day from the -5.5 of Saturday morning.",
-       "The market is moving toward the app's number. The app has Detroit winning by about 1.7, not 3.5. The +5.5 is gone from the board, and now the +4.5 is gone too.",
-       "If your book still shows a Detroit price you like and Check says bet, bet now. Waiting already cost Tampa Bay backers two points in a day, and a good number today beats a hoped-for number at kickoff."
+       "Washington opened at +4 and is now +6. Cincinnati is -6 on DraftKings at -114, -5.5 on FanDuel at -120, and -6.5 at Pinnacle. That is a full point of disagreement between books on the same game.",
+       "The move is toward Cincinnati, and it is a two-point move from the open. The app has Cincinnati by about 5, so the market has now moved past the app's number on DraftKings and Pinnacle.",
+       "If your book still shows Washington +6 or Cincinnati -5.5 and you like the look of it, Check it. A point of disagreement between books is exactly when Check earns its keep."
       ],
-      "takeaway": "Detroit moved another full point to -3.5, two points in a day from -5.5. The +5.5 and the +4.5 are both gone from the board.",
+      "takeaway": "Cincinnati moved from -4 to -6, and the books disagree by a full point: -5.5 on FanDuel, -6 on DraftKings, -6.5 at Pinnacle. Check your book's line.",
       "evidence_ids": [
-       "ev-board-am"
+       "ev-monday",
+       "ev-board-pm"
+      ],
+      "sources": [
+       {
+        "label": "The Sharp Edition — Bengals vs Commanders line movement",
+        "url": "https://thesharpedition.com/games/2026_11_CIN_WAS"
+       },
+       {
+        "label": "NFL EDGE app — product/latest",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       }
+      ]
+     },
+     {
+      "headline": "The hook is the story tonight",
+      "paragraphs": [
+       "San Francisco is -3.5 on DraftKings and FanDuel, but -3.0 at Pinnacle. The hook is the difference between those two numbers, and tonight it is live: the app has the game a pick'em, so a 3-point 49ers win is a real possibility.",
+       "If your book shows San Francisco -3, that is a better number than -3.5 — same team, same game, and a win by exactly 3 pushes instead of losing. Check it before kickoff and let the app run it back through the model and the evaluator.",
+       "If your book only has -3.5, that is the price as it stands. Do not chase the -3 somewhere else after kickoff. The number you can actually bet is the only one that counts."
+      ],
+      "takeaway": "San Francisco is -3.5 on DraftKings and FanDuel but -3.0 at Pinnacle. A 3-point win pushes at -3 and loses at -3.5 — check what your book has.",
+      "evidence_ids": [
+       "ev-board-pm"
       ],
       "sources": [
        {
@@ -190,50 +256,21 @@
       ]
      },
      {
-      "headline": "Kansas City came in a point on DraftKings",
+      "headline": "The Jets-Chargers total flew over the morning number",
       "paragraphs": [
-       "DraftKings moved Kansas City from 16.5 to 15.5 against Arizona. FanDuel held at 16.5. The books disagree by a full point on the same game, and that is exactly when Check earns its keep.",
-       "The app has Kansas City winning by about 6, so the market is still far from the app's number on either book. The direction is toward the app, but the distance is still wide, and the app put no card on this game."
+       "The total dropped a full point in the morning, from 42.5 to 41.5. The game finished 27-24 — 51 points, ten over the morning total. The app's total sat near 46, closer to the final than the market was.",
+       "That is a result, not a signal. A total that already went over does not tell you anything about the next total. Note it, then move on to tonight and Monday."
       ],
-      "takeaway": "DraftKings moved Kansas City to 15.5 while FanDuel held at 16.5. The books disagree by a point — Check your book's line.",
+      "takeaway": "The Jets-Chargers total dropped to 41.5 in the morning and the game finished at 51 points. The app's total was near 46 — closer, but that is a result, not a signal.",
       "evidence_ids": [
-       "ev-board-am"
+       "ev-scores",
+       "ev-board-pm"
       ],
       "sources": [
        {
-        "label": "NFL EDGE app — product/latest",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     },
-     {
-      "headline": "The Jets-Chargers total dropped a point",
-      "paragraphs": [
-       "The Jets at Chargers total went from 42.5 to 41.5 on DraftKings, and FanDuel shows 41.5 too. That is a full point down overnight.",
-       "The app's total for that game sits near 46, so the market is still well short of the app's number — but the direction is down. If your book still shows 42.5, Check it. If it shows 41.5, Check that too."
-      ],
-      "takeaway": "The Jets-Chargers total dropped a full point to 41.5. The app's total sits near 46, so the market is still well short.",
-      "evidence_ids": [
-       "ev-board-am"
-      ],
-      "sources": [
-       {
-        "label": "NFL EDGE app — product/latest",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     },
-     {
-      "headline": "The Value card is back, and the other two got a touch cheaper",
-      "paragraphs": [
-       "Giants +6 at -109 is a Value card again this morning, after the lane sat empty last night. The line and price are the same as Saturday morning. Nothing about the Giants changed. The app just decided the card earns its place again.",
-       "The other two cards got a touch cheaper. The Jaguars moneyline is -255 on DraftKings, down from -256 last night. The Jets are +3 at -102, down from -105 on Saturday morning. A cheaper price on the same pick is a better price."
-      ],
-      "takeaway": "Value is back with Giants +6 at -109. Jaguars moneyline is -255 and Jets +3 is -102, both a touch cheaper.",
-      "evidence_ids": [
-       "ev-board-am"
-      ],
-      "sources": [
+        "label": "StatMuse — All NFL game logs this season",
+        "url": "https://www.statmuse.com/nfl/ask/all-nfl-game-logs-this-season"
+       },
        {
         "label": "NFL EDGE app — product/latest",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
@@ -248,13 +285,13 @@
     "title": "Today's Tip",
     "items": [
      {
-      "headline": "Game day: check the inactives, then trust the board",
+      "headline": "Tonight: check the hook, then Monday check the inactives",
       "paragraphs": [
-       "The inactives come out about 90 minutes before kickoff — 11:30 a.m. ET for the 1:00 p.m. ET games. That is when Mayfield and Evans get their final answer. Check the inactives, then Check your prices.",
-       "The board refreshes every morning and evening, so the numbers you see now are the numbers for today. Do not carry last night's prices into today's games.",
-       "Three cards are live, the Value card is back, and Detroit has moved twice. Check your prices against the board you have now, not the one you had yesterday."
+       "Two games left this week, and each one has its own check. Tonight, the check is the line: San Francisco -3.5 on the big books, -3.0 at Pinnacle. If your book has the -3, Check it before the 8:20 p.m. ET kickoff in Mexico City.",
+       "Monday, the check is the inactives. They land about 90 minutes before the 8:15 p.m. ET kickoff, and that is when White, Patrick, Robertson and Croskey-Merritt get their final answer. Check the inactives, then Check your prices.",
+       "And one more thing: the evening board had not refreshed when this brief was written, so the numbers here are from the morning board. The board refreshes every morning and evening. Check the app for the latest before you bet anything tonight or Monday."
       ],
-      "takeaway": "Inactives come out about 90 minutes before kickoff. Check them, then Check your prices against today's board — not last night's.",
+      "takeaway": "Tonight, check whether your book has San Francisco -3 or -3.5 before the 8:20 p.m. ET kickoff. Monday, check the inactives about 90 minutes before kickoff, then Check your prices — and Check the app, since the evening board had not refreshed yet.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -265,12 +302,12 @@
  },
  "evidence": [
   {
-   "evidence_id": "ev-board-am",
+   "evidence_id": "ev-board-pm",
    "category": "board",
    "verification": "REPORTED",
-   "fact": "NFL EDGE product/latest fetched Sunday Nov 22, 2026 about 6:08 a.m. Denver (app data observed_at_utc 2026-11-22T12:08:51Z, state FRESH, prediction_as_of_utc 2026-11-22T12:05:04Z). All three cards are live again. Hit Rate: Jaguars moneyline -255 DraftKings, evaluator probability 0.7360, break-even 0.7183, EV +0.0246, play-through -264. Balanced: Jets +3 -102 DraftKings, evaluator probability 0.4774, break-even 0.5050, EV -0.052, model probability 0.5056, play-through -105. Value: Giants +6 -109 DraftKings, evaluator probability 0.5253, break-even 0.5215, EV +0.0069, play-through -110. The Value lane was empty in the Saturday evening brief; it is back this morning. Expected margins (home-team perspective): KC by 6.33 vs spread 15.5 DraftKings (16.5 FanDuel), BUF by 3.36 vs 16.5, CHI by 0.23 vs 11.5, DET by 1.67 vs 3.5, PIT by 1.84 vs spread 3.5, JAX by 5.70 vs spread 6.0, TEN by 0.12 vs DAL spread 7.5. DraftKings board, Sunday morning: DET -3.5 -111 (was -4.5 Saturday evening, -5.5 Saturday morning), TB +3.5 -108; KC -15.5 -106 (was 16.5); NYJ/LAC total 41.5 (was 42.5); JAX moneyline -255 (was -256 Saturday evening); NYJ +3 -102 (was -105 Saturday morning); NYG +6 -109; DAL -7.5 -106 (unchanged). Quarterbacks: Arizona now lists Josh Johnson as expected starter (snapshot changed 2026-11-22T12:00:01Z); Tampa Bay lists Baker Mayfield as expected starter with injury status Questionable; the Jets list Geno Smith.",
-   "interpretation": "Three cards again after an empty Value lane last night. Detroit has moved two points in a day toward the app's number, and the Kansas City spread came in a point on DraftKings while FanDuel held at 16.5.",
-   "app_guidance": "Read the three cards as the app shows them, then Check any price at your own book before betting.",
+   "fact": "NFL EDGE product/latest fetched Sunday Nov 22, 2026 at 6:05, 6:08 and 6:10 p.m. Denver — all three reads returned the MORNING board (app data generated_at_utc 2026-11-22T12:08:51Z, state FRESH, prediction_as_of_utc 2026-11-22T12:05:04Z). The evening board refresh had not landed by 6:10 p.m. Denver. All board numbers in this brief are from that morning board, and readers should Check the app for the latest. Morning cards (all for games now final): Hit Rate Jaguars moneyline -255 DraftKings, evaluator probability 0.7360, break-even 0.7183, EV +0.0246, play-through -264. Balanced Jets +3 -102 DraftKings, evaluator probability 0.4774, break-even 0.5050, EV -0.052, model probability 0.5056, play-through -105. Value Giants +6 -109 DraftKings, evaluator probability 0.5253, break-even 0.5215, EV +0.0069, play-through -110. Remaining games on the morning board: Minnesota at San Francisco (Mexico City, neutral site, 8:20 p.m. ET) — expected margin San Francisco by 0.14, app total about 49.5; DraftKings San Francisco -3.5 -105, Minnesota +3.5 -114, total 46.5, moneyline San Francisco -178, Minnesota +149; FanDuel San Francisco -3.5 +100, total 46.5; Pinnacle San Francisco -3.0 -118, total 46.0. Quarterbacks: Kirk Cousins (Minnesota) and Brock Purdy (San Francisco), both with no injury designation. Cincinnati at Washington (Monday 8:15 p.m. ET) — expected margin Cincinnati by 5.18, app total about 47.9; DraftKings Cincinnati -6 -114, Washington +6 -105, total 54.5, moneyline Cincinnati -300, Washington +244; FanDuel Cincinnati -5.5 -120, total 54.5; Pinnacle Cincinnati -6.5 +101, total 55.0. Quarterbacks: Joe Burrow (Cincinnati) and Jayden Daniels (Washington), both with no injury designation.",
+   "interpretation": "The evening board had not refreshed by 6:10 p.m. Denver, so this brief reports the morning board plainly and tells readers to Check for the latest. The app calls tonight's game a pick'em while the market has San Francisco -3.5, and it nearly agrees with the market on Monday (Cincinnati by about 5, market -6). No card sits on either remaining game.",
+   "app_guidance": "Use the morning-board numbers as the latest available, then Check your own book's price — Check runs the current board, not this brief.",
    "sources": [
     {
      "label": "NFL EDGE app — product/latest",
@@ -280,77 +317,92 @@
    ]
   },
   {
+   "evidence_id": "ev-scores",
+   "category": "results",
+   "verification": "REPORTED",
+   "fact": "Sunday Nov 22, 2026 Week 11 finals: Detroit 31, Tampa Bay 21. Kansas City 34, Arizona 7. NY Jets 27, LA Chargers 24. NY Giants 23, Jacksonville 18. Buffalo 26, Miami 9. Chicago 21, New Orleans 13. Dallas 51, Tennessee 30. Carolina 35, Baltimore 33. Philadelphia 19, Pittsburgh 16. Denver 38, Las Vegas 24. Morning spreads for context: Detroit -3.5, Kansas City -15.5 DraftKings, Buffalo -16.5, Chicago -11.5, Dallas -7.5. Detroit and Kansas City covered; Buffalo and Chicago won but did not cover. The Jets-Chargers game finished with 51 total points against a 41.5 total.",
+   "interpretation": "Two of the three morning cards won: the Jets won outright as a 3-point dog and the Giants won outright as a 6-point dog, while the Jaguars moneyline lost. The big home favorites split on covering.",
+   "app_guidance": "Log the results honestly — the Jaguars moneyline lost, and the tracker only works if the losers go in too.",
+   "sources": [
+    {
+     "label": "Reuters — NFL roundup: Lions, Bears improve to 8-2",
+     "url": "https://www.reuters.com/sports/nfl-roundup-lions-bears-improve-8-2-ahead-turkey-day-tilt--flm-2026-11-22/",
+     "published_at_utc": "2026-11-22T00:00:00Z"
+    },
+    {
+     "label": "theScore — Jaguars vs Giants matchup",
+     "url": "https://www.thescore.com/nfl/event/140733",
+     "published_at_utc": "2026-11-22T00:00:00Z"
+    },
+    {
+     "label": "StatMuse — All NFL game logs this season",
+     "url": "https://www.statmuse.com/nfl/ask/all-nfl-game-logs-this-season",
+     "published_at_utc": "2026-11-22T00:00:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-evans",
+   "category": "injury",
+   "verification": "REPORTED",
+   "fact": "San Francisco 49ers wide receiver Mike Evans is set to return from a flare-up of Achilles tendinitis in Week 11 against the Minnesota Vikings on Sunday night in Mexico City, per NFL Network's Ian Rapoport. Evans leads the 49ers with 70 receiving yards per game over six contests played in 2026. He is listed at +200 to score a touchdown anytime against Minnesota. CORRECTION: this morning's brief said Evans was expected back for Tampa Bay. That was wrong. Evans plays for San Francisco, and he returns tonight against Minnesota.",
+   "interpretation": "The 49ers get their leading receiver back for the biggest game of the night. The morning brief's Tampa Bay framing of Evans was an error, and this brief corrects it.",
+   "app_guidance": "Evans returning does not change the app's number for tonight — the app already has the game a pick'em. If your book's 49ers price looks good, Check it.",
+   "sources": [
+    {
+     "label": "Yahoo Sports — Week 11 live updates (Evans to return for 49ers, per Rapoport)",
+     "url": "https://www.chatsports.com/nfl/a/source/week-11-nfl-schedule-scores-live-updates-brock-bowers-questionable-with-ankle-injury-baker-mayfield-mike-evans-to-play-18604206",
+     "published_at_utc": "2026-11-22T00:00:00Z"
+    },
+    {
+     "label": "FanDuel Research — Vikings vs 49ers prediction (Evans +200 anytime TD)",
+     "url": "https://www.fanduel.com/research/vikings-vs-49ers-prediction-nfl-player-props-odds-and-4-best-bets-for-mexico-city-snf",
+     "published_at_utc": "2026-11-22T00:00:00Z"
+    }
+   ]
+  },
+  {
    "evidence_id": "ev-mayfield",
    "category": "injury",
    "verification": "REPORTED",
-   "fact": "Tampa Bay Buccaneers quarterback Baker Mayfield (plantar fascia injury in his foot, plus a thumb issue) is expected to play Sunday at Detroit, per Tom Pelissero of The Ringer and a Sunday morning update: he will play today barring a setback. He remains officially questionable, did not practice Wednesday, and practiced on a limited basis Thursday and Friday. He is expected to wear a special orthotic and new cleats. If he cannot go, undrafted rookie Jalon Daniels would start. Wide receiver Mike Evans is expected to return after limited practices Thursday and Friday, but he also remains officially questionable. Tampa Bay safety Antoine Winfield Jr. is OUT for Sunday's game with an ankle injury.",
-   "interpretation": "Tampa Bay's two biggest offensive names are both expected to play, but neither is final until the inactives come out about 90 minutes before the 1:00 p.m. ET kickoff. The defense is short-handed without Winfield.",
-   "app_guidance": "Check the Tampa Bay price now, and check it again at the inactives. If Mayfield is out, the number will move fast.",
+   "fact": "Baker Mayfield played through his plantar fascia foot injury in Tampa Bay's 31-21 loss at Detroit, completing 20 of 33 passes for 187 yards and two touchdowns, both to rookie receiver Ted Hurst. Mayfield was sacked four times. Tampa Bay safety Antoine Winfield Jr. was out with an ankle injury, as reported this morning.",
+   "interpretation": "The questionable tag resolved the way the morning brief expected: Mayfield played, and he played hurt. It was not enough — Detroit won by 10 and covered the 3.5.",
+   "app_guidance": "Nothing to do now — the game is final. The lesson is the process: the inactives confirmed Mayfield, and the number still went Detroit's way.",
    "sources": [
     {
-     "label": "FantasyLife — Week 11 injuries, coachspeak and news (Sunday AM update)",
-     "url": "https://www.fantasylife.com/articles/fantasy/week-11-fantasy-football-injuries-coachspeak-and-news-to-help",
+     "label": "NBC Sports — Mayfield plays through foot issue in Week 11 loss",
+     "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-22/mayfield-plays-through-foot-issue-in-week-11-loss",
      "published_at_utc": "2026-11-22T00:00:00Z"
     },
     {
-     "label": "Pro Football Rumors — Mayfield on track to start in Week 11",
-     "url": "https://www.profootballrumors.com/2026/11/buccaneers-qb-baker-mayfield-on-track-to-start-in-week-11",
-     "published_at_utc": "2026-11-21T00:00:00Z"
-    },
-    {
-     "label": "BoydsBets — NFL Injury Report (Winfield Jr. out)",
-     "url": "https://www.boydsbets.com/nfl-injuries/",
+     "label": "Buccaneers.com — Bucs-Lions Week 11 recap",
+     "url": "https://www.buccaneers.com/news/bucs-lions-week-11-recap-postgame-report-2026",
      "published_at_utc": "2026-11-22T00:00:00Z"
     }
    ]
   },
   {
-   "evidence_id": "ev-ari-qb",
-   "category": "quarterback",
-   "verification": "REPORTED",
-   "fact": "The Cardinals downgraded rookie quarterback Carson Beck to out for Sunday's game at Kansas City because of back spasms, and Josh Johnson will start. It is Arizona's fourth different starting quarterback in four weeks. Rookie Joey Aguilar is the backup. The NFL EDGE app's quarterback snapshot updated Sunday morning (2026-11-22T12:00:01Z) and now lists Johnson as Arizona's expected starter.",
-   "interpretation": "Arizona's quarterback question is settled, and the app has caught up. The app still put no card on this game.",
-   "app_guidance": "Do not bet Arizona at Kansas City on the app's old number. The app now reflects Johnson starting; Check your price against the current board.",
-   "sources": [
-    {
-     "label": "Arizona Cardinals — Josh Johnson start confirmed after Carson Beck downgraded",
-     "url": "https://www.azcardinals.com/news/josh-johnson-start-confirmed-after-carson-beck-downgraded",
-     "published_at_utc": "2026-11-21T00:00:00Z"
-    },
-    {
-     "label": "Reuters — Cards QB Josh Johnson to start vs Chiefs; Carson Beck out",
-     "url": "https://www.reuters.com/sports/cards-qb-josh-johnson-start-vs-chiefs-carson-beck-out--flm-2026-11-21/",
-     "published_at_utc": "2026-11-21T00:00:00Z"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-maye",
+   "evidence_id": "ev-monday",
    "category": "injury",
    "verification": "REPORTED",
-   "fact": "New England Patriots quarterback Drake Maye suffered a fractured right fibula that will not require surgery but is expected to sideline him for some time, per Adam Schefter of ESPN. He is out indefinitely. New England is not on today's board, so the injury changes nothing on this slate.",
-   "interpretation": "The biggest quarterback news of the weekend does not touch today's games.",
-   "app_guidance": "Nothing to do in the app today. Note it for next week, when New England returns to the board.",
+   "fact": "Cincinnati at Washington, Monday Nov 23, 8:15 p.m. ET, Northwest Stadium, Landover. Both quarterbacks are clear: Joe Burrow carries no injury designation after an illness and is expected to start; Jayden Daniels is expected to start for Washington. Cincinnati ruled out guard Dalton Risner (knee). Questionable for Cincinnati: guard Dylan Fairchild (oblique), safety Kyle Dugger (quadriceps), cornerback Dax Hill (illness). Questionable for Washington: running back Rachaad White (heel), center Lucas Patrick (concussion), cornerback Amik Robertson (ankle), running back Jacory Croskey-Merritt (groin, has resumed practicing and is in line to return). Washington's Laremy Tunsil is on injured reserve. National Weather Service forecast for kickoff, issued Sunday 3:52 p.m. ET: 54 degrees, wind from the northwest at 10 mph gusting to 22, partly cloudy, 8 percent chance of rain. Line movement: Washington opened +4 and is now +6 (Cincinnati -6 on DraftKings, -5.5 on FanDuel, -6.5 at Pinnacle); total 54.5.",
+   "interpretation": "Monday's quarterback question is settled on both sides. The injuries that matter are in the trenches and the Washington backfield, and the line has climbed two points toward Cincinnati.",
+   "app_guidance": "The inactives land about 90 minutes before kickoff. If White or Croskey-Merritt is out, Check the Washington price again — the number will move.",
    "sources": [
     {
-     "label": "DARI Market — NFL Injury Report November 22, 2026 (Maye fractured fibula, per Schefter)",
-     "url": "https://darimarket.us/nfl/injury-report",
+     "label": "Vigged — Bengals vs Commanders (NWS weather, injury report)",
+     "url": "https://vigged.com/nfl/2026/week-11/cincinnati-bengals-at-washington-commanders",
      "published_at_utc": "2026-11-22T00:00:00Z"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-weather",
-   "category": "weather",
-   "verification": "REPORTED",
-   "fact": "National Weather Service forecasts for Sunday Nov 22 kickoff windows, pulled Sun Nov 22 7:19 a.m. ET: New Orleans at Chicago, 1:00 p.m. ET — rain likely, 56 degrees, wind WSW 15 mph gusting to 24, 91 percent chance of precipitation. Arizona at Kansas City, 1:00 p.m. ET — mostly sunny, 48 degrees, wind N 15 mph gusting to 24, 0 percent chance of precipitation. Jacksonville at NY Giants, MetLife — rain likely, 61 degrees, wind NE 6 mph, 63 percent chance of light rain. Pittsburgh at Philadelphia — 64 degrees, wind NE 5 mph, 42 percent chance of light rain. Baltimore at Carolina, 1:00 p.m. ET — 59 degrees, wind NNE 8 mph gusting to 17, 39 percent chance of light rain. Miami at Buffalo, 1:00 p.m. ET — partly sunny, 66 degrees, wind S 7 mph, 1 percent chance of precipitation. Las Vegas at Denver, 4:25 p.m. ET — mostly sunny, 43 degrees, wind N 5 mph, 0 percent chance of precipitation. Minnesota at San Francisco (Mexico City), 8:20 p.m. ET — fair, 62 degrees, wind SSW 3 mph. Cincinnati at Washington, Monday 8:15 p.m. ET — clear, 54 degrees, wind NW 9 mph gusting to 18.",
-   "interpretation": "Rain is likely in Chicago and at MetLife, with wind at 15 mph in Chicago and Kansas City. Philadelphia's rain chance has dropped from Saturday. Weather is a fact about the game, not a totals edge.",
-   "app_guidance": "Note the weather, then bet the app's numbers, not the forecast.",
-   "sources": [
+    },
     {
-     "label": "FantasyTools — NFL Weather Week 11 (National Weather Service)",
-     "url": "https://fantasytools.ai/nfl-weather-report/",
-     "published_at_utc": "2026-11-22T12:19:00Z"
+     "label": "SI — Commanders vs Bengals final injury report",
+     "url": "https://www.si.com/nfl/commanders/onsi/commanders-bengals-monday-night-football-how-to-watch?utm_source=RSS",
+     "published_at_utc": "2026-11-22T00:00:00Z"
+    },
+    {
+     "label": "The Sharp Edition — Bengals vs Commanders line movement",
+     "url": "https://thesharpedition.com/games/2026_11_CIN_WAS",
+     "published_at_utc": "2026-11-22T00:00:00Z"
     }
    ]
   }
