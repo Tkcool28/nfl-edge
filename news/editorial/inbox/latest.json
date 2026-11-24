@@ -1,14 +1,14 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-11-23T13:18:34Z",
- "research_generated_at_utc": "2026-11-23T13:18:34Z",
+ "submitted_at_utc": "2026-11-24T01:12:57Z",
+ "research_generated_at_utc": "2026-11-24T01:12:57Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-11-23T13:18:34Z",
-  "edition": "Morning Brief",
-  "title": "NFL EDGE Monday Morning Brief",
-  "dek": "San Francisco rolled in Mexico City, the morning board is fresh again, and tonight is Cincinnati at Washington with both quarterbacks clear.",
-  "research_generated_at_utc": "PLACEHOLDER",
+  "published_at_utc": "2026-11-24T01:12:57Z",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Monday Evening Brief",
+  "dek": "The inactives are in, the line moved toward Cincinnati, and the app's Balanced card moved with it - Washington +6.5 now.",
+  "research_generated_at_utc": "2026-11-24T01:12:57Z",
   "sections": [
    {
     "id": "what-matters",
@@ -16,80 +16,62 @@
     "title": "What Matters Today",
     "items": [
      {
-      "headline": "San Francisco rolled in Mexico City, 35-10",
+      "headline": "Inactives are in: Robertson is out, Croskey-Merritt is back",
       "paragraphs": [
-       "Sunday night is settled. San Francisco beat Minnesota 35-10 in Mexico City, and it was not close after the first quarter. Brock Purdy threw for 255 yards and three touchdowns on 21 of 26 passing.",
-       "The 49ers are 9-1 now, the best record in the NFC. Minnesota falls to 7-3. San Francisco covered the 3.5 points with room to spare, and the 45 total points stayed under the 46.5 market total.",
-       "That closes the Sunday slate. Tonight is the only game left on the Week 11 board."
+       "The final answers are in, about 90 minutes before kickoff as expected. Washington loses starting cornerback Amik Robertson to his ankle injury - his pregame workout did not go well. Robertson started the first nine games and leads the team with 10 passes defended. Washington has only four cornerbacks active tonight against Joe Burrow, Ja'Marr Chase and Tee Higgins.",
+       "The rest of Washington's question marks resolved the good way. Running back Jacory Croskey-Merritt was activated from injured reserve and is playing his first game since Week 5. Running back Rachaad White is active after his heel injury, and center Lucas Patrick is active after his concussion.",
+       "Cincinnati's two questionable starters play. Cornerback Dax Hill is active after missing practice all week with an illness, and left guard Dylan Fairchild is active after his oblique injury. Safety Kyle Dugger is out with his quad injury, and guard Dalton Risner is out as ruled out on Saturday with knee injuries.",
+       "Both quarterbacks are clear, as they were this morning. Joe Burrow starts for Cincinnati, Jayden Daniels starts for Washington."
       ],
-      "takeaway": "San Francisco beat Minnesota 35-10 in Mexico City, covered the 3.5, and moved to 9-1. Sunday is done; tonight is Cincinnati at Washington.",
+      "takeaway": "Washington is without starting cornerback Amik Robertson tonight, but Croskey-Merritt, White and Patrick are all active, and Cincinnati's Hill and Fairchild both play. Only Risner and Dugger sit for the Bengals.",
       "evidence_ids": [
-       "ev-snf"
+       "ev-inactives"
       ],
       "sources": [
        {
-        "label": "Reuters — 49ers rout Vikings in Mexico City return",
-        "url": "https://www.reuters.com/sports/49ers-rout-vikings-nfl-makes-electrifying-return-mexico-2026-11-23/"
+        "label": "NBC Sports - No surprises in Commanders' inactives for MNF",
+        "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-23/no-surprises-in-commanders-inactives-for-mnf"
+       },
+       {
+        "label": "SI - Two Bengals Starters Who Were Questionable are Active; Commanders To Be Without Key Starter",
+        "url": "https://www.si.com/nfl/bengals/onsi/two-bengals-starters-who-were-questionable-are-active-commanders-to-be-without-key-starter-01m85ab7ezxt"
        }
       ]
      },
      {
-      "headline": "Tonight: Cincinnati at Washington, both quarterbacks clear",
+      "headline": "Tonight: Cincinnati at Washington, kickoff 8:15 p.m. ET",
       "paragraphs": [
-       "Monday Night Football is Cincinnati at Washington, 8:15 p.m. ET kickoff at Northwest Stadium in Landover. Both quarterbacks are clear. Joe Burrow starts for Cincinnati after an illness, and Jayden Daniels starts for Washington.",
-       "The app has Cincinnati by about 5 points. The market has the Bengals -6 on DraftKings, -5.5 on FanDuel, and -6.5 at Pinnacle. The total is 54.5."
+       "One game left this week. Cincinnati visits Washington at Northwest Stadium in Landover, kickoff 8:15 p.m. ET.",
+       "The app has Cincinnati by about 5 points. Both quarterbacks are clear, with no injury designation on either side. The inactives are settled, so the only thing left before kickoff is your price."
       ],
-      "takeaway": "Tonight, 8:15 p.m. ET: Cincinnati at Washington. Burrow and Daniels are both clear to start, and the app has Cincinnati by about 5.",
+      "takeaway": "Cincinnati at Washington, 8:15 p.m. ET. Burrow and Daniels are both clear, the app has Cincinnati by about 5, and the inactives are settled.",
       "evidence_ids": [
-       "ev-board-am",
-       "ev-monday-am"
+       "ev-board-pm"
       ],
       "sources": [
        {
-        "label": "NFL EDGE app — product/latest",
+        "label": "NFL EDGE app - product/latest",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       },
-       {
-        "label": "Vigged — Bengals vs Commanders (injury report)",
-        "url": "https://vigged.com/nfl/2026/week-11/cincinnati-bengals-at-washington-commanders"
        }
       ]
      },
      {
-      "headline": "Injuries: one Bengal out, four Commanders to watch",
+      "headline": "A light shower is possible at kickoff, then it clears",
       "paragraphs": [
-       "Cincinnati ruled out guard Dalton Risner with a knee injury. Three more Bengals are questionable: guard Dylan Fairchild, safety Kyle Dugger, and cornerback Dax Hill.",
-       "Washington has four questionable: running back Rachaad White, center Lucas Patrick, cornerback Amik Robertson, and running back Jacory Croskey-Merritt, who has resumed practicing and is in line to return. Left tackle Laremy Tunsil is on injured reserve.",
-       "None of this is final until the inactive lists land, about 90 minutes before kickoff. That is the moment to check if you are betting tonight."
+       "The evening forecast changed a little from this morning. A light shower is possible around the 8:00 p.m. ET kickoff - 57 degrees, wind from the north-northwest at about 10 mph, gusting to about 19. By 9:00 p.m. it is cloudy and 55 degrees, and the rain chance drops fast.",
+       "This morning's forecast had rain unlikely. The update brings a shower into the kickoff window and clears it after that. Cool and breezy, nothing more."
       ],
-      "takeaway": "Risner is out for Cincinnati; White, Patrick, Robertson and Croskey-Merritt are questionable for Washington. Final answers come with the inactives, about 90 minutes before kickoff.",
+      "takeaway": "Light rain is possible around the 8:15 p.m. ET kickoff in Landover, then it clears to cloudy and cool, wind about 10 mph. A small change from this morning's dry forecast.",
       "evidence_ids": [
-       "ev-monday-am"
+       "ev-weather-pm"
       ],
       "sources": [
        {
-        "label": "Vigged — Bengals vs Commanders (injury report)",
-        "url": "https://vigged.com/nfl/2026/week-11/cincinnati-bengals-at-washington-commanders"
+        "label": "weather.com - Landover hourly forecast",
+        "url": "https://weather.com/us/md/city/hyattsville/hourbyhour"
        },
        {
-        "label": "SI — Commanders vs Bengals final injury report",
-        "url": "https://www.si.com/nfl/commanders/onsi/commanders-bengals-monday-night-football-how-to-watch?utm_source=RSS"
-       }
-      ]
-     },
-     {
-      "headline": "Tonight's weather: cool, light wind, rain unlikely",
-      "paragraphs": [
-       "The final forecast for Landover has 56 degrees at kickoff, falling into the low 50s through the night. Wind from the northwest at about 10 mph. The chance of rain is 15 percent at 8:00 p.m. and near zero after that.",
-       "That is a touch warmer and calmer than the forecast from Sunday. Cool and dry, nothing that should change how the game is played."
-      ],
-      "takeaway": "Landover tonight: mid-50s at kickoff, northwest wind about 10 mph, rain unlikely. Cool and dry.",
-      "evidence_ids": [
-       "ev-weather-am"
-      ],
-      "sources": [
-       {
-        "label": "National Weather Service — hourly forecast, Landover MD",
+        "label": "National Weather Service - hourly forecast, Landover MD",
         "url": "https://api.weather.gov/gridpoints/LWX/103,72/forecast/hourly"
        }
       ]
@@ -102,37 +84,38 @@
     "title": "What It Means for NFL EDGE",
     "items": [
      {
-      "headline": "The board is fresh, and tonight has two cards",
+      "headline": "The Balanced card moved with the line",
       "paragraphs": [
-       "The morning board has refreshed, so these are today's numbers. Hit Rate takes Cincinnati to win outright at -295 on FanDuel. The app gives the Bengals about a 74-in-100 chance, and it will take the price down to -306.",
-       "Balanced takes Washington +6 at -107 on DraftKings. The app has Cincinnati winning by about 5, so 6 points is just past the app's number. That is the middle ground: a strong pick without paying too much.",
-       "There is no Value card tonight. Nothing on the board meets the Value contract, so the lane stays quiet. That is the lane working as designed, not a pick that went missing.",
-       "A quick reminder on price: -295 means every $2.95 you risk wins $1. Hit Rate is the pick most likely to win, not the best price on the board. If your book has a different number on either side, tap Check, type it in, and let the app run it back through the model and the evaluator."
+       "Here is what changed on the evening board. Balanced is now Washington +6.5 at -112 on FanDuel. This morning it was Washington +6 at -107 on DraftKings. Same side, better number, different book - the card followed the line.",
+       "Hit Rate is the same pick at a slightly different price: Cincinnati moneyline, now -300 on FanDuel instead of -295 this morning. The app gives Cincinnati about a 74 percent chance to win outright. Hit Rate is the pick most likely to win, and the app's own tutorial says Hit Rate is not Profit Rate.",
+       "There is still no Value play. No offer satisfies the Value lane, so the app is not forcing a plus-expected-value pick where it does not see one.",
+       "Cards move when lines move. That is the whole point of the evening board. If your book has a number you like on either side, type the line and the price into Check and let the app run it back through the model and the evaluator."
       ],
-      "takeaway": "Tonight's cards: Hit Rate Cincinnati moneyline -295 on FanDuel, Balanced Washington +6 at -107 on DraftKings, and no Value play. Check your own book's price on either side.",
+      "takeaway": "Balanced moved to Washington +6.5 at -112 on FanDuel, from +6 at -107 on DraftKings this morning. Hit Rate is still Cincinnati moneyline at -300, and there is still no Value play.",
       "evidence_ids": [
+       "ev-board-pm",
        "ev-board-am"
       ],
       "sources": [
        {
-        "label": "NFL EDGE app — product/latest",
+        "label": "NFL EDGE app - product/latest",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
       ]
      },
      {
-      "headline": "The model and the market nearly agree on this one",
+      "headline": "The model and the market still nearly agree on the spread",
       "paragraphs": [
-       "The app has Cincinnati by 5.18. The market has the Bengals between 5.5 and 6.5 depending on the book. That is not a big disagreement. It is the model and the market looking at the same game and landing in the same place.",
-       "When the two agree this closely, the edge is in the price, not the pick. Washington +6 on DraftKings is one side of it. If your book has Washington +6.5 or Cincinnati -5.5, that half-point is worth a Check before kickoff."
+       "The app has Cincinnati by about 5 points. The market has Cincinnati -6 on DraftKings and -6.5 on FanDuel and Pinnacle. That is close agreement, and it has been close all day.",
+       "The total is a different story. The app's total sits near 48. The market total is 54.5 on DraftKings, 53.5 on FanDuel and 54.0 at Pinnacle. That is a big gap, and the app still puts no card on the total. A gap is a starting point, not a bet - the card is what the model and the evaluator agreed on after the full check."
       ],
-      "takeaway": "The app says Cincinnati by about 5; the market says 5.5 to 6.5. When they agree this closely, shop the half-point — Check what your book has.",
+      "takeaway": "The app says Cincinnati by about 5 against a market -6 to -6.5, close agreement. On the total the app says about 48 against a market 53.5 to 54.5, a big gap with no card on it.",
       "evidence_ids": [
-       "ev-board-am"
+       "ev-board-pm"
       ],
       "sources": [
        {
-        "label": "NFL EDGE app — product/latest",
+        "label": "NFL EDGE app - product/latest",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
       ]
@@ -146,13 +129,13 @@
     "mode": "learning",
     "items": [
      {
-      "headline": "Juice: the price of placing the bet",
+      "headline": "The push: when nobody wins the bet",
       "paragraphs": [
-       "Every price carries a cost called juice, or vig. It is the book's cut, and it is baked into the odds. At -110, you risk $1.10 to win $1. At -120, you risk $1.20 to win the same $1.",
-       "Here is a clearly labeled hypothetical example. Imagine two books offering the same team at the same spread. One book lists it at -110, the other at -120. Same team, same spread, same game. The -110 ticket risks less to win the same dollar, so it is the better bet before the game even starts.",
-       "That is why the app's Check matters. A good pick at a bad price can still be a no-bet, and the same pick at a better price can be a bet. The pick did not change. The price did."
+       "A spread without a half-point in it can end in a tie. When the final margin lands exactly on the spread, the bet is a push. Nobody wins, nobody loses, and your stake comes back.",
+       "Here is a clearly labeled hypothetical example. Imagine a favorite listed at -3, and the favorite wins the game by exactly 3 points. A ticket on the favorite pushes - the stake comes back. A ticket on the underdog at +3 pushes too. Same game, same margin, both tickets refunded.",
+       "That is the other side of the hook. A spread like -3.5 can never push, because a team cannot win by half a point. A spread like -3 can. When you see a whole-number spread, the push is part of the price - and Check will tell you what each price is actually worth."
       ],
-      "takeaway": "Juice is what you risk to win a dollar — $1.10 at -110, $1.20 at -120 — so the same pick at a better price is a better bet. Always compare the price, not just the team.",
+      "takeaway": "A push is when the final margin lands exactly on a whole-number spread, like a favorite winning by exactly 3 at -3, and your stake comes back - a -3.5 spread can never push.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -165,46 +148,38 @@
     "title": "Line Movement",
     "items": [
      {
-      "headline": "Cincinnati's number has not moved since last night",
+      "headline": "FanDuel moved a full point toward Cincinnati",
       "paragraphs": [
-       "The Bengals are still -6 on DraftKings, -5.5 on FanDuel, and -6.5 at Pinnacle. The books are still a full point apart. The only change since the evening brief is the price: DraftKings moved from -114 to -113 on Cincinnati, and Washington +6 moved from -105 to -107.",
-       "Washington opened this game at +4 and is now +6, so the move toward Cincinnati happened earlier in the week. Overnight, the line sat still. The total is steady too, at 54.5 on DraftKings and FanDuel and 55 at Pinnacle.",
-       "If your book is not DraftKings or FanDuel, tap Check and type in your line and price. The app runs it back through the model and the evaluator and gives you a bet or no-bet verdict on your number."
+       "FanDuel had Cincinnati -5.5 this morning. The evening board has FanDuel at -6.5. That is a full point toward the favorite in one day, and it matches Pinnacle at -6.5 now.",
+       "DraftKings held at -6, but the price moved: Cincinnati -6 was -113 this morning and is -120 tonight. Washington +6 is now +100 on DraftKings, from -107 this morning.",
+       "The app caught the move. Balanced moved from Washington +6 on DraftKings to Washington +6.5 on FanDuel, with a play-through of 6.5 at -115. When books disagree by a point, Check is where the difference pays off - type in your book's line and price and let the app run it back."
       ],
-      "takeaway": "Cincinnati is still -6 on DraftKings, -5.5 on FanDuel, -6.5 at Pinnacle — the line has not moved overnight. The books still disagree by a full point, so Check your book's number.",
+      "takeaway": "FanDuel moved Cincinnati from -5.5 to -6.5 since this morning, matching Pinnacle, while DraftKings held -6 at a steeper -120. The app's Balanced card moved to +6.5 with it.",
       "evidence_ids": [
-       "ev-board-am",
-       "ev-monday-am"
-      ],
-      "sources": [
-       {
-        "label": "NFL EDGE app — product/latest",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       },
-       {
-        "label": "Vigged — Bengals vs Commanders (injury report)",
-        "url": "https://vigged.com/nfl/2026/week-11/cincinnati-bengals-at-washington-commanders"
-       }
-      ]
-     },
-     {
-      "headline": "Sunday night: the favorite covered, the total stayed under",
-      "paragraphs": [
-       "San Francisco closed at -3.5 and won 35-10, so the favorite covered with room to spare. The 45 total points finished under the 46.5 market total, and under the app's number near 49.5.",
-       "That is one result, not a signal. It settles the Sunday slate and nothing more."
-      ],
-      "takeaway": "San Francisco covered -3.5 in a 35-10 win, and the 45 points stayed under the 46.5 total. One result, not a signal.",
-      "evidence_ids": [
-       "ev-snf",
+       "ev-board-pm",
        "ev-board-am"
       ],
       "sources": [
        {
-        "label": "Reuters — 49ers rout Vikings in Mexico City return",
-        "url": "https://www.reuters.com/sports/49ers-rout-vikings-nfl-makes-electrifying-return-mexico-2026-11-23/"
-       },
+        "label": "NFL EDGE app - product/latest",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       }
+      ]
+     },
+     {
+      "headline": "Totals ticked down a point",
+      "paragraphs": [
+       "The total moved a little too. FanDuel went from 54.5 this morning to 53.5 tonight. Pinnacle went from 55.0 to 54.0. DraftKings held at 54.5.",
+       "The app's total sits near 48, well under all three books. That gap was there this morning and it is still there. The app still puts no card on the total, so this is a move to note, not a move to chase."
+      ],
+      "takeaway": "The total ticked down a point at FanDuel, 54.5 to 53.5, and at Pinnacle, 55.0 to 54.0, while DraftKings held at 54.5. The app's total near 48 still has no card on it.",
+      "evidence_ids": [
+       "ev-board-pm",
+       "ev-board-am"
+      ],
+      "sources": [
        {
-        "label": "NFL EDGE app — product/latest",
+        "label": "NFL EDGE app - product/latest",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
       ]
@@ -217,13 +192,12 @@
     "title": "Today's Tip",
     "items": [
      {
-      "headline": "Tonight: check the inactives, then check your price",
+      "headline": "Tonight: the inactives are settled, so Check your price before kickoff",
       "paragraphs": [
-       "Monday game? Monday check. The inactive lists land about 90 minutes before the 8:15 p.m. ET kickoff, and that is when the four questionable Commanders get their final answer. Check the inactives, then Check your prices.",
-       "If your book has Washington +6.5 or Cincinnati -5.5, that half-point is worth a Check before kickoff. A good number now beats a hoped-for number later.",
-       "And one honest note: settlement is manual, so the tracker only works if you are honest with yourself. Log tonight's result either way, losers included."
+       "There is nothing left to wait on tonight. The inactives are in, both quarterbacks are clear, and kickoff is 8:15 p.m. ET. If Check says bet at your book's number, bet now - the line already moved once today, from -5.5 to -6.5 on FanDuel, and waiting lets it drift the wrong way too.",
+       "Check both cards against your book. Hit Rate is Cincinnati moneyline, Balanced is Washington +6.5, and there is no Value play. The number you can actually bet is the only one that counts."
       ],
-      "takeaway": "Check the inactives about 90 minutes before the 8:15 p.m. ET kickoff, then Check your prices — and log the result honestly either way.",
+      "takeaway": "The inactives are settled and kickoff is 8:15 p.m. ET. If Check says bet at your book's number, bet now - the line already moved once today.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -234,20 +208,17 @@
  },
  "evidence": [
   {
-   "evidence_id": "ev-snf",
-   "category": "scores",
-   "verification": "REPORTED",
-   "fact": "San Francisco beat Minnesota 35-10 on Sunday Night Football in Mexico City (Estadio Banorte). Brock Purdy completed 21 of 26 passes for 255 yards and three touchdowns. San Francisco is now 9-1, Minnesota 7-3. San Francisco covered as a 3.5-point favorite. The game finished with 45 total points, under the 46.5 market total.",
-   "interpretation": "A decisive win for the best record in the NFC; the favorite covered comfortably and the total stayed under.",
-   "app_guidance": "Sunday is settled. Tonight is the only game left on the Week 11 board.",
+   "evidence_id": "ev-board-pm",
+   "category": "board",
+   "verification": "INTERNAL_CANONICAL",
+   "fact": "NFL EDGE product/latest fetched Monday Nov 23, 2026 at 6:08:44 p.m. Denver: app data generated_at_utc 2026-11-24T00:08:44Z, state FRESH, prediction_as_of_utc 2026-11-24T00:05:04Z. The evening board has refreshed. Tonight's game is Cincinnati at Washington, Monday 8:15 p.m. ET, Northwest Stadium, Landover. Expected margin: Cincinnati by 5.18. App total about 47.9. Headline cards: Hit Rate Cincinnati moneyline -300 FanDuel, model probability 0.7366, play-through -311, state BET. Balanced Washington +6.5 -112 FanDuel, model probability 0.5049, play-through 6.5 at -115, state BET. Value: NO_PLAY - no offer satisfies the frozen VALUE lane contract. Market board: DraftKings Cincinnati -6 -120, Washington +6 +100, total 54.5, moneyline Cincinnati -301, Washington +245. FanDuel Cincinnati -6.5 -108, Washington +6.5 -112, total 53.5, moneyline Cincinnati -300, Washington +245. Pinnacle Cincinnati -6.5 -102, total 54.0, moneyline Cincinnati -286. Quarterbacks: Joe Burrow (Cincinnati) and Jayden Daniels (Washington), both expected starters with no injury designation.",
+   "interpretation": "The Balanced card moved with the line: it was Washington +6 on DraftKings this morning and is now Washington +6.5 on FanDuel. Hit Rate is unchanged in kind, Cincinnati moneyline, at -300 instead of -295. No Value play again.",
+   "app_guidance": "Two cards tonight, no Value play. The Balanced card's book and line changed since this morning, so Check your own book's price before betting either side.",
    "sources": [
     {
-     "label": "Reuters — 49ers rout Vikings in Mexico City return",
-     "url": "https://www.reuters.com/sports/49ers-rout-vikings-nfl-makes-electrifying-return-mexico-2026-11-23/"
-    },
-    {
-     "label": "NBC Sports — 49ers move to 9-1 with 35-10 victory over Vikings",
-     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/sunday-night-football-49ers-move-to-9-1-with-dominant-35-10-victory-over-vikings"
+     "label": "NFL EDGE app - product/latest",
+     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest",
+     "published_at_utc": "2026-11-24T00:08:44Z"
     }
    ]
   },
@@ -255,49 +226,50 @@
    "evidence_id": "ev-board-am",
    "category": "board",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "NFL EDGE product/latest fetched Monday Nov 23, 2026 at about 6:15 a.m. Denver: app data generated_at_utc 2026-11-23T12:08:45Z, state FRESH, prediction_as_of_utc 2026-11-23T12:05:04Z. The morning board has refreshed. Tonight's game is Cincinnati at Washington, Monday 8:15 p.m. ET, Northwest Stadium, Landover. Expected margin: Cincinnati by 5.18. App total about 47.9. Headline cards: Hit Rate Cincinnati moneyline -295 FanDuel, model probability 0.7366, play-through -306, state BET. Balanced Washington +6 -107 DraftKings, model probability 0.5047, play-through 6.0 at -110, state BET. Value: NO_PLAY — no offer satisfies the frozen VALUE lane contract. Market board: DraftKings Cincinnati -6 -113, Washington +6 -107, total 54.5, moneyline Cincinnati -302, Washington +246. FanDuel Cincinnati -5.5 -120, Washington +5.5 +100, total 54.5, moneyline Cincinnati -295, Washington +240. Pinnacle Cincinnati -6.5 -101, total 55.0, moneyline Cincinnati -296, Washington +255. Quarterbacks: Joe Burrow (Cincinnati) and Jayden Daniels (Washington), both expected starters with no injury designation.",
-   "interpretation": "The model and the market nearly agree on Cincinnati by about 5 to 6. The Hit Rate card takes Cincinnati to win outright; the Balanced card takes the 6 points with Washington.",
-   "app_guidance": "Two cards tonight, no Value play. Check your own book's price before betting either one.",
+   "fact": "NFL EDGE product/latest as reported in this morning's brief (fetched Monday Nov 23, 2026 at about 6:15 a.m. Denver, generated_at_utc 2026-11-23T12:08:45Z): Hit Rate Cincinnati moneyline -295 FanDuel, play-through -306. Balanced Washington +6 -107 DraftKings, play-through 6.0 at -110. Value NO_PLAY. Market board: DraftKings Cincinnati -6 -113, Washington +6 -107, total 54.5. FanDuel Cincinnati -5.5 -120, total 54.5. Pinnacle Cincinnati -6.5 -101, total 55.0. Expected margin Cincinnati by 5.18, app total about 47.9.",
+   "interpretation": "Morning baseline for the evening comparison: FanDuel had Cincinnati at -5.5 this morning and now has -6.5. DraftKings held -6 but the price moved from -113 to -120. Totals ticked down a point at FanDuel and Pinnacle.",
+   "app_guidance": "Use the morning numbers only as the comparison point. The evening board is the live one.",
    "sources": [
     {
-     "label": "NFL EDGE app — product/latest",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+     "label": "NFL EDGE app - product/latest",
+     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest",
+     "published_at_utc": "2026-11-23T12:08:45Z"
     }
    ]
   },
   {
-   "evidence_id": "ev-monday-am",
+   "evidence_id": "ev-inactives",
    "category": "injury",
    "verification": "REPORTED",
-   "fact": "Cincinnati at Washington, Monday Nov 23, 8:15 p.m. ET. Both quarterbacks are clear: Joe Burrow carries no injury designation after an illness and is expected to start; Jayden Daniels is expected to start for Washington. Cincinnati ruled out guard Dalton Risner (knee). Questionable for Cincinnati: guard Dylan Fairchild (oblique), safety Kyle Dugger (quadriceps), cornerback Dax Hill (illness). Questionable for Washington: running back Rachaad White (heel), center Lucas Patrick (concussion), cornerback Amik Robertson (ankle), running back Jacory Croskey-Merritt (groin, has resumed practicing and is in line to return). Washington's Laremy Tunsil is on injured reserve. Final inactive lists land about 90 minutes before kickoff.",
-   "interpretation": "No quarterback doubt for either side. The open questions are in the trenches and the Washington backfield, and they resolve at the inactive list.",
-   "app_guidance": "Check the inactives about 90 minutes before kickoff, then Check your prices — a late scratch can move a line.",
+   "fact": "Inactives for Cincinnati at Washington, Monday Nov 23, 8:15 p.m. ET, announced about 90 minutes before kickoff. Washington: starting cornerback Amik Robertson is OUT with an ankle injury after his pregame workout did not go well; running back Jacory Croskey-Merritt was activated from injured reserve and is playing; running back Rachaad White (heel) is active; center Lucas Patrick (concussion) is active. Washington's other inactives are QB Athan Kaliakmanis (emergency third QB), RB Robert Henry Jr., DT Ricky Barber and G Tanoa Togiai. Cincinnati: starting cornerback Dax Hill (illness) is active; left guard Dylan Fairchild (oblique) is active; safety Kyle Dugger (quadriceps) is OUT; guard Dalton Risner (knee) is OUT as ruled out Saturday. Cincinnati's other inactives are OT Myles Hinton, TE Cam Grandy and DT Landon Robinson. Both quarterbacks, Joe Burrow and Jayden Daniels, are clear to start.",
+   "interpretation": "The morning's four Washington question marks are resolved: Robertson is the one loss, and it is a real one - he started the first nine games and leads the team with 10 passes defended, and Washington has only four cornerbacks active against Joe Burrow. The backfield is whole again with Croskey-Merritt back and White active. For Cincinnati, the two questionable starters play and only the already-ruled-out Risner and the still-recovering Dugger sit.",
+   "app_guidance": "The inactives are settled, so there is nothing left to wait on before kickoff. Check your price on either card now - a late scratch would have moved the line, and this one did not move the app's number.",
    "sources": [
     {
-     "label": "Vigged — Bengals vs Commanders (injury report)",
-     "url": "https://vigged.com/nfl/2026/week-11/cincinnati-bengals-at-washington-commanders"
+     "label": "NBC Sports - No surprises in Commanders' inactives for MNF",
+     "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-23/no-surprises-in-commanders-inactives-for-mnf"
     },
     {
-     "label": "SI — Commanders vs Bengals final injury report",
-     "url": "https://www.si.com/nfl/commanders/onsi/commanders-bengals-monday-night-football-how-to-watch?utm_source=RSS"
+     "label": "SI - Two Bengals Starters Who Were Questionable are Active; Commanders To Be Without Key Starter",
+     "url": "https://www.si.com/nfl/bengals/onsi/two-bengals-starters-who-were-questionable-are-active-commanders-to-be-without-key-starter-01m85ab7ezxt"
     }
    ]
   },
   {
-   "evidence_id": "ev-weather-am",
+   "evidence_id": "ev-weather-pm",
    "category": "weather",
    "verification": "REPORTED",
-   "fact": "National Weather Service hourly forecast for Landover, Maryland, Monday evening: 56 degrees at 8:00 p.m. ET, 54 at 9:00 p.m., 53 at 10:00 p.m., wind from the northwest at about 9 to 10 mph, mostly cloudy. Chance of rain 15 percent at 8:00 p.m., falling to 5 percent at 9:00 p.m. and near zero after that. Rain unlikely during the game.",
-   "interpretation": "Cool and calm for late November. Nothing in the forecast that should change how the game is played.",
+   "fact": "Hourly forecast for Landover, Maryland, Monday evening: 8:00 p.m. ET light rain, 57 degrees, rain chance 78 percent, about 0.01 inches; 9:00 p.m. cloudy, 55 degrees, rain chance 23 percent; 10:00 p.m. cloudy, 53 degrees, rain chance 15 percent; wind from the north-northwest at about 10 to 11 mph, gusting to about 19 mph. This morning's forecast had rain unlikely, with a 15 percent chance at 8:00 p.m. - the evening update brings a light shower possible around kickoff, clearing after that.",
+   "interpretation": "A light shower around kickoff, then clearing and cool. A small change from the morning forecast, and nothing that should change how the game is played.",
    "app_guidance": "Weather is a fact to know, not an edge to chase. No totals play follows from it.",
    "sources": [
     {
-     "label": "National Weather Service — hourly forecast, Landover MD",
-     "url": "https://api.weather.gov/gridpoints/LWX/103,72/forecast/hourly"
+     "label": "weather.com - Landover hourly forecast",
+     "url": "https://weather.com/us/md/city/hyattsville/hourbyhour"
     },
     {
-     "label": "weather.com — Landover hourly forecast",
-     "url": "https://weather.com/us/md/city/hyattsville/hourbyhour"
+     "label": "National Weather Service - hourly forecast, Landover MD",
+     "url": "https://api.weather.gov/gridpoints/LWX/103,72/forecast/hourly"
     }
    ]
   }
