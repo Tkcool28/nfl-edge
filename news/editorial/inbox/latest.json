@@ -1,14 +1,14 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-11-24T01:12:57Z",
- "research_generated_at_utc": "2026-11-24T01:12:57Z",
+ "submitted_at_utc": "2026-11-24T13:22:36Z",
+ "research_generated_at_utc": "2026-11-24T13:22:36Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-11-24T01:12:57Z",
-  "edition": "Evening Brief",
-  "title": "NFL EDGE Monday Evening Brief",
-  "dek": "The inactives are in, the line moved toward Cincinnati, and the app's Balanced card moved with it - Washington +6.5 now.",
-  "research_generated_at_utc": "2026-11-24T01:12:57Z",
+  "published_at_utc": "2026-11-24T13:22:36Z",
+  "edition": "Morning Brief",
+  "title": "NFL EDGE Tuesday Morning Brief",
+  "dek": "Washington stunned Cincinnati on Monday night, the board still shows Week 11, and Thanksgiving week starts Wednesday night in Los Angeles.",
+  "research_generated_at_utc": "2026-11-24T13:22:36Z",
   "sections": [
    {
     "id": "what-matters",
@@ -16,63 +16,65 @@
     "title": "What Matters Today",
     "items": [
      {
-      "headline": "Inactives are in: Robertson is out, Croskey-Merritt is back",
+      "headline": "Washington stuns Cincinnati 22-20 on a walk-off field goal",
       "paragraphs": [
-       "The final answers are in, about 90 minutes before kickoff as expected. Washington loses starting cornerback Amik Robertson to his ankle injury - his pregame workout did not go well. Robertson started the first nine games and leads the team with 10 passes defended. Washington has only four cornerbacks active tonight against Joe Burrow, Ja'Marr Chase and Tee Higgins.",
-       "The rest of Washington's question marks resolved the good way. Running back Jacory Croskey-Merritt was activated from injured reserve and is playing his first game since Week 5. Running back Rachaad White is active after his heel injury, and center Lucas Patrick is active after his concussion.",
-       "Cincinnati's two questionable starters play. Cornerback Dax Hill is active after missing practice all week with an illness, and left guard Dylan Fairchild is active after his oblique injury. Safety Kyle Dugger is out with his quad injury, and guard Dalton Risner is out as ruled out on Saturday with knee injuries.",
-       "Both quarterbacks are clear, as they were this morning. Joe Burrow starts for Cincinnati, Jayden Daniels starts for Washington."
+       "Washington beat Cincinnati 22-20 on Monday night. Rookie kicker Drew Stevens kicked five field goals, including a 26-yarder as time expired, to win it.",
+       "Jayden Daniels drove Washington 64 yards in 34 seconds on the final drive. He hit rookie Antonio Williams on two long throws to set up the kick. Cincinnati led most of the night, but Washington scored on six straight drives to pull off the upset.",
+       "The app had Cincinnati by about 5 points and gave the Bengals about a 74 percent chance to win outright. The dog won outright. That is the whole lesson of the night, and it is in the next section."
       ],
-      "takeaway": "Washington is without starting cornerback Amik Robertson tonight, but Croskey-Merritt, White and Patrick are all active, and Cincinnati's Hill and Fairchild both play. Only Risner and Dugger sit for the Bengals.",
+      "takeaway": "Washington 22, Cincinnati 20. Daniels drove 64 yards in 34 seconds, Stevens kicked the walk-off 26-yarder, and the underdog won outright.",
       "evidence_ids": [
-       "ev-inactives"
+       "ev-result"
       ],
       "sources": [
        {
-        "label": "NBC Sports - No surprises in Commanders' inactives for MNF",
-        "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-23/no-surprises-in-commanders-inactives-for-mnf"
+        "label": "Reuters - Commanders rally past Bengals as last-minute drive produces winning FG",
+        "url": "https://www.reuters.com/sports/nfl/commanders-rally-past-bengals-last-minute-drive-produces-winning-fg--flm-2026-11-24/"
        },
        {
-        "label": "SI - Two Bengals Starters Who Were Questionable are Active; Commanders To Be Without Key Starter",
-        "url": "https://www.si.com/nfl/bengals/onsi/two-bengals-starters-who-were-questionable-are-active-commanders-to-be-without-key-starter-01m85ab7ezxt"
+        "label": "NBC Sports - Monday Night Football: Commanders rally for 22-20 win over Bengals",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-commanders-rally-for-22-20-win-over-bengals"
        }
       ]
      },
      {
-      "headline": "Tonight: Cincinnati at Washington, kickoff 8:15 p.m. ET",
+      "headline": "Thanksgiving week injury picture: Parsons nearing a debut, Ferguson out, several starters uncertain",
       "paragraphs": [
-       "One game left this week. Cincinnati visits Washington at Northwest Stadium in Landover, kickoff 8:15 p.m. ET.",
-       "The app has Cincinnati by about 5 points. Both quarterbacks are clear, with no injury designation on either side. The inactives are settled, so the only thing left before kickoff is your price."
+       "Green Bay's Micah Parsons has been medically cleared after ACL surgery and is set to make his season debut Wednesday against the Rams, after limited practices Sunday and Monday. One other listing still shows him out, so treat his status as unresolved until the inactives land about 90 minutes before kickoff.",
+       "Green Bay running back Josh Jacobs, finger, was limited in Monday's practice and is listed questionable for Wednesday. Rams running back Kyren Williams was upgraded to full participation Monday. Rams defensive end Myles Garrett did not practice Monday with a knee issue.",
+       "For Thursday: Philadelphia cornerback Quinyon Mitchell did not practice Monday with a hamstring injury and his status is uncertain. Eagles receiver DeVonta Smith was a full participant, and running back Saquon Barkley was limited with a neck issue and an illness. Dallas tight end Jake Ferguson did not practice Monday and is out for Thursday with knee and ankle injuries.",
+       "Detroit tight end Sam LaPorta was limited Monday with an ankle injury. Chicago cornerback Kyler Gordon and running back Roschon Johnson both did not practice Monday, shoulder and ankle. Kansas City running back Kenneth Walker III did not practice with a groin injury, and tight end Noah Gray did not practice with a rib injury."
       ],
-      "takeaway": "Cincinnati at Washington, 8:15 p.m. ET. Burrow and Daniels are both clear, the app has Cincinnati by about 5, and the inactives are settled.",
+      "takeaway": "Parsons is cleared and could debut Wednesday, but one listing still shows him out, so wait for inactives. Ferguson is out for Dallas on Thursday, and Mitchell, Barkley, LaPorta, Gordon, Johnson, Walker and Gray are all uncertain or limited.",
       "evidence_ids": [
-       "ev-board-pm"
+       "ev-injuries"
       ],
       "sources": [
        {
-        "label": "NFL EDGE app - product/latest",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+        "label": "SICscore - 2026 NFL Week 12 Injury Report",
+        "url": "https://sicscore.com/news/2026-nfl-week-12-injury-report"
        }
       ]
      },
      {
-      "headline": "A light shower is possible at kickoff, then it clears",
+      "headline": "Rain and wind wait for Thursday night in Buffalo; the other games are indoors",
       "paragraphs": [
-       "The evening forecast changed a little from this morning. A light shower is possible around the 8:00 p.m. ET kickoff - 57 degrees, wind from the north-northwest at about 10 mph, gusting to about 19. By 9:00 p.m. it is cloudy and 55 degrees, and the rain chance drops fast.",
-       "This morning's forecast had rain unlikely. The update brings a shower into the kickoff window and clears it after that. Cool and breezy, nothing more."
+       "Kansas City at Buffalo is the one outdoor game this week, Thursday at 8:20 p.m. ET at Highmark Stadium. Rain is likely after 1:00 p.m. Thursday, with a high near 41 degrees, and rain is expected through the night. Wind runs about 9 to 13 mph from the east, gusting into the 20s.",
+       "The other two Thursday games are under cover. Chicago at Detroit kicks off at 1:00 p.m. ET at Ford Field, a dome. Philadelphia at Dallas kicks off at 4:30 p.m. ET at AT&T Stadium, a retractable roof, with sunshine and a high near 55 expected outside.",
+       "Wednesday night is indoors too. Green Bay visits the Rams at 8:00 p.m. ET at SoFi Stadium. So the only weather to watch this week is Buffalo on Thursday night, and the forecast can still move before kickoff."
       ],
-      "takeaway": "Light rain is possible around the 8:15 p.m. ET kickoff in Landover, then it clears to cloudy and cool, wind about 10 mph. A small change from this morning's dry forecast.",
+      "takeaway": "Thursday night in Buffalo: rain likely, near 40 degrees, wind gusting into the 20s. The Bears-Lions, Eagles-Cowboys and Rams-Packers games are all indoors, so weather is not a factor there.",
       "evidence_ids": [
-       "ev-weather-pm"
+       "ev-weather"
       ],
       "sources": [
        {
-        "label": "weather.com - Landover hourly forecast",
-        "url": "https://weather.com/us/md/city/hyattsville/hourbyhour"
+        "label": "Wager on Weather - NFL Weather Report",
+        "url": "https://wageronweather.com/nfl-weather"
        },
        {
-        "label": "National Weather Service - hourly forecast, Landover MD",
-        "url": "https://api.weather.gov/gridpoints/LWX/103,72/forecast/hourly"
+        "label": "Gridiron & Wine - NFL Weather Week 12, 2026",
+        "url": "https://gridironandwine.com/nfl/games/weather/"
        }
       ]
      }
@@ -84,17 +86,15 @@
     "title": "What It Means for NFL EDGE",
     "items": [
      {
-      "headline": "The Balanced card moved with the line",
+      "headline": "No cards yet this morning - the board has not flipped to Week 12",
       "paragraphs": [
-       "Here is what changed on the evening board. Balanced is now Washington +6.5 at -112 on FanDuel. This morning it was Washington +6 at -107 on DraftKings. Same side, better number, different book - the card followed the line.",
-       "Hit Rate is the same pick at a slightly different price: Cincinnati moneyline, now -300 on FanDuel instead of -295 this morning. The app gives Cincinnati about a 74 percent chance to win outright. Hit Rate is the pick most likely to win, and the app's own tutorial says Hit Rate is not Profit Rate.",
-       "There is still no Value play. No offer satisfies the Value lane, so the app is not forcing a plus-expected-value pick where it does not see one.",
-       "Cards move when lines move. That is the whole point of the evening board. If your book has a number you like on either side, type the line and the price into Check and let the app run it back through the model and the evaluator."
+       "The app still shows Week 11 this morning. The board was generated at 12:08 a.m. ET and is fresh, but all 13 Week 11 games lack a provider event, the market boards are empty, and all three headline cards read no play. There is no Week 12 line in the app yet, so there is no card to follow.",
+       "That is normal for a Tuesday morning after a Monday night game. The board refreshes every morning and evening, and the Week 12 lines land when it flips. Check the evening board for the first Week 12 cards.",
+       "When the board flips, the cards will be there the same way they always are. Hit Rate is the pick most likely to win. Balanced is the strong pick without paying too much. Value is the model's plus-expected-value play. If your book already has a Week 12 number you like, type the line and the price into Check and let the app run it back through the model and the evaluator before you bet it."
       ],
-      "takeaway": "Balanced moved to Washington +6.5 at -112 on FanDuel, from +6 at -107 on DraftKings this morning. Hit Rate is still Cincinnati moneyline at -300, and there is still no Value play.",
+      "takeaway": "No Week 12 cards this morning because the board has not flipped yet - all three lanes read no play with empty market boards. Check the evening board for the first Week 12 lines.",
       "evidence_ids": [
-       "ev-board-pm",
-       "ev-board-am"
+       "ev-board"
       ],
       "sources": [
        {
@@ -104,19 +104,25 @@
       ]
      },
      {
-      "headline": "The model and the market still nearly agree on the spread",
+      "headline": "A 74 percent chance still loses about one time in four",
       "paragraphs": [
-       "The app has Cincinnati by about 5 points. The market has Cincinnati -6 on DraftKings and -6.5 on FanDuel and Pinnacle. That is close agreement, and it has been close all day.",
-       "The total is a different story. The app's total sits near 48. The market total is 54.5 on DraftKings, 53.5 on FanDuel and 54.0 at Pinnacle. That is a big gap, and the app still puts no card on the total. A gap is a starting point, not a bet - the card is what the model and the evaluator agreed on after the full check."
+       "Last night the app gave Cincinnati about a 74 percent chance to win outright, and Hit Rate was the Cincinnati moneyline. Washington won 22-20.",
+       "That is not the model being wrong. A 74 percent chance means the other side wins about one time in four, and last night was that one time. Hit Rate is the pick most likely to win, and the app's own tutorial says Hit Rate is not Profit Rate.",
+       "The point of the cards is to price the chance honestly, not to promise the result. When a favorite loses, the question is whether the price was fair for the chance, not whether the pick lost."
       ],
-      "takeaway": "The app says Cincinnati by about 5 against a market -6 to -6.5, close agreement. On the total the app says about 48 against a market 53.5 to 54.5, a big gap with no card on it.",
+      "takeaway": "Cincinnati at about 74 percent still lost. A probability is not a promise - the favorite wins about three times in four at that number, and last night was the fourth.",
       "evidence_ids": [
-       "ev-board-pm"
+       "ev-board-pm",
+       "ev-result"
       ],
       "sources": [
        {
         "label": "NFL EDGE app - product/latest",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       },
+       {
+        "label": "Reuters - Commanders rally past Bengals as last-minute drive produces winning FG",
+        "url": "https://www.reuters.com/sports/nfl/commanders-rally-past-bengals-last-minute-drive-produces-winning-fg--flm-2026-11-24/"
        }
       ]
      }
@@ -129,13 +135,13 @@
     "mode": "learning",
     "items": [
      {
-      "headline": "The push: when nobody wins the bet",
+      "headline": "Handle vs. tickets: two different crowds",
       "paragraphs": [
-       "A spread without a half-point in it can end in a tie. When the final margin lands exactly on the spread, the bet is a push. Nobody wins, nobody loses, and your stake comes back.",
-       "Here is a clearly labeled hypothetical example. Imagine a favorite listed at -3, and the favorite wins the game by exactly 3 points. A ticket on the favorite pushes - the stake comes back. A ticket on the underdog at +3 pushes too. Same game, same margin, both tickets refunded.",
-       "That is the other side of the hook. A spread like -3.5 can never push, because a team cannot win by half a point. A spread like -3 can. When you see a whole-number spread, the push is part of the price - and Check will tell you what each price is actually worth."
+       "Two numbers get quoted about where the betting is going, and they measure different things. Tickets, labeled BET, is the share of the number of bets. Handle, labeled HND, is the share of the money.",
+       "Here is a clearly labeled hypothetical example. Say 70 percent of the bets are on the favorite, but only 40 percent of the money is. That means lots of small bets on the favorite and fewer, bigger bets on the underdog. The crowd and the money are pointing different ways.",
+       "That split is interesting, not a pick. One book's split is only one book, and a split alone never tells you which side is right. What it tells you is to ask why the money disagrees with the crowd, and to watch whether the line moves toward the money before you bet."
       ],
-      "takeaway": "A push is when the final margin lands exactly on a whole-number spread, like a favorite winning by exactly 3 at -3, and your stake comes back - a -3.5 spread can never push.",
+      "takeaway": "Tickets count the bets, handle counts the money. When they point different ways, ask why before you pick a side - and remember one book's split is only one book.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -148,39 +154,25 @@
     "title": "Line Movement",
     "items": [
      {
-      "headline": "FanDuel moved a full point toward Cincinnati",
+      "headline": "Week 11 closed with the dog winning outright after the line moved the other way",
       "paragraphs": [
-       "FanDuel had Cincinnati -5.5 this morning. The evening board has FanDuel at -6.5. That is a full point toward the favorite in one day, and it matches Pinnacle at -6.5 now.",
-       "DraftKings held at -6, but the price moved: Cincinnati -6 was -113 this morning and is -120 tonight. Washington +6 is now +100 on DraftKings, from -107 this morning.",
-       "The app caught the move. Balanced moved from Washington +6 on DraftKings to Washington +6.5 on FanDuel, with a play-through of 6.5 at -115. When books disagree by a point, Check is where the difference pays off - type in your book's line and price and let the app run it back."
+       "The last real movement of Week 11 came before Monday night kickoff. FanDuel moved a full point toward Cincinnati, from -5.5 in the morning to -6.5 in the evening. DraftKings held -6 but the price moved from -113 to -120. Totals ticked down about a point.",
+       "Washington won 22-20 outright. The line moved toward the favorite all day, and the underdog won the game. Movement is information, not a result.",
+       "There is no new movement to report this morning because the app has no Week 12 lines yet. The board still shows Week 11. When it flips, this section picks up the Week 12 openers and tracks them against the results."
       ],
-      "takeaway": "FanDuel moved Cincinnati from -5.5 to -6.5 since this morning, matching Pinnacle, while DraftKings held -6 at a steeper -120. The app's Balanced card moved to +6.5 with it.",
+      "takeaway": "FanDuel moved a full point toward Cincinnati before kickoff, DraftKings' price moved from -113 to -120, and Washington won 22-20 outright. No Week 12 lines in the app yet, so no new movement this morning.",
       "evidence_ids": [
        "ev-board-pm",
-       "ev-board-am"
+       "ev-result"
       ],
       "sources": [
        {
         "label": "NFL EDGE app - product/latest",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
-       }
-      ]
-     },
-     {
-      "headline": "Totals ticked down a point",
-      "paragraphs": [
-       "The total moved a little too. FanDuel went from 54.5 this morning to 53.5 tonight. Pinnacle went from 55.0 to 54.0. DraftKings held at 54.5.",
-       "The app's total sits near 48, well under all three books. That gap was there this morning and it is still there. The app still puts no card on the total, so this is a move to note, not a move to chase."
-      ],
-      "takeaway": "The total ticked down a point at FanDuel, 54.5 to 53.5, and at Pinnacle, 55.0 to 54.0, while DraftKings held at 54.5. The app's total near 48 still has no card on it.",
-      "evidence_ids": [
-       "ev-board-pm",
-       "ev-board-am"
-      ],
-      "sources": [
+       },
        {
-        "label": "NFL EDGE app - product/latest",
-        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+        "label": "Reuters - Commanders rally past Bengals as last-minute drive produces winning FG",
+        "url": "https://www.reuters.com/sports/nfl/commanders-rally-past-bengals-last-minute-drive-produces-winning-fg--flm-2026-11-24/"
        }
       ]
      }
@@ -192,12 +184,24 @@
     "title": "Today's Tip",
     "items": [
      {
-      "headline": "Tonight: the inactives are settled, so Check your price before kickoff",
+      "headline": "No games today - the week starts Wednesday night in Los Angeles",
       "paragraphs": [
-       "There is nothing left to wait on tonight. The inactives are in, both quarterbacks are clear, and kickoff is 8:15 p.m. ET. If Check says bet at your book's number, bet now - the line already moved once today, from -5.5 to -6.5 on FanDuel, and waiting lets it drift the wrong way too.",
-       "Check both cards against your book. Hit Rate is Cincinnati moneyline, Balanced is Washington +6.5, and there is no Value play. The number you can actually bet is the only one that counts."
+       "There is no football today. Week 12 starts Wednesday night, Green Bay at the Rams, 8:00 p.m. ET at SoFi Stadium. Thursday brings three games: Chicago at Detroit at 1:00 p.m. ET, Philadelphia at Dallas at 4:30 p.m. ET, and Kansas City at Buffalo at 8:20 p.m. ET.",
+       "Inactives land about 90 minutes before each kickoff, and that is when the last injury questions get answered. Parsons, Jacobs, Mitchell, Barkley and the rest stay open until then.",
+       "There is nothing to rush this morning. When the evening board flips to Week 12, look at the cards, and if your book has a number you like, run it through Check first. A good number today beats a hoped-for number later in the week, because waiting lets the number drift the wrong way too."
       ],
-      "takeaway": "The inactives are settled and kickoff is 8:15 p.m. ET. If Check says bet at your book's number, bet now - the line already moved once today.",
+      "takeaway": "No games today. Week 12 starts Wednesday night, Green Bay at the Rams, then three Thanksgiving games Thursday. Inactives land about 90 minutes before each kickoff.",
+      "editorial_only": true,
+      "evidence_ids": [],
+      "sources": []
+     },
+     {
+      "headline": "Log the losers too",
+      "paragraphs": [
+       "Settlement is manual here. Nobody settles your bets for you, so the tracker only works if you are honest with yourself.",
+       "Log the losers the same night you log the winners. A tracker that only holds wins is not a record, it is a highlight reel, and it cannot tell you what is actually working."
+      ],
+      "takeaway": "Settlement is manual, so the tracker only works if you log the losers too. A record with only wins cannot tell you what is actually working.",
       "editorial_only": true,
       "evidence_ids": [],
       "sources": []
@@ -208,68 +212,87 @@
  },
  "evidence": [
   {
+   "evidence_id": "ev-result",
+   "category": "result",
+   "verification": "EXTERNAL_VERIFIED",
+   "fact": "Washington Commanders defeated Cincinnati Bengals 22-20 on Monday Night Football, Nov 23, 2026, at Northwest Stadium. Rookie kicker Drew Stevens kicked a season-high five field goals, including the winning 26-yarder as time expired. Jayden Daniels moved Washington 64 yards in 34 seconds on the final drive, hitting rookie Antonio Williams on two long throws. Cincinnati led most of the night; Washington scored on six straight drives.",
+   "interpretation": "The underdog won outright after the line moved toward Cincinnati all day. The app's Hit Rate pick (Cincinnati moneyline) lost.",
+   "app_guidance": "Report the result as the lead; use it to teach what a 74 percent chance means.",
+   "sources": [
+    {
+     "label": "Reuters - Commanders rally past Bengals as last-minute drive produces winning FG",
+     "url": "https://www.reuters.com/sports/nfl/commanders-rally-past-bengals-last-minute-drive-produces-winning-fg--flm-2026-11-24/",
+     "published_at_utc": "2026-11-24T01:00:00Z"
+    },
+    {
+     "label": "NBC Sports - Monday Night Football: Commanders rally for 22-20 win over Bengals",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/monday-night-football-commanders-rally-for-22-20-win-over-bengals",
+     "published_at_utc": "2026-11-24T01:00:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-injuries",
+   "category": "injury",
+   "verification": "EXTERNAL_VERIFIED",
+   "fact": "Week 12 injury report, Monday Nov 23, 2026: Micah Parsons (Packers, knee/ACL) medically cleared, set to make 2026 season debut Wednesday vs Rams, limited in Sunday and Monday practices. Josh Jacobs (Packers, finger) limited Monday, listed questionable. Kyren Williams (Rams, toe) upgraded to full participation Monday. Myles Garrett (Rams, knee/rest) did not participate Monday. Quinyon Mitchell (Eagles, hamstring) did not participate Monday, status for Thursday vs Cowboys uncertain. DeVonta Smith (Eagles, hamstring) full participant Monday. Saquon Barkley (Eagles, neck/illness) limited Monday. Jake Ferguson (Cowboys, knee/ankle) did not participate Monday, out for Thursday. Sam LaPorta (Lions, ankle) limited Monday. Kyler Gordon (Bears, shoulder) did not participate Monday. Roschon Johnson (Bears, ankle) did not participate Monday. Kenneth Walker III (Chiefs, groin) did not participate Monday. Noah Gray (Chiefs, ribs) did not participate Monday. Note: a second listing still shows Parsons as out, so his status is treated as unresolved pending inactives.",
+   "interpretation": "Several Thursday starters are uncertain; the only firm out among the names is Ferguson. Parsons' debut is reported but not unanimous across listings.",
+   "app_guidance": "Group all injury news here with facts; point readers to inactives about 90 minutes before kickoff.",
+   "sources": [
+    {
+     "label": "SICscore - 2026 NFL Week 12 Injury Report",
+     "url": "https://sicscore.com/news/2026-nfl-week-12-injury-report",
+     "published_at_utc": "2026-11-24T00:00:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-weather",
+   "category": "weather",
+   "verification": "EXTERNAL_VERIFIED",
+   "fact": "Week 12 weather: Kansas City at Buffalo, Thursday Nov 26, 8:20 p.m. ET, Highmark Stadium (open air): rain likely after 1 p.m. Thursday, high near 41, rain expected through the night, wind east 9-13 mph gusting into the 20s, precipitation chance 80-100 percent Thursday night. Chicago at Detroit, Thursday 1:00 p.m. ET, Ford Field (dome): weather not a factor. Philadelphia at Dallas, Thursday 4:30 p.m. ET, AT&T Stadium (retractable roof): sunny, 55/38, weather not a factor. Green Bay at Rams, Wednesday Nov 25, 8:00 p.m. ET, SoFi Stadium (indoor): weather not a factor.",
+   "interpretation": "Only Buffalo carries weather this week. Report it factually; do not frame it as a totals edge.",
+   "app_guidance": "Weather is factual context for Thursday night only.",
+   "sources": [
+    {
+     "label": "Wager on Weather - NFL Weather Report",
+     "url": "https://wageronweather.com/nfl-weather",
+     "published_at_utc": "2026-11-24T12:00:00Z"
+    },
+    {
+     "label": "Gridiron & Wine - NFL Weather Week 12, 2026",
+     "url": "https://gridironandwine.com/nfl/games/weather/",
+     "published_at_utc": "2026-11-24T00:00:00Z"
+    }
+   ]
+  },
+  {
+   "evidence_id": "ev-board",
+   "category": "board",
+   "verification": "INTERNAL_CANONICAL",
+   "fact": "NFL EDGE product/latest fetched Tuesday Nov 24, 2026 at about 6:15 a.m. Denver: app data generated_at_utc 2026-11-24T12:08:45Z, state FRESH, prediction_as_of_utc 2026-11-24T12:05:04Z. Week 11, slate UPCOMING. All 13 Week 11 games lack a provider event; market boards empty on every game. Headline cards: Hit Rate NO_PLAY, Balanced NO_PLAY, Value NO_PLAY - no offer satisfies any lane contract. No Week 12 lines in the app yet.",
+   "interpretation": "The board has not flipped to Week 12. There are no cards and no lines to report this morning.",
+   "app_guidance": "Say plainly that no cards exist yet; point readers to the evening board and to Check once lines appear.",
+   "sources": [
+    {
+     "label": "NFL EDGE app - product/latest",
+     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest",
+     "published_at_utc": "2026-11-24T12:08:45Z"
+    }
+   ]
+  },
+  {
    "evidence_id": "ev-board-pm",
    "category": "board",
    "verification": "INTERNAL_CANONICAL",
-   "fact": "NFL EDGE product/latest fetched Monday Nov 23, 2026 at 6:08:44 p.m. Denver: app data generated_at_utc 2026-11-24T00:08:44Z, state FRESH, prediction_as_of_utc 2026-11-24T00:05:04Z. The evening board has refreshed. Tonight's game is Cincinnati at Washington, Monday 8:15 p.m. ET, Northwest Stadium, Landover. Expected margin: Cincinnati by 5.18. App total about 47.9. Headline cards: Hit Rate Cincinnati moneyline -300 FanDuel, model probability 0.7366, play-through -311, state BET. Balanced Washington +6.5 -112 FanDuel, model probability 0.5049, play-through 6.5 at -115, state BET. Value: NO_PLAY - no offer satisfies the frozen VALUE lane contract. Market board: DraftKings Cincinnati -6 -120, Washington +6 +100, total 54.5, moneyline Cincinnati -301, Washington +245. FanDuel Cincinnati -6.5 -108, Washington +6.5 -112, total 53.5, moneyline Cincinnati -300, Washington +245. Pinnacle Cincinnati -6.5 -102, total 54.0, moneyline Cincinnati -286. Quarterbacks: Joe Burrow (Cincinnati) and Jayden Daniels (Washington), both expected starters with no injury designation.",
-   "interpretation": "The Balanced card moved with the line: it was Washington +6 on DraftKings this morning and is now Washington +6.5 on FanDuel. Hit Rate is unchanged in kind, Cincinnati moneyline, at -300 instead of -295. No Value play again.",
-   "app_guidance": "Two cards tonight, no Value play. The Balanced card's book and line changed since this morning, so Check your own book's price before betting either side.",
+   "fact": "NFL EDGE product/latest as reported in the Monday evening brief (fetched Monday Nov 23, 2026 at about 6:08 p.m. Denver, generated_at_utc 2026-11-24T00:08:44Z): expected margin Cincinnati by 5.18, app total about 47.9. Hit Rate Cincinnati moneyline -300 FanDuel, model probability 0.7366, play-through -311, state BET. Balanced Washington +6.5 -112 FanDuel, model probability 0.5049, play-through 6.5 at -115, state BET. Value NO_PLAY. Market board: DraftKings Cincinnati -6 -120 (morning -113), Washington +6 +100, total 54.5, moneyline Cincinnati -301, Washington +245. FanDuel Cincinnati -6.5 -108 (morning -5.5), Washington +6.5 -112, total 53.5, moneyline Cincinnati -300, Washington +245. Pinnacle Cincinnati -6.5 -102, total 54.0, moneyline Cincinnati -286.",
+   "interpretation": "Evening baseline: FanDuel moved a full point toward Cincinnati from the morning; DraftKings' price moved from -113 to -120; totals ticked down about a point. Washington won outright 22-20.",
+   "app_guidance": "Use as the comparison point for the Week 11 close-out; the morning board has no Week 12 lines.",
    "sources": [
     {
      "label": "NFL EDGE app - product/latest",
      "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest",
      "published_at_utc": "2026-11-24T00:08:44Z"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-board-am",
-   "category": "board",
-   "verification": "INTERNAL_CANONICAL",
-   "fact": "NFL EDGE product/latest as reported in this morning's brief (fetched Monday Nov 23, 2026 at about 6:15 a.m. Denver, generated_at_utc 2026-11-23T12:08:45Z): Hit Rate Cincinnati moneyline -295 FanDuel, play-through -306. Balanced Washington +6 -107 DraftKings, play-through 6.0 at -110. Value NO_PLAY. Market board: DraftKings Cincinnati -6 -113, Washington +6 -107, total 54.5. FanDuel Cincinnati -5.5 -120, total 54.5. Pinnacle Cincinnati -6.5 -101, total 55.0. Expected margin Cincinnati by 5.18, app total about 47.9.",
-   "interpretation": "Morning baseline for the evening comparison: FanDuel had Cincinnati at -5.5 this morning and now has -6.5. DraftKings held -6 but the price moved from -113 to -120. Totals ticked down a point at FanDuel and Pinnacle.",
-   "app_guidance": "Use the morning numbers only as the comparison point. The evening board is the live one.",
-   "sources": [
-    {
-     "label": "NFL EDGE app - product/latest",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest",
-     "published_at_utc": "2026-11-23T12:08:45Z"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-inactives",
-   "category": "injury",
-   "verification": "REPORTED",
-   "fact": "Inactives for Cincinnati at Washington, Monday Nov 23, 8:15 p.m. ET, announced about 90 minutes before kickoff. Washington: starting cornerback Amik Robertson is OUT with an ankle injury after his pregame workout did not go well; running back Jacory Croskey-Merritt was activated from injured reserve and is playing; running back Rachaad White (heel) is active; center Lucas Patrick (concussion) is active. Washington's other inactives are QB Athan Kaliakmanis (emergency third QB), RB Robert Henry Jr., DT Ricky Barber and G Tanoa Togiai. Cincinnati: starting cornerback Dax Hill (illness) is active; left guard Dylan Fairchild (oblique) is active; safety Kyle Dugger (quadriceps) is OUT; guard Dalton Risner (knee) is OUT as ruled out Saturday. Cincinnati's other inactives are OT Myles Hinton, TE Cam Grandy and DT Landon Robinson. Both quarterbacks, Joe Burrow and Jayden Daniels, are clear to start.",
-   "interpretation": "The morning's four Washington question marks are resolved: Robertson is the one loss, and it is a real one - he started the first nine games and leads the team with 10 passes defended, and Washington has only four cornerbacks active against Joe Burrow. The backfield is whole again with Croskey-Merritt back and White active. For Cincinnati, the two questionable starters play and only the already-ruled-out Risner and the still-recovering Dugger sit.",
-   "app_guidance": "The inactives are settled, so there is nothing left to wait on before kickoff. Check your price on either card now - a late scratch would have moved the line, and this one did not move the app's number.",
-   "sources": [
-    {
-     "label": "NBC Sports - No surprises in Commanders' inactives for MNF",
-     "url": "https://www.nbcsports.com/fantasy/football/player-news/2026-11-23/no-surprises-in-commanders-inactives-for-mnf"
-    },
-    {
-     "label": "SI - Two Bengals Starters Who Were Questionable are Active; Commanders To Be Without Key Starter",
-     "url": "https://www.si.com/nfl/bengals/onsi/two-bengals-starters-who-were-questionable-are-active-commanders-to-be-without-key-starter-01m85ab7ezxt"
-    }
-   ]
-  },
-  {
-   "evidence_id": "ev-weather-pm",
-   "category": "weather",
-   "verification": "REPORTED",
-   "fact": "Hourly forecast for Landover, Maryland, Monday evening: 8:00 p.m. ET light rain, 57 degrees, rain chance 78 percent, about 0.01 inches; 9:00 p.m. cloudy, 55 degrees, rain chance 23 percent; 10:00 p.m. cloudy, 53 degrees, rain chance 15 percent; wind from the north-northwest at about 10 to 11 mph, gusting to about 19 mph. This morning's forecast had rain unlikely, with a 15 percent chance at 8:00 p.m. - the evening update brings a light shower possible around kickoff, clearing after that.",
-   "interpretation": "A light shower around kickoff, then clearing and cool. A small change from the morning forecast, and nothing that should change how the game is played.",
-   "app_guidance": "Weather is a fact to know, not an edge to chase. No totals play follows from it.",
-   "sources": [
-    {
-     "label": "weather.com - Landover hourly forecast",
-     "url": "https://weather.com/us/md/city/hyattsville/hourbyhour"
-    },
-    {
-     "label": "National Weather Service - hourly forecast, Landover MD",
-     "url": "https://api.weather.gov/gridpoints/LWX/103,72/forecast/hourly"
     }
    ]
   }
