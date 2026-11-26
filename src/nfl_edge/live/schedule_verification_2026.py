@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
+import base64
+import binascii
 import hashlib
 import json
+import os
+import tempfile
 import time
+from collections.abc import Callable
 from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
@@ -12,8 +17,8 @@ from typing import Any
 
 import requests
 
-from .nflverse_2026_identity import CANONICAL_TEAMS
 from .markets_2026 import _normalized_team, _parse_utc
+from .nflverse_2026_identity import CANONICAL_TEAMS
 from .schedule_2026 import rollover_at_utc, validate_schedule
 
 ESPN_SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
@@ -113,6 +118,169 @@ def _espn_scoreboard(url: str) -> bytes:
     return bytes(raw)
 
 
+
+_RECORD_SCHEMA = "NFL_EDGE_VERIFIED_KICKOFF_V1"
+
+
+def _digest(value: Any) -> str:
+    return hashlib.sha256(json.dumps(value, sort_keys=True, allow_nan=False).encode()).hexdigest()
+
+
+def _context(schedule: dict[str, Any], game_id: str) -> dict[str, Any]:
+    game, = (game for game in schedule["games"] if game["game_id"] == game_id)
+    return {
+        "season": schedule["season"],
+        "week": schedule["week"],
+        "schedule_source_url": schedule["context_source_url"],
+        "game": {key: value for key, value in game.items() if key != "context_source_at_utc"},
+    }
+
+
+def _record_path(root: Path, context: dict[str, Any]) -> Path:
+    return root / "kickoff_reconciliations" / f"{_digest(context)}.json"
+
+
+def _verified_record(
+    context: dict[str, Any], corrected: str, *, raw: bytes, retrieved: str,
+    verified: str, event: dict[str, Any], checkpoint_sha256: str | None,
+) -> dict[str, Any]:
+    original = _kickoff(context["game"]["scheduled_start_utc"])
+    revised = _kickoff(corrected)
+    acquired_at, verified_at = _kickoff(retrieved), _kickoff(verified)
+    if acquired_at > verified_at or original == revised:
+        raise ValueError("invalid reconciliation chronology")
+    if _kickoff(event["kickoff_utc"]) != revised:
+        raise ValueError(f"ESPN kickoff {event['kickoff_utc']} does not confirm {corrected}")
+    return {
+        "schema_version": _RECORD_SCHEMA,
+        "context": context,
+        "checkpoint_sha256": checkpoint_sha256,
+        "original_kickoff_utc": _utc_text(original),
+        "corrected_kickoff_utc": _utc_text(revised),
+        "verified_at_utc": _utc_text(verified_at),
+        "verified_before_original_kickoff": verified_at < original,
+        "verified_before_corrected_kickoff": verified_at < revised,
+        "espn": {
+            "url": espn_week_url(context["season"], context["week"]),
+            "retrieved_at_utc": _utc_text(acquired_at),
+            "event_id": event["event_id"],
+            "response_sha256": hashlib.sha256(raw).hexdigest(),
+            "response_base64": base64.b64encode(raw).decode("ascii"),
+        },
+    }
+
+
+def _read_record(
+    path: Path, context: dict[str, Any], corrected: str, checkpoint_sha256: str | None,
+) -> tuple[dict[str, Any], str] | None:
+    try:
+        with path.open("rb") as handle:
+            stored = handle.read(2 * MAX_RESPONSE_BYTES + 1)
+    except FileNotFoundError:
+        return None
+    try:
+        if len(stored) > 2 * MAX_RESPONSE_BYTES:
+            raise ValueError("oversized record")
+        envelope = json.loads(stored)
+        record = envelope["record"]
+        digest = _digest(record)
+        if set(envelope) != {"record", "sha256"} or envelope["sha256"] != digest:
+            raise ValueError("record digest mismatch")
+        binding = record["checkpoint_sha256"]
+        if binding is not None and binding != checkpoint_sha256:
+            raise ValueError("checkpoint binding conflict")
+        if _kickoff(record["corrected_kickoff_utc"]) != _kickoff(corrected):
+            raise ValueError("conflicting corrected kickoff for the same archived context")
+        espn = record["espn"]
+        raw = base64.b64decode(espn["response_base64"], validate=True)
+        event = _verified_event(raw, context)
+        expected = _verified_record(
+            context, corrected, raw=raw, retrieved=espn["retrieved_at_utc"],
+            verified=record["verified_at_utc"], event=event, checkpoint_sha256=binding,
+        )
+        if record != expected:
+            raise ValueError("record context, chronology, or ESPN provenance mismatch")
+        return record, digest
+    except (AttributeError, KeyError, TypeError, ValueError, OverflowError, binascii.Error) as exc:
+        raise ScheduleVerificationError(f"invalid persisted kickoff evidence: {path.name}: {exc}") from exc
+
+
+def _verified_event(raw: bytes, context: dict[str, Any]) -> dict[str, Any]:
+    if len(raw) > MAX_RESPONSE_BYTES:
+        raise ValueError("ESPN response exceeds the byte limit")
+    game = context["game"]
+    gid = game["game_id"]
+    events = _event_rows(raw, matchups={(game["away_team"], game["home_team"]): gid})
+    if gid not in events:
+        raise ValueError(f"ESPN response has no matching event for {gid}")
+    return events[gid]
+
+
+def _persist_record(path: Path, record: dict[str, Any]) -> None:
+    """Create an immutable record atomically, allowing a concurrent writer to win."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(dir=path.parent) as handle:
+        handle.write(json.dumps({"record": record, "sha256": _digest(record)}, sort_keys=True).encode())
+        handle.flush()
+        os.fsync(handle.fileno())
+        try:
+            os.link(handle.name, path)
+        except FileExistsError:
+            return
+        directory = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+
+
+def _correction_audit(record: dict[str, Any], digest: str) -> dict[str, Any]:
+    original = record["original_kickoff_utc"]
+    corrected = record["corrected_kickoff_utc"]
+    game_id = record["context"]["game"]["game_id"]
+    return {
+        "game_id": game_id,
+        "record_sha256": digest,
+        "espn_event_id": record["espn"]["event_id"],
+        "verified_at_utc": record["verified_at_utc"],
+        "verified_before_original_kickoff": record["verified_before_original_kickoff"],
+        "verified_before_corrected_kickoff": record["verified_before_corrected_kickoff"],
+        "original_kickoff_utc": original,
+        "corrected_kickoff_utc": corrected,
+        "selector_eligibility_cutoff_utc": min(original, corrected, key=_kickoff),
+    }
+
+
+def historical_kickoff_evidence(
+    root: Path, schedule: dict[str, Any], game_id: str, corrected: str, *,
+    checkpoint_sha256: str, acquire: Callable[[str], tuple[bytes, str]] | None = None,
+) -> dict[str, Any]:
+    """Use previously captured evidence or verify and retain one historical correction."""
+    context = _context(schedule, game_id)
+    path = _record_path(root, context)
+    try:
+        existing = _read_record(path, context, corrected, checkpoint_sha256)
+        if existing is None and acquire is not None:
+            raw, retrieved = acquire(espn_week_url(schedule["season"], schedule["week"]))
+            event = _verified_event(raw, context)
+            record = _verified_record(
+                context, corrected, raw=raw, retrieved=retrieved,
+                verified=_utc_text(datetime.now(timezone.utc)), event=event,
+                checkpoint_sha256=checkpoint_sha256,
+            )
+            _persist_record(path, record)
+            existing = _read_record(path, context, corrected, checkpoint_sha256)
+        if existing is None:
+            raise ScheduleVerificationError("missing persisted ESPN kickoff evidence")
+        return _correction_audit(*existing)
+    except (OSError, requests.RequestException, KeyError, TypeError, ValueError, OverflowError) as exc:
+        raise ScheduleVerificationError(f"ESPN kickoff evidence rejected for {game_id}: {exc}") from exc
+
+
+def acquire_espn_evidence(url: str) -> tuple[bytes, str]:
+    raw = _espn_scoreboard(url)
+    return raw, _utc_text(datetime.now(timezone.utc))
+
 def _kickoff_disagreements(schedule: dict[str, Any], events: list[dict[str, Any]]) -> list[dict[str, str]]:
     if not events:
         return []
@@ -148,6 +316,7 @@ def reconcile_market_kickoffs(
     live: bool,
     espn_response: Path | None = None,
     capture_path: Path | None = None,
+    evidence_root: Path | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     """Check ESPN only for specific nflverse/Odds kickoff disagreements."""
     discrepancies = _kickoff_disagreements(schedule, events)
@@ -168,8 +337,8 @@ def reconcile_market_kickoffs(
         return schedule, {**report, "status": "ESPN_CAPTURE_REQUIRED"}
     try:
         if live:
-            raw = _espn_scoreboard(url)
-            report["espn"]["retrieved_at_utc"] = _utc_text(datetime.now(timezone.utc))
+            raw, retrieved = acquire_espn_evidence(url)
+            report["espn"]["retrieved_at_utc"] = retrieved
             if capture_path is not None:
                 capture_path.parent.mkdir(parents=True, exist_ok=True)
                 capture_path.write_bytes(raw)
@@ -211,4 +380,22 @@ def reconcile_market_kickoffs(
     slate = [(game["game_id"], game["scheduled_start_utc"]) for game in revised["games"]]
     digest = hashlib.sha256(json.dumps(slate, separators=(",", ":")).encode()).hexdigest()
     revised["schedule_version"] = f"ODDS_ESPN_{season}_REG_WEEK{week}_{digest}"
-    return validate_schedule(revised), {**report, "status": "KICKOFF_CONFIRMED"}
+    revised = validate_schedule(revised)
+    if live and evidence_root is not None:
+        verified = _utc_text(datetime.now(timezone.utc))
+        for row in discrepancies:
+            gid = row["game_id"]
+            context = _context(schedule, gid)
+            path = _record_path(evidence_root, context)
+            record = _verified_record(
+                context, row["odds_kickoff_utc"], raw=raw, retrieved=retrieved,
+                verified=verified, event=secondary[gid], checkpoint_sha256=None,
+            )
+            # An active capture may share a context with settled evidence from a
+            # concurrent weekly rollover. Validate the winner before using it.
+            _persist_record(path, record)
+            stored = _read_record(path, context, row["odds_kickoff_utc"], None)
+            if stored is None:
+                raise ScheduleVerificationError(f"missing persisted active kickoff evidence for {gid}")
+            row["verification_record_sha256"] = stored[1]
+    return revised, {**report, "status": "KICKOFF_CONFIRMED"}

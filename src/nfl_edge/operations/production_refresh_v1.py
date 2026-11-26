@@ -443,6 +443,7 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                 schedule, reconciliation = reconcile_market_kickoffs(
                     schedule, events, live=config.live, espn_response=config.espn_response,
                     capture_path=(run_dir / "raw" / "espn-scoreboard.json") if config.live else None,
+                    evidence_root=config.evidence_root,
                 )
                 if reconciliation is not None:
                     reconciliation["odds_response_sha256"] = metadata["response_sha256"]

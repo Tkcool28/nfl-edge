@@ -1,15 +1,21 @@
 from __future__ import annotations
 
+import gzip
 import json
 from copy import deepcopy
+from datetime import datetime, timezone
+from pathlib import Path
 
 import polars as pl
 import pytest
+import requests
 
 from nfl_edge.features.totals_v1.pbp_semantics import REQUIRED_PBP_COLUMNS
 from nfl_edge.live import evidence_2026 as ev
+from nfl_edge.live import schedule_verification_2026 as verification
 from nfl_edge.live import surface_evidence_2026 as surfaces
-from nfl_edge.live.historical_schedule_2026 import HistoricalScheduleError, reuse, sha
+from nfl_edge.live.historical_schedule_2026 import HistoricalScheduleError, checkpoint, reuse, sha
+from nfl_edge.live.product_state_2026 import Entering2026ProductStateError, _final_pregame_selector_rows
 from nfl_edge.live.schedule_materializer_2026 import (
     ScheduleMaterializationError,
     build_week_schedule,
@@ -54,7 +60,9 @@ def sources(monkeypatch):
 
 
 def materialize(root, source):
-    return ev.materialize_settled_evidence(output_dir=root, schedule_rows=source, active_as_of_utc=NOW)
+    return ev.materialize_settled_evidence(
+        output_dir=root, schedule_rows=source, active_as_of_utc=NOW, verify_historical_kickoffs=False,
+    )
 
 
 def test_original_week6_shape_verified_and_deterministic():
@@ -216,7 +224,6 @@ def test_checkpoint_complete_slate_and_replay_contract(tmp_path, sources):
 def test_preprovider_reports_blocked_stage_without_provider(tmp_path, monkeypatch, capsys):
     import importlib.util
     import sys
-    from pathlib import Path
 
     path = Path(__file__).resolve().parents[2] / 'scripts/verify_live_2026_preprovider_v1.py'
     spec = importlib.util.spec_from_file_location('week7_preprovider_test', path)
@@ -274,7 +281,6 @@ def test_replay_preserves_retractable_structure_and_fresh_actual_position(tmp_pa
 
 
 def test_checkpoint_keeps_week5_provenance_order(tmp_path):
-    from nfl_edge.live.historical_schedule_2026 import checkpoint
     from nfl_edge.live.week5_surface_evidence_2026 import IDENTITY_FIELDS, load_surface_evidence
 
     source = [{**{k: r[k] for k in IDENTITY_FIELDS}, 'surface': '', 'roof': 'outdoors',
@@ -289,3 +295,191 @@ def test_checkpoint_keeps_week5_provenance_order(tmp_path):
         'schema_version': ev.EVIDENCE_SCHEMA, 'season': 2026, 'active_week': 6,
         'through_week': 5, 'schedule_checkpoints': {'5': ref}}))
     assert reuse(tmp_path, list(reversed(source)), 5)['schedule'] == payload
+
+
+@pytest.fixture(autouse=True)
+def verification_clock(monkeypatch):
+    class VerificationClock(datetime):
+        @classmethod
+        def now(cls, tz=timezone.utc):
+            return cls.fromisoformat("2026-11-26T00:00:00Z").astimezone(tz)
+
+    monkeypatch.setattr(verification, "datetime", VerificationClock)
+
+def pin(root, archived, week):
+    schedule = build_week_schedule(archived, season=2026, week=week, observed_at_utc=NOW)
+    bundle = checkpoint(archived, schedule)
+    ref = sha(bundle)
+    directory = root / "schedule_checkpoints"
+    directory.mkdir()
+    path = directory / f"{ref}.json"
+    path.write_text(json.dumps(bundle))
+    (root / "settled_evidence_manifest.json").write_text(json.dumps({
+        "schema_version": ev.EVIDENCE_SCHEMA, "season": 2026,
+        "active_week": week, "schedule_checkpoints": {str(week): ref},
+    }))
+    return bundle, path
+
+
+def espn_game(away="SEA", home="DEN", kickoff="2026-10-01T17:00:00Z"):
+    return {"id": "12345", "date": kickoff, "competitions": [{
+        "id": "12345", "date": kickoff, "competitors": [
+            {"homeAway": "away", "team": {"abbreviation": away}},
+            {"homeAway": "home", "team": {"abbreviation": home}},
+        ],
+    }]}
+
+
+def capture(*events):
+    return json.dumps({"events": list(events)}).encode(), "2026-10-21T12:10:00Z"
+
+
+def forbidden(*args):
+    pytest.fail("verification must work without a network request")
+
+
+def test_real_espn_capture_with_synthetic_week11_checkpoint(tmp_path):
+    archived = {**rows()[0], "week": "11", "game_id": "2026_11_JAX_NYG",
+                "away_team": "JAX", "home_team": "NYG", "gameday": "2026-11-22",
+                "gametime": "13:00"}
+    bundle, path = pin(tmp_path, [archived], 11)
+    original = path.read_bytes()
+    incoming = [{**archived, "gametime": "16:25"}]
+    with pytest.raises(HistoricalScheduleError, match="missing persisted ESPN"):
+        reuse(tmp_path, incoming, 11)
+    fixture = Path(__file__).resolve().parents[1] / "fixtures/espn_nfl_2026-11-22.json.gz"
+    # The trusted acquisition clock here is a synthetic test input.
+    def acquire(url):
+        assert url == verification.espn_week_url(2026, 11)
+        return gzip.decompress(fixture.read_bytes()), "2026-11-25T22:00:00Z"
+
+    audit = []
+    assert reuse(tmp_path, incoming, 11, acquire_espn=acquire, kickoff_audit=audit) == bundle
+    assert path.read_bytes() == original
+    assert audit[0]["espn_event_id"] == "401873069"
+    assert audit[0]["selector_eligibility_cutoff_utc"] == "2026-11-22T18:00:00Z"
+    assert not audit[0]["verified_before_original_kickoff"]
+    assert not audit[0]["verified_before_corrected_kickoff"]
+    assert datetime.fromisoformat(audit[0]["verified_at_utc"]) >= datetime.fromisoformat("2026-11-25T22:00:00Z")
+    repeated = []
+    assert reuse(tmp_path, incoming, 11, acquire_espn=forbidden, kickoff_audit=repeated) == bundle
+    assert repeated == audit
+
+
+def test_active_capture_reused_for_historical_checkpoint(tmp_path, monkeypatch):
+    bundle, _ = pin(tmp_path, rows(), 4)
+    incoming = rows()
+    incoming[3]["gametime"] = "13:00"
+    other_schedule = build_week_schedule(rows(), season=2026, week=4, observed_at_utc="2026-10-01T08:00:00Z")
+    monkeypatch.setattr(verification, "acquire_espn_evidence", lambda _: capture(espn_game(), {}))
+    odds = [{"id": "synthetic-odds", "away_team": "SEA", "home_team": "DEN", "commence_time": "2026-10-01T17:00:00Z"}]
+    revised, report = verification.reconcile_market_kickoffs(other_schedule, odds, live=True, evidence_root=tmp_path)
+    assert revised["games"][0]["scheduled_start_utc"] == "2026-10-01T17:00:00Z"
+    audit = []
+    assert reuse(tmp_path, incoming, 4, acquire_espn=forbidden, kickoff_audit=audit) == bundle
+    assert audit[0]["record_sha256"] == report["discrepancies"][0]["verification_record_sha256"]
+
+
+@pytest.mark.parametrize("fault, diagnostic", [
+    ("wrong_time", "does not confirm"),
+    ("wrong_date", "does not confirm"),
+    ("wrong_home", "no matching event"),
+    ("wrong_away", "no matching event"),
+    ("duplicate", "duplicate ESPN"),
+    ("reversed", "orientation"),
+    ("missing", "no matching event"),
+    ("timeout", "timed out"),
+    ("malformed", "Expecting value"),
+])
+def test_bad_espn_evidence_rejects(tmp_path, fault, diagnostic):
+    pin(tmp_path, rows(), 4)
+    incoming = rows()
+    incoming[3]["gametime"] = "13:00"
+    events = {
+        "wrong_time": [espn_game(kickoff="2026-10-01T17:15:00Z")],
+        "wrong_date": [espn_game(kickoff="2026-10-02T17:00:00Z")],
+        "wrong_home": [espn_game(home="KC")],
+        "wrong_away": [espn_game(away="ARI")],
+        "duplicate": [espn_game(), espn_game()],
+        "reversed": [espn_game(away="DEN", home="SEA")],
+        "missing": [],
+    }
+
+    def acquire(_):
+        if fault == "timeout":
+            raise requests.Timeout("timed out")
+        if fault == "malformed":
+            return b"invalid JSON", NOW
+        return capture(*events[fault])
+
+    with pytest.raises(HistoricalScheduleError, match=diagnostic):
+        reuse(tmp_path, incoming, 4, acquire_espn=acquire)
+    assert not (tmp_path / "kickoff_reconciliations").exists()
+
+
+def test_unrelated_context_and_checkpoint_validated_before_verification(tmp_path):
+    bundle, path = pin(tmp_path, rows(), 4)
+    incoming = rows()
+    assert reuse(tmp_path, incoming, 4, acquire_espn=forbidden) == bundle
+    incoming[3].update(gametime="13:00", away_rest="4")
+    with pytest.raises(HistoricalScheduleError, match="field=away_rest"):
+        reuse(tmp_path, incoming, 4, acquire_espn=forbidden)
+    path.write_text("{}")
+    with pytest.raises(HistoricalScheduleError, match="integrity/provenance"):
+        reuse(tmp_path, incoming, 4, acquire_espn=forbidden)
+
+
+def test_materialization_pins_evidence_and_rejects_tampering(tmp_path, monkeypatch, sources):
+    calls = []
+    monkeypatch.setattr(ev, "acquire_espn_evidence", lambda url: calls.append(url) or capture({}, espn_game()))
+    kwargs = {"output_dir": tmp_path, "active_as_of_utc": NOW}
+    first = ev.materialize_settled_evidence(schedule_rows=rows(), **kwargs)
+    incoming = rows()
+    incoming[3]["gametime"] = "13:00"
+    second = ev.materialize_settled_evidence(schedule_rows=incoming, **kwargs)
+    third = ev.materialize_settled_evidence(schedule_rows=rows(), **kwargs)
+    assert len(calls) == 1 and second.manifest == third.manifest
+    assert first.manifest["schedule_checkpoints"] == second.manifest["schedule_checkpoints"]
+    manifest = tmp_path / "settled_evidence_manifest.json"
+    before = manifest.read_bytes()
+    incoming[3]["gametime"] = "13:15"
+    with pytest.raises(ev.SettledEvidenceError, match="conflicting corrected kickoff"):
+        ev.materialize_settled_evidence(schedule_rows=incoming, **kwargs)
+    assert manifest.read_bytes() == before
+    path, = (tmp_path / "kickoff_reconciliations").glob("*.json")
+    envelope = json.loads(path.read_bytes())
+    envelope["record"]["espn"]["event_id"] = "12346"
+    # Even with a recomputed envelope hash, the actual capture must match.
+    envelope["sha256"] = verification._digest(envelope["record"])
+    path.write_text(json.dumps(envelope))
+    with pytest.raises(ev.SettledEvidenceError, match="HISTORICAL_REPLAY_INTEGRITY.*ESPN provenance"):
+        ev.load_settled_evidence(tmp_path)
+
+
+@pytest.mark.parametrize("recorded_kickoff", ["18:00", "21:25"])
+def test_selector_window_only_shrinks(tmp_path, recorded_kickoff):
+    gid = "2026_11_JAX_NYG"
+    proof = {"selector_evidence": {
+        "schema_version": "NFL_EDGE_LIVE_SELECTOR_EVIDENCE_V1",
+        "week": 11,
+        "games": [{"game_id": gid, "kickoff_at_utc": f"2026-11-22T{recorded_kickoff}:00Z"}],
+        "rows": [{"game_id": gid, "line": 3.5}],
+        "captured_at_utc": "2026-11-22T18:00:00Z",
+    }}
+    late = tmp_path / "late/product/deterministic-proof.json"
+    early = tmp_path / "early/product/deterministic-proof.json"
+    early_proof = deepcopy(proof)
+    early_proof["selector_evidence"]["captured_at_utc"] = "2026-11-22T17:59:59Z"
+    early_proof["selector_evidence"]["rows"][0]["line"] = 2.5
+    args = {"run_root": tmp_path, "week": 11, "required_game_ids": {gid},
+            "kickoff_cutoffs": {gid: datetime.fromisoformat("2026-11-22T18:00:00Z")}}
+    with pytest.raises(Entering2026ProductStateError, match="missing.*selector evidence|missing selector coverage"):
+        _final_pregame_selector_rows(successful_proofs=[(late, proof)], **args)
+    selected = {}
+    excluded = {}
+    picked = _final_pregame_selector_rows(
+        successful_proofs=[(late, proof), (early, early_proof)], selected_runs=selected,
+        cutoff_rejections=excluded, **args,
+    )
+    assert picked[0]["line"] == 2.5 and selected == {gid: "early"}
+    assert excluded == ({gid: {"late"}} if recorded_kickoff == "21:25" else {})

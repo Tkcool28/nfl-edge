@@ -14,6 +14,7 @@ import tempfile
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -43,6 +44,7 @@ from nfl_edge.live.schedule_materializer_2026 import (
     choose_active_schedule,
     fetch_nflverse_rows,
 )
+from nfl_edge.live.schedule_verification_2026 import acquire_espn_evidence
 
 PLAYER_STATS_URL = (
     "https://github.com/nflverse/nflverse-data/releases/download/stats_player/stats_player_week_2026.parquet"
@@ -406,6 +408,7 @@ def _materialize_settled_evidence(
     active_as_of_utc: str | None = None,
     session: requests.Session | None = None,
     schedule_rows: list[Mapping[str, Any]] | None = None,
+    verify_historical_kickoffs: bool = True,
 ) -> SettledSeasonEvidence:
     observed = _now()
     active_as_of = active_as_of_utc or observed
@@ -429,18 +432,24 @@ def _materialize_settled_evidence(
     schedules = {}
     bundles = {active_week: checkpoint(rows, active)}
     decisions = []
+    # One bounded request per distinct disputed historical week per materialization.
+    acquire_espn = lru_cache(maxsize=17)(acquire_espn_evidence) if verify_historical_kickoffs else None
     # Publish the strictly validated active schedule independently. No evaluator
     # may proceed without the separate complete settled-evidence/state gates.
     _write_json_atomic(root / f"week{active_week}_schedule_v1.json", active)
     schedules[active_week] = active
     for week in range(1, active_week):
         try:
-            bundle = reuse(root, rows, week)
+            kickoff_audit = []
+            bundle = reuse(root, rows, week, acquire_espn=acquire_espn, kickoff_audit=kickoff_audit)
             if bundle is None:
                 try:
                     payload = build_week_schedule(rows, season=2026, week=week, observed_at_utc=observed)
                 except ScheduleMaterializationError:
-                    bundle = reuse(root, rows, week, allow_reviewed=True)
+                    bundle = reuse(
+                        root, rows, week, allow_reviewed=True,
+                        acquire_espn=acquire_espn, kickoff_audit=kickoff_audit,
+                    )
                     if bundle is None:
                         raise
                     payload = bundle["schedule"]
@@ -459,6 +468,8 @@ def _materialize_settled_evidence(
         schedules[week] = payload
         bundles[week] = bundle
         decisions.append({"week": week, "decision": decision, "checkpoint_sha256": checkpoint_sha(bundle)})
+        if kickoff_audit:
+            decisions[-1]["kickoff_reconciliations"] = kickoff_audit
         _write_json_atomic(root / f"week{week}_schedule_v1.json", payload)
     for payload in schedules.values():
         surface_recoveries.extend(payload.get("surface_recovery", []))
@@ -591,6 +602,7 @@ def materialize_settled_evidence(
     active_as_of_utc: str | None = None,
     session: requests.Session | None = None,
     schedule_rows: list[Mapping[str, Any]] | None = None,
+    verify_historical_kickoffs: bool = True,
 ) -> SettledSeasonEvidence:
     root = Path(output_dir)
     with _evidence_lock(root, exclusive=True):
@@ -599,6 +611,7 @@ def materialize_settled_evidence(
             active_as_of_utc=active_as_of_utc,
             session=session,
             schedule_rows=schedule_rows,
+            verify_historical_kickoffs=verify_historical_kickoffs,
         )
 
 
@@ -613,7 +626,13 @@ def _load_settled_evidence(root: str | Path) -> SettledSeasonEvidence:
     through_week = int(manifest.get("through_week", -1))
     if not 0 <= through_week <= 17:
         raise SettledEvidenceError("settled evidence through_week is invalid")
-    for raw_week, ref in manifest.get("schedule_checkpoints", {}).items():
+    checkpoints = manifest.get("schedule_checkpoints", {})
+    for decision in manifest.get("schedule_recovery_decisions", []):
+        if decision.get("kickoff_reconciliations"):
+            week = decision.get("week")
+            if not isinstance(week, int) or not 1 <= week <= through_week or str(week) not in checkpoints:
+                raise SettledEvidenceError("stage=HISTORICAL_REPLAY_INTEGRITY: unbound kickoff reconciliation week")
+    for raw_week, ref in checkpoints.items():
         week = int(raw_week)
         try:
             bundle_path = base / "schedule_checkpoints" / f"{ref}.json"
