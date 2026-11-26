@@ -820,7 +820,10 @@ def _final_pregame_selector_rows(
 def _successful_selector_proofs(run_root: Path) -> Iterable[tuple[Path, Mapping[str, Any]]]:
     for proof_path in sorted(run_root.glob("*/product/deterministic-proof.json")):
         status_path = proof_path.parents[1] / "run-status.json"
-        if status_path.is_file() and json.loads(status_path.read_bytes()).get("outcome") == "SUCCESS":
+        if not status_path.is_file():
+            continue
+        status = json.loads(status_path.read_bytes())
+        if status.get("outcome") == "SUCCESS" and status.get("execution_mode") != "REPLAY":
             yield proof_path, json.loads(proof_path.read_bytes())
 
 

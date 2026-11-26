@@ -159,3 +159,30 @@ def test_replay_normalization_is_byte_stable():
     first_bytes = json.dumps(first, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
     second_bytes = json.dumps(second, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
     assert first_bytes == second_bytes
+
+
+def test_malformed_successful_response_retains_headers_and_raw_bytes(tmp_path):
+    from nfl_edge.live.markets_2026 import load_capture
+
+    raw = b"not JSON"
+    client = _Session(raw)
+    capture = acquire_live_response(
+        schedule=_schedule(), output_dir=tmp_path, live=True, api_key="test-only",
+        session=client, acquired_at_utc=ACQUIRED,
+    )
+    assert len(client.calls) == 1
+    assert capture.response_path.read_bytes() == raw
+    assert capture.credits_consumed == 3 and capture.credits_remaining == 497
+    with pytest.raises(LiveMarketError, match="not valid JSON"):
+        load_capture(capture.response_path)
+
+
+def test_replayed_sidecar_must_match_retained_bytes(tmp_path):
+    from nfl_edge.live.markets_2026 import load_capture
+
+    capture = tmp_path / "odds.json"
+    capture.write_bytes(_raw())
+    metadata = capture.with_suffix(".meta.json")
+    metadata.write_text(json.dumps({"acquired_at_utc": ACQUIRED, "response_sha256": "0" * 64}))
+    with pytest.raises(LiveMarketError, match="does not match its sidecar"):
+        load_capture(capture)

@@ -71,8 +71,14 @@ def _wire_success(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, calls: list[s
         refresh,
         "acquire_live_response",
         lambda **kwargs: (
-            calls.append("provider")
-            or SimpleNamespace(response_path=tmp_path / "raw.json", metadata_path=tmp_path / "raw.meta.json")
+            kwargs["on_request"]()
+            or calls.append("provider")
+            or SimpleNamespace(
+                response_path=tmp_path / "raw.json",
+                metadata_path=tmp_path / "raw.meta.json",
+                credits_consumed=3,
+                credits_remaining=97,
+            )
         ),
     )
     (tmp_path / "raw.json").write_text("[]", encoding="utf-8")
@@ -258,6 +264,10 @@ def test_saved_response_replay_never_calls_provider(monkeypatch: pytest.MonkeyPa
     assert outcome is refresh.RefreshOutcome.SUCCESS
     assert "provider" not in calls
     assert summary["provider_request_count"] == 0
+    assert summary["credits_consumed"] == 0
+    assert summary["credits_remaining"] is None
+    assert summary["capture_credits_consumed"] == 3
+    assert summary["capture_credits_remaining"] == 97
 
 
 def test_missing_active_week_fails_before_sleeper_or_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -331,7 +341,9 @@ def test_provider_failure_is_one_attempt_and_never_publishes(monkeypatch: pytest
     monkeypatch.setattr(
         refresh,
         "acquire_live_response",
-        lambda **kwargs: calls.append("provider") or (_ for _ in ()).throw(RuntimeError("HTTP 500")),
+        lambda **kwargs: (
+            kwargs["on_request"]() or calls.append("provider") or (_ for _ in ()).throw(RuntimeError("HTTP 500"))
+        ),
     )
 
     outcome, summary = refresh.run_refresh(_config(tmp_path))
@@ -647,6 +659,10 @@ def test_odds_kickoff_disagreement_checks_espn_after_single_pull(monkeypatch, tm
     config = _config(tmp_path)
     outcome, summary = refresh.run_refresh(config)
     assert summary["provider_request_count"] == 1
+    assert summary["credits_consumed"] == 3
+    assert summary["credits_remaining"] == 97
+    assert summary["credits_consumed"] == 3
+    assert summary["credits_remaining"] == 97
     assert calls[:4] == ["sleeper", "score", "provider", "ESPN"]
     assert calls.count("provider") == calls.count("ESPN") == 1
     run_dir = config.run_root / summary["run_id"]
@@ -664,3 +680,76 @@ def test_odds_kickoff_disagreement_checks_espn_after_single_pull(monkeypatch, tm
         assert outcome is refresh.RefreshOutcome.SCHEDULE_NOT_READY
         assert report["status"] == "KICKOFF_UNCONFIRMED"
         assert "publish" not in calls
+
+
+def test_missing_provider_configuration_records_no_request(monkeypatch, tmp_path):
+    acquire = refresh.acquire_live_response
+    calls = []
+    _wire_success(monkeypatch, tmp_path, calls)
+    monkeypatch.setattr(refresh, "acquire_live_response", acquire)
+    monkeypatch.delenv("ODDS_API_KEY", raising=False)
+    outcome, summary = refresh.run_refresh(_config(tmp_path))
+    assert outcome is refresh.RefreshOutcome.MARKET_ACQUISITION_FAILED
+    assert summary["provider_request_count"] == 0
+    assert summary["credits_consumed"] is None
+
+
+def test_replayed_success_is_not_a_native_selector_proof(tmp_path):
+    from nfl_edge.live.product_state_2026 import _successful_selector_proofs
+
+    for mode in ("LIVE", "REPLAY"):
+        root = tmp_path / mode
+        (root / "product").mkdir(parents=True)
+        (root / "run-status.json").write_text(json.dumps({"outcome": "SUCCESS", "execution_mode": mode}))
+        (root / "product/deterministic-proof.json").write_text("{}")
+    assert [path.parents[1].name for path, _ in _successful_selector_proofs(tmp_path)] == ["LIVE"]
+
+
+def test_started_game_replay_reuses_football_and_retains_both_raw_captures(monkeypatch, tmp_path):
+    from dataclasses import replace
+
+    live_load_capture = refresh.load_capture
+    calls = []
+    _wire_success(monkeypatch, tmp_path, calls)
+    schedule, events, scoreboard = kickoff_sources(week_number=1)
+    active = refresh.resolve_active_schedule()
+    active.payload = schedule
+    monkeypatch.setattr(refresh, "resolve_active_schedule", lambda *a, **kw: active)
+    monkeypatch.setattr(refresh, "load_capture", live_load_capture)
+    monkeypatch.setattr(verification, "_espn_scoreboard", lambda *_: pytest.fail("unexpected network"))
+    events[0]["commence_time"] = "2026-11-22T18:15:28Z"
+    events[1]["commence_time"] = "2026-11-22T21:25:00Z"
+
+    espn_file = tmp_path / "saved-espn.json"
+    espn_raw = json.dumps(scoreboard).encode()
+    espn_file.write_bytes(espn_raw)
+    config = replace(
+        _config(tmp_path, live=False), prediction_as_of_utc="2026-11-22T19:00:00Z",
+        espn_response=espn_file,
+    )
+    raw = json.dumps(events).encode()
+    config.market_response.write_bytes(raw)
+    config.market_response.with_suffix(".meta.json").write_text(json.dumps({
+        "acquired_at_utc": "2026-11-22T19:01:00Z", "response_sha256": hashlib.sha256(raw).hexdigest(),
+        "credits_consumed": 3, "credits_remaining": 446,
+    }))
+
+    original_normalizer = refresh.normalize_market_snapshot
+
+    def observe_normalization(**kwargs):
+        assert kwargs["schedule"] is schedule
+        assert len(kwargs["events"]) == 2
+        assert [row["game_id"] for row in kwargs["started_game_exclusions"]] == ["2026_01_JAX_NYG"]
+        return original_normalizer(**kwargs)
+
+    monkeypatch.setattr(refresh, "normalize_market_snapshot", observe_normalization)
+    outcome, summary = refresh.run_refresh(config)
+    assert outcome is refresh.RefreshOutcome.SUCCESS
+    assert calls.count("score") == 1
+    assert summary["schedule_reconciliation_status"] == "STARTED_GAMES_EXCLUDED"
+    assert summary["credits_consumed"] == summary["provider_request_count"] == 0
+    assert summary["capture_credits_consumed"] == 3 and summary["capture_credits_remaining"] == 446
+    run = config.run_root / summary["run_id"]
+    assert (run / "raw" / config.market_response.name).read_bytes() == raw
+    assert (run / "raw/espn-scoreboard.json").read_bytes() == espn_raw
+    assert not (run / "reconciled-schedule.json").exists()

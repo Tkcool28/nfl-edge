@@ -207,7 +207,11 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
         "finished_at_utc": None,
         "outcome": None,
         "provider_request_count": 0,
-        "credits_consumed": None,
+        "credits_consumed": None if config.live else 0,
+        "credits_remaining": None,
+        "capture_credits_consumed": None,
+        "capture_credits_remaining": None,
+        "execution_mode": "LIVE" if config.live else "REPLAY",
         "season": None,
         "week": None,
         "schedule_version": None,
@@ -245,6 +249,9 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
         _atomic_json(run_dir / "run-status.json", summary)
         _atomic_json(config.run_root / "latest-status.json", summary)
         return outcome, summary
+
+    def record_provider_dispatch() -> None:
+        summary["provider_request_count"] = 1
 
     try:
         with _exclusive_lock(config.run_root):
@@ -382,87 +389,81 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
             except Exception as exc:
                 return finish(RefreshOutcome.FOOTBALL_STATE_NOT_READY, exc)
 
-            capture_events: list[dict[str, Any]] | None = None
-            capture_metadata: dict[str, Any] | None = None
-            try:
-                if config.live:
-                    # This is the single live-acquisition seam in one run. It has no
-                    # retry path; record the one bounded attempt even if it fails.
-                    summary["provider_request_count"] = 1
-                    capture = acquire_live_response(schedule=schedule, output_dir=run_dir / "raw", live=True)
-                else:
+            if config.live:
+                try:
+                    # This is the only live request. Quota belongs to the successful
+                    # HTTP response and survives every later parse or pipeline failure.
+                    capture = acquire_live_response(
+                        schedule=schedule, output_dir=run_dir / "raw", live=True, on_request=record_provider_dispatch,
+                    )
+                    summary.update(
+                        credits_consumed=capture.credits_consumed,
+                        credits_remaining=capture.credits_remaining,
+                        capture_credits_consumed=capture.credits_consumed,
+                        capture_credits_remaining=capture.credits_remaining,
+                    )
+                except Exception as exc:
+                    return finish(RefreshOutcome.MARKET_ACQUISITION_FAILED, exc)
+                try:
+                    events, metadata = load_capture(capture.response_path, metadata_path=capture.metadata_path)
+                except Exception as exc:
+                    return finish(RefreshOutcome.MARKET_NORMALIZATION_FAILED, exc)
+                captured_at = metadata["acquired_at_utc"]
+            else:
+                try:
                     assert config.market_response is not None
-                    capture_events, capture_metadata = load_capture(
+                    events, metadata = load_capture(
                         config.market_response,
                         metadata_path=config.market_metadata,
-                        acquired_at_utc=config.prediction_as_of_utc,
+                        fallback_acquired_at_utc=config.prediction_as_of_utc,
                     )
-                    # The CLI as-of override above may have shadowed the saved
-                    # capture timestamp inside load_capture. Restore the original
-                    # saved value: replay market identity is frozen at capture
-                    # time and must never depend on the invocation as-of.
-                    saved_ts = None
-                    if config.market_metadata is not None and Path(config.market_metadata).is_file():
-                        saved_metadata = json.loads(Path(config.market_metadata).read_text(encoding="utf-8"))
-                        saved_ts = str(saved_metadata.get("acquired_at_utc") or "")
-                    if not saved_ts and Path(config.market_response).with_suffix(".meta.json").is_file():
-                        sidecar_metadata = json.loads(
-                            Path(config.market_response).with_suffix(".meta.json").read_text(encoding="utf-8")
-                        )
-                        saved_ts = str(sidecar_metadata.get("acquired_at_utc") or "")
-                    if saved_ts:
-                        capture_metadata["captured_acquired_at_utc"] = saved_ts
-                        capture_metadata["acquired_at_utc"] = saved_ts
+                    captured_at = metadata.get("captured_acquired_at_utc")
+                    summary.update(
+                        capture_credits_consumed=metadata.get("credits_consumed"),
+                        capture_credits_remaining=metadata.get("credits_remaining"),
+                    )
                     raw_copy = run_dir / "raw" / config.market_response.name
                     raw_copy.parent.mkdir(parents=True, exist_ok=True)
                     raw_copy.write_bytes(config.market_response.read_bytes())
-                    metadata_copy = raw_copy.with_suffix(".meta.json")
-                    _atomic_json(metadata_copy, _redact_value(dict(capture_metadata)))
-                    # Reuse the loaded replay below; live capture is handled in the common branch.
-                    capture = None
-            except Exception as exc:
-                return finish(RefreshOutcome.MARKET_ACQUISITION_FAILED, exc)
+                    _atomic_json(raw_copy.with_suffix(".meta.json"), _redact_value(dict(metadata)))
+                except Exception as exc:
+                    return finish(RefreshOutcome.MARKET_ACQUISITION_FAILED, exc)
 
-            try:
-                if capture is None:
-                    if capture_events is None or capture_metadata is None:
-                        raise RuntimeError("replay capture was not loaded")
-                    # Replay must freeze the original capture timestamp: the saved
-                    # metadata acquired_at_utc is the market identity anchor. The
-                    # CLI as-of time must never override it.
-                    events, metadata = capture_events, capture_metadata
-                    original_capture_ts = metadata.get("captured_acquired_at_utc")
-                    if original_capture_ts:
-                        metadata["acquired_at_utc"] = str(original_capture_ts)
-                else:
-                    events, metadata = load_capture(capture.response_path, metadata_path=capture.metadata_path)
-            except Exception as exc:
-                return finish(RefreshOutcome.MARKET_NORMALIZATION_FAILED, exc)
-
+            started_game_exclusions = []
+            schedule_corrected = False
             try:
                 schedule, reconciliation = reconcile_market_kickoffs(
                     schedule, events, live=config.live, espn_response=config.espn_response,
-                    capture_path=(run_dir / "raw" / "espn-scoreboard.json") if config.live else None,
+                    capture_path=(
+                        run_dir / "raw" / "espn-scoreboard.json" if config.live or config.espn_response else None
+                    ),
                     evidence_root=config.evidence_root,
+                    prediction_as_of_utc=config.prediction_as_of_utc,
+                    odds_acquired_at_utc=captured_at,
                 )
                 if reconciliation is not None:
                     reconciliation["odds_response_sha256"] = metadata["response_sha256"]
-                    reconciliation["odds_acquired_at_utc"] = metadata["acquired_at_utc"]
+                    reconciliation["odds_acquired_at_utc"] = captured_at
                     summary["schedule_reconciliation_status"] = reconciliation["status"]
                     _atomic_json(run_dir / "schedule-reconciliation.json", reconciliation)
-                    if reconciliation["status"] != "KICKOFF_CONFIRMED":
+                    if reconciliation["status"] not in {"KICKOFF_CONFIRMED", "STARTED_GAMES_EXCLUDED"}:
                         raise ScheduleVerificationError(
                             f"{reconciliation['status']}: see schedule-reconciliation.json"
                         )
-                    if config.prospective_dir is not None:
-                        require_prospective_kickoff_compatibility(schedule, runtime_root=config.prospective_dir)
-                    schedule_path = (run_dir / "reconciled-schedule.json").resolve()
-                    _atomic_json(schedule_path, schedule)
-                    summary.update(schedule_path=str(schedule_path), schedule_version=schedule["schedule_version"])
+                    started_game_exclusions = reconciliation.get("started_game_exclusions", [])
+                    if started_game_exclusions:
+                        summary["started_game_exclusions"] = started_game_exclusions
+                    schedule_corrected = reconciliation["status"] == "KICKOFF_CONFIRMED"
+                    if schedule_corrected:
+                        if config.prospective_dir is not None:
+                            require_prospective_kickoff_compatibility(schedule, runtime_root=config.prospective_dir)
+                        schedule_path = (run_dir / "reconciled-schedule.json").resolve()
+                        _atomic_json(schedule_path, schedule)
+                        summary.update(schedule_path=str(schedule_path), schedule_version=schedule["schedule_version"])
             except Exception as exc:
                 return finish(RefreshOutcome.SCHEDULE_NOT_READY, exc)
 
-            if reconciliation is not None:
+            if schedule_corrected:
                 try:
                     football = score_schedule(schedule_path, football_path.with_name("reconciled-" + football_path.name))
                 except Exception as exc:
@@ -476,11 +477,11 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                     response_sha256=str(metadata["response_sha256"]),
                     credits_consumed=metadata.get("credits_consumed"),
                     credits_remaining=metadata.get("credits_remaining"),
+                    started_game_exclusions=started_game_exclusions,
                 )
                 market_path = run_dir / "market" / "NFL_EDGE_LIVE_MARKET_V1.json"
                 market_path.parent.mkdir(parents=True, exist_ok=True)
                 market_path.write_bytes(market_snapshot_bytes(market))
-                summary["credits_consumed"] = metadata.get("credits_consumed")
                 summary["market_snapshot_version"] = market.get("market_snapshot_version") or market.get(
                     "snapshot_version"
                 )
@@ -539,6 +540,7 @@ def run_refresh(config: RefreshConfig) -> tuple[RefreshOutcome, dict[str, Any]]:
                         current,
                         runtime_root=config.prospective_dir,
                         published_at_utc=_utc_now(),
+                        capture_mode="NATIVE_PROSPECTIVE" if config.live else "REPO_SIMULATION",
                     )
                     if capture["source_product_sha256"] != summary["product_sha256"]:
                         raise RuntimeError("prospective source product hash did not match published product hash")

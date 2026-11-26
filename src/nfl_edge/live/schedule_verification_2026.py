@@ -17,7 +17,7 @@ from typing import Any
 
 import requests
 
-from .markets_2026 import _normalized_team, _parse_utc
+from .markets_2026 import LiveMarketError, _normalized_team, _parse_utc
 from .nflverse_2026_identity import CANONICAL_TEAMS
 from .schedule_2026 import rollover_at_utc, validate_schedule
 
@@ -317,6 +317,8 @@ def reconcile_market_kickoffs(
     espn_response: Path | None = None,
     capture_path: Path | None = None,
     evidence_root: Path | None = None,
+    prediction_as_of_utc: str | None = None,
+    odds_acquired_at_utc: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any] | None]:
     """Check ESPN only for specific nflverse/Odds kickoff disagreements."""
     discrepancies = _kickoff_disagreements(schedule, events)
@@ -333,27 +335,57 @@ def reconcile_market_kickoffs(
         "espn": {"url": url},
         "discrepancies": discrepancies,
     }
-    if not live and espn_response is None:
+    started = []
+    if prediction_as_of_utc is not None or odds_acquired_at_utc is not None:
+        try:
+            cutoff = _parse_utc(prediction_as_of_utc)
+            acquired = _parse_utc(odds_acquired_at_utc)
+            if acquired < cutoff:
+                raise LiveMarketError("market acquisition precedes prediction as-of")
+        except LiveMarketError as exc:
+            return schedule, {**report, "status": "INVALID_ELIGIBILITY_TIMING", "detail": str(exc)}
+        report["eligibility_cutoff_utc"] = _utc_text(cutoff)
+        report["odds_acquired_at_utc"] = _utc_text(acquired)
+        for row in discrepancies:
+            if max(_parse_utc(row["nflverse_kickoff_utc"]), _parse_utc(row["odds_kickoff_utc"])) <= cutoff:
+                row["disposition"] = "ALREADY_STARTED_EXCLUDED"
+                started.append(row)
+        if started:
+            for row in started:
+                if sum(str(event.get("id")) == row["odds_event_id"] for event in events) != 1:
+                    raise ScheduleVerificationError(f"ambiguous provider event for {row['game_id']}")
+            report["started_game_exclusions"] = [
+                {**row, "eligibility_cutoff_utc": _utc_text(cutoff)} for row in started
+            ]
+    requires_espn = [row for row in discrepancies if row not in started]
+    if not requires_espn and espn_response is None:
+        return schedule, {**report, "status": "STARTED_GAMES_EXCLUDED"}
+    if requires_espn and not live and espn_response is None:
         return schedule, {**report, "status": "ESPN_CAPTURE_REQUIRED"}
     try:
-        if live:
+        if live and requires_espn:
             raw, retrieved = acquire_espn_evidence(url)
             report["espn"]["retrieved_at_utc"] = retrieved
-            if capture_path is not None:
-                capture_path.parent.mkdir(parents=True, exist_ok=True)
-                capture_path.write_bytes(raw)
         else:
             assert espn_response is not None
             with espn_response.open("rb") as handle:
                 raw = handle.read(MAX_RESPONSE_BYTES + 1)
             report["espn"]["saved_response"] = str(espn_response)
+        if len(raw) > MAX_RESPONSE_BYTES:
+            raise ScheduleVerificationError("ESPN response exceeds the byte limit")
+        if capture_path is not None:
+            capture_path.parent.mkdir(parents=True, exist_ok=True)
+            capture_path.write_bytes(raw)
     except (OSError, requests.RequestException, ScheduleVerificationError) as exc:
+        if not requires_espn:
+            report["espn"]["detail"] = str(exc)
+            return schedule, {**report, "status": "STARTED_GAMES_EXCLUDED"}
         return schedule, {**report, "status": "ESPN_UNAVAILABLE", "detail": str(exc)}
     report["espn"]["response_sha256"] = hashlib.sha256(raw).hexdigest()
+    if not requires_espn:
+        return schedule, {**report, "status": "STARTED_GAMES_EXCLUDED"}
     try:
-        if len(raw) > MAX_RESPONSE_BYTES:
-            raise ValueError("ESPN response exceeds the byte limit")
-        disputed_ids = {row["game_id"] for row in discrepancies}
+        disputed_ids = {row["game_id"] for row in requires_espn}
         matchups = {
             (game["away_team"], game["home_team"]): game["game_id"]
             for game in schedule["games"] if game["game_id"] in disputed_ids
@@ -362,15 +394,15 @@ def reconcile_market_kickoffs(
     except (KeyError, TypeError, ValueError, OverflowError) as exc:
         return schedule, {**report, "status": "ESPN_INVALID_RESPONSE", "detail": str(exc)}
 
-    for row in discrepancies:
+    for row in requires_espn:
         espn = secondary.get(row["game_id"], {})
         row["espn_event_id"] = espn.get("event_id")
         row["espn_kickoff_utc"] = espn.get("kickoff_utc")
-    if any(row["espn_kickoff_utc"] != row["odds_kickoff_utc"] for row in discrepancies):
+    if any(row["espn_kickoff_utc"] != row["odds_kickoff_utc"] for row in requires_espn):
         return schedule, {**report, "status": "KICKOFF_UNCONFIRMED"}
 
     revised = deepcopy(schedule)
-    kickoffs = {row["game_id"]: row["odds_kickoff_utc"] for row in discrepancies}
+    kickoffs = {row["game_id"]: row["odds_kickoff_utc"] for row in requires_espn}
     for game in revised["games"]:
         if game["game_id"] in kickoffs:
             game["scheduled_start_utc"] = kickoffs[game["game_id"]]
@@ -383,7 +415,7 @@ def reconcile_market_kickoffs(
     revised = validate_schedule(revised)
     if live and evidence_root is not None:
         verified = _utc_text(datetime.now(timezone.utc))
-        for row in discrepancies:
+        for row in requires_espn:
             gid = row["game_id"]
             context = _context(schedule, gid)
             path = _record_path(evidence_root, context)
