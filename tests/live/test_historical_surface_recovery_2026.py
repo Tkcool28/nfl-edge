@@ -483,3 +483,24 @@ def test_selector_window_only_shrinks(tmp_path, recorded_kickoff):
     )
     assert picked[0]["line"] == 2.5 and selected == {gid: "early"}
     assert excluded == ({gid: {"late"}} if recorded_kickoff == "21:25" else {})
+
+
+def test_unrelated_future_week_can_reconcile_without_a_game_specific_rule(tmp_path):
+    game = {
+        **rows()[0], "game_id": "2026_13_SEA_DEN", "week": "13",
+        "gameday": "2026-12-03", "gametime": "20:15",
+    }
+    bundle, _ = pin(tmp_path, [game], 13)
+
+    def acquire(url):
+        assert url == verification.espn_week_url(2026, 13)
+        event = espn_game(kickoff="2026-12-04T00:00:00Z")
+        return json.dumps({"events": [event]}).encode(), "2026-11-25T22:00:00Z"
+
+    audit = []
+    assert reuse(
+        tmp_path, [{**game, "gametime": "19:00"}], 13, acquire_espn=acquire, kickoff_audit=audit,
+    ) == bundle
+    assert audit[0]["game_id"] == "2026_13_SEA_DEN"
+    assert audit[0]["verified_before_corrected_kickoff"]
+    assert audit[0]["selector_eligibility_cutoff_utc"] == "2026-12-04T00:00:00Z"
