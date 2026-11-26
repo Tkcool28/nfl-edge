@@ -1,277 +1,339 @@
 {
- "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-11-25T13:20:44Z",
- "research_generated_at_utc": "2026-11-25T13:20:44Z",
  "article": {
+  "dek": "Parsons is active for his debut, Jacobs and Franklin are out, Walker is out for Thursday — and the evening board still hasn't flipped to Week 12, so Check is how you get a verdict on your book's number.",
+  "edition": "Evening Brief",
+  "published_at_utc": "2026-11-26T01:12:22Z",
+  "research_generated_at_utc": "2026-11-26T01:12:22Z",
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "published_at_utc": "2026-11-25T13:20:44Z",
-  "edition": "Morning Brief",
-  "title": "NFL EDGE Wednesday Morning Brief",
-  "dek": "Parsons is set to make his season debut tonight, the morning board still hasn't flipped to Week 12, and there are no cards yet — Check is how you get a verdict on your book's number.",
-  "research_generated_at_utc": "2026-11-25T13:20:44Z",
   "sections": [
    {
-    "id": "what-matters",
     "icon": "📰",
-    "title": "What Matters Today",
+    "id": "what-matters",
     "items": [
      {
-      "headline": "Parsons is set to debut tonight against the Rams",
-      "paragraphs": [
-       "Green Bay activated Micah Parsons from the physically unable to perform list on Tuesday. He is medically cleared after ACL surgery and expected to make his season debut Wednesday night at the Rams, 8:00 p.m. ET kickoff at SoFi Stadium.",
-       "He is officially questionable and likely on a snap count after 11 months out, so expect a limited role, not a full night. Inactives land about 90 minutes before kickoff."
-      ],
-      "takeaway": "Parsons is activated, cleared, and expected to play tonight, officially questionable and likely on a snap count.",
       "evidence_ids": [
-       "ev-parsons"
+       "ev-inactives"
+      ],
+      "headline": "Parsons is active — his debut is tonight",
+      "paragraphs": [
+       "Micah Parsons is officially active for Green Bay, so his season debut is happening tonight against the Rams at SoFi Stadium, 8:00 p.m. ET kickoff. The Packers activated him from the physically unable to perform list on Tuesday after he was medically cleared following ACL surgery.",
+       "He has not played in 11 months, so expect a limited role, not a full night. A snap count is the likely plan for his first game back."
+      ],
+      "sources": [
+       {
+        "label": "Packers.com inactives",
+        "url": "https://www.packers.com/news/packers-rams-week-12-inactives-nov-25-2026"
+       },
+       {
+        "label": "NBC Sports",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/josh-jacobs-inactive-for-wednesday-nights-game-micah-parsons-officially-active"
+       }
+      ],
+      "takeaway": "Parsons is officially active and making his season debut tonight, likely on a snap count after 11 months out."
+     },
+     {
+      "evidence_ids": [
+       "ev-inactives"
+      ],
+      "headline": "Jacobs is out, and Franklin is a surprise scratch",
+      "paragraphs": [
+       "Josh Jacobs is inactive tonight, as expected. He is only 12 days removed from surgery to repair a broken finger, and Kaleb Johnson leads the backfield in his place.",
+       "The surprise is linebacker Zaire Franklin. He practiced all week and looked set to return after four games out, but the Packers made him inactive with a shin injury, so he misses a fifth straight game. On the good side for Green Bay, center Sean Rhyan and guard Kevin Zeitler are both active after missing time.",
+       "The Rams had no surprises. Guard Steve Avila and center Coleman Shelton are out, as ruled out earlier in the week, along with tight end Terrance Ferguson. Puka Nacua and Davante Adams stay on injured reserve."
+      ],
+      "sources": [
+       {
+        "label": "Packers.com inactives",
+        "url": "https://www.packers.com/news/packers-rams-week-12-inactives-nov-25-2026"
+       },
+       {
+        "label": "Packers Wire",
+        "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/11/25/one-surprise-among-packers-inactives-vs-rams/92965492007/"
+       }
+      ],
+      "takeaway": "Jacobs is out as expected and Kaleb Johnson leads the backfield. Franklin is a surprise scratch for a fifth straight game, while Rhyan and Zeitler are back. The Rams are out Avila and Shelton, as expected."
+     },
+     {
+      "evidence_ids": [
+       "ev-thursday"
+      ],
+      "headline": "Thursday flips: Walker is out, Ferguson is out",
+      "paragraphs": [
+       "Kenneth Walker III is ruled out for Thursday night at Buffalo. That reverses the morning read — he practiced Tuesday and looked to be trending back, but the Chiefs ruled him out with a groin injury for a third straight game. Rookie Emmett Johnson starts again after back-to-back 100-yard games.",
+       "Dallas tight end Jake Ferguson is ruled out for Thursday against Philadelphia with knee and ankle injuries. That is a third straight missed game for him. The good news for Dallas is Dak Prescott was removed from the injury report and is healthy for Thursday.",
+       "Joe Milton III starts again Thursday for Philadelphia with Jalen Hurts out for the season. Kansas City also ruled out tackle Jaylon Moore, and tight end Noah Gray is questionable."
       ],
       "sources": [
        {
         "label": "Reuters",
-        "url": "https://www.reuters.com/sports/packers-activate-micah-parsons-ahead-thanksgiving-eve-game--flm-2026-11-25/"
+        "url": "https://www.reuters.com/sports/chiefs-rb-kenneth-walker-iii-groin-out-vs-bills--flm-2026-11-25/"
        },
        {
-        "label": "Packers Wire",
-        "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/11/24/micah-parsons-back-activated-to-roster-rams-week-12/92946121007/"
+        "label": "Rotoballer",
+        "url": "https://www.rotoballer.com/player-news/kenneth-walker-out-vs-bills-on-thursday/2004168"
        }
-      ]
+      ],
+      "takeaway": "Walker is out for Thursday after all, and Johnson starts again. Ferguson is out for Dallas, Prescott is healthy, and Milton starts again for Philadelphia."
      },
      {
-      "headline": "Final injury picture for tonight: Jacobs unlikely, Rams' line thin",
-      "paragraphs": [
-       "Josh Jacobs is questionable with a fractured finger and still not expected to play. He had surgery less than two weeks ago, and Kaleb Johnson would lead the backfield if he sits.",
-       "The Rams ruled out two starting offensive linemen, Steve Avila and Coleman Shelton, plus tight end Terrance Ferguson. Puka Nacua and Davante Adams stay on injured reserve. On the better side for Green Bay, linebacker Zaire Franklin is expected back after missing four games.",
-       "For Thursday: Kenneth Walker III practiced Tuesday and is trending back for Kansas City, Jake Ferguson is doubtful for Dallas, and Joe Milton III starts again for Philadelphia with Jalen Hurts out for the season."
-      ],
-      "takeaway": "Jacobs is questionable but still not expected to play tonight. The Rams are down two starting linemen. Walker is trending back for Thursday; Ferguson is doubtful; Milton starts again Thursday for Philadelphia.",
-      "evidence_ids": [
-       "ev-injuries"
-      ],
-      "sources": [
-       {
-        "label": "DraftKings Network injury report",
-        "url": "https://dknetwork.draftkings.com/2026/11/24/nfl-injury-report-week-12/"
-       },
-       {
-        "label": "Packers Wire final injury report",
-        "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/11/24/breaking-down-packers-final-injury-report-of-week-12-vs-rams/92946551007/"
-       }
-      ]
-     },
-     {
-      "headline": "Rain and wind still on for Thursday night in Buffalo",
-      "paragraphs": [
-       "Kansas City at Buffalo, Thursday night, 8:20 p.m. ET at Highmark Stadium: rain likely through the day and night, near 39 degrees, wind around 18 mph from the east-northeast.",
-       "The other three games this week are indoors: Rams-Packers at SoFi Stadium, Bears-Lions at Ford Field, and Eagles-Cowboys at AT&T Stadium."
-      ],
-      "takeaway": "Thursday night in Buffalo: rain likely all day and night, near 39 degrees, wind around 18 mph from the east-northeast. The Rams-Packers, Bears-Lions and Eagles-Cowboys games are all indoors.",
       "evidence_ids": [
        "ev-weather"
       ],
+      "headline": "Rain and wind still on for Thursday night in Buffalo",
+      "paragraphs": [
+       "Kansas City at Buffalo, Thursday night, 8:20 p.m. ET at Highmark Stadium: rain likely through the day and night, near 37 to 39 degrees, wind around 18 to 19 mph.",
+       "The other three games this week are indoors: Rams-Packers at SoFi Stadium, Bears-Lions at Ford Field, and Eagles-Cowboys at AT&T Stadium."
+      ],
       "sources": [
+       {
+        "label": "Heavy",
+        "url": "https://heavy.com/sports/nfl/kansas-city-chiefs/chiefs-bills-final-injury-report-thanksgiving/"
+       },
        {
         "label": "weather.com Orchard Park",
         "url": "https://weather.com/us/ny/city/orchard-park/tenday"
        }
-      ]
+      ],
+      "takeaway": "Thursday night in Buffalo: rain likely all day and night, near 37 to 39 degrees, wind around 18 to 19 mph. The Rams-Packers, Bears-Lions and Eagles-Cowboys games are all indoors."
      }
-    ]
+    ],
+    "title": "What Matters Today"
    },
    {
-    "id": "what-it-means",
     "icon": "💡",
-    "title": "What It Means for NFL EDGE",
+    "id": "what-it-means",
     "items": [
      {
-      "headline": "The morning board still hasn't flipped to Week 12 — no cards yet",
-      "paragraphs": [
-       "The board still shows Week 11 this morning, with all three headline cards — Hit Rate, Balanced, and Value — showing no play. That means no Week 12 cards to read yet, and no model numbers for tonight's game in the app.",
-       "Check the evening board for the first Week 12 lines. Meanwhile, the way to get a verdict on your book's number is Check: type in your book's line and price and the app runs it back through the model and evaluator."
-      ],
-      "takeaway": "No Week 12 cards this morning because the board still shows Week 11 with empty headline cards. Check the evening board, and use Check on your own book's numbers in the meantime.",
       "evidence_ids": [
        "ev-board"
+      ],
+      "headline": "The evening board still hasn't flipped to Week 12 — no cards yet",
+      "paragraphs": [
+       "The board still shows Week 11 tonight, with all three headline cards — Hit Rate, Balanced, and Value — showing no play. Tonight's Packers-Rams game is not on the board at all, so there are no model numbers for tonight or for Thursday in the app.",
+       "Check the morning board for the first Week 12 lines. Meanwhile, the way to get a verdict on your book's number is Check: type in your book's line and price and the app runs it back through the model and evaluator."
       ],
       "sources": [
        {
         "label": "NFL EDGE product/latest",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
-      ]
+      ],
+      "takeaway": "No Week 12 cards tonight because the board still shows Week 11 with empty headline cards, and tonight's game isn't on it at all. Check the morning board, and use Check on your own book's numbers in the meantime."
      },
      {
-      "headline": "The board doesn't know about Parsons yet — your book might",
-      "paragraphs": [
-       "The app's numbers were built before Tuesday's news, so they don't reflect Parsons' return. Your book's line already has: the Rams have moved from -3.5 to -2.5 toward Green Bay.",
-       "That gap is exactly what Check is for. Put your book's price in and let the app re-evaluate it instead of guessing whether the move went too far."
-      ],
-      "takeaway": "The app has not picked up today's news yet, so a line at your book may already reflect it. Run your book's number through Check rather than waiting for the board to catch up.",
       "evidence_ids": [
        "ev-board",
-       "ev-parsons",
        "ev-lines"
       ],
+      "headline": "The board doesn't know about tonight's inactives yet — your book might",
+      "paragraphs": [
+       "The app's numbers were built before today's news, so they don't reflect Parsons' return, Jacobs being out, or Franklin's surprise scratch. Your book's line already has: the Rams have moved from -3.5 to -2.5 toward Green Bay.",
+       "That gap is exactly what Check is for. Put your book's price in and let the app re-evaluate it instead of guessing whether the move went too far."
+      ],
       "sources": [
        {
         "label": "NFL EDGE product/latest",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        },
        {
-        "label": "Reuters",
-        "url": "https://www.reuters.com/sports/packers-activate-micah-parsons-ahead-thanksgiving-eve-game--flm-2026-11-25/"
-       },
-       {
-        "label": "Tony's Picks",
-        "url": "https://www.tonyspicks.com/2026/11/23/packers-vs-rams-prediction-picks-11-25-26/"
+        "label": "OddsChecker",
+        "url": "https://www.oddschecker.com/us/picks-parlays/football/nfl/20261125-packers-vs-rams-prediction-betting-pick-latest-nfl-week-12-odds-for-netflix-thanksgiving-eve-game"
        }
-      ]
+      ],
+      "takeaway": "The app has not picked up today's news yet, so a line at your book may already reflect it. Run your book's number through Check rather than waiting for the board to catch up."
      }
-    ]
+    ],
+    "title": "What It Means for NFL EDGE"
    },
    {
-    "id": "fade",
     "icon": "⚖️",
-    "title": "Learn the Game",
-    "mode": "learning",
+    "id": "fade",
     "items": [
      {
-      "headline": "Juice: the price of placing the bet",
-      "paragraphs": [
-       "Juice — also called vig — is the small fee baked into the odds. When you see -110, that number is the juice: you risk $1.10 to win $1. The book keeps the extra 10 cents on the losing side, which is how it makes money win or lose.",
-       "Hypothetical example: you bet on two teams at -110 and split them, one win and one loss. You staked $1.10 on each, so you put $2.20 down and got $2.10 back — a 10-cent loss even though you went 1-1. That is the juice doing its job."
-      ],
-      "takeaway": "A 1-1 day at -110 still loses money, so the price you pay matters as much as the team you pick.",
       "editorial_only": true,
       "evidence_ids": [],
-      "sources": []
+      "headline": "Handle: the money, not just the bets",
+      "paragraphs": [
+       "Handle is the total money wagered on a side. It is different from the ticket count, which just counts how many bets were placed. A side can have fewer tickets but more handle, which means the average bet on that side is bigger.",
+       "Hypothetical example: imagine 100 tickets on the favorite and 100 tickets on the underdog, an even split by tickets. But the favorite's tickets add up to $1,000 while the underdog's add up to $4,000. Same number of bets, very different handle — the underdog is drawing the bigger money, even though the crowd looks evenly split."
+      ],
+      "sources": [],
+      "takeaway": "Tickets count heads, handle counts dollars — when the two disagree, the money side is usually the one drawing the bigger bets."
      }
-    ]
+    ],
+    "mode": "learning",
+    "title": "Learn the Game"
    },
    {
-    "id": "market-watch",
     "icon": "👀",
-    "title": "Line Movement",
+    "id": "market-watch",
     "items": [
      {
-      "headline": "No Week 12 lines in the app yet — but the wider market has moved on Packers-Rams",
-      "paragraphs": [
-       "The app still shows Week 11, so there is no app-tracked Week 12 movement to report. The wider market has moved on tonight's game: one tracker reports the Rams opened -3.5 and now sit at -2.5, a move toward Green Bay that lines up with Parsons' return being priced in.",
-       "DraftKings now lists the Rams at -2.5. That is reported movement, not an app verdict — the app has no Week 12 numbers yet, so run your book's price through Check before you decide what it's worth."
-      ],
-      "takeaway": "No app-tracked Week 12 movement yet, but one tracker reports Rams-Packers moved from -3.5 to -2.5 toward Green Bay, and DraftKings now lists -2.5. That is reported movement, not an app verdict — run your book's number through Check.",
       "evidence_ids": [
        "ev-lines",
+       "ev-splits",
        "ev-board"
+      ],
+      "headline": "Rams-Packers held at -2.5, and the total kept sliding",
+      "paragraphs": [
+       "The Rams opened -3.5 and now sit at -2.5, a move toward Green Bay that lines up with Parsons' return being priced in. That number has held through the day: DraftKings still lists the Rams at -2.5 tonight, with the Packers at +116 on the moneyline.",
+       "The total has kept moving down. It opened around 46.5 and now sits at 44.5 at DraftKings, with some books at 43.5. The under was hit early in the week and the number has not come back.",
+       "The app has no Week 12 numbers yet, so none of this movement is app-tracked — it is reported movement from the wider market, and the app has nothing to compare it against until the board flips.",
+       "The betting splits line up with the move rather than fighting it. Most tickets and most of the money are on the same sides — the Rams on the spread, the Packers on the moneyline, the over on the total — so there is no public-versus-sharp split to fade tonight. If your book's number is different from the ones above, run it through Check and let the app give you a verdict on your price."
       ],
       "sources": [
        {
-        "label": "Tony's Picks",
-        "url": "https://www.tonyspicks.com/2026/11/23/packers-vs-rams-prediction-picks-11-25-26/"
+        "label": "OddsChecker",
+        "url": "https://www.oddschecker.com/us/picks-parlays/football/nfl/20261125-packers-vs-rams-prediction-betting-pick-latest-nfl-week-12-odds-for-netflix-thanksgiving-eve-game"
        },
        {
-        "label": "Sports Illustrated",
-        "url": "https://www.si.com/betting/micah-parsons-injury-update-betting-impact-for-packers-vs-rams-in-nfl-week-12-2026"
+        "label": "Covers",
+        "url": "https://www.covers.com/industry/nfl-5-course-thanksgiving-feast-heavy-betting-lions-cowboys-broncos-nov-25-2026"
        },
        {
         "label": "NFL EDGE product/latest",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
        }
-      ]
+      ],
+      "takeaway": "Rams-Packers held at -2.5 after opening -3.5, and the total slid from 46.5 to 44.5. The splits agree with the move, so there is no split to fade — run your book's number through Check."
      }
-    ]
+    ],
+    "title": "Line Movement"
    },
    {
-    "id": "today-tip",
     "icon": "✅",
-    "title": "Today's Tip",
+    "id": "today-tip",
     "items": [
      {
-      "headline": "Tonight's game is a Check game, not a board game",
-      "paragraphs": [
-       "There is no card on the board for Rams-Packers, so don't go looking for one. If your book has a number you like, type it into Check and let the app run it back through the model and evaluator. That is the verdict for tonight.",
-       "Inactives land about 90 minutes before the 8:00 p.m. ET kickoff, so the final word on Jacobs and Parsons comes around 6:30 p.m. ET. Wait for that before you lock anything in."
-      ],
-      "takeaway": "No card on the board tonight, so use Check on your book's number — and wait for inactives about 90 minutes before the 8:00 p.m. ET kickoff before you lock anything in.",
       "editorial_only": true,
       "evidence_ids": [],
-      "sources": []
+      "headline": "Thursday is a Check day — and log tonight honestly",
+      "paragraphs": [
+       "Tonight's game kicked off at 8:00 p.m. ET, so the inactives are final and there is nothing left to wait on there. For Thursday, the final word on who plays comes with inactives about 90 minutes before each kickoff, so check that before you lock anything in.",
+       "If your book has a Thursday number you like, type it into Check and let the app run it back through the model and evaluator. That is the verdict for your price, not a guess.",
+       "One more thing: settlement is manual, and the tracker only works if you are honest with yourself. Log tonight's result either way — the losers too."
+      ],
+      "sources": [],
+      "takeaway": "Tonight is decided, so look to Thursday: wait for inactives about 90 minutes before kickoff, run your book's number through Check, and log tonight's result honestly either way."
      }
-    ]
+    ],
+    "title": "Today's Tip"
    }
-  ]
+  ],
+  "title": "NFL EDGE Wednesday Evening Brief"
  },
  "evidence": [
   {
-   "evidence_id": "ev-parsons",
    "category": "injury",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "Green Bay activated edge rusher Micah Parsons from the physically unable to perform list to the 53-man roster on Tuesday Nov 24, 2026, setting up his season debut Wednesday Nov 25 against the Rams. He is medically cleared after ACL surgery, officially questionable on the final injury report, and expected to play on a limited snap count after 11 months out.",
-   "interpretation": "Parsons' return strengthens Green Bay's pass rush, but a snap count after 11 months out limits how much of the game he can affect.",
+   "evidence_id": "ev-inactives",
+   "fact": "Official Week 12 inactives, Wednesday Nov 25, 2026, Packers at Rams: Micah Parsons is ACTIVE and making his season debut after being activated from the physically unable to perform list on Tuesday Nov 24 following ACL surgery; he is medically cleared after 11 months out. Josh Jacobs (finger) is INACTIVE, 12 days after surgery to repair a broken finger; Kaleb Johnson leads the backfield. LB Zaire Franklin (shin) is INACTIVE, a surprise after practicing all week — he misses a fifth straight game. C Sean Rhyan and G Kevin Zeitler are ACTIVE. Rams: G Steve Avila and C Coleman Shelton are INACTIVE as ruled out earlier in the week, plus TE Terrance Ferguson; Puka Nacua and Davante Adams remain on injured reserve.",
+   "interpretation": "Green Bay gets its star pass rusher back but loses its lead back and a starting linebacker; the Rams are thin on the offensive line and at receiver, as expected.",
    "sources": [
     {
-     "label": "Reuters",
-     "url": "https://www.reuters.com/sports/packers-activate-micah-parsons-ahead-thanksgiving-eve-game--flm-2026-11-25/"
+     "label": "Packers.com inactives",
+     "url": "https://www.packers.com/news/packers-rams-week-12-inactives-nov-25-2026"
+    },
+    {
+     "label": "NBC Sports",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/josh-jacobs-inactive-for-wednesday-nights-game-micah-parsons-officially-active"
     },
     {
      "label": "Packers Wire",
-     "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/11/24/micah-parsons-back-activated-to-roster-rams-week-12/92946121007/"
+     "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/11/25/one-surprise-among-packers-inactives-vs-rams/92965492007/"
     }
-   ]
+   ],
+   "verification": "EXTERNAL_VERIFIED"
   },
   {
-   "evidence_id": "ev-injuries",
    "category": "injury",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "Final Week 12 injury reports, Tuesday Nov 24, 2026: Josh Jacobs (Packers, finger) questionable on the final report, limited in all three practices, still not expected to play Wednesday after finger surgery less than two weeks ago; Kaleb Johnson would lead the backfield if he sits. Rams ruled out G Steve Avila (hamstring), C Coleman Shelton (hamstring) and TE Terrance Ferguson; Puka Nacua and Davante Adams remain on injured reserve. Packers LB Zaire Franklin is expected back after missing four games. Kenneth Walker III (Chiefs, groin) practiced Tuesday and is trending back for Thursday. Jake Ferguson (Cowboys) is doubtful for Thursday. Joe Milton III starts again Thursday for Philadelphia with Jalen Hurts out for the season.",
-   "interpretation": "Green Bay is likely without its lead back but gets its star pass rusher back; the Rams are thin on the offensive line and at receiver.",
+   "evidence_id": "ev-thursday",
+   "fact": "Final Week 12 injury reports for Thursday Nov 26, 2026: Chiefs RB Kenneth Walker III (groin) is ruled OUT vs Buffalo, his third straight missed game, despite practicing Tuesday in a limited capacity; rookie Emmett Johnson starts again after back-to-back 100-yard rushing games. Chiefs also ruled out OT Jaylon Moore (ankle) and DT Omarr Norman-Lott (knee); TE Noah Gray (rib) and DL Peter Woods (neck) are questionable; G Trey Smith carries no designation. Cowboys TE Jake Ferguson (knee, ankle) is ruled OUT vs Philadelphia, his third straight missed game. Cowboys QB Dak Prescott was removed from the injury report and is healthy. Eagles QB Joe Milton III starts again Thursday with Jalen Hurts out for the season.",
+   "interpretation": "Walker's absence reverses the morning's trending-back read; Kansas City leans on Johnson again. Dallas loses a key target but has its quarterback healthy.",
    "sources": [
     {
-     "label": "DraftKings Network injury report",
-     "url": "https://dknetwork.draftkings.com/2026/11/24/nfl-injury-report-week-12/"
+     "label": "Reuters",
+     "url": "https://www.reuters.com/sports/chiefs-rb-kenneth-walker-iii-groin-out-vs-bills--flm-2026-11-25/"
     },
     {
-     "label": "Packers Wire final injury report",
-     "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/11/24/breaking-down-packers-final-injury-report-of-week-12-vs-rams/92946551007/"
+     "label": "Chiefs Wire",
+     "url": "https://chiefswire.usatoday.com/story/sports/nfl/chiefs/2026/11/25/kansas-city-chiefs-officially-rule-out-kenneth-walker-multiple-players-vs-buffalo-bills/92959162007/"
+    },
+    {
+     "label": "Rotoballer",
+     "url": "https://www.rotoballer.com/player-news/kenneth-walker-out-vs-bills-on-thursday/2004168"
     }
-   ]
+   ],
+   "verification": "EXTERNAL_VERIFIED"
   },
   {
-   "evidence_id": "ev-weather",
    "category": "weather",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "Week 12 weather, Thursday Nov 26, 2026: Kansas City at Buffalo, 8:20 p.m. ET, Highmark Stadium (open air): rain expected through day and night, 90% chance during the day, near 39 degrees, wind around 18 mph from the east-northeast. The Rams-Packers, Bears-Lions and Eagles-Cowboys games are all indoors.",
-   "interpretation": "Thursday night in Buffalo is the only outdoor game in the early Week 12 slate, and the weather there is wet and windy.",
+   "evidence_id": "ev-weather",
+   "fact": "Week 12 weather, Thursday Nov 26, 2026: Kansas City at Buffalo, 8:20 p.m. ET, Highmark Stadium (open air): rain expected through the day and night, around 75-90% chance, near 37 to 39 degrees, wind around 18 to 19 mph. The Rams-Packers, Bears-Lions and Eagles-Cowboys games are all indoors.",
+   "interpretation": "Thursday night in Buffalo is the only outdoor game in the early Week 12 slate, and the weather there is wet, cold and windy.",
    "sources": [
+    {
+     "label": "Heavy",
+     "url": "https://heavy.com/sports/nfl/kansas-city-chiefs/chiefs-bills-final-injury-report-thanksgiving/"
+    },
     {
      "label": "weather.com Orchard Park",
      "url": "https://weather.com/us/ny/city/orchard-park/tenday"
     }
-   ]
+   ],
+   "verification": "EXTERNAL_VERIFIED"
   },
   {
-   "evidence_id": "ev-board",
    "category": "board",
-   "verification": "INTERNAL_CANONICAL",
-   "fact": "NFL EDGE product/latest fetched Wednesday Nov 25, 2026 at about 6:16 a.m. Denver, twice: the board still shows Week 11 (product version live-2026-week11-product-v1, generated Nov 24 12:08 UTC). All three headline cards — Hit Rate, Balanced, Value — show NO_PLAY, and the market boards carry Week 11 games only. No Week 12 lines or cards are in the app yet.",
-   "interpretation": "The morning board has not flipped to Week 12, so there are no model numbers or cards for tonight's game in the app yet.",
-   "sources": []
+   "evidence_id": "ev-board",
+   "fact": "NFL EDGE product/latest fetched Wednesday Nov 25, 2026 at 6:08 p.m. Denver and again at 6:11 p.m. Denver (byte-identical): the board still shows Week 11 (product version live-2026-week11-product-v1, generated Nov 24 12:08 UTC). All three headline cards — Hit Rate, Balanced, and Value — show NO_PLAY, and the market boards carry Week 11 games only. Tonight's Packers-Rams game is not on the board at all. No Week 12 lines or cards are in the app yet.",
+   "interpretation": "The evening board has not flipped to Week 12, so there are still no model numbers or cards for tonight's game or Thursday's games in the app yet.",
+   "sources": [],
+   "verification": "INTERNAL_CANONICAL"
   },
   {
-   "evidence_id": "ev-lines",
    "category": "lines",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "One odds tracker reports the Rams-Packers line has moved toward Green Bay since it opened, from Rams -3.5 to Rams -2.5. DraftKings now lists the Rams at -2.5 for Wednesday night. A betting report notes Parsons' impending return helped shift the odds in Green Bay's favor.",
-   "interpretation": "The wider market has already priced Parsons' return into tonight's line; the app has no Week 12 numbers yet to compare it against.",
+   "evidence_id": "ev-lines",
+   "fact": "Rams-Packers line movement, Wednesday Nov 25, 2026: the Rams opened -3.5 and now sit at -2.5, a move toward Green Bay that lines up with Parsons' return being priced in. DraftKings lists the Rams at -2.5 (-110) and the Packers at +2.5 (-109), moneyline Packers +116 / Rams -137. The total opened around 46.5 and has fallen to 44.5 at DraftKings, with some books at 43.5; the under was hit early in the week.",
+   "interpretation": "The wider market has priced Parsons' return into tonight's line and pushed the total down; the app's numbers are the comparison point for whether the move went too far.",
    "sources": [
     {
-     "label": "Tony's Picks",
-     "url": "https://www.tonyspicks.com/2026/11/23/packers-vs-rams-prediction-picks-11-25-26/"
+     "label": "OddsChecker",
+     "url": "https://www.oddschecker.com/us/picks-parlays/football/nfl/20261125-packers-vs-rams-prediction-betting-pick-latest-nfl-week-12-odds-for-netflix-thanksgiving-eve-game"
     },
     {
-     "label": "Sports Illustrated",
-     "url": "https://www.si.com/betting/micah-parsons-injury-update-betting-impact-for-packers-vs-rams-in-nfl-week-12-2026"
+     "label": "Covers",
+     "url": "https://www.covers.com/industry/nfl-5-course-thanksgiving-feast-heavy-betting-lions-cowboys-broncos-nov-25-2026"
+    },
+    {
+     "label": "DraftKings Network",
+     "url": "https://dknetwork.draftkings.com/2026/11/25/packers-at-rams-nfl-player-prop-bets-for-wednesday-11-25-26/"
     }
-   ]
+   ],
+   "verification": "EXTERNAL_VERIFIED"
+  },
+  {
+   "category": "splits",
+   "evidence_id": "ev-splits",
+   "fact": "Betting splits for Packers at Rams, Wednesday Nov 25, 2026, as reported late afternoon ET: VSiN/DraftKings splits show the total drawing 71% of tickets and 62% of handle on the over; the spread has Green Bay at 49% of tickets and 52% of handle. DraftKings spread splits have the Rams at 56-57% of tickets and 53-60% of handle, and Circa money is 80% on the Rams. On the moneyline, the Packers draw 65% of DraftKings tickets and 78% of handle, and Circa money is 85% on the Packers. The free VSiN splits page itself featured a college basketball game, not the NFL game, so the NFL numbers come from reports of the VSiN splits plus DraftKings/Circa trackers. On every market, tickets and handle point the same way — there is no public-versus-sharp disagreement.",
+   "interpretation": "Tickets and handle agree on each market, so no Fade qualifies tonight; the splits line up with the line move rather than fighting it.",
+   "sources": [
+    {
+     "label": "OddsChecker (VSiN splits)",
+     "url": "https://www.oddschecker.com/us/picks-parlays/football/nfl/20261125-packers-vs-rams-prediction-betting-pick-latest-nfl-week-12-odds-for-netflix-thanksgiving-eve-game"
+    },
+    {
+     "label": "WiseGuyTeam splits",
+     "url": "https://wiseguyteam.com/nfl-betting-splits?mk=tot"
+    },
+    {
+     "label": "Covers",
+     "url": "https://www.covers.com/industry/nfl-5-course-thanksgiving-feast-heavy-betting-lions-cowboys-broncos-nov-25-2026"
+    }
+   ],
+   "verification": "EXTERNAL_VERIFIED"
   }
- ]
+ ],
+ "research_generated_at_utc": "2026-11-26T01:12:22Z",
+ "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
+ "submitted_at_utc": "2026-11-26T01:12:22Z"
 }
