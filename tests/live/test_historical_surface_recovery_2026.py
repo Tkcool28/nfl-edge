@@ -3,7 +3,7 @@ from __future__ import annotations
 import gzip
 import json
 from copy import deepcopy
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import polars as pl
@@ -14,12 +14,19 @@ from nfl_edge.features.totals_v1.pbp_semantics import REQUIRED_PBP_COLUMNS
 from nfl_edge.live import evidence_2026 as ev
 from nfl_edge.live import schedule_verification_2026 as verification
 from nfl_edge.live import surface_evidence_2026 as surfaces
-from nfl_edge.live.historical_schedule_2026 import HistoricalScheduleError, checkpoint, reuse, sha
+from nfl_edge.live.historical_schedule_2026 import (
+    SURFACE_RECOVERY_SCHEMA,
+    HistoricalScheduleError,
+    checkpoint,
+    reuse,
+    sha,
+)
 from nfl_edge.live.product_state_2026 import Entering2026ProductStateError, _final_pregame_selector_rows
 from nfl_edge.live.schedule_materializer_2026 import (
     ScheduleMaterializationError,
     build_week_schedule,
     choose_active_schedule,
+    materialize_active_schedule,
 )
 
 NOW = '2026-10-21T12:00:00Z'
@@ -39,11 +46,15 @@ def rows():
 @pytest.fixture
 def sources(monkeypatch):
     monkeypatch.setattr(ev, '_now', lambda: NOW)
+    return stub_settled_sources(monkeypatch, rows(), through_week=6)
+
+
+def stub_settled_sources(monkeypatch, schedule, *, through_week):
     monkeypatch.setattr('requests.sessions.Session.request', lambda *a, **k: pytest.fail('network forbidden'))
-    games = ev._canonical_games(rows(), through_week=6)
+    games = ev._canonical_games(schedule, through_week=through_week)
     team = pl.DataFrame([dict(game_id=g['game_id'], season=2026, week=g['week'], team=t,
                               passing_epa=1., rushing_epa=1., passing_yards=100., rushing_yards=50.)
-                         for g in games.to_dicts() for t in ['SEA', 'DEN']])
+                         for g in games.to_dicts() for t in [g['away_team'], g['home_team']]])
     qb = team.with_columns(pl.lit('QB').alias('position'), pl.col('team').alias('player_id'),
                            pl.lit(20).alias('attempts'), pl.lit(1).alias('sacks_suffered'),
                            pl.lit(0.).alias('passing_cpoe'), pl.lit(0).alias('passing_interceptions'))
@@ -52,7 +63,8 @@ def sources(monkeypatch):
         r = dict.fromkeys(REQUIRED_PBP_COLUMNS, 0)
         r.update(game_id=g['game_id'], season=2026, week=g['week'], qtr=5, play_id=200,
                  game_seconds_remaining=100., total_home_score=17, total_away_score=14,
-                 posteam='SEA', defteam='DEN', home_team='DEN', away_team='SEA')
+                 posteam=g['away_team'], defteam=g['home_team'],
+                 home_team=g['home_team'], away_team=g['away_team'])
         pbp_rows.append(r)
     data = {ev.TEAM_STATS_URL: team, ev.PLAYER_STATS_URL: qb, ev.PBP_URL: pl.DataFrame(pbp_rows)}
     monkeypatch.setattr(ev, '_download_parquet', lambda url, **kw: (data[url], sha(data[url].to_dicts())))
@@ -175,14 +187,175 @@ def test_cached_metadata_does_not_bypass_required_pbp_or_results(tmp_path, sourc
         materialize(tmp_path, source)
 
 
-def test_active_week_cannot_reuse_checkpoint_or_guess_surface(tmp_path, sources):
+def test_active_week_cannot_guess_surface_from_naked_schedule(tmp_path, sources):
     materialize(tmp_path, rows())
+    (tmp_path / 'settled_evidence_manifest.json').unlink()
     old = (tmp_path / 'week7_schedule_v1.json').read_bytes()
     source = rows()
     source[6]['surface'] = ''
     with pytest.raises(ScheduleMaterializationError, match='missing required surface'):
         materialize(tmp_path, source)
     assert (tmp_path / 'week7_schedule_v1.json').read_bytes() == old
+
+
+@pytest.mark.parametrize('active_as_of', ['2026-10-22T23:00:00Z', '2026-10-23T02:00:00Z'])
+def test_active_surface_recovery_only_fills_blank_field(tmp_path, sources, monkeypatch, active_as_of):
+    first = materialize(tmp_path, rows())
+    ref = first.manifest['schedule_checkpoints']['7']
+    original = tmp_path / 'schedule_checkpoints' / f'{ref}.json'
+    original_bytes = original.read_bytes()
+    source = rows()
+    source[-1].update(surface=' ', gametime='20:25', home_rest='8')
+    monkeypatch.setattr(ev, '_now', lambda: active_as_of)
+    result = ev.materialize_settled_evidence(
+        output_dir=tmp_path, schedule_rows=source, active_as_of_utc=active_as_of,
+        verify_historical_kickoffs=False,
+    )
+    schedule = json.loads((tmp_path / 'week7_schedule_v1.json').read_text())
+    accepted = [*source[:-1], {**source[-1], 'surface': 'grass'}]
+    expected = build_week_schedule(accepted, season=2026, week=7, observed_at_utc=active_as_of)
+    report = schedule.pop('surface_recovery')
+    assert schedule == expected
+    assert report == result.manifest['surface_recovery'] == [{
+        'schema_version': SURFACE_RECOVERY_SCHEMA,
+        'source_checkpoint_sha256': ref,
+        'source_observed_at_utc': NOW,
+        'original_surface': ' ',
+        'surface': 'grass',
+        'verified_surface_class': 'grass',
+        'source_identity': {
+            'game_id': '2026_07_SEA_DEN',
+            'gameday': '2026-10-22',
+            'venue': 'Empower Field at Mile High',
+            'venue_id': 'DEN00',
+            'neutral_site': False,
+            'roof_structure': 'OUTDOOR',
+        },
+    }]
+    assert source[-1]['surface'] == ' '
+    assert original.read_bytes() == original_bytes
+
+
+@pytest.mark.parametrize('updates, diagnostic', [
+    ({'stadium_id': 'OTHER'}, 'date/venue context mismatch'),
+    ({'stadium': 'Other stadium'}, 'date/venue context mismatch'),
+    ({'gameday': '2026-10-23'}, 'date/venue context mismatch'),
+    ({'location': 'Neutral'}, 'date/venue context mismatch'),
+    ({'location': ''}, 'missing required location'),
+    ({'roof': 'dome'}, 'date/venue context mismatch'),
+    ({'roof': 'invalid'}, 'unsupported nflverse roof'),
+    ({'away_team': 'KC', 'game_id': '2026_07_KC_DEN'}, 'missing required surface'),
+    ({'game_id': '2026_07_KC_DEN'}, 'matchup identity mismatch'),
+])
+def test_active_surface_rejects_identity_or_context_changes(tmp_path, sources, updates, diagnostic):
+    materialize(tmp_path, rows())
+    original = (tmp_path / 'week7_schedule_v1.json').read_bytes()
+    source = rows()
+    source[-1].update(surface='', **updates)
+    with pytest.raises(ScheduleMaterializationError, match=f'ACTIVE_WEEK_SCHEDULE.*{diagnostic}'):
+        materialize(tmp_path, source)
+    assert (tmp_path / 'week7_schedule_v1.json').read_bytes() == original
+
+
+def test_active_checkpoint_and_reviewed_surface_conflict(tmp_path, sources):
+    source = rows()
+    source[5]['surface'] = 'fieldturf'  # The reviewed record for this exact game says grass.
+    args = {'output_dir': tmp_path, 'active_as_of_utc': '2026-10-16T12:00:00Z'}
+    result = ev.materialize_settled_evidence(schedule_rows=source, **args)
+    schedule = json.loads((tmp_path / 'week6_schedule_v1.json').read_text())
+    assert schedule['games'][0]['surface'] == 'fieldturf'
+    assert 'surface_recovery' not in result.manifest
+    source[5]['surface'] = ''
+    with pytest.raises(ScheduleMaterializationError, match='conflicting exact-game surface evidence'):
+        ev.materialize_settled_evidence(schedule_rows=source, **args)
+
+
+def test_standalone_schedule_recovers_exact_neutral_site(tmp_path, sources, monkeypatch):
+    source = rows()
+    source[-1]['location'] = 'Neutral'
+    materialize(tmp_path, source)
+    source[-1]['surface'] = None
+    monkeypatch.setattr('nfl_edge.live.schedule_materializer_2026._observed_now', lambda: NOW)
+    _, schedule = materialize_active_schedule(output_dir=tmp_path, rows=source)
+    assert schedule['games'][0]['neutral_site']
+    assert schedule['surface_recovery'][0]['source_identity']['neutral_site']
+
+
+def test_active_surface_conflict_or_corruption_does_not_replace_schedule(tmp_path, sources):
+    first = materialize(tmp_path, rows())
+    source = rows()
+    source[-1]['surface'] = ''
+    materialize(tmp_path, source)
+    original = (tmp_path / 'week7_schedule_v1.json').read_bytes()
+    source[-1]['surface'] = 'fieldturf'
+    with pytest.raises(ScheduleMaterializationError, match='conflicting upstream surface after recovery'):
+        materialize(tmp_path, source)
+    source[-1]['surface'] = ''
+    ref = first.manifest['schedule_checkpoints']['7']
+    (tmp_path / 'schedule_checkpoints' / f'{ref}.json').write_text('{}')
+    with pytest.raises(ScheduleMaterializationError, match='checkpoint integrity/provenance mismatch'):
+        materialize(tmp_path, source)
+    with pytest.raises(ev.SettledEvidenceError, match='HISTORICAL_REPLAY_INTEGRITY'):
+        ev.load_settled_evidence(tmp_path)
+    assert (tmp_path / 'week7_schedule_v1.json').read_bytes() == original
+
+
+@pytest.mark.parametrize('rollover_surface', ['', ' MatrixTurf ', 'grass'])
+def test_synthetic_week12_to_week13_surface_lifecycle(tmp_path, monkeypatch, rollover_surface):
+    # Synthetic schedule, results, team/QB stats and PBP. The ID matches the incident for coverage.
+    template = rows()[0]
+    source = [
+        {**template, 'week': str(week), 'game_id': f'2026_{week:02d}_SEA_DEN',
+         'gameday': (date(2026, 9, 10) + timedelta(weeks=week - 1)).isoformat()}
+        for week in range(1, 14)
+    ]
+    source[11].update(game_id='2026_12_GB_LA', away_team='GB', home_team='LA',
+                      stadium='SoFi Stadium', stadium_id='LAX01', roof='dome', surface='matrixturf')
+    # Weeks 10 and 11 attest different surfaces at the same venue. Neither can certify Week 13.
+    for week, surface in [(10, 'grass'), (11, 'matrixturf'), (13, '')]:
+        source[week - 1].update(game_id=f'2026_{week:02d}_DET_LA', away_team='DET', home_team='LA',
+                                stadium='SoFi Stadium', stadium_id='LAX01', roof='dome', surface=surface)
+    stub_settled_sources(monkeypatch, source, through_week=12)
+
+    def run(timestamp):
+        monkeypatch.setattr(ev, '_now', lambda: timestamp)
+        return ev.materialize_settled_evidence(
+            output_dir=tmp_path, schedule_rows=source, active_as_of_utc=timestamp,
+            verify_historical_kickoffs=False,
+        )
+
+    first = run('2026-11-26T11:56:00Z')
+    original = first.manifest['schedule_checkpoints']['12']
+    source[11]['surface'] = ''
+    source[3]['surface'] = ''  # Unrelated history still replays independently.
+    recovered = run('2026-11-26T12:01:00Z')
+    proof, = recovered.manifest['surface_recovery']
+    assert proof['source_identity']['game_id'] == '2026_12_GB_LAR'
+    assert proof['source_checkpoint_sha256'] == original
+    repeated = run('2026-11-27T12:00:00Z')
+    assert repeated.manifest['surface_recovery'] == [proof]
+    assert repeated.manifest['schedule_checkpoints']['12'] != recovered.manifest['schedule_checkpoints']['12']
+
+    source[11]['surface'] = rollover_surface
+    with pytest.raises(ScheduleMaterializationError, match='ACTIVE_WEEK_SCHEDULE.*missing required surface'):
+        run('2026-12-01T13:00:00Z')
+
+    source[12]['surface'] = 'matrixturf'
+    if rollover_surface == 'grass':
+        with pytest.raises(ev.SettledEvidenceError, match='HISTORICAL_SCHEDULE_METADATA.*field=surface'):
+            run('2026-12-01T13:00:00Z')
+        return
+    rolled = run('2026-12-01T13:00:00Z')
+    assert rolled.through_week == 12
+    assert '2026_12_GB_LAR' in rolled.games['game_id'].to_list()
+    assert rolled.manifest['surface_recovery'] == [proof]
+    assert rolled.manifest['schedule_checkpoints']['12'] == repeated.manifest['schedule_checkpoints']['12']
+    source[12]['surface'] = ''
+    week13 = run('2026-12-03T12:00:00Z')
+    assert week13.through_week == 12
+    assert proof in week13.manifest['surface_recovery']
+    assert next(p for p in week13.manifest['surface_recovery'] if p != proof)[
+        'source_checkpoint_sha256'] == rolled.manifest['schedule_checkpoints']['13']
 
 
 def test_exact_week7_tuesday_rollover():
@@ -336,6 +509,21 @@ def capture(*events):
 
 def forbidden(*args):
     pytest.fail("verification must work without a network request")
+
+
+def test_historical_kickoff_reconciliation_with_recovered_surface(tmp_path, sources):
+    source = rows()
+    materialize(tmp_path, source)
+    source[-1]['surface'] = ''
+    recovered = materialize(tmp_path, source)
+    ref = recovered.manifest['schedule_checkpoints']['7']
+    source[-1].update(gametime='16:25', surface='grass')
+    event = espn_game(kickoff='2026-10-22T20:25:00Z')
+    audit = []
+    bundle = reuse(tmp_path, source, 7, acquire_espn=lambda _: capture(event), kickoff_audit=audit)
+    assert bundle['schedule']['games'][0]['surface'] == 'grass'
+    assert sha(bundle) == ref
+    assert audit[0]['corrected_kickoff_utc'] == '2026-10-22T20:25:00Z'
 
 
 def test_real_espn_capture_with_synthetic_week11_checkpoint(tmp_path):
