@@ -1,0 +1,33 @@
+# Ridge Totals R4 surface ablation V1 contract
+
+Frozen before fitting either challenger. Base revision `2afd81e6ddb7d36df2e9b9413aaa7780f367b770`.
+
+## Universe and parity
+
+Use the original Task05D SHA-256-verified 2018–2024 modeling table and weekly availability, the same ordered game identities, 151 chronological blocks, 78 warmup games, and 1,864 evaluated games in 146 blocks (2018 W06 through 2024 SB W22). For each block use all eligible strictly earlier observations from the repository walk-forward builder with the original 64-row floor. No separate tuning partition or additional selection step is used. Alpha remains 100 in every fit. No reweighting, tuning, randomized splits, 2025 reads of outcomes, 2026 scoring in the primary comparison, or input corrections. The 2018–2024 universe was used to select R4. It is retrospective development evidence with no newly independent holdout.
+
+A uses the original R4 factory and all 90 predictors. B remaps only `surface_category` via a reviewed explicit token dictionary and retains `surface_missing`. Missing or ambiguous categories stay unclassified, with an explicit unknown category if an unmapped label is present. C removes both `surface_category` and its missingness indicator. Preserve all other transforms and original row eligibility. Verify A against the frozen per-game R4 ledger, including identities and targets, and require maximum prediction deviation at most 0.0000001 points before fitting B or C. The accepted artifact is the locked R4 configuration plus frozen predictions and reference metrics. The live adapter refits by block. Do not represent any research fit as a serialized production model.
+
+## Metrics and uncertainty
+
+Primary metric is MAE. Secondary safeguards are RMSE, mean signed error (prediction minus actual), and the 95th percentile of absolute game-level prediction shifts. Publish signed prediction, signed error, absolute-error and squared-error difference distributions and paired game records for B−A, C−A and C−B. Include season and raw-surface frequency tables, binary subgroups, supported subtype subgroups, and the full raw surface coefficient path by chronological training window. For coefficient stability report the last fit of each season and the range across all fits, with absent categories shown as absent.
+
+Use 5,000 paired bootstrap replicates, seed 20261126. Keep complete weekly blocks together. Within each season sample circular four-consecutive-week chunks to the original block count. Report 95% percentile intervals for MAE, RMSE and signed-error differences. In sensitivity, resample complete seasons to preserve entire within-season dependence and compare the same paired metrics. Use the envelope of these two intervals for overall decision rules. These intervals describe evaluated games conditional on the fitted predictions. They do not correct model-selection reuse or measure uncertainty under future schedule shifts.
+
+Require at least 1,200 paired games, six seasons and 100 weekly blocks overall. Report subgroup metrics and descriptive weekly-block intervals for groups with at least 75 games, three seasons and eight weeks. Report counts for smaller groups. Seasonal estimates are descriptive (minimum 150 games per season for stability checks).
+
+## Practical thresholds and decision
+
+Use two-sided equivalence margins of ±0.10 points MAE, ±0.15 RMSE and ±0.25 mean signed error. MAE and RMSE margins are approximately 1% of the frozen 10.69 MAE and 13.55 RMSE. The bias margin is a quarter point and the game-level shift guard is 0.50 points at the 95th percentile, reflecting the half-point scale of totals lines. This is a score-forecast screen. It does not establish offer, recommendation or economic equivalence.
+
+A simplified arm qualifies if both MAE and RMSE decision intervals are entirely inside their respective equivalence margins or entirely below the negative margin, the signed-error interval lies inside ±0.25, and the 95th-percentile absolute shift is at most 0.50 points. Veto qualification if MAE worsens by over 0.35 in two or more eligible seasons, or if a supported subtype/binary subgroup or eligible grouped generalization diagnostic worsens by over 0.35 and its weekly-block MAE interval excludes zero. Grouped diagnostics qualify for veto with at least 500 games, four seasons and 15 observed venue/team groups. No subgroup result independently establishes improvement. Apply the same simplification criteria to C versus B if B qualifies.
+
+Classify as SURFACE_FEATURE_NOT_SUPPORTED if C qualifies versus A and, when B qualifies versus A, C also qualifies versus B. Otherwise use BINARY_SURFACE_PREFERRED if B qualifies versus A. For SUBTYPE_VALUE_SUPPORTED require both B−A and C−A decision intervals to clear +0.10 MAE, point estimates positive in at least five eligible seasons for each contrast, neither challenger to show practically better RMSE (decision interval entirely below −0.15), and the venue-held-out B−A MAE interval to exclude zero in favor of A. Otherwise use INCONCLUSIVE. All classifications are bounded to this design and require independent evidence before any production migration.
+
+## Confounding and grouped diagnostic
+
+Join pre-2025 game context by exact ID for venue, home team, roof, season, and available weather. Describe surface concentration and between-category associations for these fields and entering offensive and defensive strength proxies. Show the paired MAE change with each venue, team and season removed from evaluation, and compare raw surface coefficients after grouped exclusion. These are associations. For venue and home-team generalization diagnostics, assign each group to one of five deterministic SHA-256 folds. For each original weekly test block, score each fold using only strictly earlier records outside that fold. Use identical rows per arm and the same 64-row floor. Omit games with missing group ID or insufficient prior training in all arms and report coverage. Causal pregame features stay fixed, so a venue or team's past games may contribute to upstream form features. Report diagnostics separately from the primary test.
+
+## Historical sensitivity
+
+Only use authentic reviewed 2026 evidence for a separately labeled, isolated inference-only perturbation. Change only verified binary disagreements with an unambiguous established R4 replacement token, or use explicit grass-to-observed-artificial-token bounds when the exact subtype is unknown. Keep original evidence, predictions and training data intact. Defer to Hermes if the authenticated registry and matched original state are unavailable.
