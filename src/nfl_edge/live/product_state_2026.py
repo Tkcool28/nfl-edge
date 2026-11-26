@@ -703,6 +703,8 @@ def _final_pregame_selector_rows(
     required_game_ids: set[str],
     successful_proofs: Iterable[tuple[Path, Mapping[str, Any]]] | None = None,
     selected_runs: dict[str, str] | None = None,
+    kickoff_cutoffs: Mapping[str, datetime] | None = None,
+    cutoff_rejections: dict[str, set[str]] | None = None,
 ) -> list[dict[str, Any]] | None:
     """Assemble one final causal selector board from per-game pre-kickoff states.
 
@@ -715,6 +717,8 @@ def _final_pregame_selector_rows(
     returns None for zero coverage so the separately verified outage can be checked.
     """
     latest_by_game: dict[str, tuple[datetime, str, list[dict[str, Any]]]] = {}
+    cutoffs = kickoff_cutoffs or {}
+    rejected = cutoff_rejections if cutoff_rejections is not None else {}
 
     if successful_proofs is None:
         successful_proofs = _successful_selector_proofs(run_root)
@@ -773,6 +777,9 @@ def _final_pregame_selector_rows(
                 break
             if captured >= kickoff or gid not in required_game_ids:
                 continue
+            if gid in cutoffs and captured >= cutoffs[gid]:
+                rejected.setdefault(gid, set()).add(proof_path.parents[1].name)
+                continue
             candidate = (captured, str(proof_path), rows_by_game.get(gid, []))
             previous = latest_by_game.get(gid)
             if previous is None or candidate[:2] > previous[:2]:
@@ -785,6 +792,11 @@ def _final_pregame_selector_rows(
 
     missing = sorted(required_game_ids.difference(latest_by_game))
     if missing:
+        if set(missing) & rejected.keys():
+            raise Entering2026ProductStateError(
+                f"Week {week} historical kickoff cutoff leaves missing selector coverage: {missing}; "
+                f"excluded_runs={ {gid: sorted(runs) for gid, runs in sorted(rejected.items())} }"
+            )
         if week == 9:
             if not latest_by_game:
                 return None
@@ -882,6 +894,8 @@ def _week10_gap_board(
     evidence,
     game_rows: list[dict[str, Any]],
     run_root: Path,
+    kickoff_cutoffs: Mapping[str, datetime],
+    cutoff_rejections: dict[str, set[str]],
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     # The callers have already validated all settled football artifacts and
     # the checkpoint bundle. Keep this exception scoped to that exact slate.
@@ -963,6 +977,8 @@ def _week10_gap_board(
         required_game_ids=accepted_ids,
         successful_proofs=proofs,
         selected_runs=selected_runs,
+        kickoff_cutoffs=kickoff_cutoffs,
+        cutoff_rejections=cutoff_rejections,
     )
     if rows is None or Counter(str(row["game_id"]) for row in rows) != dict.fromkeys(accepted_ids, 6):
         raise Entering2026ProductStateError("Week 10 selector gap requires six authentic evaluator rows per covered game")
@@ -1008,25 +1024,45 @@ def advance_live_value_state(
         week = _game_week(row)
         by_week.setdefault(week, set()).add(gid)
 
-    week10_checkpoint = getattr(evidence, "manifest", {}).get("schedule_checkpoints", {}).get("10")
+    manifest = getattr(evidence, "manifest", {})
+    week10_checkpoint = manifest.get("schedule_checkpoints", {}).get("10")
+    kickoff_audits = {
+        decision["week"]: decision["kickoff_reconciliations"]
+        for decision in manifest.get("schedule_recovery_decisions", [])
+        if decision.get("kickoff_reconciliations")
+    }
     for week in range(SELECTOR_TRUST_START_WEEK, int(evidence.through_week) + 1):
         required_game_ids = by_week.get(week, set())
         if not required_game_ids:
             raise Entering2026ProductStateError(
                 f"settled evidence has no games for selector trust Week {week}"
             )
+        corrections = kickoff_audits.get(week, [])
+        cutoffs = {
+            item["game_id"]: _parse_utc(item["selector_eligibility_cutoff_utc"]) for item in corrections
+        }
+        excluded_runs: dict[str, set[str]] = {}
         week10_audit = None
         if week == 10 and (week10_checkpoint == _WEEK10_CHECKPOINT or required_game_ids & _WEEK10_KICKOFFS.keys()):
             rows, week10_audit = _week10_gap_board(
                 evidence=evidence, run_root=run_root,
                 game_rows=[row for row in settled_games if _game_week(row) == 10],
+                kickoff_cutoffs=cutoffs, cutoff_rejections=excluded_runs,
             )
         else:
             rows = _final_pregame_selector_rows(
                 run_root=run_root,
                 week=week,
                 required_game_ids=required_game_ids,
+                kickoff_cutoffs=cutoffs, cutoff_rejections=excluded_runs,
             )
+        if corrections and recovery_audit is not None:
+            recovery_audit.append({
+                "reason": "HISTORICAL_KICKOFF_SELECTOR_CUTOFF",
+                "week": week,
+                "kickoff_reconciliations": corrections,
+                "excluded_runs_by_game": {gid: sorted(runs) for gid, runs in sorted(excluded_runs.items())},
+            })
         if rows is None:
             audit = _week9_gap_audit(
                 state=state, evidence=evidence, run_root=run_root,

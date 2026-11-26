@@ -19,10 +19,15 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--active-as-of-utc")
+    parser.add_argument(
+        "--stored-kickoff-evidence-only", action="store_true",
+        help="Reuse stored historical verifications without requesting ESPN.",
+    )
     args = parser.parse_args()
     evidence = materialize_settled_evidence(
         output_dir=args.output_dir,
         active_as_of_utc=args.active_as_of_utc,
+        verify_historical_kickoffs=not args.stored_kickoff_evidence_only,
     )
     print(json.dumps({
         "status": "LIVE_WEEKLY_INPUTS_MATERIALIZED",
