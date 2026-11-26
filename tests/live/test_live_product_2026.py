@@ -259,3 +259,60 @@ def test_week2_product_uses_week2_identity_and_preserves_pending_roof(tmp_path):
     ]
     assert len(pending) == 1
     assert pending[0]["week"] == 2
+
+
+def test_started_discrepancy_uses_canonical_product_and_publication_contracts(tmp_path):
+    from nfl_edge.backend.publication import ProductStore
+    from nfl_edge.live.schedule_verification_2026 import reconcile_market_kickoffs
+    from nfl_edge.prospective.runtime_v1 import capture_published_product
+
+    schedule = load_week1_schedule(SCHEDULE)
+    started = schedule["games"][0]
+    started["scheduled_start_utc"] = "2026-09-03T17:00:00Z"
+    gid = started["game_id"]
+    events = build_synthetic_week1_response(schedule, observed_at_utc=ACQUIRED_AT)
+    events[0]["commence_time"] = "2026-09-03T17:25:00Z"
+    raw = json.dumps(events, sort_keys=True).encode()
+    raw_hash = hashlib.sha256(raw).hexdigest()
+    revised, audit = reconcile_market_kickoffs(
+        schedule, events, live=False, prediction_as_of_utc=PREDICTION_AT, odds_acquired_at_utc=ACQUIRED_AT,
+    )
+    assert revised is schedule and audit["status"] == "STARTED_GAMES_EXCLUDED"
+    market = normalize_market_snapshot(
+        schedule=schedule, events=events, acquired_at_utc=ACQUIRED_AT, response_sha256=raw_hash,
+        started_game_exclusions=audit["started_game_exclusions"], credits_consumed=3, credits_remaining=446,
+    )
+    assert hashlib.sha256(json.dumps(events, sort_keys=True).encode()).hexdigest() == market["response_sha256"]
+    assert market["audit"]["matched_canonical_games"] == 15
+    assert market["audit"]["provider_events_returned"] == 16
+    assert market["audit"]["provider_events_processed"] == 15
+    assert market["coverage_by_market"] == {"MONEYLINE": 15, "SPREAD": 15, "TOTAL": 15}
+
+    football = _football_snapshot(schedule)
+    state = load_entering_2026_product_state(ROOT / "data/live/2026/entering_product_state_v1.json")
+    kwargs = dict(root=ROOT, football_snapshot=football, market_snapshot=market, decision_state=state)
+    product, proof = build_product_snapshot(**kwargs)
+    repeated_product, repeated_proof = build_product_snapshot(**kwargs)
+    assert product_snapshot_bytes(product) == product_snapshot_bytes(repeated_product)
+    assert repeated_proof == proof
+
+    games = {game["game_id"]: game for game in product["games"]}
+    assert len(games) == 16 and games[gid]["game_status"] == "IN_PROGRESS"
+    assert games[gid]["kickoff_at_utc"] == "2026-09-03T17:00:00Z"
+    assert not any(games[gid]["market_board"].values())
+    assert all(lane["game_id"] != gid for lane in product["headlines"].values())
+    selector = proof["selector_evidence"]
+    assert {game["game_id"] for game in selector["games"]} == games.keys() - {gid}
+    assert {row["game_id"] for row in selector["rows"]} == games.keys() - {gid}
+
+    store = ProductStore(tmp_path / "publication")
+    assert store.publish(product).is_file()
+    current = store.load_latest(required=True)
+    assert current == product
+    capture = capture_published_product(
+        current, runtime_root=tmp_path / "prospective",
+        published_at_utc="2026-09-03T18:01:00Z", capture_mode="REPO_SIMULATION",
+    )
+    observation = json.loads(Path(capture["runtime_path"]).read_text())
+    assert observation["capture_mode"] == "REPO_SIMULATION"
+    assert all(lane["game_id"] != gid for lane in observation["lanes"].values())

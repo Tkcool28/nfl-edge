@@ -71,8 +71,14 @@ def _wire_success(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, calls: list[s
         refresh,
         "acquire_live_response",
         lambda **kwargs: (
-            calls.append("provider")
-            or SimpleNamespace(response_path=tmp_path / "raw.json", metadata_path=tmp_path / "raw.meta.json")
+            kwargs["on_request"]()
+            or calls.append("provider")
+            or SimpleNamespace(
+                response_path=tmp_path / "raw.json",
+                metadata_path=tmp_path / "raw.meta.json",
+                credits_consumed=3,
+                credits_remaining=97,
+            )
         ),
     )
     (tmp_path / "raw.json").write_text("[]", encoding="utf-8")
@@ -258,6 +264,10 @@ def test_saved_response_replay_never_calls_provider(monkeypatch: pytest.MonkeyPa
     assert outcome is refresh.RefreshOutcome.SUCCESS
     assert "provider" not in calls
     assert summary["provider_request_count"] == 0
+    assert summary["credits_consumed"] == 0
+    assert summary["credits_remaining"] is None
+    assert summary["capture_credits_consumed"] == 3
+    assert summary["capture_credits_remaining"] == 97
 
 
 def test_missing_active_week_fails_before_sleeper_or_provider(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
@@ -331,7 +341,9 @@ def test_provider_failure_is_one_attempt_and_never_publishes(monkeypatch: pytest
     monkeypatch.setattr(
         refresh,
         "acquire_live_response",
-        lambda **kwargs: calls.append("provider") or (_ for _ in ()).throw(RuntimeError("HTTP 500")),
+        lambda **kwargs: (
+            kwargs["on_request"]() or calls.append("provider") or (_ for _ in ()).throw(RuntimeError("HTTP 500"))
+        ),
     )
 
     outcome, summary = refresh.run_refresh(_config(tmp_path))
@@ -647,6 +659,10 @@ def test_odds_kickoff_disagreement_checks_espn_after_single_pull(monkeypatch, tm
     config = _config(tmp_path)
     outcome, summary = refresh.run_refresh(config)
     assert summary["provider_request_count"] == 1
+    assert summary["credits_consumed"] == 3
+    assert summary["credits_remaining"] == 97
+    assert summary["credits_consumed"] == 3
+    assert summary["credits_remaining"] == 97
     assert calls[:4] == ["sleeper", "score", "provider", "ESPN"]
     assert calls.count("provider") == calls.count("ESPN") == 1
     run_dir = config.run_root / summary["run_id"]
@@ -664,3 +680,26 @@ def test_odds_kickoff_disagreement_checks_espn_after_single_pull(monkeypatch, tm
         assert outcome is refresh.RefreshOutcome.SCHEDULE_NOT_READY
         assert report["status"] == "KICKOFF_UNCONFIRMED"
         assert "publish" not in calls
+
+
+def test_missing_provider_configuration_records_no_request(monkeypatch, tmp_path):
+    acquire = refresh.acquire_live_response
+    calls = []
+    _wire_success(monkeypatch, tmp_path, calls)
+    monkeypatch.setattr(refresh, "acquire_live_response", acquire)
+    monkeypatch.delenv("ODDS_API_KEY", raising=False)
+    outcome, summary = refresh.run_refresh(_config(tmp_path))
+    assert outcome is refresh.RefreshOutcome.MARKET_ACQUISITION_FAILED
+    assert summary["provider_request_count"] == 0
+    assert summary["credits_consumed"] is None
+
+
+def test_replayed_success_is_not_a_native_selector_proof(tmp_path):
+    from nfl_edge.live.product_state_2026 import _successful_selector_proofs
+
+    for mode in ("LIVE", "REPLAY"):
+        root = tmp_path / mode
+        (root / "product").mkdir(parents=True)
+        (root / "run-status.json").write_text(json.dumps({"outcome": "SUCCESS", "execution_mode": mode}))
+        (root / "product/deterministic-proof.json").write_text("{}")
+    assert [path.parents[1].name for path, _ in _successful_selector_proofs(tmp_path)] == ["LIVE"]

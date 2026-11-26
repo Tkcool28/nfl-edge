@@ -55,6 +55,7 @@ def capture_published_product(
     runtime_root: str | Path,
     published_at_utc: str,
     source_commit_sha: str | None = None,
+    capture_mode: str = "NATIVE_PROSPECTIVE",
 ) -> dict[str, Any]:
     """Capture one product that has already become production-authoritative.
 
@@ -66,7 +67,7 @@ def capture_published_product(
         product,
         published_at_utc=published_at_utc,
         source_commit_sha=source_commit_sha,
-        capture_mode="NATIVE_PROSPECTIVE",
+        capture_mode=capture_mode,
     )
     target_dir = runtime_publications_dir(
         runtime_root,

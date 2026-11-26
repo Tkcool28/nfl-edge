@@ -192,3 +192,113 @@ def test_ambiguous_odds_event_does_not_trigger_espn(monkeypatch, sources):
     monkeypatch.setattr(verification, "_espn_scoreboard", lambda *_: pytest.fail("ESPN called for duplicate Odds rows"))
     with pytest.raises(verification.ScheduleVerificationError, match="multiple Odds events"):
         verification.reconcile_market_kickoffs(schedule, odds, live=True)
+
+
+@pytest.mark.parametrize("odds_at", ["2026-11-22T18:00:00Z", "2026-11-22T18:30:00Z"])
+def test_started_discrepancy_uses_frozen_boundary_inclusively(monkeypatch, sources, tmp_path, odds_at):
+    schedule, odds, _ = sources
+    game = next(g for g in schedule["games"] if g["away_team"] == "JAX")
+    game["scheduled_start_utc"] = "2026-11-22T17:55:00Z"
+    odds[0]["commence_time"] = odds_at
+    before = deepcopy(schedule)
+    monkeypatch.setattr(verification, "acquire_espn_evidence", lambda *_: pytest.fail("unexpected ESPN request"))
+    result, report = verification.reconcile_market_kickoffs(
+        schedule, odds[:1], live=True, evidence_root=tmp_path,
+        prediction_as_of_utc="2026-11-22T18:30:00Z", odds_acquired_at_utc="2026-11-22T18:31:00Z",
+    )
+    assert result is schedule and result == before
+    assert report["status"] == "STARTED_GAMES_EXCLUDED"
+    assert report["started_game_exclusions"][0]["odds_kickoff_utc"] == odds_at
+    assert not list(tmp_path.iterdir())
+
+
+@pytest.mark.parametrize("cutoff", ["2026-11-22T17:00:00Z", "2026-11-22T19:00:00Z"])
+@pytest.mark.parametrize("index", [0, 1])
+def test_disputed_game_still_requires_espn_if_either_kickoff_is_future(monkeypatch, sources, cutoff, index):
+    schedule, odds, _ = sources
+    calls = []
+
+    def unconfirmed(url):
+        calls.append(url)
+        return b'{"events":[]}', "2026-11-23T00:01:00Z"
+
+    monkeypatch.setattr(verification, "acquire_espn_evidence", unconfirmed)
+    result, report = verification.reconcile_market_kickoffs(
+        schedule, [odds[index]], live=True, prediction_as_of_utc=cutoff,
+        odds_acquired_at_utc="2026-11-22T23:00:00Z",
+    )
+    assert calls == [verification.espn_week_url(2026, 11)]
+    assert result is schedule and report["status"] == "KICKOFF_UNCONFIRMED"
+    assert "started_game_exclusions" not in report
+
+
+@pytest.mark.parametrize("confirmed", [True, False])
+def test_mixed_slate_verifies_only_potentially_eligible_discrepancy(monkeypatch, tmp_path, sources, confirmed):
+    schedule, odds, scoreboard = sources
+    odds[0]["commence_time"] = "2026-11-22T18:15:28Z"
+    future = "2026-11-22T21:40:00Z"
+    odds[1]["commence_time"] = future
+    scoreboard["events"][1]["date"] = future
+    scoreboard["events"][1]["competitions"][0]["date"] = future
+    scoreboard["events"][0]["date"] = "unreadable but unrelated"
+    if not confirmed:
+        scoreboard["events"].pop()
+    monkeypatch.setattr(
+        verification, "acquire_espn_evidence",
+        lambda _: (json.dumps(scoreboard).encode(), "2026-11-22T19:05:30Z"),
+    )
+    result, report = verification.reconcile_market_kickoffs(
+        schedule, odds, live=True, prediction_as_of_utc="2026-11-22T19:00:00Z",
+        odds_acquired_at_utc="2026-11-22T19:05:00Z", evidence_root=tmp_path,
+    )
+    started = report["started_game_exclusions"]
+    assert [row["game_id"] for row in started] == ["2026_11_JAX_NYG"]
+    assert result["games"][0]["scheduled_start_utc"] == "2026-11-22T18:00:00Z"
+    if confirmed:
+        assert report["status"] == "KICKOFF_CONFIRMED"
+        assert result["games"][1]["scheduled_start_utc"] == future
+        saved, = list((tmp_path / "kickoff_reconciliations").glob("*.json"))
+        assert json.loads(saved.read_text())["record"]["espn"]["event_id"] == "401873076"
+    else:
+        assert report["status"] == "KICKOFF_UNCONFIRMED" and result is schedule
+        assert not list(tmp_path.iterdir())
+
+
+@pytest.mark.parametrize("acquired", [None, "2026-11-22T23:30:00", "2026-11-22T22:59:59Z"])
+def test_unsafe_acquisition_timing_cannot_grant_exclusion(monkeypatch, sources, acquired):
+    schedule, odds, _ = sources
+    monkeypatch.setattr(verification, "acquire_espn_evidence", lambda *_: pytest.fail("unsafe timing"))
+    result, report = verification.reconcile_market_kickoffs(
+        schedule, odds, live=True, prediction_as_of_utc="2026-11-22T23:00:00Z",
+        odds_acquired_at_utc=acquired,
+    )
+    assert result is schedule and report["status"] == "INVALID_ELIGIBILITY_TIMING"
+    assert "started_game_exclusions" not in report
+
+
+def test_authentic_week12_started_matchup_projection(tmp_path, monkeypatch):
+    # Exact identity and timestamps from the hash-verified failed-run audit
+    # d3b58ece3d00d0da2787c8b9276a2d6aa8f5a607213f873dbef2347262678faf.
+    # This is a projection of the production evidence, not the raw priced slate.
+    game = {
+        "game_id": "2026_12_GB_LAR", "home_team": "LAR", "away_team": "GB",
+        "scheduled_start_utc": "2026-11-26T01:00:00Z",
+    }
+    schedule = {
+        "season": 2026, "week": 12, "games": [game],
+        "schedule_version": "NFLVERSE_2026_REG_WEEK12_2026-11-26T02:09:28Z",
+    }
+    events = [{
+        "id": "5b612899d6dcdf998107f2c6c6e49a58",
+        "away_team": "Green Bay Packers", "home_team": "Los Angeles Rams",
+        "commence_time": "2026-11-26T01:15:28Z",
+    }]
+    monkeypatch.setattr(verification, "_espn_scoreboard", lambda *_: pytest.fail("unexpected network"))
+    revised, report = verification.reconcile_market_kickoffs(
+        schedule, events, live=False, prediction_as_of_utc="2026-11-26T02:28:40.937249Z",
+        odds_acquired_at_utc="2026-11-26T02:32:45Z",
+    )
+    assert revised is schedule
+    assert report["status"] == "STARTED_GAMES_EXCLUDED"
+    assert report["started_game_exclusions"][0]["game_id"] == game["game_id"]
+    assert not list(tmp_path.iterdir())

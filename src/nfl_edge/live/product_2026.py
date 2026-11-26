@@ -637,13 +637,33 @@ def build_product_snapshot(
     if set(market_boards) != set(football_games):
         raise LiveProductError("football/market canonical game IDs differ")
 
+    generated = str(market_snapshot["acquired_at_utc"])
+    prediction_as_of = str(football_snapshot["prediction_as_of_utc"])
+    if _parse_utc(generated) < _parse_utc(prediction_as_of):
+        raise LiveProductError("market acquisition precedes football prediction_as_of")
+    audit = market_snapshot["audit"]
+    excluded = set()
+    for exclusion in audit.get("started_game_exclusions", []):
+        gid = exclusion["game_id"]
+        cutoff = _parse_utc(exclusion["eligibility_cutoff_utc"])
+        if (
+            gid in excluded or gid not in football_games or cutoff != _parse_utc(prediction_as_of)
+            or _parse_utc(str(football_games[gid]["kickoff_at_utc"])) > cutoff
+            or _parse_utc(exclusion["odds_kickoff_utc"]) > cutoff
+            or any(market_boards[gid].values())
+        ):
+            raise LiveProductError(f"invalid started-game evaluator exclusion for {gid}")
+        excluded.add(gid)
+
     task05f = _load_script("live_2026_task05f_product", root / "scripts/task05f_evaluator_final_runner.py")
     confidence_v2 = _load_script(
         "live_2026_confidence_v2_product", root / "scripts/task05g_model_confidence_v2_runner.py"
     )
     spread_v3 = _load_script("live_2026_spread_v3_product", root / "scripts/task05g_spread_confidence_v3_runner.py")
     market_index = _market_snapshot_index(market_snapshot, football_games)
-    current_games = {gid: _current_game(game) for gid, game in football_games.items()}
+    current_games = {
+        gid: _current_game(game) for gid, game in football_games.items() if gid not in excluded
+    }
 
     board = _evaluate_candidates(
         task05f=task05f,
@@ -659,10 +679,6 @@ def build_product_snapshot(
         for lane in ("hit_rate", "balanced", "value")
     }
 
-    generated = str(market_snapshot["acquired_at_utc"])
-    prediction_as_of = str(football_snapshot["prediction_as_of_utc"])
-    if _parse_utc(generated) < _parse_utc(prediction_as_of):
-        raise LiveProductError("market acquisition precedes football prediction_as_of")
     product_freshness = {
         "state": "FRESH",
         "observed_at_utc": generated,
@@ -677,12 +693,15 @@ def build_product_snapshot(
         outputs = deepcopy(source["football_outputs"])
         xgb = outputs["xgboost_v2"]
         if str(xgb.get("status")) == "AVAILABLE_WITH_ROOF_SCENARIOS":
-            downstream = _aggregate_roof_scenarios(
-                task05f=task05f,
-                game=source,
-                current_game=current_games[gid],
-                market_index=market_index,
-                decision_state=decision_state,
+            downstream = (
+                missing_roof_scenario_evaluation() if gid in excluded else
+                _aggregate_roof_scenarios(
+                    task05f=task05f,
+                    game=source,
+                    current_game=current_games[gid],
+                    market_index=market_index,
+                    decision_state=decision_state,
+                )
             )
             xgb["roof_scenario_downstream"] = downstream
             roof_counts[downstream["status"]] += 1
@@ -711,16 +730,17 @@ def build_product_snapshot(
                 "quarterbacks": deepcopy(source["quarterbacks"]),
                 "market_board": deepcopy(board_for_game),
                 "football_outputs": outputs,
-                "warnings": _game_warnings(board_for_game, xgb),
+                "warnings": (
+                    ["Already-started game excluded from pregame market processing."]
+                    if gid in excluded else _game_warnings(board_for_game, xgb)
+                ),
             }
         )
 
     top_warnings = []
-    audit = market_snapshot["audit"]
-    if audit.get("unmatched_canonical_game_ids"):
-        top_warnings.append(
-            f"{len(audit['unmatched_canonical_game_ids'])} canonical Week {week} game(s) lack a provider event."
-        )
+    missing = set(audit.get("unmatched_canonical_game_ids", [])) - excluded
+    if missing:
+        top_warnings.append(f"{len(missing)} canonical Week {week} game(s) lack a provider event.")
     if int(audit.get("stale_offers") or 0) > 0:
         top_warnings.append(
             f"{int(audit['stale_offers'])} stale market offer(s) are display-only and excluded from evaluation."
@@ -764,7 +784,7 @@ def build_product_snapshot(
             "captured_at_utc": generated,
             "games": [
                 {"game_id": gid, "kickoff_at_utc": str(football_games[gid]["kickoff_at_utc"])}
-                for gid in sorted(football_games)
+                for gid in sorted(current_games)
             ],
             "rows": [{**row, "week": week} for row in board],
         },
@@ -780,6 +800,8 @@ def build_product_snapshot(
         "schema_validation": "PASS",
         "methodology_changed": False,
     }
+    if excluded:
+        proof["started_game_exclusions"] = audit["started_game_exclusions"]
     return snapshot, proof
 
 

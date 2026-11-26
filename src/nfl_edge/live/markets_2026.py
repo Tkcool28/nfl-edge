@@ -18,6 +18,7 @@ import hashlib
 import json
 import math
 import os
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -98,12 +99,14 @@ class LiveMarketCapture:
 
 def _parse_utc(value: str) -> datetime:
     text = str(value)
-    if not text.endswith("Z"):
+    if not text.endswith("Z") or text[10:11] != "T":
         raise LiveMarketError(f"timestamp must be RFC3339 UTC with Z suffix: {text!r}")
     try:
         parsed = datetime.fromisoformat(text[:-1] + "+00:00")
     except ValueError as exc:
         raise LiveMarketError(f"invalid UTC timestamp: {text!r}") from exc
+    if parsed.tzinfo is None:
+        raise LiveMarketError(f"timestamp must be timezone-aware: {text!r}")
     return parsed.astimezone(timezone.utc)
 
 
@@ -183,6 +186,7 @@ def acquire_live_response(
     api_key: str | None = None,
     session: requests.Session | None = None,
     acquired_at_utc: str | None = None,
+    on_request: Callable[[], None] | None = None,
 ) -> LiveMarketCapture:
     """Perform exactly one billable request and persist success before parsing.
 
@@ -199,6 +203,8 @@ def acquire_live_response(
     params = dict(plan["params"])
     params["apiKey"] = key
     client = session or requests.Session()
+    if on_request is not None:
+        on_request()
     response = client.get(
         str(plan["endpoint"]),
         params=params,
@@ -223,17 +229,6 @@ def acquire_live_response(
     # Persist the exact successful body before parsing/normalization.  A parser
     # defect can therefore be repaired and replayed for zero extra credits.
     response_path.write_bytes(raw)
-
-    try:
-        parsed = json.loads(response_path.read_text(encoding="utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise LiveMarketError(
-            f"successful Odds API response was persisted at {response_path} but is not valid JSON"
-        ) from exc
-    if not isinstance(parsed, list):
-        raise LiveMarketError(
-            f"successful Odds API response was persisted at {response_path} but root is not an array"
-        )
 
     consumed = _safe_header_int(response.headers, "x-requests-last")
     remaining = _safe_header_int(response.headers, "x-requests-remaining")
@@ -271,6 +266,7 @@ def load_capture(
     *,
     metadata_path: str | Path | None = None,
     acquired_at_utc: str | None = None,
+    fallback_acquired_at_utc: str | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Load a saved provider response for zero-credit deterministic replay."""
     response_file = Path(response_path)
@@ -289,7 +285,8 @@ def load_capture(
         if not isinstance(loaded, dict):
             raise LiveMarketError("market response metadata root must be an object")
         metadata = dict(loaded)
-    acquired = acquired_at_utc or metadata.get("acquired_at_utc")
+    captured_at = metadata.get("captured_acquired_at_utc", metadata.get("acquired_at_utc"))
+    acquired = acquired_at_utc or captured_at or fallback_acquired_at_utc
     if acquired is None:
         raise LiveMarketError(
             "replay requires capture metadata or an explicit acquired_at_utc timestamp"
@@ -297,7 +294,11 @@ def load_capture(
     _parse_utc(str(acquired))
     metadata.setdefault("provider", PROVIDER)
     metadata["acquired_at_utc"] = str(acquired)
-    metadata["response_sha256"] = _sha256_bytes(raw)
+    digest = _sha256_bytes(raw)
+    if metadata.get("response_sha256") not in (None, digest):
+        raise LiveMarketError("saved market response SHA-256 does not match its sidecar")
+    metadata["response_sha256"] = digest
+    metadata["captured_acquired_at_utc"] = str(captured_at) if captured_at else None
     metadata.setdefault("credits_consumed", None)
     metadata.setdefault("credits_remaining", None)
     return [dict(event) for event in events], metadata
@@ -439,10 +440,37 @@ def normalize_market_snapshot(
     response_sha256: str,
     credits_consumed: int | None = None,
     credits_remaining: int | None = None,
+    started_game_exclusions: Sequence[Mapping[str, Any]] = (),
 ) -> dict[str, Any]:
-    """Normalize one captured response into the frozen live market offer contract."""
-    _parse_utc(acquired_at_utc)
-    mapping, audit = match_provider_events(schedule, events)
+    """Normalize the eligible events while preserving the raw capture's identity."""
+    acquired = _parse_utc(acquired_at_utc)
+    excluded_ids = set()
+    schedule_by_id = {game["game_id"]: game for game in schedule["games"]}
+    for exclusion in started_game_exclusions:
+        game = schedule_by_id[exclusion["game_id"]]
+        event_id = exclusion["odds_event_id"]
+        matched = [event for event in events if str(event.get("id")) == event_id]
+        cutoff = _parse_utc(exclusion["eligibility_cutoff_utc"])
+        canonical = _parse_utc(game["scheduled_start_utc"])
+        odds = _parse_utc(exclusion["odds_kickoff_utc"])
+        if (
+            event_id in excluded_ids or len(matched) != 1
+            or _normalized_team(matched[0].get("home_team")) != game["home_team"]
+            or _normalized_team(matched[0].get("away_team")) != game["away_team"]
+            or _parse_utc(str(matched[0].get("commence_time"))) != odds
+            or _parse_utc(exclusion["nflverse_kickoff_utc"]) != canonical
+            or canonical == odds or not max(canonical, odds) <= cutoff <= acquired
+        ):
+            raise LiveMarketError(f"invalid started-game market exclusion for {game['game_id']}")
+        excluded_ids.add(event_id)
+    processing_events = [event for event in events if str(event.get("id")) not in excluded_ids]
+    mapping, audit = match_provider_events(schedule, processing_events)
+    if started_game_exclusions:
+        audit["started_game_exclusions"] = sorted(
+            (dict(row) for row in started_game_exclusions), key=lambda row: row["game_id"],
+        )
+        audit["provider_events_processed"] = audit["provider_events_returned"]
+        audit["provider_events_returned"] = len(events)
     games_by_id = {str(game["game_id"]): dict(game) for game in schedule["games"]}
     boards = {game_id: _empty_board() for game_id in games_by_id}
     exact_seen: dict[tuple[str, str, str], set[tuple[Any, ...]]] = {}
@@ -453,7 +481,7 @@ def normalize_market_snapshot(
 
     event_by_id = {
         str(event.get("id") or f"event-index-{index}"): event
-        for index, event in enumerate(events)
+        for index, event in enumerate(processing_events)
     }
     for provider_event_id, game_id in sorted(mapping.items()):
         event = event_by_id[provider_event_id]
@@ -597,6 +625,8 @@ def normalize_market_snapshot(
         "response_sha256": response_sha256,
         "boards": boards,
     }
+    if started_game_exclusions:
+        identity_material["started_game_exclusions"] = audit["started_game_exclusions"]
     snapshot_hash = hashlib.sha256(_canonical_json_bytes(identity_material)).hexdigest()
     return {
         "schema_version": "NFL_EDGE_LIVE_MARKET_V1",
