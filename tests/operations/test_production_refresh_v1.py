@@ -703,3 +703,53 @@ def test_replayed_success_is_not_a_native_selector_proof(tmp_path):
         (root / "run-status.json").write_text(json.dumps({"outcome": "SUCCESS", "execution_mode": mode}))
         (root / "product/deterministic-proof.json").write_text("{}")
     assert [path.parents[1].name for path, _ in _successful_selector_proofs(tmp_path)] == ["LIVE"]
+
+
+def test_started_game_replay_reuses_football_and_retains_both_raw_captures(monkeypatch, tmp_path):
+    from dataclasses import replace
+
+    live_load_capture = refresh.load_capture
+    calls = []
+    _wire_success(monkeypatch, tmp_path, calls)
+    schedule, events, scoreboard = kickoff_sources(week_number=1)
+    active = refresh.resolve_active_schedule()
+    active.payload = schedule
+    monkeypatch.setattr(refresh, "resolve_active_schedule", lambda *a, **kw: active)
+    monkeypatch.setattr(refresh, "load_capture", live_load_capture)
+    monkeypatch.setattr(verification, "_espn_scoreboard", lambda *_: pytest.fail("unexpected network"))
+    events[0]["commence_time"] = "2026-11-22T18:15:28Z"
+    events[1]["commence_time"] = "2026-11-22T21:25:00Z"
+
+    espn_file = tmp_path / "saved-espn.json"
+    espn_raw = json.dumps(scoreboard).encode()
+    espn_file.write_bytes(espn_raw)
+    config = replace(
+        _config(tmp_path, live=False), prediction_as_of_utc="2026-11-22T19:00:00Z",
+        espn_response=espn_file,
+    )
+    raw = json.dumps(events).encode()
+    config.market_response.write_bytes(raw)
+    config.market_response.with_suffix(".meta.json").write_text(json.dumps({
+        "acquired_at_utc": "2026-11-22T19:01:00Z", "response_sha256": hashlib.sha256(raw).hexdigest(),
+        "credits_consumed": 3, "credits_remaining": 446,
+    }))
+
+    original_normalizer = refresh.normalize_market_snapshot
+
+    def observe_normalization(**kwargs):
+        assert kwargs["schedule"] is schedule
+        assert len(kwargs["events"]) == 2
+        assert [row["game_id"] for row in kwargs["started_game_exclusions"]] == ["2026_01_JAX_NYG"]
+        return original_normalizer(**kwargs)
+
+    monkeypatch.setattr(refresh, "normalize_market_snapshot", observe_normalization)
+    outcome, summary = refresh.run_refresh(config)
+    assert outcome is refresh.RefreshOutcome.SUCCESS
+    assert calls.count("score") == 1
+    assert summary["schedule_reconciliation_status"] == "STARTED_GAMES_EXCLUDED"
+    assert summary["credits_consumed"] == summary["provider_request_count"] == 0
+    assert summary["capture_credits_consumed"] == 3 and summary["capture_credits_remaining"] == 446
+    run = config.run_root / summary["run_id"]
+    assert (run / "raw" / config.market_response.name).read_bytes() == raw
+    assert (run / "raw/espn-scoreboard.json").read_bytes() == espn_raw
+    assert not (run / "reconciled-schedule.json").exists()
