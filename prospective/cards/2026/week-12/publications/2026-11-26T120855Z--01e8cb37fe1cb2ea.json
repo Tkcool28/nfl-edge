@@ -1,0 +1,255 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "capture_mode": "NATIVE_PROSPECTIVE",
+  "creation_provenance": {
+    "provider_calls": 0,
+    "source": "CANONICAL_PUBLISHED_PRODUCT",
+    "user_specific_data_included": false
+  },
+  "field_availability": {
+    "backend_user_overlay": "EXCLUDED_USER_SPECIFIC_DATA",
+    "evaluator_probability": "NOT_EXPOSED_BY_CANONICAL_PRODUCT_V1"
+  },
+  "lanes": {
+    "balanced": {
+      "american_odds": -116,
+      "away_team": "NE",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": -116,
+        "book": "FANDUEL",
+        "ev": -0.00429601943920066,
+        "game_id": "2026_12_NE_LAC",
+        "lane": "BALANCED",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.5193382517326179,
+        "matchup": {
+          "away_team": "NE",
+          "home_team": "LAC"
+        },
+        "model_probability": 0.5829628554434434,
+        "play_through": {
+          "line": null,
+          "price_american": -119
+        },
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "selection": "NE",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5511505535880307,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": -0.00429601943920066,
+      "exact_offer_identity_id": "offer-198b37bd4377996042a11b61",
+      "game_id": "2026_12_NE_LAC",
+      "home_team": "LAC",
+      "kickoff_at_utc": "2026-11-29T21:05:00Z",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "line": null,
+      "logical_recommendation_id": "logical-2e37fb2f7080bd0d5a6ca144",
+      "market": "MONEYLINE",
+      "market_probability": 0.5193382517326179,
+      "model_probability": 0.5829628554434434,
+      "normalized_selection": "NE",
+      "normalized_side": "away",
+      "play_through": {
+        "line": null,
+        "price_american": -119
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.75,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "NE",
+      "selector_version": "balanced-price-bounded-v2",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5511505535880307,
+      "value_at": null,
+      "wager_identity_id": "wager-272516fe126f51ce6a6cd471",
+      "warnings": []
+    },
+    "hit_rate": {
+      "american_odds": -230,
+      "away_team": "LV",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": -230,
+        "book": "FANDUEL",
+        "ev": -0.02413291025645542,
+        "game_id": "2026_12_LV_CLE",
+        "lane": "HIT_RATE",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.6773255813953488,
+        "matchup": {
+          "away_team": "LV",
+          "home_team": "CLE"
+        },
+        "model_probability": 0.644933452139979,
+        "play_through": {
+          "line": null,
+          "price_american": -238
+        },
+        "recommended_units": 0.25,
+        "reliability": "MEDIUM",
+        "selection": "CLE",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.644933452139979,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": -0.02413291025645542,
+      "exact_offer_identity_id": "offer-68d2efe325503657a8a8a630",
+      "game_id": "2026_12_LV_CLE",
+      "home_team": "CLE",
+      "kickoff_at_utc": "2026-11-30T01:20:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "line": null,
+      "logical_recommendation_id": "logical-4bf1bd383c325d36747877db",
+      "market": "MONEYLINE",
+      "market_probability": 0.6773255813953488,
+      "model_probability": 0.644933452139979,
+      "normalized_selection": "CLE",
+      "normalized_side": "home",
+      "play_through": {
+        "line": null,
+        "price_american": -238
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.25,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "CLE",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.644933452139979,
+      "value_at": null,
+      "wager_identity_id": "wager-6a3c648e74fcef2fa03b9b67",
+      "warnings": []
+    },
+    "value": {
+      "american_odds": -115,
+      "away_team": "NE",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": -115,
+        "book": "FANDUEL",
+        "ev": 0.044594733329911096,
+        "game_id": "2026_12_NE_LAC",
+        "lane": "VALUE",
+        "line": 1.5,
+        "market": "SPREAD",
+        "market_probability": 0.46242774566473993,
+        "matchup": {
+          "away_team": "NE",
+          "home_team": "LAC"
+        },
+        "model_probability": 0.5059442512264684,
+        "play_through": {
+          "line": 1.5,
+          "price_american": -118
+        },
+        "recommended_units": 1.0,
+        "reliability": "MEDIUM",
+        "selection": "LAC",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5059442512264684,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.044594733329911096,
+      "exact_offer_identity_id": "offer-8934f05cce562ebb8a681555",
+      "game_id": "2026_12_NE_LAC",
+      "home_team": "LAC",
+      "kickoff_at_utc": "2026-11-29T21:05:00Z",
+      "lane": "VALUE",
+      "lane_key": "value",
+      "line": 1.5,
+      "logical_recommendation_id": "logical-3908e0c8e4338ba8d34d5022",
+      "market": "SPREAD",
+      "market_probability": 0.46242774566473993,
+      "model_probability": 0.5059442512264684,
+      "normalized_selection": "LAC",
+      "normalized_side": "home",
+      "play_through": {
+        "line": 1.5,
+        "price_american": -118
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 1.0,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "LAC",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5059442512264684,
+      "value_at": null,
+      "wager_identity_id": "wager-ceff96f8900ddba6e2bd964e",
+      "warnings": []
+    }
+  },
+  "product_freshness": {
+    "age_seconds": 0.0,
+    "observed_at_utc": "2026-11-26T12:08:55Z",
+    "state": "FRESH",
+    "threshold_seconds": 43200.0
+  },
+  "product_generated_at_utc": "2026-11-26T12:08:55Z",
+  "product_stale": false,
+  "product_warnings": [
+    "1 canonical Week 12 game(s) lack a provider event."
+  ],
+  "publication_id": "publication-01e8cb37fe1cb2eaf53ee91b",
+  "published_at_utc": "2026-11-26T12:08:55.438156Z",
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1",
+  "season": 2026,
+  "source_commit_sha": null,
+  "source_product_sha256": "01e8cb37fe1cb2eaf53ee91bd847ea9e60ed434b5c453f4bc7e1f3efcfe166c3",
+  "source_product_version": "live-2026-week12-product-v1",
+  "source_provenance": {
+    "evaluator_versions": {
+      "moneyline": "ml_v4",
+      "spread": "spread_v3",
+      "total": "total_v3"
+    },
+    "football_data_version": "live-2026-state:26431de31445db6cc8a99dfd",
+    "market_snapshot_version": "live-market:5e75d983e5fb42e0fdb728c4",
+    "model_versions": {
+      "expected_margin": "expected-margin-v1-stable",
+      "qb_elo": "qb-elo-v1.0.0",
+      "ridge_totals_r4": "ridge-totals-r4-alpha100",
+      "xgboost_v2": "post-v5-v2-conservative-adaptive-tail"
+    },
+    "prediction_as_of_utc": "2026-11-26T12:05:03.480889Z",
+    "qb_snapshot_version": "sleeper-scheduled-20261126T120001Z-0cb56e6f",
+    "selector_versions": {
+      "balanced": "balanced-price-bounded-v2",
+      "hit_rate": "v1",
+      "value": "v1"
+    }
+  },
+  "source_week_last_kickoff_at_utc": "2026-12-01T01:15:00Z",
+  "week": 12
+}
