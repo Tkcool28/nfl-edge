@@ -7,6 +7,7 @@ import io
 import json
 import os
 import tempfile
+from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping
@@ -22,6 +23,10 @@ from .venue_structure_2026 import VenueStructure2026Error, structure_for_blank_r
 NFLVERSE_GAMES_URL = "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv"
 SOURCE_NAME = "nflverse/nfldata games.csv"
 EASTERN = ZoneInfo("America/New_York")
+
+
+SurfaceRecovery = tuple[str, dict[str, Any]] | None
+SurfaceResolver = Callable[[Mapping[str, Any], str, SurfaceRecovery], SurfaceRecovery]
 
 
 class ScheduleMaterializationError(RuntimeError):
@@ -109,6 +114,7 @@ def build_week_schedule(
     season: int,
     week: int,
     observed_at_utc: str,
+    resolve_surface: SurfaceResolver | None = None,
 ) -> dict[str, Any]:
     _utc(observed_at_utc)
     selected = [
@@ -126,8 +132,11 @@ def build_week_schedule(
     for row in selected:
         away = _canonical_team(row, "away_team")
         home = _canonical_team(row, "home_team")
+        game_id = f"{season}_{week:02d}_{away}_{home}"
         try:
-            recovered = recover_missing_surface(row, canonical_game_id=f"{season}_{week:02d}_{away}_{home}")
+            recovered = recover_missing_surface(row, canonical_game_id=game_id)
+            if resolve_surface is not None:
+                recovered = resolve_surface(row, game_id, recovered)
         except SurfaceEvidenceError as exc:
             raise ScheduleMaterializationError(str(exc)) from exc
         if recovered is None:
@@ -139,7 +148,7 @@ def build_week_schedule(
         location = str(row.get("location") or "").strip().lower()
         games.append(
             {
-                "game_id": f"{season}_{week:02d}_{away}_{home}",
+                "game_id": game_id,
                 "away_team": away,
                 "home_team": home,
                 "scheduled_start_utc": _kickoff_utc(row),
@@ -186,6 +195,7 @@ def choose_active_schedule(
     season: int,
     active_as_of_utc: str,
     observed_at_utc: str,
+    resolve_surface: SurfaceResolver | None = None,
 ) -> dict[str, Any]:
     now = _utc(active_as_of_utc)
     # Week selection needs only source identity and kickoff time. Requiring
@@ -227,12 +237,13 @@ def choose_active_schedule(
             f"no {season} regular-season week is active at {active_as_of_utc}"
         )
     # Validate every required field of the *active* slate, and fail closed if
-    # it is incomplete. Never substitute surface, roof or other football data.
+    # it is incomplete after any evidence-backed surface recovery.
     return build_week_schedule(
         by_week[max(eligible)],
         season=season,
         week=max(eligible),
         observed_at_utc=observed_at_utc,
+        resolve_surface=resolve_surface,
     )
 
 def fetch_nflverse_rows(*, session: requests.Session | None = None) -> list[dict[str, str]]:
@@ -269,6 +280,8 @@ def materialize_active_schedule(
     active_as_of_utc: str | None = None,
     rows: list[Mapping[str, Any]] | None = None,
 ) -> tuple[Path, dict[str, Any]]:
+    from .historical_schedule_2026 import active_surface_resolver
+
     observed = _observed_now()
     active_as_of = active_as_of_utc or observed
     source_rows = list(rows) if rows is not None else fetch_nflverse_rows()
@@ -277,6 +290,7 @@ def materialize_active_schedule(
         season=season,
         active_as_of_utc=active_as_of,
         observed_at_utc=observed,
+        resolve_surface=active_surface_resolver(Path(output_dir), observed),
     )
     path = Path(output_dir) / f"week{int(payload['week'])}_schedule_v1.json"
     _atomic_write(path, payload)

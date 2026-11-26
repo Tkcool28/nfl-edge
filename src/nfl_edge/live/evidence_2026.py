@@ -26,6 +26,7 @@ from nfl_edge.features.pipeline import FeatureInputs
 from nfl_edge.features.totals_v1.pbp_semantics import REQUIRED_PBP_COLUMNS
 from nfl_edge.live.historical_schedule_2026 import (
     HistoricalScheduleError,
+    active_surface_resolver,
     checkpoint,
     reuse,
 )
@@ -413,12 +414,14 @@ def _materialize_settled_evidence(
     observed = _now()
     active_as_of = active_as_of_utc or observed
     rows = list(schedule_rows) if schedule_rows is not None else fetch_nflverse_rows(session=session)
+    root = Path(output_dir)
     try:
         active = choose_active_schedule(
             rows,
             season=2026,
             active_as_of_utc=active_as_of,
             observed_at_utc=observed,
+            resolve_surface=active_surface_resolver(root, observed),
         )
     except ScheduleMaterializationError as exc:
         raise ScheduleMaterializationError(
@@ -427,7 +430,6 @@ def _materialize_settled_evidence(
     active_week = int(active["week"])
     through_week = active_week - 1
 
-    root = Path(output_dir)
     surface_recoveries = []
     schedules = {}
     bundles = {active_week: checkpoint(rows, active)}
@@ -515,6 +517,8 @@ def _materialize_settled_evidence(
         }
         manifest["schedule_checkpoints"] = {str(w): checkpoint_sha(b) for w, b in bundles.items()}
         manifest["schedule_recovery_decisions"] = decisions
+        if surface_recoveries:
+            manifest["surface_recovery"] = surface_recoveries
         for bundle in bundles.values():
             _write_json_atomic(root / "schedule_checkpoints" / f"{checkpoint_sha(bundle)}.json", bundle)
         for name, frame in empties.items():
