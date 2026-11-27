@@ -1,14 +1,14 @@
 {
  "schema_version": "NFL_EDGE_DAILY_NEWS_EDITORIAL_SUBMISSION_V1",
- "submitted_at_utc": "2026-11-26T13:18:46Z",
- "research_generated_at_utc": "2026-11-26T13:18:46Z",
+ "submitted_at_utc": "2026-11-27T01:14:39Z",
+ "research_generated_at_utc": "2026-11-27T01:14:39Z",
  "article": {
   "schema_version": "NFL_EDGE_DAILY_NEWS_V1",
-  "edition": "Morning Brief",
-  "title": "NFL EDGE Thursday Morning Brief",
-  "dek": "The Rams ran Green Bay out of the game 26-13, Parsons got his sack in his debut — and the Week 12 board is finally live, with three cards on Sunday games.",
-  "published_at_utc": "2026-11-26T13:18:46Z",
-  "research_generated_at_utc": "2026-11-26T13:18:46Z",
+  "edition": "Evening Brief",
+  "title": "NFL EDGE Thursday Evening Brief",
+  "dek": "The Bears stole one in Detroit at the gun, Dallas is rolling Philadelphia late, and the board swapped two of its three Sunday cards.",
+  "published_at_utc": "2026-11-27T01:14:39Z",
+  "research_generated_at_utc": "2026-11-27T01:14:39Z",
   "sections": [
    {
     "icon": "📰",
@@ -16,63 +16,90 @@
     "title": "What Matters Today",
     "items": [
      {
-      "headline": "Rams 26, Packers 13 — Parsons got his sack, Green Bay got run over",
+      "headline": "Bears 39, Lions 35 — Williams wins it with three seconds left",
       "paragraphs": [
-       "The Rams beat the Packers 26-13 on Wednesday night in the first Thanksgiving Eve game. Green Bay tied it at 13 by halftime, then did not score again.",
-       "Micah Parsons made his season debut after 11 months out with a torn ACL. He played 27 snaps on a snap count and still got a sack of Matthew Stafford in the first half, with four pressures. The Rams just did not throw enough for him to take the game over — they ran it 47 times for 241 yards, with Blake Corum going for over 150.",
-       "Green Bay falls to 6-5 with a second straight loss. The Rams are 7-4. Packers receiver Christian Watson left the game late in the first half after a hit from Rams safety Kamren Kinchens, who was ejected, and did not return. No update on Watson yet."
+       "The Bears stole the Thanksgiving opener in Detroit. Caleb Williams hit Rome Odunze for a 6-yard touchdown with three seconds left, finishing a 13-play, 68-yard drive. It was Chicago's first lead of the game.",
+       "Jahmyr Gibbs ran for 205 yards and three touchdowns in the loss, and Jared Goff threw for 313 yards. It was not enough. The Bears are 9-2 now, alone on top of the NFC North. The Lions fall to 8-3.",
+       "The model liked Detroit by more than the market did. That lean did not survive the final drive."
       ],
-      "takeaway": "Parsons is back and looked explosive in a limited role, but the Rams ran Green Bay out of the game and the Packers' playoff path just got harder.",
+      "takeaway": "Detroit led most of the day and lost it at the gun. Nothing to bet after the fact — the board's Sunday cards are where the action is now.",
       "evidence_ids": [
-       "ev-result"
+       "ev-bears-lions"
       ],
       "sources": [
        {
-        "label": "Packers.com",
-        "url": "https://www.packers.com/news/in-game-updates-week-12-rams-2026"
+        "label": "USA Today",
+        "url": "https://www.usatoday.com/story/sports/nfl/columnist/nate-davis/2026/11/26/thanksgiving-nfl-winners-losers-chiefs-bills-bears-lions-cowboys-eagles/92970438007/"
        },
        {
-        "label": "Fox Sports",
-        "url": "https://foxsports.com/nfl/final-rams-26-packers-13"
+        "label": "Particle News",
+        "url": "https://particle.news/story/caleb-williams-throws-last-second-td-as-bears-beat-lions-to-open-thanksgiving-tripleheader"
        }
       ]
      },
      {
-      "headline": "Thursday injury board: Walker and Ferguson are out",
+      "headline": "Cowboys 38, Eagles 30 late — Dallas is rolling, Philly keeps answering",
       "paragraphs": [
-       "Kenneth Walker III is out for Kansas City tonight in Buffalo with a groin injury. It is his third straight missed game. Rookie Emmett Johnson starts again.",
-       "Jake Ferguson is out for Dallas against Philadelphia. Dak Prescott is healthy. Joe Milton starts again at quarterback for the Eagles.",
-       "The final word on who plays comes with the inactive lists, about 90 minutes before each kickoff. Chicago at Detroit kicks off at 12:30 p.m. ET, Philadelphia at Dallas at 4:30 p.m. ET, Kansas City at Buffalo at 8:20 p.m. ET."
+       "This one was still going when the brief was written, with Dallas up 38-30 and 7:30 left in the fourth quarter. Dallas led 28-10 at halftime and has controlled it since.",
+       "Dak Prescott has thrown for 258 yards and two touchdowns and run for another. Javonte Williams has three total touchdowns. Joe Milton, starting for Philadelphia with Jalen Hurts out, threw his first touchdown pass as an Eagle — a 50-yard strike to DeVonta Smith.",
+       "The final score lands in the morning brief. Do not bet the middle of a game that is already nearly decided."
       ],
-      "takeaway": "Walker is out and Johnson starts again for Kansas City; Ferguson is out for Dallas and Milton starts again for Philadelphia. Inactives land about 90 minutes before each kickoff.",
+      "takeaway": "Dallas has owned this one since the first half. The result was not final when this was written — check the morning brief for the final.",
       "evidence_ids": [
-       "ev-thursday"
+       "ev-cowboys-eagles"
       ],
       "sources": [
        {
-        "label": "Reuters",
-        "url": "https://www.reuters.com/sports/chiefs-rb-kenneth-walker-iii-groin-out-vs-bills--flm-2026-11-25/"
+        "label": "Sportradar",
+        "url": "https://sportradar.com/?q=3839457641843837345"
        },
        {
-        "label": "Rotoballer",
-        "url": "https://www.rotoballer.com/player-news/kenneth-walker-out-vs-bills-on-thursday/2004168"
+        "label": "USA Today",
+        "url": "https://www.usatoday.com/story/sports/nfl/columnist/nate-davis/2026/11/26/thanksgiving-nfl-winners-losers-chiefs-bills-bears-lions-cowboys-eagles/92970438007/"
        }
       ]
      },
      {
-      "headline": "Rain and wind tonight in Buffalo; Detroit and Dallas are indoors",
+      "headline": "Thursday injury board: Watson is in protocol, Johnson starts again in Buffalo",
       "paragraphs": [
-       "Kansas City at Buffalo kicks off at 8:20 p.m. ET in open air at Highmark Stadium. Rain is expected through the afternoon and night, with a 100% chance at kickoff, around 35 to 36 degrees, and wind out of the east-northeast around 18 to 19 mph, gusting near 30. A gale warning runs from 2:00 p.m. Thursday to 1:00 a.m. Friday.",
-       "Chicago at Detroit and Philadelphia at Dallas are both indoors, so weather is not a factor there."
+       "Christian Watson is in the concussion protocol after the hit from Rams safety Kamren Kinchens on Wednesday night. The concussion was confirmed after Watson was evaluated in the locker room. He is uncertain for Week 13, and Green Bay does not play again until Sunday, Dec. 6, against New Orleans.",
+       "The night game's inactives are set. Kenneth Walker III is out for a third straight game, so rookie Emmett Johnson starts again for Kansas City after back-to-back 100-yard games. Jaylon Moore and Omarr Norman-Lott are out too. Patrick Mahomes, Rashee Rice and Trey Smith carry no designation. For Buffalo, Dalton Kincaid and Christian Benford are questionable."
       ],
-      "takeaway": "Tonight in Buffalo: rain all night, mid-30s, wind around 19 mph with gusts near 30. Detroit and Dallas play indoors.",
+      "takeaway": "The night game's backfield is settled — Johnson again. Watson is a next-week question, not a tonight question.",
       "evidence_ids": [
-       "ev-weather"
+       "ev-watson",
+       "ev-thursday-night"
+      ],
+      "sources": [
+       {
+        "label": "Packers Wire",
+        "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/11/25/packers-lose-wr-christian-watson-to-concussion-after-illegal-hit-vs-rams/92967415007/"
+       },
+       {
+        "label": "NBC Sports",
+        "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/kenneth-walker-ruled-out-for-thanksgiving-night-vs-bills"
+       }
+      ]
+     },
+     {
+      "headline": "Rain and wind tonight in Buffalo; showers Friday in Pittsburgh",
+      "paragraphs": [
+       "The night game kicks off at 8:20 p.m. ET in the rain. Buffalo is looking at rain all night, mid-30s, wind around 19 mph with gusts near 30. A gale warning runs until 1:00 a.m. Friday.",
+       "Tomorrow is wet too. Denver at Pittsburgh kicks off at 3:00 p.m. ET on Friday at Acrisure Stadium, with showers, a high of 41, a 70% chance of rain and wind around 15 mph."
+      ],
+      "takeaway": "Two wet, windy outdoor games in a row. Weather is a fact to know, not a totals edge on its own.",
+      "evidence_ids": [
+       "ev-weather-buf",
+       "ev-weather-fri"
       ],
       "sources": [
        {
         "label": "Weather.com Orchard Park hourly",
         "url": "https://weather.com/us/new-york/city/orchard-park/hourbyhour"
+       },
+       {
+        "label": "Weather.com Pittsburgh",
+        "url": "https://weather.com/us/pa/city/pittsburgh/tenday"
        }
       ]
      }
@@ -84,15 +111,13 @@
     "title": "What It Means for NFL EDGE",
     "items": [
      {
-      "headline": "The Week 12 board is live — and it has three cards",
+      "headline": "The board swapped two of its three cards",
       "paragraphs": [
-       "The board flipped overnight. Week 12 is up, all 16 games, and there are three headline cards, all on Sunday games.",
-       "Hit Rate is Cleveland on the moneyline at -230 on FanDuel. That is the pick the app thinks is most likely to win. The model gives Cleveland about a 64.5% chance against Las Vegas, and it holds up to -238. Hit Rate is about win probability, not value — the app's own tutorial says Hit Rate is not Profit Rate.",
-       "Balanced is New England on the moneyline at -116 on FanDuel. That is the middle ground: a strong pick without paying too much, and a good starting point if you are newer to this. The model gives New England about a 58.3% chance against the Chargers, and it holds up to -119.",
-       "Value is the Chargers +1.5 at -115 on FanDuel. That is the model's plus-expected-value play, the one where the price looks better than the chance of it hitting. The model gives the Chargers about a 50.6% chance to cover, against a market price that implies about 46.2%, and it holds up to -118.",
-       "Yes, Balanced and Value are on opposite sides of the same game. That is fine. They answer different questions: Balanced asks what is a strong pick at a fair price, Value asks where the price is wrong. Read the card that matches the question you are asking."
+       "Hit Rate is now San Francisco moneyline -146. The model gives the 49ers a 73.7% chance to win. That is the job of Hit Rate: which supported pick looks most likely to win. It is not the plus-expected-value play, and it is not supposed to be. Hit Rate is not Profit Rate.",
+       "Balanced stays New England moneyline, now -120 after sitting at -116 this morning. The model gives the Patriots a 58.3% chance. Value is now Indianapolis +6.5 at -115, the model's plus-expected-value play — but the edge is thin, +0.7%, after this morning's Chargers card carried +4.5%.",
+       "When the board swaps a card, the old card is off. Cleveland moneyline and Chargers +1.5 are not bets anymore. Check the board as it stands now."
       ],
-      "takeaway": "Three cards, all Sunday: Hit Rate is Cleveland moneyline -230, Balanced is New England moneyline -116, and Value is the Chargers +1.5 at -115 — the model's plus-expected-value play.",
+      "takeaway": "Two new cards, one same pick at a worse price. The board as it stands now is the only board that counts.",
       "evidence_ids": [
        "ev-board"
       ],
@@ -104,13 +129,12 @@
       ]
      },
      {
-      "headline": "The model is cooler than the market on all three Thanksgiving favorites",
+      "headline": "No card on tonight or tomorrow — use Check",
       "paragraphs": [
-       "The model has Detroit beating Chicago by about 3.7 points. The market has Chicago as a 1.5-point favorite. That is a real gap, and it runs the other way from the board.",
-       "Same story in the other two games. The model has Dallas by about 4.8 over Philadelphia, while the market has Dallas -8.5. It has Buffalo by about 0.7 over Kansas City, while the market has Buffalo -3.",
-       "There is no card on any Thursday game. The board is not telling you to bet the other side. It is telling you the favorites are priced richer than the model likes. If your book has a Thursday number you like, type it into Check and let the app run it back through the model and evaluator. That is the verdict for your price."
+       "All three cards are Sunday games. The board has no card on Chiefs-Bills tonight or Broncos-Steelers tomorrow.",
+       "The model is cooler than the market on both favorites. It has Buffalo by 0.7 against a market of Buffalo -3, and Denver by 1.8 against a market of Denver -4.5. If your book has a number you like on either game, tap Check, type in the line and price, and the app runs it back through the model and evaluator for a bet or no-bet verdict on your price."
       ],
-      "takeaway": "The model likes Detroit, Dallas and Buffalo by less than the market does, and it has no card on any Thursday game — use Check on your book's number.",
+      "takeaway": "No card is not a no. It means the board is quiet — Check your own number.",
       "evidence_ids": [
        "ev-board"
       ],
@@ -130,16 +154,16 @@
     "mode": "learning",
     "items": [
      {
-      "headline": "Closing line value: did you beat the close?",
+      "headline": "Steam: when a line moves in a hurry",
       "paragraphs": [
-       "Closing line value is simple. It asks whether the price you took was better than the price the game closed at. If you bet a team at -2.5 and the line closes at -3.5, you got closing line value. You bought the same bet cheaper than the market ended up pricing it.",
-       "Hypothetical example: imagine you take the underdog at +3.5 on Monday. By Sunday the line has moved to +2.5. You hold a better number than anyone betting on Sunday can get. That does not mean your bet wins — the game still has to be played — but over a lot of bets, consistently beating the close is a sign you are finding good prices.",
-       "The flip side matters too. If you keep taking numbers that get worse by kickoff, you are paying more than the market thinks the bet is worth. That is a habit worth noticing, not a single result worth chasing."
+       "Steam is a line that moves fast — usually within minutes — when a lot of money hits one side at once. The number jumps because money moved it, not because the football changed.",
+       "Here is a clearly labeled hypothetical. Say a team opens at -3 on Sunday morning and by lunch it is -5, with no injury news at all. That is steam. The early number is gone.",
+       "Chasing a steamed number means paying the worst of it. If you liked the team at -3, the moment has passed. Wait for the number to come back, or check whether the other side now has value at +5."
       ],
-      "takeaway": "Beating the closing line does not guarantee a win, but consistently getting a better price than the close is one of the clearest signs you are betting well.",
+      "takeaway": "Steam tells you money moved, not that the football changed — never chase a steamed number, check whether the other side is the value now.",
+      "editorial_only": true,
       "evidence_ids": [],
-      "sources": [],
-      "editorial_only": true
+      "sources": []
      }
     ]
    },
@@ -149,45 +173,33 @@
     "title": "Line Movement",
     "items": [
      {
-      "headline": "Rams-Packers closed at -2.5, and the under cashed",
+      "headline": "Two cards replaced, one card repriced",
       "paragraphs": [
-       "The Rams opened -3.5 and closed -2.5, a move toward Green Bay that lined up with Parsons' return being priced in. The total slid from 46.5 to 44.5.",
-       "The final was 26-13, 39 points total. The under cashed, and the Rams covered the closing number — they won by 13 with the spread at 2.5. The move toward Green Bay did not pay off."
+       "Morning to evening, the board moved. Hit Rate went from Cleveland moneyline -230 to San Francisco moneyline -146. Value went from Chargers +1.5 at -115 to Indianapolis +6.5 at -115.",
+       "Balanced is the same pick, repriced: New England moneyline -116 this morning, -120 now on FanDuel, with the play-through moving from -119 to -123. The Cleveland and Chargers cards are gone from the board."
       ],
-      "takeaway": "Rams-Packers closed at -2.5 after opening -3.5, the total slid 46.5 to 44.5, and the Rams covered the closing number while the under cashed.",
+      "takeaway": "The board moved while the day went on. Bet the card as it stands, not the one from this morning.",
       "evidence_ids": [
-       "ev-lines",
-       "ev-result"
-      ],
-      "sources": [
-       {
-        "label": "OddsChecker Rams-Packers",
-        "url": "https://www.oddschecker.com/us/picks-parlays/football/nfl/20261125-packers-vs-rams-prediction-betting-pick-latest-nfl-week-12-odds-for-netflix-thanksgiving-eve-game"
-       },
-       {
-        "label": "Packers.com",
-        "url": "https://www.packers.com/news/in-game-updates-week-12-rams-2026"
-       }
-      ]
-     },
-     {
-      "headline": "A week of movement, now that the board has flipped",
-      "paragraphs": [
-       "The board spent the week on Week 11, so this is the first morning it shows Week 12. That gives us a full week of movement to look back on, from where the lines opened last Sunday to where DraftKings has them this morning.",
-       "The biggest move was the Chargers flipping from favorite to underdog. They opened -3.5 against New England and are now +1.5. That is the same game the Value card is on, and it is why the price looks the way it does.",
-       "The Buffalo total fell from 51.5 to 45.5 as the rain forecast firmed up. The Giants went from -4 to -6 against Indianapolis, and Denver went from -2.5 to -4.5 against Pittsburgh. Dallas moved from -8 to -8.5, Chicago from -2.5 to -1.5.",
-       "These are the numbers on the board now, and the app has caught up with them. If your book is sitting off the board's number, run it through Check and get a verdict on your price."
-      ],
-      "takeaway": "The Chargers flipped from -3.5 favorite to +1.5 underdog, the Buffalo total fell six points on the rain, and the Giants and Broncos both moved out. The board has caught all of it.",
-      "evidence_ids": [
-       "ev-lines",
        "ev-board"
       ],
       "sources": [
        {
-        "label": "Edgehalla Week 12 consensus",
-        "url": "https://www.edgehalla.com/nfl/vegas/12"
-       },
+        "label": "NFL EDGE product/latest",
+        "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+       }
+      ]
+     },
+     {
+      "headline": "New England's spread moved a point on DraftKings",
+      "paragraphs": [
+       "The Patriots were -1.5 on DraftKings this morning. They are -2.5 now. FanDuel still has New England -1.5, so the same game carries a different number depending on your book.",
+       "Denver -4.5 and Buffalo -3 are unchanged since the morning, and the Buffalo total is still 45.5. Cleveland's moneyline is -244 on DraftKings and -225 on FanDuel, against -230 on FanDuel this morning."
+      ],
+      "takeaway": "New England moved a point on DraftKings while FanDuel held at -1.5 — same game, different number by book. That is what Check is for.",
+      "evidence_ids": [
+       "ev-board"
+      ],
+      "sources": [
        {
         "label": "NFL EDGE product/latest",
         "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
@@ -202,16 +214,15 @@
     "title": "Today's Tip",
     "items": [
      {
-      "headline": "Thanksgiving is a Check day — and log it honestly",
+      "headline": "Friday is a Check day — and the Sunday cards are already moving",
       "paragraphs": [
-       "Three games today, and the inactives for each one land about 90 minutes before kickoff. That is the one thing worth waiting on. If your book has a number you like, do not wait for a better one that may never come — type it into Check and let the app run it back through the model and evaluator.",
-       "The board refreshes every morning and evening, and the evening brief will have the Sunday board in full. For now, the three Sunday cards are the board's answers.",
-       "One more thing: settlement is manual, and the tracker only works if you are honest with yourself. Log today's results either way — the losers too."
+       "Broncos-Steelers kicks off Friday at 3:00 p.m. ET in Pittsburgh, and the board has no card on it. If your book has a number you like, run it through Check before kickoff.",
+       "One timing note: the Balanced card got more expensive while the day went on, -116 to -120. A good number now beats a hoped-for number Sunday — waiting lets the number drift the wrong way too. And do not bet Thursday's results into Friday."
       ],
-      "takeaway": "Wait for inactives about 90 minutes before each kickoff, then run your book's number through Check. And log today's results honestly, losers included.",
+      "takeaway": "Check your Friday number before kickoff, and if a Sunday card has a good number now, take it now.",
+      "editorial_only": true,
       "evidence_ids": [],
-      "sources": [],
-      "editorial_only": true
+      "sources": []
      }
     ]
    }
@@ -219,48 +230,79 @@
  },
  "evidence": [
   {
-   "evidence_id": "ev-result",
    "category": "result",
+   "evidence_id": "ev-bears-lions",
+   "fact": "Chicago beat Detroit 39-35 on Thursday, Nov 26, 2026, at Ford Field. Caleb Williams threw a 6-yard touchdown pass to Rome Odunze with 3 seconds left, capping a 13-play, 68-yard drive. The Bears trailed for nearly the whole game and took their first lead on the final play. Jahmyr Gibbs ran 21 times for 205 yards and three touchdowns for Detroit. Jared Goff completed 25 of 36 passes for 313 yards and one touchdown with one interception. Williams threw for 345 yards. Chicago improved to 9-2 and took first place in the NFC North; Detroit fell to 8-3.",
+   "interpretation": "Detroit led most of the day and lost it at the gun. The model liked Detroit by more than the market did, and that lean did not survive the final drive.",
    "verification": "EXTERNAL_VERIFIED",
-   "fact": "Rams beat the Packers 26-13 on Wednesday night, Nov 25, 2026, at SoFi Stadium. Micah Parsons made his season debut for Green Bay after 11 months out with a torn ACL: 1 sack, 4 pressures, 27 snaps on a snap count. Blake Corum ran for over 150 yards for the Rams. Green Bay was shut out in the second half and fell to 6-5; the Rams improved to 7-4. Packers WR Christian Watson left the game late in the first half after a hit from Rams safety Kamren Kinchens, who was ejected, and did not return.",
-   "interpretation": "Parsons looked explosive in a limited role, but the Rams ran the ball 47 times and kept Green Bay's offense off the field. The Packers' playoff path got harder with a second straight loss.",
-   "app_guidance": "The game is final, so it is off the board. Nothing to Check here; the read is for the rest of the week.",
    "sources": [
     {
-     "label": "Packers.com",
-     "url": "https://www.packers.com/news/in-game-updates-week-12-rams-2026"
+     "label": "USA Today",
+     "url": "https://www.usatoday.com/story/sports/nfl/columnist/nate-davis/2026/11/26/thanksgiving-nfl-winners-losers-chiefs-bills-bears-lions-cowboys-eagles/92970438007/"
     },
     {
-     "label": "Fox Sports",
-     "url": "https://foxsports.com/nfl/final-rams-26-packers-13"
+     "label": "Particle News",
+     "url": "https://particle.news/story/caleb-williams-throws-last-second-td-as-bears-beat-lions-to-open-thanksgiving-tripleheader"
     }
    ]
   },
   {
-   "evidence_id": "ev-thursday",
-   "category": "injury",
+   "category": "result",
+   "evidence_id": "ev-cowboys-eagles",
+   "fact": "Dallas leads Philadelphia 38-30 in the fourth quarter (7:30 left) on Thursday, Nov 26, 2026, at AT&T Stadium, in a game still in progress at brief time. Dallas led 28-10 at halftime. Dak Prescott has thrown for 258 yards and two touchdowns and run for another; Javonte Williams has three total touchdowns (two rushing, one receiving). Joe Milton, starting at quarterback for Philadelphia with Jalen Hurts out, threw his first touchdown pass as an Eagle, a 50-yard strike to DeVonta Smith.",
+   "interpretation": "Dallas has controlled the game since the first half, but Philadelphia has kept answering in the second half. The result is not final at brief time.",
    "verification": "EXTERNAL_VERIFIED",
-   "fact": "Final Week 12 injury reports for Thursday Nov 26, 2026: Chiefs RB Kenneth Walker III (groin) is ruled OUT vs Buffalo, his third straight missed game; rookie Emmett Johnson starts again. Cowboys TE Jake Ferguson is ruled OUT vs Philadelphia; QB Dak Prescott is healthy; Eagles QB Joe Milton starts again for Philadelphia.",
-   "interpretation": "Both Thursday backfields/skill groups are settled on paper, but the inactive lists about 90 minutes before each kickoff are the final word.",
-   "app_guidance": "The app's expected starters already reflect Milton for Philadelphia; check the board for the latest, and run your book's number through Check.",
    "sources": [
+    {
+     "label": "Sportradar",
+     "url": "https://sportradar.com/?q=3839457641843837345"
+    },
+    {
+     "label": "USA Today",
+     "url": "https://www.usatoday.com/story/sports/nfl/columnist/nate-davis/2026/11/26/thanksgiving-nfl-winners-losers-chiefs-bills-bears-lions-cowboys-eagles/92970438007/"
+    }
+   ]
+  },
+  {
+   "category": "injury",
+   "evidence_id": "ev-watson",
+   "fact": "Green Bay WR Christian Watson is in the concussion protocol after the hit from Rams safety Kamren Kinchens late in the first half of Wednesday night's game against the Rams. Watson had four catches for 65 yards and a touchdown before leaving, and the concussion was confirmed after he was evaluated in the locker room. Kinchens was ejected for the helmet-to-helmet hit. Watson is uncertain for Week 13; Green Bay does not play again until Sunday, Dec 6, against New Orleans, so he has extra time to clear protocol.",
+   "interpretation": "Watson was Green Bay's leading receiver going into Wednesday night. His Week 13 status is a watch item for next week, not this one.",
+   "verification": "EXTERNAL_VERIFIED",
+   "sources": [
+    {
+     "label": "Packers Wire",
+     "url": "https://packerswire.usatoday.com/story/sports/nfl/packers/2026/11/25/packers-lose-wr-christian-watson-to-concussion-after-illegal-hit-vs-rams/92967415007/"
+    },
+    {
+     "label": "NBC Sports",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/christian-watson-ruled-out-with-a-concussion"
+    }
+   ]
+  },
+  {
+   "category": "injury",
+   "evidence_id": "ev-thursday-night",
+   "fact": "Final inactives for Kansas City at Buffalo, Thursday Nov 26, 2026, 8:20 p.m. ET kickoff: Chiefs RB Kenneth Walker III (groin) is OUT for a third straight game; rookie Emmett Johnson starts for a third straight game after back-to-back 100-yard rushing games. Kansas City also ruled out OT Jaylon Moore (ankle) and DT Omarr Norman-Lott (knee); TE Noah Gray (rib) and DL Peter Woods (neck) are questionable. QB Patrick Mahomes (knee, right elbow), WR Rashee Rice (knee), G Trey Smith (concussion) and CB Mansoor Delane (shoulder) carry no designation and are set to play. Buffalo listed TE Dalton Kincaid (thumb, ankle) and CB Christian Benford (groin) as questionable.",
+   "interpretation": "Kansas City's backfield is settled: Johnson again. Buffalo's two questionable starters are the last open question before kickoff.",
+   "verification": "EXTERNAL_VERIFIED",
+   "sources": [
+    {
+     "label": "NBC Sports",
+     "url": "https://www.nbcsports.com/nfl/profootballtalk/rumor-mill/news/kenneth-walker-ruled-out-for-thanksgiving-night-vs-bills"
+    },
     {
      "label": "Reuters",
      "url": "https://www.reuters.com/sports/chiefs-rb-kenneth-walker-iii-groin-out-vs-bills--flm-2026-11-25/"
-    },
-    {
-     "label": "Rotoballer",
-     "url": "https://www.rotoballer.com/player-news/kenneth-walker-out-vs-bills-on-thursday/2004168"
     }
    ]
   },
   {
-   "evidence_id": "ev-weather",
    "category": "weather",
+   "evidence_id": "ev-weather-buf",
+   "fact": "Kansas City at Buffalo, Thursday Nov 26, 2026, 8:20 p.m. ET kickoff at Highmark Stadium (open air): rain through the afternoon and night, 100% chance at kickoff, around 35 to 36 degrees, wind east-northeast around 18 to 19 mph with gusts near 30 mph. A gale warning runs 2:00 p.m. Thursday to 1:00 a.m. Friday.",
+   "interpretation": "A wet, windy night in Buffalo for the night game.",
    "verification": "EXTERNAL_VERIFIED",
-   "fact": "Week 12 weather, Thursday Nov 26, 2026: Kansas City at Buffalo, 8:20 p.m. ET, Highmark Stadium (open air): rain through the afternoon and night, 100% chance at kickoff, around 35 to 36 degrees, wind east-northeast around 18 to 19 mph with gusts near 30 mph. A gale warning runs 2:00 p.m. Thursday to 1:00 a.m. Friday. Chicago at Detroit and Philadelphia at Dallas are indoors.",
-   "interpretation": "A wet, windy night in Buffalo. Weather is a fact to know, not a totals edge on its own.",
-   "app_guidance": "If you are looking at the Buffalo total, know the conditions first, then let Check judge your book's number.",
    "sources": [
     {
      "label": "Weather.com Orchard Park hourly",
@@ -269,34 +311,28 @@
    ]
   },
   {
-   "evidence_id": "ev-board",
-   "category": "board",
-   "verification": "INTERNAL_CANONICAL",
-   "fact": "NFL EDGE product/latest fetched Thursday Nov 26, 2026, morning (Denver): the board has flipped to Week 12 (live-2026-week12-product-v1, generated 2026-11-26T12:08:55Z), 16 games, slate UPCOMING. Three headline cards, all FanDuel, all BET state, reliability MEDIUM: Hit Rate is Cleveland moneyline -230 (LV at CLE, model probability 64.5%, market 67.7%, play-through -238, 0.25 units); Balanced is New England moneyline -116 (NE at LAC, model 58.3%, market 51.9%, play-through -119, 0.75 units); Value is LAC +1.5 spread -115 (NE at LAC, model 50.6%, market 46.2%, evaluator EV +4.5%, play-through -118, 1.0 unit). Model expected margins (home minus away): Detroit +3.7 vs Chicago (market Chicago -1.5), Dallas +4.8 vs Philadelphia (market Dallas -8.5), Buffalo +0.7 vs Kansas City (market Buffalo -3). The Rams-Packers game has no live market on the board; it is final.",
-   "interpretation": "The model is cooler than the market on all three Thanksgiving favorites, and it has no card on any Thursday game. The three cards are all on Sunday games.",
-   "app_guidance": "Read the three cards as the board's best answers for Sunday. For Thursday, use Check on your own book's number.",
+   "category": "weather",
+   "evidence_id": "ev-weather-fri",
+   "fact": "Denver at Pittsburgh, Friday Nov 27, 2026, 3:00 p.m. ET kickoff at Acrisure Stadium (open air): showers expected, high 41 degrees, rain chance 70%, wind southwest around 15 mph. Overnight rain is expected Thursday into Friday, with rain or snow possible late Friday night.",
+   "interpretation": "A wet, cold, windy afternoon in Pittsburgh. Weather is a fact to know, not a totals edge on its own.",
+   "verification": "EXTERNAL_VERIFIED",
    "sources": [
     {
-     "label": "NFL EDGE product/latest",
-     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
+     "label": "Weather.com Pittsburgh",
+     "url": "https://weather.com/us/pa/city/pittsburgh/tenday"
     }
    ]
   },
   {
-   "evidence_id": "ev-lines",
-   "category": "lines",
-   "verification": "EXTERNAL_VERIFIED",
-   "fact": "Rams-Packers line movement, Week 12: the Rams opened -3.5 and closed -2.5, a move toward Green Bay that lined up with Parsons' return being priced in; the total slid from 46.5 to 44.5. Final score 26-13 (39 points) went under the closing total. Week 12 shadow-tracked openers (consensus, Sun Nov 22) vs DraftKings this morning: LAC opened -3.5 and is now +1.5 (New England -1.5); the Buffalo total opened 51.5 and is now 45.5; the Giants opened -4 and are now -6; Denver opened -2.5 and is now -4.5; Dallas opened -8 and is now -8.5; Chicago opened -2.5 and is now -1.5.",
-   "interpretation": "The biggest move of the week was the Chargers flipping from favorite to underdog against New England. The Buffalo total fell six points as the rain forecast firmed up.",
-   "app_guidance": "These are the numbers on the board now. If your book is off the board's number, Check is how you get a verdict on your price.",
+   "category": "board",
+   "evidence_id": "ev-board",
+   "fact": "NFL EDGE product/latest fetched Thursday Nov 26, 2026, evening (generated 2026-11-27T00:08:52Z, live-2026-week12-product-v1): Week 12, 16 games, slate UPCOMING. Three headline cards, all FanDuel, all BET state: Hit Rate is San Francisco moneyline -146 (SEA at SF, model probability 73.7%, market 57.4%, play-through -148, 1.0 unit, reliability LOW); Balanced is New England moneyline -120 (NE at LAC, model 58.3%, market 55.3%, play-through -123, 1.0 unit, reliability MEDIUM); Value is Indianapolis +6.5 spread -115 (NYG at IND, model 50.6%, market 52.8%, evaluator EV +0.7%, play-through -116, 0.75 units, reliability MEDIUM). Morning cards were Cleveland moneyline -230 (Hit Rate), New England moneyline -116 (Balanced), Chargers +1.5 -115 (Value): the Hit Rate and Value cards have been replaced; the Balanced card is the same pick at a worse price. Model expected margins (home minus away): Detroit +3.7 vs Chicago, Dallas +4.8 vs Philadelphia, Buffalo +0.7 vs Kansas City, Denver -1.8 at Pittsburgh (market Denver -4.5), LAC +2.2 vs New England (market New England -1.5 FanDuel, -2.5 DraftKings). Quarterbacks: Joe Milton is Philadelphia's expected starter; Mason Rudolph starts for Pittsburgh; Fernando Mendoza starts for Las Vegas; Deshaun Watson starts for Cleveland. The Rams-Packers, Bears-Lions and Eagles-Cowboys games have no live market on the board. DraftKings evening lines: New England -2.5 (was -1.5 this morning), Denver -4.5 unchanged, Buffalo -3 unchanged with the total still 45.5, Cleveland moneyline -244 (FanDuel -225, was -230 this morning).",
+   "interpretation": "The board swapped two of its three cards between morning and evening. The three cards are all Sunday games; there is no card on Thursday night or Friday.",
+   "verification": "INTERNAL_CANONICAL",
    "sources": [
     {
-     "label": "OddsChecker Rams-Packers",
-     "url": "https://www.oddschecker.com/us/picks-parlays/football/nfl/20261125-packers-vs-rams-prediction-betting-pick-latest-nfl-week-12-odds-for-netflix-thanksgiving-eve-game"
-    },
-    {
-     "label": "Edgehalla Week 12 consensus",
-     "url": "https://www.edgehalla.com/nfl/vegas/12"
+     "label": "NFL EDGE product/latest",
+     "url": "https://nfl.tkhermes.duckdns.org/api/v1/product/latest"
     }
    ]
   }
