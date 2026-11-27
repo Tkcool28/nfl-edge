@@ -1,0 +1,329 @@
+{
+  "builder_version": "prospective-card-tracking-v1",
+  "capture_mode": "NATIVE_PROSPECTIVE",
+  "creation_provenance": {
+    "provider_calls": 0,
+    "source": "CANONICAL_PUBLISHED_PRODUCT",
+    "user_specific_data_included": false
+  },
+  "field_availability": {
+    "backend_user_overlay": "EXCLUDED_USER_SPECIFIC_DATA",
+    "evaluator_probability": "NOT_EXPOSED_BY_CANONICAL_PRODUCT_V1"
+  },
+  "lanes": {
+    "balanced": {
+      "american_odds": -120,
+      "away_team": "NE",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": -120,
+        "book": "FANDUEL",
+        "ev": 0.046101454265635944,
+        "game_id": "2026_12_NE_LAC",
+        "lane": "BALANCED",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.5525036648406758,
+        "matchup": {
+          "away_team": "NE",
+          "home_team": "LAC"
+        },
+        "model_probability": 0.5829628554434434,
+        "play_through": {
+          "line": null,
+          "price_american": -123
+        },
+        "recommended_units": 1.0,
+        "reliability": "MEDIUM",
+        "selection": "NE",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5677332601420596,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.046101454265635944,
+      "exact_offer_identity_id": "offer-a358503a10b7806e70d13990",
+      "game_id": "2026_12_NE_LAC",
+      "home_team": "LAC",
+      "kickoff_at_utc": "2026-11-29T21:05:00Z",
+      "lane": "BALANCED",
+      "lane_key": "balanced",
+      "line": null,
+      "logical_recommendation_id": "logical-2e37fb2f7080bd0d5a6ca144",
+      "market": "MONEYLINE",
+      "market_probability": 0.5525036648406758,
+      "model_probability": 0.5829628554434434,
+      "normalized_selection": "NE",
+      "normalized_side": "away",
+      "play_through": {
+        "line": null,
+        "price_american": -123
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 1.0,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "NE",
+      "selector_version": "balanced-price-bounded-v2",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5677332601420596,
+      "value_at": null,
+      "wager_identity_id": "wager-272516fe126f51ce6a6cd471",
+      "warnings": []
+    },
+    "hit_rate": {
+      "american_odds": -146,
+      "away_team": "SEA",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": -146,
+        "book": "FANDUEL",
+        "ev": -0.043438018449554805,
+        "game_id": "2026_12_SEA_SF",
+        "lane": "HIT_RATE",
+        "line": null,
+        "market": "MONEYLINE",
+        "market_probability": 0.574357192494788,
+        "matchup": {
+          "away_team": "SEA",
+          "home_team": "SF"
+        },
+        "model_probability": 0.7366098376231219,
+        "play_through": {
+          "line": null,
+          "price_american": -148
+        },
+        "recommended_units": 1.0,
+        "reliability": "LOW",
+        "selection": "SF",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.655483515058955,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": -0.043438018449554805,
+      "exact_offer_identity_id": "offer-063d68d096cf8aaa0dc4c560",
+      "game_id": "2026_12_SEA_SF",
+      "home_team": "SF",
+      "kickoff_at_utc": "2026-11-29T21:25:00Z",
+      "lane": "HIT_RATE",
+      "lane_key": "hit_rate",
+      "line": null,
+      "logical_recommendation_id": "logical-0695d642d196ac1cfa4abe61",
+      "market": "MONEYLINE",
+      "market_probability": 0.574357192494788,
+      "model_probability": 0.7366098376231219,
+      "normalized_selection": "SF",
+      "normalized_side": "home",
+      "play_through": {
+        "line": null,
+        "price_american": -148
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 1.0,
+      "reliability": "LOW",
+      "roof_state": {
+        "status": "AVAILABLE",
+        "support": "SUPPORTED"
+      },
+      "selection": "SF",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.655483515058955,
+      "value_at": null,
+      "wager_identity_id": "wager-513c23361989d304c34ecf5d",
+      "warnings": []
+    },
+    "value": {
+      "american_odds": -115,
+      "away_team": "NYG",
+      "book": "FANDUEL",
+      "canonical_headline": {
+        "american_odds": -115,
+        "book": "FANDUEL",
+        "ev": 0.015900107797340968,
+        "game_id": "2026_12_NYG_IND",
+        "lane": "VALUE",
+        "line": 6.5,
+        "market": "SPREAD",
+        "market_probability": 0.5312533141027002,
+        "matchup": {
+          "away_team": "NYG",
+          "home_team": "IND"
+        },
+        "model_probability": 0.5059361465702484,
+        "play_through": {
+          "line": 6.5,
+          "price_american": -118
+        },
+        "recommended_units": 0.75,
+        "reliability": "MEDIUM",
+        "selection": "IND",
+        "state": "BET",
+        "support": "SUPPORTED",
+        "trust_probability": 0.5059361465702484,
+        "value_at": null,
+        "warnings": []
+      },
+      "ev": 0.015900107797340968,
+      "exact_offer_identity_id": "offer-c0d817d84a2d781792e461e8",
+      "game_id": "2026_12_NYG_IND",
+      "home_team": "IND",
+      "kickoff_at_utc": "2026-11-29T18:00:00Z",
+      "lane": "VALUE",
+      "lane_key": "value",
+      "line": 6.5,
+      "logical_recommendation_id": "logical-ab3f684cdaa7abff565471b4",
+      "market": "SPREAD",
+      "market_probability": 0.5312533141027002,
+      "model_probability": 0.5059361465702484,
+      "normalized_selection": "IND",
+      "normalized_side": "home",
+      "play_through": {
+        "line": 6.5,
+        "price_american": -118
+      },
+      "portfolio_duplicate_of_lane": null,
+      "portfolio_stake_suppressed_reason": null,
+      "recommended_units": 0.75,
+      "reliability": "MEDIUM",
+      "roof_state": {
+        "roof_resolution_status": "PENDING",
+        "roof_scenario_downstream": {
+          "agreement_status": "ROOF_SENSITIVE",
+          "closed_state": {
+            "actionable_probability": 0.2650280066105564,
+            "break_even_probability": 0.29411764705882354,
+            "conditional_nonpush_probability": 0.26589129001971135,
+            "evaluated_edge_probability": -0.028226357039112193,
+            "evaluator_version": "ml_v4",
+            "evidence": {
+              "calibrated_market_probability": 0.26589129001971135,
+              "final_probability_conditional_nonpush": 0.26589129001971135,
+              "model_market_disagreement": 0.06791491779799108,
+              "model_pool_weight": 0.0,
+              "raw_exact_avg_probability": 0.3338062078177024,
+              "raw_pinnacle_no_vig_probability": 0.29300567107750475,
+              "raw_qbelo_probability": 0.4250827551720718,
+              "raw_xgb_probability": 0.24252966046333313
+            },
+            "expected_value": -0.09565802427735481,
+            "fair_price_american": 276,
+            "p_loss": 0.7317252401426902,
+            "p_push": 0.003246753246753247,
+            "p_win": 0.2650280066105564,
+            "reason": null,
+            "reliability": "LOW",
+            "staking_anchor_probability": 0.26589129001971135,
+            "staking_edge_probability": -0.028226357039112193,
+            "staking_probability": 0.26589129001971135,
+            "strict_positive_value": false,
+            "support_distance": 0.0,
+            "support_n": 1514,
+            "supported": true,
+            "uncertainty": 0.03117036878408221
+          },
+          "open_state": {
+            "actionable_probability": 0.2650280066105564,
+            "break_even_probability": 0.29411764705882354,
+            "conditional_nonpush_probability": 0.26589129001971135,
+            "evaluated_edge_probability": -0.028226357039112193,
+            "evaluator_version": "ml_v4",
+            "evidence": {
+              "calibrated_market_probability": 0.26589129001971135,
+              "final_probability_conditional_nonpush": 0.26589129001971135,
+              "model_market_disagreement": 0.07707744810099249,
+              "model_pool_weight": 0.0,
+              "raw_exact_avg_probability": 0.34296873812070383,
+              "raw_pinnacle_no_vig_probability": 0.29300567107750475,
+              "raw_qbelo_probability": 0.4250827551720718,
+              "raw_xgb_probability": 0.26085472106933594
+            },
+            "expected_value": -0.09565802427735481,
+            "fair_price_american": 276,
+            "p_loss": 0.7317252401426902,
+            "p_push": 0.003246753246753247,
+            "p_win": 0.2650280066105564,
+            "reason": null,
+            "reliability": "LOW",
+            "staking_anchor_probability": 0.26589129001971135,
+            "staking_edge_probability": -0.028226357039112193,
+            "staking_probability": 0.26589129001971135,
+            "strict_positive_value": false,
+            "support_distance": 0.0,
+            "support_n": 1514,
+            "supported": true,
+            "uncertainty": 0.03117036878408221
+          },
+          "shared_state": null,
+          "status": "ROOF_SENSITIVE"
+        },
+        "roof_selected_scenario": null,
+        "status": "AVAILABLE_WITH_ROOF_SCENARIOS",
+        "support": "PARTIAL",
+        "xgboost_closed_probability": 0.24252966046333313,
+        "xgboost_open_probability": 0.26085472106933594,
+        "xgboost_scenario_delta": -0.018325060606002808
+      },
+      "selection": "IND",
+      "selector_version": "v1",
+      "state": "BET",
+      "support": "SUPPORTED",
+      "trust_probability": 0.5059361465702484,
+      "value_at": null,
+      "wager_identity_id": "wager-2707db1a964f25ae74825a0f",
+      "warnings": []
+    }
+  },
+  "product_freshness": {
+    "age_seconds": 0.0,
+    "observed_at_utc": "2026-11-27T12:08:59Z",
+    "state": "FRESH",
+    "threshold_seconds": 43200.0
+  },
+  "product_generated_at_utc": "2026-11-27T12:08:59Z",
+  "product_stale": false,
+  "product_warnings": [
+    "4 canonical Week 12 game(s) lack a provider event."
+  ],
+  "publication_id": "publication-a2674f4e2a076d44dd839cf2",
+  "published_at_utc": "2026-11-27T12:08:59.415637Z",
+  "schema_version": "NFL_EDGE_PROSPECTIVE_CARD_PUBLICATION_V1",
+  "season": 2026,
+  "source_commit_sha": null,
+  "source_product_sha256": "a2674f4e2a076d44dd839cf24a460d6ac80c9b7b7b5f3b27fe657c52a5b15efe",
+  "source_product_version": "live-2026-week12-product-v1",
+  "source_provenance": {
+    "evaluator_versions": {
+      "moneyline": "ml_v4",
+      "spread": "spread_v3",
+      "total": "total_v3"
+    },
+    "football_data_version": "live-2026-state:26431de31445db6cc8a99dfd",
+    "market_snapshot_version": "live-market:1333aaff9310e9076689d56c",
+    "model_versions": {
+      "expected_margin": "expected-margin-v1-stable",
+      "qb_elo": "qb-elo-v1.0.0",
+      "ridge_totals_r4": "ridge-totals-r4-alpha100",
+      "xgboost_v2": "post-v5-v2-conservative-adaptive-tail"
+    },
+    "prediction_as_of_utc": "2026-11-27T12:05:03.784972Z",
+    "qb_snapshot_version": "sleeper-scheduled-20261127T120001Z-557342d2",
+    "selector_versions": {
+      "balanced": "balanced-price-bounded-v2",
+      "hit_rate": "v1",
+      "value": "v1"
+    }
+  },
+  "source_week_last_kickoff_at_utc": "2026-12-01T01:15:00Z",
+  "week": 12
+}
