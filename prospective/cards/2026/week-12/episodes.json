@@ -307,8 +307,8 @@
       "lane_key": "hit_rate",
       "last_line": null,
       "last_price": -230,
-      "last_publication_id": "publication-4400471944f525cda187a7fe",
-      "last_seen_at_utc": "2026-11-28T00:08:53.978237Z",
+      "last_publication_id": "publication-03b9bde4763c3d8c27ab320a",
+      "last_seen_at_utc": "2026-11-28T12:08:57.462699Z",
       "logical_recommendation_id": "logical-4bf1bd383c325d36747877db",
       "market": "MONEYLINE",
       "normalized_selection": "CLE",
@@ -330,9 +330,26 @@
           "state": "BET",
           "value_at": null,
           "wager_identity_id": "wager-6a3c648e74fcef2fa03b9b67"
+        },
+        {
+          "american_odds": -230,
+          "book": "FANDUEL",
+          "exact_offer_identity_id": "offer-68d2efe325503657a8a8a630",
+          "line": null,
+          "play_through": {
+            "line": null,
+            "price_american": -238
+          },
+          "publication_id": "publication-03b9bde4763c3d8c27ab320a",
+          "published_at_utc": "2026-11-28T12:08:57.462699Z",
+          "recommended_units": 0.25,
+          "source_product_sha256": "03b9bde4763c3d8c27ab320a0416d21f218fd6b669d4e1e96d4b4927143a371e",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-6a3c648e74fcef2fa03b9b67"
         }
       ],
-      "publication_count": 1,
+      "publication_count": 2,
       "returned_after_gap": true,
       "selection": "CLE",
       "terminal_reason": "WEEK_HISTORY_END",
@@ -352,8 +369,8 @@
       "lane_key": "balanced",
       "last_line": 5.5,
       "last_price": -105,
-      "last_publication_id": "publication-4400471944f525cda187a7fe",
-      "last_seen_at_utc": "2026-11-28T00:08:53.978237Z",
+      "last_publication_id": "publication-03b9bde4763c3d8c27ab320a",
+      "last_seen_at_utc": "2026-11-28T12:08:57.462699Z",
       "logical_recommendation_id": "logical-e3c36d9d31c74f9248e88abc",
       "market": "SPREAD",
       "normalized_selection": "IND",
@@ -375,9 +392,26 @@
           "state": "BET",
           "value_at": null,
           "wager_identity_id": "wager-71243ae4584a31e19dccfdf7"
+        },
+        {
+          "american_odds": -105,
+          "book": "FANDUEL",
+          "exact_offer_identity_id": "offer-caac94cb61beec5e1d346a6b",
+          "line": 5.5,
+          "play_through": {
+            "line": 5.5,
+            "price_american": -108
+          },
+          "publication_id": "publication-03b9bde4763c3d8c27ab320a",
+          "published_at_utc": "2026-11-28T12:08:57.462699Z",
+          "recommended_units": 0.75,
+          "source_product_sha256": "03b9bde4763c3d8c27ab320a0416d21f218fd6b669d4e1e96d4b4927143a371e",
+          "state": "BET",
+          "value_at": null,
+          "wager_identity_id": "wager-71243ae4584a31e19dccfdf7"
         }
       ],
-      "publication_count": 1,
+      "publication_count": 2,
       "returned_after_gap": false,
       "selection": "IND",
       "terminal_reason": "WEEK_HISTORY_END",
@@ -391,7 +425,8 @@
     "publication-01e8cb37fe1cb2eaf53ee91b",
     "publication-00fea6df4b6b392b2132fb02",
     "publication-a2674f4e2a076d44dd839cf2",
-    "publication-4400471944f525cda187a7fe"
+    "publication-4400471944f525cda187a7fe",
+    "publication-03b9bde4763c3d8c27ab320a"
   ],
   "week": 12
 }
